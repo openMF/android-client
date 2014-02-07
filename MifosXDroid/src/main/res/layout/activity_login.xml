@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_instanceURL"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:inputType="text"
+        android:hint="http://" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_username"
+        android:layout_below="@+id/et_instanceURL"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:hint="Username" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/et_password"
+        android:layout_below="@+id/et_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:hint="Password" />
+</RelativeLayout>
