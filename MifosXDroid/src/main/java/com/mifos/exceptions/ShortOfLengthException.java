@@ -13,7 +13,6 @@ public class ShortOfLengthException extends Exception{
         this.inputField = inputField;
     }
 
-
     @Override
     public String toString() {
         return inputField +" Field Expects at least " + minimumCharacters
