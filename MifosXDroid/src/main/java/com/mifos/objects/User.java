@@ -1,6 +1,7 @@
 package com.mifos.objects;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class User {
 
@@ -10,8 +11,8 @@ public class User {
     private boolean authenticated;
     private int officeId;
     private String officeName;
-    private Role[] roles;
-    private Permission[] permissions;
+    private List<Role> roles;
+    private List<String> permissions;
 
     public String getUsername() {
         return username;
@@ -27,14 +28,6 @@ public class User {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getBase64EncodedAutheticationKey() {
-        return base64EncodedAuthenticationKey;
-    }
-
-    public void setBase64EncodedAutheticationKey(String base64EncodedAuthenticationKey) {
-        this.base64EncodedAuthenticationKey = base64EncodedAuthenticationKey;
     }
 
     public boolean isAuthenticated() {
@@ -61,19 +54,27 @@ public class User {
         this.officeName = officeName;
     }
 
-    public Role[] getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Role[] roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
-    public Permission[] getPermissions() {
+    public String getBase64EncodedAuthenticationKey() {
+        return base64EncodedAuthenticationKey;
+    }
+
+    public void setBase64EncodedAuthenticationKey(String base64EncodedAuthenticationKey) {
+        this.base64EncodedAuthenticationKey = base64EncodedAuthenticationKey;
+    }
+
+    public List<String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Permission[] permissions) {
+    public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
     }
 
@@ -86,8 +87,8 @@ public class User {
                 ", authenticated=" + authenticated +
                 ", officeId=" + officeId +
                 ", officeName='" + officeName + '\'' +
-                ", roles=" + Arrays.toString(roles) +
-                ", permissions=" + Arrays.toString(permissions) +
+                ", roles=" + roles +
+                ", permissions=" + permissions +
                 '}';
     }
 }

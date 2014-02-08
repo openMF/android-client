@@ -1,6 +1,11 @@
 package com.mifos.utils;
 
+import android.util.Log;
+
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 08/02/14.
@@ -17,8 +22,22 @@ public class MifosRestAdapter {
     public MifosRestAdapter(){
         restAdapter = new RestAdapter.Builder()
                 .setEndpoint(TEST_INSTANCE_URL)
+                .setErrorHandler(new MyErrorHandler())
                 .build();
     }
+
+    public class MyErrorHandler implements ErrorHandler {
+        @Override public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+            if (r != null && r.getStatus() == 401){
+                Log.e("Status","401");
+            }
+            Log.e("Status", cause.getMessage());
+            return cause;
+        }
+    }
+
+
 
     public RestAdapter getRestAdapter() {
         return restAdapter;

@@ -4,6 +4,8 @@ import com.mifos.objects.User;
 
 import retrofit.Callback;
 import retrofit.client.Response;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Query;
@@ -14,6 +16,6 @@ import retrofit.http.Query;
 public interface UserAuthService {
 
     @Headers("X-Mifos-Platform-TenantId: default")
-    @POST("/authenticate")
-    public User authenticate(@Query("username") String username, @Query("password")String password);
+    @POST("/authentication")
+    public User authenticate(@Query("username") String username, @Query("password") String password);
 }
