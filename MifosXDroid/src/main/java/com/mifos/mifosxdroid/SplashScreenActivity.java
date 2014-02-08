@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+
+    /**
+    * This is the First Activity which can be used for initial checks, inits at app Startup
+    */
+
 public class SplashScreenActivity extends ActionBarActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +31,9 @@ public class SplashScreenActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
+
     }
 
 

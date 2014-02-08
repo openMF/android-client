@@ -1,16 +1,22 @@
 package com.mifos.mifosxdroid;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.mifos.exceptions.ShortOfLengthException;
+import com.mifos.objects.User;
+import com.mifos.utils.MifosRestAdapter;
+import com.mifos.utils.UserAuthService;
+
+import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 08/02/14.
  */
 public class LoginActivity extends ActionBarActivity {
-
 
     private EditText et_instanceURL;    //Text Input for instance URl
     private EditText et_username;       //Text Input for Username
@@ -20,11 +26,30 @@ public class LoginActivity extends ActionBarActivity {
     private String instanceURL;
     private String password;
 
+    private MifosRestAdapter mifosRestAdapter;
+    private UserAuthService userAuthService;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mifosRestAdapter = new MifosRestAdapter();
+
+        userAuthService = mifosRestAdapter.getRestAdapter().create(UserAuthService.class);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+        try{
+
+            User user = userAuthService.authenticate("mifos","password");
+            Log.i("User",user.toString());
+
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
 
