@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -100,8 +101,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
     public void success(User user, Response response) {
         progressDialog.dismiss();
         Toast.makeText(context, "Welcome " + user.getUsername(), Toast.LENGTH_SHORT).show();
-
-
+        Intent intent = new Intent(LoginActivity.this,DashboardFragmentActivity.class);
+        intent.putExtra("Key","Basic "+user.getBase64EncodedAuthenticationKey());
+        startActivity(intent);
     }
 
     @Override

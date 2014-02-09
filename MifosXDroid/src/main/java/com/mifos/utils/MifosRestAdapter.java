@@ -1,5 +1,6 @@
 package com.mifos.utils;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
 /**
@@ -20,6 +21,21 @@ public class MifosRestAdapter {
                 .setEndpoint(TEST_INSTANCE_URL)
                 .setErrorHandler(new MifosRestErrorHandler())
                 .build();
+    }
+
+    public MifosRestAdapter(final String authToken){
+
+        restAdapter = new RestAdapter.Builder()
+                .setEndpoint(TEST_INSTANCE_URL)
+                .setErrorHandler(new MifosRestErrorHandler())
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade requestFacade) {
+                        requestFacade.addHeader("Authorization",authToken);
+                    }
+                })
+                .build();
+
     }
 
 

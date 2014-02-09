@@ -25,6 +25,9 @@
         <activity
             android:name="com.mifos.mifosxdroid.LoginActivity"
             android:label="Login"/>
+        <activity
+            android:name="com.mifos.mifosxdroid.DashboardFragmentActivity"
+            android:label="Dashboard"/>
     </application>
 
 </manifest>

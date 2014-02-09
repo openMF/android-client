@@ -1,5 +1,6 @@
 package com.mifos.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -10,8 +11,8 @@ public class User {
     private boolean authenticated;
     private int officeId;
     private String officeName;
-    private List<Role> roles;
-    private List<String> permissions;
+    private List<Role> roles = new ArrayList<Role>();
+    private List<String> permissions = new ArrayList<String>();
 
     public String getUsername() {
         return username;
