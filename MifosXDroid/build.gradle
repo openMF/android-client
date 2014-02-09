@@ -28,4 +28,5 @@ dependencies {
 	compile 'com.android.support:appcompat-v7:19.0.0'
     compile files('libs/retrofit-1.4.1.jar')
     compile files('libs/gson-2.2.4.jar')
+    compile files('libs/sugar-1.2.jar')
 }

@@ -13,10 +13,19 @@ public class Client {
     private Status status;
     private boolean active;
     private List<Integer> activationDate = new ArrayList<Integer>();
-    private String fullname;
+    private String firstname;
+    private String middlename;
+    private String lastname;
     private String displayName;
     private int officeId;
     private String officeName;
+    private int staffId;
+    private String staffName;
+    private Timeline timeline;
+    private String fullname;
+    private int imageId;
+    private boolean imagePresent;
+    private String externalId;
 
     public int getId() {
         return id;
@@ -58,12 +67,28 @@ public class Client {
         this.activationDate = activationDate;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getMiddlename() {
+        return middlename;
+    }
+
+    public void setMiddlename(String middlename) {
+        this.middlename = middlename;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getDisplayName() {
@@ -90,21 +115,83 @@ public class Client {
         this.officeName = officeName;
     }
 
+    public int getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
+
+    public Timeline getTimeline() {
+        return timeline;
+    }
+
+    public void setTimeline(Timeline timeline) {
+        this.timeline = timeline;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public int getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
+    }
+
+    public boolean isImagePresent() {
+        return imagePresent;
+    }
+
+    public void setImagePresent(boolean imagePresent) {
+        this.imagePresent = imagePresent;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
     @Override
     public String toString() {
-        return "PageItem{" +
+        return "Client{" +
                 "id=" + id +
                 ", accountNo='" + accountNo + '\'' +
-                ", status=" + status.toString() +
+                ", status=" + status +
                 ", active=" + active +
                 ", activationDate=" + activationDate +
-                ", fullname='" + fullname + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", middlename='" + middlename + '\'' +
+                ", lastname='" + lastname + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", officeId=" + officeId +
                 ", officeName='" + officeName + '\'' +
+                ", staffId=" + staffId +
+                ", staffName='" + staffName + '\'' +
+                ", timeline=" + timeline +
+                ", fullname='" + fullname + '\'' +
+                ", imageId=" + imageId +
+                ", imagePresent=" + imagePresent +
+                ", externalId='" + externalId + '\'' +
                 '}';
     }
-
-
-
 }
