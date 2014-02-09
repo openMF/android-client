@@ -63,8 +63,6 @@ public class DashboardFragmentActivity extends ActionBarActivity{
             View rootView = inflater.inflate(R.layout.fragment_client, container, false);
             ListView lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
 
-            Log.d("Key is : ",key);
-
             MifosRestAdapter mifosRestAdapter = new MifosRestAdapter(key);
 
             ClientService clientService = mifosRestAdapter.getRestAdapter().create(ClientService.class);
@@ -72,7 +70,6 @@ public class DashboardFragmentActivity extends ActionBarActivity{
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             Page clientPage = clientService.listAllClients();
-            Log.d("Page", "Done");
             List<PageItem> pageItems = clientPage.getPageItems();
 
             List<String> clientNames = new ArrayList<String>();
