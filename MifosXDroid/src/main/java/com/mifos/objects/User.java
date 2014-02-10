@@ -5,6 +5,8 @@ import java.util.List;
 
 public class User {
 
+    public static String AUTHENTICATION_KEY = "authenticationKey";
+
     private String username;
     private int userId;
     private String base64EncodedAuthenticationKey;

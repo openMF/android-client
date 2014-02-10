@@ -9,4 +9,5 @@
         android:id="@+id/lv_clients"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

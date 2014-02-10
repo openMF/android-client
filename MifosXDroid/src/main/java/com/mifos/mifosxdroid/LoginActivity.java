@@ -3,7 +3,9 @@ package com.mifos.mifosxdroid;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +41,11 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
 
     private Context context;
 
+    private String authenticationToken;
+
     private ProgressDialog progressDialog;
+
+    SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -47,6 +53,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         setContentView(R.layout.activity_login);
 
         context = LoginActivity.this;
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY,"NA");
 
         setupUI();
 
@@ -102,7 +111,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         progressDialog.dismiss();
         Toast.makeText(context, "Welcome " + user.getUsername(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(LoginActivity.this,DashboardFragmentActivity.class);
-        intent.putExtra("Key","Basic "+user.getBase64EncodedAuthenticationKey());
+        saveAuthenticationKey(user.getBase64EncodedAuthenticationKey());
         startActivity(intent);
     }
 
@@ -126,5 +135,13 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
                 }
         }
 
+    }
+
+    public void saveAuthenticationKey(String authenticationKey){
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(User.AUTHENTICATION_KEY,authenticationKey);
+        editor.commit();
+        editor.apply();
     }
 }
