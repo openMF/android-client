@@ -1,85 +1,110 @@
 package com.mifos.mifosxdroid;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.view.KeyEvent;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.ListView;
 
-import org.w3c.dom.Text;
+import com.mifos.objects.Page;
+import com.mifos.objects.PageItem;
+import com.mifos.objects.User;
+import com.mifos.utils.ClientService;
+import com.mifos.utils.MifosRestAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class ClientListFragment extends Fragment{
+public class ClientListFragment extends Fragment {
 
-    private View rootView;
+    SharedPreferences sharedPreferences;
 
-    private AutoCompleteTextView actv_clientSearch;
-    private TextView tv_fullName;
-    private TextView tv_accountNumber;
-    private TextView tv_externalId;
-    private TextView tv_activationDate;
-    private TextView tv_office;
-    private TextView tv_group;
-    private TextView tv_loanOfficer;
-    private TextView tv_loanCycle;
+    ActionBarActivity activity;
 
-    private Button bt_showClientDetails;
+    ListView lv_clients;
 
-    private ArrayAdapter<String> clientNames;
+    View rootView;
 
-    public ClientListFragment(ArrayAdapter<String> clientNames){
+    public ClientListFragment() {
 
-        this.clientNames = clientNames;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_client, container, false);
 
-        rootView = (View) inflater.inflate(R.layout.fragment_client,null);
+
+        activity = (ActionBarActivity) getActivity();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
         setupUI();
+        //TODO remove syso call
+        System.out.println("Auth Key = " + sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
 
+        MifosRestAdapter mifosRestAdapter = new MifosRestAdapter(sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
 
+        ClientService clientService = mifosRestAdapter.getRestAdapter().create(ClientService.class);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Page clientPage = clientService.listAllClients();
+        List<PageItem> pageItems = clientPage.getPageItems();
+
+        List<String> clientNames = new ArrayList<String>();
+        for (int i = 0; i < pageItems.size(); i++) {
+            clientNames.add(pageItems.get(i).getDisplayName());
+        }
+
+        String[] names = clientNames.toArray(new String[clientNames.size()]);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ClientListFragment.this.getActivity(), android.R.layout.simple_list_item_1,
+                names);
+
+        lv_clients.setAdapter(adapter);
 
         return rootView;
     }
 
-    public void setupUI()
-    {
+    public void setupUI() {
 
-        actv_clientSearch = (AutoCompleteTextView) rootView.findViewById(R.id.actv_clientSearch);
-        //TODO Add Client names to this box
-        actv_clientSearch.setAdapter(this.clientNames);
+        setHasOptionsMenu(true);
 
-        tv_fullName = (TextView) rootView.findViewById(R.id.tv_fullName);
-        tv_accountNumber = (TextView) rootView.findViewById(R.id.tv_accountNumber);
-        tv_externalId = (TextView) rootView.findViewById(R.id.tv_externalId);
-        tv_activationDate = (TextView) rootView.findViewById(R.id.tv_activationDate);
-        tv_office = (TextView) rootView.findViewById(R.id.tv_office);
-        tv_group = (TextView) rootView.findViewById(R.id.tv_group);
-        tv_loanOfficer = (TextView) rootView.findViewById(R.id.tv_loanOfficer);
-        tv_loanCycle = (TextView) rootView.findViewById(R.id.tv_loanCycle);
+        lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
 
-        bt_showClientDetails = (Button) rootView.findViewById(R.id.bt_showClientDetails);
-        bt_showClientDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-
-            }
-        });
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dashbord_client, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.mItem_search:
+                ((DashboardFragmentActivity) getActivity()).replaceFragments(new ClientSearchFragment());
+                break;
+
+            default: //DO NOTHING
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

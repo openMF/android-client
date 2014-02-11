@@ -17,8 +17,8 @@ import com.mifos.objects.User;
 
 
 /**
-    * This is the First Activity which can be used for initial checks, inits at app Startup
-    */
+ * This is the First Activity which can be used for initial checks, inits at app Startup
+ */
 
 public class SplashScreenActivity extends ActionBarActivity {
 
@@ -26,6 +26,7 @@ public class SplashScreenActivity extends ActionBarActivity {
     String authenticationToken;
 
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,14 +44,13 @@ public class SplashScreenActivity extends ActionBarActivity {
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
 
-        if(authenticationToken.equals("NA"))
-        {
+        if (authenticationToken.equals("NA")) {
             //if authentication key is not present
-            startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
-        }else{
+            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+        } else {
 
             //if authentication key is present open dashboard
-            startActivity(new Intent(SplashScreenActivity.this,DashboardFragmentActivity.class));
+            startActivity(new Intent(SplashScreenActivity.this, DashboardFragmentActivity.class));
         }
 
     }
@@ -58,7 +58,7 @@ public class SplashScreenActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.splash_screen, menu);
         return true;
@@ -86,7 +86,7 @@ public class SplashScreenActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_splash, container, false);
             return rootView;
         }

@@ -1,6 +1,9 @@
 package com.mifos.utils;
 
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.mifos.objects.User;
 
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +23,8 @@ public class MifosRestErrorHandler implements ErrorHandler {
         Response r = retrofitError.getResponse();
         if (r != null && r.getStatus() == 401) {
             Log.e("Status", "Authentication Error.");
+
+
         }else if(r.getStatus() == 400){
             Log.d("Status","Bad Request - Invalid Parameter or Data Integrity Issue.");
             Log.d("URL", r.getUrl());
@@ -34,4 +39,6 @@ public class MifosRestErrorHandler implements ErrorHandler {
 
         return retrofitError;
     }
+
+
 }

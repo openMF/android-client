@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bt_searchClient"
+        android:layout_marginTop="20dp"
         >
 
 
@@ -172,7 +174,7 @@
     <AutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search By Name"
+        android:hint="Search By Client Id"
         android:id="@+id/actv_clientSearch"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -183,7 +185,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show Details"
-        android:id="@+id/bt_showClientDetails"
+        android:id="@+id/bt_searchClient"
         android:layout_below="@+id/actv_clientSearch"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp" />

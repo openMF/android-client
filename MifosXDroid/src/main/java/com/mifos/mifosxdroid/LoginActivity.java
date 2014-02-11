@@ -48,14 +48,14 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
     SharedPreferences sharedPreferences;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         context = LoginActivity.this;
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY,"NA");
+        authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
         setupUI();
 
@@ -65,7 +65,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
     /*
        Perform All UI Based Operations on activity creation
      */
-    public void setupUI(){
+    public void setupUI() {
 
         et_instanceURL = (EditText) findViewById(R.id.et_instanceURL);
         et_username = (EditText) findViewById(R.id.et_username);
@@ -88,7 +88,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         userAuthService.authenticate(username, password, this);
     }
 
-    public boolean validateUserInputs() throws ShortOfLengthException{
+    public boolean validateUserInputs() throws ShortOfLengthException {
 
         //TODO Create All Validations Here for all input fields
 
@@ -98,9 +98,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         }
 
         password = et_password.getEditableText().toString();
-        if(password.length()<6)
-        {
-            throw new ShortOfLengthException("Password",6);
+        if (password.length() < 6) {
+            throw new ShortOfLengthException("Password", 6);
         }
 
         return true;
@@ -110,8 +109,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
     public void success(User user, Response response) {
         progressDialog.dismiss();
         Toast.makeText(context, "Welcome " + user.getUsername(), Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(LoginActivity.this,DashboardFragmentActivity.class);
-        saveAuthenticationKey(user.getBase64EncodedAuthenticationKey());
+        Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
+        saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
         startActivity(intent);
     }
 
@@ -137,10 +136,10 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
 
     }
 
-    public void saveAuthenticationKey(String authenticationKey){
+    public void saveAuthenticationKey(String authenticationKey) {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(User.AUTHENTICATION_KEY,authenticationKey);
+        editor.putString(User.AUTHENTICATION_KEY, authenticationKey);
         editor.commit();
         editor.apply();
     }
