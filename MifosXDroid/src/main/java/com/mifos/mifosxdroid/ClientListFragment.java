@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mifos.objects.Page;
 import com.mifos.objects.PageItem;
@@ -23,6 +24,10 @@ import com.mifos.utils.MifosRestAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 09/02/14.
@@ -58,22 +63,33 @@ public class ClientListFragment extends Fragment {
 
         ClientService clientService = mifosRestAdapter.getRestAdapter().create(ClientService.class);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        Page clientPage = clientService.listAllClients();
-        List<PageItem> pageItems = clientPage.getPageItems();
 
-        List<String> clientNames = new ArrayList<String>();
-        for (int i = 0; i < pageItems.size(); i++) {
-            clientNames.add(pageItems.get(i).getDisplayName());
-        }
+        clientService.listAllClients(new Callback<Page>() {
+            @Override
+            public void success(Page page, Response response) {
+                List<PageItem> pageItems = page.getPageItems();
 
-        String[] names = clientNames.toArray(new String[clientNames.size()]);
+                List<String> clientNames = new ArrayList<String>();
+                for (int i = 0; i < pageItems.size(); i++) {
+                    clientNames.add(pageItems.get(i).getDisplayName());
+                }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ClientListFragment.this.getActivity(), android.R.layout.simple_list_item_1,
-                names);
+                String[] names = clientNames.toArray(new String[clientNames.size()]);
 
-        lv_clients.setAdapter(adapter);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(ClientListFragment.this.getActivity(), android.R.layout.simple_list_item_1,
+                        names);
+
+                lv_clients.setAdapter(adapter);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                Toast.makeText(activity,"There was some error fetching list.",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
 
         return rootView;
     }

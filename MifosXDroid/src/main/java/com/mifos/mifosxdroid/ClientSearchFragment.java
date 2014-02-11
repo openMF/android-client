@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.objects.PageItem;
 import com.mifos.objects.User;
@@ -111,6 +112,8 @@ public class ClientSearchFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
+
+                Toast.makeText(activity, "Client not found.", Toast.LENGTH_SHORT).show();
 
             }
         });

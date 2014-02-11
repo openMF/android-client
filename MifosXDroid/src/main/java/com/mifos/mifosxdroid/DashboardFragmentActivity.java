@@ -12,8 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 
 /**
  * TODO
- * 2. Use Asynchronous loading of clients instead of performing Network Calls on main thread : Use Callback
- * 4. Format the ListView to show Names more neatly : Use ListAdapter
+ * 1. Format the ListView to show Names more neatly : Use ListAdapter
  */
 
 public class DashboardFragmentActivity extends ActionBarActivity {

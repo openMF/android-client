@@ -16,7 +16,7 @@ import retrofit.http.Query;
 public interface ClientService {
 
     @GET("/clients?tenantIdentifier=default")
-    public Page listAllClients();
+    public void listAllClients(Callback<Page> callback);
 
     @GET("/clients/{clientId}?tenantIdentifier=default")
     public void getClient(@Path("clientId") int clientId, Callback<PageItem> callback);
