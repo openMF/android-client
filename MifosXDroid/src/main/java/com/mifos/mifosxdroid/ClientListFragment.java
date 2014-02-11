@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public class ClientListFragment extends Fragment {
 
     View rootView;
 
+    List<PageItem> pageItems;
+
     public ClientListFragment() {
 
     }
@@ -67,7 +70,7 @@ public class ClientListFragment extends Fragment {
         clientService.listAllClients(new Callback<Page>() {
             @Override
             public void success(Page page, Response response) {
-                List<PageItem> pageItems = page.getPageItems();
+                pageItems = page.getPageItems();
 
                 List<String> clientNames = new ArrayList<String>();
                 for (int i = 0; i < pageItems.size(); i++) {
@@ -98,7 +101,19 @@ public class ClientListFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        Toast.makeText(activity,"Long Press an Item, to get Client Id", Toast.LENGTH_LONG).show();
+
         lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
+
+        lv_clients.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Toast.makeText(activity,"Client ID = "+pageItems.get(i).getId(),Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+        });
 
 
     }
