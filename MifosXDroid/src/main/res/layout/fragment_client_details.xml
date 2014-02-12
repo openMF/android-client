@@ -6,6 +6,7 @@
     >
 
     <TableLayout
+        android:id="@+id/tbl_clientDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -177,8 +178,7 @@
         android:hint="Search By Client Id"
         android:id="@+id/actv_clientSearch"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -189,5 +189,12 @@
         android:layout_below="@+id/actv_clientSearch"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/tbl_clientDetails"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
