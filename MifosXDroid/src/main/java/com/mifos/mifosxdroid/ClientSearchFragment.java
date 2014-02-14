@@ -115,7 +115,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
     }
 
-    
+
     public void findClients(String clientName) {
 
         mifosRestAdapter =

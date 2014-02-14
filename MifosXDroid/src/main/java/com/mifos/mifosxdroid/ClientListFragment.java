@@ -101,7 +101,7 @@ public class ClientListFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        Toast.makeText(activity,"Long Press an Item, to get Client Id", Toast.LENGTH_LONG).show();
+        //Toast.makeText(activity,"Long Press an Item, to get Client Id", Toast.LENGTH_LONG).show();
 
         lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
 

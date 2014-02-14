@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="login">Login</string>
     <string name="search">Search</string>
+    <string name="title_activity_dash_board">DashBoardActivity</string>
 
 </resources>
