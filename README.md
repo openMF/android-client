@@ -19,5 +19,4 @@ Features Currently Done :
 Product Roadmap
 ====
 
-Paste Link here
-
+https://mifosforge.jira.com/wiki/display/MIFOSX/Usability+and+Design - Product Mockup
