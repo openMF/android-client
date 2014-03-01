@@ -17,15 +17,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <ImageView
+
+
+    <QuickContactBadge
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/iv_clientImage"
+        android:id="@+id/quickContactBadge"
+        android:src="@drawable/ic_launcher"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:padding="8dp"
-        android:src="@drawable/ic_launcher"/>
-
+        android:padding="8dp"/>
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -58,7 +59,7 @@ public class ClientNameListAdapter extends BaseAdapter {
         }
 
         reusableViewHolder.tv_clientName = (TextView) view.findViewById(R.id.tv_clientName);
-        reusableViewHolder.iv_clientImage = (ImageView) view.findViewById(R.id.iv_clientImage);
+        reusableViewHolder.quickContactBadge = (QuickContactBadge) view.findViewById(R.id.quickContactBadge);
 
         reusableViewHolder.tv_clientName.setText(pageItems.get(position).getFirstname()+" "
                 +pageItems.get(position).getLastname());
@@ -70,7 +71,7 @@ public class ClientNameListAdapter extends BaseAdapter {
     private static class ReusableViewHolder{
 
         TextView tv_clientName;
-        ImageView iv_clientImage;
+        QuickContactBadge quickContactBadge;
 
     }
 }
