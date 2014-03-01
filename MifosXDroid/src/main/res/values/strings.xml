@@ -7,5 +7,6 @@
     <string name="login">Login</string>
     <string name="search">Search</string>
     <string name="title_activity_dash_board">DashBoardActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

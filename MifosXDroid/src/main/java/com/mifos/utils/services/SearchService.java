@@ -1,4 +1,4 @@
-package com.mifos.utils;
+package com.mifos.utils.services;
 
 import com.mifos.objects.SearchedEntity;
 
@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.Query;
 
 /**
@@ -13,7 +14,8 @@ import retrofit.http.Query;
  */
 public interface SearchService {
 
-    @GET("/search?tenantIdentifier=default&resource=clients")
+    @Headers("X-Mifos-Platform-TenantId: default")
+    @GET("/search?resource=clients")
     public void searchClientsByName(@Query("query") String clientName, Callback<List<SearchedEntity>> callback);
 
 

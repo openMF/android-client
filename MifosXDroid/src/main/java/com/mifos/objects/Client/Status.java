@@ -1,4 +1,4 @@
-package com.mifos.objects;
+package com.mifos.objects.client;
 
 /**
  * Created by ishankhanna on 09/02/14.

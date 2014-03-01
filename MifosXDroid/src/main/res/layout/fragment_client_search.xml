@@ -3,16 +3,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
     >
 
     <TableLayout
         android:id="@+id/tbl_clientDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bt_searchClient"
+        android:layout_marginTop="20dp"
+        >
 
 
 
@@ -25,16 +26,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
-                android:textStyle="bold"
-                android:textSize="24dp"
                 android:id="@+id/tv_fullName"
                 android:layout_marginRight="100dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="24dp"
                 android:text="PPI - 2.45"
                 android:id="@+id/tv_dummyText"
                 />
@@ -175,21 +172,29 @@
 
     </TableLayout>
 
+    <AutoCompleteTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Search By Client Id"
+        android:id="@+id/actv_clientSearch"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Details"
+        android:id="@+id/bt_searchClient"
+        android:layout_below="@+id/actv_clientSearch"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_accounts"
+        android:id="@+id/lv_searchResults"
         android:layout_below="@+id/tbl_clientDetails"
         android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/iv_clientImage"
-        android:src="@drawable/ic_launcher"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -43,7 +43,11 @@ public class SplashScreenActivity extends ActionBarActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
-
+        /**
+         * Authentication Token is checked,
+         * if NA(Not Available) User will have to login
+         * else User Redirected to Dashboard
+         */
         if (authenticationToken.equals("NA")) {
             //if authentication key is not present
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));

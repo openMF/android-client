@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -13,17 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.mifos.objects.Page;
-import com.mifos.objects.PageItem;
+import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
+import com.mifos.objects.client.Page;
+import com.mifos.objects.client.PageItem;
 import com.mifos.objects.User;
-import com.mifos.utils.ClientService;
+import com.mifos.utils.services.ClientService;
 import com.mifos.utils.MifosRestAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -62,7 +60,8 @@ public class ClientListFragment extends Fragment {
         //TODO remove syso call
         System.out.println("Auth Key = " + sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
 
-        MifosRestAdapter mifosRestAdapter = new MifosRestAdapter(sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
+        MifosRestAdapter mifosRestAdapter =
+                new MifosRestAdapter(sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
 
         ClientService clientService = mifosRestAdapter.getRestAdapter().create(ClientService.class);
 
@@ -72,17 +71,19 @@ public class ClientListFragment extends Fragment {
             public void success(Page page, Response response) {
                 pageItems = page.getPageItems();
 
-                List<String> clientNames = new ArrayList<String>();
-                for (int i = 0; i < pageItems.size(); i++) {
-                    clientNames.add(pageItems.get(i).getDisplayName());
-                }
+                ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(activity,pageItems);
+                lv_clients.setAdapter(clientNameListAdapter);
+                lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                String[] names = clientNames.toArray(new String[clientNames.size()]);
+                        ClientDetailsFragment clientDetailsFragment =
+                                ClientDetailsFragment.newInstance(pageItems.get(i).getId());
+                        ((DashboardFragmentActivity) getActivity()).replaceFragments(clientDetailsFragment);
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(ClientListFragment.this.getActivity(), android.R.layout.simple_list_item_1,
-                        names);
 
-                lv_clients.setAdapter(adapter);
+                    }
+                });
             }
 
             @Override
@@ -100,8 +101,6 @@ public class ClientListFragment extends Fragment {
     public void setupUI() {
 
         setHasOptionsMenu(true);
-
-        //Toast.makeText(activity,"Long Press an Item, to get Client Id", Toast.LENGTH_LONG).show();
 
         lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
 

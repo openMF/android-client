@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.objects.User;
 import com.mifos.utils.MifosRestAdapter;
-import com.mifos.utils.UserAuthService;
+import com.mifos.utils.services.UserAuthService;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;

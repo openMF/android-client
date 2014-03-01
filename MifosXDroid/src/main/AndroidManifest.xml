@@ -30,10 +30,6 @@
         <activity
             android:name="com.mifos.mifosxdroid.DashboardFragmentActivity"
             android:label="Dashboard" />
-        <activity
-            android:name="com.mifos.mifosxdroid.DashBoardActivity"
-            android:label="@string/title_activity_dash_board" >
-        </activity>
     </application>
 
 </manifest>

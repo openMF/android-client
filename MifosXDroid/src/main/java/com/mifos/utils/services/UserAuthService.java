@@ -1,4 +1,4 @@
-package com.mifos.utils;
+package com.mifos.utils.services;
 
 import com.mifos.objects.User;
 

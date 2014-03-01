@@ -1,5 +1,7 @@
 package com.mifos.objects;
 
+import com.mifos.objects.client.Role;
+
 import java.util.ArrayList;
 import java.util.List;
 

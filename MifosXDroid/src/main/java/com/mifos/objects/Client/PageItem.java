@@ -1,4 +1,4 @@
-package com.mifos.objects;
+package com.mifos.objects.client;
 
 import java.util.ArrayList;
 import java.util.List;

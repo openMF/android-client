@@ -18,13 +18,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.objects.PageItem;
+import com.mifos.objects.client.PageItem;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
-import com.mifos.utils.ClientService;
+import com.mifos.utils.services.ClientService;
 import com.mifos.utils.MifosRestAdapter;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.utils.SearchService;
+import com.mifos.utils.services.SearchService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -73,7 +73,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
+        rootView = inflater.inflate(R.layout.fragment_client_search, container, false);
         activity = (ActionBarActivity) getActivity();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);

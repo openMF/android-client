@@ -10,10 +10,6 @@ import android.support.v7.app.ActionBarActivity;
  * Created by ishankhanna on 09/02/14.
  */
 
-/**
- * TODO
- * 1. Format the ListView to show Names more neatly : Use ListAdapter
- */
 
 public class DashboardFragmentActivity extends ActionBarActivity {
 
