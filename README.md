@@ -12,7 +12,7 @@ Features Currently Done :
 3. Client Search By Id 
 4. Long Click an Item in Client List, to get its Client ID
 5. Client Search By Name Implemented
-
+6. Client Loan Accounts Lists Being Fetched
 
 ----------------------------------------------
 
