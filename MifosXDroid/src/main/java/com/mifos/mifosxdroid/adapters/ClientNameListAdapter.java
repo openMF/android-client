@@ -60,11 +60,13 @@ public class ClientNameListAdapter extends BaseAdapter {
         }
 
         reusableViewHolder.tv_clientName = (TextView) view.findViewById(R.id.tv_clientName);
+        reusableViewHolder.tv_clientAccountNumber = (TextView) view.findViewById(R.id.tv_clientAccountNumber);
         reusableViewHolder.quickContactBadge = (QuickContactBadge) view.findViewById(R.id.quickContactBadge);
 
         reusableViewHolder.tv_clientName.setText(pageItems.get(position).getFirstname()+" "
                 +pageItems.get(position).getLastname());
 
+        reusableViewHolder.tv_clientAccountNumber.setText(pageItems.get(position).getAccountNo().toString());
 
         return view;
     }
@@ -72,6 +74,7 @@ public class ClientNameListAdapter extends BaseAdapter {
     private static class ReusableViewHolder{
 
         TextView tv_clientName;
+        TextView tv_clientAccountNumber;
         QuickContactBadge quickContactBadge;
 
     }

@@ -120,6 +120,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     public void onClick(View view) {
 
