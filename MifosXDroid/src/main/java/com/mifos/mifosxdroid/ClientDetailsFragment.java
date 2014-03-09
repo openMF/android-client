@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +60,8 @@ public class ClientDetailsFragment extends Fragment {
 
     SharedPreferences sharedPreferences;
 
+    ActionBar actionBar;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -94,7 +97,7 @@ public class ClientDetailsFragment extends Fragment {
         activity = (ActionBarActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(ClientDetailsFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
+        actionBar = activity.getSupportActionBar();
         setupUI();
         getClientInfo(clientId);
 
@@ -131,10 +134,11 @@ public class ClientDetailsFragment extends Fragment {
             public void success(PageItem pageItem, Response response) {
 
                 if (pageItem != null) {
+                    actionBar.setTitle("Mifos Client - "+pageItem.getLastname());
                     tv_fullName.setText(pageItem.getDisplayName());
                     tv_accountNumber.setText(pageItem.getAccountNo());
                     tv_externalId.setText(pageItem.getExternalId());
-                    tv_activationDate.setText(pageItem.getActivationDate().toString());
+                    tv_activationDate.setText(pageItem.getFormattedActivationDateAsString());
                     tv_office.setText(pageItem.getOfficeName());
 
                     ClientAccountsService clientAccountsService =

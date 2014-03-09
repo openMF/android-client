@@ -16,11 +16,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
+import com.mifos.objects.User;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.PageItem;
-import com.mifos.objects.User;
-import com.mifos.utils.services.ClientService;
 import com.mifos.utils.MifosRestAdapter;
+import com.mifos.utils.services.ClientService;
 
 import java.util.List;
 
@@ -71,7 +71,7 @@ public class ClientListFragment extends Fragment {
             public void success(Page page, Response response) {
                 pageItems = page.getPageItems();
 
-                ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(activity,pageItems);
+                ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(activity, pageItems);
                 lv_clients.setAdapter(clientNameListAdapter);
                 lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -89,7 +89,7 @@ public class ClientListFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Toast.makeText(activity,"There was some error fetching list.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "There was some error fetching list.", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -108,7 +108,7 @@ public class ClientListFragment extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Toast.makeText(activity,"Client ID = "+pageItems.get(i).getId(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Client ID = " + pageItems.get(i).getId(), Toast.LENGTH_SHORT).show();
 
                 return false;
             }

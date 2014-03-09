@@ -26,26 +26,19 @@ import retrofit.client.Response;
  */
 public class LoginActivity extends ActionBarActivity implements Callback<User>, View.OnClickListener {
 
+    SharedPreferences sharedPreferences;
     private EditText et_instanceURL;
     private EditText et_username;
     private EditText et_password;
-
     private Button bt_login;
-
     private String username;
     private String instanceURL;
     private String password;
-
     private MifosRestAdapter mifosRestAdapter;
     private UserAuthService userAuthService;
-
     private Context context;
-
     private String authenticationToken;
-
     private ProgressDialog progressDialog;
-
-    SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

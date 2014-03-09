@@ -3,42 +3,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:layout_margin="16dp"
     >
+
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_accounts"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tbl_clientDetails" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/iv_clientImage"
+        android:src="@drawable/ic_launcher"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:id="@+id/tv_fullName"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/iv_clientImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:text="PPI - 2.45"
+        android:id="@+id/tv_dummyText"
+        android:layout_below="@+id/tv_fullName"
+        android:layout_toRightOf="@+id/iv_clientImage" />
 
     <TableLayout
         android:id="@+id/tbl_clientDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/iv_clientImage"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textStyle="bold"
-                android:textSize="24dp"
-                android:id="@+id/tv_fullName"
-                android:layout_marginRight="100dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="24dp"
-                android:text="PPI - 2.45"
-                android:id="@+id/tv_dummyText"
-                />
-        </TableRow>
 
         <TableRow
             android:layout_width="fill_parent"
@@ -174,22 +186,5 @@
         </TableRow>
 
     </TableLayout>
-
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lv_accounts"
-        android:layout_below="@+id/tbl_clientDetails"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/iv_clientImage"
-        android:src="@drawable/ic_launcher"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

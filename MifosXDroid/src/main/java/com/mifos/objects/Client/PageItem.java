@@ -1,7 +1,12 @@
 package com.mifos.objects.client;
 
+
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ishankhanna on 09/02/14.
@@ -169,6 +174,24 @@ public class PageItem {
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
+    }
+
+    public String getFormattedActivationDateAsString()
+    {
+        //TODO Format Date Based on Current Locale
+        /**
+         * Integer List Contains
+         * YYYY
+         * MM
+         * DD
+         */
+
+        Calendar calender = Calendar.getInstance();
+        calender.set(activationDate.get(0),activationDate.get(1),activationDate.get(2));
+
+        DateFormat dateFormat = DateFormat.getDateInstance();
+        return dateFormat.format(calender.getTime()).toString();
+
     }
 
     @Override
