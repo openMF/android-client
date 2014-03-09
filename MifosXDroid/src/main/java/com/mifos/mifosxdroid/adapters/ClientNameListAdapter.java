@@ -53,6 +53,7 @@ public class ClientNameListAdapter extends BaseAdapter {
             view = layoutInflater.inflate(R.layout.row_client_name,null);
             reusableViewHolder = new ReusableViewHolder();
             view.setTag(reusableViewHolder);
+
         }else
         {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
