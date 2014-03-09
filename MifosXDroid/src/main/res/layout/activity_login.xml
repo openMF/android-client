@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/et_instanceURL"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
         android:inputType="text"
         android:hint="http://"
-        android:minWidth="200dp" />
+        android:minWidth="200dp"
+        android:layout_below="@+id/tv_title_instance"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/et_username"
-        android:layout_below="@+id/et_instanceURL"
-        android:layout_marginTop="40dp"
         android:hint="Username"
-        android:layout_alignLeft="@+id/et_instanceURL"
-        android:layout_alignRight="@+id/et_instanceURL" />
+        android:layout_below="@+id/tv_title_username"
+        android:layout_alignLeft="@+id/tv_title_username"
+        android:layout_alignStart="@+id/tv_title_username"
+        android:layout_alignRight="@+id/et_instanceURL"
+        android:layout_alignEnd="@+id/et_instanceURL" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -30,11 +31,12 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/et_password"
-        android:layout_below="@+id/et_username"
-        android:layout_marginTop="40dp"
         android:hint="Password"
-        android:layout_alignLeft="@+id/et_username"
-        android:layout_alignRight="@+id/et_username" />
+        android:layout_below="@+id/tv_title_password"
+        android:layout_alignLeft="@+id/tv_title_password"
+        android:layout_alignStart="@+id/tv_title_password"
+        android:layout_alignRight="@+id/et_username"
+        android:layout_alignEnd="@+id/et_username" />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,5 +46,58 @@
         android:layout_below="@+id/et_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="39dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/iv_logo"
+        android:src="@drawable/ic_launcher"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Mifos"
+        android:textSize="30sp"
+        android:id="@+id/tv_title"
+        android:textColor="#ff003fff"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/et_instanceURL"
+        android:layout_alignStart="@+id/et_instanceURL" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Mifos Instance:"
+        android:id="@+id/tv_title_instance"
+        android:layout_below="@+id/iv_logo"
+        android:layout_alignLeft="@+id/et_instanceURL"
+        android:layout_alignStart="@+id/et_instanceURL" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Username:"
+        android:id="@+id/tv_title_username"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/et_instanceURL"
+        android:layout_alignLeft="@+id/et_instanceURL"
+        android:layout_alignStart="@+id/et_instanceURL" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Password:"
+        android:layout_marginTop="16dp"
+        android:id="@+id/tv_title_password"
+        android:layout_below="@+id/et_username"
+        android:layout_alignLeft="@+id/et_username"
+        android:layout_alignStart="@+id/et_username" />
 
 </RelativeLayout>
