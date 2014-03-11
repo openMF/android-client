@@ -2,6 +2,8 @@ package com.mifos.utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 
 /**
@@ -18,7 +20,10 @@ public class SafeUIBlockingUtility {
 
     private ProgressDialog progressDialog;
 
+    private Context context;
+
     public SafeUIBlockingUtility(Context context){
+        this.context = context;
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(utilityMessage);
         progressDialog.setCancelable(false);
@@ -31,7 +36,7 @@ public class SafeUIBlockingUtility {
         progressDialog.show();
     }
 
-    public void safeUnBlockUI(){
+    public void safelyUnBlockUI(){
         progressDialog.dismiss();
     }
 
@@ -49,6 +54,14 @@ public class SafeUIBlockingUtility {
 
     public static void setUtilityMessage(String utilityMessage) {
         SafeUIBlockingUtility.utilityMessage = utilityMessage;
+    }
+
+    public void safelyUnblockUIForFailure(String tag, String message){
+
+        progressDialog.dismiss();
+        Toast.makeText(context, "Some Problem Executing Request", Toast.LENGTH_SHORT).show();
+        Log.i(tag,message);
+
     }
 
 

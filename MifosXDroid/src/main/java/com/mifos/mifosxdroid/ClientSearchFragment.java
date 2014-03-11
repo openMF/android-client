@@ -145,13 +145,13 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
                 lv_searchResults.setAdapter(adapter);
                 lv_searchResults.setOnItemClickListener(ClientSearchFragment.this);
                 performUICleanUp();
-                safeUIBlockingUtility.safeUnBlockUI();
+                safeUIBlockingUtility.safelyUnBlockUI();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 performUICleanUp();
-                safeUIBlockingUtility.safeUnBlockUI();
+                safeUIBlockingUtility.safelyUnBlockUI();
             }
         });
 
@@ -178,7 +178,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
                 }
                 performUICleanUp();
-                safeUIBlockingUtility.safeUnBlockUI();
+                safeUIBlockingUtility.safelyUnBlockUI();
 
             }
 
@@ -187,7 +187,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
                 Toast.makeText(activity, "Client not found.", Toast.LENGTH_SHORT).show();
                 performUICleanUp();
-                safeUIBlockingUtility.safeUnBlockUI();
+                safeUIBlockingUtility.safelyUnBlockUI();
 
             }
         });

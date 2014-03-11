@@ -1,12 +1,13 @@
 package com.mifos.objects.client;
 
 
+import com.mifos.objects.Status;
+import com.mifos.objects.Timeline;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by ishankhanna on 09/02/14.

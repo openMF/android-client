@@ -1,5 +1,8 @@
 package com.mifos.objects.client;
 
+import com.mifos.objects.Status;
+import com.mifos.objects.Timeline;
+
 import java.util.ArrayList;
 import java.util.List;
 

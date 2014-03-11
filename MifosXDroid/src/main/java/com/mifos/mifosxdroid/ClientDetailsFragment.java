@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.mifos.utils.services.ClientAccountsService;
 import com.mifos.utils.services.ClientService;
 
 import java.util.Iterator;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -175,7 +173,7 @@ public class ClientDetailsFragment extends Fragment {
 
                         }
                     });
-                    safeUIBlockingUtility.safeUnBlockUI();
+                    safeUIBlockingUtility.safelyUnBlockUI();
 
                 }
 
@@ -185,7 +183,7 @@ public class ClientDetailsFragment extends Fragment {
             public void failure(RetrofitError retrofitError) {
 
                 Toast.makeText(activity, "Client not found.", Toast.LENGTH_SHORT).show();
-                safeUIBlockingUtility.safeUnBlockUI();
+                safeUIBlockingUtility.safelyUnBlockUI();
 
             }
         });
