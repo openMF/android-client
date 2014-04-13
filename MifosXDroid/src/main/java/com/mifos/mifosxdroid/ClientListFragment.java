@@ -19,11 +19,10 @@ import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.objects.User;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.PageItem;
-import com.mifos.utils.MifosRestAdapter;
-import com.mifos.utils.services.ClientService;
 
 import java.util.List;
 
+import com.mifos.utils.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -32,8 +31,6 @@ import retrofit.client.Response;
  * Created by ishankhanna on 09/02/14.
  */
 public class ClientListFragment extends Fragment {
-
-    SharedPreferences sharedPreferences;
 
     ActionBarActivity activity;
 
@@ -54,19 +51,10 @@ public class ClientListFragment extends Fragment {
 
 
         activity = (ActionBarActivity) getActivity();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
         setupUI();
-        //TODO remove syso call
-        System.out.println("Auth Key = " + sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
 
-        MifosRestAdapter mifosRestAdapter =
-                new MifosRestAdapter(sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
-
-        ClientService clientService = mifosRestAdapter.getRestAdapter().create(ClientService.class);
-
-
-        clientService.listAllClients(new Callback<Page>() {
+        API.clientService.listAllClients(new Callback<Page>() {
             @Override
             public void success(Page page, Response response) {
                 pageItems = page.getPageItems();

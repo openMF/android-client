@@ -18,18 +18,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.mifos.objects.client.PageItem;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
-import com.mifos.utils.services.ClientService;
-import com.mifos.utils.MifosRestAdapter;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.utils.services.SearchService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mifos.utils.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -42,31 +43,26 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     public ClientSearchFragment() {
     }
 
-
     private View rootView;
 
-    private AutoCompleteTextView actv_clientSearch;
-    private TextView tv_fullName;
-    private TextView tv_accountNumber;
-    private TextView tv_externalId;
-    private TextView tv_activationDate;
-    private TextView tv_office;
-    private TextView tv_group;
-    private TextView tv_loanOfficer;
-    private TextView tv_loanCycle;
+    @InjectView(R.id.actv_clientSearch) AutoCompleteTextView actv_clientSearch;
+    @InjectView(R.id.tv_fullName) TextView tv_fullName;
+    @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
+    @InjectView(R.id.tv_externalId) TextView tv_externalId;
+    @InjectView(R.id.tv_activationDate) TextView tv_activationDate;
+    @InjectView(R.id.tv_office) TextView tv_office;
+    @InjectView(R.id.tv_group) TextView tv_group;
+    @InjectView(R.id.tv_loanOfficer) TextView tv_loanOfficer;
+    @InjectView(R.id.tv_loanCycle) TextView tv_loanCycle;
 
-    private ListView lv_searchResults;
+    @InjectView(R.id.lv_searchResults) ListView lv_searchResults;
 
-    private Button bt_showClientDetails;
-
-    SharedPreferences sharedPreferences;
+    @InjectView(R.id.bt_searchClient) Button bt_showClientDetails;
 
     ActionBarActivity activity;
 
     List<String> clientNames = new ArrayList<String>();
     List<Integer> clientIds = new ArrayList<Integer>();
-
-    MifosRestAdapter mifosRestAdapter;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
@@ -76,56 +72,25 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
         rootView = inflater.inflate(R.layout.fragment_client_search, container, false);
         activity = (ActionBarActivity) getActivity();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
-        setupUI();
-
+        ButterKnife.inject(this, rootView);
 
         return rootView;
     }
 
-    public void setupUI() {
-
-        actv_clientSearch = (AutoCompleteTextView) rootView.findViewById(R.id.actv_clientSearch);
-        //TODO Add Client names to this box
-
-        tv_fullName = (TextView) rootView.findViewById(R.id.tv_fullName);
-        tv_accountNumber = (TextView) rootView.findViewById(R.id.tv_accountNumber);
-        tv_externalId = (TextView) rootView.findViewById(R.id.tv_externalId);
-        tv_activationDate = (TextView) rootView.findViewById(R.id.tv_activationDate);
-        tv_office = (TextView) rootView.findViewById(R.id.tv_office);
-        tv_group = (TextView) rootView.findViewById(R.id.tv_group);
-        tv_loanOfficer = (TextView) rootView.findViewById(R.id.tv_loanOfficer);
-        tv_loanCycle = (TextView) rootView.findViewById(R.id.tv_loanCycle);
-
-        lv_searchResults = (ListView) rootView.findViewById(R.id.lv_searchResults);
-
-        bt_showClientDetails = (Button) rootView.findViewById(R.id.bt_searchClient);
-        bt_showClientDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(!actv_clientSearch.getEditableText().toString().isEmpty())
-                {
-                    findClients(actv_clientSearch.getEditableText().toString());
-                }
-
-            }
-        });
-
+    @OnClick(R.id.bt_searchClient)
+    public void showClientDetails(Button btn){
+        if(!actv_clientSearch.getEditableText().toString().isEmpty())
+        {
+            findClients(actv_clientSearch.getEditableText().toString());
+        }
     }
 
 
     public void findClients(String clientName) {
 
-        mifosRestAdapter =
-                new MifosRestAdapter(sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
-
-        SearchService searchService = mifosRestAdapter.getRestAdapter().create(SearchService.class);
-
         safeUIBlockingUtility = new SafeUIBlockingUtility(ClientSearchFragment.this.getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        searchService.searchClientsByName(clientName,new Callback<List<SearchedEntity>>() {
+        API.searchService.searchClientsByName(clientName,new Callback<List<SearchedEntity>>() {
             @Override
             public void success(List<SearchedEntity> searchedEntities, Response response) {
 
@@ -163,9 +128,8 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
     public void getClientInfo(int clientId){
 
-        ClientService clientService = mifosRestAdapter.getRestAdapter().create(ClientService.class);
         safeUIBlockingUtility.safelyBlockUI();
-        clientService.getClient(clientId, new Callback<PageItem>() {
+        API.clientService.getClient(clientId, new Callback<PageItem>() {
             @Override
             public void success(PageItem pageItem, Response response) {
 

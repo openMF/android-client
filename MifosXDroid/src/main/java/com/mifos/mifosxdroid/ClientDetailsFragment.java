@@ -13,18 +13,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.adapters.AccountsListAdapter;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.client.PageItem;
-import com.mifos.utils.MifosRestAdapter;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.utils.services.ClientAccountsService;
-import com.mifos.utils.services.ClientService;
 
 import java.util.Iterator;
 
+import com.mifos.utils.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -36,21 +36,18 @@ public class ClientDetailsFragment extends Fragment {
 
     public int clientId;
 
+    @InjectView(R.id.tv_fullName) TextView tv_fullName;
+    @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
+    @InjectView(R.id.tv_externalId) TextView tv_externalId;
+    @InjectView(R.id.tv_activationDate) TextView tv_activationDate;
+    @InjectView(R.id.tv_office) TextView tv_office;
+    @InjectView(R.id.tv_group) TextView tv_group;
+    @InjectView(R.id.tv_loanOfficer) TextView tv_loanOfficer;
+    @InjectView(R.id.tv_loanCycle) TextView tv_loanCycle;
 
-    private TextView tv_fullName;
-    private TextView tv_accountNumber;
-    private TextView tv_externalId;
-    private TextView tv_activationDate;
-    private TextView tv_office;
-    private TextView tv_group;
-    private TextView tv_loanOfficer;
-    private TextView tv_loanCycle;
-
-    private ListView lv_accounts;
+    @InjectView(R.id.lv_accounts) ListView lv_accounts;
 
     View rootView;
-
-    MifosRestAdapter mifosRestAdapter;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
@@ -96,38 +93,17 @@ public class ClientDetailsFragment extends Fragment {
         safeUIBlockingUtility = new SafeUIBlockingUtility(ClientDetailsFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        setupUI();
+        ButterKnife.inject(this, rootView);
         getClientInfo(clientId);
-
-
-
 
         return rootView;
     }
 
 
-    public void setupUI(){
-
-        tv_fullName = (TextView) rootView.findViewById(R.id.tv_fullName);
-        tv_accountNumber = (TextView) rootView.findViewById(R.id.tv_accountNumber);
-        tv_externalId = (TextView) rootView.findViewById(R.id.tv_externalId);
-        tv_activationDate = (TextView) rootView.findViewById(R.id.tv_activationDate);
-        tv_office = (TextView) rootView.findViewById(R.id.tv_office);
-        tv_group = (TextView) rootView.findViewById(R.id.tv_group);
-        tv_loanOfficer = (TextView) rootView.findViewById(R.id.tv_loanOfficer);
-        tv_loanCycle = (TextView) rootView.findViewById(R.id.tv_loanCycle);
-        lv_accounts = (ListView) rootView.findViewById(R.id.lv_accounts);
-
-    }
-
     public void getClientInfo(int clientId){
 
-        mifosRestAdapter =
-                new MifosRestAdapter(sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA"));
-
-        ClientService clientService = mifosRestAdapter.getRestAdapter().create(ClientService.class);
         safeUIBlockingUtility.safelyBlockUI();
-        clientService.getClient(clientId, new Callback<PageItem>() {
+        API.clientService.getClient(clientId, new Callback<PageItem>() {
             @Override
             public void success(PageItem pageItem, Response response) {
 
@@ -139,10 +115,7 @@ public class ClientDetailsFragment extends Fragment {
                     tv_activationDate.setText(pageItem.getFormattedActivationDateAsString());
                     tv_office.setText(pageItem.getOfficeName());
 
-                    ClientAccountsService clientAccountsService =
-                            mifosRestAdapter.getRestAdapter().create(ClientAccountsService.class);
-
-                    clientAccountsService.getAllAccountsOfClient(pageItem.getId(), new Callback<ClientAccounts>() {
+                    API.clientAccountsService.getAllAccountsOfClient(pageItem.getId(), new Callback<ClientAccounts>() {
                         @Override
                         public void success(ClientAccounts clientAccounts, Response response) {
 

@@ -7,15 +7,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.objects.User;
-import com.mifos.utils.MifosRestAdapter;
-import com.mifos.utils.services.UserAuthService;
+import com.mifos.utils.services.API;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -24,18 +25,17 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends ActionBarActivity implements Callback<User>, View.OnClickListener {
+public class LoginActivity extends ActionBarActivity implements Callback<User> {
 
     SharedPreferences sharedPreferences;
-    private EditText et_instanceURL;
-    private EditText et_username;
-    private EditText et_password;
-    private Button bt_login;
+    @InjectView(R.id.et_instanceURL) EditText et_instanceURL;
+    @InjectView(R.id.et_username) EditText et_username;
+    @InjectView(R.id.et_password) EditText et_password;
+    @InjectView(R.id.bt_login) Button bt_login;
+
     private String username;
     private String instanceURL;
     private String password;
-    private MifosRestAdapter mifosRestAdapter;
-    private UserAuthService userAuthService;
     private Context context;
     private String authenticationToken;
     private ProgressDialog progressDialog;
@@ -50,35 +50,17 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
+        ButterKnife.inject(this);
         setupUI();
 
     }
 
-
-    /*
-       Perform All UI Based Operations on activity creation
-     */
     public void setupUI() {
-
-        et_instanceURL = (EditText) findViewById(R.id.et_instanceURL);
-        et_username = (EditText) findViewById(R.id.et_username);
-        et_password = (EditText) findViewById(R.id.et_password);
-
-        bt_login = (Button) findViewById(R.id.bt_login);
-        bt_login.setOnClickListener(this);
 
         progressDialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Logging In");
         progressDialog.setCancelable(false);
 
-    }
-
-    public void login(String username, String password) {
-        mifosRestAdapter = new MifosRestAdapter();
-
-        userAuthService = mifosRestAdapter.getRestAdapter().create(UserAuthService.class);
-
-        userAuthService.authenticate(username, password, this);
     }
 
     public boolean validateUserInputs() throws ShortOfLengthException {
@@ -105,6 +87,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
         saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -113,21 +96,17 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>, 
         Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show();
     }
 
+    @OnClick(R.id.bt_login)
+    public void login(Button button){
+        try {
+            if (validateUserInputs())
+                progressDialog.show();
 
-    @Override
-    public void onClick(View view) {
+            API.userAuthService.authenticate(username, password, this);
 
-        switch (view.getId()) {
-            case R.id.bt_login:
-                try {
-                    if (validateUserInputs())
-                        progressDialog.show();
-                    login(username, password);
-                } catch (ShortOfLengthException e) {
-                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-                }
+        } catch (ShortOfLengthException e) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void saveAuthenticationKey(String authenticationKey) {

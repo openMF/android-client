@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mifos.objects.User;
+import com.mifos.utils.Constants;
 
 
 /**
@@ -31,6 +32,7 @@ public class SplashScreenActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        getSupportActionBar().hide();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -38,7 +40,8 @@ public class SplashScreenActivity extends ActionBarActivity {
                     .commit();
         }
 
-        context = SplashScreenActivity.this.getBaseContext();
+        context = SplashScreenActivity.this.getApplicationContext();
+        Constants.applicationContext = getApplicationContext();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
@@ -57,27 +60,8 @@ public class SplashScreenActivity extends ActionBarActivity {
             startActivity(new Intent(SplashScreenActivity.this, DashboardFragmentActivity.class));
         }
 
-    }
+        finish();
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.splash_screen, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

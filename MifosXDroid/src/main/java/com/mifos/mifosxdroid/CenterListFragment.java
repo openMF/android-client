@@ -13,12 +13,11 @@ import android.widget.ListView;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.objects.Center;
 import com.mifos.objects.User;
-import com.mifos.utils.MifosRestAdapter;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.utils.services.CenterService;
 
 import java.util.List;
 
+import com.mifos.utils.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -35,8 +34,6 @@ public class CenterListFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private ActionBarActivity actionBarActivity;
     private List<Center> centers;
-    private MifosRestAdapter mifosRestAdapter;
-    private CenterService centerService;
     private SafeUIBlockingUtility safeUIBlockingUtility;
     private CentersListAdapter centersListAdapter;
 
@@ -56,19 +53,14 @@ public class CenterListFragment extends Fragment {
 
         setupUI();
 
-        mifosRestAdapter =
-                new MifosRestAdapter(sharedPreferences.getString(User.AUTHENTICATION_KEY,"NA"));
-
-        centerService = mifosRestAdapter.getRestAdapter().create(CenterService.class);
-
         safeUIBlockingUtility = new SafeUIBlockingUtility(actionBarActivity);
 
         safeUIBlockingUtility.safelyBlockUI();
-        centerService.getAllCenters(new Callback<List<Center>>() {
+        API.centerService.getAllCenters(new Callback<List<Center>>() {
             @Override
             public void success(List<Center> centers, Response response) {
 
-                centersListAdapter = new CentersListAdapter(actionBarActivity,centers);
+                centersListAdapter = new CentersListAdapter(actionBarActivity, centers);
 
                 lv_centers_list.setAdapter(centersListAdapter);
 
