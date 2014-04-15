@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.LoanAccount;
 
@@ -54,29 +56,27 @@ public class AccountsListAdapter extends BaseAdapter {
         if(view==null)
         {
             view = layoutInflater.inflate(R.layout.row_account_item,null);
-            reusableViewHolder = new ReusableViewHolder();
+            reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
         }else
         {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_loanAccountName = (TextView) view.findViewById(R.id.tv_loanAccountName);
-
         reusableViewHolder.tv_loanAccountName.setText(loanAccountList.get(i).getProductName());
-
-        reusableViewHolder.tv_loanAccountNumber = (TextView) view.findViewById(R.id.tv_loanAccountNumber);
         reusableViewHolder.tv_loanAccountNumber.setText(loanAccountList.get(i).getAccountNo());
-
-
-
 
         return view;
     }
 
     public static class ReusableViewHolder{
 
-            TextView tv_loanAccountName, tv_loanAccountNumber;
+        @InjectView(R.id.tv_loanAccountName) TextView tv_loanAccountName;
+        @InjectView(R.id.tv_loanAccountNumber) TextView tv_loanAccountNumber;
+
+        public ReusableViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
 
     }
 }

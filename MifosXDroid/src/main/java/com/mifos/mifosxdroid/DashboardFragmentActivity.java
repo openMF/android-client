@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 
-public class DashboardFragmentActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class DashboardFragmentActivity extends ActionBarActivity implements ActionBar.TabListener, ClientListFragment.FragmentChangeListener {
 
     public static Context context;
     private ViewPager viewPager;
@@ -61,6 +61,7 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Acti
 
     }
 
+    @Override
     public void replaceFragments(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 

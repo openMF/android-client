@@ -1,10 +1,8 @@
 package com.mifos.mifosxdroid;
 
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
-import com.mifos.objects.User;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.PageItem;
 
@@ -32,16 +30,22 @@ import retrofit.client.Response;
  */
 public class ClientListFragment extends Fragment {
 
-    ActionBarActivity activity;
 
     ListView lv_clients;
 
     View rootView;
 
-    List<PageItem> pageItems;
+    List<Client> pageItems;
+    FragmentChangeListener activityListener;
+    private Context context;
 
     public ClientListFragment() {
 
+    }
+
+
+    public static interface FragmentChangeListener {
+        void replaceFragments(Fragment fragment);
     }
 
     @Override
@@ -50,7 +54,8 @@ public class ClientListFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
 
 
-        activity = (ActionBarActivity) getActivity();
+        context = getActivity().getApplicationContext();
+        activityListener = (FragmentChangeListener) getActivity();
 
         setupUI();
 
@@ -59,7 +64,7 @@ public class ClientListFragment extends Fragment {
             public void success(Page page, Response response) {
                 pageItems = page.getPageItems();
 
-                ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(activity, pageItems);
+                ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(context, pageItems);
                 lv_clients.setAdapter(clientNameListAdapter);
                 lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -67,7 +72,7 @@ public class ClientListFragment extends Fragment {
 
                         ClientDetailsFragment clientDetailsFragment =
                                 ClientDetailsFragment.newInstance(pageItems.get(i).getId());
-                        ((DashboardFragmentActivity) getActivity()).replaceFragments(clientDetailsFragment);
+                        activityListener.replaceFragments(clientDetailsFragment);
 
 
                     }
@@ -77,7 +82,8 @@ public class ClientListFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Toast.makeText(activity, "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                if(getActivity() != null)
+                    Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -96,7 +102,8 @@ public class ClientListFragment extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Toast.makeText(activity, "Client ID = " + pageItems.get(i).getId(), Toast.LENGTH_SHORT).show();
+                if(getActivity() != null)
+                Toast.makeText(getActivity(), "Client ID = " + pageItems.get(i).getId(), Toast.LENGTH_SHORT).show();
 
                 return false;
             }
@@ -116,7 +123,7 @@ public class ClientListFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.mItem_search:
-                ((DashboardFragmentActivity) getActivity()).replaceFragments(new ClientSearchFragment());
+                activityListener.replaceFragments(new ClientSearchFragment());
                 break;
 
             default: //DO NOTHING

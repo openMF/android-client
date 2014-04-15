@@ -9,7 +9,10 @@ import android.widget.ImageView;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.PageItem;
 
 import java.util.List;
@@ -20,9 +23,9 @@ import java.util.List;
 public class ClientNameListAdapter extends BaseAdapter {
 
     LayoutInflater layoutInflater;
-    List<PageItem> pageItems;
+    List<Client> pageItems;
 
-    public ClientNameListAdapter(Context context, List<PageItem> pageItems){
+    public ClientNameListAdapter(Context context, List<Client> pageItems){
 
         layoutInflater = LayoutInflater.from(context);
         this.pageItems = pageItems;
@@ -34,7 +37,7 @@ public class ClientNameListAdapter extends BaseAdapter {
     }
 
     @Override
-    public PageItem getItem(int position) {
+    public Client getItem(int position) {
         return pageItems.get(position);
     }
 
@@ -51,17 +54,13 @@ public class ClientNameListAdapter extends BaseAdapter {
         if(view==null)
         {
             view = layoutInflater.inflate(R.layout.row_client_name,null);
-            reusableViewHolder = new ReusableViewHolder();
+            reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
 
         }else
         {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
-
-        reusableViewHolder.tv_clientName = (TextView) view.findViewById(R.id.tv_clientName);
-        reusableViewHolder.tv_clientAccountNumber = (TextView) view.findViewById(R.id.tv_clientAccountNumber);
-        reusableViewHolder.quickContactBadge = (QuickContactBadge) view.findViewById(R.id.quickContactBadge);
 
         reusableViewHolder.tv_clientName.setText(pageItems.get(position).getFirstname()+" "
                 +pageItems.get(position).getLastname());
@@ -71,11 +70,15 @@ public class ClientNameListAdapter extends BaseAdapter {
         return view;
     }
 
-    private static class ReusableViewHolder{
+     static class ReusableViewHolder{
 
-        TextView tv_clientName;
-        TextView tv_clientAccountNumber;
-        QuickContactBadge quickContactBadge;
+         @InjectView(R.id.tv_clientName) TextView tv_clientName;
+         @InjectView(R.id.tv_clientAccountNumber) TextView tv_clientAccountNumber;
+         @InjectView(R.id.quickContactBadge) QuickContactBadge quickContactBadge;
+
+         public ReusableViewHolder(View view) {
+             ButterKnife.inject(this, view);
+         }
 
     }
 }
