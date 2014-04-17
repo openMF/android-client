@@ -1,0 +1,33 @@
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.3"
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 19
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:19.0.1'
+    compile 'com.android.support:appcompat-v7:19.0.1'
+    compile files('libs/retrofit-1.4.1.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/sugar-1.3_beta.jar')
+    compile files('libs/butterknife-4.0.1.jar')
+}
