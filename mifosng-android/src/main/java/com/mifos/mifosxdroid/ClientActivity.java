@@ -1,0 +1,35 @@
+package com.mifos.mifosxdroid;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
+import com.mifos.mifosxdroid.fragments.ClientFragment;
+
+
+public class ClientActivity extends ActionBarActivity
+{
+    private int groupId;
+    private Intent intentForExtras;
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_global_container_layout);
+        init();
+        setFragment();
+    }
+    private void init()
+    {
+        intentForExtras = getIntent();
+        groupId = intentForExtras.getIntExtra("group_id",0);
+    }
+    private void setFragment()
+    {
+        FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+        ClientFragment fragment = new ClientFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt("group_id",groupId);
+        fragment.setArguments(arguments);
+        fragmentTransaction.replace(R.id.global_container,fragment).commit();
+    }
+}

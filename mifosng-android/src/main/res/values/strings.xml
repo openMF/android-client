@@ -8,5 +8,18 @@
     <string name="search">Search</string>
     <string name="title_activity_dash_board">DashBoardActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="loan_id">Loan ID</string>
+    <string name="loan_account_id">Account ID</string>
+    <string name="loan_account_status_id">Account Status ID</string>
+    <string name="loan_product_short_name">Product Short Name</string>
+    <string name="loan_disbursement_amount">Disbursement Amount</string>
+    <string name="loan_principal_due">Principal Due</string>
+    <string name="loan_principal_paid">Principal Paid</string>
+    <string name="loan_interest_due">Interest Due</string>
+    <string name="loan_interest_paid">Interest Paid</string>
+    <string name="loan_charges_due">Charges Due</string>
+    <string name="loan_total_due">Total Due</string>
+    <string name="group_name">Group Name</string>
+    <string name="staff_name">Staff Name</string>
+    <string name="level_name">Level Name</string>
 </resources>

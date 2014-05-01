@@ -2,22 +2,21 @@ package com.mifos.mifosxdroid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.objects.User;
+import com.mifos.utils.services.data.Payload;
 import com.mifos.utils.services.API;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -39,7 +38,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
     private Context context;
     private String authenticationToken;
     private ProgressDialog progressDialog;
-
+    private String tag = getClass().getSimpleName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +51,18 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
 
         ButterKnife.inject(this);
         setupUI();
-
+        if(bt_login==null)
+        {
+            Log.i(tag,"login button is null");
+        }
+        else
+            Log.i(tag,"login button is not null");
     }
-
+    private void setTestLoginData()
+    {
+        et_username.setText("mifos");
+        et_password.setText( "password");
+    }
     public void setupUI() {
 
         progressDialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
@@ -84,10 +92,28 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
     public void success(User user, Response response) {
         progressDialog.dismiss();
         Toast.makeText(context, "Welcome " + user.getUsername(), Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
-        saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
+     //   saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
+       /* Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
+        getCenter();
+    }
+    private void getCenter()
+    {
+        API.centerService.getCenter(new Payload(),new Callback<com.mifos.utils.services.data.Center>()
+        {
+            @Override
+            public void success(com.mifos.utils.services.data.Center center, Response response)
+            {
+                 Log.i(tag,"Center JSON:"+center.toString());
+            }
+            @Override
+            public void failure(RetrofitError error)
+            {
+                Toast.makeText(LoginActivity.this, "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                Log.e(tag,"JSON Parsing error:\n"+error.toString()+"\n");
+            }
+        });
     }
 
     @Override
@@ -98,6 +124,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
 
     @OnClick(R.id.bt_login)
     public void login(Button button){
+
+        setTestLoginData();//TODO Delete it
         try {
             if (validateUserInputs())
                 progressDialog.show();

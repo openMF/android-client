@@ -1,7 +1,5 @@
 package com.mifos.utils.services;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import com.mifos.objects.Center;
 import com.mifos.objects.SearchedEntity;
@@ -9,16 +7,16 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.PageItem;
-import com.mifos.utils.Constants;
+import com.mifos.utils.services.data.Payload;
 import retrofit.*;
-import retrofit.client.*;
+import retrofit.client.Response;
 import retrofit.http.*;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class API {
-    public static String url = "https://demo.openmf.org/mifosng-provider/api/v1";
+    public static String url = "https://demo2.openmf.org/mifosng-provider/api/v1";
 
     static RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
             .setRequestInterceptor(new RequestInterceptor() {
@@ -26,14 +24,8 @@ public class API {
                 public void intercept(RequestFacade request) {
                     request.addHeader("Accept", "application/json");
                     request.addHeader("Content-Type", "application/json");
-                    request.addHeader("X-Mifos-Platform-TenantId", "default");
-
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Constants.applicationContext);
-                    String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-
-                    if (authToken != null && !"NA".equals(authToken)) {
-                        request.addHeader("Authorization", authToken);
-                    }
+                    request.addHeader("X-Mifos-Platform-TenantId", "demo2");
+                    request.addHeader("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=");
                 }
             })
             .setErrorHandler(new MifosRestErrorHandler())
@@ -75,12 +67,13 @@ public class API {
 
         @GET("/centers")
         public void getAllCenters(Callback<List<Center>> callback);
-
+        @POST("/centers/2?command=generateCollectionSheet")
+        public void getCenter(@Body Payload payload, Callback<com.mifos.utils.services.data.Center> callback);
 
     }
 
-    public static CenterService centerService = restAdapter.create(CenterService.class);
 
+    public static CenterService centerService = restAdapter.create(CenterService.class);
     public interface ClientAccountsService {
 
         @GET("/clients/{clientId}/accounts")

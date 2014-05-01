@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-
 import com.mifos.mifosxdroid.adapters.FragmentAdapter;
 
 import java.util.ArrayList;
@@ -101,6 +100,7 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Acti
         List<Fragment> fragmentList = new ArrayList<Fragment>();
         fragmentList.add(new ClientListFragment());
         fragmentList.add(new CenterListFragment());
+
         return fragmentList;
     }
 
