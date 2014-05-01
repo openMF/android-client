@@ -57,7 +57,7 @@ public class ClientListAdapter extends BaseAdapter {
 
         viewHolder.tv_client_id.setText(String.valueOf(client.getClientId()));
         viewHolder.tv_client_name.setText(client.getClientName());
-        viewHolder.tv_attendance_type.setText(client.getAttendanceType().getValue());
+//        viewHolder.tv_attendance_type.setText(client.getAttendanceType().getValue());
 
         return view;
     }

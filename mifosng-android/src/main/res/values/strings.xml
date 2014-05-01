@@ -22,4 +22,5 @@
     <string name="group_name">Group Name</string>
     <string name="staff_name">Staff Name</string>
     <string name="level_name">Level Name</string>
+    <string name="offline">Offline</string>
 </resources>

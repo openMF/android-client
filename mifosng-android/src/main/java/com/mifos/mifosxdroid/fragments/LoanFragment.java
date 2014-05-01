@@ -12,6 +12,7 @@ import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanListAdapter;
 import com.mifos.objects.db.Loan;
+import com.orm.query.Condition;
 import com.orm.query.Select;
 
 import java.util.ArrayList;
@@ -54,17 +55,11 @@ public class LoanFragment extends Fragment
     private List<Loan> getLoans()
     {
         loansClientHave.clear();
-        List<Loan> loanList = Select.from(Loan.class).list();
+        List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)).list();
         Log.i(tag, "Looking for loan with client ID:" + clientId);
         Log.i(tag, "Loans in ClientFragment from DB:" + loanList.toString());
 
-        for (Loan loan : loanList)
-        {
-            if (loan.getClientId() == clientId)
-            {
-                loansClientHave.add(loan);
-            }
-        }
+        loansClientHave.addAll(loanList);
         return loansClientHave;
     }
 }

@@ -1,8 +1,5 @@
 package com.mifos.utils.services.data;
 
-/**
- * Created by Ajeet on 28-Apr-14.
- */
 public class Payload
 {
     String dateFormat="dd MMMM YYYY";

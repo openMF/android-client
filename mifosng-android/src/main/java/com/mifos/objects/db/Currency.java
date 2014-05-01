@@ -1,5 +1,6 @@
 package com.mifos.objects.db;
 
+import com.google.gson.Gson;
 import com.orm.SugarRecord;
 
 public class Currency extends SugarRecord<Currency>
@@ -11,17 +12,16 @@ public class Currency extends SugarRecord<Currency>
     private String displaySymbol;
     private String nameCode;
     private String displayLabel;
-    private int loanId;
+    private Loan loan;
 
-    public int getLoanId()
-    {
-        return loanId;
+    public Loan getLoan() {
+        return loan;
     }
 
-    public void setLoanId(int loanId)
-    {
-        this.loanId = loanId;
+    public void setLoan(Loan loan) {
+        this.loan = loan;
     }
+
     public String getDisplayLabel()
     {
         return displayLabel;
@@ -95,15 +95,7 @@ public class Currency extends SugarRecord<Currency>
     @Override
     public String toString()
     {
-        return "Currency{" +
-                "code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", decimalPlaces=" + decimalPlaces +
-                ", inMultiplesOf=" + inMultiplesOf +
-                ", displaySymbol='" + displaySymbol + '\'' +
-                ", nameCode='" + nameCode + '\'' +
-                ", displayLabel='" + displayLabel + '\'' +
-                ", loanId=" + loanId +
-                '}';
+        return new Gson().toJson(this);
     }
+
 }

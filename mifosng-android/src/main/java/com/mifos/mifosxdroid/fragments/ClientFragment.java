@@ -15,6 +15,7 @@ import com.mifos.mifosxdroid.LoanActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientListAdapter;
 import com.mifos.objects.db.Client;
+import com.orm.query.Condition;
 import com.orm.query.Select;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     @InjectView(R.id.lv_clients)
      ListView lv_clients;
     private ClientListAdapter adapter = null;
-    private int groupId;
+    private long groupId;
     private List<Client> clientsInTheGroup = new ArrayList<Client>();
     final private String tag = getClass().getSimpleName();
     @Override
@@ -38,9 +39,9 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         setAdapter();
         return view;
     }
-    private int getGroupId()
+    private long getGroupId()
     {
-        groupId =  getArguments().getInt("group_id",0);
+        groupId =  getArguments().getLong("group_id",0);
         return groupId;
     }
 
@@ -55,15 +56,10 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     private List<Client> getClients()
     {
         clientsInTheGroup.clear();
-        List<Client> clients  = Select.from(Client.class).list();
+        List<Client> clients  = Select.from(Client.class).where(Condition.prop("mifos_group").eq(groupId)).list();
+
         Log.i(tag,"Clients in ClientFragment from DB:"+clients.toString());
-        for(Client client:clients)
-        {
-            if(client.getGroupId()== groupId)
-            {
-                clientsInTheGroup.add(client);
-            }
-        }
+        clientsInTheGroup.addAll(clients);
         return clientsInTheGroup;
     }
 

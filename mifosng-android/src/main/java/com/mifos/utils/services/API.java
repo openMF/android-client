@@ -1,12 +1,12 @@
 package com.mifos.utils.services;
 
 import android.util.Log;
-import com.mifos.objects.Center;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.PageItem;
+import com.mifos.objects.db.CollectionSheet;
 import com.mifos.utils.services.data.Payload;
 import retrofit.*;
 import retrofit.client.Response;
@@ -66,9 +66,9 @@ public class API {
     public interface CenterService {
 
         @GET("/centers")
-        public void getAllCenters(Callback<List<Center>> callback);
+        public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
         @POST("/centers/2?command=generateCollectionSheet")
-        public void getCenter(@Body Payload payload, Callback<com.mifos.utils.services.data.Center> callback);
+        public void getCenter(@Body Payload payload, Callback<CollectionSheet> callback);
 
     }
 

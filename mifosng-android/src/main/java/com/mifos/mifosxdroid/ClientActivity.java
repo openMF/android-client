@@ -9,7 +9,7 @@ import com.mifos.mifosxdroid.fragments.ClientFragment;
 
 public class ClientActivity extends ActionBarActivity
 {
-    private int groupId;
+    private long groupId;
     private Intent intentForExtras;
     public void onCreate(Bundle savedInstanceState)
     {
@@ -21,14 +21,14 @@ public class ClientActivity extends ActionBarActivity
     private void init()
     {
         intentForExtras = getIntent();
-        groupId = intentForExtras.getIntExtra("group_id",0);
+        groupId = intentForExtras.getLongExtra("group_id",0);
     }
     private void setFragment()
     {
         FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
         ClientFragment fragment = new ClientFragment();
         Bundle arguments = new Bundle();
-        arguments.putInt("group_id",groupId);
+        arguments.putLong("group_id",groupId);
         fragment.setArguments(arguments);
         fragmentTransaction.replace(R.id.global_container,fragment).commit();
     }

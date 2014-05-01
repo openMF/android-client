@@ -1,5 +1,6 @@
 package com.mifos.objects.db;
 
+import com.google.gson.Gson;
 import com.orm.SugarRecord;
 
 public class AttendanceType extends SugarRecord<AttendanceType>
@@ -7,17 +8,15 @@ public class AttendanceType extends SugarRecord<AttendanceType>
     private int attendanceTypeId;
     private String code;
     private String value;
-    private int clientId;
-    public int getClientId()
-    {
-        return clientId;
+    private Client client;
+
+    public Client getClient() {
+        return client;
     }
 
-    public void setClientId(int clientId)
-    {
-        this.clientId = clientId;
+    public void setClient(Client client) {
+        this.client = client;
     }
-
 
     public String getValue()
     {
@@ -52,10 +51,7 @@ public class AttendanceType extends SugarRecord<AttendanceType>
     @Override
     public String toString()
     {
-        return "AttendanceType{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+        return new Gson().toJson(this);
     }
+
 }

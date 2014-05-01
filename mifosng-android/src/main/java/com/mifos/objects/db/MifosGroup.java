@@ -1,6 +1,7 @@
 package com.mifos.objects.db;
 
 
+import com.google.gson.Gson;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 
@@ -10,8 +11,12 @@ public class MifosGroup extends SugarRecord<MifosGroup>
 {
         private int groupId;
         private String groupName;
-        private Staff staff;
-        private Level level;
+    public int staffId;
+    public String staffName;
+
+    public int levelId;
+    public String levelName;
+
         @Ignore
         private List<Client> clients;
 
@@ -27,35 +32,8 @@ public class MifosGroup extends SugarRecord<MifosGroup>
     }
 
     @Override
-    public String toString()
-    {
-        return "MifosGroup{" +
-                "groupId=" + groupId +
-                ", groupName='" + groupName + '\'' +
-                ", staff=" + staff +
-                ", level=" + level+
-                ", clients=" + clients +
-                '}';
-    }
-
-    public Level getLevel()
-    {
-        return level;
-    }
-
-    public void setLevel(Level level)
-    {
-        this.level = level;
-    }
-
-    public Staff getStaff()
-    {
-        return staff;
-    }
-
-    public void setStaff(Staff staff)
-    {
-        this.staff = staff;
+    public String toString() {
+        return new Gson().toJson(this);
     }
 
     public String getGroupName()
@@ -79,4 +57,11 @@ public class MifosGroup extends SugarRecord<MifosGroup>
     }
 
 
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public String getLevelName() {
+        return levelName;
+    }
 }

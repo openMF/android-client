@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -114,8 +115,8 @@ public class ClientListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dashbord_client, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -124,6 +125,10 @@ public class ClientListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.mItem_search:
                 activityListener.replaceFragments(new ClientSearchFragment());
+                break;
+
+            case R.id.offline_menu:
+                startActivity(new Intent(getActivity(), GroupActivity.class));
                 break;
 
             default: //DO NOTHING

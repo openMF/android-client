@@ -3,13 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/mItem_search"
-        android:title="@string/search"
-        android:showAsAction="ifRoom"
-        android:enabled="true"/>
-
- <item
-        android:id="@+id/offline_menu"
+        android:id="@+id/offline"
         android:title="@string/offline"
         android:showAsAction="ifRoom"
         android:enabled="true"/>

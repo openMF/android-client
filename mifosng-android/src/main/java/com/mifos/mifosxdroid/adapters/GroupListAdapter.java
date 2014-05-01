@@ -56,9 +56,10 @@ public class GroupListAdapter extends BaseAdapter {
         viewHolder.tv_level_name = (TextView) view.findViewById(R.id.tv_level_name);
 
 
-        viewHolder.tv_group_name.setText(groups.get(i).getGroupName());
-        viewHolder.tv_staff_name.setText(groups.get(i).getStaff().getStaffName());
-        viewHolder.tv_level_name.setText(groups.get(i).getLevel().getLevelName());
+        MifosGroup mifosGroup = groups.get(i);
+        viewHolder.tv_group_name.setText(mifosGroup.getGroupName());
+        viewHolder.tv_staff_name.setText( mifosGroup.getStaffName());
+        viewHolder.tv_level_name.setText(mifosGroup.getLevelName());
 
         return view;
     }

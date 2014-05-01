@@ -1,5 +1,6 @@
 package com.mifos.objects.db;
 
+import com.google.gson.Gson;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 
@@ -10,31 +11,29 @@ public class Client extends SugarRecord<Client>
 {
     private int clientId;
     private String clientName;
+
     @Ignore
     private List<Loan> loans;
+
     private AttendanceType attendanceType;
-    private int groupId;
+    private MifosGroup mifosGroup;
+
+    public MifosGroup getMifosGroup() {
+        return mifosGroup;
+    }
+
+    public void setMifosGroup(MifosGroup mifosGroup) {
+        this.mifosGroup = mifosGroup;
+    }
 
     @Override
     public String toString()
     {
-        return "Client{" +
-                "clientId=" + clientId +
-                ", clientName='" + clientName + '\'' +
-                ", loans=" + loans +
-                ", attendanceType=" + attendanceType +
-                ", groupId=" + groupId +
-                '}';
+        return new Gson().toJson(this);
     }
 
-    public int getGroupId()
-    {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId)
-    {
-        this.groupId = groupId;
+    public List<Loan> getLoans() {
+        return loans;
     }
 
     public AttendanceType getAttendanceType()
@@ -45,16 +44,6 @@ public class Client extends SugarRecord<Client>
     public void setAttendanceType(AttendanceType attendanceType)
     {
         this.attendanceType = attendanceType;
-    }
-    @Ignore
-    public  List<Loan> getLoans()
-    {
-        return loans;
-    }
-    @Ignore
-    public void setLoans( List<Loan>  loans)
-    {
-        this.loans = loans;
     }
 
     public String getClientName()

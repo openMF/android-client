@@ -2,11 +2,15 @@ package com.mifos.mifosxdroid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +19,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.objects.User;
-import com.mifos.utils.services.data.Payload;
 import com.mifos.utils.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -92,28 +95,10 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
     public void success(User user, Response response) {
         progressDialog.dismiss();
         Toast.makeText(context, "Welcome " + user.getUsername(), Toast.LENGTH_SHORT).show();
-     //   saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
-       /* Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
+        saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
+        Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
         startActivity(intent);
-        finish();*/
-        getCenter();
-    }
-    private void getCenter()
-    {
-        API.centerService.getCenter(new Payload(),new Callback<com.mifos.utils.services.data.Center>()
-        {
-            @Override
-            public void success(com.mifos.utils.services.data.Center center, Response response)
-            {
-                 Log.i(tag,"Center JSON:"+center.toString());
-            }
-            @Override
-            public void failure(RetrofitError error)
-            {
-                Toast.makeText(LoginActivity.this, "There was some error fetching list.", Toast.LENGTH_SHORT).show();
-                Log.e(tag,"JSON Parsing error:\n"+error.toString()+"\n");
-            }
-        });
+        finish();
     }
 
     @Override
@@ -143,5 +128,26 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
         editor.putString(User.AUTHENTICATION_KEY, authenticationKey);
         editor.commit();
         editor.apply();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.offline_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.offline:
+                startActivity(new Intent(this, GroupActivity.class));
+                break;
+
+            default: //DO NOTHING
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
