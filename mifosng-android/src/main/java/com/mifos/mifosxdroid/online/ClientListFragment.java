@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid;
+package com.mifos.mifosxdroid.online;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,17 +14,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.mifos.mifosxdroid.GroupActivity;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
-import com.mifos.objects.client.PageItem;
+import com.mifos.utils.services.API;
 
 import java.util.List;
 
-import com.mifos.utils.services.API;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
 
 /**
  * Created by ishankhanna on 09/02/14.
@@ -32,7 +36,7 @@ import retrofit.client.Response;
 public class ClientListFragment extends Fragment {
 
 
-    ListView lv_clients;
+    @InjectView(R.id.lv_clients) ListView lv_clients;
 
     View rootView;
 
@@ -53,16 +57,16 @@ public class ClientListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
-
+        ButterKnife.inject(this, rootView);
 
         context = getActivity().getApplicationContext();
         activityListener = (FragmentChangeListener) getActivity();
 
         setupUI();
 
-        API.clientService.listAllClients(new Callback<Page>() {
+        API.clientService.listAllClients(new Callback<Page<Client>>() {
             @Override
-            public void success(Page page, Response response) {
+            public void success(Page<Client> page, Response response) {
                 pageItems = page.getPageItems();
 
                 ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(context, pageItems);
@@ -74,7 +78,6 @@ public class ClientListFragment extends Fragment {
                         ClientDetailsFragment clientDetailsFragment =
                                 ClientDetailsFragment.newInstance(pageItems.get(i).getId());
                         activityListener.replaceFragments(clientDetailsFragment);
-
 
                     }
                 });
@@ -97,7 +100,7 @@ public class ClientListFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
+        //lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
 
         lv_clients.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -107,6 +110,13 @@ public class ClientListFragment extends Fragment {
                 Toast.makeText(getActivity(), "Client ID = " + pageItems.get(i).getId(), Toast.LENGTH_SHORT).show();
 
                 return false;
+            }
+        });
+
+        lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
             }
         });
 
@@ -124,7 +134,7 @@ public class ClientListFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.mItem_search:
-                activityListener.replaceFragments(new ClientSearchFragment());
+                startActivity(new Intent(getActivity(), ClientSearchActivity.class));
                 break;
 
             case R.id.offline_menu:

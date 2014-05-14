@@ -29,7 +29,7 @@
                 android:name="com.mifos.mifosxdroid.LoginActivity"
                 android:label="Login"/>
         <activity
-                android:name="com.mifos.mifosxdroid.DashboardFragmentActivity"
+                android:name=".online.DashboardFragmentActivity"
                 android:label="Dashboard">
 
                 </activity>

@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid;
+package com.mifos.mifosxdroid.online;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,31 +10,31 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.adapters.AccountsListAdapter;
+import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.client.Client;
+import com.mifos.utils.Constants;
+import com.mifos.utils.SafeUIBlockingUtility;
+import com.mifos.utils.services.API;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.mifos.mifosxdroid.adapters.AccountsListAdapter;
-import com.mifos.objects.User;
-import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.accounts.loan.LoanAccount;
-import com.mifos.objects.client.PageItem;
-import com.mifos.utils.SafeUIBlockingUtility;
-
-import java.util.Iterator;
-
-import com.mifos.utils.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
 public class ClientDetailsFragment extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String CLIENT_ID = "cliendId";
 
+
+    private OnFragmentInteractionListener mListener;
+    
     public int clientId;
 
     @InjectView(R.id.tv_fullName) TextView tv_fullName;
@@ -67,7 +68,7 @@ public class ClientDetailsFragment extends Fragment {
     public static ClientDetailsFragment newInstance(int clientId) {
         ClientDetailsFragment fragment = new ClientDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(CLIENT_ID, clientId);
+        args.putInt(Constants.CLIENT_ID, clientId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,7 +80,8 @@ public class ClientDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            clientId = getArguments().getInt(CLIENT_ID);
+            clientId = getArguments().getInt(Constants.CLIENT_ID);
+            System.out.print(clientId);
         }
     }
 
@@ -103,40 +105,37 @@ public class ClientDetailsFragment extends Fragment {
     public void getClientInfo(int clientId){
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.clientService.getClient(clientId, new Callback<PageItem>() {
+        API.clientService.getClient(clientId, new Callback<Client>() {
             @Override
-            public void success(PageItem pageItem, Response response) {
+            public void success(Client client, Response response) {
 
-                if (pageItem != null) {
-                    actionBar.setTitle("Mifos Client - "+pageItem.getLastname());
-                    tv_fullName.setText(pageItem.getDisplayName());
-                    tv_accountNumber.setText(pageItem.getAccountNo());
-                    tv_externalId.setText(pageItem.getExternalId());
-                    tv_activationDate.setText(pageItem.getFormattedActivationDateAsString());
-                    tv_office.setText(pageItem.getOfficeName());
+                if (client != null) {
+                    actionBar.setTitle("Mifos Client - " + client.getLastname());
+                    tv_fullName.setText(client.getDisplayName());
+                    tv_accountNumber.setText(client.getAccountNo());
+                    tv_externalId.setText(client.getExternalId());
+                    tv_activationDate.setText(client.getFormattedActivationDateAsString());
+                    tv_office.setText(client.getOfficeName());
 
-                    API.clientAccountsService.getAllAccountsOfClient(pageItem.getId(), new Callback<ClientAccounts>() {
+                    API.clientAccountsService.getAllAccountsOfClient(client.getId(), new Callback<ClientAccounts>() {
                         @Override
-                        public void success(ClientAccounts clientAccounts, Response response) {
+                        public void success(final ClientAccounts clientAccounts, Response response) {
 
 
                             AccountsListAdapter accountsListAdapter =
-                                    new AccountsListAdapter(ClientDetailsFragment.this.getActivity(),clientAccounts.getLoanAccounts());
-                            //TODO REMOVE THIS PRINTER
-                            try{
-                                Iterator<LoanAccount> iterator = clientAccounts.getLoanAccounts().iterator();
-                                while(iterator.hasNext())
-                                {
-                                    LoanAccount loanAccount = iterator.next();
-                                    System.out.println(loanAccount.toString());
-                                }
-                            }catch(Exception e)
-                            {
-                                e.printStackTrace();
-                            }
+                                    new AccountsListAdapter(getActivity().getApplicationContext(),clientAccounts.getLoanAccounts());
 
                             lv_accounts.setAdapter(accountsListAdapter);
+                            lv_accounts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                                    mListener.loadLoanAccountSummary(clientAccounts.getLoanAccounts().get(i).getId());
+
+
+
+                                }
+                            });
                         }
 
                         @Override
@@ -166,10 +165,25 @@ public class ClientDetailsFragment extends Fragment {
 
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }
 
+    public interface OnFragmentInteractionListener {
+
+        public void loadLoanAccountSummary(int loanAccountNumber);
+    }
 
 
 }

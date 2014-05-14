@@ -3,7 +3,9 @@ package com.mifos.objects.client;
 import com.mifos.objects.Status;
 import com.mifos.objects.Timeline;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -174,6 +176,23 @@ public class Client {
         this.externalId = externalId;
     }
 
+    public String getFormattedActivationDateAsString()
+    {
+        //TODO Format Date Based on Current Locale
+        /**
+         * Integer List Contains
+         * YYYY
+         * MM
+         * DD
+         */
+
+        Calendar calender = Calendar.getInstance();
+        calender.set(activationDate.get(0),activationDate.get(1),activationDate.get(2));
+
+        DateFormat dateFormat = DateFormat.getDateInstance();
+        return dateFormat.format(calender.getTime()).toString();
+
+    }
     @Override
     public String toString() {
         return "Client{" +

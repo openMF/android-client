@@ -8,4 +8,10 @@ import android.content.Context;
 public class Constants {
 
     public static Context applicationContext;
+
+    public static final String CLIENT_NAME = "clientName";
+
+    public static final String CLIENT_ID = "clientId";
+
+    public static final String LOAN_ACCOUNT_NUMBER = "loanAccountNumber";
 }

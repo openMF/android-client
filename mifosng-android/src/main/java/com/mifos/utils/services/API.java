@@ -4,6 +4,7 @@ import android.util.Log;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.PageItem;
 import com.mifos.objects.db.CollectionSheet;
@@ -93,7 +94,7 @@ public class API {
          * @param callback - Callback to handle the response and/or error
          */
         @GET("/clients")
-        public void listAllClients(Callback<Page> callback);
+        public void listAllClients(Callback<Page<Client>> callback);
 
 
         /**
@@ -101,7 +102,7 @@ public class API {
          * @param callback - Callback to handle the response and/or error
          */
         @GET("/clients/{clientId}")
-        public void getClient(@Path("clientId") int clientId, Callback<PageItem> callback);
+        public void getClient(@Path("clientId") int clientId, Callback<Client> callback);
 
 
     }
@@ -113,6 +114,14 @@ public class API {
         @GET("/search?resource=clients")
         public void searchClientsByName(@Query("query") String clientName, Callback<List<SearchedEntity>> callback);
 
+
+    }
+
+    public static LoanService loanService = restAdapter.create(LoanService.class);
+    public interface LoanService {
+
+        @GET("/loans/{loanId}")
+        public void getLoanById(@Path("loanId") int loanId, Callback<com.mifos.objects.accounts.loan.Loan> callback);
 
     }
 

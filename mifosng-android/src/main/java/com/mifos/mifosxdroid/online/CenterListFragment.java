@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid;
+package com.mifos.mifosxdroid.online;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,14 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.objects.Center;
-import com.mifos.objects.User;
 import com.mifos.utils.SafeUIBlockingUtility;
+import com.mifos.utils.services.API;
 
 import java.util.List;
 
-import com.mifos.utils.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
