@@ -16,8 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class API {
-    public static String url = "https://demo2.openmf.org/mifosng-provider/api/v1";
 
+    //This instance has more Data for Testing
+    public static String url = "https://demo.openmf.org/mifosng-provider/api/v1";
+
+    //public static String url = "https://demo2.openmf.org/mifosng-provider/api/v1";
     static RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
             .setRequestInterceptor(new RequestInterceptor() {
                 @Override
