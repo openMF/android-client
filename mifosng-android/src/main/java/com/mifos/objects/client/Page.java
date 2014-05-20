@@ -9,13 +9,13 @@ import java.util.List;
 public class Page {
 
     private int totalFilteredRecords;
-    private List<PageItem> pageItems = new ArrayList<PageItem>();
+    private List<Client> pageItems = new ArrayList<Client>();
 
 
-    public List<PageItem> getPageItems() {
+    public List<Client> getPageItems() {
         return pageItems;
     }
-    public void setPageItems(List<PageItem> pageItems) {
+    public void setPageItems(List<Client> pageItems) {
         this.pageItems = pageItems;
     }
 
