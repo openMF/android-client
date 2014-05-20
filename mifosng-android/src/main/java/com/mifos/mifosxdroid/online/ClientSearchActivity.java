@@ -73,7 +73,9 @@ public class ClientSearchActivity extends ActionBarActivity implements ClientSea
 
         LoanAccountSummaryFragment loanAccountSummaryFragment = LoanAccountSummaryFragment.newInstance(loanAccountNumber);
         FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack("Client Details Fragment");
         fragmentTransaction.replace(R.id.search_activity_container,loanAccountSummaryFragment).commit();
+
 
     }
 }

@@ -32,11 +32,14 @@
                 android:name=".online.DashboardFragmentActivity"
                 android:label="Dashboard">
 
-                </activity>
+        </activity>
+        <activity android:name=".online.ClientSearchActivity" />
         <activity android:name=".GroupActivity"
                 android:configChanges="orientation|screenSize"/>
-        <activity android:name=".ClientActivity" android:configChanges="orientation|screenSize"/>
-        <activity android:name=".LoanActivity" android:configChanges="orientation|screenSize"/>
+        <activity android:name=".ClientActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".LoanActivity"
+            android:configChanges="orientation|screenSize"/>
         <meta-data android:name="DATABASE" android:value="mifos.db" />
         <meta-data android:name="VERSION" android:value="3" />
         <meta-data android:name="QUERY_LOG" android:value="true" />

@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="8dp"
+    android:layout_margin="8dp"
     >
 
 
@@ -15,6 +15,7 @@
         android:id="@+id/tv_clientName"
         android:paddingLeft="8dp"
         android:layout_alignParentTop="true"
+        android:textColor="@color/black"
         android:layout_toRightOf="@+id/quickContactBadge" />
 
 
@@ -38,6 +39,7 @@
         android:text="Small Text"
         android:id="@+id/tv_clientAccountNumber"
         android:layout_below="@+id/tv_clientName"
+        android:textColor="@color/black"
         android:layout_alignLeft="@+id/tv_clientName"
         android:paddingLeft="8dp"/>
 

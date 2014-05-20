@@ -183,6 +183,7 @@ public class ClientDetailsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
 
         public void loadLoanAccountSummary(int loanAccountNumber);
+
     }
 
 

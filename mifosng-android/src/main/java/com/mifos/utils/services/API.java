@@ -28,7 +28,7 @@ public class API {
                 public void intercept(RequestFacade request) {
                     request.addHeader("Accept", "application/json");
                     request.addHeader("Content-Type", "application/json");
-                    request.addHeader("X-Mifos-Platform-TenantId", "demo2");
+                    request.addHeader("X-Mifos-Platform-TenantId", "default");
                     request.addHeader("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=");
                 }
             })

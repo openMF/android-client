@@ -1,11 +1,14 @@
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +34,7 @@ import retrofit.client.Response;
 
 public class ClientSearchFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private static final String TAG = "Client Search Fragment";
 
     @InjectView(R.id.et_search_by_id) EditText et_searchById;
     @InjectView(R.id.bt_searchClient) Button bt_searchClient;
@@ -97,6 +101,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
             public void success(List<SearchedEntity> searchedEntities, Response response) {
 
                 Iterator<SearchedEntity> iterator = searchedEntities.iterator();
+                Log.i(TAG, "Results Found = "+searchedEntities.size());
                 while(iterator.hasNext())
                 {
                     SearchedEntity searchedEntity = iterator.next();
@@ -111,7 +116,16 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
                 lv_searchResults.setAdapter(adapter);
                 lv_searchResults.setOnItemClickListener(ClientSearchFragment.this);
+
+                //If the search query returned one or more results close the keyboard
+
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(et_searchById.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+
                 safeUIBlockingUtility.safelyUnBlockUI();
+
+
             }
 
             @Override

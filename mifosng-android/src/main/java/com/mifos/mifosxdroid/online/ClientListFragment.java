@@ -100,8 +100,6 @@ public class ClientListFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        //lv_clients = (ListView) rootView.findViewById(R.id.lv_clients);
-
         lv_clients.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {

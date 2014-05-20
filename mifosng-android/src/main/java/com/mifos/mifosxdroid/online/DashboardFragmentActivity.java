@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 
-public class DashboardFragmentActivity extends ActionBarActivity implements ActionBar.TabListener, ClientListFragment.FragmentChangeListener {
+public class DashboardFragmentActivity extends ActionBarActivity implements ActionBar.TabListener, ClientListFragment.FragmentChangeListener{
 
     public static Context context;
     private ViewPager viewPager;
@@ -114,4 +114,5 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Acti
 
         return tab;
     }
+
 }
