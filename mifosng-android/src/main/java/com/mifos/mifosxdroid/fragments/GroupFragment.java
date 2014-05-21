@@ -9,20 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
-import com.mifos.objects.db.*;
-import com.mifos.objects.db.AttendanceType;
-import com.mifos.objects.db.Client;
-import com.mifos.objects.db.Currency;
-import com.mifos.objects.db.Loan;
+import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.utils.services.data.*;
-import com.mifos.utils.services.API;
+import com.mifos.utils.Network;
+import com.mifos.services.API;
+import com.mifos.services.RepaymentTransactionSyncService;
+import com.mifos.services.data.Payload;
 import com.orm.query.Select;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -32,135 +31,78 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener
-{
+public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener {
+
     @InjectView(R.id.lv_group)
     ListView lv_group;
+    @InjectView(R.id.progress_group)
+    ProgressBar progressGroup;
+
     GroupListAdapter adapter = null;
     private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
     String tag = getClass().getSimpleName();
-    View view ;
+    View view;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        view =  inflater.inflate(R.layout.fragment_group,null);
-        ButterKnife.inject(this,view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_group, null);
+        ButterKnife.inject(this, view);
         getData();
         return view;
     }
 
-    private void setAdapter()
-    {
-        if(adapter==null)
-            adapter = new GroupListAdapter(getActivity(),groupList);
-        if(lv_group==null)
-        {
-            lv_group = (ListView) view.findViewById(R.id.lv_group);
+    @Override
+    public void onResume() {
+        super.onResume();
+        setAdapter();
+        getActivity().startService(new Intent(RepaymentTransactionSyncService.class.getName()));
+    }
+
+    private void setAdapter() {
+        groupList.clear();
+        groupList.addAll(getAllGroups());
+        if (adapter == null) {
+            adapter = new GroupListAdapter(getActivity(), groupList);
+            lv_group.setAdapter(adapter);
         }
-        lv_group.setAdapter(adapter);
         lv_group.setOnItemClickListener(this);
-
+        lv_group.setEmptyView(progressGroup);
+        adapter.notifyDataSetChanged();
     }
-    private void getData()
-    {
-        API.centerService.getCenter(new Payload(), new Callback<CollectionSheet>() {
 
-            @Override
-            public void success(CollectionSheet collectionSheet, Response arg1) {
-                if(collectionSheet !=null)
-                {
-                    Log.i(tag, "CollectionSheet\n"+ collectionSheet.toString());
-                    insertGroupData(collectionSheet);
-                    setAdapter();
-                }
-                else
-                    Log.i(tag, "null is null null null null null null");
-            }
+    private void getData() {
 
-            @Override
-            public void failure(RetrofitError arg0) {
-                Toast.makeText(getActivity(), "There was some error fetching data.", Toast.LENGTH_SHORT).show();
+        if(Network.isOnline(getActivity().getApplicationContext())) {
 
-            }
-        });
-    }
-    private List<MifosGroup> insertGroupData(CollectionSheet collectionSheet)
-    {
+            API.centerService.getCenter(new Payload(), new Callback<CollectionSheet>() {
+                @Override
+                public void success(CollectionSheet collectionSheet, Response arg1) {
 
-        for(MifosGroup group : collectionSheet.groups){
+                    if (collectionSheet != null) {
+                        collectionSheet.saveData();
 
-            group.save();
-
-            List<Client> clients = group.getClients();
-
-            for(Client client: clients){
-                if(isNewClient(client.getClientId()))
-                {
-                    client.setMifosGroup(group);
-                    client.save();
-
-                    AttendanceType attendanceType = client.getAttendanceType();
-                    attendanceType.setClient(client);
-                    attendanceType.save();
+                        if (groupList.size() == 0)
+                            setAdapter();
+                    }
                 }
 
-                List<Loan> loans = client.getLoans();
-                for(Loan loan : loans){
-
-                    loan.setClient(client);
-                    loan.save();
-
-                    Currency currency = loan.getCurrency();
-                    currency.setLoan(loan);
-                    currency.save();
-
+                @Override
+                public void failure(RetrofitError arg0) {
+                    Toast.makeText(getActivity(), "There was some error fetching data.", Toast.LENGTH_SHORT).show();
                 }
-            }
+            });
         }
-
-        groupList.addAll(collectionSheet.groups);
-        return groupList;
     }
 
-    private boolean isNewGroup(int groupId)
-    {
-        boolean isNewGroup = true;
-        List<MifosGroup> groups = Select.from(MifosGroup.class).list();
-        for(MifosGroup group:groups)
-        {
-            if(group.getGroupId()==groupId)
-            {
-                isNewGroup = false;
-                break;
-            }
-        }
-        return isNewGroup;
-
+    private List<MifosGroup> getAllGroups() {
+        return Select.from(MifosGroup.class).list();
     }
-
-    private boolean isNewClient(int clientId)
-    {
-        boolean isNewClient = true;
-        List<Client> clients = Select.from(Client.class).list();
-        for(Client client:clients)
-        {
-            if(client.getClientId()== clientId)
-            {
-                isNewClient = false;
-                break;
-            }
-        }
-        return isNewClient;
-
-    }
-
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-    {
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(getActivity(), ClientActivity.class);
-        Log.i(tag,"Group Id:"+groupList.get(i).getGroupId());
-        intent.putExtra("group_id",groupList.get(i).getId());
+        intent.putExtra("group_id", groupList.get(i).getId());
+        Log.i(tag, "onItemClick = Group ID:" + groupList.get(i).getId());
         startActivity(intent);
     }
 }

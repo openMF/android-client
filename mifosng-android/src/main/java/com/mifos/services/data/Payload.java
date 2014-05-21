@@ -1,4 +1,4 @@
-package com.mifos.utils.services.data;
+package com.mifos.services.data;
 
 public class Payload
 {

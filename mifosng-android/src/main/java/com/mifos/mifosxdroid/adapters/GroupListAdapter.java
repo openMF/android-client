@@ -18,7 +18,6 @@ public class GroupListAdapter extends BaseAdapter {
     private List<MifosGroup> groups;
 
     public GroupListAdapter(Context context, List<MifosGroup> groups){
-
         layoutInflater = LayoutInflater.from(context);
         this.groups = groups;
     }

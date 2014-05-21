@@ -18,6 +18,17 @@ public class Loan extends SugarRecord<Loan> {
     public int productId;
     private Currency currency;
     private Client client;
+    private String isPaymentChanged;
+
+    public String getIsPaymentChanged()
+    {
+        return isPaymentChanged;
+    }
+
+    public void setIsPaymentChanged(String isPaymentChanged)
+    {
+        this.isPaymentChanged = isPaymentChanged;
+    }
 
     public Client getClient() {
         return client;

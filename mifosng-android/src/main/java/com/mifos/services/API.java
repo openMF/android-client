@@ -1,4 +1,4 @@
-package com.mifos.utils.services;
+package com.mifos.services;
 
 import android.util.Log;
 import com.mifos.objects.SearchedEntity;
@@ -6,9 +6,10 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
-import com.mifos.objects.client.PageItem;
 import com.mifos.objects.db.CollectionSheet;
-import com.mifos.utils.services.data.Payload;
+import com.mifos.services.data.Payload;
+import com.mifos.services.data.CollectionSheetPayload;
+import com.mifos.services.data.SaveResponse;
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.http.*;
@@ -73,7 +74,8 @@ public class API {
         public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
         @POST("/centers/2?command=generateCollectionSheet")
         public void getCenter(@Body Payload payload, Callback<CollectionSheet> callback);
-
+        @POST("/centers/2?command=saveCollectionSheet")
+        public SaveResponse saveCollectionSheet(@Body CollectionSheetPayload collectionSheetPayload);
     }
 
 
@@ -151,7 +153,6 @@ public class API {
 
         return cb;
     }
-
 
     public static <T> Callback<List<T>> getCallbackList(List<T> t) {
         Callback<List<T>> cb = new Callback<List<T>>() {

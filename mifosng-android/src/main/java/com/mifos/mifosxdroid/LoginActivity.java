@@ -19,7 +19,7 @@ import butterknife.OnClick;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
-import com.mifos.utils.services.API;
+import com.mifos.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -61,17 +61,11 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
         else
             Log.i(tag,"login button is not null");
     }
-    private void setTestLoginData()
+    public void setupUI()
     {
-        et_username.setText("mifos");
-        et_password.setText( "password");
-    }
-    public void setupUI() {
-
         progressDialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Logging In");
         progressDialog.setCancelable(false);
-
     }
 
     public boolean validateUserInputs() throws ShortOfLengthException {
@@ -110,7 +104,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
     @OnClick(R.id.bt_login)
     public void login(Button button){
 
-        setTestLoginData();//TODO Delete it
         try {
             if (validateUserInputs())
                 progressDialog.show();
