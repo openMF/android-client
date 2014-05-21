@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.SearchedEntity;
+import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
 import com.mifos.utils.services.API;
 
@@ -39,8 +41,8 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     @InjectView(R.id.et_search_by_id) EditText et_searchById;
     @InjectView(R.id.bt_searchClient) Button bt_searchClient;
     @InjectView(R.id.lv_searchResults) ListView lv_searchResults;
+
     View rootView;
-    private OnFragmentInteractionListener mListener;
 
     private String searchQuery;
 
@@ -141,34 +143,18 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        mListener.loadClientDetails(clientIds.get(i));
+        Intent clientActivityIntent = new Intent(getActivity(),ClientActivity.class);
+        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientIds.get(i));
+        startActivity(clientActivityIntent);
 
     }
 
-
-    public interface OnFragmentInteractionListener {
-
-        public void loadClientDetails(int clientId);
-
-    }
 
 }

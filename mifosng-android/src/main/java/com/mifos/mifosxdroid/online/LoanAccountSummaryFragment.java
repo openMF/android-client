@@ -186,7 +186,6 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
 
-        public void onBackPressed(int clientId);
     }
 
 }

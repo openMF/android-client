@@ -39,6 +39,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         setAdapter();
         return view;
     }
+
     private long getGroupId()
     {
         groupId =  getArguments().getLong("group_id",0);

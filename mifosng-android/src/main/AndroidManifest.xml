@@ -1,49 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mifos.mifosxdroid"
-          android:versionCode="1"
-          android:versionName="1.0">
+    package="com.mifos.mifosxdroid"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
     <uses-sdk
-            android:minSdkVersion="10"
-            android:targetSdkVersion="19"/>
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-            android:allowBackup="false"
-            android:icon="@drawable/ic_launcher"
-            android:name="com.orm.SugarApp"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Mifosxactionbar">
+        android:name="com.orm.SugarApp"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Mifosxactionbar" >
         <activity
-                android:name="com.mifos.mifosxdroid.SplashScreenActivity"
-                android:label="@string/app_name">
+            android:name="com.mifos.mifosxdroid.SplashScreenActivity"
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-                android:name="com.mifos.mifosxdroid.LoginActivity"
-                android:label="Login"/>
+            android:name="com.mifos.mifosxdroid.LoginActivity"
+            android:label="Login" />
         <activity
-                android:name=".online.DashboardFragmentActivity"
-                android:label="Dashboard">
-
+            android:name="com.mifos.mifosxdroid.online.DashboardFragmentActivity"
+            android:label="Dashboard" >
         </activity>
-        <activity android:name=".online.ClientSearchActivity" />
-        <activity android:name=".GroupActivity"
-                android:configChanges="orientation|screenSize"/>
-        <activity android:name=".ClientActivity"
-            android:configChanges="orientation|screenSize"/>
-        <activity android:name=".LoanActivity"
-            android:configChanges="orientation|screenSize"/>
-        <meta-data android:name="DATABASE" android:value="mifos.db" />
-        <meta-data android:name="VERSION" android:value="3" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <activity android:name="com.mifos.mifosxdroid.online.ClientSearchActivity" />
+        <activity
+            android:name="com.mifos.mifosxdroid.GroupActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name="com.mifos.mifosxdroid.ClientActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name="com.mifos.mifosxdroid.LoanActivity"
+            android:configChanges="orientation|screenSize" />
 
+        <meta-data
+            android:name="DATABASE"
+            android:value="mifos.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="3" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+
+        <activity
+            android:name="com.mifos.mifosxdroid.online.ClientActivity"
+            android:label="@string/title_activity_client" >
+        </activity>
     </application>
 
 </manifest>

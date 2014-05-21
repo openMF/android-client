@@ -19,6 +19,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.utils.Constants;
 import com.mifos.utils.services.API;
 
 import java.util.List;
@@ -75,9 +76,9 @@ public class ClientListFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                        ClientDetailsFragment clientDetailsFragment =
-                                ClientDetailsFragment.newInstance(pageItems.get(i).getId());
-                        activityListener.replaceFragments(clientDetailsFragment);
+                        Intent clientActivityIntent = new Intent(getActivity(),ClientActivity.class);
+                        clientActivityIntent.putExtra(Constants.CLIENT_ID, pageItems.get(i).getId());
+                        startActivity(clientActivityIntent);
 
                     }
                 });
