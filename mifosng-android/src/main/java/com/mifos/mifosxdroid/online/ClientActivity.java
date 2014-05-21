@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.mifos.mifosxdroid.R;
+import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import butterknife.ButterKnife;
 
 public class ClientActivity extends ActionBarActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
-                                                                 LoanAccountSummaryFragment.OnFragmentInteractionListener{
+                                                                 LoanAccountSummaryFragment.OnFragmentInteractionListener,
+                                                                 LoanRepaymentFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +52,18 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
 
         LoanAccountSummaryFragment loanAccountSummaryFragment = LoanAccountSummaryFragment.newInstance(loanAccountNumber);
         FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.addToBackStack("Client Details Fragment");
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.global_container,loanAccountSummaryFragment).commit();
 
     }
 
 
+    @Override
+    public void makeRepayment(Loan loan) {
+
+        LoanRepaymentFragment loanRepaymentFragment = LoanRepaymentFragment.newInstance(loan);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, loanRepaymentFragment).commit();
+    }
 }

@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,9 +9,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.mifos.utils.services.API;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -32,6 +36,8 @@ import retrofit.client.Response;
  */
 public class LoanAccountSummaryFragment extends Fragment {
 
+
+    private OnFragmentInteractionListener mListener;
 
     int loanAccountNumber;
 
@@ -91,6 +97,10 @@ public class LoanAccountSummaryFragment extends Fragment {
     TextView tv_total_due;
     @InjectView(R.id.tv_total_paid)
     TextView tv_total_paid;
+    @InjectView(R.id.bt_repayment)
+    Button bt_repayment;
+
+    private Loan clientLoan;
 
     public static LoanAccountSummaryFragment newInstance(int loanAccountNumber) {
         LoanAccountSummaryFragment fragment = new LoanAccountSummaryFragment();
@@ -134,10 +144,14 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         actionBar.setTitle("Loan Account Summary");
 
+        //TODO Implement cases to enable/disable repayment button
+        bt_repayment.setEnabled(false);
+
         API.loanService.getLoanById(loanAccountNumber, new Callback<Loan>() {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void success(Loan loan, Response response) {
+                clientLoan = loan;
                 tv_clientName.setText(loan.getClientName());
                 tv_loan_product_short_name.setText(loan.getLoanProductName());
                 tv_loanAccountNumber.setText("#"+loan.getAccountNo());
@@ -146,7 +160,7 @@ public class LoanAccountSummaryFragment extends Fragment {
                 tv_in_arrears.setText(String.valueOf(loan.getSummary().getTotalOverdue()));
                 tv_loan_officer.setText(loan.getLoanOfficerName());
                 //TODO Implement QuickContactBadge
-                //quickContactBadge.setImageToDefault();
+                quickContactBadge.setImageToDefault();
 
                 tv_principal.setText(String.valueOf(loan.getSummary().getPrincipalDisbursed()));
                 tv_loan_principal_due.setText(String.valueOf(loan.getSummary().getPrincipalOutstanding()));
@@ -168,6 +182,8 @@ public class LoanAccountSummaryFragment extends Fragment {
                 tv_total_due.setText(String.valueOf(loan.getSummary().getTotalOutstanding()));
                 tv_total_paid.setText(String.valueOf(loan.getSummary().getTotalRepayment()));
 
+                bt_repayment.setEnabled(true);
+
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
 
@@ -182,10 +198,34 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     }
 
+    @OnClick(R.id.bt_repayment)
+    public void repaymentButtonClicked(){
+        String TAG = "Loan Repayment Module";
+        Log.i(TAG, "repayment button clicked");
+        Log.i(TAG, "Client Name = "+clientLoan.getClientName());
+        Log.i(TAG, "Product Name = "+clientLoan.getLoanProductName());
+        Log.i(TAG, "Account Number = "+clientLoan.getAccountNo());
+        Log.i(TAG, "In Arrears = "+clientLoan.getSummary().getTotalOverdue());
+        Log.i(TAG, "Amount Due = "+clientLoan.getSummary().getPrincipalDisbursed());
+        mListener.makeRepayment(clientLoan);
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
 
     public interface OnFragmentInteractionListener {
 
+        public void makeRepayment(Loan loan);
     }
 
 }
