@@ -15,7 +15,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 10
@@ -31,4 +31,5 @@ dependencies {
     compile files('libs/butterknife-4.0.1.jar')
     compile 'com.android.support:support-v4:19.0.1'
     compile 'com.android.support:appcompat-v7:19.0.1'
+    compile 'com.jakewharton.fliptables:fliptables:1.0.1'
 }

@@ -75,6 +75,7 @@
     <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="butterknife-4.0.1" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.4.1" level="project" />
+    <orderEntry type="library" exported="" name="fliptables-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="sugar-1.3_beta" level="project" />
   </component>

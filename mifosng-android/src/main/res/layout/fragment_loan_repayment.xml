@@ -298,7 +298,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pay Now"
+            android:text="Review Payment"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/tb_repaymentForm"
             android:id="@+id/bt_paynow"

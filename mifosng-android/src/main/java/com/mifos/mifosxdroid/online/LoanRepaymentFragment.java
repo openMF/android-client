@@ -1,6 +1,8 @@
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jakewharton.fliptables.FlipTable;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
@@ -336,6 +339,58 @@ public class LoanRepaymentFragment extends Fragment {
     @OnClick(R.id.bt_paynow)
     public void reviewPaymentDetails(){
 
+        String[] headers = {"Field", "Value"};
+        String[][] data = {
+                {"Repayment Date", et_repaymentDate.getText().toString()},
+                {"Payment Type", sp_paymentType.getSelectedItem().toString()},
+                {"Amount", et_amount.getText().toString()},
+                {"Addition Payment", et_additionalPayment.getText().toString()},
+                {"Fees", et_fees.getText().toString()},
+                {"Total", String.valueOf(calculateTotal())}
+        };
+
+        System.out.println(FlipTable.of(headers,data));
+
+        String formReviewString = new StringBuilder().append(data[0][0] + " : " + data[0][1])
+                .append("\n")
+                .append(data[1][0] + " : " + data[1][1])
+                .append("\n")
+                .append(data[2][0] + " : " + data[2][1])
+                .append("\n")
+                .append(data[3][0] + " : " + data[3][1])
+                .append("\n")
+                .append(data[4][0] + " : " + data[4][1])
+                .append("\n")
+                .append(data[5][0] + " : " + data[5][1]).toString();
+
+
+        AlertDialog confirmPaymentDialog = new AlertDialog.Builder(getActivity())
+                .setTitle("Review Payment Details")
+                .setMessage(formReviewString)
+                .setPositiveButton("Pay Now", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        submitPayment();
+                    }
+                })
+                .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
+
+
+
+    }
+
+    @OnClick(R.id.bt_cancelPayment)
+    public void cancelPayment(){
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    public void submitPayment(){
         //TODO Implement a proper builder method here
 
         String dateString = et_repaymentDate.getEditableText().toString().replace(" - ", " ");
@@ -362,13 +417,14 @@ public class LoanRepaymentFragment extends Fragment {
                                     Toast.LENGTH_LONG).show();
                         }
                         safeUIBlockingUtility.safelyUnBlockUI();
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
+                        Toast.makeText(getActivity(),"Payment Failed",Toast.LENGTH_SHORT).show();
                         safeUIBlockingUtility.safelyUnBlockUI();
                     }
                 });
-
     }
 }
