@@ -21,7 +21,7 @@ import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.utils.services.API;
+import com.mifos.services.API;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

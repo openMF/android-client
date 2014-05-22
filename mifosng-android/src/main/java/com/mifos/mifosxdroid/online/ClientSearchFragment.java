@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.online;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +20,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.utils.services.API;
+import com.mifos.services.API;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -27,4 +27,7 @@
     <string name="search_results">Search Results</string>
     <string name="title_activity_client">ClientActivity</string>
 
+    <string name="total">Total</string>
+    <string name="client_name">Client Name</string>
+    <string name="save">Save</string>
 </resources>

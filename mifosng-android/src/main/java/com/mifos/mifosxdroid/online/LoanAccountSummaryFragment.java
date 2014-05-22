@@ -22,7 +22,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.utils.services.API;
+import com.mifos.services.API;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
