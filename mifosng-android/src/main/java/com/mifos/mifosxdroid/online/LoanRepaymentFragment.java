@@ -13,16 +13,29 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.templates.loans.PaymentTypeOption;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
+import com.mifos.utils.services.API;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class LoanRepaymentFragment extends Fragment {
@@ -38,12 +51,16 @@ public class LoanRepaymentFragment extends Fragment {
     ActionBar actionBar;
 
 
+    // Arguments Passed From the Loan Account Summary Fragment
     String clientName;
     String loanAccountNumber;
     String loanProductName;
     Double amountInArrears;
     Double amountDue;
     Double fees;
+
+    // Values fetched from Loan Repayment Template
+    List<PaymentTypeOption> paymentTypeOptionList;
 
     @InjectView(R.id.tv_clientName) TextView tv_clientName;
     @InjectView(R.id.tv_loan_product_short_name) TextView tv_loanProductShortName;
@@ -55,6 +72,7 @@ public class LoanRepaymentFragment extends Fragment {
     @InjectView(R.id.et_additional_payment) EditText et_additionalPayment;
     @InjectView(R.id.et_fees) EditText et_fees;
     @InjectView(R.id.tv_total) TextView tv_total;
+    @InjectView(R.id.sp_payment_type) Spinner sp_paymentType;
 
 
     private OnFragmentInteractionListener mListener;
@@ -104,6 +122,7 @@ public class LoanRepaymentFragment extends Fragment {
         safeUIBlockingUtility = new SafeUIBlockingUtility(LoanRepaymentFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
+        actionBar.setTitle("Loan Repayment");
         ButterKnife.inject(this, rootView);
 
         inflateUI();
@@ -130,6 +149,8 @@ public class LoanRepaymentFragment extends Fragment {
     }
 
     public void inflateUI(){
+
+        safeUIBlockingUtility.safelyBlockUI();
 
         tv_clientName.setText(clientName);
         tv_loanProductShortName.setText(loanProductName);
@@ -213,6 +234,11 @@ public class LoanRepaymentFragment extends Fragment {
         Double total = amountInArrears + amountDue + fees;
 
         tv_total.setText(String.valueOf(calculateTotal()));
+
+        inflateRepaymentDate();
+
+        inflatePaymentOptions();
+
     }
 
     public Double calculateTotal(){
@@ -227,4 +253,60 @@ public class LoanRepaymentFragment extends Fragment {
 
     }
 
+    public void inflatePaymentOptions(){
+
+        API.loanService.getLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
+
+            @Override
+            public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
+
+                if(loanRepaymentTemplate != null)
+                {
+                    List<String> listOfPaymentTypes = new ArrayList<String>();
+
+                    //Currently this method assumes that Positions are Unique for each paymentType
+                    //TODO Implement a Duplication check on positions and sort them and add into listOfPaymentTypes
+                    paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
+                    Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
+                    while(paymentTypeOptionIterator.hasNext())
+                    {
+                        PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
+                        listOfPaymentTypes.add(paymentTypeOption.getPosition(),paymentTypeOption.getName());
+                    }
+
+                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                            android.R.layout.simple_spinner_item, listOfPaymentTypes);
+
+                    paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sp_paymentType.setAdapter(paymentTypeAdapter);
+
+                }
+
+                safeUIBlockingUtility.safelyUnBlockUI();
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                safeUIBlockingUtility.safelyUnBlockUI();
+
+            }
+        });
+
+    }
+
+    public void inflateRepaymentDate(){
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        et_repaymentDate.setText(new StringBuilder().append(month + 1)
+        .append(" - ").append(day).append(" - ").append(year));
+
+
+
+    }
 }
