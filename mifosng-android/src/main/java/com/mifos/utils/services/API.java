@@ -4,6 +4,8 @@ import android.util.Log;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.PageItem;
@@ -115,6 +117,11 @@ public class API {
 
         @GET("/loans/{loanId}/transactions/template?command=repayment")
         public void getLoanRepaymentTemplate(@Path("loanId") int loanId, Callback<LoanRepaymentTemplate> callback);
+
+        @POST("/loans/{loanId}/transactions?command=repayment")
+        public void submitPayment(@Path("loanId") int loanId,
+                                  @Body LoanRepaymentRequest loanRepaymentRequest,
+                                  Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
 
     }
 

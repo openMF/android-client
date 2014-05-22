@@ -10,16 +10,22 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.PaymentTypeOption;
 import com.mifos.utils.Constants;
@@ -28,17 +34,22 @@ import com.mifos.utils.services.API;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 
 public class LoanRepaymentFragment extends Fragment {
+
+    //TODO Test and Remove Amount Due and Fees Due from Instance Method (Don't Pass'em as arguments)
 
     View rootView;
 
@@ -56,11 +67,10 @@ public class LoanRepaymentFragment extends Fragment {
     String loanAccountNumber;
     String loanProductName;
     Double amountInArrears;
-    Double amountDue;
-    Double fees;
 
     // Values fetched from Loan Repayment Template
     List<PaymentTypeOption> paymentTypeOptionList;
+    HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
 
     @InjectView(R.id.tv_clientName) TextView tv_clientName;
     @InjectView(R.id.tv_loan_product_short_name) TextView tv_loanProductShortName;
@@ -73,7 +83,7 @@ public class LoanRepaymentFragment extends Fragment {
     @InjectView(R.id.et_fees) EditText et_fees;
     @InjectView(R.id.tv_total) TextView tv_total;
     @InjectView(R.id.sp_payment_type) Spinner sp_paymentType;
-
+    @InjectView(R.id.bt_paynow) Button bt_paynow;
 
     private OnFragmentInteractionListener mListener;
 
@@ -90,8 +100,8 @@ public class LoanRepaymentFragment extends Fragment {
             args.putString(Constants.LOAN_PRODUCT_NAME, loan.getLoanProductName());
             args.putString(Constants.LOAN_ACCOUNT_NUMBER, loan.getAccountNo());
             args.putDouble(Constants.AMOUNT_IN_ARREARS, loan.getSummary().getTotalOverdue());
-            args.putDouble(Constants.AMOUNT_DUE, loan.getSummary().getPrincipalDisbursed());
-            args.putDouble(Constants.FEES_DUE, loan.getSummary().getFeeChargesOutstanding());
+            //args.putDouble(Constants.AMOUNT_DUE, loan.getSummary().getPrincipalDisbursed());
+            //args.putDouble(Constants.FEES_DUE, loan.getSummary().getFeeChargesOutstanding());
             fragment.setArguments(args);
         }
         return fragment;
@@ -106,8 +116,8 @@ public class LoanRepaymentFragment extends Fragment {
             loanAccountNumber = getArguments().getString(Constants.LOAN_ACCOUNT_NUMBER);
             loanProductName = getArguments().getString(Constants.LOAN_PRODUCT_NAME);
             amountInArrears = getArguments().getDouble(Constants.AMOUNT_IN_ARREARS);
-            amountDue = getArguments().getDouble(Constants.AMOUNT_DUE);
-            fees = getArguments().getDouble(Constants.FEES_DUE);
+            //amountDue = getArguments().getDouble(Constants.AMOUNT_DUE);
+            //fees = getArguments().getDouble(Constants.FEES_DUE);
         }
     }
 
@@ -156,11 +166,10 @@ public class LoanRepaymentFragment extends Fragment {
         tv_loanProductShortName.setText(loanProductName);
         tv_loanAccountNumber.setText(loanAccountNumber);
         tv_inArrears.setText(String.valueOf(amountInArrears));
-        tv_amountDue.setText(String.valueOf(amountDue));
 
         //Setup Form with Default Values
-        Double amount = amountInArrears + amountDue;
-        et_amount.setText(String.valueOf(amount));
+        et_amount.setText("0.0");
+
         et_amount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -169,11 +178,11 @@ public class LoanRepaymentFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                try{
+                try {
                     tv_total.setText(String.valueOf(calculateTotal()));
-                }catch (NumberFormatException nfe){
+                } catch (NumberFormatException nfe) {
                     et_amount.setText("0");
-                }finally {
+                } finally {
                     tv_total.setText(String.valueOf(calculateTotal()));
                 }
             }
@@ -183,7 +192,9 @@ public class LoanRepaymentFragment extends Fragment {
 
             }
         });
+
         et_additionalPayment.setText("0.0");
+
         et_additionalPayment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -207,7 +218,8 @@ public class LoanRepaymentFragment extends Fragment {
             }
         });
 
-        et_fees.setText(String.valueOf(fees));
+        et_fees.setText("0.0");
+
         et_fees.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -231,13 +243,11 @@ public class LoanRepaymentFragment extends Fragment {
             }
         });
 
-        Double total = amountInArrears + amountDue + fees;
-
-        tv_total.setText(String.valueOf(calculateTotal()));
-
         inflateRepaymentDate();
 
         inflatePaymentOptions();
+
+        tv_total.setText(String.valueOf(calculateTotal()));
 
     }
 
@@ -262,6 +272,10 @@ public class LoanRepaymentFragment extends Fragment {
 
                 if(loanRepaymentTemplate != null)
                 {
+                    tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
+
+                    inflateRepaymentDate();
+
                     List<String> listOfPaymentTypes = new ArrayList<String>();
 
                     //Currently this method assumes that Positions are Unique for each paymentType
@@ -272,6 +286,7 @@ public class LoanRepaymentFragment extends Fragment {
                     {
                         PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
                         listOfPaymentTypes.add(paymentTypeOption.getPosition(),paymentTypeOption.getName());
+                        paymentTypeHashMap.put(paymentTypeOption.getName(),paymentTypeOption.getId());
                     }
 
                     ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(),
@@ -279,6 +294,10 @@ public class LoanRepaymentFragment extends Fragment {
 
                     paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_paymentType.setAdapter(paymentTypeAdapter);
+
+                    et_amount.setText(String.valueOf(loanRepaymentTemplate.getPrincipalPortion()+loanRepaymentTemplate.getInterestPortion()));
+                    et_additionalPayment.setText("0.0");
+                    et_fees.setText(String.valueOf(loanRepaymentTemplate.getFeeChargesPortion()));
 
                 }
 
@@ -299,14 +318,57 @@ public class LoanRepaymentFragment extends Fragment {
     public void inflateRepaymentDate(){
 
         Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        et_repaymentDate.setText(new StringBuilder().append(month + 1)
-        .append(" - ").append(day).append(" - ").append(year));
+        et_repaymentDate.setText(new StringBuilder().append(day)
+                .append(" - ").append(month + 1).append(" - ").append(year));
 
+        /*
+            TODO Add Validation to make sure :
+            1. Date Is in Correct Format
+            2. Date Entered is not greater than Date Today i.e Date is not in future
+         */
 
+    }
+
+    @OnClick(R.id.bt_paynow)
+    public void reviewPaymentDetails(){
+
+        //TODO Implement a proper builder method here
+
+        String dateString = et_repaymentDate.getEditableText().toString().replace(" - ", " ");
+
+        final LoanRepaymentRequest loanRepaymentRequest = new LoanRepaymentRequest();
+        loanRepaymentRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));
+        loanRepaymentRequest.setLocale("en");
+        loanRepaymentRequest.setTransactionAmount(String.valueOf(calculateTotal()));
+        loanRepaymentRequest.setDateFormat("dd MM yyyy");
+        loanRepaymentRequest.setTransactionDate(dateString);
+        String builtRequest = new Gson().toJson(loanRepaymentRequest);
+        Log.i("TAG", builtRequest);
+
+        safeUIBlockingUtility.safelyBlockUI();
+        API.loanService.submitPayment(Integer.parseInt(loanAccountNumber),
+                loanRepaymentRequest,
+                new Callback<LoanRepaymentResponse>() {
+                    @Override
+                    public void success(LoanRepaymentResponse loanRepaymentResponse, Response response) {
+
+                        if (loanRepaymentResponse != null)
+                        {
+                            Toast.makeText(getActivity(),"Payment Successful, Transaction ID = "+loanRepaymentResponse.getResourceId(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                    }
+                });
 
     }
 }
