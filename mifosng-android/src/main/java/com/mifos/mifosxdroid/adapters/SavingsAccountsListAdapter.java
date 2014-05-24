@@ -1,46 +1,44 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.accounts.loan.LoanAccount;
-
-import org.w3c.dom.Text;
+import com.mifos.objects.accounts.savings.SavingsAccount;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
- * Created by ishankhanna on 01/03/14.
+ * Created by ishankhanna on 23/05/14.
  */
-public class AccountsListAdapter extends BaseAdapter {
+public class SavingsAccountsListAdapter extends BaseAdapter {
 
-    List<LoanAccount> loanAccountList;
-    LayoutInflater layoutInflater;
+    private List<SavingsAccount> savingsAccountList;
+    private LayoutInflater layoutInflater;
 
-    public AccountsListAdapter(Context context, List<LoanAccount> loanAccountList){
+    public SavingsAccountsListAdapter(Context context, List<SavingsAccount> savingsAccountList) {
 
         layoutInflater = LayoutInflater.from(context);
-        this.loanAccountList = loanAccountList;
+        this.savingsAccountList = savingsAccountList;
 
     }
-
-
 
     @Override
     public int getCount() {
-        return loanAccountList.size();
+        return savingsAccountList.size();
     }
 
     @Override
-    public LoanAccount getItem(int i) {
-        return loanAccountList.get(i);
+    public SavingsAccount getItem(int i) {
+        return savingsAccountList.get(i);
     }
 
     @Override
@@ -52,31 +50,32 @@ public class AccountsListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         ReusableViewHolder reusableViewHolder;
+        if(view==null) {
 
-        if(view==null)
-        {
             view = layoutInflater.inflate(R.layout.row_account_item,null);
             reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
-        }else
-        {
+
+        }else {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_loanAccountName.setText(loanAccountList.get(i).getProductName());
-        reusableViewHolder.tv_loanAccountNumber.setText(loanAccountList.get(i).getAccountNo());
+        reusableViewHolder.tv_accountName.setText(savingsAccountList.get(i).getProductName());
+        reusableViewHolder.tv_accountNumber.setText(savingsAccountList.get(i).getAccountNo());
 
         return view;
     }
 
+
     public static class ReusableViewHolder{
 
-        @InjectView(R.id.tv_loanAccountName) TextView tv_loanAccountName;
-        @InjectView(R.id.tv_loanAccountNumber) TextView tv_loanAccountNumber;
+        @InjectView(R.id.tv_accountName) TextView tv_accountName;
+        @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
 
         public ReusableViewHolder(View view) {
             ButterKnife.inject(this, view);
         }
+
 
     }
 }

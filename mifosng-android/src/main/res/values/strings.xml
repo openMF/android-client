@@ -30,4 +30,6 @@
     <string name="total">Total</string>
     <string name="client_name">Client Name</string>
     <string name="save">Save</string>
+    <string name="loanAccounts">Loan Accounts</string>
+    <string name="savingAccounts">Savings Accounts</string>
 </resources>
