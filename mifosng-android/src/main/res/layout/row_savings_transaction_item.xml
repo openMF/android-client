@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp">
 
     <TextView
         android:layout_width="0dp"
@@ -10,6 +12,8 @@
         android:layout_weight="0.35"
         android:id="@+id/tv_transaction_date"
         android:text="May 24,2014"
+        android:textColor="@color/black"
+        style="@android:style/TextAppearance.Medium"
         android:gravity="left"/>
 
     <TextView
@@ -17,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.30"
         android:id="@+id/tv_transaction_type"
+        android:textColor="@color/black"
+        style="@android:style/TextAppearance.Medium"
         android:text="Withdrawal"
         android:gravity="center"/>
 
@@ -25,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:id="@+id/tv_transaction_amount"
+        android:textColor="@color/black"
+        style="@android:style/TextAppearance.Medium"
         android:text="2500 INR"
         android:gravity="right"/>
 

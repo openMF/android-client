@@ -142,7 +142,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        actionBar.setTitle("Loan Account Summary");
+        actionBar.setTitle(getResources().getString(R.string.loanAccountSummary));
 
         //TODO Implement cases to enable/disable repayment button
         bt_repayment.setEnabled(false);

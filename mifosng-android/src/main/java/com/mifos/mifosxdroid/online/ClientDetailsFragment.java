@@ -210,6 +210,14 @@ public class ClientDetailsFragment extends Fragment {
                                     }
                                 });
                                 lv_accounts_savings.setAdapter(savingsAccountsListAdapter);
+                                lv_accounts_savings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                        mListener.loadSavingsAccountSummary(clientAccounts.getSavingsAccounts().get(i).getId());
+                                    }
+                                });
+
                             }
 
                         }
@@ -259,6 +267,7 @@ public class ClientDetailsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
 
         public void loadLoanAccountSummary(int loanAccountNumber);
+        public void loadSavingsAccountSummary(int savingsAccountNumber);
 
     }
 

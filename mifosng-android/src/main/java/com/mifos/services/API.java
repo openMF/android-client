@@ -6,6 +6,7 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
+import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
@@ -124,6 +125,22 @@ public class API {
         public void submitPayment(@Path("loanId") int loanId,
                                   @Body LoanRepaymentRequest loanRepaymentRequest,
                                   Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
+
+    }
+
+    public static SavingsAccountService savingsAccountService = restAdapter.create(SavingsAccountService.class);
+    public interface SavingsAccountService {
+
+        /**
+         *
+         * @param savingsAccountId - savingsAccountId for which information is requested
+         * @param association - Mention Type of Association Needed, Like :- all, transactions etc.
+         * @param savingsAccountWithAssociationsCallback - callback to receive the response
+         */
+        @GET("/savingsaccounts/{savingsAccountId}")
+        public void getSavingsAccountWithAssociations(@Path("savingsAccountId") int savingsAccountId,
+                                                      @Query("associations") String association,
+                                                      Callback<SavingsAccountWithAssociations> savingsAccountWithAssociationsCallback);
 
     }
 

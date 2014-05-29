@@ -31,5 +31,7 @@
     <string name="client_name">Client Name</string>
     <string name="save">Save</string>
     <string name="loanAccounts">Loan Accounts</string>
+    <string name="loanAccountSummary">Loan Account Summary</string>
     <string name="savingAccounts">Savings Accounts</string>
+    <string name="savingsAccountSummary">Savings Account Summary</string>
 </resources>

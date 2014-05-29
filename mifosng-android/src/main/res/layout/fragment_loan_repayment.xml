@@ -62,7 +62,6 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Product Name"
-                android:background="@drawable/divider_white"
                 android:id="@+id/tv_loan_product_short_name" />
 
             <TextView
@@ -72,7 +71,6 @@
                 android:text="Medium Text"
                 android:id="@+id/tv_loanAccountNumber"
                 android:gravity="right"
-                android:background="@drawable/divider_white"
                 android:layout_weight="0.4" />
 
         </LinearLayout>

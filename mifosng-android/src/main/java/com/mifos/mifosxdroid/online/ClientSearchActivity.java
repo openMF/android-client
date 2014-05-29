@@ -59,6 +59,17 @@ public class ClientSearchActivity extends ActionBarActivity implements LoanAccou
     }
 
     @Override
+    public void loadSavingsAccountSummary(int savingsAccountNumber) {
+
+        SavingsAccountSummaryFragment savingsAccountSummaryFragment
+                = SavingsAccountSummaryFragment.newInstance(savingsAccountNumber);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.global_container,savingsAccountSummaryFragment).commit();
+
+    }
+
+    @Override
     public void makeRepayment(Loan loan) {
 
     }

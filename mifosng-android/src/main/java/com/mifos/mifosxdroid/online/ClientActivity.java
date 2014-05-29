@@ -14,8 +14,8 @@ import butterknife.ButterKnife;
 
 public class ClientActivity extends ActionBarActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
                                                                  LoanAccountSummaryFragment.OnFragmentInteractionListener,
-                                                                 LoanRepaymentFragment.OnFragmentInteractionListener{
-
+                                                                 LoanRepaymentFragment.OnFragmentInteractionListener,
+                                                                 SavingsAccountSummaryFragment.OnFragmentInteractionListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +50,21 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     @Override
     public void loadLoanAccountSummary(int loanAccountNumber) {
 
-        LoanAccountSummaryFragment loanAccountSummaryFragment = LoanAccountSummaryFragment.newInstance(loanAccountNumber);
+        LoanAccountSummaryFragment loanAccountSummaryFragment
+                = LoanAccountSummaryFragment.newInstance(loanAccountNumber);
         FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.global_container,loanAccountSummaryFragment).commit();
 
+    }
+
+    @Override
+    public void loadSavingsAccountSummary(int savingsAccountNumber) {
+        SavingsAccountSummaryFragment savingsAccountSummaryFragment
+                = SavingsAccountSummaryFragment.newInstance(savingsAccountNumber);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.global_container,savingsAccountSummaryFragment).commit();
     }
 
 
@@ -65,5 +75,15 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.global_container, loanRepaymentFragment).commit();
+    }
+
+    @Override
+    public void makeDeposit() {
+
+    }
+
+    @Override
+    public void makeWithdrawal() {
+
     }
 }
