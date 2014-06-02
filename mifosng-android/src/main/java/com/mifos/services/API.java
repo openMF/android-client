@@ -1,5 +1,7 @@
 package com.mifos.services;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
@@ -14,6 +16,7 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
+import com.mifos.utils.Constants;
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.http.*;
@@ -24,7 +27,7 @@ import java.util.List;
 public class API {
 
     //This instance has more Data for Testing
-    public static String url = "https://demo.openmf.org/mifosng-provider/api/v1";
+    public static String url = "https://developer.openmf.org/mifosng-provider/api/v1";
 
     //public static String url = "https://demo2.openmf.org/mifosng-provider/api/v1";
     static RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
@@ -33,8 +36,16 @@ public class API {
                 public void intercept(RequestFacade request) {
                     request.addHeader("Accept", "application/json");
                     request.addHeader("Content-Type", "application/json");
-                    request.addHeader("X-Mifos-Platform-TenantId", "default");
-                    request.addHeader("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=");
+                    request.addHeader("X-Mifos-Platform-TenantId", "developer");
+//                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
+
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Constants.applicationContext);
+                    String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
+
+                    if (authToken != null && !"NA".equals(authToken)) {
+                        request.addHeader("Authorization", authToken);
+                    }
+
                 }
             })
             .setErrorHandler(new MifosRestErrorHandler())
@@ -74,9 +85,9 @@ public class API {
 
         @GET("/centers")
         public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
-        @POST("/centers/2?command=generateCollectionSheet")
+        @POST("/centers/2026?command=generateCollectionSheet")
         public void getCenter(@Body Payload payload, Callback<CollectionSheet> callback);
-        @POST("/centers/2?command=saveCollectionSheet")
+        @POST("/centers/2026?command=saveCollectionSheet")
         public SaveResponse saveCollectionSheet(@Body CollectionSheetPayload collectionSheetPayload);
     }
 

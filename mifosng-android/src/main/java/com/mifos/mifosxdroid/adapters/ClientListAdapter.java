@@ -28,7 +28,6 @@ public class ClientListAdapter extends BaseAdapter {
     private String tag = getClass().getSimpleName();
     private Map<Loan, Integer> listPaidAmounts;
     private EditFocusChangeListener editFocusChangeListener;
-    private int clientId = -1;
     private Context context;
 
     public ClientListAdapter(Context context, List<Client> listClient) {
@@ -76,15 +75,14 @@ public class ClientListAdapter extends BaseAdapter {
         }
 
         final Client client = listClient.get(i);
-        clientId = client.getClientId();
 
-        Loan loan = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)).first();
+        Loan loan = Select.from(Loan.class).where(Condition.prop("client").eq(client.getId())).first();
 
         if (loan != null && loan.productShortName.length() > 0) {
 
             viewHolder.tv_product_short_name.setText(loan.productShortName);
             viewHolder.tv_client_name.setText(client.getClientName());
-            viewHolder.et_amt_paid.setText(String.valueOf(listPaidAmounts.get(clientId)));
+            viewHolder.et_amt_paid.setText(String.valueOf(loan.totalDue));
             viewHolder.et_amt_paid.setTag(loan);
             viewHolder.et_amt_paid.setOnFocusChangeListener(editFocusChangeListener);
         }
