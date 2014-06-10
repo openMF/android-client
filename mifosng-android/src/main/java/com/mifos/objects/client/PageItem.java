@@ -187,11 +187,12 @@ public class PageItem {
          * DD
          */
 
-        Calendar calender = Calendar.getInstance();
-        calender.set(activationDate.get(0),activationDate.get(1),activationDate.get(2));
+        Calendar calendar = Calendar.getInstance();
+        // Note, java.util.Calendar month is zero-indexed.
+        calendar.set(activationDate.get(0),activationDate.get(1)-1,activationDate.get(2));
 
         DateFormat dateFormat = DateFormat.getDateInstance();
-        return dateFormat.format(calender.getTime()).toString();
+        return dateFormat.format(calendar.getTime()).toString();
 
     }
 
