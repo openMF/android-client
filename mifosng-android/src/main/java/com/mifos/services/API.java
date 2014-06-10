@@ -17,9 +17,11 @@ import com.mifos.services.data.Payload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
+
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.http.*;
+import retrofit.mime.TypedFile;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +37,6 @@ public class API {
                 @Override
                 public void intercept(RequestFacade request) {
                     request.addHeader("Accept", "application/json");
-                    request.addHeader("Content-Type", "application/json");
                     request.addHeader("X-Mifos-Platform-TenantId", "developer");
 //                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
 
@@ -111,6 +112,14 @@ public class API {
         @GET("/clients/{clientId}")
         public void getClient(@Path("clientId") int clientId, Callback<Client> callback);
 
+        @Multipart
+        @POST("/clients/{clientId}/images")
+        public void uploadClientImage(@Path("clientId") int clientId,
+                                      @Part("file") TypedFile file,
+                                      Callback<Response> callback);
+
+        @DELETE("/clients/{clientId}/images")
+        void deleteClientImage(@Path("clientId") int clientId, Callback<Response> callback);
     }
 
     public static ClientService clientService = restAdapter.create(ClientService.class);

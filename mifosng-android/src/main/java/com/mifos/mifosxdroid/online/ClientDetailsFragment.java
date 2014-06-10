@@ -1,19 +1,24 @@
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,19 +27,23 @@ import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
+import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.services.API;
+
+import java.io.File;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 
 
 public class ClientDetailsFragment extends Fragment {
-
+    // Intent response codes. Each response code must be a unique integer.
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
 
     private OnFragmentInteractionListener mListener;
     
@@ -54,6 +63,7 @@ public class ClientDetailsFragment extends Fragment {
     @InjectView(R.id.tv_count_savings_accounts) TextView tv_count_savings_accounts;
     @InjectView(R.id.lv_accounts_loans) ListView lv_accounts_loans;
     @InjectView(R.id.lv_accounts_savings) ListView lv_accounts_savings;
+    @InjectView(R.id.iv_clientImage) ImageView iv_clientImage;
 
 
     View rootView;
@@ -68,6 +78,7 @@ public class ClientDetailsFragment extends Fragment {
 
     boolean isLoanAccountsListOpen = false;
     boolean isSavingsAccountsListOpen = false;
+    private File capturedClientImageFile;
 
 
     /**
@@ -95,6 +106,7 @@ public class ClientDetailsFragment extends Fragment {
             clientId = getArguments().getInt(Constants.CLIENT_ID);
             System.out.print(clientId);
         }
+        capturedClientImageFile = new File(getActivity().getExternalCacheDir(), "client_image.png");
     }
 
     @Override
@@ -128,6 +140,31 @@ public class ClientDetailsFragment extends Fragment {
                     tv_externalId.setText(client.getExternalId());
                     tv_activationDate.setText(client.getFormattedActivationDateAsString());
                     tv_office.setText(client.getOfficeName());
+
+                    iv_clientImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            PopupMenu menu = new PopupMenu(getActivity(), view);
+                            menu.getMenuInflater().inflate(R.menu.client_image_popup, menu.getMenu());
+                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    switch (menuItem.getItemId()) {
+                                        case R.id.client_image_capture:
+                                            captureClientImage();
+                                            break;
+                                        case R.id.client_image_remove:
+                                            deleteClientImage();
+                                            break;
+                                        default:
+                                            Log.e("ClientDetailsFragment", "Unrecognized client image menu item");
+                                    }
+                                    return true;
+                                }
+                            });
+                            menu.show();
+                        }
+                    });
 
                     API.clientAccountsService.getAllAccountsOfClient(client.getId(), new Callback<ClientAccounts>() {
                         @Override
@@ -262,6 +299,62 @@ public class ClientDetailsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
+                onClientImageCapture(resultCode, data);
+                break;
+        }
+    }
+
+    public void captureClientImage() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(capturedClientImageFile));
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    public void deleteClientImage() {
+        API.clientService.deleteClientImage(clientId, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Toast.makeText(activity, "Image deleted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Toast.makeText(activity, "Failed to delete image", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void onClientImageCapture(int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            uploadImage(capturedClientImageFile);
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            // User cancelled the image capture.
+        } else {
+            Toast.makeText(activity, "Failed to capture image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void uploadImage(File pngFile) {
+        API.clientService.uploadClientImage(clientId,
+                new TypedFile("image/png", pngFile),
+                new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        Toast.makeText(activity, "Client image updated", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Toast.makeText(activity, "Failed to update image", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     public interface OnFragmentInteractionListener {
