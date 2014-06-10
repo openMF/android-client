@@ -133,6 +133,11 @@ public class ClientDetailsFragment extends Fragment {
                         @Override
                         public void success(final ClientAccounts clientAccounts, Response response) {
 
+                            // Proceed only when the fragment is added to the activity.
+                            if (!isAdded()) {
+                                return;
+                            }
+
                             final String loanAccountsStringResource = getResources().getString(R.string.loanAccounts);
                             final String savingsAccountsStringResource = getResources().getString(R.string.savingAccounts);
                             final String loanListOpen = "- " + loanAccountsStringResource;
