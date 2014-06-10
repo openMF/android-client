@@ -148,7 +148,7 @@ public class API {
         @GET("/clients/{clientId}")
         public void getClient(@Path("clientId") int clientId, Callback<Client> callback);
 
-        @Headers({"Accept: application/octet-stream", "Content-Type: application/json"})
+        @Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}/images")
         public void getClientImage(@Path("clientId") int clientId, Callback<TypedByteArray> callback);
 
