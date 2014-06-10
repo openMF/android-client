@@ -29,6 +29,9 @@ public class API {
     //This instance has more Data for Testing
     public static String mInstanceUrl = "https://developer.openmf.org/mifosng-provider/api/v1";
 
+    public static final String ACCEPT_JSON = "Accept: application/json";
+    public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
+
     //public static String mInstanceUrl = "https://demo2.openmf.org/mifosng-provider/api/v1";
 
     static RestAdapter sRestAdapter;
@@ -60,8 +63,6 @@ public class API {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
-                        request.addHeader("Accept", "application/json");
-                        request.addHeader("Content-Type", "application/json");
                         if (url.contains("developer")) {
                             request.addHeader("X-Mifos-Platform-TenantId", "developer");
                         } else {
@@ -82,6 +83,7 @@ public class API {
                 })
                 .setErrorHandler(new MifosRestErrorHandler())
                 .build();
+        // TODO: This logging is sometimes excessive, e.g. for client image requests.
         restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
         return restAdapter;
     }
@@ -113,19 +115,23 @@ public class API {
 
     public interface CenterService {
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/centers")
         public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST("/centers/2026?command=generateCollectionSheet")
         public void getCenter(@Body Payload payload, Callback<CollectionSheet> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST("/centers/2026?command=saveCollectionSheet")
         public SaveResponse saveCollectionSheet(@Body CollectionSheetPayload collectionSheetPayload);
+
     }
-
-
-
 
     public interface ClientAccountsService {
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}/accounts")
         public void getAllAccountsOfClient(@Path("clientId") int clientId, Callback<ClientAccounts> callback);
 
@@ -133,9 +139,11 @@ public class API {
 
     public interface ClientService {
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/clients")
         public void listAllClients(Callback<Page<Client>> callback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}")
         public void getClient(@Path("clientId") int clientId, Callback<Client> callback);
 
@@ -143,20 +151,23 @@ public class API {
 
     public interface SearchService {
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/search?resource=clients")
         public void searchClientsByName(@Query("query") String clientName, Callback<List<SearchedEntity>> callback);
-
 
     }
 
     public interface LoanService {
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/loans/{loanId}")
         public void getLoanById(@Path("loanId") int loanId, Callback<com.mifos.objects.accounts.loan.Loan> callback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/loans/{loanId}/transactions/template?command=repayment")
         public void getLoanRepaymentTemplate(@Path("loanId") int loanId, Callback<LoanRepaymentTemplate> callback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST("/loans/{loanId}/transactions?command=repayment")
         public void submitPayment(@Path("loanId") int loanId,
                                   @Body LoanRepaymentRequest loanRepaymentRequest,
@@ -172,6 +183,7 @@ public class API {
          * @param association - Mention Type of Association Needed, Like :- all, transactions etc.
          * @param savingsAccountWithAssociationsCallback - callback to receive the response
          */
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/savingsaccounts/{savingsAccountId}")
         public void getSavingsAccountWithAssociations(@Path("savingsAccountId") int savingsAccountId,
                                                       @Query("associations") String association,
@@ -179,11 +191,12 @@ public class API {
 
     }
 
-
     public interface UserAuthService {
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST("/authentication")
         public void authenticate(@Query("username") String username, @Query("password") String password, Callback<User> userCallback);
+
     }
 
     public static <T> Callback<T> getCallback(T t) {
