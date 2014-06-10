@@ -12,6 +12,8 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
+import com.mifos.services.data.GpsCoordinatesRequest;
+import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.CollectionSheetPayload;
@@ -27,7 +29,7 @@ import java.util.List;
 public class API {
 
     //This instance has more Data for Testing
-    public static String url = "https://developer.openmf.org/mifosng-provider/api/v1";
+    public static String url = "https://demo.openmf.org/mifosng-provider/api/v1";
 
     //public static String url = "https://demo2.openmf.org/mifosng-provider/api/v1";
     static RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
@@ -36,7 +38,7 @@ public class API {
                 public void intercept(RequestFacade request) {
                     request.addHeader("Accept", "application/json");
                     request.addHeader("Content-Type", "application/json");
-                    request.addHeader("X-Mifos-Platform-TenantId", "developer");
+                    request.addHeader("X-Mifos-Platform-TenantId", "default");
 //                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
 
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Constants.applicationContext);
@@ -197,5 +199,16 @@ public class API {
 
         return cb;
     }
+
+
+    public interface GpsCoordinatesService {
+
+        @POST("/datatables/gps_coordinates/{clientId}?genericResultSet=true")
+        public void setGpsCoordinates(@Path("clientId") int clientId,
+                                      @Body GpsCoordinatesRequest coordinates,
+                                      Callback<GpsCoordinatesResponse> callback);
+    }
+
+    public static GpsCoordinatesService gpsCoordinatesService = restAdapter.create(GpsCoordinatesService.class);
 }
 
