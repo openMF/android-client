@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
@@ -130,17 +132,28 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
     }
 
     @OnClick(R.id.bt_login)
-    public void login(Button button){
+    public void onLoginClick(Button button){
+        login();
+    }
 
+    private void login() {
         try {
             if (validateUserInputs())
                 progressDialog.show();
 
             API.userAuthService.authenticate(username, password, this);
-
         } catch (ShortOfLengthException e) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @OnEditorAction(R.id.et_password)
+    public boolean passwordSubmitted(KeyEvent keyEvent) {
+        if (keyEvent != null && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+            login();
+            return true;
+        }
+        return false;
     }
 
     public void saveAuthenticationKey(String authenticationKey) {
