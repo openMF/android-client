@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
     <string name="search">Search</string>
     <string name="title_activity_dash_board">DashBoardActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -34,4 +35,5 @@
     <string name="loanAccountSummary">Loan Account Summary</string>
     <string name="savingAccounts">Savings Accounts</string>
     <string name="savingsAccountSummary">Savings Account Summary</string>
+    <string name="default_instance_url">https://developer.openmf.org/mifosng-provider/api/v1</string>
 </resources>

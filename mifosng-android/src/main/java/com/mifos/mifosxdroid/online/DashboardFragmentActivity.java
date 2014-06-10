@@ -1,14 +1,19 @@
 package com.mifos.mifosxdroid.online;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.MenuItem;
 
+import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.adapters.FragmentAdapter;
 
 import java.util.ArrayList;
@@ -20,7 +25,7 @@ import java.util.List;
 
 
 public class DashboardFragmentActivity extends ActionBarActivity implements ActionBar.TabListener, ClientListFragment.FragmentChangeListener{
-
+    public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
     public static Context context;
     private ViewPager viewPager;
     private FragmentAdapter fragmentAdapter;
@@ -115,4 +120,22 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Acti
         return tab;
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
+
+        switch (item.getItemId()) {
+            case R.id.offline:
+                startActivity(new Intent(this, GroupActivity.class));
+                break;
+            case R.id.logout:
+                startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));
+                break;
+            default: //DO NOTHING
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

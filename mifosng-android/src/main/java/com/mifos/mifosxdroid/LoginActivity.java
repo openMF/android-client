@@ -20,6 +20,11 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -28,6 +33,8 @@ import retrofit.client.Response;
  * Created by ishankhanna on 08/02/14.
  */
 public class LoginActivity extends ActionBarActivity implements Callback<User> {
+
+    public static String INSTANCE_URL_KEY = "instanceURL";
 
     SharedPreferences sharedPreferences;
     @InjectView(R.id.et_instanceURL) EditText et_instanceURL;
@@ -50,17 +57,22 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
         context = LoginActivity.this;
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String previouslyEnteredUrl = sharedPreferences.getString(INSTANCE_URL_KEY,
+                getString(R.string.default_instance_url));
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
         ButterKnife.inject(this);
         setupUI();
         if(bt_login==null)
         {
-            Log.i(tag,"login button is null");
+            Log.i(tag, "login button is null");
         }
-        else
-            Log.i(tag,"login button is not null");
+        else {
+            Log.i(tag, "login button is not null");
+        }
+        et_instanceURL.setText(previouslyEnteredUrl);
     }
+
     public void setupUI()
     {
         progressDialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
@@ -71,6 +83,22 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
     public boolean validateUserInputs() throws ShortOfLengthException {
 
         //TODO Create All Validations Here for all input fields
+
+        String urlInputValue = et_instanceURL.getEditableText().toString();
+        try {
+            URL url = new URL(urlInputValue);
+            instanceURL = url.toURI().toString();
+            Log.d(tag, "instance URL: " + instanceURL);
+            API.setInstanceUrl(instanceURL);
+            saveInstanceUrl(instanceURL);
+        } catch (MalformedURLException e) {
+            Log.e(tag, "Invalid instance URL: " + urlInputValue, e);
+            throw new ShortOfLengthException("Instance URL", 5);
+        } catch (URISyntaxException uriException) {
+            Log.e(tag, "Invalid instance URL: " + urlInputValue, uriException);
+            throw new ShortOfLengthException("Instance URL", 5);
+        }
+
 
         username = et_username.getEditableText().toString();
         if (username.length() < 5) {
@@ -116,9 +144,15 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
     }
 
     public void saveAuthenticationKey(String authenticationKey) {
-
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(User.AUTHENTICATION_KEY, authenticationKey);
+        editor.commit();
+        editor.apply();
+    }
+
+    public void saveInstanceUrl(String instanceURL) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(INSTANCE_URL_KEY, instanceURL);
         editor.commit();
         editor.apply();
     }
@@ -131,7 +165,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        Log.d(tag, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.offline:
                 startActivity(new Intent(this, GroupActivity.class));
