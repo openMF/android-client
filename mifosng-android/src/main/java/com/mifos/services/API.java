@@ -20,6 +20,7 @@ import com.mifos.utils.Constants;
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.http.*;
+import retrofit.mime.TypedByteArray;
 
 import java.util.Iterator;
 import java.util.List;
@@ -146,6 +147,10 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}")
         public void getClient(@Path("clientId") int clientId, Callback<Client> callback);
+
+        @Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
+        @GET("/clients/{clientId}/images")
+        public void getClientImage(@Path("clientId") int clientId, Callback<TypedByteArray> callback);
 
     }
 
