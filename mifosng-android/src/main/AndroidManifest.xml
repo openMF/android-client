@@ -29,6 +29,9 @@
             android:name="com.mifos.mifosxdroid.LoginActivity"
             android:label="Login" />
         <activity
+            android:name="com.mifos.mifosxdroid.online.LogoutActivity"
+            android:label="@string/logout" />
+        <activity
             android:name="com.mifos.mifosxdroid.online.DashboardFragmentActivity"
             android:label="Dashboard" >
         </activity>

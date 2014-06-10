@@ -4,15 +4,19 @@
 
     <item
         android:id="@+id/mItem_search"
-        android:title="@string/search"
+        android:enabled="true"
         android:showAsAction="ifRoom"
-        android:enabled="true"/>
+        android:title="@string/search" />
 
- <item
+    <item
         android:id="@+id/offline_menu"
-        android:title="@string/offline"
+        android:enabled="true"
         android:showAsAction="ifRoom"
-        android:enabled="true"/>
+        android:title="@string/offline" />
 
+    <item android:id="@+id/logout"
+        android:enabled="true"
+        android:showAsAction="ifRoom"
+        android:title="@string/logout" />
 
 </menu>

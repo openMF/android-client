@@ -27,33 +27,63 @@ import java.util.List;
 public class API {
 
     //This instance has more Data for Testing
-    public static String url = "https://developer.openmf.org/mifosng-provider/api/v1";
+    public static String mInstanceUrl = "https://developer.openmf.org/mifosng-provider/api/v1";
 
-    //public static String url = "https://demo2.openmf.org/mifosng-provider/api/v1";
-    static RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
-            .setRequestInterceptor(new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    request.addHeader("Accept", "application/json");
-                    request.addHeader("Content-Type", "application/json");
-                    request.addHeader("X-Mifos-Platform-TenantId", "developer");
-//                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
+    //public static String mInstanceUrl = "https://demo2.openmf.org/mifosng-provider/api/v1";
 
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Constants.applicationContext);
-                    String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-
-                    if (authToken != null && !"NA".equals(authToken)) {
-                        request.addHeader("Authorization", authToken);
-                    }
-
-                }
-            })
-            .setErrorHandler(new MifosRestErrorHandler())
-            .build();
+    static RestAdapter sRestAdapter;
+    public static CenterService centerService;
+    public static ClientAccountsService clientAccountsService;
+    public static ClientService clientService;
+    public static LoanService loanService;
+    public static SavingsAccountService savingsAccountService;
+    public static SearchService searchService;
+    public static UserAuthService userAuthService;
 
     static {
-        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
+        init();
+    }
 
+    private static synchronized void init() {
+        sRestAdapter = createRestAdapter(getInstanceUrl());
+        centerService = sRestAdapter.create(CenterService.class);
+        clientAccountsService = sRestAdapter.create(ClientAccountsService.class);
+        clientService = sRestAdapter.create(ClientService.class);
+        loanService = sRestAdapter.create(LoanService.class);
+        savingsAccountService = sRestAdapter.create(SavingsAccountService.class);
+        searchService = sRestAdapter.create(SearchService.class);
+        userAuthService = sRestAdapter.create(UserAuthService.class);
+    }
+
+    private static RestAdapter createRestAdapter(final String url) {
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("Accept", "application/json");
+                        request.addHeader("Content-Type", "application/json");
+                        if (url.contains("developer")) {
+                            request.addHeader("X-Mifos-Platform-TenantId", "developer");
+                        } else {
+                            request.addHeader("X-Mifos-Platform-TenantId", "default");
+                        }
+
+  //                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
+
+                        SharedPreferences pref = PreferenceManager
+                                .getDefaultSharedPreferences(Constants.applicationContext);
+                        String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
+
+                        if (authToken != null && !"NA".equals(authToken)) {
+                            request.addHeader("Authorization", authToken);
+                        }
+
+                    }
+                })
+                .setErrorHandler(new MifosRestErrorHandler())
+                .build();
+        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
+        return restAdapter;
     }
 
      static class MifosRestErrorHandler implements ErrorHandler {
@@ -92,7 +122,7 @@ public class API {
     }
 
 
-    public static CenterService centerService = restAdapter.create(CenterService.class);
+
 
     public interface ClientAccountsService {
 
@@ -100,8 +130,6 @@ public class API {
         public void getAllAccountsOfClient(@Path("clientId") int clientId, Callback<ClientAccounts> callback);
 
     }
-
-    public static ClientAccountsService clientAccountsService = restAdapter.create(ClientAccountsService.class);
 
     public interface ClientService {
 
@@ -113,8 +141,6 @@ public class API {
 
     }
 
-    public static ClientService clientService = restAdapter.create(ClientService.class);
-
     public interface SearchService {
 
         @GET("/search?resource=clients")
@@ -123,7 +149,6 @@ public class API {
 
     }
 
-    public static LoanService loanService = restAdapter.create(LoanService.class);
     public interface LoanService {
 
         @GET("/loans/{loanId}")
@@ -139,7 +164,6 @@ public class API {
 
     }
 
-    public static SavingsAccountService savingsAccountService = restAdapter.create(SavingsAccountService.class);
     public interface SavingsAccountService {
 
         /**
@@ -155,16 +179,12 @@ public class API {
 
     }
 
-    public static SearchService searchService = restAdapter.create(SearchService.class);
 
     public interface UserAuthService {
 
         @POST("/authentication")
         public void authenticate(@Query("username") String username, @Query("password") String password, Callback<User> userCallback);
     }
-
-    public static UserAuthService userAuthService = restAdapter.create(UserAuthService.class);
-
 
     public static <T> Callback<T> getCallback(T t) {
         Callback<T> cb = new Callback<T>() {
@@ -196,6 +216,15 @@ public class API {
         };
 
         return cb;
+    }
+
+    public static synchronized void setInstanceUrl(String url) {
+        mInstanceUrl = url;
+        init();
+    }
+
+    public static synchronized String getInstanceUrl() {
+        return mInstanceUrl;
     }
 }
 
