@@ -21,6 +21,7 @@ import retrofit.*;
 import retrofit.client.Response;
 import retrofit.http.*;
 import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedFile;
 
 import java.util.Iterator;
 import java.util.List;
@@ -150,7 +151,7 @@ public class API {
 
         @Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}/images")
-        public void getClientImage(@Path("clientId") int clientId, Callback<TypedByteArray> callback);
+        public void getClientImage(@Path("clientId") int clientId, Callback<TypedFile> callback);
 
     }
 

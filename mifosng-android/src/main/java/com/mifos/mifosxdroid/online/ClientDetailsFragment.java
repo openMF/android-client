@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedFile;
 
 
 public class ClientDetailsFragment extends Fragment {
@@ -119,7 +122,7 @@ public class ClientDetailsFragment extends Fragment {
         safeUIBlockingUtility.safelyBlockUI();
         API.clientService.getClient(clientId, new Callback<Client>() {
             @Override
-            public void success(Client client, Response response) {
+            public void success(final Client client, Response response) {
 
                 if (client != null) {
                     actionBar.setTitle("Mifos Client - " + client.getLastname());
@@ -128,6 +131,24 @@ public class ClientDetailsFragment extends Fragment {
                     tv_externalId.setText(client.getExternalId());
                     tv_activationDate.setText(client.getFormattedActivationDateAsString());
                     tv_office.setText(client.getOfficeName());
+
+                    if (client.isImagePresent()) {
+                        API.clientService.getClientImage(client.getId(), new Callback<TypedFile>() {
+
+                            @Override
+                            public void success(final TypedFile file, Response response) {
+                                byte[] buf = new byte[file.];
+                                byte[] bytes = IOUtils.toByteArray(is);
+                                Log.d("", file.in().read(buf));
+                            }
+
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+                                Log.d("", "No image found for clientId " + client.getId());
+                            }
+
+                        });
+                    }
 
                     API.clientAccountsService.getAllAccountsOfClient(client.getId(), new Callback<ClientAccounts>() {
                         @Override
