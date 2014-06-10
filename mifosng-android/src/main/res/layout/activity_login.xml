@@ -5,12 +5,16 @@
     android:padding="@dimen/activity_horizontal_margin">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_instanceURL"
         android:inputType="text"
-        android:hint="http://"
+        android:hint="@string/default_instance_url"
         android:minWidth="200dp"
+        android:imeOptions="actionNext"
+        android:nextFocusDown="@+id/et_username"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_below="@+id/tv_title_instance"
         android:layout_centerHorizontal="true" />
 
@@ -19,6 +23,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_username"
         android:hint="Username"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:nextFocusDown="@+id/et_password"
         android:layout_below="@+id/tv_title_username"
         android:layout_alignLeft="@+id/tv_title_username"
         android:layout_alignStart="@+id/tv_title_username"
@@ -32,6 +39,9 @@
         android:ems="10"
         android:id="@+id/et_password"
         android:hint="Password"
+        android:imeOptions="actionDone"
+        android:imeActionLabel="@string/login"
+        android:nextFocusDown="@+id/bt_login"
         android:layout_below="@+id/tv_title_password"
         android:layout_alignLeft="@+id/tv_title_password"
         android:layout_alignStart="@+id/tv_title_password"
@@ -52,6 +62,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/iv_logo"
         android:src="@drawable/ic_launcher"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -65,8 +76,8 @@
         android:id="@+id/tv_title"
         android:textColor="#ff003fff"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/et_instanceURL"
-        android:layout_alignStart="@+id/et_instanceURL" />
+        android:layout_toRightOf="@id/iv_logo"
+        android:layout_marginLeft="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
