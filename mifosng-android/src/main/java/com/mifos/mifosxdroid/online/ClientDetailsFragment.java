@@ -152,12 +152,16 @@ public class ClientDetailsFragment extends Fragment {
                     tv_activationDate.setText(client.getFormattedActivationDateAsString());
                     tv_office.setText(client.getOfficeName());
 
+                    // TODO: For some reason Retrofit always calls the failure() method even after
+                    // receiving a 200 response with image bytes. Perhaps we need to change the
+                    // argument type from TypedFile to something else?
                     if (client.isImagePresent()) {
                         API.clientService.getClientImage(client.getId(), new Callback<TypedFile>() {
 
                             @Override
                             public void success(final TypedFile file, Response response) {
                                 try {
+                                    // TODO: Parse bytes and render image in the UI.
                                     byte[] bytes = inputStreamToByteArray(file.in());
                                 } catch (IOException e) {
                                     e.printStackTrace();
