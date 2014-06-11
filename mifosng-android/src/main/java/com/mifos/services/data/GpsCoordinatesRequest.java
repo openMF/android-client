@@ -1,7 +1,7 @@
 package com.mifos.services.data;
 
 /**
- * Represents the GPS coordinates of a client location.
+ * Represents the GPS coordinates request to set the client location.
  */
 public class GpsCoordinatesRequest
 {

@@ -35,8 +35,9 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                                                                  SavingsAccountSummaryFragment.OnFragmentInteractionListener,
                                                                  GooglePlayServicesClient.ConnectionCallbacks,
                                                                  GooglePlayServicesClient.OnConnectionFailedListener{
-    private LocationClient mLocationClient;  // Could be null.
-    // True if play services are available, and once location services are connected.
+    // Null if play services are not available.
+    private LocationClient mLocationClient;
+    // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
     private int clientId;
 
@@ -49,10 +50,12 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
         ClientDetailsFragment clientDetailsFragment = ClientDetailsFragment.newInstance(clientId);
         fragmentTransaction.replace(R.id.global_container, clientDetailsFragment).commit();
+
+        // Initialize location client only if play services are available.
         if (servicesConnected()) {
             mLocationClient = new LocationClient(this, this, this);
-            locationAvailable.set(true);
         } else {
+            mLocationClient = null;
             locationAvailable.set(false);
         }
     }
@@ -61,13 +64,17 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     protected void onStart() {
         super.onStart();
         // Connect the client.
-        mLocationClient.connect();
+        if (mLocationClient != null) {
+            mLocationClient.connect();
+        }
     }
 
     @Override
     protected void onStop() {
         // Disconnecting the client invalidates it.
-        mLocationClient.disconnect();
+        if (mLocationClient != null) {
+            mLocationClient.disconnect();
+        }
         super.onStop();
     }
 
@@ -109,6 +116,11 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                             }
                         });
                 ;
+            } else {
+                // Display the connection status
+                Toast.makeText(this, "Location not available",
+                        Toast.LENGTH_SHORT).show();
+                Log.w(this.getLocalClassName(), "Location not available");
             }
             return true;
         }
@@ -167,11 +179,10 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         if (ConnectionResult.SUCCESS == resultCode) {
             Log.d(this.getLocalClassName(), "Google Play Services connected");
             return true;
-            // Google Play services was not available for some reason
+        // Google Play services was not available for some reason
         } else {
-            // TODO: display a better actionable error message.
             Log.w(this.getLocalClassName(), "Google Play Services not available");
-            Toast.makeText(this, "Google Play Services not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -196,9 +207,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     @Override
     public void onDisconnected() {
         locationAvailable.set(false);
-        // Display the connection status
-        Toast.makeText(this, "Disconnected. Please re-connect.",
-                Toast.LENGTH_SHORT).show();
+        Log.d(this.getLocalClassName(), "Disconnected from location services");
     }
 
     /*
@@ -231,14 +240,12 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
                 e.printStackTrace();
+                Log.e(this.getLocalClassName(),
+                        "Connection to location services failed" + connectionResult.getErrorCode());
                 Toast.makeText(this, "Connection to location services failed.",
                         Toast.LENGTH_SHORT).show();
             }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
+        } else { // No resolution available.
             Log.e(this.getLocalClassName(),
                     "Connection to location services failed" + connectionResult.getErrorCode());
             Toast.makeText(this, "Connection to location services failed.",
