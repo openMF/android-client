@@ -36,6 +36,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                                                                  GooglePlayServicesClient.ConnectionCallbacks,
                                                                  GooglePlayServicesClient.OnConnectionFailedListener{
     private LocationClient mLocationClient;  // Could be null.
+    // True if play services are available, and once location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
     private int clientId;
 
@@ -86,10 +87,12 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         if (id == R.id.action_settings) {
             return true;
         }
+        // TODO: The REST API for this is NOT WORKING YET!
+        // Currently it will show a toast, but will not actually save anything to the data table.
         if (id == R.id.action_save_location) {
             if (locationAvailable.get()) {
                 Location location = mLocationClient.getLastLocation();
-                Toast.makeText(this, "Saving current location: "
+                Toast.makeText(this, "Current location NOT being saved yet: "
                         + location.toString(), Toast.LENGTH_SHORT).show();
 
                 API.gpsCoordinatesService.setGpsCoordinates(clientId,

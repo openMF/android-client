@@ -210,6 +210,11 @@ public class API {
         return cb;
     }
 
+    /**
+     * TODO: THIS API IS NOT WORKING -- FIX IT.
+     *
+     * Currently there is something wrong with the formatting of the request.
+     */
     public interface GpsCoordinatesService {
 
         @POST("/datatables/gps_coordinates/{clientId}?genericResultSet=true")
