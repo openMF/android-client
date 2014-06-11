@@ -3,6 +3,7 @@ package com.mifos.services;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -12,24 +13,33 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.services.data.Payload;
-import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
-import retrofit.*;
-import retrofit.client.Response;
-import retrofit.http.*;
 
 import java.util.Iterator;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.ErrorHandler;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.Path;
+import retrofit.http.Query;
+
 public class API {
 
     //This instance has more Data for Testing
-    public static String url = "https://demo.openmf.org/mifosng-provider/api/v1";
+    public static String url = "https://developer.openmf.org/mifosng-provider/api/v1";
 
     //public static String url = "https://demo2.openmf.org/mifosng-provider/api/v1";
     static RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
@@ -38,7 +48,7 @@ public class API {
                 public void intercept(RequestFacade request) {
                     request.addHeader("Accept", "application/json");
                     request.addHeader("Content-Type", "application/json");
-                    request.addHeader("X-Mifos-Platform-TenantId", "default");
+                    request.addHeader("X-Mifos-Platform-TenantId", "developer");
 //                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
 
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Constants.applicationContext);
@@ -200,7 +210,6 @@ public class API {
         return cb;
     }
 
-
     public interface GpsCoordinatesService {
 
         @POST("/datatables/gps_coordinates/{clientId}?genericResultSet=true")
@@ -211,4 +220,3 @@ public class API {
 
     public static GpsCoordinatesService gpsCoordinatesService = restAdapter.create(GpsCoordinatesService.class);
 }
-
