@@ -17,9 +17,11 @@ import com.mifos.services.data.Payload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
+
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.http.*;
+import retrofit.mime.TypedFile;
 import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedFile;
 
@@ -148,6 +150,16 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}")
         public void getClient(@Path("clientId") int clientId, Callback<Client> callback);
+
+        @Multipart
+        @POST("/clients/{clientId}/images")
+        public void uploadClientImage(@Path("clientId") int clientId,
+                                      @Part("file") TypedFile file,
+                                      Callback<Response> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @DELETE("/clients/{clientId}/images")
+        void deleteClientImage(@Path("clientId") int clientId, Callback<Response> callback);
 
         @Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}/images")

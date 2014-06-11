@@ -35,5 +35,8 @@
     <string name="loanAccountSummary">Loan Account Summary</string>
     <string name="savingAccounts">Savings Accounts</string>
     <string name="savingsAccountSummary">Savings Account Summary</string>
+
+    <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
+
     <string name="default_instance_url">https://developer.openmf.org/mifosng-provider/api/v1</string>
 </resources>
