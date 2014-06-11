@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:0.11.+'
     }
 }
 apply plugin: 'android'
@@ -15,13 +15,14 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
-
+    buildToolsVersion '19.1.0'
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 19
     }
     sourceSets { main { java.srcDirs = ['src/main/java', 'src/test/java/'] } }
+    productFlavors {
+    }
 }
 
 dependencies {
@@ -29,8 +30,9 @@ dependencies {
     compile files('libs/gson-2.2.4.jar')
     compile files('libs/sugar-1.3_beta.jar')
     compile files('libs/butterknife-4.0.1.jar')
-    compile 'com.android.support:support-v4:19.0.1'
-    compile 'com.android.support:appcompat-v7:19.0.1'
+    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.google.android.gms:play-services:4.4.52'
     compile 'com.jakewharton.fliptables:fliptables:1.0.1'
     compile 'javax.annotation:jsr250-api:1.0@jar'
 }

@@ -13,6 +13,8 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.services.data.GpsCoordinatesRequest;
+import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
@@ -46,6 +48,8 @@ public class API {
     public static SavingsAccountService savingsAccountService;
     public static SearchService searchService;
     public static UserAuthService userAuthService;
+    // TODO: this service is not done yet!
+    public static GpsCoordinatesService gpsCoordinatesService;
 
     static {
         init();
@@ -60,6 +64,7 @@ public class API {
         savingsAccountService = sRestAdapter.create(SavingsAccountService.class);
         searchService = sRestAdapter.create(SearchService.class);
         userAuthService = sRestAdapter.create(UserAuthService.class);
+        gpsCoordinatesService = sRestAdapter.create(GpsCoordinatesService.class);
     }
 
     private static RestAdapter createRestAdapter(final String url) {
@@ -73,7 +78,7 @@ public class API {
                             request.addHeader("X-Mifos-Platform-TenantId", "default");
                         }
 
-  //                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
+                        //                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
 
                         SharedPreferences pref = PreferenceManager
                                 .getDefaultSharedPreferences(Constants.applicationContext);
@@ -92,7 +97,7 @@ public class API {
         return restAdapter;
     }
 
-     static class MifosRestErrorHandler implements ErrorHandler {
+    static class MifosRestErrorHandler implements ErrorHandler {
         @Override
         public Throwable handleError(RetrofitError retrofitError) {
 
@@ -217,6 +222,21 @@ public class API {
 
     }
 
+    /**
+     * Service for getting and retrieving GPS coordinates for a client's location, stored
+     * in a custom data table.
+     * TODOs:
+     * getGpsCoordinates needs to be added.
+     * setGpsCoordinates is not working yet - currently there is something wrong with the formatting of the request.
+     */
+    public interface GpsCoordinatesService {
+
+        @POST("/datatables/gps_coordinates/{clientId}?genericResultSet=true")
+        public void setGpsCoordinates(@Path("clientId") int clientId,
+                                      @Body GpsCoordinatesRequest coordinates,
+                                      Callback<GpsCoordinatesResponse> callback);
+    }
+
     public static <T> Callback<T> getCallback(T t) {
         Callback<T> cb = new Callback<T>() {
             @Override
@@ -258,4 +278,3 @@ public class API {
         return mInstanceUrl;
     }
 }
-
