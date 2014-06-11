@@ -31,7 +31,10 @@ import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -125,13 +128,21 @@ public class ClientDetailsFragment extends Fragment {
         return rootView;
     }
 
+    private static byte[] inputStreamToByteArray(InputStream input) throws IOException {
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+        return output.toByteArray();
+    }
 
-    public void getClientInfo(int clientId){
-
+    public void getClientInfo(int clientId) {
         safeUIBlockingUtility.safelyBlockUI();
         API.clientService.getClient(clientId, new Callback<Client>() {
             @Override
-            public void success(Client client, Response response) {
+            public void success(final Client client, Response response) {
 
                 if (client != null) {
                     actionBar.setTitle("Mifos Client - " + client.getLastname());
@@ -140,6 +151,30 @@ public class ClientDetailsFragment extends Fragment {
                     tv_externalId.setText(client.getExternalId());
                     tv_activationDate.setText(client.getFormattedActivationDateAsString());
                     tv_office.setText(client.getOfficeName());
+
+                    // TODO: For some reason Retrofit always calls the failure() method even after
+                    // receiving a 200 response with image bytes. Perhaps we need to change the
+                    // argument type from TypedFile to something else?
+                    if (client.isImagePresent()) {
+                        API.clientService.getClientImage(client.getId(), new Callback<TypedFile>() {
+
+                            @Override
+                            public void success(final TypedFile file, Response response) {
+                                try {
+                                    // TODO: Parse bytes and render image in the UI.
+                                    byte[] bytes = inputStreamToByteArray(file.in());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+                                Log.d("ClientDetailsFragment", "No image found for clientId " + client.getId());
+                            }
+
+                        });
+                    }
 
                     iv_clientImage.setOnClickListener(new View.OnClickListener() {
                         @Override
