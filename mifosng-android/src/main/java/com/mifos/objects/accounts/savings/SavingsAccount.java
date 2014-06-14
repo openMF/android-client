@@ -1,7 +1,7 @@
 
 package com.mifos.objects.accounts.savings;
 
-import com.mifos.objects.accounts.Currency;
+import com.mifos.objects.Currency;
 
 import java.util.HashMap;
 import java.util.Map;

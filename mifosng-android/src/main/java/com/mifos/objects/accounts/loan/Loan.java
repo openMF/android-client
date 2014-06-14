@@ -1,6 +1,7 @@
 
 package com.mifos.objects.accounts.loan;
 
+import com.mifos.objects.Currency;
 import com.mifos.objects.Timeline;
 
 import java.util.ArrayList;

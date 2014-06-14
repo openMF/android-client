@@ -34,4 +34,8 @@
     <string name="loanAccountSummary">Loan Account Summary</string>
     <string name="savingAccounts">Savings Accounts</string>
     <string name="savingsAccountSummary">Savings Account Summary</string>
+    <string name="review_transaction">Review Transaction</string>
+    <string name="amount">Amount</string>
+    <string name="date">Date</string>
+    <string name="payment_type">Payment Type</string>
 </resources>

@@ -179,6 +179,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Payment Type"
                     android:id="@+id/textView2"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1" />
 
                 <Spinner

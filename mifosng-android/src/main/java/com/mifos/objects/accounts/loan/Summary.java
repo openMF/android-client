@@ -1,6 +1,8 @@
 
 package com.mifos.objects.accounts.loan;
 
+import com.mifos.objects.Currency;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

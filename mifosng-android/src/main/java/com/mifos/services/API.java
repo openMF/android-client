@@ -6,11 +6,14 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
@@ -136,11 +139,30 @@ public class API {
          * @param savingsAccountId - savingsAccountId for which information is requested
          * @param association - Mention Type of Association Needed, Like :- all, transactions etc.
          * @param savingsAccountWithAssociationsCallback - callback to receive the response
+         *
+         * Use this method to retrieve the Savings Account With Associations
          */
         @GET("/savingsaccounts/{savingsAccountId}")
         public void getSavingsAccountWithAssociations(@Path("savingsAccountId") int savingsAccountId,
                                                       @Query("associations") String association,
                                                       Callback<SavingsAccountWithAssociations> savingsAccountWithAssociationsCallback);
+
+        /**
+         *
+         * @param savingsAccountId - savingsAccountId for which information is requested
+         * @param savingsAccountTransactionTemplateCallback - Savings Account Transaction Template Callback
+         *
+         * Use this method to retrieve the Savings Account Transaction Template
+         */
+
+        @GET("/savingsaccounts/{savingsAccountId}/transactions/template")
+        public void getSavingsAccountTransactionTemplate(@Path("savingsAccountId") int savingsAccountId, Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
+
+        @POST("/savingsaccounts/{savingsAccountId}/transactions")
+        public void processTransaction(@Path("savingsAccountId") int savingsAccountId,
+                                              @Query("command") String transactionType,
+                                              @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
+                                              Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
 
     }
 
