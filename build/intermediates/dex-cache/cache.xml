@@ -2,12 +2,6 @@
 <pre-dex-items>
 
     <item
-        dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/gson-2.2.4-92819d521dc7ff862adbca300f1e6e7bc2d87cef.jar"
-        jar="/Users/ishankhanna/Development/Android/android-client/mifosng-android/libs/gson-2.2.4.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="973e832af433b44c3ed11c426f2f390b29f3f3f8"/>
-    <item
         dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/fliptables-1.0.1-9680c9e71a09a29d4fd34699e7ac9cd76715108c.jar"
         jar="/Users/ishankhanna/.gradle/caches/modules-2/files-2.1/com.jakewharton.fliptables/fliptables/1.0.1/41af4f95028e93f37d372f313867606e8be9375f/fliptables-1.0.1.jar"
         jumboMode="false"
@@ -26,23 +20,11 @@
         revision="19.1.0"
         sha1="3dfdf1db5ce5ea2999a5dcde8c8e650b02660059"/>
     <item
-        dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/butterknife-4.0.1-8fa28137a045d69b169910c4c5225f11b3b35734.jar"
-        jar="/Users/ishankhanna/Development/Android/android-client/mifosng-android/libs/butterknife-4.0.1.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="f43b36925363701633d01adb8e54df7150397a78"/>
-    <item
         dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/jsr250-api-1.0-bd2174f6f70f8414e895ba3dfed3441c514db627.jar"
         jar="/Users/ishankhanna/.gradle/caches/modules-2/files-2.1/javax.annotation/jsr250-api/1.0/5025422767732a1ab45d93abfea846513d742dcf/jsr250-api-1.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="5025422767732a1ab45d93abfea846513d742dcf"/>
-    <item
-        dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/retrofit-1.4.1-9bdb7bafb5d3f621e7ebda56aeb24bd48211b5cf.jar"
-        jar="/Users/ishankhanna/Development/Android/android-client/mifosng-android/libs/retrofit-1.4.1.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="23de973a4908bc6f5ac6524af3251a19ad81a7b1"/>
     <item
         dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/support-v4-19.1.0-fe930dc68beb1e566675ce71b270d4091c6c249b.jar"
         jar="/Applications/Android Studio.app/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
@@ -55,5 +37,23 @@
         jumboMode="false"
         revision="19.1.0"
         sha1="5a9776f8a908635a16dc48c4b5300cb9f3faf495"/>
+    <item
+        dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/gson-2.2.4-92819d521dc7ff862adbca300f1e6e7bc2d87cef.jar"
+        jar="/Users/ishankhanna/Development/Android/android-client/mifosng-android/libs/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="973e832af433b44c3ed11c426f2f390b29f3f3f8"/>
+    <item
+        dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/butterknife-4.0.1-8fa28137a045d69b169910c4c5225f11b3b35734.jar"
+        jar="/Users/ishankhanna/Development/Android/android-client/mifosng-android/libs/butterknife-4.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="f43b36925363701633d01adb8e54df7150397a78"/>
+    <item
+        dex="/Users/ishankhanna/Development/Android/android-client/mifosng-android/build/intermediates/pre-dexed/debug/retrofit-1.4.1-9bdb7bafb5d3f621e7ebda56aeb24bd48211b5cf.jar"
+        jar="/Users/ishankhanna/Development/Android/android-client/mifosng-android/libs/retrofit-1.4.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="23de973a4908bc6f5ac6524af3251a19ad81a7b1"/>
 
 </pre-dex-items>

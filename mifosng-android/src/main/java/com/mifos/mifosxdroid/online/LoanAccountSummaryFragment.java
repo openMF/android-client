@@ -36,6 +36,16 @@ import retrofit.client.Response;
  */
 public class LoanAccountSummaryFragment extends Fragment {
 
+    /*
+        Set of Actions that can be performed depending on the status of the Loan
+     */
+    private static final int ACTION_NOT_SET = -1;
+    private static final int ACTION_APPROVE_LOAN = 0;
+    private static final int ACTION_DISBURSE_LOAN = 1;
+    private static final int TRANSACTION_REPAYMENT = 2;
+
+    // Action Identifier in the onProcessTransactionClicked Method
+    private int processLoanTransactionAction = -1;
 
     private OnFragmentInteractionListener mListener;
 
@@ -97,8 +107,8 @@ public class LoanAccountSummaryFragment extends Fragment {
     TextView tv_total_due;
     @InjectView(R.id.tv_total_paid)
     TextView tv_total_paid;
-    @InjectView(R.id.bt_repayment)
-    Button bt_repayment;
+    @InjectView(R.id.bt_processLoanTransaction)
+    Button bt_processLoanTransaction;
 
     private Loan clientLoan;
 
@@ -145,7 +155,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         actionBar.setTitle(getResources().getString(R.string.loanAccountSummary));
 
         //TODO Implement cases to enable/disable repayment button
-        bt_repayment.setEnabled(false);
+        bt_processLoanTransaction.setEnabled(false);
 
         API.loanService.getLoanById(loanAccountNumber, new Callback<Loan>() {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -182,7 +192,33 @@ public class LoanAccountSummaryFragment extends Fragment {
                 tv_total_due.setText(String.valueOf(loan.getSummary().getTotalOutstanding()));
                 tv_total_paid.setText(String.valueOf(loan.getSummary().getTotalRepayment()));
 
-                bt_repayment.setEnabled(true);
+                bt_processLoanTransaction.setEnabled(true);
+                if(loan.getStatus().getActive())
+                {
+                    /*
+                     *   if Loan is already active
+                     *   the Transaction Would be Make Repayment
+                     *
+                     */
+                    bt_processLoanTransaction.setText("Make Repayment");
+                    processLoanTransactionAction = TRANSACTION_REPAYMENT;
+
+                }else if(loan.getStatus().getPendingApproval()) {
+                    bt_processLoanTransaction.setText("Approve Loan");
+                    processLoanTransactionAction = ACTION_APPROVE_LOAN;
+                }else if(loan.getStatus().getWaitingForDisbursal()) {
+                    bt_processLoanTransaction.setText("Disburse Loan");
+                    processLoanTransactionAction = ACTION_DISBURSE_LOAN;
+                }else if(loan.getStatus().getClosedObligationsMet()){
+                    bt_processLoanTransaction.setEnabled(false);
+                    bt_processLoanTransaction.setText("Make Repayment");
+                }else {
+
+                    //TODO Implement Actions for Other Status' as well
+                    bt_processLoanTransaction.setEnabled(false);
+                    bt_processLoanTransaction.setText("Make Repayment");
+                }
+
 
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
@@ -195,19 +231,22 @@ public class LoanAccountSummaryFragment extends Fragment {
             }
         });
 
-
     }
 
-    @OnClick(R.id.bt_repayment)
-    public void repaymentButtonClicked(){
-        String TAG = "Loan Repayment Module";
-        Log.i(TAG, "repayment button clicked");
-        Log.i(TAG, "Client Name = "+clientLoan.getClientName());
-        Log.i(TAG, "Product Name = "+clientLoan.getLoanProductName());
-        Log.i(TAG, "Account Number = "+clientLoan.getAccountNo());
-        Log.i(TAG, "In Arrears = "+clientLoan.getSummary().getTotalOverdue());
-        Log.i(TAG, "Amount Due = "+clientLoan.getSummary().getPrincipalDisbursed());
-        mListener.makeRepayment(clientLoan);
+    @OnClick(R.id.bt_processLoanTransaction)
+    public void onProcessTransactionClicked(){
+
+
+        if(processLoanTransactionAction == TRANSACTION_REPAYMENT)
+        {
+            mListener.makeRepayment(clientLoan);
+        }else if(processLoanTransactionAction == ACTION_APPROVE_LOAN) {
+            //TODO mListener.approveLoan()
+        }else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
+            //TODO mListener.disburseLoan()
+        }else {
+            Log.i(getActivity().getLocalClassName(), "TRANSACTION ACTION NOT SET");
+        }
 
     }
 

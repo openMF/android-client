@@ -438,8 +438,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tbl_loanSummary"
-            android:text="Make Repayment"
-            android:id="@+id/bt_repayment"
+            android:text="Process Loan Transaction"
+            android:id="@+id/bt_processLoanTransaction"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"/>
 
