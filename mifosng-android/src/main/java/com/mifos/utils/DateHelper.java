@@ -1,5 +1,6 @@
 package com.mifos.utils;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -7,9 +8,19 @@ import java.util.List;
  * <p>This is a helper class that will be used to convert List<Interger> Type Dates
  * from MifosX into Simple Strings or Date Formats</p>
  */
-public class ListToDateConverter {
+public class DateHelper {
 
+    public static String getCurrentDateAsString(){
 
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String date = day + " - " + (month + 1) + " - " + year;
+
+        return date;
+    }
 
     public static String getDateAsString(List<Integer> integersOfDate) {
 

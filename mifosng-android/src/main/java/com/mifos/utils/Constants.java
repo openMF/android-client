@@ -24,4 +24,10 @@ public class Constants {
     public static final String FEES_DUE = "feesDue";
 
     public static final String SAVINGS_ACCOUNT_NUMBER = "savingsAccountNumber";
+
+    public static final String SAVINGS_ACCOUNT_TRANSACTION_TYPE = "transactionType";
+
+    public static final String SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT = "Deposit";
+
+    public static final String SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL = "Withdrawal";
 }

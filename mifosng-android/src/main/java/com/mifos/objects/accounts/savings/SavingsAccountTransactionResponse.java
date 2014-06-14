@@ -1,17 +1,19 @@
-
-package com.mifos.objects.accounts.loan;
+package com.mifos.objects.accounts.savings;
 
 import com.google.gson.annotations.Expose;
 import com.mifos.objects.Changes;
 
-public class LoanRepaymentResponse {
+/**
+ * Created by ishankhanna on 12/06/14.
+ */
+public class SavingsAccountTransactionResponse {
 
     @Expose
     private Integer officeId;
     @Expose
     private Integer clientId;
     @Expose
-    private Integer loanId;
+    private Integer savingsId;
     @Expose
     private Integer resourceId;
     @Expose
@@ -33,12 +35,12 @@ public class LoanRepaymentResponse {
         this.clientId = clientId;
     }
 
-    public Integer getLoanId() {
-        return loanId;
+    public Integer getSavingsId() {
+        return savingsId;
     }
 
-    public void setLoanId(Integer loanId) {
-        this.loanId = loanId;
+    public void setSavingsId(Integer savingsId) {
+        this.savingsId = savingsId;
     }
 
     public Integer getResourceId() {
@@ -56,5 +58,4 @@ public class LoanRepaymentResponse {
     public void setChanges(Changes changes) {
         this.changes = changes;
     }
-
 }

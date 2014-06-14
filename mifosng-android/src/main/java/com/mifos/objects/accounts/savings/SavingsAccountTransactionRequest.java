@@ -1,18 +1,22 @@
-
-package com.mifos.objects.accounts.loan;
+package com.mifos.objects.accounts.savings;
 
 import com.google.gson.annotations.Expose;
 
-public class Changes {
+/**
+ * Created by ishankhanna on 12/06/14.
+ */
+public class SavingsAccountTransactionRequest {
 
+    @Expose
+    private String dateFormat;
+    @Expose
+    private String locale;
     @Expose
     private String transactionDate;
     @Expose
     private String transactionAmount;
     @Expose
-    private String locale;
-    @Expose
-    private String dateFormat;
+    private String paymentTypeId;
     @Expose
     private String note;
     @Expose
@@ -25,6 +29,23 @@ public class Changes {
     private String receiptNumber;
     @Expose
     private String bankNumber;
+
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
 
     public String getTransactionDate() {
         return transactionDate;
@@ -42,20 +63,12 @@ public class Changes {
         this.transactionAmount = transactionAmount;
     }
 
-    public String getLocale() {
-        return locale;
+    public String getPaymentTypeId() {
+        return paymentTypeId;
     }
 
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
-    public String getDateFormat() {
-        return dateFormat;
-    }
-
-    public void setDateFormat(String dateFormat) {
-        this.dateFormat = dateFormat;
+    public void setPaymentTypeId(String paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
     }
 
     public String getNote() {

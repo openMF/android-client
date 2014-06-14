@@ -19,6 +19,7 @@ import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.services.API;
+import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
@@ -40,6 +41,10 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
     private int clientId;
+
+                                                                 SavingsAccountSummaryFragment.OnFragmentInteractionListener{
+    //TODO Try to shorten the code, this activity contains too much of repeated code
+    //Implement DRY - Don't Repeat Yourself Approach Here
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,13 +163,24 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     }
 
     @Override
-    public void makeDeposit() {
+    public void makeDeposit(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {
+
+        SavingsAccountTransactionFragment savingsAccountTransactionFragment =
+                SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, savingsAccountTransactionFragment).commit();
 
     }
 
     @Override
-    public void makeWithdrawal() {
+    public void makeWithdrawal(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {
 
+        SavingsAccountTransactionFragment savingsAccountTransactionFragment =
+                SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, savingsAccountTransactionFragment).commit();
     }
 
     /**

@@ -29,7 +29,7 @@ import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-import com.mifos.objects.templates.loans.PaymentTypeOption;
+import com.mifos.objects.PaymentTypeOption;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
@@ -50,8 +50,6 @@ import retrofit.client.Response;
 
 public class LoanRepaymentFragment extends Fragment {
 
-    //TODO Test and Remove Amount Due and Fees Due from Instance Method (Don't Pass'em as arguments)
-
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
@@ -61,7 +59,6 @@ public class LoanRepaymentFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     ActionBar actionBar;
-
 
     // Arguments Passed From the Loan Account Summary Fragment
     String clientName;
@@ -335,7 +332,7 @@ public class LoanRepaymentFragment extends Fragment {
     }
 
     @OnClick(R.id.bt_paynow)
-    public void reviewPaymentDetails(){
+    public void onPayNowButtonClicked(){
 
         String[] headers = {"Field", "Value"};
         String[][] data = {
@@ -384,7 +381,7 @@ public class LoanRepaymentFragment extends Fragment {
     }
 
     @OnClick(R.id.bt_cancelPayment)
-    public void cancelPayment(){
+    public void onCancelPaymentButtonClicked(){
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 

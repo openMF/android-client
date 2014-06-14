@@ -1,0 +1,181 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mifos.mifosxdroid.online.SavingsAccountTransactionFragment"
+    android:layout_margin="16dp">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_1"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Client Name"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/tv_clientName" />
+
+        <QuickContactBadge
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/quickContactBadge_client"
+            android:layout_gravity="right|end"
+            android:layout_marginLeft="100dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider_1"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_below="@+id/linear_layout_1"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tbl_transaction_details"
+        android:layout_below="@+id/divider_1"
+        android:layout_marginTop="4dp">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tbl_transaction_details_row_1"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_gravity="center_vertical"
+                android:text="Account Number" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/tv_savingsAccountNumber"
+                android:layout_gravity="center_vertical"
+                android:gravity="left"
+                android:layout_weight="0.4" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:id="@+id/tbl_transaction_details_row_2">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/date"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tv_transaction_date"
+                />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="left"
+                android:id="@+id/et_transaction_date"
+                android:layout_gravity="right|center_vertical"
+                android:hint="yyyy-mm-dd"
+                android:inputType="date"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:id="@+id/tbl_transaction_details_row_3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/amount"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tv_transaction_amount"
+                />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="left"
+                android:layout_gravity="center_vertical"
+                android:inputType="numberDecimal"
+                android:id="@+id/et_transaction_amount"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:id="@+id/tbl_transaction_details_row_4">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/payment_type"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tv_payment_type"
+                android:layout_weight="0.6" />
+
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/sp_payment_type"
+                android:gravity="left"
+                android:layout_weight="0.4" />
+
+        </TableRow>
+
+
+
+    </TableLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tbl_transaction_details"
+        android:id="@+id/bt_cancelTransaction"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Review"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tbl_transaction_details"
+        android:id="@+id/bt_reviewTransaction"
+        android:layout_marginTop="8dp"/>
+
+</RelativeLayout>

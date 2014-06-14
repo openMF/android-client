@@ -1,5 +1,5 @@
 
-package com.mifos.objects.templates.loans;
+package com.mifos.objects;
 
 import com.google.gson.annotations.Expose;
 
