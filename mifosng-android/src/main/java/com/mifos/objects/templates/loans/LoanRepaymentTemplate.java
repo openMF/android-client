@@ -1,11 +1,12 @@
 
 package com.mifos.objects.templates.loans;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.mifos.objects.Currency;
 import com.mifos.objects.PaymentTypeOption;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoanRepaymentTemplate {
 

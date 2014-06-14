@@ -19,8 +19,8 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
-import com.mifos.utils.Constants;
 import com.mifos.services.API;
+import com.mifos.utils.Constants;
 
 import java.util.List;
 

@@ -7,14 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.LoanAccount;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 01/03/14.

@@ -2,15 +2,13 @@ package com.mifos.mifosxdroid.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.db.Client;
 import com.mifos.objects.db.Loan;
@@ -19,6 +17,9 @@ import com.orm.query.Select;
 
 import java.util.List;
 import java.util.Map;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class ClientListAdapter extends BaseAdapter {

@@ -13,7 +13,6 @@ import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.adapters.FragmentAdapter;
 
 import java.util.ArrayList;

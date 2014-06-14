@@ -18,9 +18,9 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.SearchedEntity;
+import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
-import com.mifos.services.API;
 
 import java.util.ArrayList;
 import java.util.Iterator;

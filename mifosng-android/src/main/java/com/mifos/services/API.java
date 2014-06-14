@@ -3,6 +3,7 @@ package com.mifos.services;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -14,27 +15,23 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.db.Loan;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-<<<<<<< HEAD
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
+import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
-=======
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
->>>>>>> savings
 import com.mifos.services.data.Payload;
-import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
+
+import java.util.Iterator;
+import java.util.List;
 
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.http.*;
 import retrofit.mime.TypedFile;
-import retrofit.mime.TypedByteArray;
-import retrofit.mime.TypedFile;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class API {
 
@@ -190,7 +187,7 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/loans/{loanId}")
-        public void getLoanById(@Path("loanId") int loanId, Callback<com.mifos.objects.accounts.loan.Loan> callback);
+        public void getLoanById(@Path("loanId") int loanId, Callback<Loan> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/loans/{loanId}/transactions/template?command=repayment")

@@ -5,6 +5,7 @@ import com.mifos.objects.Currency;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")

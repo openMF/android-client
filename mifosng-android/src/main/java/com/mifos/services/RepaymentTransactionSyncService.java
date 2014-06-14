@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
+
 import com.mifos.objects.db.RepaymentTransaction;
-import com.mifos.utils.Network;
 import com.mifos.services.data.BulkRepaymentTransactions;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
+import com.mifos.utils.Network;
 import com.orm.query.Select;
 
-import java.util.*;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RepaymentTransactionSyncService extends Service {
 

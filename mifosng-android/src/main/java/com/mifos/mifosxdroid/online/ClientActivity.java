@@ -2,9 +2,9 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.IntentSender;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +16,10 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.services.API;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
-import com.mifos.services.API;
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
@@ -35,14 +35,13 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                                                                  LoanRepaymentFragment.OnFragmentInteractionListener,
                                                                  SavingsAccountSummaryFragment.OnFragmentInteractionListener,
                                                                  GooglePlayServicesClient.ConnectionCallbacks,
-                                                                 GooglePlayServicesClient.OnConnectionFailedListener{
+                                                                 GooglePlayServicesClient.OnConnectionFailedListener {
     // Null if play services are not available.
     private LocationClient mLocationClient;
     // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
     private int clientId;
 
-                                                                 SavingsAccountSummaryFragment.OnFragmentInteractionListener{
     //TODO Try to shorten the code, this activity contains too much of repeated code
     //Implement DRY - Don't Repeat Yourself Approach Here
 

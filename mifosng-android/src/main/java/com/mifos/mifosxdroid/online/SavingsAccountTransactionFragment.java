@@ -36,8 +36,6 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;

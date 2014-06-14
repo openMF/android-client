@@ -7,8 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanListAdapter;
 import com.mifos.objects.db.Loan;
@@ -17,6 +16,9 @@ import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class LoanFragment extends Fragment

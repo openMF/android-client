@@ -42,4 +42,6 @@
     <string name="amount">Amount</string>
     <string name="date">Date</string>
     <string name="payment_type">Payment Type</string>
+    <string name="logout">Logout</string>
+    <string name="action_save_location">Save location</string>
 </resources>

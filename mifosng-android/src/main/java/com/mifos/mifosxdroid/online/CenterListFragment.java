@@ -13,8 +13,8 @@ import android.widget.ListView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.objects.Center;
-import com.mifos.utils.SafeUIBlockingUtility;
 import com.mifos.services.API;
+import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
 

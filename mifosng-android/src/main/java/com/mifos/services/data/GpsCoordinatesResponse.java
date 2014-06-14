@@ -6,4 +6,5 @@ package com.mifos.services.data;
  */
 public class GpsCoordinatesResponse
 {
+
 }
