@@ -27,6 +27,7 @@ import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
@@ -395,6 +396,23 @@ public class ClientDetailsFragment extends Fragment {
                     }
                 }
         );
+    }
+
+
+    public void inflateDataTablesList(){
+
+        API.clientService.getDatatablesOfClient(new Callback<DataTable>() {
+            @Override
+            public void success(DataTable dataTable, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
+
     }
 
     public interface OnFragmentInteractionListener {

@@ -16,6 +16,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CollectionSheetPayload;
@@ -173,6 +174,10 @@ public class API {
         @GET("/clients/{clientId}/images")
         public void getClientImage(@Path("clientId") int clientId, Callback<TypedFile> callback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables?apptable=m_client")
+        public void getDatatablesOfClient(Callback<DataTable> callback);
+
     }
 
     public interface SearchService {
@@ -224,10 +229,11 @@ public class API {
          *
          * Use this method to retrieve the Savings Account Transaction Template
          */
-
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/savingsaccounts/{savingsAccountId}/transactions/template")
         public void getSavingsAccountTransactionTemplate(@Path("savingsAccountId") int savingsAccountId, Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST("/savingsaccounts/{savingsAccountId}/transactions")
         public void processTransaction(@Path("savingsAccountId") int savingsAccountId,
                                               @Query("command") String transactionType,
