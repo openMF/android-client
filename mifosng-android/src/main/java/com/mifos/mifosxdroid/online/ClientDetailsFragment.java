@@ -405,6 +405,8 @@ public class ClientDetailsFragment extends Fragment {
             @Override
             public void success(DataTable dataTable, Response response) {
 
+
+
             }
 
             @Override

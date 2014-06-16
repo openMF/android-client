@@ -57,13 +57,6 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Acti
 
         viewPager.setOffscreenPageLimit(0);
 
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.container_dashboard, new ClientListFragment())
-//                    .commit();
-//        }
-
-
     }
 
     @Override

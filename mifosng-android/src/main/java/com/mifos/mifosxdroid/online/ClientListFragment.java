@@ -22,6 +22,8 @@ import com.mifos.objects.client.Page;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 
+import org.apache.http.HttpStatus;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -87,8 +89,19 @@ public class ClientListFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                if(getActivity() != null)
-                    Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                if(getActivity() != null) {
+                    if(retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                        Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getActivity(), LogoutActivity.class));
+                        getActivity().finish();
+
+                    }else {
+                        Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+
 
             }
         });

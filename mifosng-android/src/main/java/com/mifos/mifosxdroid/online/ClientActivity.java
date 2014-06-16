@@ -131,6 +131,12 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * Called when a Loan Account is Selected
+     * from the list of Loan Accounts on Client Details Fragment
+     * It displays the summary of the Selected Loan Account
+     */
+
     @Override
     public void loadLoanAccountSummary(int loanAccountNumber) {
 
@@ -142,6 +148,13 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
 
     }
 
+    /*
+     * Called when a Savings Account is Selected
+     * from the list of Savings Accounts on Client Details Fragment
+     *
+     * It displays the summary of the Selected Savings Account
+     */
+
     @Override
     public void loadSavingsAccountSummary(int savingsAccountNumber) {
         SavingsAccountSummaryFragment savingsAccountSummaryFragment
@@ -151,7 +164,13 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         fragmentTransaction.replace(R.id.global_container,savingsAccountSummaryFragment).commit();
     }
 
-
+    /*
+     * Called when the make the make repayment button is clicked
+     * in the Loan Account Summary Fragment.
+     *
+     * It will display the Loan Repayment Fragment where
+     * the Information of the repayment has to be filled in.
+     */
     @Override
     public void makeRepayment(Loan loan) {
 
@@ -161,6 +180,16 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         fragmentTransaction.replace(R.id.global_container, loanRepaymentFragment).commit();
     }
 
+    /*
+     * Called when the make the make deposit button is clicked
+     * in the Savings Account Summary Fragment.
+     *
+     * It will display the Transaction Fragment where the information
+     * of the transaction has to be filled in.
+     *
+     * The transactionType defines if the transaction is a Deposit
+     *
+    */
     @Override
     public void makeDeposit(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {
 
@@ -171,6 +200,15 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         fragmentTransaction.replace(R.id.global_container, savingsAccountTransactionFragment).commit();
 
     }
+    /*
+     * Called when the make the make withdrawal button is clicked
+     * in the Savings Account Summary Fragment
+     *
+     * It will display the Transaction Fragment where the information
+     * of the transaction has to be filled in.
+     *
+     * The transactionType defines if the transaction is a Deposit
+    */
 
     @Override
     public void makeWithdrawal(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {

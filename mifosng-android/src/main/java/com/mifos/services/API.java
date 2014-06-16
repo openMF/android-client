@@ -37,7 +37,7 @@ import retrofit.mime.TypedFile;
 public class API {
 
     //This instance has more Data for Testing
-    public static String mInstanceUrl = "https://developer.openmf.org/mifosng-provider/api/v1";
+    public static String mInstanceUrl = "https://demo.openmf.org/mifosng-provider/api/v1";
 
     public static final String ACCEPT_JSON = "Accept: application/json";
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
