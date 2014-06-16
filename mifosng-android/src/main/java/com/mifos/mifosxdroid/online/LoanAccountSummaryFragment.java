@@ -37,7 +37,9 @@ import retrofit.client.Response;
 public class LoanAccountSummaryFragment extends Fragment {
 
     /*
-        Set of Actions that can be performed depending on the status of the Loan
+        Set of Actions and Transactions that can be performed depending on the status of the Loan
+        Actions are performed to change the status of the loan
+        Transactions are performed to do repayments
      */
     private static final int ACTION_NOT_SET = -1;
     private static final int ACTION_APPROVE_LOAN = 0;
@@ -198,18 +200,31 @@ public class LoanAccountSummaryFragment extends Fragment {
                     /*
                      *   if Loan is already active
                      *   the Transaction Would be Make Repayment
-                     *
                      */
                     bt_processLoanTransaction.setText("Make Repayment");
                     processLoanTransactionAction = TRANSACTION_REPAYMENT;
 
                 }else if(loan.getStatus().getPendingApproval()) {
+
+                    /*
+                     *  if Loan is Pending for Approval
+                     *  the Action would be Approve Loan
+                     */
                     bt_processLoanTransaction.setText("Approve Loan");
                     processLoanTransactionAction = ACTION_APPROVE_LOAN;
                 }else if(loan.getStatus().getWaitingForDisbursal()) {
+                    /*
+                     *  if Loan is Waiting for Disbursal
+                     *  the Action would be Disburse Loan
+                     */
                     bt_processLoanTransaction.setText("Disburse Loan");
                     processLoanTransactionAction = ACTION_DISBURSE_LOAN;
                 }else if(loan.getStatus().getClosedObligationsMet()){
+                    //TODO Ask Vishwas about this status and getClosed Status' difference and what action to perform
+                    /*
+                     *  if Loan is Closed after the obligations are met
+                     *  the make payment will be disabled so that no more payment can be collected
+                     */
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Make Repayment");
                 }else {

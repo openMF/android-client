@@ -76,8 +76,6 @@ public class SavingsAccountTransactionFragment extends Fragment {
     String transactionType;     //Defines if the Transaction is a Deposit to an Account or a Withdrawal from an Account
     String clientName;
 
-    SavingsAccount savingsAccountWithAssociations;
-
     // Values to be fetched from Savings Account Template
     List<PaymentTypeOption> paymentTypeOptionList;
     HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
@@ -285,8 +283,8 @@ public class SavingsAccountTransactionFragment extends Fragment {
         savingsAccountTransactionRequest.setTransactionAmount(et_transactionAmount.getEditableText().toString());
         savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));
 
-        String builtTransactionReuqestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
-        Log.i("Transaction Reuqest Body", builtTransactionReuqestAsJson);
+        String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
+        Log.i("Transaction Request Body", builtTransactionRequestAsJson);
 
         safeUIBlockingUtility.safelyBlockUI();
 
