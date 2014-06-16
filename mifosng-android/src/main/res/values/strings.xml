@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">MifosXDroid</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="datatables">Datatables</string>
     <string name="action_settings">Settings</string>
     <string name="login">Login</string>
     <string name="search">Search</string>

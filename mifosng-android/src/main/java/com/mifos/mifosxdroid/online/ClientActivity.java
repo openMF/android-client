@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +24,9 @@ import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.ButterKnife;
@@ -36,6 +40,28 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                                                                  SavingsAccountSummaryFragment.OnFragmentInteractionListener,
                                                                  GooglePlayServicesClient.ConnectionCallbacks,
                                                                  GooglePlayServicesClient.OnConnectionFailedListener {
+    /**
+     * Static Variables for Inflation of Menu and Submenus
+     */
+
+    private static final int MENU_ITEM_SAVE_LOCATION = 0;
+    private static final int MENU_ITEM_DATA_TABLES = 1;
+
+    /**
+     * Control Menu Changes from Fragments
+     * change this Variable to True in the Fragment and Magic
+     * Happens in onPrepareOptionsMenu Method Below
+     */
+    public static Boolean didMenuDataChange = Boolean.FALSE;
+    public static Boolean shouldAddDataTables = Boolean.FALSE;
+
+    /**
+     * This list will contain list of data tables
+     * and will be used to inflate the Submenu Datatables
+     */
+    public static List<String> dataTableMenuItems = new ArrayList<String>();
+
+
     // Null if play services are not available.
     private LocationClient mLocationClient;
     // True if play services are available and location services are connected.
@@ -90,14 +116,42 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if(didMenuDataChange)
+        {
+            menu.clear();
+            menu.add(MENU_ITEM_SAVE_LOCATION,100,Menu.NONE, "Save Location");
+
+            if(shouldAddDataTables)
+            {
+                if(dataTableMenuItems.size()>0)
+                {
+                    menu.addSubMenu(MENU_ITEM_DATA_TABLES,1,Menu.NONE,"DataTables");
+                    SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
+                    Iterator<String> stringIterator = dataTableMenuItems.iterator();
+                    while(stringIterator.hasNext())
+                    {
+                        dataTableSubMenu.add(MENU_ITEM_DATA_TABLES,100,Menu.NONE,stringIterator.next().toString());
+                    }
+                }
+
+                shouldAddDataTables = Boolean.FALSE;
+            }
+            didMenuDataChange = Boolean.FALSE;
+        }
+
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
         // TODO: The REST API for this is NOT WORKING YET!
         // Currently it will show a toast, but will not actually save anything to the data table.
         if (id == R.id.action_save_location) {
@@ -130,6 +184,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /*
      * Called when a Loan Account is Selected

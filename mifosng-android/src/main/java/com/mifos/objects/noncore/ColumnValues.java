@@ -32,4 +32,13 @@ public class ColumnValues {
     public void setScore(Integer score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "ColumnValues{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                ", score=" + score +
+                '}';
+    }
 }

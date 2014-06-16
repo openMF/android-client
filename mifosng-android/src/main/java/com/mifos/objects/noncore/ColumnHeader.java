@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by ishankhanna on 16/06/14.
  */
-public class ColumnHeaderData {
+public class ColumnHeader {
 
     /**
      * columnCode will only be returned if columnDisplayType = "CODELOOKUP"
@@ -88,5 +88,19 @@ public class ColumnHeaderData {
 
     public void setColumnValues(List<ColumnValues> columnValues) {
         this.columnValues = columnValues;
+    }
+
+    @Override
+    public String toString() {
+        return "ColumnHeader{" +
+                "columnCode='" + columnCode + '\'' +
+                ", columnDisplayType='" + columnDisplayType + '\'' +
+                ", columnLength=" + columnLength +
+                ", columnName='" + columnName + '\'' +
+                ", columnType='" + columnType + '\'' +
+                ", isColumnNullable=" + isColumnNullable +
+                ", isColumnPrimaryKey=" + isColumnPrimaryKey +
+                ", columnValues=" + columnValues +
+                '}';
     }
 }

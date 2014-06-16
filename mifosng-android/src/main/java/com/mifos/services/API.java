@@ -101,6 +101,10 @@ public class API {
         return restAdapter;
     }
 
+    public static void changeRestAdapterLogLevel(RestAdapter.LogLevel logLevel) {
+        sRestAdapter.setLogLevel(logLevel);
+    }
+
     static class MifosRestErrorHandler implements ErrorHandler {
         @Override
         public Throwable handleError(RetrofitError retrofitError) {
@@ -176,7 +180,7 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/datatables?apptable=m_client")
-        public void getDatatablesOfClient(Callback<DataTable> callback);
+        public void getDatatablesOfClient(Callback<List<DataTable>> callback);
 
     }
 
