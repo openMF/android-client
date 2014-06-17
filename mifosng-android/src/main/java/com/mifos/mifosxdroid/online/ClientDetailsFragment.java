@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -436,6 +436,9 @@ public class ClientDetailsFragment extends Fragment {
 
     }
 
+
+    public static List<DataTable> clientDataTables = new ArrayList<DataTable>();
+
     /**
      * Use this method to fetch all datatables for client and inflate them as
      * menu options
@@ -455,11 +458,12 @@ public class ClientDetailsFragment extends Fragment {
                     ClientActivity.shouldAddDataTables = Boolean.TRUE;
                     ClientActivity.didMenuDataChange = Boolean.TRUE;
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
-                    ClientActivity.dataTableMenuItems.clear();
+                    ClientActivity.clientDataTableMenuItems.clear();
                     while(dataTableIterator.hasNext())
                     {
                         DataTable dataTable = dataTableIterator.next();
-                        ClientActivity.dataTableMenuItems.add(dataTable.getRegisteredTableName());
+                        clientDataTables.add(dataTable);
+                        ClientActivity.clientDataTableMenuItems.add(dataTable.getRegisteredTableName());
                     }
                 }
 

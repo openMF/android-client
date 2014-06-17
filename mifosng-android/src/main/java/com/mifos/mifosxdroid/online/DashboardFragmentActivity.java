@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 
-public class DashboardFragmentActivity extends ActionBarActivity implements ActionBar.TabListener, ClientListFragment.FragmentChangeListener{
+public class DashboardFragmentActivity extends ActionBarActivity implements ActionBar.TabListener{
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
     public static Context context;
     private ViewPager viewPager;
@@ -57,19 +57,6 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Acti
 
         viewPager.setOffscreenPageLimit(0);
 
-    }
-
-    @Override
-    public void replaceFragments(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack
-        transaction.replace(R.id.vp_dashboard, fragment);
-        transaction.addToBackStack(null);
-
-        // Commit the transaction
-        transaction.commit();
     }
 
     @Override

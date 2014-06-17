@@ -44,12 +44,5 @@ public class DataTable {
                 '}';
     }
 
-//    menu.clear();
-//    menu.add(MENU_ITEM_SAVE_LOCATION,100,Menu.NONE, "Save Location");
-//    menu.addSubMenu(MENU_LEVEL_2,1,Menu.NONE,"DataTables");
-//
-//    SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
-//    dataTableSubMenu.add(MENU_LEVEL_2,100,Menu.NONE,"Table1");
-//    dataTableSubMenu.add(MENU_LEVEL_2,100,Menu.NONE,"Table2");
-//    dataTableSubMenu.add(MENU_LEVEL_2,100,Menu.NONE,"Table3");
+
 }

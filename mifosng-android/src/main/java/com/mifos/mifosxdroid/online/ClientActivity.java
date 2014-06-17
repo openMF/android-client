@@ -44,8 +44,8 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      * Static Variables for Inflation of Menu and Submenus
      */
 
-    private static final int MENU_ITEM_SAVE_LOCATION = 0;
-    private static final int MENU_ITEM_DATA_TABLES = 1;
+    private static final int MENU_ITEM_SAVE_LOCATION = 1000;
+    private static final int MENU_ITEM_DATA_TABLES = 1001;
 
     /**
      * Control Menu Changes from Fragments
@@ -56,10 +56,15 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     public static Boolean shouldAddDataTables = Boolean.FALSE;
 
     /**
+     * Property to identify the type of data tables to be shown.
+     */
+    public static int idOfDataTableToBeShownInMenu = -1;
+
+    /**
      * This list will contain list of data tables
      * and will be used to inflate the Submenu Datatables
      */
-    public static List<String> dataTableMenuItems = new ArrayList<String>();
+    public static List<String> clientDataTableMenuItems = new ArrayList<String>();
 
 
     // Null if play services are not available.
@@ -115,24 +120,49 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         return true;
     }
 
+    /**
+     *
+     * This method is called EVERY TIME the menu button is pressed
+     * on the action bar. So All dynamic changes in the menu are
+     * done here.
+     *
+     * @param menu Current Menu in the Layout
+     * @return true if the menu was successfully prepared
+     */
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
         if(didMenuDataChange)
         {
             menu.clear();
-            menu.add(MENU_ITEM_SAVE_LOCATION,100,Menu.NONE, "Save Location");
 
+            // This is a static menu item that will be added on the first position
+            menu.add(Menu.NONE,MENU_ITEM_SAVE_LOCATION,Menu.NONE, "Save Location");
+
+            // If the client request fetched data tables this will be true
             if(shouldAddDataTables)
             {
-                if(dataTableMenuItems.size()>0)
+                // Just another check to make sure the clientDataTableMenuItems list is not empty
+                if(clientDataTableMenuItems.size()>0)
                 {
-                    menu.addSubMenu(MENU_ITEM_DATA_TABLES,1,Menu.NONE,"DataTables");
+                    /*
+                        Now that we have the list, lets add an Option for users to see the sub menu
+                        of all data tables available
+                     */
+                    //TODO Make the name of this dynamic based on clients, loans and savings
+                    menu.addSubMenu(Menu.NONE,MENU_ITEM_DATA_TABLES,Menu.NONE,"Additional Client Details");
+
+                    // This is the ID of Each data table which will be used in onOptionsItemSelected Method
+                    int SUBMENU_ITEM_ID = 0;
+
+                    // Create a Sub Menu that holds a link to all data tables
                     SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
-                    Iterator<String> stringIterator = dataTableMenuItems.iterator();
+                    Iterator<String> stringIterator = clientDataTableMenuItems.iterator();
                     while(stringIterator.hasNext())
                     {
-                        dataTableSubMenu.add(MENU_ITEM_DATA_TABLES,100,Menu.NONE,stringIterator.next().toString());
+                        dataTableSubMenu.add(Menu.NONE,SUBMENU_ITEM_ID,Menu.NONE,stringIterator.next().toString());
+                        SUBMENU_ITEM_ID++;
                     }
                 }
 
@@ -140,7 +170,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
             }
             didMenuDataChange = Boolean.FALSE;
         }
-
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -152,9 +181,10 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
         // TODO: The REST API for this is NOT WORKING YET!
         // Currently it will show a toast, but will not actually save anything to the data table.
-        if (id == R.id.action_save_location) {
+        if (id == MENU_ITEM_SAVE_LOCATION) {
             if (locationAvailable.get()) {
                 Location location = mLocationClient.getLastLocation();
                 Toast.makeText(this, "Current location NOT being saved yet: "
@@ -182,7 +212,24 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
             }
             return true;
         }
+
+        if(id >= 0 && id < clientDataTableMenuItems.size())
+        {
+            loadDataTableFragment(id);
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    public void loadDataTableFragment(int dataTablePostionInTheList) {
+
+        //TODO Add a detailed implementation
+
+        DataTableFragment dataTableFragment = DataTableFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList));
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.global_container,dataTableFragment).commit();
+
     }
 
 

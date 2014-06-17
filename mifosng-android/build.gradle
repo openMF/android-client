@@ -30,8 +30,11 @@ dependencies {
     compile files('libs/gson-2.2.4.jar')
     compile files('libs/sugar-1.3_beta.jar')
     compile files('libs/butterknife-4.0.1.jar')
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:19.1.0'
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:appcompat-v7:19.1.0'
+    // You must install or update the Google Repository through the SDK manager to use this dependency.
     compile 'com.google.android.gms:play-services:4.4.52'
     compile 'com.jakewharton.fliptables:fliptables:1.0.1'
     compile 'javax.annotation:jsr250-api:1.0@jar'

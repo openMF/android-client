@@ -42,6 +42,14 @@ public class API {
     public static final String ACCEPT_JSON = "Accept: application/json";
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
 
+    /*
+        As Mifos is a multi-tenant platform, all requests require you to specify a tenant
+        as a header in each request.
+     */
+    public static final String HEADER_MIFOS_TENANT_ID = "X-Mifos-Platform-TenantId";
+
+    public static final String HEADER_AUTHORIZATION = "Authorization";
+
     //public static String mInstanceUrl = "https://demo2.openmf.org/mifosng-provider/api/v1";
 
     static RestAdapter sRestAdapter;
@@ -77,19 +85,23 @@ public class API {
                     @Override
                     public void intercept(RequestFacade request) {
                         if (url.contains("developer")) {
-                            request.addHeader("X-Mifos-Platform-TenantId", "developer");
+                            request.addHeader(HEADER_MIFOS_TENANT_ID, "developer");
                         } else {
-                            request.addHeader("X-Mifos-Platform-TenantId", "default");
+                            request.addHeader(HEADER_MIFOS_TENANT_ID, "default");
                         }
 
-                        //                    request.addHeader("Authorization", "Basic VXNlcjE6dGVjaDRtZg==");
+                        /*
+                            Look for the Auth token in the shared preferences
+                            and add it to the request. Because it is mandatory to
+                            supply the Authorization Header in every request
+                        */
 
                         SharedPreferences pref = PreferenceManager
                                 .getDefaultSharedPreferences(Constants.applicationContext);
                         String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
 
                         if (authToken != null && !"NA".equals(authToken)) {
-                            request.addHeader("Authorization", authToken);
+                            request.addHeader(HEADER_AUTHORIZATION, authToken);
                         }
 
                     }
@@ -245,6 +257,11 @@ public class API {
                                               Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
 
     }
+
+    /**
+     * Service for authenticating users.
+     * No other service can be used without authentication.
+     */
 
     public interface UserAuthService {
 

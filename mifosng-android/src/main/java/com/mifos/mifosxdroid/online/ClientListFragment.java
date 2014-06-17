@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +45,6 @@ public class ClientListFragment extends Fragment {
     View rootView;
 
     List<Client> pageItems;
-    FragmentChangeListener activityListener;
     private Context context;
 
     public ClientListFragment() {
@@ -52,9 +52,6 @@ public class ClientListFragment extends Fragment {
     }
 
 
-    public static interface FragmentChangeListener {
-        void replaceFragments(Fragment fragment);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +60,6 @@ public class ClientListFragment extends Fragment {
         ButterKnife.inject(this, rootView);
 
         context = getActivity().getApplicationContext();
-        activityListener = (FragmentChangeListener) getActivity();
 
         setupUI();
 
@@ -90,6 +86,7 @@ public class ClientListFragment extends Fragment {
             public void failure(RetrofitError retrofitError) {
 
                 if(getActivity() != null) {
+                    Log.i("Error", ""+retrofitError.getResponse().getStatus());
                     if(retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                         Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getActivity(), LogoutActivity.class));

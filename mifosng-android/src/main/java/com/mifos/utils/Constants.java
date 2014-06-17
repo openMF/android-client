@@ -30,4 +30,14 @@ public class Constants {
     public static final String SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT = "Deposit";
 
     public static final String SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL = "Withdrawal";
+
+    public static final String DATA_TABLE_REGISTERED_NAME = "dataTableRegisteredName";
+
+    /**
+     * Variables to identify which Data Tables have to be shown
+     */
+    public static final int DATA_TABLE_CLIENTS = 2001;
+    public static final int DATA_TABLE_LOAN_ACCOUNTS = 2002;
+    public static final int DATA_TABLES_SAVINGS_ACCOUNTS = 2003;
+
 }
