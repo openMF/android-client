@@ -319,11 +319,11 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      * It will display the Transaction Fragment where the information
      * of the transaction has to be filled in.
      *
-     * The transactionType defines if the transaction is a Deposit
+     * The transactionType defines if the transaction is a Deposit or a Withdrawal
      *
     */
     @Override
-    public void makeDeposit(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {
+    public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {
 
         SavingsAccountTransactionFragment savingsAccountTransactionFragment =
                 SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType);
@@ -332,25 +332,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         fragmentTransaction.replace(R.id.global_container, savingsAccountTransactionFragment).commit();
 
     }
-    /*
-     * Called when the make the make withdrawal button is clicked
-     * in the Savings Account Summary Fragment
-     *
-     * It will display the Transaction Fragment where the information
-     * of the transaction has to be filled in.
-     *
-     * The transactionType defines if the transaction is a Withdrawal
-    */
 
-    @Override
-    public void makeWithdrawal(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {
-
-        SavingsAccountTransactionFragment savingsAccountTransactionFragment =
-                SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
-        fragmentTransaction.replace(R.id.global_container, savingsAccountTransactionFragment).commit();
-    }
 
     /**
      * Returns true if Google Play services is available, otherwise false.

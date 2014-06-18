@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
@@ -33,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -171,18 +171,17 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
     @OnClick(R.id.bt_deposit)
     public void onDepositButtonClicked() {
-        mListener.makeDeposit(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT);
+        mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT);
     }
 
     @OnClick(R.id.bt_withdrawal)
     public void onWithdrawalButtonClicked() {
-        mListener.makeDeposit(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL);
+        mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL);
     }
 
     public interface OnFragmentInteractionListener {
 
-        public void makeDeposit(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
-        public void makeWithdrawal(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
+        public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
     }
 
 
