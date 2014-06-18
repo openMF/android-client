@@ -59,7 +59,7 @@
         android:id="@+id/bt_login"
         android:layout_below="@+id/et_password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp" />
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:layout_width="wrap_content"
