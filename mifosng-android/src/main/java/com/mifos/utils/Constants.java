@@ -34,10 +34,18 @@ public class Constants {
     public static final String DATA_TABLE_REGISTERED_NAME = "dataTableRegisteredName";
 
     /**
-     * Variables to identify which Data Tables have to be shown
+     * Constants to identify which Data Tables have to be shown
      */
     public static final int DATA_TABLE_CLIENTS = 2001;
-    public static final int DATA_TABLE_LOAN_ACCOUNTS = 2002;
+    public static final int DATA_TABLE_LOANS = 2002;
     public static final int DATA_TABLES_SAVINGS_ACCOUNTS = 2003;
+
+    /**
+     * Constants to for Data Table Menu Names
+     */
+    public static final String DATA_TABLE_CLIENTS_NAME = "More Client Info";
+    public static final String DATA_TABLE_LOAN_NAME = "More Loan Info";
+    public static final String DATA_TABLE_SAVINGS_ACCOUNTS_NAME = "More Savings Account Info";
+
 
 }

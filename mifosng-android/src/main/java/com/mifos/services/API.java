@@ -227,6 +227,15 @@ public class API {
                                   @Body LoanRepaymentRequest loanRepaymentRequest,
                                   Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables?apptable=m_loan")
+        public void getDatatablesOfLoan(Callback<List<DataTable>> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables/{dataTableName}/{loanId}/")
+        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("loanId") int clientId, Callback<JsonArray> callback);
+
+
     }
 
     public interface SavingsAccountService {
@@ -262,6 +271,8 @@ public class API {
                                               @Query("command") String transactionType,
                                               @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
                                               Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
+
+
 
     }
 

@@ -454,16 +454,16 @@ public class ClientDetailsFragment extends Fragment {
                 if(dataTables != null)
                 {
                     Log.i("DATATABLE", "FOUND");
-                    //TODO Implement Datatables inflation into menu
+                    ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLE_CLIENTS;
                     ClientActivity.shouldAddDataTables = Boolean.TRUE;
                     ClientActivity.didMenuDataChange = Boolean.TRUE;
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
-                    ClientActivity.clientDataTableMenuItems.clear();
+                    ClientActivity.dataTableMenuItems.clear();
                     while(dataTableIterator.hasNext())
                     {
                         DataTable dataTable = dataTableIterator.next();
                         clientDataTables.add(dataTable);
-                        ClientActivity.clientDataTableMenuItems.add(dataTable.getRegisteredTableName());
+                        ClientActivity.dataTableMenuItems.add(dataTable.getRegisteredTableName());
                     }
                 }
 

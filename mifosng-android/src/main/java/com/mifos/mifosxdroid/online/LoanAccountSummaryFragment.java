@@ -20,14 +20,20 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -236,6 +242,8 @@ public class LoanAccountSummaryFragment extends Fragment {
 
 
                 safeUIBlockingUtility.safelyUnBlockUI();
+
+                inflateDataTablesList();
             }
 
             @Override
@@ -276,10 +284,54 @@ public class LoanAccountSummaryFragment extends Fragment {
         }
     }
 
-
     public interface OnFragmentInteractionListener {
 
         public void makeRepayment(Loan loan);
     }
+
+    public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
+
+
+    /**
+     * Use this method to fetch all datatables for client and inflate them as
+     * menu options
+     */
+    public void inflateDataTablesList(){
+
+        safeUIBlockingUtility.safelyBlockUI();
+        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
+        API.loanService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
+            @Override
+            public void success(List<DataTable> dataTables, Response response) {
+
+                if (dataTables != null) {
+                    Log.i("DATATABLE", "FOUND");
+                    ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLE_LOANS;
+                    ClientActivity.shouldAddDataTables = Boolean.TRUE;
+                    ClientActivity.didMenuDataChange = Boolean.TRUE;
+                    Iterator<DataTable> dataTableIterator = dataTables.iterator();
+                    ClientActivity.dataTableMenuItems.clear();
+                    while (dataTableIterator.hasNext()) {
+                        DataTable dataTable = dataTableIterator.next();
+                        loanDataTables.add(dataTable);
+                        ClientActivity.dataTableMenuItems.add(dataTable.getRegisteredTableName());
+                    }
+                }
+
+                safeUIBlockingUtility.safelyUnBlockUI();
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("DATATABLE", retrofitError.getLocalizedMessage());
+                safeUIBlockingUtility.safelyUnBlockUI();
+
+            }
+        });
+
+    }
+
+
 
 }

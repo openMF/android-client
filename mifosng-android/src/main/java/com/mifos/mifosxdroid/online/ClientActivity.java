@@ -64,7 +64,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      * This list will contain list of data tables
      * and will be used to inflate the Submenu Datatables
      */
-    public static List<String> clientDataTableMenuItems = new ArrayList<String>();
+    public static List<String> dataTableMenuItems = new ArrayList<String>();
 
 
     // Null if play services are not available.
@@ -143,22 +143,34 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
             // If the client request fetched data tables this will be true
             if(shouldAddDataTables)
             {
-                // Just another check to make sure the clientDataTableMenuItems list is not empty
-                if(clientDataTableMenuItems.size()>0)
+                // Just another check to make sure the dataTableMenuItems list is not empty
+                if(dataTableMenuItems.size()>0)
                 {
                     /*
                         Now that we have the list, lets add an Option for users to see the sub menu
                         of all data tables available
                      */
-                    //TODO Make the name of this dynamic based on clients, loans and savings
-                    menu.addSubMenu(Menu.NONE,MENU_ITEM_DATA_TABLES,Menu.NONE,"Additional Client Details");
+                    switch(idOfDataTableToBeShownInMenu)
+                    {
+                        case Constants.DATA_TABLE_CLIENTS : menu.addSubMenu(Menu.NONE,MENU_ITEM_DATA_TABLES,Menu.NONE,Constants.DATA_TABLE_CLIENTS_NAME);
+                            break;
+                        case Constants.DATA_TABLE_LOANS: menu.addSubMenu(Menu.NONE,MENU_ITEM_DATA_TABLES,Menu.NONE,Constants.DATA_TABLE_LOAN_NAME);
+                            break;
+                        case Constants.DATA_TABLES_SAVINGS_ACCOUNTS : menu.addSubMenu(Menu.NONE,MENU_ITEM_DATA_TABLES,Menu.NONE,Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
+                            break;
+                        default :
+                        /*
+                            TODO Implement Creation of Data Table Call from here
+                            if no data table available
+                         */
+                    }
 
                     // This is the ID of Each data table which will be used in onOptionsItemSelected Method
                     int SUBMENU_ITEM_ID = 0;
 
                     // Create a Sub Menu that holds a link to all data tables
                     SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
-                    Iterator<String> stringIterator = clientDataTableMenuItems.iterator();
+                    Iterator<String> stringIterator = dataTableMenuItems.iterator();
                     while(stringIterator.hasNext())
                     {
                         dataTableSubMenu.add(Menu.NONE,SUBMENU_ITEM_ID,Menu.NONE,stringIterator.next().toString());
@@ -213,7 +225,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
             return true;
         }
 
-        if(id >= 0 && id < clientDataTableMenuItems.size())
+        if(id >= 0 && id < dataTableMenuItems.size())
         {
             loadDataTableFragment(id);
         }
@@ -222,8 +234,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     }
 
     public void loadDataTableFragment(int dataTablePostionInTheList) {
-
-        //TODO Add a detailed implementation
 
         DataTableFragment dataTableFragment = DataTableFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList), ClientDetailsFragment.clientId);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -309,7 +319,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      * It will display the Transaction Fragment where the information
      * of the transaction has to be filled in.
      *
-     * The transactionType defines if the transaction is a Deposit
+     * The transactionType defines if the transaction is a Withdrawal
     */
 
     @Override

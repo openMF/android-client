@@ -31,12 +31,11 @@ public class DataTableUIBuilder {
         Log.i("Number of Column Headers", "" + dataTable.getColumnHeaderData().size());
 
         Iterator<JsonElement> jsonElementIterator = jsonElements.iterator();
-
+        int tableIndex = 0;
         while(jsonElementIterator.hasNext())
         {
             TableLayout tableLayout = new TableLayout(context);
             tableLayout.setPadding(10,10,10,10);
-            tableLayout.setGravity(Gravity.CENTER_HORIZONTAL);
 
             JsonElement jsonElement = jsonElementIterator.next();
 
@@ -44,7 +43,7 @@ public class DataTableUIBuilder {
             while(rowIndex<dataTable.getColumnHeaderData().size())
             {
                 TableRow tableRow = new TableRow(context);
-                tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 tableRow.setPadding(10,10,10,10);
                 if(rowIndex % 2 == 0) {
                     tableRow.setBackgroundColor(Color.LTGRAY);
@@ -54,20 +53,27 @@ public class DataTableUIBuilder {
 
                 TextView key = new TextView(context);
                 key.setText(dataTable.getColumnHeaderData().get(rowIndex).getColumnName());
-
+                key.setGravity(Gravity.LEFT);
                 TextView value = new TextView(context);
-                value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString());
+                value.setGravity(Gravity.END);
+                if(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString().contains("\""))
+                {
+                    value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString().replace("\"",""));
+                }else{
+                    value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString());
+                }
 
                 tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 tableRow.addView(value, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                tableLayout.addView(tableRow, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                tableLayout.addView(tableRow, new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
                 rowIndex++;
             }
 
 
-            linearLayout.addView(tableLayout, new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
+            linearLayout.addView(tableLayout);
+            Log.i("TABLE INDEX", ""+tableIndex);
+            tableIndex++;
         }
 
         return linearLayout;
