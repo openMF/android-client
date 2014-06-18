@@ -2,8 +2,12 @@ package com.mifos.utils;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import com.mifos.objects.noncore.ColumnHeader;
 import com.mifos.objects.noncore.DataTable;
@@ -23,35 +27,30 @@ public class DataTableUIBuilder {
 
         //linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
         Iterator<ColumnHeader> columnHeaderIterator = dataTable.getColumnHeaderData().iterator();
-        int viewIndex = 0;
+        int rowIndex = 0;
+        TableLayout tableLayout = new TableLayout(context);
+
 
         while(columnHeaderIterator.hasNext())
         {
-            TextView currentTextView = new TextView(context);
-            currentTextView.setId(viewIndex);
-            currentTextView.setText(columnHeaderIterator.next().getColumnName());
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            TableRow tableRow = new TableRow(context);
+            tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            tableRow.setPadding(10,10,10,10);
+            if(rowIndex % 2 == 0) {
+                tableRow.setBackgroundColor(Color.LTGRAY);
+            }else {
+                tableRow.setBackgroundColor(Color.WHITE);
+            }
 
+            TextView key = new TextView(context);
+            key.setText(columnHeaderIterator.next().getColumnName());
 
-//            layoutParams.topMargin = 8;
-//            layoutParams.bottomMargin = 8;
-//            layoutParams.leftMargin = 8;
-//            layoutParams.rightMargin = 8;
-
-//            if(viewIndex==1)
-//
-//            {
-//                previousTextView = currentTextView;
-//                //layoutParams.addRule(LinearLayout.ALIGN_PARENT_LEFT);
-//                layoutParams.setMargins(8,8,8,8);
-//            }else {
-//                layoutParams.setMargins(8,8,8,8);
-//                previousTextView = currentTextView;
-//             }
-            layoutParams.setMargins(8,8,8,8);
-            linearLayout.addView(currentTextView, viewIndex, layoutParams);
-            viewIndex++;
+            tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            tableLayout.addView(tableRow, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            rowIndex++;
         }
+
+        linearLayout.addView(tableLayout, new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         return linearLayout;
 
