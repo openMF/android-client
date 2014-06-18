@@ -57,7 +57,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    int loanAccountNumber;
+    public static int loanAccountNumber;
 
     View rootView;
 
@@ -300,7 +300,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
         API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
-        API.loanService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
+        API.dataTableService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 

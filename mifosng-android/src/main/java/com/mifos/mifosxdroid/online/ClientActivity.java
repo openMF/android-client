@@ -158,7 +158,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                             break;
                         case Constants.DATA_TABLES_SAVINGS_ACCOUNTS : menu.addSubMenu(Menu.NONE,MENU_ITEM_DATA_TABLES,Menu.NONE,Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
                             break;
-                        default :
+                        default : return false;
                         /*
                             TODO Implement Creation of Data Table Call from here
                             if no data table available
@@ -234,8 +234,28 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     }
 
     public void loadDataTableFragment(int dataTablePostionInTheList) {
+        DataTableFragment dataTableFragment;
 
-        DataTableFragment dataTableFragment = DataTableFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList), ClientDetailsFragment.clientId);
+        switch(idOfDataTableToBeShownInMenu)
+        {
+            case Constants.DATA_TABLE_CLIENTS : dataTableFragment =
+                    DataTableFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList),
+                    ClientDetailsFragment.clientId);
+                break;
+            case Constants.DATA_TABLE_LOANS: dataTableFragment =
+                    DataTableFragment.newInstance(LoanAccountSummaryFragment.loanDataTables.get(dataTablePostionInTheList),
+                            LoanAccountSummaryFragment.loanAccountNumber);
+                break;
+            case Constants.DATA_TABLES_SAVINGS_ACCOUNTS : dataTableFragment =
+                    DataTableFragment.newInstance(SavingsAccountSummaryFragment.savingsAccountDataTables.get(dataTablePostionInTheList),
+                            SavingsAccountSummaryFragment.savingsAccountNumber);
+                break;
+            default : return;
+                        /*
+                            TODO Implement Creation of Data Table Call from here
+                            if no data table available
+                         */
+        }
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.global_container,dataTableFragment).commit();

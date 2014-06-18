@@ -29,7 +29,7 @@ public class DataTableFragment extends Fragment {
     //private OnFragmentInteractionListener mListener;
 
     private static DataTable dataTable;
-    private static int clientId;
+    private static int entityId;
 
     ActionBarActivity activity;
 
@@ -44,11 +44,11 @@ public class DataTableFragment extends Fragment {
 
 
 
-    public static DataTableFragment newInstance(DataTable dataTable, int clientId) {
+    public static DataTableFragment newInstance(DataTable dataTable, int entityId) {
 
         DataTableFragment fragment = new DataTableFragment();
         fragment.dataTable = dataTable;
-        fragment.clientId = clientId;
+        fragment.entityId = entityId;
         return fragment;
     }
     public DataTableFragment() {
@@ -73,7 +73,7 @@ public class DataTableFragment extends Fragment {
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableFragment.this.getActivity());
 
-        API.clientService.getDataOfDataTable(dataTable.getRegisteredTableName(), clientId, new Callback<JsonArray>() {
+        API.dataTableService.getDataOfDataTable(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
             @Override
             public void success(JsonArray jsonElements, Response response) {
 
@@ -86,7 +86,7 @@ public class DataTableFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.i("JSON ARRAY", retrofitError.getLocalizedMessage());
+                Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
 
             }
 

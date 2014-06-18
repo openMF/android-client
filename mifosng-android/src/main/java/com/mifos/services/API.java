@@ -59,6 +59,7 @@ public class API {
     public static CenterService centerService;
     public static ClientAccountsService clientAccountsService;
     public static ClientService clientService;
+    public static DataTableService dataTableService;
     public static LoanService loanService;
     public static SavingsAccountService savingsAccountService;
     public static SearchService searchService;
@@ -75,6 +76,7 @@ public class API {
         centerService = sRestAdapter.create(CenterService.class);
         clientAccountsService = sRestAdapter.create(ClientAccountsService.class);
         clientService = sRestAdapter.create(ClientService.class);
+        dataTableService = sRestAdapter.create(DataTableService.class);
         loanService = sRestAdapter.create(LoanService.class);
         savingsAccountService = sRestAdapter.create(SavingsAccountService.class);
         searchService = sRestAdapter.create(SearchService.class);
@@ -193,14 +195,6 @@ public class API {
         @GET("/clients/{clientId}/images")
         public void getClientImage(@Path("clientId") int clientId, Callback<TypedFile> callback);
 
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables?apptable=m_client")
-        public void getDatatablesOfClient(Callback<List<DataTable>> callback);
-
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables/{dataTableName}/{clientId}/")
-        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("clientId") int clientId, Callback<JsonArray> callback);
-
     }
 
     public interface SearchService {
@@ -226,15 +220,6 @@ public class API {
         public void submitPayment(@Path("loanId") int loanId,
                                   @Body LoanRepaymentRequest loanRepaymentRequest,
                                   Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
-
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables?apptable=m_loan")
-        public void getDatatablesOfLoan(Callback<List<DataTable>> callback);
-
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables/{dataTableName}/{loanId}/")
-        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("loanId") int clientId, Callback<JsonArray> callback);
-
 
     }
 
@@ -273,8 +258,33 @@ public class API {
                                               Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
 
 
+    }
+
+    public interface DataTableService {
+
+        //TODO refactor the methods to to just one and specify the Query param
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables?apptable=m_savings_account")
+        public void getDatatablesOfSavingsAccount(Callback<List<DataTable>> callback);
+
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables?apptable=m_client")
+        public void getDatatablesOfClient(Callback<List<DataTable>> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables?apptable=m_loan")
+        public void getDatatablesOfLoan(Callback<List<DataTable>> callback);
+
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables/{dataTableName}/{entityId}/")
+        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int clientId, Callback<JsonArray> callback);
+
 
     }
+
 
     /**
      * Service for authenticating users.

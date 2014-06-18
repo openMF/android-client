@@ -20,14 +20,20 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -47,7 +53,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    int savingsAccountNumber;
+    public static int savingsAccountNumber;
 
     View rootView;
 
@@ -127,6 +133,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
                             safeUIBlockingUtility.safelyUnBlockUI();
 
+                            inflateDataTablesList();
                         }
                     }
 
@@ -174,6 +181,52 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
         public void makeDeposit(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
         public void makeWithdrawal(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
+    }
+
+
+    public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
+
+
+    /**
+     * Use this method to fetch all datatables for a savings account and inflate them as
+     * menu options
+     */
+    public void inflateDataTablesList(){
+
+        safeUIBlockingUtility.safelyBlockUI();
+        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
+
+        //TODO change loan service to savings account service
+        API.dataTableService.getDatatablesOfSavingsAccount(new Callback<List<DataTable>>() {
+            @Override
+            public void success(List<DataTable> dataTables, Response response) {
+
+                if (dataTables != null) {
+                    Log.i("DATATABLE", "FOUND");
+                    ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLES_SAVINGS_ACCOUNTS;
+                    ClientActivity.shouldAddDataTables = Boolean.TRUE;
+                    ClientActivity.didMenuDataChange = Boolean.TRUE;
+                    Iterator<DataTable> dataTableIterator = dataTables.iterator();
+                    ClientActivity.dataTableMenuItems.clear();
+                    while (dataTableIterator.hasNext()) {
+                        DataTable dataTable = dataTableIterator.next();
+                        savingsAccountDataTables.add(dataTable);
+                        ClientActivity.dataTableMenuItems.add(dataTable.getRegisteredTableName());
+                    }
+                }
+
+                safeUIBlockingUtility.safelyUnBlockUI();
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("DATATABLE", retrofitError.getLocalizedMessage());
+                safeUIBlockingUtility.safelyUnBlockUI();
+
+            }
+        });
+
     }
 
 }

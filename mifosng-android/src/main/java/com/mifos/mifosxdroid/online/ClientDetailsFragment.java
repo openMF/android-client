@@ -447,7 +447,7 @@ public class ClientDetailsFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
         API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
-        API.clientService.getDatatablesOfClient(new Callback<List<DataTable>>() {
+        API.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
