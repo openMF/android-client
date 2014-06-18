@@ -10,13 +10,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
+import com.google.gson.JsonArray;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.services.API;
 import com.mifos.utils.DataTableUIBuilder;
+import com.mifos.utils.SafeUIBlockingUtility;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class DataTableFragment extends Fragment {
@@ -24,6 +29,7 @@ public class DataTableFragment extends Fragment {
     //private OnFragmentInteractionListener mListener;
 
     private static DataTable dataTable;
+    private static int clientId;
 
     ActionBarActivity activity;
 
@@ -33,10 +39,16 @@ public class DataTableFragment extends Fragment {
 
     View rootView;
 
-    public static DataTableFragment newInstance(DataTable dataTable) {
+    SafeUIBlockingUtility safeUIBlockingUtility;
+
+
+
+
+    public static DataTableFragment newInstance(DataTable dataTable, int clientId) {
 
         DataTableFragment fragment = new DataTableFragment();
         fragment.dataTable = dataTable;
+        fragment.clientId = clientId;
         return fragment;
     }
     public DataTableFragment() {
@@ -59,7 +71,26 @@ public class DataTableFragment extends Fragment {
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle(dataTable.getRegisteredTableName());
 
-        rootView = DataTableUIBuilder.getDataTableLayout(dataTable, (LinearLayout)rootView, getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableFragment.this.getActivity());
+
+        API.clientService.getDataOfDataTable(dataTable.getRegisteredTableName(), clientId, new Callback<JsonArray>() {
+            @Override
+            public void success(JsonArray jsonElements, Response response) {
+
+                if(jsonElements!=null)
+                {
+                    rootView = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, (LinearLayout)rootView, getActivity());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                Log.i("JSON ARRAY", retrofitError.getLocalizedMessage());
+
+            }
+
+        });
 
         return rootView;
     }

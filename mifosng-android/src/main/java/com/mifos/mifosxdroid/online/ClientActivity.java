@@ -225,7 +225,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
 
         //TODO Add a detailed implementation
 
-        DataTableFragment dataTableFragment = DataTableFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList));
+        DataTableFragment dataTableFragment = DataTableFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList), ClientDetailsFragment.clientId);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.global_container,dataTableFragment).commit();

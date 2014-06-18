@@ -3,13 +3,16 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.mifos.objects.noncore.ColumnHeader;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.mifos.objects.noncore.DataTable;
 
 import java.util.Iterator;
@@ -23,34 +26,49 @@ import java.util.Iterator;
 public class DataTableUIBuilder {
 
 
-    public static LinearLayout getDataTableLayout(DataTable dataTable, LinearLayout linearLayout, Context context){
+    public static LinearLayout getDataTableLayout(DataTable dataTable, JsonArray jsonElements, LinearLayout linearLayout, Context context){
 
-        //linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
-        Iterator<ColumnHeader> columnHeaderIterator = dataTable.getColumnHeaderData().iterator();
-        int rowIndex = 0;
-        TableLayout tableLayout = new TableLayout(context);
+        Log.i("Number of Column Headers", "" + dataTable.getColumnHeaderData().size());
 
+        Iterator<JsonElement> jsonElementIterator = jsonElements.iterator();
 
-        while(columnHeaderIterator.hasNext())
+        while(jsonElementIterator.hasNext())
         {
-            TableRow tableRow = new TableRow(context);
-            tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            tableRow.setPadding(10,10,10,10);
-            if(rowIndex % 2 == 0) {
-                tableRow.setBackgroundColor(Color.LTGRAY);
-            }else {
-                tableRow.setBackgroundColor(Color.WHITE);
+            TableLayout tableLayout = new TableLayout(context);
+            tableLayout.setPadding(10,10,10,10);
+            tableLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+
+            JsonElement jsonElement = jsonElementIterator.next();
+
+            int rowIndex=0;
+            while(rowIndex<dataTable.getColumnHeaderData().size())
+            {
+                TableRow tableRow = new TableRow(context);
+                tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                tableRow.setPadding(10,10,10,10);
+                if(rowIndex % 2 == 0) {
+                    tableRow.setBackgroundColor(Color.LTGRAY);
+                }else {
+                    tableRow.setBackgroundColor(Color.WHITE);
+                }
+
+                TextView key = new TextView(context);
+                key.setText(dataTable.getColumnHeaderData().get(rowIndex).getColumnName());
+
+                TextView value = new TextView(context);
+                value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString());
+
+                tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                tableRow.addView(value, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                tableLayout.addView(tableRow, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                rowIndex++;
             }
 
-            TextView key = new TextView(context);
-            key.setText(columnHeaderIterator.next().getColumnName());
 
-            tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            tableLayout.addView(tableRow, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            rowIndex++;
+            linearLayout.addView(tableLayout, new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
         }
-
-        linearLayout.addView(tableLayout, new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         return linearLayout;
 

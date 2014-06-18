@@ -55,7 +55,7 @@ public class ClientDetailsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     
-    public int clientId;
+    public static int clientId;
 
     @InjectView(R.id.tv_fullName) TextView tv_fullName;
     @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.gson.JsonArray;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -25,6 +26,8 @@ import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
+
+import org.json.JSONArray;
 
 import java.util.Iterator;
 import java.util.List;
@@ -193,6 +196,10 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/datatables?apptable=m_client")
         public void getDatatablesOfClient(Callback<List<DataTable>> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/datatables/{dataTableName}/{clientId}/")
+        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("clientId") int clientId, Callback<JsonArray> callback);
 
     }
 
