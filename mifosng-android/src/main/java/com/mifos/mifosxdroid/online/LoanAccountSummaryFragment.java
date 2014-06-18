@@ -249,6 +249,7 @@ public class LoanAccountSummaryFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
+                Log.i(getTag(),retrofitError.getLocalizedMessage());
                 Toast.makeText(activity, "Loan Account not found.", Toast.LENGTH_SHORT).show();
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
@@ -299,13 +300,11 @@ public class LoanAccountSummaryFragment extends Fragment {
     public void inflateDataTablesList(){
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
         API.dataTableService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
                 if (dataTables != null) {
-                    Log.i("DATATABLE", "FOUND");
                     ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLE_LOANS;
                     ClientActivity.shouldAddDataTables = Boolean.TRUE;
                     ClientActivity.didMenuDataChange = Boolean.TRUE;

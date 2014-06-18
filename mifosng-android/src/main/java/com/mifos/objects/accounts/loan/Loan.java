@@ -26,16 +26,16 @@ public class Loan {
     private String loanOfficerName;
     private LoanType loanType;
     private Currency currency;
-    private Integer principal;
-    private Integer approvedPrincipal;
+    private Double principal;
+    private Double approvedPrincipal;
     private Integer termFrequency;
     private TermPeriodFrequencyType termPeriodFrequencyType;
     private Integer numberOfRepayments;
     private Integer repaymentEvery;
     private RepaymentFrequencyType repaymentFrequencyType;
-    private Integer interestRatePerPeriod;
+    private Double interestRatePerPeriod;
     private InterestRateFrequencyType interestRateFrequencyType;
-    private Integer annualInterestRate;
+    private Double annualInterestRate;
     private AmortizationType amortizationType;
     private InterestType interestType;
     private InterestCalculationPeriodType interestCalculationPeriodType;
@@ -44,7 +44,7 @@ public class Loan {
     private Boolean syncDisbursementWithMeeting;
     private Timeline timeline;
     private Summary summary;
-    private Integer feeChargesAtDisbursementCharged;
+    private Double feeChargesAtDisbursementCharged;
     private Integer loanCounter;
     private Integer loanProductCounter;
     private Boolean multiDisburseLoan;
@@ -174,19 +174,19 @@ public class Loan {
         this.currency = currency;
     }
 
-    public Integer getPrincipal() {
+    public Double getPrincipal() {
         return principal;
     }
 
-    public void setPrincipal(Integer principal) {
+    public void setPrincipal(Double principal) {
         this.principal = principal;
     }
 
-    public Integer getApprovedPrincipal() {
+    public Double getApprovedPrincipal() {
         return approvedPrincipal;
     }
 
-    public void setApprovedPrincipal(Integer approvedPrincipal) {
+    public void setApprovedPrincipal(Double approvedPrincipal) {
         this.approvedPrincipal = approvedPrincipal;
     }
 
@@ -230,11 +230,11 @@ public class Loan {
         this.repaymentFrequencyType = repaymentFrequencyType;
     }
 
-    public Integer getInterestRatePerPeriod() {
+    public Double getInterestRatePerPeriod() {
         return interestRatePerPeriod;
     }
 
-    public void setInterestRatePerPeriod(Integer interestRatePerPeriod) {
+    public void setInterestRatePerPeriod(Double interestRatePerPeriod) {
         this.interestRatePerPeriod = interestRatePerPeriod;
     }
 
@@ -246,11 +246,11 @@ public class Loan {
         this.interestRateFrequencyType = interestRateFrequencyType;
     }
 
-    public Integer getAnnualInterestRate() {
+    public Double getAnnualInterestRate() {
         return annualInterestRate;
     }
 
-    public void setAnnualInterestRate(Integer annualInterestRate) {
+    public void setAnnualInterestRate(Double annualInterestRate) {
         this.annualInterestRate = annualInterestRate;
     }
 
@@ -318,11 +318,11 @@ public class Loan {
         this.summary = summary;
     }
 
-    public Integer getFeeChargesAtDisbursementCharged() {
+    public Double getFeeChargesAtDisbursementCharged() {
         return feeChargesAtDisbursementCharged;
     }
 
-    public void setFeeChargesAtDisbursementCharged(Integer feeChargesAtDisbursementCharged) {
+    public void setFeeChargesAtDisbursementCharged(Double feeChargesAtDisbursementCharged) {
         this.feeChargesAtDisbursementCharged = feeChargesAtDisbursementCharged;
     }
 

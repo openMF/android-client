@@ -43,7 +43,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -446,14 +445,12 @@ public class ClientDetailsFragment extends Fragment {
     public void inflateDataTablesList(){
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
         API.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
                 if(dataTables != null)
                 {
-                    Log.i("DATATABLE", "FOUND");
                     ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLE_CLIENTS;
                     ClientActivity.shouldAddDataTables = Boolean.TRUE;
                     ClientActivity.didMenuDataChange = Boolean.TRUE;

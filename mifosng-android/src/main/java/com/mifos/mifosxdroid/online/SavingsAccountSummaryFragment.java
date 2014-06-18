@@ -66,6 +66,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
     ActionBar actionBar;
 
     SavingsAccountWithAssociations savingsAccountWithAssociations;
+
     public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber) {
         SavingsAccountSummaryFragment fragment = new SavingsAccountSummaryFragment();
         Bundle args = new Bundle();
@@ -128,7 +129,8 @@ public class SavingsAccountSummaryFragment extends Fragment {
                             SavingsAccountTransactionsListAdapter savingsAccountTransactionsListAdapter
                                     = new SavingsAccountTransactionsListAdapter(getActivity().getApplicationContext(),
                                     savingsAccountWithAssociations.getTransactions().size()<5?
-                                            savingsAccountWithAssociations.getTransactions():savingsAccountWithAssociations.getTransactions().subList(0,5));
+                                            savingsAccountWithAssociations.getTransactions():
+                                            savingsAccountWithAssociations.getTransactions().subList(0,5));
                             lv_lastFiveTransactions.setAdapter(savingsAccountTransactionsListAdapter);
 
                             safeUIBlockingUtility.safelyUnBlockUI();
@@ -194,7 +196,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
     public void inflateDataTablesList(){
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
 
         //TODO change loan service to savings account service
         API.dataTableService.getDatatablesOfSavingsAccount(new Callback<List<DataTable>>() {
@@ -202,7 +203,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
             public void success(List<DataTable> dataTables, Response response) {
 
                 if (dataTables != null) {
-                    Log.i("DATATABLE", "FOUND");
                     ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLES_SAVINGS_ACCOUNTS;
                     ClientActivity.shouldAddDataTables = Boolean.TRUE;
                     ClientActivity.didMenuDataChange = Boolean.TRUE;
