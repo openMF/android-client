@@ -11,6 +11,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -137,12 +139,16 @@ public class LoanAccountSummaryFragment extends Fragment {
         if (getArguments() != null) {
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //TODO Ask Satya about this bug
+        // When I open a RepaymentSchedule fragment and come back the menu does not appear, why?
+        setHasOptionsMenu(true);
 
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false);
         activity = (ActionBarActivity) getActivity();
@@ -240,6 +246,12 @@ public class LoanAccountSummaryFragment extends Fragment {
                     bt_processLoanTransaction.setText("Make Repayment");
                 }
 
+                /*
+                 * This will remove the Save Location option from menu
+                 * as it is not needed while working with loans and
+                 * add an option to view repayment schedule
+                 */
+                updateMenu();
 
                 safeUIBlockingUtility.safelyUnBlockUI();
 
@@ -285,9 +297,27 @@ public class LoanAccountSummaryFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.i("ID", ""+item.getItemId());
+
+        if(item.getItemId() == ClientActivity.MENU_ITEM_REPAYMENT_SCHEDULE) {
+
+            mListener.loadRepaymentSchedule(loanAccountNumber);
+            return false;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     public interface OnFragmentInteractionListener {
 
         public void makeRepayment(Loan loan);
+        public void loadRepaymentSchedule(int loanId);
     }
 
     public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
@@ -297,7 +327,7 @@ public class LoanAccountSummaryFragment extends Fragment {
      * Use this method to fetch all datatables for client and inflate them as
      * menu options
      */
-    public void inflateDataTablesList(){
+    public void inflateDataTablesList() {
 
         safeUIBlockingUtility.safelyBlockUI();
         API.dataTableService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
@@ -331,6 +361,13 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     }
 
+    public void updateMenu() {
+
+        ClientActivity.shouldAddRepaymentSchedule = Boolean.TRUE;
+        ClientActivity.shouldAddSaveLocation = Boolean.FALSE;
+        ClientActivity.didMenuDataChange = Boolean.TRUE;
+
+    }
 
 
 }

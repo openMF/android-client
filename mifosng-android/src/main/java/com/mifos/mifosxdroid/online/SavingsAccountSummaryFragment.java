@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
@@ -47,13 +48,15 @@ public class SavingsAccountSummaryFragment extends Fragment {
     @InjectView(R.id.tv_savings_account_balance) TextView tv_savingsAccountBalance;
     @InjectView(R.id.tv_total_deposits) TextView tv_totalDeposits;
     @InjectView(R.id.tv_total_withdrawals) TextView tv_totalWithdrawals;
-    @InjectView(R.id.lv_last_five_savings_transactions) ListView lv_lastFiveTransactions;
+    @InjectView(R.id.lv_savings_transactions) ListView lv_Transactions;
     @InjectView(R.id.bt_deposit) Button bt_deposit;
     @InjectView(R.id.bt_withdrawal) Button bt_withdrawal;
 
     private OnFragmentInteractionListener mListener;
 
     public static int savingsAccountNumber;
+
+    public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
 
     View rootView;
 
@@ -66,6 +69,24 @@ public class SavingsAccountSummaryFragment extends Fragment {
     ActionBar actionBar;
 
     SavingsAccountWithAssociations savingsAccountWithAssociations;
+
+
+    // Cached List of all savings account transactions
+    // that are used for inflation of rows in
+    // Infinite Scroll View
+    List<Transaction> listOfAllTransactions = new ArrayList<Transaction>();
+    int countOfTransactionsInListView = 0;
+    SavingsAccountTransactionsListAdapter savingsAccountTransactionsListAdapter;
+
+    boolean LOADMORE; // variable to enable and disable loading of data into listview
+
+    // variables to capture position of first visible items
+    // so that while loading the listview does not scroll automatically
+    int index,top;
+
+    // variables to control amount of data loading on each load
+    int INITIAL = 0;
+    int FINAL = 5;
 
     public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber) {
         SavingsAccountSummaryFragment fragment = new SavingsAccountSummaryFragment();
@@ -126,16 +147,24 @@ public class SavingsAccountSummaryFragment extends Fragment {
                             tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalDeposits()));
                             tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalWithdrawals()));
 
-                            SavingsAccountTransactionsListAdapter savingsAccountTransactionsListAdapter
+                            savingsAccountTransactionsListAdapter
                                     = new SavingsAccountTransactionsListAdapter(getActivity().getApplicationContext(),
-                                    savingsAccountWithAssociations.getTransactions().size()<5?
+                                    savingsAccountWithAssociations.getTransactions().size()< FINAL ?
                                             savingsAccountWithAssociations.getTransactions():
-                                            savingsAccountWithAssociations.getTransactions().subList(0,5));
-                            lv_lastFiveTransactions.setAdapter(savingsAccountTransactionsListAdapter);
+                                            savingsAccountWithAssociations.getTransactions().subList(INITIAL,FINAL));
+                            lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
+
+                            // Cache transactions here
+                            listOfAllTransactions.addAll(savingsAccountWithAssociations.getTransactions());
+
+                            updateMenu();
 
                             safeUIBlockingUtility.safelyUnBlockUI();
 
                             inflateDataTablesList();
+
+                            enableInfiniteScrollOfTransactions();
+
                         }
                     }
 
@@ -184,10 +213,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
         public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
     }
 
-
-    public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
-
-
     /**
      * Use this method to fetch all datatables for a savings account and inflate them as
      * menu options
@@ -225,6 +250,86 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
             }
         });
+
+    }
+
+    public void enableInfiniteScrollOfTransactions() {
+
+
+        lv_Transactions.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    LOADMORE = false;
+                } else {
+                    LOADMORE = true;
+                }
+
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+
+                final int lastItem = firstVisibleItem + visibleItemCount;
+
+                if (firstVisibleItem == 0) {
+                    return;
+                }
+
+                if (lastItem == totalItemCount && LOADMORE) {
+
+                    LOADMORE = false;
+
+                    loadNextFiveTransactions();
+
+                }
+            }
+
+        });
+
+
+    }
+
+    public void loadNextFiveTransactions() {
+
+        index = lv_Transactions.getFirstVisiblePosition();
+
+        View v = lv_Transactions.getChildAt(0);
+
+        top = (v == null)? 0 : v.getTop();
+
+        FINAL += 5;
+
+        if(FINAL > listOfAllTransactions.size())
+        {
+            FINAL = listOfAllTransactions.size();
+            savingsAccountTransactionsListAdapter =
+                    new SavingsAccountTransactionsListAdapter(getActivity(),
+                            listOfAllTransactions.subList(INITIAL, FINAL));
+            savingsAccountTransactionsListAdapter.notifyDataSetChanged();
+            lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
+            lv_Transactions.setSelectionFromTop(index, top);
+            return;
+        }
+
+        savingsAccountTransactionsListAdapter =
+                new SavingsAccountTransactionsListAdapter(getActivity(),
+                        listOfAllTransactions.subList(INITIAL, FINAL));
+        savingsAccountTransactionsListAdapter.notifyDataSetChanged();
+        lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
+        lv_Transactions.setSelectionFromTop(index, top);
+
+
+    }
+
+    public void updateMenu() {
+
+        ClientActivity.shouldAddRepaymentSchedule = Boolean.FALSE;
+        ClientActivity.shouldAddSaveLocation = Boolean.FALSE;
+        ClientActivity.didMenuDataChange = Boolean.TRUE;
 
     }
 

@@ -44,8 +44,9 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      * Static Variables for Inflation of Menu and Submenus
      */
 
-    private static final int MENU_ITEM_SAVE_LOCATION = 1000;
-    private static final int MENU_ITEM_DATA_TABLES = 1001;
+    public static final int MENU_ITEM_SAVE_LOCATION = 1000;
+    public static final int MENU_ITEM_DATA_TABLES = 1001;
+    public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
 
     /**
      * Control Menu Changes from Fragments
@@ -54,6 +55,8 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      */
     public static Boolean didMenuDataChange = Boolean.FALSE;
     public static Boolean shouldAddDataTables = Boolean.FALSE;
+    public static Boolean shouldAddSaveLocation = Boolean.FALSE;
+    public static Boolean shouldAddRepaymentSchedule = Boolean.FALSE;
 
     /**
      * Property to identify the type of data tables to be shown.
@@ -137,9 +140,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         {
             menu.clear();
 
-            // This is a static menu item that will be added on the first position
-            menu.add(Menu.NONE,MENU_ITEM_SAVE_LOCATION,Menu.NONE, "Save Location");
-
             // If the client request fetched data tables this will be true
             if(shouldAddDataTables)
             {
@@ -169,7 +169,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                     int SUBMENU_ITEM_ID = 0;
 
                     // Create a Sub Menu that holds a link to all data tables
-                    SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
+                    SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
                     Iterator<String> stringIterator = dataTableMenuItems.iterator();
                     while(stringIterator.hasNext())
                     {
@@ -180,6 +180,17 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
 
                 shouldAddDataTables = Boolean.FALSE;
             }
+
+            if(shouldAddSaveLocation) {
+                // Show the Save Location Menu Item
+                menu.add(Menu.NONE,MENU_ITEM_SAVE_LOCATION,Menu.NONE, "Save Location");
+            }
+
+            if(shouldAddRepaymentSchedule) {
+                // Show the Loan Repayment Item
+                menu.add(Menu.NONE,MENU_ITEM_REPAYMENT_SCHEDULE,Menu.NONE, "Repayment Schedule");
+            }
+
             didMenuDataChange = Boolean.FALSE;
         }
 
@@ -233,6 +244,13 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         return super.onOptionsItemSelected(item);
     }
 
+
+    /*
+     * Called when a Data table has been selected for viewing
+     * from the Sub Menu of Data Table
+     *
+     * It displays the data of data table based on the name of data table
+     */
     public void loadDataTableFragment(int dataTablePostionInTheList) {
         DataTableFragment dataTableFragment;
 
@@ -261,6 +279,8 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         fragmentTransaction.replace(R.id.global_container,dataTableFragment).commit();
 
     }
+
+
 
 
     /*
@@ -310,6 +330,23 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.global_container, loanRepaymentFragment).commit();
+    }
+
+    /*
+     * Called when the Repayment Schedule option from the Menu is
+     * clicked
+     *
+     * It will display the Complete Loan Repayment Schedule.
+     */
+
+    @Override
+    public void loadRepaymentSchedule(int loanId) {
+
+        LoanRepaymentScheduleFragment loanRepaymentScheduleFragment = LoanRepaymentScheduleFragment.newInstance(loanId);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, loanRepaymentScheduleFragment).commit();
+
     }
 
     /*

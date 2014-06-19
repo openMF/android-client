@@ -44,4 +44,5 @@
     <string name="payment_type">Payment Type</string>
     <string name="logout">Logout</string>
     <string name="action_save_location">Save location</string>
+    <string name="loan_repayment_schedule">Loan Repayment Schedule</string>
 </resources>

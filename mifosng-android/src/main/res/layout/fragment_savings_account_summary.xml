@@ -158,17 +158,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Last 5 Transactions"
+        android:text="Transactions"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@id/divider_3"
         android:layout_marginTop="4dp"
-        android:id="@+id/last_five_savings_transactions"/>
+        android:id="@+id/savings_transactions"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_last_five_savings_transactions"
-        android:layout_below="@id/last_five_savings_transactions"
+        android:id="@+id/lv_savings_transactions"
+        android:layout_below="@id/savings_transactions"
         android:layout_above="@+id/bt_withdrawal"/>
 
     <Button

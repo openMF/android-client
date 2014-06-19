@@ -416,6 +416,8 @@ public class ClientDetailsFragment extends Fragment {
 
                 }
 
+                updateMenu();
+
                 safeUIBlockingUtility.safelyUnBlockUI();
 
                 inflateDataTablesList();
@@ -485,5 +487,12 @@ public class ClientDetailsFragment extends Fragment {
 
     }
 
+    public void updateMenu() {
+
+        ClientActivity.shouldAddRepaymentSchedule = Boolean.TRUE;
+        ClientActivity.shouldAddSaveLocation = Boolean.TRUE;
+        ClientActivity.didMenuDataChange = Boolean.TRUE;
+
+    }
 
 }

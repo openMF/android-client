@@ -8,15 +8,16 @@ import com.google.gson.JsonArray;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
-import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
@@ -27,14 +28,24 @@ import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 
-import org.json.JSONArray;
-
 import java.util.Iterator;
 import java.util.List;
 
-import retrofit.*;
+import retrofit.Callback;
+import retrofit.ErrorHandler;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.*;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.Headers;
+import retrofit.http.Multipart;
+import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
 public class API {
@@ -220,6 +231,11 @@ public class API {
         public void submitPayment(@Path("loanId") int loanId,
                                   @Body LoanRepaymentRequest loanRepaymentRequest,
                                   Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/loans/{loanId}?associations=repaymentSchedule")
+        public void getLoanRepaymentSchedule(@Path("loanId") int loanId,
+                                              Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
 
     }
 
