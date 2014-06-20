@@ -1,11 +1,9 @@
-MIFOSXDROID
+Android Client for MifosX
 ---------------------------------------------
 
-Android Application Client using MifosX Project.
+Installation instructions located at https://github.com/openMF/android-client/wiki
 
-Read ToDo.md for the list of task
-
-Download Latest APK - https://github.com/openMF/android-client/blob/gsoc-master/mifosng-android/mifosng-android.apk
+Latest APK can be downloaded at - https://github.com/openMF/android-client/blob/gsoc-master/mifosng-android/mifosng-android.apk
 
 ----------------------------------------------
 
