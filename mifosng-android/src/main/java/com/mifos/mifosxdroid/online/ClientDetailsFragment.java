@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
+import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
@@ -526,13 +527,18 @@ public class ClientDetailsFragment extends Fragment {
         @Override
         protected Void doInBackground(Integer... integers) {
 
+            SharedPreferences pref = PreferenceManager
+                    .getDefaultSharedPreferences(Constants.applicationContext);
+            String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
+
             HttpClient httpClient = new DefaultHttpClient();
 
             String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/"+
                     integers[0] + "/images";
             HttpGet imageFetchingRequest = new HttpGet(url);
+            //TODO: Remove default tenant dependency
             imageFetchingRequest.addHeader("X-Mifos-Platform-TenantId","default");
-            imageFetchingRequest.addHeader("Authorization","Basic bWlmb3M6cGFzc3dvcmQ=");
+            imageFetchingRequest.addHeader(API.HEADER_AUTHORIZATION,authToken);
 
             try {
                 HttpResponse response = httpClient.execute(imageFetchingRequest);
@@ -545,7 +551,6 @@ public class ClientDetailsFragment extends Fragment {
                 while ((line = rd.readLine()) != null) {
                     result.append(line);
                 }
-
 
                 String[] imageDataAndInfoSplitString = result.toString().split(",");
                 byte[] bytes = Base64.decode(imageDataAndInfoSplitString[1].getBytes(),Base64.DEFAULT);
