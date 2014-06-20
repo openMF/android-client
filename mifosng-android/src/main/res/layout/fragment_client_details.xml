@@ -9,13 +9,17 @@
     >
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:id="@+id/iv_clientImage"
         android:src="@drawable/ic_launcher"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:adjustViewBounds="false"
+        android:scaleType="fitXY"
+        android:paddingBottom="8dp"
+        android:paddingRight="8dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -221,7 +225,8 @@
         android:id="@+id/lv_accounts_loans"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/line1"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/tv_toggle_savings_accounts"
@@ -253,6 +258,8 @@
         android:id="@+id/line2"
         android:layout_below="@id/tv_toggle_savings_accounts"
         android:background="@color/black"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="16dp"
         />
 
     <ListView

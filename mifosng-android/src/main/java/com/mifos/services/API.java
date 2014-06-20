@@ -47,6 +47,7 @@ import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 public class API {
 
@@ -202,9 +203,9 @@ public class API {
         @DELETE("/clients/{clientId}/images")
         void deleteClientImage(@Path("clientId") int clientId, Callback<Response> callback);
 
-        @Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
+        //@Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}/images")
-        public void getClientImage(@Path("clientId") int clientId, Callback<TypedFile> callback);
+        public void getClientImage(@Path("clientId") int clientId, Callback<TypedString> callback);
 
     }
 

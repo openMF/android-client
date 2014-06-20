@@ -23,6 +23,8 @@ android {
     sourceSets { main { java.srcDirs = ['src/main/java', 'src/test/java/'] } }
     productFlavors {
     }
+    buildTypes {
+    }
 }
 
 dependencies {
@@ -41,4 +43,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.4.52'
     compile 'com.jakewharton.fliptables:fliptables:1.0.1'
     compile 'javax.annotation:jsr250-api:1.0@jar'
+    compile 'com.squareup.picasso:picasso-pollexor:2.1.1@jar'
 }

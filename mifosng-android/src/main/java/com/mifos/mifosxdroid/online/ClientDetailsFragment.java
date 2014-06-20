@@ -3,7 +3,10 @@ package com.mifos.mifosxdroid.online;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -11,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,10 +36,17 @@ import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,6 +57,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 
 public class ClientDetailsFragment extends Fragment {
@@ -187,6 +199,7 @@ public class ClientDetailsFragment extends Fragment {
             @Override
             public void success(Response response, Response response2) {
                 Toast.makeText(activity, "Image deleted", Toast.LENGTH_SHORT).show();
+                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
             }
 
             @Override
@@ -213,11 +226,15 @@ public class ClientDetailsFragment extends Fragment {
                     @Override
                     public void success(Response response, Response response2) {
                         Toast.makeText(activity, "Client image updated", Toast.LENGTH_SHORT).show();
+                        new ImageLoadingAsyncTask().execute(clientId);
+
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         Toast.makeText(activity, "Failed to update image", Toast.LENGTH_SHORT).show();
+                        new ImageLoadingAsyncTask().execute(clientId);
+
                     }
                 }
         );
@@ -248,24 +265,31 @@ public class ClientDetailsFragment extends Fragment {
                     // receiving a 200 response with image bytes. Perhaps we need to change the
                     // argument type from TypedFile to something else?
                     if (client.isImagePresent()) {
-                        API.clientService.getClientImage(client.getId(), new Callback<TypedFile>() {
 
-                            @Override
-                            public void success(final TypedFile file, Response response) {
-                                try {
-                                    // TODO: Parse bytes and render image in the UI.
-                                    byte[] bytes = inputStreamToByteArray(file.in());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                        new ImageLoadingAsyncTask().execute(client.getId());
 
-                            @Override
-                            public void failure(RetrofitError retrofitError) {
-                                Log.d("ClientDetailsFragment", "No image found for clientId " + client.getId());
-                            }
-
-                        });
+//                        API.clientService.getClientImage(client.getId(), new Callback<TypedString>() {
+//
+//                            @Override
+//                            public void success(final TypedString file, Response response) {
+//
+//                                // TODO: Parse bytes and render image in the UI.
+//                               // byte[] bytes = inputStreamToByteArray(file.in());
+//                               byte[] bytes = file.getBytes();
+//                                Log.d("Image Loading", "Byte Loading Completed");
+////                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+////                                iv_clientImage.setImageBitmap(bmp);
+//
+//                            }
+//
+//                            @Override
+//                            public void failure(RetrofitError retrofitError) {
+//                                Log.d("ClientDetailsFragment", "No image found for clientId " + client.getId());
+//                                Log.d("Why Image Fetching Failed?", retrofitError.getLocalizedMessage());
+//
+//                            }
+//
+//                        });
                     }
 
                     iv_clientImage.setOnClickListener(new View.OnClickListener() {
@@ -494,5 +518,58 @@ public class ClientDetailsFragment extends Fragment {
         ClientActivity.didMenuDataChange = Boolean.TRUE;
 
     }
+
+    public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
+
+        Bitmap bmp;
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/"+
+                    integers[0] + "/images";
+            HttpGet imageFetchingRequest = new HttpGet(url);
+            imageFetchingRequest.addHeader("X-Mifos-Platform-TenantId","default");
+            imageFetchingRequest.addHeader("Authorization","Basic bWlmb3M6cGFzc3dvcmQ=");
+
+            try {
+                HttpResponse response = httpClient.execute(imageFetchingRequest);
+
+                BufferedReader rd = new BufferedReader(
+                        new InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer result = new StringBuffer();
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+
+
+                String[] imageDataAndInfoSplitString = result.toString().split(",");
+                byte[] bytes = Base64.decode(imageDataAndInfoSplitString[1].getBytes(),Base64.DEFAULT);
+                bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                Log.d("Response", result.toString());
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            if(bmp != null) {
+                iv_clientImage.setImageBitmap(bmp);
+            } else {
+                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+            }
+
+        }
+    };
 
 }

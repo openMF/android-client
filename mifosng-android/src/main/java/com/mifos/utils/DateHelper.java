@@ -92,9 +92,6 @@ public class DateHelper {
         } else {
             return -1;
         }
-
-
-
     }
 
 
