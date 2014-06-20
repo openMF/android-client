@@ -75,17 +75,11 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         return super.onOptionsItemSelected(item);
     }
 
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-    }
-
     private void saveUpdatedLoanToDB() {
         Map<Loan, Integer> mapDue = adapter.getUpdatedDueList();
 
         Set<Loan> loans = mapDue.keySet();
-        for(Loan loan : loans) {
+        for (Loan loan : loans) {
             int updatedDue = mapDue.get(loan);
             new RepaymentTransaction(loan, updatedDue).save();
         }
@@ -107,8 +101,15 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
 
     private void setAdapter() {
         clientsInTheGroup = Select.from(Client.class).where(Condition.prop("mifos_group").eq(groupId)).list();
+
+        List<Loan> loans = new ArrayList<Loan>();
+
+        for(Client client: clientsInTheGroup){
+            loans.addAll(Select.from(Loan.class).where(Condition.prop("client").eq(client.getId())).list());
+        }
+
         if (adapter == null)
-            adapter = new ClientListAdapter(getActivity(), clientsInTheGroup);
+            adapter = new ClientListAdapter(getActivity(), loans);
         lv_clients.setAdapter(adapter);
         lv_clients.setOnItemClickListener(this);
     }
@@ -121,7 +122,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         List<Loan> loans = Select.from(Loan.class).list();
         for (Loan loan : loans) {
             if (loan.getClient().getMifosGroup().getId() == groupId) {
-                listPaidAmount.put(loan, loan.chargesDue);
+                listPaidAmount.put(loan, loan.totalDue);
                 totalAmountDue += loan.chargesDue;
             }
         }
@@ -138,5 +139,11 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         Intent intent = new Intent(getActivity(), LoanActivity.class);
         intent.putExtra("clientId", clientId);
         startActivity(intent);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 }

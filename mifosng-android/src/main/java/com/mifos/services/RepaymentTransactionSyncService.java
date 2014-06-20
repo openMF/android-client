@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.mifos.objects.db.Loan;
 import com.mifos.objects.db.RepaymentTransaction;
 import com.mifos.services.data.BulkRepaymentTransactions;
 import com.mifos.services.data.CollectionSheetPayload;
@@ -13,6 +14,7 @@ import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Network;
 import com.orm.query.Select;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,7 +22,7 @@ import java.util.TimerTask;
 public class RepaymentTransactionSyncService extends Service {
 
     private static final String TAG = RepaymentTransactionSyncService.class.getSimpleName();
-    private final long FIFTEEN_MINUTES = 15 * 60 * 1000L;
+    private final long FIFTEEN_MINUTES = 30 * 1000L;
 
     private Timer timer;
 
@@ -32,17 +34,21 @@ public class RepaymentTransactionSyncService extends Service {
             Log.i(TAG, "Fetch transactions from Database:" + transactions);
 
             if (transactions.size() > 0) {
-                BulkRepaymentTransactions[] repaymentTransactions = new BulkRepaymentTransactions[transactions.size()];
-
-                int i = 0;
+                List<BulkRepaymentTransactions> repaymentTransactions = new ArrayList<BulkRepaymentTransactions>();
 
                 for (RepaymentTransaction transaction : transactions) {
-                    repaymentTransactions[i] = new BulkRepaymentTransactions(transaction.getLoan().getLoanId(), transaction.getTransactionAmount());
-                    i++;
+                    Loan loan = transaction.getLoan();
+                    if(loan.getAccountStatusId() == 300) {
+                        repaymentTransactions.add(new BulkRepaymentTransactions(loan.getLoanId(), transaction.getTransactionAmount()));
+                    }
                 }
 
+                BulkRepaymentTransactions[] repaymentTransactionArray = new BulkRepaymentTransactions[repaymentTransactions.size()];
+                repaymentTransactions.toArray(repaymentTransactionArray);
+
+
                 CollectionSheetPayload payload = new CollectionSheetPayload();
-                payload.bulkRepaymentTransactions = repaymentTransactions;
+                payload.bulkRepaymentTransactions = repaymentTransactionArray;
 
                 SaveCollectionSheetTask task = new SaveCollectionSheetTask();
                 task.execute(payload);

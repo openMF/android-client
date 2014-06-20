@@ -68,4 +68,24 @@ public class Loan extends SugarRecord<Loan> {
         this.disbursementAmount = disbursementAmount;
     }
 
+    public int getAccountStatusId() {
+        return accountStatusId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Loan loan = (Loan) o;
+
+        if (loanId != loan.loanId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return loanId;
+    }
 }

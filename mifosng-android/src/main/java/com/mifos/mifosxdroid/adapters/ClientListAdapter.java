@@ -25,13 +25,13 @@ import butterknife.InjectView;
 public class ClientListAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
-    private List<Client> listClient;
+    private List<Loan> listClient;
     private String tag = getClass().getSimpleName();
     private Map<Loan, Integer> listPaidAmounts;
     private EditFocusChangeListener editFocusChangeListener;
     private Context context;
 
-    public ClientListAdapter(Context context, List<Client> listClient) {
+    public ClientListAdapter(Context context, List<Loan> listClient) {
 
         layoutInflater = LayoutInflater.from(context);
         this.listClient = listClient;
@@ -49,7 +49,7 @@ public class ClientListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Client getItem(int i) {
+    public Loan getItem(int i) {
         return this.listClient.get(i);
     }
 
@@ -75,14 +75,12 @@ public class ClientListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        final Client client = listClient.get(i);
-
-        Loan loan = Select.from(Loan.class).where(Condition.prop("client").eq(client.getId())).first();
+        final Loan loan = listClient.get(i);
 
         if (loan != null && loan.productShortName.length() > 0) {
 
             viewHolder.tv_product_short_name.setText(loan.productShortName);
-            viewHolder.tv_client_name.setText(client.getClientName());
+            viewHolder.tv_client_name.setText(loan.getClient().getClientName());
             viewHolder.et_amt_paid.setText(String.valueOf(loan.totalDue));
             viewHolder.et_amt_paid.setTag(loan);
             viewHolder.et_amt_paid.setOnFocusChangeListener(editFocusChangeListener);
