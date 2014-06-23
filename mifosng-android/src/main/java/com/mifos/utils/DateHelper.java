@@ -34,6 +34,23 @@ public class DateHelper {
         return date;
     }
 
+
+    //Currently supports on "dd MM yyyy"
+    public static String getCurrentDateAsDateFormat() {
+
+        Calendar calendar = Calendar.getInstance();
+
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String date = day + " " + (month + 1) + " " + year;
+
+
+        return date;
+
+    }
+
     public static String getDateAsString(List<Integer> integersOfDate) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -46,6 +63,8 @@ public class DateHelper {
         return stringBuilder.toString();
 
     }
+
+
 
     /**
      *

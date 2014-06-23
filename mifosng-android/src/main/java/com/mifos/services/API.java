@@ -9,6 +9,7 @@ import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -29,6 +30,7 @@ import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -214,7 +216,8 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.SEARCH + "?resource=clients")
-        public void searchClientsByName(@Query("query") String clientName, Callback<List<SearchedEntity>> listCallback);
+        public void searchClientsByName(@Query("query") String clientName,
+                                        Callback<List<SearchedEntity>> listCallback);
 
     }
 
@@ -226,7 +229,29 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
-        public void getLoanRepaymentTemplate(@Path("loanId") int loanId, Callback<LoanRepaymentTemplate> loanRepaymentTemplateCallback);
+        public void getLoanRepaymentTemplate(@Path("loanId") int loanId,
+                                             Callback<LoanRepaymentTemplate> loanRepaymentTemplateCallback);
+
+
+        /*
+             Mandatory Fields
+                1. String approvedOnDate
+        */
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.LOANS + "/{loanId}?command=approve")
+        public void approveLoanApplication(@Path("loanId") int loanId,
+                                           @Body LoanApprovalRequest loanApprovalRequest,
+                                           Callback<GenericResponse> genericResponseCallback);
+
+        /*
+            Mandatory Fields
+                1. String actualDisbursementDate
+          */
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
+        public void disburseLoan(@Path("loanId") int loanId,
+                                 @Body HashMap<String,Object> genericRequest,
+                                 Callback<GenericResponse> genericResponseCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")

@@ -21,12 +21,16 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
+import com.mifos.services.GenericResponse;
 import com.mifos.utils.Constants;
+import com.mifos.utils.DateHelper;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,6 +45,8 @@ import retrofit.client.Response;
  * Created by ishankhanna on 09/05/14.
  */
 public class LoanAccountSummaryFragment extends Fragment {
+
+    //TODO : Localisation in xml along with comments
 
     /*
         Set of Actions and Transactions that can be performed depending on the status of the Loan
@@ -177,36 +183,18 @@ public class LoanAccountSummaryFragment extends Fragment {
                 tv_clientName.setText(loan.getClientName());
                 tv_loan_product_short_name.setText(loan.getLoanProductName());
                 tv_loanAccountNumber.setText("#"+loan.getAccountNo());
-                tv_loan_total_due.setText("-"+loan.getSummary().getPrincipalDisbursed());
                 tv_loan_account_status.setText(loan.getStatus().getValue());
-                tv_in_arrears.setText(String.valueOf(loan.getSummary().getTotalOverdue()));
                 tv_loan_officer.setText(loan.getLoanOfficerName());
                 //TODO Implement QuickContactBadge
                 quickContactBadge.setImageToDefault();
 
-                tv_principal.setText(String.valueOf(loan.getSummary().getPrincipalDisbursed()));
-                tv_loan_principal_due.setText(String.valueOf(loan.getSummary().getPrincipalOutstanding()));
-                tv_loan_principal_paid.setText(String.valueOf(loan.getSummary().getPrincipalPaid()));
 
-                tv_interest.setText(String.valueOf(loan.getSummary().getInterestCharged()));
-                tv_loan_interest_due.setText(String.valueOf(loan.getSummary().getInterestOutstanding()));
-                tv_loan_interest_paid.setText(String.valueOf(loan.getSummary().getInterestPaid()));
 
-                tv_fees.setText(String.valueOf(loan.getSummary().getFeeChargesCharged()));
-                tv_loan_fees_due.setText(String.valueOf(loan.getSummary().getFeeChargesOutstanding()));
-                tv_loan_fees_paid.setText(String.valueOf(loan.getSummary().getFeeChargesPaid()));
-
-                tv_penalty.setText(String.valueOf(loan.getSummary().getPenaltyChargesCharged()));
-                tv_loan_penalty_due.setText(String.valueOf(loan.getSummary().getPenaltyChargesOutstanding()));
-                tv_loan_penalty_paid.setText(String.valueOf(loan.getSummary().getPenaltyChargesPaid()));
-
-                tv_total.setText(String.valueOf(loan.getSummary().getTotalExpectedRepayment()));
-                tv_total_due.setText(String.valueOf(loan.getSummary().getTotalOutstanding()));
-                tv_total_paid.setText(String.valueOf(loan.getSummary().getTotalRepayment()));
 
                 bt_processLoanTransaction.setEnabled(true);
                 if(loan.getStatus().getActive())
                 {
+                    inflateLoanSummary(loan);
                     /*
                      *   if Loan is already active
                      *   the Transaction Would be Make Repayment
@@ -230,7 +218,7 @@ public class LoanAccountSummaryFragment extends Fragment {
                     bt_processLoanTransaction.setText("Disburse Loan");
                     processLoanTransactionAction = ACTION_DISBURSE_LOAN;
                 }else if(loan.getStatus().getClosedObligationsMet()){
-                    //TODO Ask Vishwas about this status and getClosed Status' difference and what action to perform
+                    inflateLoanSummary(loan);
                     /*
                      *  if Loan is Closed after the obligations are met
                      *  the make payment will be disabled so that no more payment can be collected
@@ -238,10 +226,9 @@ public class LoanAccountSummaryFragment extends Fragment {
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Make Repayment");
                 }else {
-
-                    //TODO Implement Actions for Other Status' as well
+                    inflateLoanSummary(loan);
                     bt_processLoanTransaction.setEnabled(false);
-                    bt_processLoanTransaction.setText("Make Repayment");
+                    bt_processLoanTransaction.setText("Loan Closed");
                 }
 
                 /*
@@ -275,9 +262,9 @@ public class LoanAccountSummaryFragment extends Fragment {
         {
             mListener.makeRepayment(clientLoan);
         }else if(processLoanTransactionAction == ACTION_APPROVE_LOAN) {
-            //TODO mListener.approveLoan()
+            approveLoan();
         }else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
-            //TODO mListener.disburseLoan()
+            disburseLoan();
         }else {
             Log.i(getActivity().getLocalClassName(), "TRANSACTION ACTION NOT SET");
         }
@@ -373,5 +360,88 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     }
 
+    public void inflateLoanSummary(Loan loan) {
+
+        tv_loan_total_due.setText("-"+loan.getSummary().getPrincipalDisbursed());
+        tv_in_arrears.setText(String.valueOf(loan.getSummary().getTotalOverdue()));
+        tv_principal.setText(String.valueOf(loan.getSummary().getPrincipalDisbursed()));
+        tv_loan_principal_due.setText(String.valueOf(loan.getSummary().getPrincipalOutstanding()));
+        tv_loan_principal_paid.setText(String.valueOf(loan.getSummary().getPrincipalPaid()));
+
+        tv_interest.setText(String.valueOf(loan.getSummary().getInterestCharged()));
+        tv_loan_interest_due.setText(String.valueOf(loan.getSummary().getInterestOutstanding()));
+        tv_loan_interest_paid.setText(String.valueOf(loan.getSummary().getInterestPaid()));
+
+        tv_fees.setText(String.valueOf(loan.getSummary().getFeeChargesCharged()));
+        tv_loan_fees_due.setText(String.valueOf(loan.getSummary().getFeeChargesOutstanding()));
+        tv_loan_fees_paid.setText(String.valueOf(loan.getSummary().getFeeChargesPaid()));
+
+        tv_penalty.setText(String.valueOf(loan.getSummary().getPenaltyChargesCharged()));
+        tv_loan_penalty_due.setText(String.valueOf(loan.getSummary().getPenaltyChargesOutstanding()));
+        tv_loan_penalty_paid.setText(String.valueOf(loan.getSummary().getPenaltyChargesPaid()));
+
+        tv_total.setText(String.valueOf(loan.getSummary().getTotalExpectedRepayment()));
+        tv_total_due.setText(String.valueOf(loan.getSummary().getTotalOutstanding()));
+        tv_total_paid.setText(String.valueOf(loan.getSummary().getTotalRepayment()));
+
+    }
+
+    //TODO : Add Support for Changing Dates
+    public void approveLoan() {
+
+        LoanApprovalRequest loanApprovalRequest = new LoanApprovalRequest();
+        loanApprovalRequest.setApprovedOnDate(DateHelper.getCurrentDateAsDateFormat());
+
+        API.loanService.approveLoanApplication(loanAccountNumber,
+                loanApprovalRequest,
+                new Callback<GenericResponse>() {
+            @Override
+            public void success(GenericResponse genericResponse, Response response) {
+
+                Log.i("Failed","No");
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                Log.i("Failed","yes");
+
+            }
+        });
+
+    }
+
+    //TODO : Add Support for Changing Dates
+    public void disburseLoan() {
+
+        HashMap<String,Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("dateFormat", "dd MM yyyy");
+        hashMap.put("actualDisbursementDate", DateHelper.getCurrentDateAsDateFormat());
+        hashMap.put("locale","en");
+
+        API.loanService.disburseLoan(loanAccountNumber,
+                hashMap,
+                new Callback<GenericResponse>() {
+
+                    @Override
+                    public void success(GenericResponse genericResponse, Response response) {
+
+                        Log.i("Failed","No");
+
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+
+                        Log.i("Failed","Yes");
+
+
+                    }
+                });
+
+    }
 
 }
