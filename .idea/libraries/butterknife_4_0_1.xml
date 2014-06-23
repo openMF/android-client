@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="butterknife-4.0.1">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/mifosng-android/libs/butterknife-4.0.1.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="sugar-1.3_beta">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/mifosng-android/libs/sugar-1.3_beta.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
