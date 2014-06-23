@@ -24,6 +24,8 @@ import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
+import org.apache.http.HttpStatus;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -211,28 +213,62 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        // TODO: The REST API for this is NOT WORKING YET!
-        // Currently it will show a toast, but will not actually save anything to the data table.
         if (id == MENU_ITEM_SAVE_LOCATION) {
             if (locationAvailable.get()) {
-                Location location = mLocationClient.getLastLocation();
-                Toast.makeText(this, "Current location NOT being saved yet: "
-                        + location.toString(), Toast.LENGTH_SHORT).show();
+                final Location location = mLocationClient.getLastLocation();
+
+
 
                 API.gpsCoordinatesService.setGpsCoordinates(clientId,
-                        new GpsCoordinatesRequest(clientId, location.getLatitude(), location.getLongitude()),
+                        new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                         new Callback<GpsCoordinatesResponse>(){
                             @Override
                             public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
-                                Log.d("online/ClientActivity", "Successfully saved GPS coordinates");
+                                Toast.makeText(getApplicationContext(), "Current location saved successfully: "
+                                        + location.toString(), Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
                             public void failure(RetrofitError retrofitError) {
-                                Log.d("online/ClientActivity", "Failed to save GPS coordinates");
+
+                                /*
+                                  *  TODO:
+                                  *  1. Ask Vishwas about how to parse the error json response?
+                                  *     Does it follow a pattern that can be mapped here
+                                  *  2. Implement a proper mechanism to read the error messages and perform actions based on them
+                                  *
+                                 */
+                                if(retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
+
+                                    API.gpsCoordinatesService.updateGpsCoordinates(clientId,
+                                            new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
+                                            new Callback<GpsCoordinatesResponse>() {
+                                                @Override
+                                                public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
+
+                                                    Toast.makeText(getApplicationContext(), "Current location updated successfully: "
+                                                            + location.toString(), Toast.LENGTH_SHORT).show();
+
+                                                }
+
+                                                @Override
+                                                public void failure(RetrofitError retrofitError) {
+
+                                                    Toast.makeText(getApplicationContext(), "Current location could not be updated: "
+                                                            + location.toString(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+                                } else {
+
+                                    Toast.makeText(getApplicationContext(), "Current location could not be saved: "
+                                            + location.toString(), Toast.LENGTH_SHORT).show();
+
+                                }
+
                             }
                         });
-                ;
+
             } else {
                 // Display the connection status
                 Toast.makeText(this, "Location not available",

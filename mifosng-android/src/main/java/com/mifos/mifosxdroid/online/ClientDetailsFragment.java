@@ -538,7 +538,7 @@ public class ClientDetailsFragment extends Fragment {
             String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/"+
                     integers[0] + "/images";
             HttpGet imageFetchingRequest = new HttpGet(url);
-            //TODO: Remove default tenant dependency
+            //TODO: Remove default tenant dependency & static URL dependency
             imageFetchingRequest.addHeader("X-Mifos-Platform-TenantId","default");
             imageFetchingRequest.addHeader(API.HEADER_AUTHORIZATION,authToken);
 

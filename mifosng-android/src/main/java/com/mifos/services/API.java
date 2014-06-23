@@ -44,6 +44,7 @@ import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -323,16 +324,20 @@ public class API {
     /**
      * Service for getting and retrieving GPS coordinates for a client's location, stored
      * in a custom data table.
-     * TODO:
-     * getGpsCoordinates needs to be added.
-     * setGpsCoordinates is not working yet - currently there is something wrong with the formatting of the request.
      */
     public interface GpsCoordinatesService {
 
-        @POST(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}?genericResultSet=true")
+        @POST(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}")
         public void setGpsCoordinates(@Path("clientId") int clientId,
-                                      @Body GpsCoordinatesRequest coordinates,
+                                      @Body GpsCoordinatesRequest gpsCoordinatesRequest,
                                       Callback<GpsCoordinatesResponse> gpsCoordinatesResponseCallback);
+
+        @PUT(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}")
+        public void updateGpsCoordinates(@Path("clientId") int clientId,
+                                         @Body GpsCoordinatesRequest gpsCoordinatesRequest,
+                                         Callback<GpsCoordinatesResponse> gpsCoordinatesResponseCallback);
+
+
     }
 
     public static <T> Callback<T> getCallback(T t) {

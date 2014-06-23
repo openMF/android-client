@@ -5,25 +5,15 @@ package com.mifos.services.data;
  */
 public class GpsCoordinatesRequest
 {
-    private int clientId;
     private double latitude;
     private double longitude;
     // Defaults
     private String dateFormat="dd MMMM YYYY";
     private String locale="en";
 
-    public GpsCoordinatesRequest(int clientId, double latitude, double longitude) {
-        this.clientId = clientId;
+    public GpsCoordinatesRequest(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
     }
 
     public double getLongitude() {

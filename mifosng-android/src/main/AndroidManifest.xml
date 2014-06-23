@@ -19,7 +19,8 @@
         android:theme="@style/Theme.Mifosxactionbar" >
         <activity
             android:name="com.mifos.mifosxdroid.SplashScreenActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,24 +29,35 @@
         </activity>
         <activity
             android:name="com.mifos.mifosxdroid.LoginActivity"
-            android:label="Login" />
+            android:label="Login"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.mifos.mifosxdroid.online.LogoutActivity"
+            android:screenOrientation="portrait"
             android:label="@string/logout" />
         <activity
             android:name="com.mifos.mifosxdroid.online.DashboardFragmentActivity"
+            android:screenOrientation="portrait"
             android:label="Dashboard" >
         </activity>
-        <activity android:name="com.mifos.mifosxdroid.online.ClientSearchActivity" />
+        <activity android:name="com.mifos.mifosxdroid.online.ClientSearchActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.mifos.mifosxdroid.GroupActivity"
-            android:configChanges="orientation|screenSize" />
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"
+            />
         <activity
             android:name="com.mifos.mifosxdroid.ClientActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.mifos.mifosxdroid.LoanActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            />
 
         <meta-data
             android:name="DATABASE"
@@ -61,7 +73,9 @@
 
         <activity
             android:name="com.mifos.mifosxdroid.online.ClientActivity"
-            android:label="@string/title_activity_client" >
+            android:label="@string/title_activity_client"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <service
                 android:name="com.mifos.services.RepaymentTransactionSyncService"

@@ -53,7 +53,7 @@ public class ClientSearchActivity extends ActionBarActivity implements LoanAccou
         LoanAccountSummaryFragment loanAccountSummaryFragment = LoanAccountSummaryFragment.newInstance(loanAccountNumber);
         FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.search_activity_container,loanAccountSummaryFragment).commit();
+        fragmentTransaction.replace(R.id.global_container,loanAccountSummaryFragment).commit();
 
 
     }
