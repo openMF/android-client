@@ -18,6 +18,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -268,28 +269,6 @@ public class ClientDetailsFragment extends Fragment {
 
                         new ImageLoadingAsyncTask().execute(client.getId());
 
-//                        API.clientService.getClientImage(client.getId(), new Callback<TypedString>() {
-//
-//                            @Override
-//                            public void success(final TypedString file, Response response) {
-//
-//                                // TODO: Parse bytes and render image in the UI.
-//                               // byte[] bytes = inputStreamToByteArray(file.in());
-//                               byte[] bytes = file.getBytes();
-//                                Log.d("Image Loading", "Byte Loading Completed");
-////                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-////                                iv_clientImage.setImageBitmap(bmp);
-//
-//                            }
-//
-//                            @Override
-//                            public void failure(RetrofitError retrofitError) {
-//                                Log.d("ClientDetailsFragment", "No image found for clientId " + client.getId());
-//                                Log.d("Why Image Fetching Failed?", retrofitError.getLocalizedMessage());
-//
-//                            }
-//
-//                        });
                     }
 
                     iv_clientImage.setOnClickListener(new View.OnClickListener() {
@@ -399,6 +378,18 @@ public class ClientDetailsFragment extends Fragment {
 
                         }
                     });
+
+                    //This is used to handle touch events on the list view and consume them without
+                    //passing onto scroll view
+                    lv_accounts_loans.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                            view.getParent().requestDisallowInterceptTouchEvent(true);
+
+                            return false;
+                        }
+                    });
                 }
 
                 if (clientAccounts.getSavingsAccounts().size() > 0) {
@@ -435,6 +426,18 @@ public class ClientDetailsFragment extends Fragment {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                             mListener.loadSavingsAccountSummary(clientAccounts.getSavingsAccounts().get(i).getId());
+                        }
+                    });
+
+                    //This is used to handle touch events on the list view and consume them without
+                    //passing onto scroll view
+                    lv_accounts_savings.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                            view.getParent().requestDisallowInterceptTouchEvent(true);
+
+                            return false;
                         }
                     });
 
@@ -554,8 +557,6 @@ public class ClientDetailsFragment extends Fragment {
                 String[] imageDataAndInfoSplitString = result.toString().split(",");
                 byte[] bytes = Base64.decode(imageDataAndInfoSplitString[1].getBytes(),Base64.DEFAULT);
                 bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                Log.d("Response", result.toString());
-
 
             } catch (IOException e) {
                 e.printStackTrace();
