@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class LoanWithAssociations {
-
+//TODO Fix OBJECT Typed Lists
     private Integer id;
     private String accountNo;
     private Status status;
@@ -49,17 +50,17 @@ public class LoanWithAssociations {
     private Summary summary;
     private RepaymentSchedule repaymentSchedule;
     private List<Transaction> transactions = new ArrayList<Transaction>();
-    private List<Object> disbursementDetails = new ArrayList<Object>();
+    private List<Object> disbursementDetails;
     private Double feeChargesAtDisbursementCharged;
     private Double totalOverpaid;
     private Integer loanCounter;
     private Integer loanProductCounter;
     private Boolean multiDisburseLoan;
     private Boolean canDisburse;
-    private List<Object> emiAmountVariations = new ArrayList<Object>();
+    private List<Object> emiAmountVariations;
     private Boolean inArrears;
     private Boolean isNPA;
-    private List<Object> overdueCharges = new ArrayList<Object>();
+    private List<Object> overdueCharges;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {

@@ -47,7 +47,9 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     public static final int MENU_ITEM_SAVE_LOCATION = 1000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
+    public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
 
+    //TODO: Ask Vishwas about converting this approach into a HashMap Based approach
     /**
      * Control Menu Changes from Fragments
      * change this Variable to True in the Fragment and Magic
@@ -57,7 +59,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     public static Boolean shouldAddDataTables = Boolean.FALSE;
     public static Boolean shouldAddSaveLocation = Boolean.FALSE;
     public static Boolean shouldAddRepaymentSchedule = Boolean.FALSE;
-
+    public static Boolean shouldAddLoanTransactions = Boolean.FALSE;
     /**
      * Property to identify the type of data tables to be shown.
      */
@@ -189,6 +191,10 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
             if(shouldAddRepaymentSchedule) {
                 // Show the Loan Repayment Item
                 menu.add(Menu.NONE,MENU_ITEM_REPAYMENT_SCHEDULE,Menu.NONE, "Repayment Schedule");
+            }
+
+            if(shouldAddLoanTransactions) {
+                menu.add(Menu.NONE,MENU_ITEM_LOAN_TRANSACTIONS,Menu.NONE,"Transactions");
             }
 
             didMenuDataChange = Boolean.FALSE;
@@ -346,6 +352,23 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.global_container, loanRepaymentScheduleFragment).commit();
+
+    }
+
+    /*
+     * Called when the Transactions option from the Menu is clicked
+     *
+     * It will display all the Transactions associated with the Loan
+     * and also their details
+     */
+
+    @Override
+    public void loadLoanTransactions(int loanId) {
+
+        LoanTransactionsFragment loanTransactionsFragment = LoanTransactionsFragment.newInstance(loanId);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, loanTransactionsFragment).commit();
 
     }
 

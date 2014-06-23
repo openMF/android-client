@@ -58,7 +58,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 
 public class ClientDetailsFragment extends Fragment {

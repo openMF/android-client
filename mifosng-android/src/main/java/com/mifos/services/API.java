@@ -51,6 +51,7 @@ import retrofit.mime.TypedString;
 
 public class API {
 
+    //TODO : Constants for API Endpoints
     //This instance has more Data for Testing
     public static String mInstanceUrl = "https://demo.openmf.org/mifosng-provider/api/v1";
 
@@ -138,15 +139,15 @@ public class API {
         @Override
         public Throwable handleError(RetrofitError retrofitError) {
 
-            Response r = retrofitError.getResponse();
-            if (r != null && r.getStatus() == 401) {
+            Response response = retrofitError.getResponse();
+            if (response != null && response.getStatus() == 401) {
                 Log.e("Status", "Authentication Error.");
 
 
-            }else if(r.getStatus() == 400){
+            }else if(response.getStatus() == 400){
                 Log.d("Status","Bad Request - Invalid Parameter or Data Integrity Issue.");
-                Log.d("URL", r.getUrl());
-                List<retrofit.client.Header> headersList = r.getHeaders();
+                Log.d("URL", response.getUrl());
+                List<retrofit.client.Header> headersList = response.getHeaders();
                 Iterator<retrofit.client.Header> iterator = headersList.iterator();
                 while(iterator.hasNext())
                 {    retrofit.client.Header header = iterator.next();
@@ -203,6 +204,7 @@ public class API {
         @DELETE("/clients/{clientId}/images")
         void deleteClientImage(@Path("clientId") int clientId, Callback<Response> callback);
 
+        //TODO: Implement when API Fixed
         //@Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
         @GET("/clients/{clientId}/images")
         public void getClientImage(@Path("clientId") int clientId, Callback<TypedString> callback);
@@ -238,6 +240,10 @@ public class API {
         public void getLoanRepaymentSchedule(@Path("loanId") int loanId,
                                               Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET("/loans/{loanId}?associations=transactions")
+        public void getLoanWithTransactions(@Path("loanId") int loanId,
+                                            Callback<LoanWithAssociations> loanWithAssociationsCallback);
     }
 
     public interface SavingsAccountService {

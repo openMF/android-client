@@ -67,14 +67,14 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
         reusableViewHolder.tv_repaymentAmountPaid.setText(String.valueOf(periodList.get(i).getTotalPaidForPeriod()));
 
         if(periodList.get(i).getComplete()) {
-            view.setBackgroundColor(context.getResources().getColor(R.color.light_green_bg));
+            view.setBackgroundColor(context.getResources().getColor(R.color.light_green));
         } else if (!periodList.get(i).getComplete()
                 && (DateHelper.dateComparator(DateHelper.getCurrentDateAsListOfIntegers(), periodList.get(i).getDueDate()) > 0)) {
 
-            view.setBackgroundColor(context.getResources().getColor(R.color.light_red_bg));
+            view.setBackgroundColor(context.getResources().getColor(R.color.light_red));
 
         } else {
-            view.setBackgroundColor(context.getResources().getColor(R.color.light_blue_bg));
+            view.setBackgroundColor(context.getResources().getColor(R.color.light_blue));
         }
 
 

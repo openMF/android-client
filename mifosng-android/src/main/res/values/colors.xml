@@ -2,7 +2,8 @@
 <resources>
     <color name="black">#000000</color>
     <color name="deposit_green">#08860C</color>
-    <color name="light_green_bg">#ff8bf98a</color>
-    <color name="light_blue_bg">#FF87DBF9</color>
-    <color name="light_red_bg">#FFF96562</color>
+    <color name="light_green">#ff8bf98a</color>
+    <color name="light_blue">#FF87DBF9</color>
+    <color name="light_red">#FFF96562</color>
+    <color name="light_grey">#ffd1d1d1</color>
 </resources>

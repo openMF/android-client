@@ -90,4 +90,14 @@ public class ClientSearchActivity extends ActionBarActivity implements LoanAccou
         fragmentTransaction.replace(R.id.global_container, loanRepaymentScheduleFragment).commit();
 
     }
+
+    @Override
+    public void loadLoanTransactions(int loanId) {
+
+        LoanTransactionsFragment loanTransactionsFragment = LoanTransactionsFragment.newInstance(loanId);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, loanTransactionsFragment).commit();
+
+    }
 }

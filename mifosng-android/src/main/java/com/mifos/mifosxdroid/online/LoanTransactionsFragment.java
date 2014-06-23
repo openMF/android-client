@@ -11,10 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
+import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
@@ -27,7 +27,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentScheduleFragment extends Fragment {
+public class LoanTransactionsFragment extends Fragment {
+
+    @InjectView(R.id.elv_loan_transactions)
+    ExpandableListView elv_loanTransactions;
 
     private int loanAccountNumber;
 
@@ -43,16 +46,14 @@ public class LoanRepaymentScheduleFragment extends Fragment {
 
     ActionBar actionBar;
 
-    @InjectView(R.id.lv_repayment_schedule) ListView lv_repaymentSchedule;
-
-    public static LoanRepaymentScheduleFragment newInstance(int loanAccountNumber) {
-        LoanRepaymentScheduleFragment fragment = new LoanRepaymentScheduleFragment();
+    public static LoanTransactionsFragment newInstance(int loanAccountNumber) {
+        LoanTransactionsFragment fragment = new LoanTransactionsFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber);
         fragment.setArguments(args);
         return fragment;
     }
-    public LoanRepaymentScheduleFragment() {
+    public LoanTransactionsFragment() {
         // Required empty public constructor
     }
 
@@ -68,16 +69,14 @@ public class LoanRepaymentScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        rootView = inflater.inflate(R.layout.fragment_loan_repayment_schedule, container, false);
+        rootView = inflater.inflate(R.layout.fragment_loan_transactions, container, false);
         activity = (ActionBarActivity) getActivity();
-        safeUIBlockingUtility = new SafeUIBlockingUtility(LoanRepaymentScheduleFragment.this.getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(LoanTransactionsFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        actionBar.setTitle(getResources().getString(R.string.loan_repayment_schedule));
         ButterKnife.inject(this, rootView);
 
-        inflateRepaymentSchedule();
+        inflateLoanTransactions();
 
         return rootView;
     }
@@ -86,7 +85,7 @@ public class LoanRepaymentScheduleFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-           // mListener = (OnFragmentInteractionListener) activity;
+            //mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -99,41 +98,37 @@ public class LoanRepaymentScheduleFragment extends Fragment {
         mListener = null;
     }
 
-    public void inflateRepaymentSchedule(){
+     public interface OnFragmentInteractionListener {
 
-        API.loanService.getLoanRepaymentSchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
+    }
+
+    public void inflateLoanTransactions() {
+
+        API.loanService.getLoanWithTransactions(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
 
-                LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter =
-                        new LoanRepaymentScheduleAdapter(getActivity(),loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods());
-                lv_repaymentSchedule.setAdapter(loanRepaymentScheduleAdapter);
+                if(loanWithAssociations != null) {
 
-                updateMenu();
+                    Log.i("Transaction List Size", "" + loanWithAssociations.getTransactions().size());
+
+                    LoanTransactionAdapter loanTransactionAdapter =
+                            new LoanTransactionAdapter(getActivity(),loanWithAssociations.getTransactions());
+                    elv_loanTransactions.setAdapter(loanTransactionAdapter);
+                    elv_loanTransactions.setGroupIndicator(null);
+
+                }
 
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.i(getActivity().getLocalClassName(),retrofitError.getLocalizedMessage());
             }
         });
 
-
-
     }
 
-    public interface OnFragmentInteractionListener {
 
-    }
-
-    public void updateMenu() {
-
-        ClientActivity.shouldAddRepaymentSchedule = Boolean.FALSE;
-        ClientActivity.shouldAddSaveLocation = Boolean.FALSE;
-        ClientActivity.didMenuDataChange = Boolean.TRUE;
-
-    }
 
 }

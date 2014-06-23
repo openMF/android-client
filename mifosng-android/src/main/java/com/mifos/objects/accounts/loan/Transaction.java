@@ -22,9 +22,9 @@ public class Transaction {
     private Double amount;
     private Double principalPortion;
     private Double interestPortion;
-    private Integer feeChargesPortion;
-    private Integer penaltyChargesPortion;
-    private Integer overpaymentPortion;
+    private Double feeChargesPortion;
+    private Double penaltyChargesPortion;
+    private Double overpaymentPortion;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
@@ -107,27 +107,27 @@ public class Transaction {
         this.interestPortion = interestPortion;
     }
 
-    public Integer getFeeChargesPortion() {
+    public Double getFeeChargesPortion() {
         return feeChargesPortion;
     }
 
-    public void setFeeChargesPortion(Integer feeChargesPortion) {
+    public void setFeeChargesPortion(Double feeChargesPortion) {
         this.feeChargesPortion = feeChargesPortion;
     }
 
-    public Integer getPenaltyChargesPortion() {
+    public Double getPenaltyChargesPortion() {
         return penaltyChargesPortion;
     }
 
-    public void setPenaltyChargesPortion(Integer penaltyChargesPortion) {
+    public void setPenaltyChargesPortion(Double penaltyChargesPortion) {
         this.penaltyChargesPortion = penaltyChargesPortion;
     }
 
-    public Integer getOverpaymentPortion() {
+    public Double getOverpaymentPortion() {
         return overpaymentPortion;
     }
 
-    public void setOverpaymentPortion(Integer overpaymentPortion) {
+    public void setOverpaymentPortion(Double overpaymentPortion) {
         this.overpaymentPortion = overpaymentPortion;
     }
 
@@ -139,4 +139,23 @@ public class Transaction {
         this.additionalProperties.put(name, value);
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", officeId=" + officeId +
+                ", officeName='" + officeName + '\'' +
+                ", type=" + type +
+                ", date=" + date +
+                ", currency=" + currency +
+                ", paymentDetailData=" + paymentDetailData +
+                ", amount=" + amount +
+                ", principalPortion=" + principalPortion +
+                ", interestPortion=" + interestPortion +
+                ", feeChargesPortion=" + feeChargesPortion +
+                ", penaltyChargesPortion=" + penaltyChargesPortion +
+                ", overpaymentPortion=" + overpaymentPortion +
+                ", additionalProperties=" + additionalProperties +
+                '}';
+    }
 }

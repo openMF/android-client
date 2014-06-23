@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -310,6 +308,10 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         }
 
+        if(item.getItemId() == ClientActivity.MENU_ITEM_LOAN_TRANSACTIONS) {
+            mListener.loadLoanTransactions(loanAccountNumber);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -318,6 +320,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         public void makeRepayment(Loan loan);
         public void loadRepaymentSchedule(int loanId);
+        public void loadLoanTransactions(int loanId);
     }
 
     public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
@@ -365,6 +368,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         ClientActivity.shouldAddRepaymentSchedule = Boolean.TRUE;
         ClientActivity.shouldAddSaveLocation = Boolean.FALSE;
+        ClientActivity.shouldAddLoanTransactions = Boolean.TRUE;
         ClientActivity.didMenuDataChange = Boolean.TRUE;
 
     }
