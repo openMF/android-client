@@ -21,6 +21,7 @@ import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
+import com.mifos.services.data.APIEndPoint;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
@@ -51,22 +52,18 @@ import retrofit.mime.TypedString;
 
 public class API {
 
-    //TODO : Constants for API Endpoints
     //This instance has more Data for Testing
     public static String mInstanceUrl = "https://demo.openmf.org/mifosng-provider/api/v1";
 
     public static final String ACCEPT_JSON = "Accept: application/json";
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
+    public static final String HEADER_AUTHORIZATION = "Authorization";
 
     /*
         As Mifos is a multi-tenant platform, all requests require you to specify a tenant
         as a header in each request.
      */
     public static final String HEADER_MIFOS_TENANT_ID = "X-Mifos-Platform-TenantId";
-
-    public static final String HEADER_AUTHORIZATION = "Authorization";
-
-    //public static String mInstanceUrl = "https://demo2.openmf.org/mifosng-provider/api/v1";
 
     static RestAdapter sRestAdapter;
     public static CenterService centerService;
@@ -163,15 +160,16 @@ public class API {
     public interface CenterService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/centers")
+        @GET(APIEndPoint.CENTERS)
         public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
 
+        //TODO Remove Static Center Code
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST("/centers/2026?command=generateCollectionSheet")
+        @POST(APIEndPoint.CENTERS + "/2026?command=generateCollectionSheet")
         public void getCenter(@Body Payload payload, Callback<CollectionSheet> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST("/centers/2026?command=saveCollectionSheet")
+        @POST(APIEndPoint.CENTERS + "/2026?command=saveCollectionSheet")
         public SaveResponse saveCollectionSheet(@Body CollectionSheetPayload collectionSheetPayload);
 
     }
@@ -179,30 +177,30 @@ public class API {
     public interface ClientAccountsService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/clients/{clientId}/accounts")
-        public void getAllAccountsOfClient(@Path("clientId") int clientId, Callback<ClientAccounts> callback);
+        @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
+        public void getAllAccountsOfClient(@Path("clientId") int clientId, Callback<ClientAccounts> clientAccountsCallback);
 
     }
 
     public interface ClientService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/clients")
+        @GET(APIEndPoint.CLIENTS)
         public void listAllClients(Callback<Page<Client>> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/clients/{clientId}")
-        public void getClient(@Path("clientId") int clientId, Callback<Client> callback);
+        @GET(APIEndPoint.CLIENTS + "/{clientId}")
+        public void getClient(@Path("clientId") int clientId, Callback<Client> clientCallback);
 
         @Multipart
-        @POST("/clients/{clientId}/images")
+        @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
         public void uploadClientImage(@Path("clientId") int clientId,
                                       @Part("file") TypedFile file,
-                                      Callback<Response> callback);
+                                      Callback<Response> responseCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @DELETE("/clients/{clientId}/images")
-        void deleteClientImage(@Path("clientId") int clientId, Callback<Response> callback);
+        @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
+        void deleteClientImage(@Path("clientId") int clientId, Callback<Response> responseCallback);
 
         //TODO: Implement when API Fixed
         //@Headers({"Accept: application/octet-stream", CONTENT_TYPE_JSON})
@@ -214,34 +212,34 @@ public class API {
     public interface SearchService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/search?resource=clients")
-        public void searchClientsByName(@Query("query") String clientName, Callback<List<SearchedEntity>> callback);
+        @GET(APIEndPoint.SEARCH + "?resource=clients")
+        public void searchClientsByName(@Query("query") String clientName, Callback<List<SearchedEntity>> listCallback);
 
     }
 
     public interface LoanService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/loans/{loanId}")
-        public void getLoanById(@Path("loanId") int loanId, Callback<Loan> callback);
+        @GET(APIEndPoint.LOANS + "/{loanId}")
+        public void getLoanById(@Path("loanId") int loanId, Callback<Loan> loanCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/loans/{loanId}/transactions/template?command=repayment")
-        public void getLoanRepaymentTemplate(@Path("loanId") int loanId, Callback<LoanRepaymentTemplate> callback);
+        @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
+        public void getLoanRepaymentTemplate(@Path("loanId") int loanId, Callback<LoanRepaymentTemplate> loanRepaymentTemplateCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST("/loans/{loanId}/transactions?command=repayment")
+        @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
         public void submitPayment(@Path("loanId") int loanId,
                                   @Body LoanRepaymentRequest loanRepaymentRequest,
                                   Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/loans/{loanId}?associations=repaymentSchedule")
+        @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
         public void getLoanRepaymentSchedule(@Path("loanId") int loanId,
                                               Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/loans/{loanId}?associations=transactions")
+        @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
         public void getLoanWithTransactions(@Path("loanId") int loanId,
                                             Callback<LoanWithAssociations> loanWithAssociationsCallback);
     }
@@ -257,7 +255,7 @@ public class API {
          * Use this method to retrieve the Savings Account With Associations
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/savingsaccounts/{savingsAccountId}")
+        @GET(APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}")
         public void getSavingsAccountWithAssociations(@Path("savingsAccountId") int savingsAccountId,
                                                       @Query("associations") String association,
                                                       Callback<SavingsAccountWithAssociations> savingsAccountWithAssociationsCallback);
@@ -270,11 +268,11 @@ public class API {
          * Use this method to retrieve the Savings Account Transaction Template
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/savingsaccounts/{savingsAccountId}/transactions/template")
+        @GET(APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}/transactions/template")
         public void getSavingsAccountTransactionTemplate(@Path("savingsAccountId") int savingsAccountId, Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST("/savingsaccounts/{savingsAccountId}/transactions")
+        @POST(APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}/transactions")
         public void processTransaction(@Path("savingsAccountId") int savingsAccountId,
                                               @Query("command") String transactionType,
                                               @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
@@ -288,22 +286,22 @@ public class API {
         //TODO refactor the methods to to just one and specify the Query param
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables?apptable=m_savings_account")
-        public void getDatatablesOfSavingsAccount(Callback<List<DataTable>> callback);
+        @GET(APIEndPoint.DATATABLES + "?apptable=m_savings_account")
+        public void getDatatablesOfSavingsAccount(Callback<List<DataTable>> listCallback);
 
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables?apptable=m_client")
-        public void getDatatablesOfClient(Callback<List<DataTable>> callback);
+        @GET(APIEndPoint.DATATABLES + "?apptable=m_client")
+        public void getDatatablesOfClient(Callback<List<DataTable>> listCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables?apptable=m_loan")
-        public void getDatatablesOfLoan(Callback<List<DataTable>> callback);
+        @GET(APIEndPoint.DATATABLES + "?apptable=m_loan")
+        public void getDatatablesOfLoan(Callback<List<DataTable>> listCallback);
 
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET("/datatables/{dataTableName}/{entityId}/")
-        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int clientId, Callback<JsonArray> callback);
+        @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
+        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int clientId, Callback<JsonArray> jsonArrayCallback);
 
 
     }
@@ -317,7 +315,7 @@ public class API {
     public interface UserAuthService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST("/authentication")
+        @POST(APIEndPoint.AUTHENTICATION)
         public void authenticate(@Query("username") String username, @Query("password") String password, Callback<User> userCallback);
 
     }
@@ -325,16 +323,16 @@ public class API {
     /**
      * Service for getting and retrieving GPS coordinates for a client's location, stored
      * in a custom data table.
-     * TODOs:
+     * TODO:
      * getGpsCoordinates needs to be added.
      * setGpsCoordinates is not working yet - currently there is something wrong with the formatting of the request.
      */
     public interface GpsCoordinatesService {
 
-        @POST("/datatables/gps_coordinates/{clientId}?genericResultSet=true")
+        @POST(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}?genericResultSet=true")
         public void setGpsCoordinates(@Path("clientId") int clientId,
                                       @Body GpsCoordinatesRequest coordinates,
-                                      Callback<GpsCoordinatesResponse> callback);
+                                      Callback<GpsCoordinatesResponse> gpsCoordinatesResponseCallback);
     }
 
     public static <T> Callback<T> getCallback(T t) {
