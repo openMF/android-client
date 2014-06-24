@@ -42,8 +42,6 @@ public class DataTableDataFragment extends Fragment {
     SafeUIBlockingUtility safeUIBlockingUtility;
 
 
-
-
     public static DataTableDataFragment newInstance(DataTable dataTable, int entityId) {
 
         DataTableDataFragment fragment = new DataTableDataFragment();
@@ -51,6 +49,7 @@ public class DataTableDataFragment extends Fragment {
         fragment.entityId = entityId;
         return fragment;
     }
+
     public DataTableDataFragment() {
         // Required empty public constructor
     }
@@ -77,9 +76,8 @@ public class DataTableDataFragment extends Fragment {
             @Override
             public void success(JsonArray jsonElements, Response response) {
 
-                if(jsonElements!=null)
-                {
-                    rootView = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, (LinearLayout)rootView, getActivity());
+                if (jsonElements != null) {
+                    rootView = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, (LinearLayout) rootView, getActivity());
                 }
             }
 

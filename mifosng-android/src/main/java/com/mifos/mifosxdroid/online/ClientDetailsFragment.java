@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -38,17 +37,13 @@ import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -522,6 +517,7 @@ public class ClientDetailsFragment extends Fragment {
 
     }
 
+    //TODO Ask Vishwas which way to use Binary or Data URI
     public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         Bitmap bmp;
@@ -532,35 +528,58 @@ public class ClientDetailsFragment extends Fragment {
             SharedPreferences pref = PreferenceManager
                     .getDefaultSharedPreferences(Constants.applicationContext);
             String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-
-            HttpClient httpClient = new DefaultHttpClient();
-
             String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/"+
                     integers[0] + "/images";
-            HttpGet imageFetchingRequest = new HttpGet(url);
-            //TODO: Remove default tenant dependency & static URL dependency
-            imageFetchingRequest.addHeader("X-Mifos-Platform-TenantId","default");
-            imageFetchingRequest.addHeader(API.HEADER_AUTHORIZATION,authToken);
 
-            try {
-                HttpResponse response = httpClient.execute(imageFetchingRequest);
+//            HttpClient httpClient = new DefaultHttpClient();
+//            HttpGet imageFetchingRequest = new HttpGet(url);
+//            //TODO: Remove default tenant dependency & static URL dependency
+//            imageFetchingRequest.addHeader("X-Mifos-Platform-TenantId","default");
+//            imageFetchingRequest.addHeader(API.HEADER_AUTHORIZATION,authToken);
+//
+//            try {
+//                HttpResponse response = httpClient.execute(imageFetchingRequest);
+//
+//                BufferedReader rd = new BufferedReader(
+//                        new InputStreamReader(response.getEntity().getContent()));
+//
+//                StringBuffer result = new StringBuffer();
+//                String line = "";
+//                while ((line = rd.readLine()) != null) {
+//                    result.append(line);
+//                }
+//
+//                String[] imageDataAndInfoSplitString = result.toString().split(",");
+//                byte[] bytes = Base64.decode(imageDataAndInfoSplitString[1].getBytes(),Base64.DEFAULT);
+//                bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            try{
 
-                BufferedReader rd = new BufferedReader(
-                        new InputStreamReader(response.getEntity().getContent()));
+                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
 
-                StringBuffer result = new StringBuffer();
-                String line = "";
-                while ((line = rd.readLine()) != null) {
-                    result.append(line);
-                }
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
+                httpURLConnection.setRequestProperty(API.HEADER_AUTHORIZATION,authToken);
+                httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+                Log.i("Connected", "True");
+                InputStream inputStream = httpURLConnection.getInputStream();
 
-                String[] imageDataAndInfoSplitString = result.toString().split(",");
-                byte[] bytes = Base64.decode(imageDataAndInfoSplitString[1].getBytes(),Base64.DEFAULT);
-                bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                bmp = BitmapFactory.decodeStream(inputStream);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                httpURLConnection.disconnect();
+                Log.i("Connected", "False");
+
+            }catch (MalformedURLException e) {
+
+            }catch (IOException ioe) {
+
             }
+
 
             return null;
         }
