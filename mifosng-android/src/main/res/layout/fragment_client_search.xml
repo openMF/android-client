@@ -14,7 +14,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="8dp"
-        android:hint="@string/search_by_id"/>
+        android:hint="@string/client_search_hint"/>
 
     <Button
         android:layout_width="wrap_content"

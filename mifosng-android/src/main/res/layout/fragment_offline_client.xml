@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent" android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:id="@+id/lv_clients"
-            android:descendantFocusability="beforeDescendants"
-            android:layout_centerHorizontal="true"/>
+        android:id="@+id/lv_clients"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1"
+        android:descendantFocusability="beforeDescendants" />
 
-    <LinearLayout android:layout_width="fill_parent"
-                  android:orientation="horizontal"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="5dp"
-                  android:layout_marginBottom="5dp"
-                  android:padding="10dp"
-            >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
         <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1"
-                android:text="@string/total"
-                android:textStyle="bold"
-                />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/total"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
         <TextView
-                android:layout_below="@+id/tv_clientName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="10000000"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:inputType="number"
-                android:background="@drawable/rounded_background"
-                android:id="@+id/tv_total_amt_paid"
-                android:textStyle="bold"
-                />
+            android:id="@+id/tv_total_amt_paid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_clientName"
+            android:background="@drawable/rounded_background"
+            android:inputType="number"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="10000000"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>
