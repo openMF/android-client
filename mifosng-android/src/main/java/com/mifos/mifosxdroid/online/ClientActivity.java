@@ -294,20 +294,20 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      * It displays the data of data table based on the name of data table
      */
     public void loadDataTableFragment(int dataTablePostionInTheList) {
-        DataTableFragment dataTableFragment;
+        DataTableDataFragment dataTableDataFragment;
 
         switch(idOfDataTableToBeShownInMenu)
         {
-            case Constants.DATA_TABLE_CLIENTS : dataTableFragment =
-                    DataTableFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList),
-                    ClientDetailsFragment.clientId);
+            case Constants.DATA_TABLE_CLIENTS : dataTableDataFragment =
+                    DataTableDataFragment.newInstance(ClientDetailsFragment.clientDataTables.get(dataTablePostionInTheList),
+                            ClientDetailsFragment.clientId);
                 break;
-            case Constants.DATA_TABLE_LOANS: dataTableFragment =
-                    DataTableFragment.newInstance(LoanAccountSummaryFragment.loanDataTables.get(dataTablePostionInTheList),
+            case Constants.DATA_TABLE_LOANS: dataTableDataFragment =
+                    DataTableDataFragment.newInstance(LoanAccountSummaryFragment.loanDataTables.get(dataTablePostionInTheList),
                             LoanAccountSummaryFragment.loanAccountNumber);
                 break;
-            case Constants.DATA_TABLES_SAVINGS_ACCOUNTS : dataTableFragment =
-                    DataTableFragment.newInstance(SavingsAccountSummaryFragment.savingsAccountDataTables.get(dataTablePostionInTheList),
+            case Constants.DATA_TABLES_SAVINGS_ACCOUNTS : dataTableDataFragment =
+                    DataTableDataFragment.newInstance(SavingsAccountSummaryFragment.savingsAccountDataTables.get(dataTablePostionInTheList),
                             SavingsAccountSummaryFragment.savingsAccountNumber);
                 break;
             default : return;
@@ -318,7 +318,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         }
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.global_container,dataTableFragment).commit();
+        fragmentTransaction.replace(R.id.global_container, dataTableDataFragment).commit();
 
     }
 

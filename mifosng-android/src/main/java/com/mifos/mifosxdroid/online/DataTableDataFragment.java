@@ -24,7 +24,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class DataTableFragment extends Fragment {
+public class DataTableDataFragment extends Fragment {
 
     //private OnFragmentInteractionListener mListener;
 
@@ -44,14 +44,14 @@ public class DataTableFragment extends Fragment {
 
 
 
-    public static DataTableFragment newInstance(DataTable dataTable, int entityId) {
+    public static DataTableDataFragment newInstance(DataTable dataTable, int entityId) {
 
-        DataTableFragment fragment = new DataTableFragment();
+        DataTableDataFragment fragment = new DataTableDataFragment();
         fragment.dataTable = dataTable;
         fragment.entityId = entityId;
         return fragment;
     }
-    public DataTableFragment() {
+    public DataTableDataFragment() {
         // Required empty public constructor
     }
 
@@ -71,7 +71,7 @@ public class DataTableFragment extends Fragment {
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle(dataTable.getRegisteredTableName());
 
-        safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableFragment.this.getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableDataFragment.this.getActivity());
 
         API.dataTableService.getDataOfDataTable(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
             @Override
