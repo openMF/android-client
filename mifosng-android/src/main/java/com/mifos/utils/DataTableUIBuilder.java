@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
 
 import java.util.Iterator;
@@ -55,7 +57,7 @@ public class DataTableUIBuilder {
                 key.setText(dataTable.getColumnHeaderData().get(rowIndex).getColumnName());
                 key.setGravity(Gravity.LEFT);
                 TextView value = new TextView(context);
-                value.setGravity(Gravity.END);
+                value.setGravity(Gravity.RIGHT);
                 if(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString().contains("\""))
                 {
                     value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString().replace("\"",""));
@@ -63,15 +65,19 @@ public class DataTableUIBuilder {
                     value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString());
                 }
 
-                tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                tableRow.addView(value, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                tableLayout.addView(tableRow, new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1f));
+                tableRow.addView(value, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1f));
+                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                layoutParams.setMargins(12,16,12,16);
+                tableLayout.addView(tableRow, layoutParams);
 
                 rowIndex++;
             }
 
-
+            View v = new View(context);
+            v.setBackgroundColor(context.getResources().getColor(R.color.black));
             linearLayout.addView(tableLayout);
+            linearLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,1));
             Log.i("TABLE INDEX", ""+tableIndex);
             tableIndex++;
         }

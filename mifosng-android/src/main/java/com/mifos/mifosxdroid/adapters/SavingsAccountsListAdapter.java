@@ -22,12 +22,13 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
 
     private List<SavingsAccount> savingsAccountList;
     private LayoutInflater layoutInflater;
+    Context context;
 
     public SavingsAccountsListAdapter(Context context, List<SavingsAccount> savingsAccountList) {
 
-        layoutInflater = LayoutInflater.from(context);
+        this.layoutInflater = LayoutInflater.from(context);
         this.savingsAccountList = savingsAccountList;
-
+        this.context = context;
     }
 
     @Override
@@ -59,7 +60,17 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_accountName.setText(savingsAccountList.get(i).getProductName());
+        if(savingsAccountList.get(i).getStatus().getActive()) {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+        } else if (savingsAccountList.get(i).getStatus().getApproved()) {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_yellow));
+        } else if (savingsAccountList.get(i).getStatus().getSubmittedAndPendingApproval()) {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.blue));
+        } else {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.black));
+        }
+
+        reusableViewHolder.tv_amount.setText(String.valueOf(savingsAccountList.get(i).getAccountBalance()));
         reusableViewHolder.tv_accountNumber.setText(savingsAccountList.get(i).getAccountNo());
 
         return view;
@@ -68,8 +79,9 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
 
     public static class ReusableViewHolder{
 
-        @InjectView(R.id.tv_accountName) TextView tv_accountName;
+        @InjectView(R.id.tv_amount) TextView tv_amount;
         @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
+        @InjectView(R.id.view_status_indicator) View view_status_indicator;
 
         public ReusableViewHolder(View view) {
             ButterKnife.inject(this, view);

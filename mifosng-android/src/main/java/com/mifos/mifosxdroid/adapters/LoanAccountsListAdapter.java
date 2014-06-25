@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,12 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
     private List<LoanAccount> loanAccountList;
     private LayoutInflater layoutInflater;
-
+    Context context;
     public LoanAccountsListAdapter(Context context, List<LoanAccount> loanAccountList){
 
-        layoutInflater = LayoutInflater.from(context);
+        this.layoutInflater = LayoutInflater.from(context);
         this.loanAccountList = loanAccountList;
-
+        this.context = context;
     }
 
     @Override
@@ -50,19 +51,28 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
         ReusableViewHolder reusableViewHolder;
 
-        if(view==null)
-        {
+        if(view==null) {
             view = layoutInflater.inflate(R.layout.row_account_item,null);
             reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
-
-        }else
-        {
+        }else {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
-
         }
 
-        reusableViewHolder.tv_accountName.setText(loanAccountList.get(i).getProductName());
+        if(loanAccountList.get(i).getStatus().getActive()) {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+        } else if (loanAccountList.get(i).getStatus().getWaitingForDisbursal()) {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_yellow));
+
+        } else if (loanAccountList.get(i).getStatus().getPendingApproval()) {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.blue));
+        } else {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.black));
+        }
+
+        //TODO : Change getProductName to Loan Amount Due
+        reusableViewHolder.tv_amount.setText(loanAccountList.get(i).getProductName());
+        reusableViewHolder.tv_amount.setEllipsize(TextUtils.TruncateAt.END);
         reusableViewHolder.tv_accountNumber.setText(loanAccountList.get(i).getAccountNo());
 
         return view;
@@ -71,8 +81,9 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
     public static class ReusableViewHolder{
 
-        @InjectView(R.id.tv_accountName) TextView tv_accountName;
+        @InjectView(R.id.tv_amount) TextView tv_amount;
         @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
+        @InjectView(R.id.view_status_indicator) View view_status_indicator;
 
         public ReusableViewHolder(View view) {
             ButterKnife.inject(this, view);

@@ -19,7 +19,7 @@
             android:paddingBottom="8dp"
             android:paddingRight="8dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_dp_placeholder" />
 
         <TextView
             android:id="@+id/tv_fullName"
@@ -31,25 +31,14 @@
             android:textSize="24dp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_dummyText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_fullName"
-            android:layout_toRightOf="@+id/iv_clientImage"
-            android:text="PPI - 2.45"
-            android:textSize="24dp"
-            android:textStyle="bold" />
-
         <TableLayout
             android:id="@+id/tbl_clientDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/iv_clientImage">
+            android:layout_below="@+id/tv_fullName"
+            android:layout_toRightOf="@+id/iv_clientImage">
 
 
             <TableRow
@@ -59,13 +48,16 @@
 
                 <TextView
                     android:id="@+id/tvs_accountNumber"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/account_number" />
 
                 <TextView
                     android:id="@+id/tv_accountNumber"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:gravity="right"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="20015063" />
             </TableRow>
@@ -76,15 +68,18 @@
 
                 <TextView
                     android:id="@+id/tvs_externalId"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/external_id" />
 
                 <TextView
                     android:id="@+id/tv_externalId"
-                    android:layout_width="wrap_content"
+                    android:gravity="right"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
-                    android:text="New Text" />
+                    android:text="" />
             </TableRow>
 
             <TableRow
@@ -93,15 +88,18 @@
 
                 <TextView
                     android:id="@+id/tvs_activationDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/activation_date" />
 
                 <TextView
                     android:id="@+id/tv_activationDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:gravity="right"
                     android:layout_height="wrap_content"
-                    android:text="New Text" />
+                    android:text="" />
             </TableRow>
 
             <TableRow
@@ -111,15 +109,18 @@
 
                 <TextView
                     android:id="@+id/tvs_office"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/office" />
 
                 <TextView
                     android:id="@+id/tv_office"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:gravity="right"
                     android:layout_height="wrap_content"
-                    android:text="New Text" />
+                    android:text="" />
             </TableRow>
 
             <TableRow
@@ -129,15 +130,18 @@
 
                 <TextView
                     android:id="@+id/tvs_group"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/group" />
 
                 <TextView
                     android:id="@+id/tv_group"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:gravity="right"
                     android:layout_height="wrap_content"
-                    android:text="New Text" />
+                    android:text="" />
             </TableRow>
 
             <TableRow
@@ -147,15 +151,18 @@
 
                 <TextView
                     android:id="@+id/tvs_loanOfficer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/loan_officer" />
 
                 <TextView
                     android:id="@+id/tv_loanOfficer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:gravity="right"
                     android:layout_height="wrap_content"
-                    android:text="New Text" />
+                    android:text="" />
             </TableRow>
 
             <TableRow
@@ -165,15 +172,18 @@
 
                 <TextView
                     android:id="@+id/tvs_loanCycle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/loan_cycle" />
 
                 <TextView
                     android:id="@+id/tv_loanCycle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:gravity="right"
                     android:layout_height="wrap_content"
-                    android:text="New Text" />
+                    android:text="" />
             </TableRow>
 
         </TableLayout>
