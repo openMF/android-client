@@ -61,21 +61,21 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_scheduleNumber.setText(String.valueOf(periodList.get(i).getPeriod()));
         reusableViewHolder.tv_repaymentDueDate.setText(DateHelper.getDateAsString(periodList.get(i).getDueDate()));
         reusableViewHolder.tv_repaymentAmountDue.setText(String.valueOf(periodList.get(i).getTotalDueForPeriod()));
         reusableViewHolder.tv_repaymentAmountPaid.setText(String.valueOf(periodList.get(i).getTotalPaidForPeriod()));
 
         if(periodList.get(i).getComplete()) {
-            view.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
         } else if (!periodList.get(i).getComplete()
                 && (DateHelper.dateComparator(DateHelper.getCurrentDateAsListOfIntegers(), periodList.get(i).getDueDate()) > 0)) {
-
-            view.setBackgroundColor(context.getResources().getColor(R.color.light_red));
-
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_red));
         } else {
-            view.setBackgroundColor(context.getResources().getColor(R.color.light_blue));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_blue));
         }
+
+
+
 
 
 
@@ -85,7 +85,8 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
 
     public static class ReusableViewHolder {
 
-        @InjectView(R.id.tv_schedule_number) TextView tv_scheduleNumber;
+
+        @InjectView(R.id.view_status_indicator) View view_status_indicator;
         @InjectView(R.id.tv_repayment_due_date) TextView tv_repaymentDueDate;
         @InjectView(R.id.tv_repayment_amount_due) TextView tv_repaymentAmountDue;
         @InjectView(R.id.tv_repayment_amount_paid) TextView tv_repaymentAmountPaid;
