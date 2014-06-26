@@ -15,6 +15,7 @@ public class Summary {
     private Double totalDeposits;
     private Double accountBalance;
     private Double totalWithdrawals;
+    private Double totalInterestEarned;
 
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -48,6 +49,18 @@ public class Summary {
 
     public void setTotalWithdrawals(Double totalWithdrawals) {
         this.totalWithdrawals = totalWithdrawals;
+    }
+
+    public Double getTotalInterestEarned() {
+        return totalInterestEarned;
+    }
+
+    public void setTotalInterestEarned(Double totalInterestEarned) {
+        this.totalInterestEarned = totalInterestEarned;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
     }
 
     public Map<String, Object> getAdditionalProperties() {

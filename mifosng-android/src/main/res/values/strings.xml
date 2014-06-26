@@ -93,5 +93,6 @@
     <string name="logout">Logout</string>
     <string name="action_save_location">Save location</string>
     <string name="loan_disbursement_date">Disbursement Date</string>
+    <string name="savings_interest_earned">Interest Earned</string>
     <!-- Menu Item Names End Here -->
 </resources>

@@ -49,6 +49,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
     @InjectView(R.id.tv_total_deposits) TextView tv_totalDeposits;
     @InjectView(R.id.tv_total_withdrawals) TextView tv_totalWithdrawals;
     @InjectView(R.id.lv_savings_transactions) ListView lv_Transactions;
+    @InjectView(R.id.tv_interest_earned) TextView tv_interestEarned;
     @InjectView(R.id.bt_deposit) Button bt_deposit;
     @InjectView(R.id.bt_withdrawal) Button bt_withdrawal;
 
@@ -143,9 +144,20 @@ public class SavingsAccountSummaryFragment extends Fragment {
                             tv_clientName.setText(savingsAccountWithAssociations.getClientName());
                             tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
                             tv_savingsAccountNumber.setText(savingsAccountWithAssociations.getAccountNo());
+
+                            if(savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null){
+                                tv_interestEarned.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalInterestEarned()));
+                            } else {
+                                tv_interestEarned.setText("0.00");
+                            }
                             tv_savingsAccountBalance.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getAccountBalance()));
                             tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalDeposits()));
-                            tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalWithdrawals()));
+
+                            if(savingsAccountWithAssociations.getSummary().getTotalWithdrawals() != null) {
+                                tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalWithdrawals()));
+                            } else {
+                                tv_totalWithdrawals.setText("0.00");
+                            }
 
                             savingsAccountTransactionsListAdapter
                                     = new SavingsAccountTransactionsListAdapter(getActivity().getApplicationContext(),
