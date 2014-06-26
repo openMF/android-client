@@ -117,6 +117,8 @@ public class LoanTransactionsFragment extends Fragment {
                     elv_loanTransactions.setAdapter(loanTransactionAdapter);
                     elv_loanTransactions.setGroupIndicator(null);
 
+
+
                 }
 
             }

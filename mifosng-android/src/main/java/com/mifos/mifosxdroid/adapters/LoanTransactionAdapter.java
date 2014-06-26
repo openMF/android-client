@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Transaction;
 import com.mifos.objects.accounts.loan.Type;
@@ -86,7 +87,7 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+    public View getGroupView(int i, boolean isExpanded, View view, ViewGroup viewGroup) {
 
         ReusableParentViewHolder reusableParentViewHolder;
         if(view == null) {
@@ -96,7 +97,15 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         }else {
             reusableParentViewHolder = (ReusableParentViewHolder) view.getTag();
         }
+        Iconify.IconValue contractedIconValue = Iconify.IconValue.fa_arrow_circle_right;
+        Iconify.IconValue expandedIconValue = Iconify.IconValue.fa_arrow_circle_down;
+        if(!isExpanded){
+            reusableParentViewHolder.tv_arrow.setText(contractedIconValue.formattedName());
+        }else{
+            reusableParentViewHolder.tv_arrow.setText(expandedIconValue .formattedName());
+        }
 
+        Iconify.addIcons(reusableParentViewHolder.tv_arrow);
         reusableParentViewHolder.tv_transactionDate.setText(
                 DateHelper.getDateAsString(parents.get(i).getDate()));
         reusableParentViewHolder.tv_transactionType.setText(
@@ -140,6 +149,7 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
 
     public static class ReusableParentViewHolder {
 
+        @InjectView(R.id.tv_arrow) TextView tv_arrow;
         @InjectView(R.id.tv_transaction_date) TextView tv_transactionDate;
         @InjectView(R.id.tv_transaction_type) TextView tv_transactionType;
         @InjectView(R.id.tv_transaction_amount) TextView tv_transactionAmount;

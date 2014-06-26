@@ -47,4 +47,5 @@ dependencies {
     compile 'com.jakewharton.fliptables:fliptables:1.0.1'
     compile 'javax.annotation:jsr250-api:1.0@jar'
     compile 'com.squareup.picasso:picasso-pollexor:2.1.1@jar'
+    compile 'com.joanzapata.android:android-iconify:1.0.6'
 }

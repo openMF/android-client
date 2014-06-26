@@ -7,5 +7,7 @@
     <color name="light_blue">#FF87DBF9</color>
     <color name="light_red">#fff9393c</color>
     <color name="light_grey">#ffd1d1d1</color>
+    <color name="transaction_detail_bg">#8ad3da44</color>
+    <color name="transaction_detail_table_header_bg">#8ada6134</color>
     <color name="blue">#ff003fff</color>
 </resources>
