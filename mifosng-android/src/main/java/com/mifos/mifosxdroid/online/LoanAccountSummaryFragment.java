@@ -366,7 +366,11 @@ public class LoanAccountSummaryFragment extends Fragment {
     public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {
 
         tv_amount_disbursed.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalDisbursed()));
-        tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations.getTimeline().getActualDisbursementDate()));
+        try {
+            tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations.getTimeline().getActualDisbursementDate()));
+        }catch (ArrayIndexOutOfBoundsException exception) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.loan_rejected_message), Toast.LENGTH_SHORT).show();
+        }
         tv_in_arrears.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOverdue()));
         tv_principal.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalDisbursed()));
         tv_loan_principal_due.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalOutstanding()));
