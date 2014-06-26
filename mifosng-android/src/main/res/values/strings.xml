@@ -48,14 +48,14 @@
     <string name="loan_account_id">Account ID</string>
     <string name="loan_account_status_id">Account Status ID</string>
     <string name="loan_product_short_name">Product Short Name</string>
-    <string name="loan_disbursement_amount">Disbursement Amount</string>
+    <string name="loan_amount_disbursed">Amount Disbursed</string>
     <string name="loan_principal_due">Principal Due</string>
     <string name="loan_principal_paid">Principal Paid</string>
     <string name="loan_interest_due">Interest Due</string>
     <string name="loan_interest_paid">Interest Paid</string>
     <string name="loan_charges_due">Charges Due</string>
     <string name="loan_total_due">Total Due</string>
-    <string name="account_summary">Account Summary</string>
+    <string name="summary">Summary</string>
     <string name="original_loan">Original Loan</string>
     <string name="amount_paid">Amount Paid</string>
     <string name="loan_balance">Loan Balance</string>
@@ -92,5 +92,6 @@
     <string name="action_settings">Settings</string>
     <string name="logout">Logout</string>
     <string name="action_save_location">Save location</string>
+    <string name="loan_disbursement_date">Disbursement Date</string>
     <!-- Menu Item Names End Here -->
 </resources>

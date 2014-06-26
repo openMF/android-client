@@ -94,7 +94,7 @@
                 android:layout_weight=".7"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/loan_disbursement_amount"
+                android:text="@string/loan_amount_disbursed"
                 />
 
         <TextView
@@ -223,7 +223,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Valid"
-                android:id="@+id/tv_loan_total_due"
+                android:id="@+id/tv_amount_disbursed"
                 />
     </LinearLayout>
 </LinearLayout>

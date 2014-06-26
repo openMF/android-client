@@ -62,7 +62,7 @@ public class LoanListAdapter extends BaseAdapter {
         viewHolder.tv_loan_interest_due = (TextView) view.findViewById(R.id.tv_loan_interest_due);
         viewHolder.tv_loan_interest_paid = (TextView) view.findViewById(R.id.tv_loan_interest_paid);
         viewHolder.tv_loan_charges_due = (TextView) view.findViewById(R.id.tv_loan_charges_due);
-        viewHolder.tv_loan_total_due = (TextView) view.findViewById(R.id.tv_loan_total_due);
+        viewHolder.tv_loan_total_due = (TextView) view.findViewById(R.id.tv_amount_disbursed);
 
         viewHolder.tv_loan_id.setText(String.valueOf(loan.getLoanId()));
 

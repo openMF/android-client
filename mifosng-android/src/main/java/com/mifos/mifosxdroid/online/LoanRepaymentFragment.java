@@ -28,7 +28,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
-import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
@@ -89,17 +89,17 @@ public class LoanRepaymentFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static LoanRepaymentFragment newInstance(Loan loan) {
+    public static LoanRepaymentFragment newInstance(LoanWithAssociations loanWithAssociations) {
         LoanRepaymentFragment fragment = new LoanRepaymentFragment();
         Bundle args = new Bundle();
-        if(loan != null)
+        if(loanWithAssociations != null)
         {
-            args.putString(Constants.CLIENT_NAME, loan.getClientName());
-            args.putString(Constants.LOAN_PRODUCT_NAME, loan.getLoanProductName());
-            args.putString(Constants.LOAN_ACCOUNT_NUMBER, loan.getAccountNo());
-            args.putDouble(Constants.AMOUNT_IN_ARREARS, loan.getSummary().getTotalOverdue());
-            //args.putDouble(Constants.AMOUNT_DUE, loan.getSummary().getPrincipalDisbursed());
-            //args.putDouble(Constants.FEES_DUE, loan.getSummary().getFeeChargesOutstanding());
+            args.putString(Constants.CLIENT_NAME, loanWithAssociations.getClientName());
+            args.putString(Constants.LOAN_PRODUCT_NAME, loanWithAssociations.getLoanProductName());
+            args.putString(Constants.LOAN_ACCOUNT_NUMBER, loanWithAssociations.getAccountNo());
+            args.putDouble(Constants.AMOUNT_IN_ARREARS, loanWithAssociations.getSummary().getTotalOverdue());
+            //args.putDouble(Constants.AMOUNT_DUE, loanWithAssociations.getSummary().getPrincipalDisbursed());
+            //args.putDouble(Constants.FEES_DUE, loanWithAssociations.getSummary().getFeeChargesOutstanding());
             fragment.setArguments(args);
         }
         return fragment;

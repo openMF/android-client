@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.utils.FragmentConstants;
 
 import butterknife.ButterKnife;
@@ -72,7 +72,7 @@ public class ClientSearchActivity extends ActionBarActivity implements LoanAccou
 
 
     @Override
-    public void makeRepayment(Loan loan) {
+    public void makeRepayment(LoanWithAssociations loan) {
 
         LoanRepaymentFragment loanRepaymentFragment = LoanRepaymentFragment.newInstance(loan);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

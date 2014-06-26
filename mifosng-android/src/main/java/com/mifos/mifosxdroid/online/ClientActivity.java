@@ -16,7 +16,7 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.accounts.loan.Loan;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.services.API;
 import com.mifos.services.data.GpsCoordinatesRequest;
@@ -366,7 +366,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
      * the Information of the repayment has to be filled in.
      */
     @Override
-    public void makeRepayment(Loan loan) {
+    public void makeRepayment(LoanWithAssociations loan) {
 
         LoanRepaymentFragment loanRepaymentFragment = LoanRepaymentFragment.newInstance(loan);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

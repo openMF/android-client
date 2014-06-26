@@ -8,7 +8,6 @@ import com.google.gson.JsonArray;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
@@ -224,8 +223,8 @@ public class API {
     public interface LoanService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET(APIEndPoint.LOANS + "/{loanId}")
-        public void getLoanById(@Path("loanId") int loanId, Callback<Loan> loanCallback);
+        @GET(APIEndPoint.LOANS + "/{loanId}?associations=all")
+        public void getLoanByIdWithAllAssociations(@Path("loanId") int loanId, Callback<LoanWithAssociations> loanCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")

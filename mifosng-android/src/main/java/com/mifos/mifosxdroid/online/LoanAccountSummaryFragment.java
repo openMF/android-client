@@ -20,8 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
@@ -75,6 +75,8 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     ActionBar actionBar;
 
+    @InjectView(R.id.view_status_indicator)
+    View view_status_indicator;
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
     @InjectView(R.id.quickContactBadge_client)
@@ -83,10 +85,10 @@ public class LoanAccountSummaryFragment extends Fragment {
     TextView tv_loan_product_short_name;
     @InjectView(R.id.tv_loanAccountNumber)
     TextView tv_loanAccountNumber;
-    @InjectView(R.id.tv_loan_total_due)
-    TextView tv_loan_total_due;
-    @InjectView(R.id.tv_loan_account_status)
-    TextView tv_loan_account_status;
+    @InjectView(R.id.tv_amount_disbursed)
+    TextView tv_amount_disbursed;
+    @InjectView(R.id.tv_disbursement_date)
+    TextView tv_disbursement_date;
     @InjectView(R.id.tv_in_arrears)
     TextView tv_in_arrears;
     @InjectView(R.id.tv_loan_officer)
@@ -124,7 +126,7 @@ public class LoanAccountSummaryFragment extends Fragment {
     @InjectView(R.id.bt_processLoanTransaction)
     Button bt_processLoanTransaction;
 
-    private Loan clientLoan;
+    private LoanWithAssociations clientLoanWithAssociations;
 
     public static LoanAccountSummaryFragment newInstance(int loanAccountNumber) {
         LoanAccountSummaryFragment fragment = new LoanAccountSummaryFragment();
@@ -175,58 +177,59 @@ public class LoanAccountSummaryFragment extends Fragment {
         //TODO Implement cases to enable/disable repayment button
         bt_processLoanTransaction.setEnabled(false);
 
-        API.loanService.getLoanById(loanAccountNumber, new Callback<Loan>() {
+        API.loanService.getLoanByIdWithAllAssociations(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
-            public void success(Loan loan, Response response) {
-                clientLoan = loan;
-                tv_clientName.setText(loan.getClientName());
-                tv_loan_product_short_name.setText(loan.getLoanProductName());
-                tv_loanAccountNumber.setText("#"+loan.getAccountNo());
-                tv_loan_account_status.setText(loan.getStatus().getValue());
-                tv_loan_officer.setText(loan.getLoanOfficerName());
+            public void success(LoanWithAssociations loanWithAssociations, Response response) {
+                clientLoanWithAssociations = loanWithAssociations;
+                tv_clientName.setText(loanWithAssociations.getClientName());
+                tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());
+                tv_loanAccountNumber.setText("#" + loanWithAssociations.getAccountNo());
+                tv_loan_officer.setText(loanWithAssociations.getLoanOfficerName());
                 //TODO Implement QuickContactBadge
                 quickContactBadge.setImageToDefault();
 
 
-
-
                 bt_processLoanTransaction.setEnabled(true);
-                if(loan.getStatus().getActive())
-                {
-                    inflateLoanSummary(loan);
+                if (loanWithAssociations.getStatus().getActive()) {
+                    inflateLoanSummary(loanWithAssociations);
                     /*
                      *   if Loan is already active
                      *   the Transaction Would be Make Repayment
                      */
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.light_green));
                     bt_processLoanTransaction.setText("Make Repayment");
                     processLoanTransactionAction = TRANSACTION_REPAYMENT;
 
-                }else if(loan.getStatus().getPendingApproval()) {
+                } else if (loanWithAssociations.getStatus().getPendingApproval()) {
 
                     /*
                      *  if Loan is Pending for Approval
                      *  the Action would be Approve Loan
                      */
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.blue));
                     bt_processLoanTransaction.setText("Approve Loan");
                     processLoanTransactionAction = ACTION_APPROVE_LOAN;
-                }else if(loan.getStatus().getWaitingForDisbursal()) {
+                } else if (loanWithAssociations.getStatus().getWaitingForDisbursal()) {
                     /*
                      *  if Loan is Waiting for Disbursal
                      *  the Action would be Disburse Loan
                      */
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.light_yellow));
                     bt_processLoanTransaction.setText("Disburse Loan");
                     processLoanTransactionAction = ACTION_DISBURSE_LOAN;
-                }else if(loan.getStatus().getClosedObligationsMet()){
-                    inflateLoanSummary(loan);
+                } else if (loanWithAssociations.getStatus().getClosedObligationsMet()) {
+                    inflateLoanSummary(loanWithAssociations);
                     /*
                      *  if Loan is Closed after the obligations are met
                      *  the make payment will be disabled so that no more payment can be collected
                      */
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.black));
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Make Repayment");
-                }else {
-                    inflateLoanSummary(loan);
+                } else {
+                    inflateLoanSummary(loanWithAssociations);
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.black));
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Loan Closed");
                 }
@@ -246,7 +249,7 @@ public class LoanAccountSummaryFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.i(getTag(),retrofitError.getLocalizedMessage());
+                Log.i(getTag(), retrofitError.getLocalizedMessage());
                 Toast.makeText(activity, "Loan Account not found.", Toast.LENGTH_SHORT).show();
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
@@ -260,7 +263,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         if(processLoanTransactionAction == TRANSACTION_REPAYMENT)
         {
-            mListener.makeRepayment(clientLoan);
+            mListener.makeRepayment(clientLoanWithAssociations);
         }else if(processLoanTransactionAction == ACTION_APPROVE_LOAN) {
             approveLoan();
         }else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
@@ -305,7 +308,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
 
-        public void makeRepayment(Loan loan);
+        public void makeRepayment(LoanWithAssociations loan);
         public void loadRepaymentSchedule(int loanId);
         public void loadLoanTransactions(int loanId);
     }
@@ -360,29 +363,30 @@ public class LoanAccountSummaryFragment extends Fragment {
 
     }
 
-    public void inflateLoanSummary(Loan loan) {
+    public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {
 
-        tv_loan_total_due.setText("-"+loan.getSummary().getPrincipalDisbursed());
-        tv_in_arrears.setText(String.valueOf(loan.getSummary().getTotalOverdue()));
-        tv_principal.setText(String.valueOf(loan.getSummary().getPrincipalDisbursed()));
-        tv_loan_principal_due.setText(String.valueOf(loan.getSummary().getPrincipalOutstanding()));
-        tv_loan_principal_paid.setText(String.valueOf(loan.getSummary().getPrincipalPaid()));
+        tv_amount_disbursed.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalDisbursed()));
+        tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations.getTimeline().getActualDisbursementDate()));
+        tv_in_arrears.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOverdue()));
+        tv_principal.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalDisbursed()));
+        tv_loan_principal_due.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalOutstanding()));
+        tv_loan_principal_paid.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalPaid()));
 
-        tv_interest.setText(String.valueOf(loan.getSummary().getInterestCharged()));
-        tv_loan_interest_due.setText(String.valueOf(loan.getSummary().getInterestOutstanding()));
-        tv_loan_interest_paid.setText(String.valueOf(loan.getSummary().getInterestPaid()));
+        tv_interest.setText(String.valueOf(loanWithAssociations.getSummary().getInterestCharged()));
+        tv_loan_interest_due.setText(String.valueOf(loanWithAssociations.getSummary().getInterestOutstanding()));
+        tv_loan_interest_paid.setText(String.valueOf(loanWithAssociations.getSummary().getInterestPaid()));
 
-        tv_fees.setText(String.valueOf(loan.getSummary().getFeeChargesCharged()));
-        tv_loan_fees_due.setText(String.valueOf(loan.getSummary().getFeeChargesOutstanding()));
-        tv_loan_fees_paid.setText(String.valueOf(loan.getSummary().getFeeChargesPaid()));
+        tv_fees.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesCharged()));
+        tv_loan_fees_due.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesOutstanding()));
+        tv_loan_fees_paid.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesPaid()));
 
-        tv_penalty.setText(String.valueOf(loan.getSummary().getPenaltyChargesCharged()));
-        tv_loan_penalty_due.setText(String.valueOf(loan.getSummary().getPenaltyChargesOutstanding()));
-        tv_loan_penalty_paid.setText(String.valueOf(loan.getSummary().getPenaltyChargesPaid()));
+        tv_penalty.setText(String.valueOf(loanWithAssociations.getSummary().getPenaltyChargesCharged()));
+        tv_loan_penalty_due.setText(String.valueOf(loanWithAssociations.getSummary().getPenaltyChargesOutstanding()));
+        tv_loan_penalty_paid.setText(String.valueOf(loanWithAssociations.getSummary().getPenaltyChargesPaid()));
 
-        tv_total.setText(String.valueOf(loan.getSummary().getTotalExpectedRepayment()));
-        tv_total_due.setText(String.valueOf(loan.getSummary().getTotalOutstanding()));
-        tv_total_paid.setText(String.valueOf(loan.getSummary().getTotalRepayment()));
+        tv_total.setText(String.valueOf(loanWithAssociations.getSummary().getTotalExpectedRepayment()));
+        tv_total_due.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOutstanding()));
+        tv_total_paid.setText(String.valueOf(loanWithAssociations.getSummary().getTotalRepayment()));
 
     }
 
@@ -398,15 +402,13 @@ public class LoanAccountSummaryFragment extends Fragment {
             @Override
             public void success(GenericResponse genericResponse, Response response) {
 
-                Log.i("Failed","No");
-
+                inflateLoanAccountSummary();
 
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.i("Failed","yes");
 
             }
         });
@@ -428,15 +430,13 @@ public class LoanAccountSummaryFragment extends Fragment {
                     @Override
                     public void success(GenericResponse genericResponse, Response response) {
 
-                        Log.i("Failed","No");
-
+                        inflateLoanAccountSummary();
 
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
 
-                        Log.i("Failed","Yes");
 
 
                     }
