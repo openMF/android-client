@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
@@ -168,6 +169,27 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
                             // Cache transactions here
                             listOfAllTransactions.addAll(savingsAccountWithAssociations.getTransactions());
+
+                            lv_Transactions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                    /*
+                                     On Click at a Savings Account Transaction
+                                     1. get the transactionId of that transaction
+                                     2. get the account Balance after that transaction
+                                    */
+                                    int transactionId = listOfAllTransactions.get(i).getId();
+                                    double runningBalance = listOfAllTransactions.get(i).getRunningBalance();
+
+                                    //Display them as a Formatted string in a toast message
+                                    Toast.makeText(getActivity(),
+                                            String.format(getResources().getString(R.string.savings_transaction_detail),
+                                                    transactionId,runningBalance),
+                                            Toast.LENGTH_LONG).show();
+
+                                }
+                            });
 
                             updateMenu();
 
