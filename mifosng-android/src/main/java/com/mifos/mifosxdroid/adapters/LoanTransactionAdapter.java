@@ -97,8 +97,8 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         }else {
             reusableParentViewHolder = (ReusableParentViewHolder) view.getTag();
         }
-        Iconify.IconValue contractedIconValue = Iconify.IconValue.fa_arrow_circle_right;
-        Iconify.IconValue expandedIconValue = Iconify.IconValue.fa_arrow_circle_down;
+        Iconify.IconValue contractedIconValue = Iconify.IconValue.fa_plus_circle;
+        Iconify.IconValue expandedIconValue = Iconify.IconValue.fa_minus_circle;
         if(!isExpanded){
             reusableParentViewHolder.tv_arrow.setText(contractedIconValue.formattedName());
         }else{
