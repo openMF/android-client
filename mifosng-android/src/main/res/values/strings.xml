@@ -71,6 +71,10 @@
     <string name="loanAccountSummary">Loan Account Summary</string>
     <string name="loan_repayment_schedule">Loan Repayment Schedule</string>
     <string name="loan_rejected_message">Loan was Rejected</string>
+    <string name="repayment">Repayment</string>
+    <string name="complete">Complete</string>
+    <string name="pending">Pending</string>
+    <string name="overdue">Overdue</string>
     <!-- Loan Related Terminologies End Here -->
 
     <!-- Savings Account Related Terminologies Begin Here -->

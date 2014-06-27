@@ -63,5 +63,12 @@
         android:layout_below="@id/tbl_header"
         android:layout_centerHorizontal="true" />
 
+    <include
+        android:id="@+id/flrs_footer"
+        layout="@layout/fragment_loan_repayment_schedule_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
 
 </RelativeLayout>

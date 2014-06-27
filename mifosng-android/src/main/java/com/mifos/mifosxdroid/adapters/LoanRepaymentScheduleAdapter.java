@@ -68,7 +68,7 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
         if(periodList.get(i).getComplete()) {
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
         } else if (!periodList.get(i).getComplete()
-                && (DateHelper.dateComparator(DateHelper.getCurrentDateAsListOfIntegers(), periodList.get(i).getDueDate()) > 0)) {
+                && (periodList.get(i).getTotalOverdue()!=null && periodList.get(i).getTotalOverdue()>0)) {
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_red));
         } else {
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_blue));

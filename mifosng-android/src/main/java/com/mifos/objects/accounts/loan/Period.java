@@ -393,4 +393,5 @@ public class Period {
                 ", totalWrittenOffForPeriod=" + totalWrittenOffForPeriod +
                 '}';
     }
+
 }

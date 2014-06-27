@@ -12,13 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.loan.Period;
+import com.mifos.objects.accounts.loan.RepaymentSchedule;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -44,7 +49,10 @@ public class LoanRepaymentScheduleFragment extends Fragment {
     ActionBar actionBar;
 
     @InjectView(R.id.lv_repayment_schedule) ListView lv_repaymentSchedule;
-
+    @InjectView(R.id.tv_total_paid)TextView tv_totalPaid;
+    @InjectView(R.id.tv_total_upcoming) TextView tv_totalUpcoming;
+    @InjectView(R.id.tv_total_overdue) TextView tv_totalOverdue;
+    @InjectView(R.id.flrs_footer) View flrs_footer;
     public static LoanRepaymentScheduleFragment newInstance(int loanAccountNumber) {
         LoanRepaymentScheduleFragment fragment = new LoanRepaymentScheduleFragment();
         Bundle args = new Bundle();
@@ -105,9 +113,28 @@ public class LoanRepaymentScheduleFragment extends Fragment {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
 
+                List<Period> listOfActualPeriods = loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods();
+
                 LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter =
-                        new LoanRepaymentScheduleAdapter(getActivity(),loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods());
+                        new LoanRepaymentScheduleAdapter(getActivity(), listOfActualPeriods);
                 lv_repaymentSchedule.setAdapter(loanRepaymentScheduleAdapter);
+
+                String totalRepaymentsCompleted = getResources().getString(R.string.complete) + " : ";
+                String totalRepaymentsOverdue = getResources().getString(R.string.overdue) + " : ";
+                String totalRepaymentsPending = getResources().getString(R.string.pending) + " : ";
+                //Implementing the Footer here
+                tv_totalPaid.setText(totalRepaymentsCompleted + String.valueOf(
+                        RepaymentSchedule.getNumberOfRepaymentsComplete(listOfActualPeriods)
+                ));
+
+                tv_totalOverdue.setText(totalRepaymentsOverdue + String.valueOf(
+                        RepaymentSchedule.getNumberOfRepaymentsOverDue(listOfActualPeriods)
+                ));
+
+                tv_totalUpcoming.setText(totalRepaymentsPending + String.valueOf(
+                        RepaymentSchedule.getNumberOfRepaymentsPending(listOfActualPeriods)
+                ));
+
 
                 updateMenu();
 

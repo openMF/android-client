@@ -13,7 +13,7 @@ public class RepaymentSchedule {
     Integer loanTermInDays;
     List<Period> periods;
     Double totalFeeChargesCharged;
-    Double  totalInterestCharged;
+    Double totalInterestCharged;
     Double totalOutstanding;
     Double totalPaidInAdvance;
     Double totalPaidLate;
@@ -179,4 +179,50 @@ public class RepaymentSchedule {
                 ", totalWrittenOff=" + totalWrittenOff +
                 '}';
     }
+
+    //Helper Method to get total completed repayments
+    public static int getNumberOfRepaymentsComplete(List<Period> periodList) {
+
+        int count = 0;
+
+        for(Period period : periodList) {
+            if (period.getComplete())
+                count++;
+        }
+
+        return count;
+    }
+    //Helper Method to get total pending/upcoming repayments
+    public static int getNumberOfRepaymentsPending(List<Period> periodList) {
+
+        int count = 0;
+
+        for (Period period : periodList) {
+            if (!period.getComplete())
+                count++;
+
+        }
+
+        return count;
+
+    }
+
+    //Helper Method to get total repayments overdue
+    public static int getNumberOfRepaymentsOverDue(List<Period> periodList) {
+
+        int count = 0;
+
+        for (Period period : periodList) {
+            if (period.getTotalOverdue()!=null && period.getTotalOverdue()>0) {
+                if (!period.getComplete())
+                    count++;
+            }
+
+        }
+
+        return count;
+
+
+    }
+
 }
