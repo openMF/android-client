@@ -11,15 +11,16 @@
 
     <TextView
         android:id="@+id/tv_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
         android:shadowColor="#22000000"
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="1"
         android:text="{fa-android}"
         android:textColor="#FF33B5E5"
-        android:textSize="20sp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content" android:layout_marginRight="8dp"/>
+        android:textSize="20sp" />
 
 
     <TextView

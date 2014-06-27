@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
@@ -50,6 +51,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -72,6 +74,8 @@ public class ClientDetailsFragment extends Fragment {
     @InjectView(R.id.tv_group) TextView tv_group;
     @InjectView(R.id.tv_loanOfficer) TextView tv_loanOfficer;
     @InjectView(R.id.tv_loanCycle) TextView tv_loanCycle;
+    @InjectView(R.id.tv_toggle_loan_accounts_icon) TextView tv_toggle_loan_accounts_icon;
+    @InjectView(R.id.tv_toggle_savings_accounts_icon) TextView tv_toggle_savings_accounts_icon;
     @InjectView(R.id.tv_toggle_loan_accounts) TextView tv_toggle_loan_accounts;
     @InjectView(R.id.tv_toggle_savings_accounts) TextView tv_toggle_savings_accounts;
     @InjectView(R.id.tv_count_loan_accounts) TextView tv_count_loan_accounts;
@@ -331,37 +335,43 @@ public class ClientDetailsFragment extends Fragment {
 
                 final String loanAccountsStringResource = getResources().getString(R.string.loanAccounts);
                 final String savingsAccountsStringResource = getResources().getString(R.string.savingAccounts);
-                final String loanListOpen = "- " + loanAccountsStringResource;
-                final String loanListClosed = "+ " + loanAccountsStringResource;
-                final String savingsListOpen = "- " + savingsAccountsStringResource;
-                final String savingsListClosed = "+ " + savingsAccountsStringResource;
+
+                final Iconify.IconValue listOpenIcon = Iconify.IconValue.fa_minus_circle;
+                final Iconify.IconValue listClosedIcon = Iconify.IconValue.fa_plus_circle;
+
 
                 if (clientAccounts.getLoanAccounts().size() > 0) {
                     LoanAccountsListAdapter loanAccountsListAdapter =
                             new LoanAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getLoanAccounts());
-                    tv_toggle_loan_accounts.setText(loanListClosed);
+                    tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
+                    tv_toggle_loan_accounts.setText(loanAccountsStringResource);
                     tv_count_loan_accounts.setText(String.valueOf(clientAccounts.getLoanAccounts().size()));
                     tv_toggle_loan_accounts.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (!isLoanAccountsListOpen) {
                                 isLoanAccountsListOpen = true;
-                                tv_toggle_loan_accounts.setText(loanListOpen);
+                                
+                                tv_toggle_loan_accounts_icon.setText(listOpenIcon.formattedName());
                                 //TODO SIZE AND ANIMATION TO BE ADDED
                                 //Drop Down and Fold Up
                                 //Calculate Size of 1 cell and show a couple of them
                                 isSavingsAccountsListOpen = false;
-                                tv_toggle_savings_accounts.setText(savingsListClosed);
+                                tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
                                 lv_accounts_savings.setVisibility(View.GONE);
                                 lv_accounts_loans.setVisibility(View.VISIBLE);
                             } else {
                                 isLoanAccountsListOpen = false;
-                                tv_toggle_loan_accounts.setText(loanListClosed);
+                                tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
                                 //TODO SIZE AND ANIMATION TO BE ADDED
                                 //Drop Down and Fold Up
                                 //Calculate Size of 1 cell and show a couple of them
                                 lv_accounts_loans.setVisibility(View.GONE);
                             }
+
+                            //Adding Icons to the TextView by this call
+                            Iconify.addIcons(tv_toggle_loan_accounts_icon,tv_toggle_savings_accounts_icon);
+
                         }
                     });
                     lv_accounts_loans.setAdapter(loanAccountsListAdapter);
@@ -390,31 +400,39 @@ public class ClientDetailsFragment extends Fragment {
                 if (clientAccounts.getSavingsAccounts().size() > 0) {
                     SavingsAccountsListAdapter savingsAccountsListAdapter =
                             new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getSavingsAccounts());
-                    tv_toggle_savings_accounts.setText(savingsListClosed);
+                    tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
+                    tv_toggle_savings_accounts.setText(savingsAccountsStringResource);
                     tv_count_savings_accounts.setText(String.valueOf(clientAccounts.getSavingsAccounts().size()));
                     tv_toggle_savings_accounts.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (!isSavingsAccountsListOpen) {
                                 isSavingsAccountsListOpen = true;
-                                tv_toggle_savings_accounts.setText(savingsListOpen);
+                                tv_toggle_savings_accounts_icon.setText(listOpenIcon.formattedName());
                                 //TODO SIZE AND ANIMATION TO BE ADDED
                                 //Drop Down and Fold Up
                                 //Calculate Size of 1 cell and show a couple of them
                                 isLoanAccountsListOpen = false;
-                                tv_toggle_loan_accounts.setText(loanListClosed);
+                                tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
                                 lv_accounts_loans.setVisibility(View.GONE);
                                 lv_accounts_savings.setVisibility(View.VISIBLE);
                             } else {
                                 isSavingsAccountsListOpen = false;
-                                tv_toggle_savings_accounts.setText(savingsListClosed);
+                                tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
                                 //TODO SIZE AND ANIMATION TO BE ADDED
                                 //Drop Down and Fold Up
                                 //Calculate Size of 1 cell and show a couple of them
                                 lv_accounts_savings.setVisibility(View.GONE);
                             }
+                            //Adding Icons to the TextView by this call
+                            Iconify.addIcons(tv_toggle_loan_accounts_icon,tv_toggle_savings_accounts_icon);
+
                         }
                     });
+
+                    //Adding Icons to the TextView by this call
+                    Iconify.addIcons(tv_toggle_loan_accounts_icon,tv_toggle_savings_accounts_icon);
+
                     lv_accounts_savings.setAdapter(savingsAccountsListAdapter);
                     lv_accounts_savings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -517,7 +535,6 @@ public class ClientDetailsFragment extends Fragment {
 
     }
 
-    //TODO Ask Vishwas which way to use Binary or Data URI
     public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         Bitmap bmp;
@@ -528,34 +545,11 @@ public class ClientDetailsFragment extends Fragment {
             SharedPreferences pref = PreferenceManager
                     .getDefaultSharedPreferences(Constants.applicationContext);
             String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
+            //TODO : Make the URL static
+            //TODO : Implement Scaling
             String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/"+
                     integers[0] + "/images";
 
-//            HttpClient httpClient = new DefaultHttpClient();
-//            HttpGet imageFetchingRequest = new HttpGet(url);
-//            //TODO: Remove default tenant dependency & static URL dependency
-//            imageFetchingRequest.addHeader("X-Mifos-Platform-TenantId","default");
-//            imageFetchingRequest.addHeader(API.HEADER_AUTHORIZATION,authToken);
-//
-//            try {
-//                HttpResponse response = httpClient.execute(imageFetchingRequest);
-//
-//                BufferedReader rd = new BufferedReader(
-//                        new InputStreamReader(response.getEntity().getContent()));
-//
-//                StringBuffer result = new StringBuffer();
-//                String line = "";
-//                while ((line = rd.readLine()) != null) {
-//                    result.append(line);
-//                }
-//
-//                String[] imageDataAndInfoSplitString = result.toString().split(",");
-//                byte[] bytes = Base64.decode(imageDataAndInfoSplitString[1].getBytes(),Base64.DEFAULT);
-//                bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
             try{
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
@@ -595,5 +589,36 @@ public class ClientDetailsFragment extends Fragment {
 
         }
     };
+
+    /**
+     * This method just passes on a users click from Icon to
+     * Savings Account Text View
+     *
+     * Clicking on this icon will trigger an action that gets
+     * triggered when the adjacent view is clicked i.e. SavingsAccounts Text View
+     */
+
+    @OnClick(R.id.tv_toggle_savings_accounts_icon)
+    public void onSavingsAccountToggleIconClicked() {
+
+        tv_toggle_savings_accounts.performClick();
+
+    }
+
+    /**
+     * This method just passes on a users click from Icon to
+     * Loan Account Text View.
+     *
+     * Clicking on this icon will trigger an action that gets
+     * triggered when the adjacent view is clicked i.e. LoanAccounts Text View
+     */
+
+    @OnClick(R.id.tv_toggle_loan_accounts_icon)
+    public void onLoanAccountsToggleIconClicked() {
+
+        tv_toggle_loan_accounts.performClick();
+
+    }
+
 
 }

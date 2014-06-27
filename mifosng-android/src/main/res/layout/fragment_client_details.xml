@@ -189,11 +189,27 @@
         </TableLayout>
 
         <TextView
+            android:id="@+id/tv_toggle_loan_accounts_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:shadowColor="#22000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
+            android:text="{fa-android}"
+            android:textColor="#FF33B5E5"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBaseline="@+id/tv_toggle_loan_accounts"
+            />
+
+        <TextView
             android:id="@+id/tv_toggle_loan_accounts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/tbl_clientDetails"
+            android:layout_toRightOf="@+id/tv_toggle_loan_accounts_icon"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
             android:text="@string/loanAccounts"
@@ -205,7 +221,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/tv_toggle_loan_accounts"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
             android:text="00"
@@ -227,11 +243,27 @@
             android:visibility="gone" />
 
         <TextView
+            android:id="@+id/tv_toggle_savings_accounts_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:shadowColor="#22000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
+            android:text="{fa-android}"
+            android:textColor="#FF33B5E5"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBaseline="@+id/tv_toggle_savings_accounts"
+            />
+
+        <TextView
             android:id="@+id/tv_toggle_savings_accounts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/lv_accounts_loans"
+            android:layout_toRightOf="@id/tv_toggle_savings_accounts_icon"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
             android:text="@string/savingAccounts"
@@ -243,7 +275,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/tv_toggle_savings_accounts"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
             android:text="00"

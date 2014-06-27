@@ -46,7 +46,6 @@ import retrofit.client.Response;
  */
 public class LoanAccountSummaryFragment extends Fragment {
 
-    //TODO : Localisation in xml along with comments
 
     /*
         Set of Actions and Transactions that can be performed depending on the status of the Loan
