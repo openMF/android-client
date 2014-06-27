@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.mifos.objects.CenterWithAssociations;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -164,6 +165,11 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
         public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CENTERS + "/{centerId}/associations=groupMembers")
+        public void getAllGroupsForCenter(@Path("centerId") int centerId,
+                                          Callback<CenterWithAssociations> centerWithAssociationsCallback);
 
         //TODO Remove Static Center Code
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})

@@ -56,6 +56,7 @@ public class CenterListFragment extends Fragment {
         safeUIBlockingUtility = new SafeUIBlockingUtility(actionBarActivity);
 
         safeUIBlockingUtility.safelyBlockUI();
+
         API.centerService.getAllCenters(new Callback<List<Center>>() {
             @Override
             public void success(List<Center> centers, Response response) {
