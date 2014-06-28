@@ -92,6 +92,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
         </activity>
+
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="b781afbde2e7db1df8455861d3f5d59c158f3bff"/>
     </application>
 
 </manifest>

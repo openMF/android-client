@@ -548,7 +548,7 @@ public class ClientDetailsFragment extends Fragment {
             //TODO : Make the URL static
             //TODO : Implement Scaling
             String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/"+
-                    integers[0] + "/images";
+                    integers[0] + "/images?maxHeight=120&maxWidth=120";
 
             try{
 
