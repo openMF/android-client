@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- General Terms Begin Here -->
     <string name="app_name">MifosXDroid</string>
     <string name="datatables">Datatables</string>
@@ -39,6 +40,13 @@
     <string name="id">ID</string>
     <!-- General Terms End Here -->
 
+
+    <!-- Group Terms Begin Here -->
+    <string name="active">Active</string>
+    <string name="inactive">InActive</string>
+    <!-- Group Terms End Here -->
+
+
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
     <string name="loan_cycle">Loan Cycle</string>
@@ -77,6 +85,7 @@
     <string name="overdue">Overdue</string>
     <!-- Loan Related Terminologies End Here -->
 
+
     <!-- Savings Account Related Terminologies Begin Here -->
     <string name="savings_account_balance">Account Balance</string>
     <string name="savings_total_deposits">Total Deposits</string>
@@ -89,10 +98,12 @@
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <!-- Savings Account Related Terminologies End Here -->
 
+
     <!-- Action Bar Fragment and Activity Titles Begin Here -->
     <string name="title_activity_dash_board">DashBoardActivity</string>
     <string name="title_activity_client">ClientActivity</string>
     <!-- Action Bar Fragment and Activity Titles End Here -->
+
 
     <!-- Menu Item Names Begin Here -->
     <string name="action_settings">Settings</string>
@@ -101,4 +112,10 @@
     <string name="loan_disbursement_date">Disbursement Date</string>
     <string name="savings_interest_earned">Interest Earned</string>
     <!-- Menu Item Names End Here -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_center_list">Groups</string>
+    <string name="title_center_detail">Center Detail</string>
+    <string name="title_activity_centers">Centers</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

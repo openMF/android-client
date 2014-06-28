@@ -8,20 +8,30 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.db.MifosGroup;
+import com.mifos.objects.Group;
+import com.mifos.objects.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
-public class GroupListAdapter extends BaseAdapter {
+/**
+ * Created by ishankhanna on 28/06/14.
+ */
+public class GroupListAdapter extends BaseAdapter{
 
-    private LayoutInflater layoutInflater;
-    private List<MifosGroup> groups;
+    LayoutInflater layoutInflater;
+    Context context;
+    List<Group> groups = new ArrayList<Group>();
 
-    public GroupListAdapter(Context context, List<MifosGroup> groups){
-        layoutInflater = LayoutInflater.from(context);
+    public GroupListAdapter(Context context, List<Group> groups) {
+        this.layoutInflater = LayoutInflater.from(context);
+        this.context = context;
         this.groups = groups;
     }
+
 
     @Override
     public int getCount() {
@@ -29,7 +39,7 @@ public class GroupListAdapter extends BaseAdapter {
     }
 
     @Override
-    public MifosGroup getItem(int i) {
+    public Group getItem(int i) {
         return this.groups.get(i);
     }
 
@@ -41,33 +51,46 @@ public class GroupListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        ViewHolder viewHolder;
+        ReusableGroupViewHolder reusableGroupViewHolder;
 
-        if(view==null){
-            view = layoutInflater.inflate(R.layout.row_group_list_item,viewGroup,false);
-            viewHolder = new ViewHolder();
-            view.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolder) view.getTag();
+        if(view == null) {
+            view = layoutInflater.inflate(R.layout.row_group_list, null);
+            reusableGroupViewHolder = new ReusableGroupViewHolder(view);
+            view.setTag(reusableGroupViewHolder);
+        } else {
+            reusableGroupViewHolder = (ReusableGroupViewHolder) view.getTag();
         }
 
-        viewHolder.tv_group_name = (TextView) view.findViewById(R.id.tv_group_name);
-        viewHolder.tv_staff_name = (TextView) view.findViewById(R.id.tv_staff_name);
-        viewHolder.tv_level_name = (TextView) view.findViewById(R.id.tv_level_name);
+        Group group = groups.get(i);
 
+        reusableGroupViewHolder.tv_groupName.setText(group.getName());
+        reusableGroupViewHolder.tv_officeName.setText(group.getOfficeName());
 
-        MifosGroup mifosGroup = groups.get(i);
-        viewHolder.tv_group_name.setText(mifosGroup.getGroupName());
-        viewHolder.tv_staff_name.setText( mifosGroup.getStaffName());
-        viewHolder.tv_level_name.setText(mifosGroup.getLevelName());
+        /**
+         * Passing the String value of Status to Helper Method of
+         * Status Class that compares String Value to a Static String and returns
+         * if Status is Active or not
+         */
+        if(Status.isActive(group.getStatus().getValue())) {
+            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources().getColor(R.color.deposit_green));
+            reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R.string.active));
+        } else {
+            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources().getColor(R.color.light_red));
+            reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R.string.inactive));
+        }
 
         return view;
     }
 
-    public static class ViewHolder
-    {
-        TextView tv_group_name;
-        TextView tv_staff_name;
-        TextView tv_level_name;
+    public static class ReusableGroupViewHolder {
+
+        @InjectView(R.id.tv_group_name) TextView tv_groupName;
+        @InjectView(R.id.tv_office_name) TextView tv_officeName;
+        @InjectView(R.id.view_status_indicator) View view_statusIndicator;
+        @InjectView(R.id.tv_status_text) TextView tv_statusText;
+
+        public ReusableGroupViewHolder(View view) { ButterKnife.inject(this, view); }
+
+
     }
 }

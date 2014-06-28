@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.GroupListAdapter;
+import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
 import com.mifos.services.API;
@@ -40,7 +40,7 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     @InjectView(R.id.progress_group)
     ProgressBar progressGroup;
 
-    GroupListAdapter adapter = null;
+    MifosGroupListAdapter adapter = null;
     private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
     String tag = getClass().getSimpleName();
     View view;
@@ -64,7 +64,7 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         groupList.clear();
         groupList.addAll(getAllGroups());
         if (adapter == null) {
-            adapter = new GroupListAdapter(getActivity(), groupList);
+            adapter = new MifosGroupListAdapter(getActivity(), groupList);
             lv_group.setAdapter(adapter);
         }
         lv_group.setOnItemClickListener(this);

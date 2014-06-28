@@ -8,9 +8,10 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name="com.orm.SugarApp"
         android:allowBackup="false"
@@ -18,9 +19,9 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Mifosxactionbar" >
         <activity
-            android:name="com.mifos.mifosxdroid.SplashScreenActivity"
+            android:name=".SplashScreenActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,36 +29,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mifos.mifosxdroid.LoginActivity"
+            android:name=".LoginActivity"
             android:label="Login"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.mifos.mifosxdroid.online.LogoutActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/logout" />
+            android:name=".online.LogoutActivity"
+            android:label="@string/logout"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.mifos.mifosxdroid.online.DashboardFragmentActivity"
-            android:screenOrientation="portrait"
-            android:label="Dashboard" >
+            android:name=".online.DashboardFragmentActivity"
+            android:label="Dashboard"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.mifos.mifosxdroid.online.ClientSearchActivity"
-            android:screenOrientation="portrait"
-            />
         <activity
-            android:name="com.mifos.mifosxdroid.GroupActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|screenSize"
-            />
+            android:name=".online.ClientSearchActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.mifos.mifosxdroid.ClientActivity"
+            android:name=".GroupActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.mifos.mifosxdroid.LoanActivity"
+            android:name=".ClientActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoanActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="DATABASE"
@@ -68,24 +66,32 @@
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.mifos.mifosxdroid.online.ClientActivity"
+            android:name=".online.ClientActivity"
             android:label="@string/title_activity_client"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
         </activity>
+
         <service
-                android:name="com.mifos.services.RepaymentTransactionSyncService"
-                android:exported="false"
-                >
+            android:name="com.mifos.services.RepaymentTransactionSyncService"
+            android:exported="false" >
             <intent-filter>
-                <action
-                        android:name="com.mifos.services.RepaymentTransactionSyncService"/>
+                <action android:name="com.mifos.services.RepaymentTransactionSyncService" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".online.Centers"
+            android:label="@string/title_activity_centers"
+            android:parentActivityName=".online.DashboardFragmentActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
+        </activity>
     </application>
 
 </manifest>

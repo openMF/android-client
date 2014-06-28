@@ -33,6 +33,8 @@ public class Constants {
 
     public static final String DATA_TABLE_REGISTERED_NAME = "dataTableRegisteredName";
 
+    public static final String GROUP_ID = "groupId";
+
     /**
      * Constants to identify which Data Tables have to be shown
      */

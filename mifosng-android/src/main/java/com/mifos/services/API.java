@@ -167,7 +167,7 @@ public class API {
         public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET(APIEndPoint.CENTERS + "/{centerId}/associations=groupMembers")
+        @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
         public void getAllGroupsForCenter(@Path("centerId") int centerId,
                                           Callback<CenterWithAssociations> centerWithAssociationsCallback);
 

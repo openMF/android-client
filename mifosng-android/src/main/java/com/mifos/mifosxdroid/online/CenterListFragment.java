@@ -56,7 +56,6 @@ public class CenterListFragment extends Fragment {
         safeUIBlockingUtility = new SafeUIBlockingUtility(actionBarActivity);
 
         safeUIBlockingUtility.safelyBlockUI();
-
         API.centerService.getAllCenters(new Callback<List<Center>>() {
             @Override
             public void success(List<Center> centers, Response response) {
@@ -64,6 +63,8 @@ public class CenterListFragment extends Fragment {
                 centersListAdapter = new CentersListAdapter(actionBarActivity, centers);
 
                 lv_centers_list.setAdapter(centersListAdapter);
+
+
 
                 safeUIBlockingUtility.safelyUnBlockUI();
 
@@ -83,6 +84,13 @@ public class CenterListFragment extends Fragment {
     public void setupUI(){
 
         lv_centers_list = (ListView) rootView.findViewById(R.id.lv_center_list);
+
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        public void loadGroupsOfCenter(int centerId);
+
 
     }
 }
