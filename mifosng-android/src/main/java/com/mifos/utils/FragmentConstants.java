@@ -13,5 +13,6 @@ public class FragmentConstants {
 
     public static String FRAG_CENTER_LIST = "Centers List Fragment";
 
+    public static String FRAG_GROUP_LIST = "Group List Fragment";
 
 }

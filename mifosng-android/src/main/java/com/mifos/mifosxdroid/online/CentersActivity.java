@@ -7,11 +7,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.objects.client.Client;
 import com.mifos.utils.FragmentConstants;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class CentersActivity extends ActionBarActivity implements CenterListFragment.OnFragmentInteractionListener {
+public class CentersActivity extends ActionBarActivity
+        implements CenterListFragment.OnFragmentInteractionListener,
+                   GroupListFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +60,14 @@ public class CentersActivity extends ActionBarActivity implements CenterListFrag
         fragmentTransaction.replace(R.id.center_container, groupListFragment);
         fragmentTransaction.commit();
 
+    }
+
+    @Override
+    public void loadClientsOfGroup(List<Client> clientList) {
+        ClientListFragment clientListFragment = ClientListFragment.newInstance(clientList);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_LIST);
+        fragmentTransaction.replace(R.id.center_container, clientListFragment);
+        fragmentTransaction.commit();
     }
 }

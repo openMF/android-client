@@ -10,14 +10,19 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
 import com.mifos.objects.CenterWithAssociations;
+import com.mifos.objects.GroupWithAssociations;
+import com.mifos.objects.client.Client;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -88,7 +93,7 @@ public class GroupListFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-//            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -103,6 +108,8 @@ public class GroupListFragment extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
+
+        public void loadClientsOfGroup(List<Client> clientList);
     }
 
     public void inflateGroupList() {
@@ -111,13 +118,36 @@ public class GroupListFragment extends Fragment {
 
         API.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
-            public void success(CenterWithAssociations centerWithAssociations, Response response) {
+            public void success(final CenterWithAssociations centerWithAssociations, Response response) {
 
                 if (centerWithAssociations != null) {
 
                     GroupListAdapter groupListAdapter = new GroupListAdapter(getActivity(), centerWithAssociations.getGroupMembers());
                     lv_groupList.setAdapter(groupListAdapter);
+                    lv_groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                            int groupId = centerWithAssociations.getGroupMembers().get(i).getId();
+
+                            API.groupService.getGroupWithAssociations(groupId,
+                                    new Callback<GroupWithAssociations>() {
+                                        @Override
+                                        public void success(GroupWithAssociations groupWithAssociations, Response response) {
+
+                                            if(groupWithAssociations != null) {
+                                                mListener.loadClientsOfGroup(groupWithAssociations.getClientMembers());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void failure(RetrofitError retrofitError) {
+
+                                        }
+                                    });
+
+                        }
+                    });
                     safeUIBlockingUtility.safelyUnBlockUI();
                 }
             }

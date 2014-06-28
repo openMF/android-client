@@ -25,6 +25,7 @@ import com.mifos.utils.Constants;
 
 import org.apache.http.HttpStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -44,13 +45,18 @@ public class ClientListFragment extends Fragment {
 
     View rootView;
 
-    List<Client> pageItems;
+    List<Client> clientList = new ArrayList<Client>();
     private Context context;
 
     public ClientListFragment() {
 
     }
 
+    public static ClientListFragment newInstance(List<Client> clientList) {
+        ClientListFragment clientListFragment = new ClientListFragment();
+        clientListFragment.setClientList(clientList);
+        return clientListFragment;
+    }
 
 
     @Override
@@ -58,78 +64,12 @@ public class ClientListFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         ButterKnife.inject(this, rootView);
-
+        setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
 
-        setupUI();
-
-        API.clientService.listAllClients(new Callback<Page<Client>>() {
-            @Override
-            public void success(Page<Client> page, Response response) {
-                pageItems = page.getPageItems();
-
-                ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(context, pageItems);
-                lv_clients.setAdapter(clientNameListAdapter);
-                lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        Intent clientActivityIntent = new Intent(getActivity(),ClientActivity.class);
-                        clientActivityIntent.putExtra(Constants.CLIENT_ID, pageItems.get(i).getId());
-                        startActivity(clientActivityIntent);
-
-                    }
-                });
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                if(getActivity() != null) {
-                    Log.i("Error", ""+retrofitError.getResponse().getStatus());
-                    if(retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                        Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getActivity(), LogoutActivity.class));
-                        getActivity().finish();
-
-                    }else {
-                        Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-
-
-            }
-        });
-
+        fetchClientList();
 
         return rootView;
-    }
-
-    public void setupUI() {
-
-        setHasOptionsMenu(true);
-
-        lv_clients.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                if(getActivity() != null)
-                Toast.makeText(getActivity(), "Client ID = " + pageItems.get(i).getId(), Toast.LENGTH_SHORT).show();
-
-                return false;
-            }
-        });
-
-        lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-        });
-
-
     }
 
     @Override
@@ -155,5 +95,72 @@ public class ClientListFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void inflateClientList() {
+
+        ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(context, clientList);
+        lv_clients.setAdapter(clientNameListAdapter);
+        lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Intent clientActivityIntent = new Intent(getActivity(),ClientActivity.class);
+                clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(i).getId());
+                startActivity(clientActivityIntent);
+
+            }
+        });
+
+    }
+
+    public void fetchClientList() {
+
+        //Check if ClientListFragment has a clientList
+        if(clientList.size() > 0) {
+            inflateClientList();
+        } else {
+
+            //Get a Client List
+            API.clientService.listAllClients(new Callback<Page<Client>>() {
+
+                @Override
+                public void success(Page<Client> page, Response response) {
+                    clientList = page.getPageItems();
+                    inflateClientList();
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+
+                    if(getActivity() != null) {
+                        Log.i("Error", "" + retrofitError.getResponse().getStatus());
+                        if(retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                            Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getActivity(), LogoutActivity.class));
+                            getActivity().finish();
+
+                        }else {
+                            Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+            });
+
+        }
+
+
+
+
+
+    }
+
+    public List<Client> getClientList() {
+        return clientList;
+    }
+
+    public void setClientList(List<Client> clientList) {
+        this.clientList = clientList;
     }
 }

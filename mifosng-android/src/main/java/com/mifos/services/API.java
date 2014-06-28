@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.mifos.objects.CenterWithAssociations;
+import com.mifos.objects.GroupWithAssociations;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -77,8 +78,8 @@ public class API {
     public static SavingsAccountService savingsAccountService;
     public static SearchService searchService;
     public static UserAuthService userAuthService;
-    // TODO: this service is not done yet!
     public static GpsCoordinatesService gpsCoordinatesService;
+    public static GroupService groupService;
 
     static {
         init();
@@ -95,6 +96,7 @@ public class API {
         searchService = sRestAdapter.create(SearchService.class);
         userAuthService = sRestAdapter.create(UserAuthService.class);
         gpsCoordinatesService = sRestAdapter.create(GpsCoordinatesService.class);
+        groupService = sRestAdapter.create(GroupService.class);
     }
 
     private static RestAdapter createRestAdapter(final String url) {
@@ -367,6 +369,15 @@ public class API {
                                          @Body GpsCoordinatesRequest gpsCoordinatesRequest,
                                          Callback<GpsCoordinatesResponse> gpsCoordinatesResponseCallback);
 
+
+    }
+
+    public interface GroupService {
+
+        @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void getGroupWithAssociations(@Path("groupId") int groupId,
+                                             Callback<GroupWithAssociations> groupWithAssociationsCallback);
 
     }
 
