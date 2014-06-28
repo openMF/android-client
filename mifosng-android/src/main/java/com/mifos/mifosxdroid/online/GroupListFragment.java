@@ -49,7 +49,7 @@ public class GroupListFragment extends Fragment {
     public static GroupListFragment newInstance(int centerId) {
         GroupListFragment fragment = new GroupListFragment();
         Bundle args = new Bundle();
-        args.putInt(Constants.GROUP_ID, centerId);
+        args.putInt(Constants.CENTER_ID, centerId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +62,7 @@ public class GroupListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            centerId = getArguments().getInt(Constants.GROUP_ID);
+            centerId = getArguments().getInt(Constants.CENTER_ID);
         }
     }
 
@@ -76,6 +76,7 @@ public class GroupListFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
         ButterKnife.inject(this, rootView);
+        actionBar.setTitle(getResources().getString(R.string.group));
 
         inflateGroupList();
 
@@ -131,7 +132,6 @@ public class GroupListFragment extends Fragment {
 
 
     }
-
 
 
 }

@@ -85,7 +85,7 @@
         </service>
 
         <activity
-            android:name=".online.Centers"
+            android:name=".online.CentersActivity"
             android:label="@string/title_activity_centers"
             android:parentActivityName=".online.DashboardFragmentActivity" >
             <meta-data

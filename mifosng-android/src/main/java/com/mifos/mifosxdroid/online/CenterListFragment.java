@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.online;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -8,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
@@ -37,6 +39,7 @@ public class CenterListFragment extends Fragment {
     private SafeUIBlockingUtility safeUIBlockingUtility;
     private CentersListAdapter centersListAdapter;
 
+    private OnFragmentInteractionListener mListener;
 
     public CenterListFragment(){
 
@@ -58,13 +61,20 @@ public class CenterListFragment extends Fragment {
         safeUIBlockingUtility.safelyBlockUI();
         API.centerService.getAllCenters(new Callback<List<Center>>() {
             @Override
-            public void success(List<Center> centers, Response response) {
+            public void success(final List<Center> centers, Response response) {
 
                 centersListAdapter = new CentersListAdapter(actionBarActivity, centers);
 
                 lv_centers_list.setAdapter(centersListAdapter);
 
+                lv_centers_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                        mListener.loadGroupsOfCenter(centers.get(i).getId());
+
+                    }
+                });
 
                 safeUIBlockingUtility.safelyUnBlockUI();
 
@@ -91,6 +101,22 @@ public class CenterListFragment extends Fragment {
 
         public void loadGroupsOfCenter(int centerId);
 
-
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_margin="4dp"/>
 
     <TextView
         android:id="@+id/tv_office_name"
@@ -19,15 +20,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_margin="4dp"/>
 
     <View
         android:id="@+id/view_status_indicator"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/light_red" />
+        android:background="@color/light_red"
+        android:layout_margin="4dp"/>
 
     <TextView
         android:id="@+id/tv_status_text"
@@ -35,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_margin="4dp"/>
 
 </LinearLayout>

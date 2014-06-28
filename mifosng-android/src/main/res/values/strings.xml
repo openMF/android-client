@@ -9,7 +9,7 @@
     <string name="group_name">Group Name</string>
     <string name="staff_name">Staff Name</string>
     <string name="level_name">Level Name</string>
-    <string name="offline">Offline</string>
+    <string name="offline">Offline *</string>
     <string name="client_search_hint">enter client name or ID</string>
     <string name="search_results">Search Results</string>
     <string name="total">Total</string>
@@ -117,5 +117,6 @@
     <string name="title_center_detail">Center Detail</string>
     <string name="title_activity_centers">Centers</string>
     <string name="hello_world">Hello world!</string>
+    <string name="center">Center</string>
 
 </resources>

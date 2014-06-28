@@ -8,6 +8,11 @@
         android:showAsAction="ifRoom"
         android:title="@string/search" />
 
+    <item android:id="@+id/item_centers"
+        android:enabled="true"
+        android:showAsAction="ifRoom"
+        android:title="@string/center"/>
+
     <item
         android:id="@+id/offline_menu"
         android:enabled="true"
