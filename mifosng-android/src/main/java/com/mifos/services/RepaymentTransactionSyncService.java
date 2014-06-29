@@ -73,11 +73,12 @@ public class RepaymentTransactionSyncService {
                     int centerId = preferences.getInt(CenterDetailsActivity.CENTER_ID_KEY, -1);
                     SaveResponse response = API.centerService.saveCollectionSheet(centerId, collectionSheetPayloads[0]);
                     if (response != null) {
-                    Log.i(TAG, "saveCollectionSheet - Response:" + response.toString());
-                    RepaymentTransaction.deleteAll(RepaymentTransaction.class);
-                        preferences.edit().clear();
-
-                }
+                        Log.i(TAG, "saveCollectionSheet - Response:" + response.toString());
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.commit();
+                        RepaymentTransaction.deleteAll(RepaymentTransaction.class);
+                    }
                 } catch (RetrofitError error) {
 
                 } catch (Exception ex) {

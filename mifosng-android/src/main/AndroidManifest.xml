@@ -67,6 +67,12 @@
             android:name="QUERY_LOG"
             android:value="true" />
         <meta-data
+                android:name="ENCRYPTION_KEY"
+                android:value="TEMP_DATA_ENCRYPTION_KEY"/>
+        <meta-data
+                android:name="DOMAIN_PACKAGE_NAME"
+                android:value="com.mifos.objects.db"/>
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
