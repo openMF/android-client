@@ -156,10 +156,11 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             clientId = getArguments().getInt(Constants.CLIENT_ID);
-
-            //Necessary Call to add and update the Menu in a Fragment
-            setHasOptionsMenu(true);
         }
+
+        //Necessary Call to add and update the Menu in a Fragment
+        setHasOptionsMenu(true);
+
         capturedClientImageFile = new File(getActivity().getExternalCacheDir(), "client_image.png");
 
         // Initialize location client only if play services are available.
@@ -248,14 +249,14 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         menu.clear();
 
-        menu.add(Menu.NONE,MENU_ITEM_SAVE_LOCATION,Menu.NONE, "Save Location");
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
+        menu.add(Menu.NONE,MENU_ITEM_SAVE_LOCATION,Menu.NONE, "Save Location");
 
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
 
         // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
+        SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
         if(dataTableSubMenu != null && clientDataTables != null && clientDataTables.size()>0) {
             Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
             while (dataTableIterator.hasNext()) {
@@ -579,8 +580,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
                 }
 
-                updateMenu();
-
                 safeUIBlockingUtility.safelyUnBlockUI();
 
                 inflateDataTablesList();
@@ -747,13 +746,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     }
 
-    public void updateMenu() {
-
-        ClientActivity.shouldAddRepaymentSchedule = Boolean.TRUE;
-        ClientActivity.shouldAddSaveLocation = Boolean.TRUE;
-        ClientActivity.didMenuDataChange = Boolean.TRUE;
-
-    }
 
     public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
 

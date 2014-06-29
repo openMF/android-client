@@ -38,6 +38,7 @@
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
+    <string name="transactions">Transactions</string>
     <!-- General Terms End Here -->
 
 
@@ -90,7 +91,6 @@
     <string name="savings_account_balance">Account Balance</string>
     <string name="savings_total_deposits">Total Deposits</string>
     <string name="savings_total_withdrawals">Total Withdrawals</string>
-    <string name="savings_transactions">Transactions</string>
     <string name="savings_make_withdrawal">Make Withdrawal</string>
     <string name="savings_make_deposit">Make Deposit</string>
     <string name="savingAccounts">Savings Accounts</string>

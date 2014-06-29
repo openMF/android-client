@@ -7,11 +7,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,6 +30,7 @@ import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
+import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -56,6 +60,10 @@ public class LoanAccountSummaryFragment extends Fragment {
     private static final int ACTION_APPROVE_LOAN = 0;
     private static final int ACTION_DISBURSE_LOAN = 1;
     private static final int TRANSACTION_REPAYMENT = 2;
+
+    public static final int MENU_ITEM_DATA_TABLES = 1001;
+    public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
+    public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
 
     // Action Identifier in the onProcessTransactionClicked Method
     private int processLoanTransactionAction = -1;
@@ -145,15 +153,14 @@ public class LoanAccountSummaryFragment extends Fragment {
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         }
 
+        //Necessary Call to add and update the Menu in a Fragment
+        setHasOptionsMenu(true);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //TODO Ask Satya about this bug
-        // When I open a RepaymentSchedule fragment and come back the menu does not appear, why?
-        setHasOptionsMenu(true);
 
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false);
         activity = (ActionBarActivity) getActivity();
@@ -233,13 +240,6 @@ public class LoanAccountSummaryFragment extends Fragment {
                     bt_processLoanTransaction.setText("Loan Closed");
                 }
 
-                /*
-                 * This will remove the Save Location option from menu
-                 * as it is not needed while working with loans and
-                 * add an option to view repayment schedule
-                 */
-                updateMenu();
-
                 safeUIBlockingUtility.safelyUnBlockUI();
 
                 inflateDataTablesList();
@@ -285,21 +285,67 @@ public class LoanAccountSummaryFragment extends Fragment {
     }
 
 
+    /**
+     * Prepare the Screen's standard options menu to be displayed.  This is
+     * called right before the menu is shown, every time it is shown.  You can
+     * use this method to efficiently enable/disable items or otherwise
+     * dynamically modify the contents.  See
+     * {@link android.app.Activity#onPrepareOptionsMenu(android.view.Menu) Activity.onPrepareOptionsMenu}
+     * for more information.
+     *
+     * @param menu The options menu as last shown or first initialized by
+     *             onCreateOptionsMenu().
+     * @see #setHasOptionsMenu
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+
+        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
+        menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
+        menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
+
+        int SUBMENU_ITEM_ID = 0;
+
+        // Create a Sub Menu that holds a link to all data tables
+        SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
+        if(dataTableSubMenu != null && loanDataTables != null && loanDataTables.size()>0) {
+            Iterator<DataTable> dataTableIterator = loanDataTables.iterator();
+            while (dataTableIterator.hasNext()) {
+                dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator.next().getRegisteredTableName());
+                SUBMENU_ITEM_ID++;
+            }
+        }
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         Log.i("ID", ""+item.getItemId());
 
-        if(item.getItemId() == ClientActivity.MENU_ITEM_REPAYMENT_SCHEDULE) {
-
+        if(item.getItemId() == MENU_ITEM_REPAYMENT_SCHEDULE) {
             mListener.loadRepaymentSchedule(loanAccountNumber);
-            return false;
-
         }
 
-        if(item.getItemId() == ClientActivity.MENU_ITEM_LOAN_TRANSACTIONS) {
+        if(item.getItemId() == MENU_ITEM_LOAN_TRANSACTIONS) {
             mListener.loadLoanTransactions(loanAccountNumber);
         }
+
+        if (item.getItemId() >= 0 && item.getItemId() < loanDataTables.size()) {
+
+            DataTableDataFragment dataTableDataFragment
+                        = DataTableDataFragment.newInstance(loanDataTables.get(item.getItemId()),
+                    loanAccountNumber);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+            fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
+            ClientActivity.replaceFragment(fragmentTransaction);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -327,15 +373,11 @@ public class LoanAccountSummaryFragment extends Fragment {
             public void success(List<DataTable> dataTables, Response response) {
 
                 if (dataTables != null) {
-                    ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLE_LOANS;
-                    ClientActivity.shouldAddDataTables = Boolean.TRUE;
-                    ClientActivity.didMenuDataChange = Boolean.TRUE;
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
-                    ClientActivity.dataTableMenuItems.clear();
+                    loanDataTables.clear();
                     while (dataTableIterator.hasNext()) {
                         DataTable dataTable = dataTableIterator.next();
                         loanDataTables.add(dataTable);
-                        ClientActivity.dataTableMenuItems.add(dataTable.getRegisteredTableName());
                     }
                 }
 
@@ -350,15 +392,6 @@ public class LoanAccountSummaryFragment extends Fragment {
 
             }
         });
-
-    }
-
-    public void updateMenu() {
-
-        ClientActivity.shouldAddRepaymentSchedule = Boolean.TRUE;
-        ClientActivity.shouldAddSaveLocation = Boolean.FALSE;
-        ClientActivity.shouldAddLoanTransactions = Boolean.TRUE;
-        ClientActivity.didMenuDataChange = Boolean.TRUE;
 
     }
 

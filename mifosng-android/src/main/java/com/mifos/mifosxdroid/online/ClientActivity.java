@@ -27,8 +27,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
 
     public static final int MENU_ITEM_SAVE_LOCATION = 1000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
-    public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
-    public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
 
     //TODO: Ask Vishwas about converting this approach into a HashMap Based approach
     /**
@@ -128,15 +126,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                 }
 
                 shouldAddDataTables = Boolean.FALSE;
-            }
-
-            if (shouldAddSaveLocation) {
-                // Show the Save Location Menu Item
-                menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, "Save Location");
-            }
-
-            if (shouldAddLoanTransactions) {
-                menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, "Transactions");
             }
 
             didMenuDataChange = Boolean.FALSE;
