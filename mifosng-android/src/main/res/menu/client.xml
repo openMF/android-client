@@ -3,9 +3,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mifos.mifosxdroid.online.ClientActivity" >
 
-    <item android:id="@+id/action_save_location"
-        android:title="@string/action_save_location"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-
 </menu>

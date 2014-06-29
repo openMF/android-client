@@ -21,12 +21,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         LoanAccountSummaryFragment.OnFragmentInteractionListener,
         LoanRepaymentFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {
-    /**
-     * Static Variables for Inflation of Menu and Submenus
-     */
-
-    public static final int MENU_ITEM_SAVE_LOCATION = 1000;
-    public static final int MENU_ITEM_DATA_TABLES = 1001;
 
     //TODO: Ask Vishwas about converting this approach into a HashMap Based approach
     /**
@@ -96,43 +90,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        if (didMenuDataChange) {
-            menu.clear();
-
-            // If the client request fetched data tables this will be true
-            if (shouldAddDataTables) {
-                // Just another check to make sure the dataTableMenuItems list is not empty
-                if (dataTableMenuItems.size() > 0) {
-                    /*
-                        Now that we have the list, lets add an Option for users to see the sub menu
-                        of all data tables available
-                     */
-                    switch (idOfDataTableToBeShownInMenu) {
-                        case Constants.DATA_TABLE_LOANS:
-                            menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
-                            break;
-                        case Constants.DATA_TABLES_SAVINGS_ACCOUNTS:
-                            menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
-                            break;
-                        default:
-                            return false;
-                        /*
-                            TODO Implement Creation of Data Table Call from here
-                            if no data table available
-                         */
-                    }
-
-
-                }
-
-                shouldAddDataTables = Boolean.FALSE;
-            }
-
-            didMenuDataChange = Boolean.FALSE;
-        }
-
-
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -141,40 +98,6 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
     public boolean onOptionsItemSelected(MenuItem item) {
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    /*
-     * Called when a Data table has been selected for viewing
-     * from the Sub Menu of Data Table
-     *
-     * It displays the data of data table based on the name of data table
-     */
-    public void loadDataTableFragment(int idOfDataTableToBeShownInMenu, int dataTablePostionInTheList) {
-        DataTableDataFragment dataTableDataFragment;
-
-        switch (idOfDataTableToBeShownInMenu) {
-            case Constants.DATA_TABLE_LOANS:
-                dataTableDataFragment =
-                        DataTableDataFragment.newInstance(LoanAccountSummaryFragment.loanDataTables.get(dataTablePostionInTheList),
-                                LoanAccountSummaryFragment.loanAccountNumber);
-                break;
-            case Constants.DATA_TABLES_SAVINGS_ACCOUNTS:
-                dataTableDataFragment =
-                        DataTableDataFragment.newInstance(SavingsAccountSummaryFragment.savingsAccountDataTables.get(dataTablePostionInTheList),
-                                SavingsAccountSummaryFragment.savingsAccountNumber);
-                break;
-            default:
-                return;
-                        /*
-                            TODO Implement Creation of Data Table Call from here
-                            if no data table available
-                         */
-        }
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.global_container, dataTableDataFragment).commit();
-
     }
 
     /**

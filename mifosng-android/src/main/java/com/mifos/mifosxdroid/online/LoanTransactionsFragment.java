@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -63,6 +64,8 @@ public class LoanTransactionsFragment extends Fragment {
         if (getArguments() != null) {
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         }
+
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -98,7 +101,28 @@ public class LoanTransactionsFragment extends Fragment {
         mListener = null;
     }
 
-     public interface OnFragmentInteractionListener {
+    /**
+     * Prepare the Screen's standard options menu to be displayed.  This is
+     * called right before the menu is shown, every time it is shown.  You can
+     * use this method to efficiently enable/disable items or otherwise
+     * dynamically modify the contents.  See
+     * {@link android.app.Activity#onPrepareOptionsMenu(android.view.Menu) Activity.onPrepareOptionsMenu}
+     * for more information.
+     *
+     * @param menu The options menu as last shown or first initialized by
+     *             onCreateOptionsMenu().
+     * @see #setHasOptionsMenu
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    public interface OnFragmentInteractionListener {
 
     }
 
@@ -116,9 +140,6 @@ public class LoanTransactionsFragment extends Fragment {
                             new LoanTransactionAdapter(getActivity(),loanWithAssociations.getTransactions());
                     elv_loanTransactions.setAdapter(loanTransactionAdapter);
                     elv_loanTransactions.setGroupIndicator(null);
-
-
-
                 }
 
             }

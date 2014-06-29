@@ -74,44 +74,55 @@ import retrofit.mime.TypedFile;
 
 
 public class ClientDetailsFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks,
-                                                               GooglePlayServicesClient.OnConnectionFailedListener{
-    // Intent response codes. Each response code must be a unique integer.
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
-
+        GooglePlayServicesClient.OnConnectionFailedListener {
     /*
     * Define a request code to send to Google Play services
     * This code is returned in Activity.onActivityResult
     */
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
-
     /**
      * IDs for Inflation of Menus and their Items
      */
     public static final int MENU_ITEM_SAVE_LOCATION = 1000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
-
-    private OnFragmentInteractionListener mListener;
-    
+    // Intent response codes. Each response code must be a unique integer.
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
-
-    @InjectView(R.id.tv_fullName) TextView tv_fullName;
-    @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
-    @InjectView(R.id.tv_externalId) TextView tv_externalId;
-    @InjectView(R.id.tv_activationDate) TextView tv_activationDate;
-    @InjectView(R.id.tv_office) TextView tv_office;
-    @InjectView(R.id.tv_group) TextView tv_group;
-    @InjectView(R.id.tv_loanOfficer) TextView tv_loanOfficer;
-    @InjectView(R.id.tv_loanCycle) TextView tv_loanCycle;
-    @InjectView(R.id.tv_toggle_loan_accounts_icon) TextView tv_toggle_loan_accounts_icon;
-    @InjectView(R.id.tv_toggle_savings_accounts_icon) TextView tv_toggle_savings_accounts_icon;
-    @InjectView(R.id.tv_toggle_loan_accounts) TextView tv_toggle_loan_accounts;
-    @InjectView(R.id.tv_toggle_savings_accounts) TextView tv_toggle_savings_accounts;
-    @InjectView(R.id.tv_count_loan_accounts) TextView tv_count_loan_accounts;
-    @InjectView(R.id.tv_count_savings_accounts) TextView tv_count_savings_accounts;
-    @InjectView(R.id.lv_accounts_loans) ListView lv_accounts_loans;
-    @InjectView(R.id.lv_accounts_savings) ListView lv_accounts_savings;
-    @InjectView(R.id.iv_clientImage) ImageView iv_clientImage;
+    public static List<DataTable> clientDataTables = new ArrayList<DataTable>();
+    @InjectView(R.id.tv_fullName)
+    TextView tv_fullName;
+    @InjectView(R.id.tv_accountNumber)
+    TextView tv_accountNumber;
+    @InjectView(R.id.tv_externalId)
+    TextView tv_externalId;
+    @InjectView(R.id.tv_activationDate)
+    TextView tv_activationDate;
+    @InjectView(R.id.tv_office)
+    TextView tv_office;
+    @InjectView(R.id.tv_group)
+    TextView tv_group;
+    @InjectView(R.id.tv_loanOfficer)
+    TextView tv_loanOfficer;
+    @InjectView(R.id.tv_loanCycle)
+    TextView tv_loanCycle;
+    @InjectView(R.id.tv_toggle_loan_accounts_icon)
+    TextView tv_toggle_loan_accounts_icon;
+    @InjectView(R.id.tv_toggle_savings_accounts_icon)
+    TextView tv_toggle_savings_accounts_icon;
+    @InjectView(R.id.tv_toggle_loan_accounts)
+    TextView tv_toggle_loan_accounts;
+    @InjectView(R.id.tv_toggle_savings_accounts)
+    TextView tv_toggle_savings_accounts;
+    @InjectView(R.id.tv_count_loan_accounts)
+    TextView tv_count_loan_accounts;
+    @InjectView(R.id.tv_count_savings_accounts)
+    TextView tv_count_savings_accounts;
+    @InjectView(R.id.lv_accounts_loans)
+    ListView lv_accounts_loans;
+    @InjectView(R.id.lv_accounts_savings)
+    ListView lv_accounts_savings;
+    @InjectView(R.id.iv_clientImage)
+    ImageView iv_clientImage;
 
     View rootView;
 
@@ -125,13 +136,16 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     boolean isLoanAccountsListOpen = false;
     boolean isSavingsAccountsListOpen = false;
+    private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
-
     // Null if play services are not available.
     private LocationClient mLocationClient;
     // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
+    public ClientDetailsFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -146,9 +160,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         args.putInt(Constants.CLIENT_ID, clientId);
         fragment.setArguments(args);
         return fragment;
-    }
-    public ClientDetailsFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -250,14 +261,14 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         menu.clear();
 
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
-        menu.add(Menu.NONE,MENU_ITEM_SAVE_LOCATION,Menu.NONE, "Save Location");
+        menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, "Save Location");
 
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
 
         // Create a Sub Menu that holds a link to all data tables
         SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
-        if(dataTableSubMenu != null && clientDataTables != null && clientDataTables.size()>0) {
+        if (dataTableSubMenu != null && clientDataTables != null && clientDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
             while (dataTableIterator.hasNext()) {
                 dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator.next().getRegisteredTableName());
@@ -288,19 +299,18 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         int id = item.getItemId();
 
-        if(id == MENU_ITEM_SAVE_LOCATION) {
+        if (id == MENU_ITEM_SAVE_LOCATION) {
 
             saveLocation();
         } else if (id >= 0 && id < clientDataTables.size()) {
 
             DataTableDataFragment dataTableDataFragment
-                    = DataTableDataFragment.newInstance(clientDataTables.get(id),clientId);
+                    = DataTableDataFragment.newInstance(clientDataTables.get(id), clientId);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
             fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
             ClientActivity.replaceFragment(fragmentTransaction);
         }
-
 
 
         return super.onOptionsItemSelected(item);
@@ -367,7 +377,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     /**
      * Use this method to fetch and inflate client details
      * in the fragment
-     *
      */
     public void getClientDetails() {
 
@@ -439,7 +448,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     }
 
-
     /**
      * Use this method to fetch and inflate all loan and savings accounts
      * of the client and inflate them in the fragment
@@ -475,7 +483,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                         public void onClick(View view) {
                             if (!isLoanAccountsListOpen) {
                                 isLoanAccountsListOpen = true;
-                                
+
                                 tv_toggle_loan_accounts_icon.setText(listOpenIcon.formattedName());
                                 //TODO SIZE AND ANIMATION TO BE ADDED
                                 //Drop Down and Fold Up
@@ -494,7 +502,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                             }
 
                             //Adding Icons to the TextView by this call
-                            Iconify.addIcons(tv_toggle_loan_accounts_icon,tv_toggle_savings_accounts_icon);
+                            Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
                         }
                     });
@@ -549,13 +557,13 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                                 lv_accounts_savings.setVisibility(View.GONE);
                             }
                             //Adding Icons to the TextView by this call
-                            Iconify.addIcons(tv_toggle_loan_accounts_icon,tv_toggle_savings_accounts_icon);
+                            Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
                         }
                     });
 
                     //Adding Icons to the TextView by this call
-                    Iconify.addIcons(tv_toggle_loan_accounts_icon,tv_toggle_savings_accounts_icon);
+                    Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
                     lv_accounts_savings.setAdapter(savingsAccountsListAdapter);
                     lv_accounts_savings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -599,26 +607,21 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     }
 
-
-    public static List<DataTable> clientDataTables = new ArrayList<DataTable>();
-
     /**
      * Use this method to fetch all datatables for client and inflate them as
      * menu options
      */
-    public void inflateDataTablesList(){
+    public void inflateDataTablesList() {
 
         safeUIBlockingUtility.safelyBlockUI();
         API.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
-                if(dataTables != null)
-                {
+                if (dataTables != null) {
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
                     clientDataTables.clear();
-                    while(dataTableIterator.hasNext())
-                    {
+                    while (dataTableIterator.hasNext()) {
                         DataTable dataTable = dataTableIterator.next();
                         clientDataTables.add(dataTable);
                     }
@@ -739,73 +742,10 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     }
 
-    public interface OnFragmentInteractionListener {
-
-        public void loadLoanAccountSummary(int loanAccountNumber);
-        public void loadSavingsAccountSummary(int savingsAccountNumber);
-
-    }
-
-
-    public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
-
-        Bitmap bmp;
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-
-            SharedPreferences pref = PreferenceManager
-                    .getDefaultSharedPreferences(Constants.applicationContext);
-            String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-            //TODO : Make the URL static
-            //TODO : Implement Scaling
-            String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/"+
-                    integers[0] + "/images?maxHeight=120&maxWidth=120";
-
-            try{
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
-
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
-                httpURLConnection.setRequestProperty(API.HEADER_AUTHORIZATION,authToken);
-                httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-                Log.i("Connected", "True");
-                InputStream inputStream = httpURLConnection.getInputStream();
-
-                bmp = BitmapFactory.decodeStream(inputStream);
-
-                httpURLConnection.disconnect();
-                Log.i("Connected", "False");
-
-            }catch (MalformedURLException e) {
-
-            }catch (IOException ioe) {
-
-            }
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-            if(bmp != null) {
-                iv_clientImage.setImageBitmap(bmp);
-            } else {
-                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            }
-
-        }
-    };
-
     /**
      * This method just passes on a users click from Icon to
      * Savings Account Text View
-     *
+     * <p/>
      * Clicking on this icon will trigger an action that gets
      * triggered when the adjacent view is clicked i.e. SavingsAccounts Text View
      */
@@ -820,7 +760,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     /**
      * This method just passes on a users click from Icon to
      * Loan Account Text View.
-     *
+     * <p/>
      * Clicking on this icon will trigger an action that gets
      * triggered when the adjacent view is clicked i.e. LoanAccounts Text View
      */
@@ -832,6 +772,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     }
 
+    ;
+
     public void saveLocation() {
 
         if (locationAvailable.get()) {
@@ -840,7 +782,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
             API.gpsCoordinatesService.setGpsCoordinates(clientId,
                     new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
-                    new Callback<GpsCoordinatesResponse>(){
+                    new Callback<GpsCoordinatesResponse>() {
                         @Override
                         public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
                             Toast.makeText(getActivity(), "Current location saved successfully: "
@@ -857,7 +799,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                                   *  2. Implement a proper mechanism to read the error messages and perform actions based on them
                                   *
                                  */
-                            if(retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
+                            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
 
                                 API.gpsCoordinatesService.updateGpsCoordinates(clientId,
                                         new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
@@ -876,7 +818,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                                                 Toast.makeText(getActivity(), "Current location could not be updated: "
                                                         + location.toString(), Toast.LENGTH_SHORT).show();
                                             }
-                                        });
+                                        }
+                                );
 
                             } else {
 
@@ -886,7 +829,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                             }
 
                         }
-                    });
+                    }
+            );
 
         } else {
             // Display the connection status
@@ -895,5 +839,68 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             Log.w(getActivity().getLocalClassName(), "Location not available");
         }
 
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        public void loadLoanAccountSummary(int loanAccountNumber);
+
+        public void loadSavingsAccountSummary(int savingsAccountNumber);
+
+    }
+
+    public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
+
+        Bitmap bmp;
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+
+            SharedPreferences pref = PreferenceManager
+                    .getDefaultSharedPreferences(Constants.applicationContext);
+            String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
+            //TODO : Make the URL static
+            //TODO : Implement Scaling
+            String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/" +
+                    integers[0] + "/images?maxHeight=120&maxWidth=120";
+
+            try {
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
+
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
+                httpURLConnection.setRequestProperty(API.HEADER_AUTHORIZATION, authToken);
+                httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+                Log.i("Connected", "True");
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                bmp = BitmapFactory.decodeStream(inputStream);
+
+                httpURLConnection.disconnect();
+                Log.i("Connected", "False");
+
+            } catch (MalformedURLException e) {
+
+            } catch (IOException ioe) {
+
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            if (bmp != null) {
+                iv_clientImage.setImageBitmap(bmp);
+            } else {
+                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+            }
+
+        }
     }
 }

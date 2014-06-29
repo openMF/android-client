@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -34,34 +35,34 @@ import retrofit.client.Response;
 
 public class LoanRepaymentScheduleFragment extends Fragment {
 
+    View rootView;
+    SafeUIBlockingUtility safeUIBlockingUtility;
+    ActionBarActivity activity;
+    SharedPreferences sharedPreferences;
+    ActionBar actionBar;
+    @InjectView(R.id.lv_repayment_schedule)
+    ListView lv_repaymentSchedule;
+    @InjectView(R.id.tv_total_paid)
+    TextView tv_totalPaid;
+    @InjectView(R.id.tv_total_upcoming)
+    TextView tv_totalUpcoming;
+    @InjectView(R.id.tv_total_overdue)
+    TextView tv_totalOverdue;
+    @InjectView(R.id.flrs_footer)
+    View flrs_footer;
     private int loanAccountNumber;
-
     private OnFragmentInteractionListener mListener;
 
-    View rootView;
+    public LoanRepaymentScheduleFragment() {
+        // Required empty public constructor
+    }
 
-    SafeUIBlockingUtility safeUIBlockingUtility;
-
-    ActionBarActivity activity;
-
-    SharedPreferences sharedPreferences;
-
-    ActionBar actionBar;
-
-    @InjectView(R.id.lv_repayment_schedule) ListView lv_repaymentSchedule;
-    @InjectView(R.id.tv_total_paid)TextView tv_totalPaid;
-    @InjectView(R.id.tv_total_upcoming) TextView tv_totalUpcoming;
-    @InjectView(R.id.tv_total_overdue) TextView tv_totalOverdue;
-    @InjectView(R.id.flrs_footer) View flrs_footer;
     public static LoanRepaymentScheduleFragment newInstance(int loanAccountNumber) {
         LoanRepaymentScheduleFragment fragment = new LoanRepaymentScheduleFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber);
         fragment.setArguments(args);
         return fragment;
-    }
-    public LoanRepaymentScheduleFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -70,6 +71,9 @@ public class LoanRepaymentScheduleFragment extends Fragment {
         if (getArguments() != null) {
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         }
+
+        setHasOptionsMenu(false);
+
     }
 
     @Override
@@ -94,7 +98,7 @@ public class LoanRepaymentScheduleFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-           // mListener = (OnFragmentInteractionListener) activity;
+            // mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -107,7 +111,28 @@ public class LoanRepaymentScheduleFragment extends Fragment {
         mListener = null;
     }
 
-    public void inflateRepaymentSchedule(){
+    /**
+     * Prepare the Screen's standard options menu to be displayed.  This is
+     * called right before the menu is shown, every time it is shown.  You can
+     * use this method to efficiently enable/disable items or otherwise
+     * dynamically modify the contents.  See
+     * {@link android.app.Activity#onPrepareOptionsMenu(android.view.Menu) Activity.onPrepareOptionsMenu}
+     * for more information.
+     *
+     * @param menu The options menu as last shown or first initialized by
+     *             onCreateOptionsMenu().
+     * @see #setHasOptionsMenu
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    public void inflateRepaymentSchedule() {
 
         API.loanService.getLoanRepaymentSchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
@@ -135,31 +160,19 @@ public class LoanRepaymentScheduleFragment extends Fragment {
                         RepaymentSchedule.getNumberOfRepaymentsPending(listOfActualPeriods)
                 ));
 
-
-                updateMenu();
-
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.i(getActivity().getLocalClassName(),retrofitError.getLocalizedMessage());
+                Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
             }
         });
-
 
 
     }
 
     public interface OnFragmentInteractionListener {
-
-    }
-
-    public void updateMenu() {
-
-        ClientActivity.shouldAddRepaymentSchedule = Boolean.FALSE;
-        ClientActivity.shouldAddSaveLocation = Boolean.FALSE;
-        ClientActivity.didMenuDataChange = Boolean.TRUE;
 
     }
 
