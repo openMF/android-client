@@ -5,10 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -26,6 +30,7 @@ import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -41,6 +46,9 @@ import retrofit.client.Response;
 
 
 public class SavingsAccountSummaryFragment extends Fragment {
+
+    public static final int MENU_ITEM_DATA_TABLES = 1001;
+
 
     @InjectView(R.id.tv_clientName) TextView tv_clientName;
     @InjectView(R.id.quickContactBadge_client) QuickContactBadge quickContactBadge;
@@ -71,7 +79,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
     ActionBar actionBar;
 
     SavingsAccountWithAssociations savingsAccountWithAssociations;
-
 
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
@@ -107,6 +114,8 @@ public class SavingsAccountSummaryFragment extends Fragment {
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -191,8 +200,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
                                 }
                             });
 
-                            updateMenu();
-
                             safeUIBlockingUtility.safelyUnBlockUI();
 
                             inflateDataTablesList();
@@ -231,6 +238,75 @@ public class SavingsAccountSummaryFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * Prepare the Screen's standard options menu to be displayed.  This is
+     * called right before the menu is shown, every time it is shown.  You can
+     * use this method to efficiently enable/disable items or otherwise
+     * dynamically modify the contents.  See
+     * {@link android.app.Activity#onPrepareOptionsMenu(android.view.Menu) Activity.onPrepareOptionsMenu}
+     * for more information.
+     *
+     * @param menu The options menu as last shown or first initialized by
+     *             onCreateOptionsMenu().
+     * @see #setHasOptionsMenu
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+
+        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
+
+        // This is the ID of Each data table which will be used in onOptionsItemSelected Method
+        int SUBMENU_ITEM_ID = 0;
+
+        // Create a Sub Menu that holds a link to all data tables
+        SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
+        if (dataTableSubMenu != null && savingsAccountDataTables != null && savingsAccountDataTables.size() > 0) {
+            Iterator<DataTable> dataTableIterator = savingsAccountDataTables.iterator();
+            while (dataTableIterator.hasNext()) {
+                dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator.next().getRegisteredTableName());
+                SUBMENU_ITEM_ID++;
+            }
+        }
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    /**
+     * This hook is called whenever an item in your options menu is selected.
+     * The default implementation simply returns false to have the normal
+     * processing happen (calling the item's Runnable or sending a message to
+     * its Handler as appropriate).  You can use this method for any items
+     * for which you would like to do processing without those other
+     * facilities.
+     * <p/>
+     * <p>Derived classes should call through to the base class for it to
+     * perform the default menu handling.
+     *
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to
+     * proceed, true to consume it here.
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id >= 0 && id < savingsAccountDataTables.size()) {
+
+            DataTableDataFragment dataTableDataFragment
+                    = DataTableDataFragment.newInstance(savingsAccountDataTables.get(id), savingsAccountNumber);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+            fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
+            ClientActivity.replaceFragment(fragmentTransaction);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @OnClick(R.id.bt_deposit)
     public void onDepositButtonClicked() {
@@ -261,15 +337,11 @@ public class SavingsAccountSummaryFragment extends Fragment {
             public void success(List<DataTable> dataTables, Response response) {
 
                 if (dataTables != null) {
-                    ClientActivity.idOfDataTableToBeShownInMenu = Constants.DATA_TABLES_SAVINGS_ACCOUNTS;
-                    ClientActivity.shouldAddDataTables = Boolean.TRUE;
-                    ClientActivity.didMenuDataChange = Boolean.TRUE;
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
-                    ClientActivity.dataTableMenuItems.clear();
+                    savingsAccountDataTables.clear();
                     while (dataTableIterator.hasNext()) {
                         DataTable dataTable = dataTableIterator.next();
                         savingsAccountDataTables.add(dataTable);
-                        ClientActivity.dataTableMenuItems.add(dataTable.getRegisteredTableName());
                     }
                 }
 
@@ -356,14 +428,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
         lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
         lv_Transactions.setSelectionFromTop(index, top);
 
-
-    }
-
-    public void updateMenu() {
-
-        ClientActivity.shouldAddRepaymentSchedule = Boolean.FALSE;
-        ClientActivity.shouldAddSaveLocation = Boolean.FALSE;
-        ClientActivity.didMenuDataChange = Boolean.TRUE;
 
     }
 

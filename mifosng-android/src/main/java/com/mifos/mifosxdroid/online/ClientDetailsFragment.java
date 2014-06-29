@@ -259,7 +259,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public void onPrepareOptionsMenu(Menu menu) {
 
         menu.clear();
-
+        //TODO : Localisation of Menu Item Strings
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
         menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, "Save Location");
 
