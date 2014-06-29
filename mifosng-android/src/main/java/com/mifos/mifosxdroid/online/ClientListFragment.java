@@ -5,34 +5,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.mifos.mifosxdroid.GroupActivity;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import com.mifos.mifosxdroid.CenterDetailsActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
-
 import org.apache.http.HttpStatus;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -87,7 +79,7 @@ public class ClientListFragment extends Fragment {
                 break;
 
             case R.id.offline_menu:
-                startActivity(new Intent(getActivity(), GroupActivity.class));
+                startActivity(new Intent(getActivity(), CenterDetailsActivity.class));
                 break;
 
             default: //DO NOTHING

@@ -8,18 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.db.Client;
 import com.mifos.objects.db.Loan;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 
 import java.util.List;
 import java.util.Map;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
 public class ClientListAdapter extends BaseAdapter {
@@ -47,6 +42,7 @@ public class ClientListAdapter extends BaseAdapter {
     public int getCount() {
         return this.listClient.size();
     }
+
 
     @Override
     public Loan getItem(int i) {
@@ -85,7 +81,6 @@ public class ClientListAdapter extends BaseAdapter {
             viewHolder.et_amt_paid.setTag(loan);
             viewHolder.et_amt_paid.setOnFocusChangeListener(editFocusChangeListener);
         }
-
         return view;
     }
 
@@ -110,6 +105,8 @@ public class ClientListAdapter extends BaseAdapter {
                 Loan loan =(Loan) (v.getTag());
                 int changedValue = Integer.parseInt(((EditText) v).getText().toString());
                 listPaidAmounts.put(loan, changedValue);
+                loan.totalDue = changedValue;
+                loan.save();
                 notifyDataSetChanged();
             }
         }

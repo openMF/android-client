@@ -14,23 +14,21 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.mifos.exceptions.ShortOfLengthException;
-import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
-import com.mifos.objects.User;
-import com.mifos.services.API;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
+import com.mifos.exceptions.ShortOfLengthException;
+import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
+import com.mifos.objects.User;
+import com.mifos.services.API;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Created by ishankhanna on 08/02/14.
@@ -101,8 +99,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
             Log.e(tag, "Invalid instance URL: " + urlInputValue, uriException);
             throw new ShortOfLengthException("Instance URL", 5);
         }
-
-
         username = et_username.getEditableText().toString();
         if (username.length() < 5) {
             throw new ShortOfLengthException("Username", 5);
@@ -115,6 +111,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
 
         return true;
     }
+
 
     @Override
     public void success(User user, Response response) {
@@ -182,7 +179,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
         Log.d(tag, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.offline:
-                startActivity(new Intent(this, GroupActivity.class));
+                startActivity(new Intent(this, CenterDetailsActivity.class));
                 break;
 
             default: //DO NOTHING

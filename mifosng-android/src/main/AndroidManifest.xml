@@ -75,14 +75,11 @@
             android:label="@string/title_activity_client"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+                android:name=".CenterDetailsActivity"
+                android:screenOrientation="portrait">
+        </activity>
 
-        <service
-            android:name="com.mifos.services.RepaymentTransactionSyncService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.mifos.services.RepaymentTransactionSyncService" />
-            </intent-filter>
-        </service>
 
         <activity
             android:name=".online.CentersActivity"

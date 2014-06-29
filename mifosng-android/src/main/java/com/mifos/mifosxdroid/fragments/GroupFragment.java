@@ -1,17 +1,20 @@
 package com.mifos.mifosxdroid.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import com.mifos.mifosxdroid.CenterDetailsActivity;
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
@@ -22,32 +25,30 @@ import com.mifos.services.RepaymentTransactionSyncService;
 import com.mifos.services.data.Payload;
 import com.mifos.utils.Network;
 import com.orm.query.Select;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
+
+    private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
     @InjectView(R.id.lv_group)
     ListView lv_group;
     @InjectView(R.id.progress_group)
     ProgressBar progressGroup;
-
     MifosGroupListAdapter adapter = null;
-    private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
     String tag = getClass().getSimpleName();
     View view;
-
+    private MenuItem syncItem;
+    private String date;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_group, null);
+        setHasOptionsMenu(true);
         ButterKnife.inject(this, view);
         getData();
         return view;
@@ -57,7 +58,26 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     public void onResume() {
         super.onResume();
         setAdapter();
-        getActivity().startService(new Intent(RepaymentTransactionSyncService.class.getName()));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_sync, menu);
+        syncItem = menu.findItem(R.id.action_sync);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_sync) {
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View syncProgress = inflater.inflate(R.layout.sync_progress, null);
+            MenuItemCompat.setActionView(item, syncProgress);
+            RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService(this);
+            syncService.syncRepayments();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setAdapter() {
@@ -72,11 +92,74 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         adapter.notifyDataSetChanged();
     }
 
+    private Payload getPayload() {
+        final Payload payload = new Payload();
+        SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        date = preferences.getString(CenterDetailsActivity.TRANSACTION_DATE_KEY, null);
+        if (date != null) {
+            String[] splittedDate = date.split("-");
+            int month = Integer.parseInt(splittedDate[1]);
+            final StringBuilder builder = new StringBuilder();
+            builder.append(splittedDate[0]);
+            builder.append(" ");
+            builder.append(getMonthName(month));
+            builder.append(" ");
+            builder.append(splittedDate[2]);
+            payload.setTransactionDate(builder.toString());
+        }
+        return payload;
+
+    }
+
+    private String getMonthName(int month) {
+        String monthName = "";
+        switch (month) {
+            case 1:
+                monthName = "Jan";
+                break;
+            case 2:
+                monthName = "Feb";
+                break;
+            case 3:
+                monthName = "Mar";
+                break;
+            case 4:
+                monthName = "Apr";
+                break;
+            case 5:
+                monthName = "May";
+                break;
+            case 6:
+                monthName = "Jun";
+                break;
+            case 7:
+                monthName = "Jul";
+                break;
+            case 8:
+                monthName = "Aug";
+                break;
+            case 9:
+                monthName = "Sep";
+                break;
+            case 10:
+                monthName = "Oct";
+                break;
+            case 11:
+                monthName = "Nov";
+                break;
+            case 12:
+                monthName = "Dec";
+                break;
+        }
+        return monthName;
+    }
+
     private void getData() {
 
-        if(Network.isOnline(getActivity().getApplicationContext())) {
-
-            API.centerService.getCenter(new Payload(), new Callback<CollectionSheet>() {
+        if (Network.isOnline(getActivity().getApplicationContext())) {
+            SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            int centerId = preferences.getInt(CenterDetailsActivity.CENTER_ID_KEY, -1);
+            API.centerService.getCenter(centerId, getPayload(), new Callback<CollectionSheet>() {
                 @Override
                 public void success(CollectionSheet collectionSheet, Response arg1) {
 
@@ -106,5 +189,11 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         intent.putExtra("group_id", groupList.get(i).getId());
         Log.i(tag, "onItemClick = Group ID:" + groupList.get(i).getId());
         startActivity(intent);
+    }
+
+    @Override
+    public void onSyncFinish(String message) {
+        MenuItemCompat.setActionView(syncItem, null);
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 }

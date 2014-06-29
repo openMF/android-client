@@ -10,8 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
-
-import com.mifos.mifosxdroid.GroupActivity;
+import com.mifos.mifosxdroid.CenterDetailsActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.FragmentAdapter;
 
@@ -107,7 +106,7 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Acti
                 startActivity(new Intent(this, CentersActivity.class));
                 break;
             case R.id.offline:
-                startActivity(new Intent(this, GroupActivity.class));
+                startActivity(new Intent(this, CenterDetailsActivity.class));
                 break;
             case R.id.logout:
                 startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));

@@ -5,17 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.LoanActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientListAdapter;
@@ -25,28 +21,19 @@ import com.mifos.objects.db.RepaymentTransaction;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import java.util.*;
 
 
 public class ClientFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    final private String tag = getClass().getSimpleName();
     @InjectView(R.id.lv_clients)
     ListView lv_clients;
-
+    @InjectView(R.id.tv_total_amt_paid)
+    TextView tv_total_amt_paid;
     private ClientListAdapter adapter = null;
     private long groupId;
     private List<Client> clientsInTheGroup = new ArrayList<Client>();
-    final private String tag = getClass().getSimpleName();
-
-    @InjectView(R.id.tv_total_amt_paid)
-    TextView tv_total_amt_paid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,11 +94,11 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         for(Client client: clientsInTheGroup){
             loans.addAll(Select.from(Loan.class).where(Condition.prop("client").eq(client.getId())).list());
         }
-
         if (adapter == null)
             adapter = new ClientListAdapter(getActivity(), loans);
         lv_clients.setAdapter(adapter);
         lv_clients.setOnItemClickListener(this);
+
     }
 
     private void calculateTotalDueAmount() {
@@ -123,7 +110,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         for (Loan loan : loans) {
             if (loan.getClient().getMifosGroup().getId() == groupId) {
                 listPaidAmount.put(loan, loan.totalDue);
-                totalAmountDue += loan.chargesDue;
+                totalAmountDue += loan.totalDue;
             }
         }
         tv_total_amt_paid.setText(String.valueOf(totalAmountDue));

@@ -3,7 +3,6 @@ package com.mifos.services;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.mifos.objects.CenterWithAssociations;
 import com.mifos.objects.GroupWithAssociations;
@@ -23,53 +22,30 @@ import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
-import com.mifos.services.data.APIEndPoint;
-import com.mifos.services.data.CollectionSheetPayload;
-import com.mifos.services.data.GpsCoordinatesRequest;
-import com.mifos.services.data.GpsCoordinatesResponse;
-import com.mifos.services.data.Payload;
-import com.mifos.services.data.SaveResponse;
+import com.mifos.services.data.*;
 import com.mifos.utils.Constants;
+import retrofit.*;
+import retrofit.client.Response;
+import retrofit.http.*;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.Headers;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Part;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
-
 public class API {
-
-    //This instance has more Data for Testing
-    public static String mInstanceUrl = "https://demo.openmf.org/mifosng-provider/api/v1";
 
     public static final String ACCEPT_JSON = "Accept: application/json";
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
     public static final String HEADER_AUTHORIZATION = "Authorization";
-
     /*
         As Mifos is a multi-tenant platform, all requests require you to specify a tenant
         as a header in each request.
      */
     public static final String HEADER_MIFOS_TENANT_ID = "X-Mifos-Platform-TenantId";
-
-    static RestAdapter sRestAdapter;
+    //This instance has more Data for Testing
+    public static String mInstanceUrl = "https://demo.openmf.org/mifosng-provider/api/v1";
     public static CenterService centerService;
     public static ClientAccountsService clientAccountsService;
     public static ClientService clientService;
@@ -80,10 +56,11 @@ public class API {
     public static UserAuthService userAuthService;
     public static GpsCoordinatesService gpsCoordinatesService;
     public static GroupService groupService;
-
     static {
         init();
     }
+
+    static RestAdapter sRestAdapter;
 
     private static synchronized void init() {
         sRestAdapter = createRestAdapter(getInstanceUrl());
@@ -137,29 +114,45 @@ public class API {
         sRestAdapter.setLogLevel(logLevel);
     }
 
-    static class MifosRestErrorHandler implements ErrorHandler {
-        @Override
-        public Throwable handleError(RetrofitError retrofitError) {
-
-            Response response = retrofitError.getResponse();
-            if (response != null && response.getStatus() == 401) {
-                Log.e("Status", "Authentication Error.");
-
-
-            }else if(response.getStatus() == 400){
-                Log.d("Status","Bad Request - Invalid Parameter or Data Integrity Issue.");
-                Log.d("URL", response.getUrl());
-                List<retrofit.client.Header> headersList = response.getHeaders();
-                Iterator<retrofit.client.Header> iterator = headersList.iterator();
-                while(iterator.hasNext())
-                {    retrofit.client.Header header = iterator.next();
-                    Log.d("Header ",header.toString());
-                }
+    public static <T> Callback<T> getCallback(T t) {
+        Callback<T> cb = new Callback<T>() {
+            @Override
+            public void success(T o, Response response) {
+                System.out.println("Object " + o);
             }
 
-            return retrofitError;
-        }
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                System.out.println("Error: " + retrofitError);
+            }
+        };
 
+        return cb;
+    }
+
+    public static <T> Callback<List<T>> getCallbackList(List<T> t) {
+        Callback<List<T>> cb = new Callback<List<T>>() {
+            @Override
+            public void success(List<T> o, Response response) {
+                System.out.println("Object " + o);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                System.out.println("Error: " + retrofitError);
+            }
+        };
+
+        return cb;
+    }
+
+    public static synchronized String getInstanceUrl() {
+        return mInstanceUrl;
+    }
+
+    public static synchronized void setInstanceUrl(String url) {
+        mInstanceUrl = url;
+        init();
     }
 
     public interface CenterService {
@@ -175,12 +168,12 @@ public class API {
 
         //TODO Remove Static Center Code
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST(APIEndPoint.CENTERS + "/2026?command=generateCollectionSheet")
-        public void getCenter(@Body Payload payload, Callback<CollectionSheet> callback);
+        @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
+        public void getCenter(@Path("centerId") int centerId, @Body Payload payload, Callback<CollectionSheet> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST(APIEndPoint.CENTERS + "/2026?command=saveCollectionSheet")
-        public SaveResponse saveCollectionSheet(@Body CollectionSheetPayload collectionSheetPayload);
+        @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
+        public SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload);
 
     }
 
@@ -227,6 +220,7 @@ public class API {
                                         Callback<List<SearchedEntity>> listCallback);
 
     }
+
 
     public interface LoanService {
 
@@ -339,7 +333,6 @@ public class API {
 
     }
 
-
     /**
      * Service for authenticating users.
      * No other service can be used without authentication.
@@ -381,44 +374,28 @@ public class API {
 
     }
 
-    public static <T> Callback<T> getCallback(T t) {
-        Callback<T> cb = new Callback<T>() {
-            @Override
-            public void success(T o, Response response) {
-                System.out.println("Object " + o);
+    static class MifosRestErrorHandler implements ErrorHandler {
+        @Override
+        public Throwable handleError(RetrofitError retrofitError) {
+
+            Response response = retrofitError.getResponse();
+            if (response != null && response.getStatus() == 401) {
+                Log.e("Status", "Authentication Error.");
+
+
+            } else if (response.getStatus() == 400) {
+                Log.d("Status", "Bad Request - Invalid Parameter or Data Integrity Issue.");
+                Log.d("URL", response.getUrl());
+                List<retrofit.client.Header> headersList = response.getHeaders();
+                Iterator<retrofit.client.Header> iterator = headersList.iterator();
+                while (iterator.hasNext()) {
+                    retrofit.client.Header header = iterator.next();
+                    Log.d("Header ", header.toString());
+                }
             }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                System.out.println("Error: " + retrofitError);
-            }
-        };
+            return retrofitError;
+        }
 
-        return cb;
-    }
-
-    public static <T> Callback<List<T>> getCallbackList(List<T> t) {
-        Callback<List<T>> cb = new Callback<List<T>>() {
-            @Override
-            public void success(List<T> o, Response response) {
-                System.out.println("Object " + o);
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                System.out.println("Error: " + retrofitError);
-            }
-        };
-
-        return cb;
-    }
-
-    public static synchronized void setInstanceUrl(String url) {
-        mInstanceUrl = url;
-        init();
-    }
-
-    public static synchronized String getInstanceUrl() {
-        return mInstanceUrl;
     }
 }
