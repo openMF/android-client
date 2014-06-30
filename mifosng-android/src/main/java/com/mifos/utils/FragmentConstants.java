@@ -15,4 +15,6 @@ public class FragmentConstants {
 
     public static String FRAG_GROUP_LIST = "Group List Fragment";
 
+    public static String DFRAG_DATE_PICKER = "Date Picker";
+
 }
