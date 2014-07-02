@@ -39,6 +39,11 @@
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
     <string name="transactions">Transactions</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="file_name">File Name</string>
+    <string name="file_location">Location</string>
+
     <!-- General Terms End Here -->
 
 
@@ -120,5 +125,6 @@
     <string name="title_activity_centers">Centers</string>
     <string name="hello_world">Hello world!</string>
     <string name="center">Center</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

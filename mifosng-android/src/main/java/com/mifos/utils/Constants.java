@@ -9,6 +9,10 @@ public class Constants {
 
     public static Context applicationContext;
 
+    public static final String ENTITY_TYPE_CLIENTS = "clients";
+
+    public static final String ENTITY_TYPE_LOANS = "loans";
+
     public static final String CLIENT_NAME = "clientName";
 
     public static final String CLIENT_ID = "clientId";
@@ -36,6 +40,10 @@ public class Constants {
     public static final String CENTER_ID = "centerId";
 
     public static final String GROUP_ID = "groupId";
+
+    public static final String ENTITY_TYPE = "entityType";
+
+    public static final String ENTITY_ID = "entityId";
 
     /**
      * Constants to identify which Data Tables have to be shown

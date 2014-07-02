@@ -15,5 +15,6 @@ public class APIEndPoint {
     public static final String SAVINGSACCOUNTS = "/savingsaccounts";
     public static final String DATATABLES = "/datatables";
     public static final String GROUPS = "/groups";
+    public static final String DOCUMENTS = "/documents";
 
 }

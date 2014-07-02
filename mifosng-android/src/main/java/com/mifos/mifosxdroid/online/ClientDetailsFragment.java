@@ -85,6 +85,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
      */
     public static final int MENU_ITEM_SAVE_LOCATION = 1000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
+    public static final int MENU_ITEM_DOCUMENTS = 1003;
+
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
@@ -262,6 +264,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         //TODO : Localisation of Menu Item Strings
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
         menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, "Save Location");
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, "Documents");
 
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
@@ -310,6 +313,9 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
             fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
             ClientActivity.replaceFragment(fragmentTransaction);
+        } else if (id == MENU_ITEM_DOCUMENTS) {
+
+            loadDocuments();
         }
 
 
@@ -772,8 +778,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     }
 
-    ;
-
     public void saveLocation() {
 
         if (locationAvailable.get()) {
@@ -903,4 +907,15 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         }
     }
+
+    public void loadDocuments() {
+
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.global_container, documentListFragment);
+        fragmentTransaction.commit();
+
+    }
+
 }
