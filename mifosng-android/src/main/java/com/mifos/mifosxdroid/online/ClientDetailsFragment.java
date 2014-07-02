@@ -863,10 +863,15 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             SharedPreferences pref = PreferenceManager
                     .getDefaultSharedPreferences(Constants.applicationContext);
             String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-            //TODO : Make the URL static
-            //TODO : Implement Scaling
-            String url = "https://demo.openmf.org/mifosng-provider/api/v1/clients/" +
-                    integers[0] + "/images?maxHeight=120&maxWidth=120";
+            String mInstanceUrl = pref.getString(Constants.INSTANCE_URL_KEY,
+                    getString(R.string.default_instance_url));
+
+            String url = Constants.PROTOCOL_HTTPS
+                    + mInstanceUrl
+                    + Constants.API_PATH + "/"
+                    + "clients/"
+                    + integers[0]
+                    + "/images?maxHeight=120&maxWidth=120";
 
             try {
 

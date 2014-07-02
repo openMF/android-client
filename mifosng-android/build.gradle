@@ -31,11 +31,22 @@ android {
     }
 }
 
+task nativeLibsToJar(type: Zip, description: 'create a jar archive of the native libs') {
+    destinationDir file("$buildDir/native-libs")
+    baseName 'native-libs'
+    extension 'jar'
+    from fileTree(dir: 'src/main/libs', include: '**/*.so')
+    into 'lib/'
+}
+
+tasks.withType(JavaCompile) {
+    compileTask -> compileTask.dependsOn(nativeLibsToJar)
+}
+
 dependencies {
-    compile files('libs/retrofit-1.4.1.jar')
-    compile files('libs/gson-2.2.4.jar')
-    compile files('libs/sugar-1.3_beta.jar')
-    compile files('libs/butterknife-4.0.1.jar')
+    compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
+    compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
+
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     // You must install or update the Google Repository through the SDK manager to use this dependency.

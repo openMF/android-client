@@ -67,6 +67,12 @@
             android:name="QUERY_LOG"
             android:value="true" />
         <meta-data
+                android:name="ENCRYPTION_KEY"
+                android:value="TEMP_DATA_ENCRYPTION_KEY"/>
+        <meta-data
+                android:name="DOMAIN_PACKAGE_NAME"
+                android:value="com.mifos.objects.db"/>
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
@@ -75,14 +81,11 @@
             android:label="@string/title_activity_client"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+                android:name=".CenterDetailsActivity"
+                android:screenOrientation="portrait">
+        </activity>
 
-        <service
-            android:name="com.mifos.services.RepaymentTransactionSyncService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.mifos.services.RepaymentTransactionSyncService" />
-            </intent-filter>
-        </service>
 
         <activity
             android:name=".online.CentersActivity"

@@ -58,8 +58,7 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
         String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
         String mInstanceUrl = pref.getString(Constants.INSTANCE_URL_KEY,
                 context.getString(R.string.default_instance_url));
-        //TODO : Make the URL static
-        //TODO : Implement Scaling
+
         String url = Constants.PROTOCOL_HTTPS
                 + mInstanceUrl
                 + Constants.API_PATH + "/"

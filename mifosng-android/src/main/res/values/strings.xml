@@ -119,6 +119,9 @@
     <string name="action_save_location">Save location</string>
     <string name="loan_disbursement_date">Disbursement Date</string>
     <string name="savings_interest_earned">Interest Earned</string>
+    <string name="sync">Sync</string>
+    <string name="enter_center_id">Center Id</string>
+    <string name="tap_to_select_date">Tap to select date</string>
     <!-- Menu Item Names End Here -->
     <string name="title_center_list">Groups</string>
     <string name="title_center_detail">Center Detail</string>

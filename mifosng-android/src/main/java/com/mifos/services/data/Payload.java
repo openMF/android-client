@@ -4,7 +4,7 @@ public class Payload
 {
     String dateFormat="dd MMMM YYYY";
     String locale="en";
-    int calendarId =112;
+    int calendarId = 112;
     String transactionDate ="18 June 2014";
 
     public String getDateFormat()
