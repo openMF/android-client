@@ -12,12 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.objects.noncore.Document;
 import com.mifos.services.API;
+import com.mifos.utils.AsyncFileDownloader;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
@@ -30,7 +32,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class DocumentListFragment extends Fragment {
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -117,7 +118,7 @@ public class DocumentListFragment extends Fragment {
 
         API.documentService.getListOfDocuments(entityType, entiyId , new Callback<List<Document>>() {
             @Override
-            public void success(List<Document> documents, Response response) {
+            public void success(final List<Document> documents, Response response) {
 
                 if (documents != null) {
 
@@ -129,6 +130,14 @@ public class DocumentListFragment extends Fragment {
 
                     DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity(),documents);
                     lv_documents.setAdapter(documentListAdapter);
+
+                    lv_documents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader(getActivity(),documents.get(i).getFileName());
+                            asyncFileDownloader.execute(entityType,String.valueOf(entiyId),String.valueOf(documents.get(i).getId()));
+                        }
+                    });
 
                 }
 

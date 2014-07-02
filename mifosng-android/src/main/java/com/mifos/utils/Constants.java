@@ -9,6 +9,14 @@ public class Constants {
 
     public static Context applicationContext;
 
+    public static String INSTANCE_URL_KEY = "instanceURL";
+
+    public static String PROTOCOL_HTTP = "http://";
+
+    public static String PROTOCOL_HTTPS = "https://";
+
+    public static String API_PATH = "/mifosng-provider/api/v1";
+
     public static final String ENTITY_TYPE_CLIENTS = "clients";
 
     public static final String ENTITY_TYPE_LOANS = "loans";

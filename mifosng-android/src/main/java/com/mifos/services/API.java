@@ -350,7 +350,6 @@ public class API {
                                        @Path("entityId") int entityId,
                                        Callback<List<Document>> documentListCallback);
 
-
     }
 
 
