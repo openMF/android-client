@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.exceptions.ShortOfLengthException;
@@ -35,15 +36,18 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends ActionBarActivity implements Callback<User> {
+public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     public static String INSTANCE_URL_KEY = "instanceURL";
-
+    public static String PROTOCOL_HTTP = "http://";
+    public static String PROTOCOL_HTTPS = "https://";
+    public static String API_PATH = "/mifosng-provider/api/v1";
     SharedPreferences sharedPreferences;
     @InjectView(R.id.et_instanceURL) EditText et_instanceURL;
     @InjectView(R.id.et_username) EditText et_username;
     @InjectView(R.id.et_password) EditText et_password;
     @InjectView(R.id.bt_login) Button bt_login;
+    @InjectView(R.id.tv_constructed_instance_url) TextView tv_constructed_instance_url;
 
     private String username;
     private String instanceURL;
@@ -73,6 +77,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
         else {
             Log.i(tag, "login button is not null");
         }
+        tv_constructed_instance_url.setText(PROTOCOL_HTTPS + previouslyEnteredUrl + API_PATH);
         et_instanceURL.setText(previouslyEnteredUrl);
     }
 
@@ -89,11 +94,15 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
 
         String urlInputValue = et_instanceURL.getEditableText().toString();
         try {
-            URL url = new URL(urlInputValue);
+            String validDomain = validateInstanceUrl(urlInputValue);
+            Log.d("Filtered URL", validDomain);
+            String constructedURL = PROTOCOL_HTTPS + validDomain + API_PATH;
+            tv_constructed_instance_url.setText(constructedURL);
+            URL url = new URL(constructedURL);
             instanceURL = url.toURI().toString();
             Log.d(tag, "instance URL: " + instanceURL);
             API.setInstanceUrl(instanceURL);
-            saveInstanceUrl(instanceURL);
+            saveInstanceUrl(validDomain);
         } catch (MalformedURLException e) {
             Log.e(tag, "Invalid instance URL: " + urlInputValue, e);
             throw new ShortOfLengthException("Instance URL", 5);
@@ -191,4 +200,32 @@ public class LoginActivity extends ActionBarActivity implements Callback<User> {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public String validateInstanceUrl(String url) {
+
+        String filteredUrl;
+
+        if(url.contains("https://")) {
+
+            //Strip https:// from the URL
+            filteredUrl = url.replace("https://","");
+
+        }else if(url.contains("http://")) {
+
+            //String http:// from the URL
+            filteredUrl = url.replace("http://","");
+        }else{
+
+            //String URL doesn't include protocol
+            filteredUrl = url;
+        }
+
+        if(filteredUrl.charAt(filteredUrl.length()-1) == '/') {
+            filteredUrl = filteredUrl.replace("/","");
+        }
+
+        return filteredUrl;
+
+    }
+
 }

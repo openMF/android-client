@@ -16,12 +16,12 @@
     <string name="client_name">Client Name</string>
     <string name="save">Save</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
-    <string name="default_instance_url">https://developer.openmf.org/mifosng-provider/api/v1</string>
+    <string name="default_instance_url">developer.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
     <string name="payment_type">Payment Type</string>
-    <string name="mifos_instance">Mifos Instance</string>
+    <string name="mifos_instance_domain">Mifos Instance Domain</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="mifos">Mifos</string>
@@ -94,6 +94,9 @@
     <string name="savings_make_withdrawal">Make Withdrawal</string>
     <string name="savings_make_deposit">Make Deposit</string>
     <string name="savingAccounts">Savings Accounts</string>
+    <string name="savingsAccount">Savings Account</string>
+    <string name="deposit">Deposit</string>
+    <string name="withdrawal">Withdrawal</string>
     <string name="savingsAccountSummary">Savings Account Summary</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <!-- Savings Account Related Terminologies End Here -->
@@ -112,7 +115,6 @@
     <string name="loan_disbursement_date">Disbursement Date</string>
     <string name="savings_interest_earned">Interest Earned</string>
     <!-- Menu Item Names End Here -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_center_list">Groups</string>
     <string name="title_center_detail">Center Detail</string>
     <string name="title_activity_centers">Centers</string>

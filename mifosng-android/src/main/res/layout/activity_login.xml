@@ -22,6 +22,14 @@
         android:layout_below="@+id/tv_title_instance"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_constructed_instance_url"
+        android:layout_below="@id/et_instanceURL"
+        android:layout_alignLeft="@id/et_instanceURL"
+        android:layout_marginTop="16dp"/>
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/mifos_instance"
+        android:text="@string/mifos_instance_domain"
         android:id="@+id/tv_title_instance"
         android:layout_below="@id/tv_title"
         android:layout_alignLeft="@+id/et_instanceURL"
@@ -89,7 +97,7 @@
         android:text="@string/username"
         android:id="@+id/tv_title_username"
         android:layout_marginTop="16dp"
-        android:layout_below="@+id/et_instanceURL"
+        android:layout_below="@+id/tv_constructed_instance_url"
         android:layout_alignLeft="@+id/et_instanceURL"
         android:layout_alignStart="@+id/et_instanceURL" />
 
