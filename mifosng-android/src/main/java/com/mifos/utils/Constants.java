@@ -21,6 +21,8 @@ public class Constants {
 
     public static final String ENTITY_TYPE_LOANS = "loans";
 
+    public static final String ENTITY_TYPE_SAVINGS = "savings";
+
     public static final String CLIENT_NAME = "clientName";
 
     public static final String CLIENT_ID = "clientId";

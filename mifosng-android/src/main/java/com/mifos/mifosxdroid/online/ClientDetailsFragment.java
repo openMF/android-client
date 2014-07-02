@@ -312,7 +312,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
             fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
-            ClientActivity.replaceFragment(fragmentTransaction);
+            fragmentTransaction.commit();
         } else if (id == MENU_ITEM_DOCUMENTS) {
 
             loadDocuments();
