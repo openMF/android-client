@@ -5,3 +5,4 @@
 .idea/
 build/
 mifosng-android/src/main/res/values/com_crashlytics_export_strings.xml
+mifosng-android/mifosng-android.apk
