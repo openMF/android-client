@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.online;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,10 +36,13 @@ import retrofit.client.Response;
 
 public class DocumentListFragment extends Fragment {
 
+    public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
+
     private OnFragmentInteractionListener mListener;
 
     private String entityType;
-    private int entiyId;
+
+    private int entityId;
 
     View rootView;
 
@@ -59,6 +65,7 @@ public class DocumentListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public DocumentListFragment() {
         // Required empty public constructor
     }
@@ -69,9 +76,10 @@ public class DocumentListFragment extends Fragment {
         if (getArguments() != null) {
 
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
-            entiyId = getArguments().getInt(Constants.ENTITY_ID);
+            entityId = getArguments().getInt(Constants.ENTITY_ID);
 
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -107,6 +115,25 @@ public class DocumentListFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+
+        MenuItem menuItemAddNewDocument= menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu.NONE, getString(R.string.add_new));
+        menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable.ic_action_content_new));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(Uri uri);
@@ -116,7 +143,7 @@ public class DocumentListFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.documentService.getListOfDocuments(entityType, entiyId , new Callback<List<Document>>() {
+        API.documentService.getListOfDocuments(entityType, entityId, new Callback<List<Document>>() {
             @Override
             public void success(final List<Document> documents, Response response) {
 
@@ -128,14 +155,14 @@ public class DocumentListFragment extends Fragment {
 
                     }
 
-                    DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity(),documents);
+                    DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity(), documents);
                     lv_documents.setAdapter(documentListAdapter);
 
                     lv_documents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader(getActivity(),documents.get(i).getFileName());
-                            asyncFileDownloader.execute(entityType,String.valueOf(entiyId),String.valueOf(documents.get(i).getId()));
+                            AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader(getActivity(), documents.get(i).getFileName());
+                            asyncFileDownloader.execute(entityType, String.valueOf(entityId), String.valueOf(documents.get(i).getId()));
                         }
                     });
 
@@ -154,7 +181,6 @@ public class DocumentListFragment extends Fragment {
 
             }
         });
-
 
 
     }

@@ -136,5 +136,6 @@
     <string name="remove">Remove</string>
     <string name="identifiers">Identifiers</string>
     <string name="message_no_identifiers_available">No Identifiers available for this client</string>
+    <string name="add_new">Add New</string>
 
 </resources>

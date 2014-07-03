@@ -152,10 +152,23 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
         safeUIBlockingUtility.safelyUnBlockUI();
         Intent intent = new Intent(Intent.ACTION_VIEW);
 
-        String fileType = "application/pdf";
-        //TODO Implement for different file types
+        //TODO Add Support for maximum Mime Types
+        String fileType = "";
+
         if(fileName.contains(".pdf")) {
             fileType = "application/pdf";
+        } else if (fileName.contains(".rtf")) {
+            fileType = "application/rtf";
+        } else if (fileName.contains(".png")) {
+            fileType = "image/png";
+        } else if (fileName.contains(".jpg") || fileName.contains(".jpeg")) {
+            fileType = "image/jpeg";
+        } else if (fileName.contains(".txt")) {
+            fileType = "text/plain";
+        } else if (fileName.contains(".html") || fileName.contains(".htm")) {
+            fileType = "text/html";
+        } else if (fileName.contains(".xls")) {
+            fileType = "application/vnd.ms-excel";
         }
 
         intent.setDataAndType(Uri.fromFile(file), fileType);
