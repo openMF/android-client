@@ -3,6 +3,7 @@ package com.mifos.services;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.mifos.objects.CenterWithAssociations;
 import com.mifos.objects.GroupWithAssociations;
@@ -21,19 +22,39 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
+import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
-import com.mifos.services.data.*;
+import com.mifos.services.data.APIEndPoint;
+import com.mifos.services.data.CollectionSheetPayload;
+import com.mifos.services.data.GpsCoordinatesRequest;
+import com.mifos.services.data.GpsCoordinatesResponse;
+import com.mifos.services.data.Payload;
+import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
-import retrofit.*;
-import retrofit.client.Response;
-import retrofit.http.*;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.ErrorHandler;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.Headers;
+import retrofit.http.Multipart;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Part;
+import retrofit.http.Path;
+import retrofit.http.Query;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 public class API {
 
@@ -58,6 +79,7 @@ public class API {
     public static GpsCoordinatesService gpsCoordinatesService;
     public static GroupService groupService;
     public static DocumentService documentService;
+    public static IdentifierService identifierService;
 
     static {
         init();
@@ -78,6 +100,7 @@ public class API {
         gpsCoordinatesService = sRestAdapter.create(GpsCoordinatesService.class);
         groupService = sRestAdapter.create(GroupService.class);
         documentService = sRestAdapter.create(DocumentService.class);
+        identifierService = sRestAdapter.create(IdentifierService.class);
     }
 
     private static RestAdapter createRestAdapter(final String url) {
@@ -337,6 +360,10 @@ public class API {
 
     }
 
+    /**
+     * Service for management of Documents
+     */
+
     public interface DocumentService {
 
         @GET("/{entityType}/{entityId}"+APIEndPoint.DOCUMENTS)
@@ -344,6 +371,21 @@ public class API {
         public void getListOfDocuments(@Path("entityType") String entityType,
                                        @Path("entityId") int entityId,
                                        Callback<List<Document>> documentListCallback);
+
+    }
+
+    public interface IdentifierService {
+
+        @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS)
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void getListOfIdentifiers(@Path("clientId") int clientId,
+                                         Callback<List<Identifier>> identifierListCallback);
+
+        @DELETE(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void deleteIdentifier(@Path("clientId") int clientId,
+                                     @Path("identifierId") int identifierId,
+                                     Callback<GenericResponse> genericResponseCallback);
 
     }
 

@@ -86,6 +86,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public static final int MENU_ITEM_SAVE_LOCATION = 1000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_DOCUMENTS = 1003;
+    public static final int MENU_ITEM_IDENTIFIERS = 1004;
 
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
@@ -263,9 +264,9 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         menu.clear();
         //TODO : Localisation of Menu Item Strings
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
-        menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, "Save Location");
-        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, "Documents");
-
+        menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, getString(R.string.action_save_location));
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
+        menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
 
@@ -316,6 +317,10 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         } else if (id == MENU_ITEM_DOCUMENTS) {
 
             loadDocuments();
+
+        } else if (id == MENU_ITEM_IDENTIFIERS) {
+
+            loadIdentifiers();
         }
 
 
@@ -919,6 +924,16 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.global_container, documentListFragment);
+        fragmentTransaction.commit();
+
+    }
+
+    public void loadIdentifiers() {
+
+        ClientIdentifiersFragment clientIdentifiersFragment = ClientIdentifiersFragment.newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.global_container, clientIdentifiersFragment);
         fragmentTransaction.commit();
 
     }

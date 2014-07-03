@@ -17,4 +17,10 @@ public class GenericResponse {
         this.responseFields = responseFields;
     }
 
+    @Override
+    public String toString() {
+        return "GenericResponse{" +
+                "responseFields=" + responseFields +
+                '}';
+    }
 }

@@ -130,5 +130,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="center">Center</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="type">Type</string>
+    <string name="upload">Upload</string>
+    <string name="download">Download</string>
+    <string name="remove">Remove</string>
+    <string name="identifiers">Identifiers</string>
+    <string name="message_no_identifiers_available">No Identifiers available for this client</string>
 
 </resources>
