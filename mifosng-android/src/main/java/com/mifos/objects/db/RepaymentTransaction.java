@@ -23,4 +23,8 @@ public class RepaymentTransaction extends SugarRecord<RepaymentTransaction> {
     public int getTransactionAmount() {
         return transactionAmount;
     }
+
+    public void setTransactionAmount(int transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
 }

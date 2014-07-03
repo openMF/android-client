@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.mifos.mifosxdroid.CenterDetailsActivity;
-import com.mifos.objects.db.Loan;
-import com.mifos.objects.db.RepaymentTransaction;
+import com.mifos.objects.db.*;
 import com.mifos.services.data.BulkRepaymentTransactions;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
@@ -51,11 +50,20 @@ public class RepaymentTransactionSyncService {
             SaveCollectionSheetTask task = new SaveCollectionSheetTask();
             task.execute(payload);
         } else
-            syncFinishListener.onSyncFinish("There is no data to sync");
+            syncFinishListener.onSyncFinish("There is no data to sync", false);
+    }
+
+    private void deleteAllOfflineCollectionSheetData() {
+        RepaymentTransaction.deleteAll(RepaymentTransaction.class);
+        MifosGroup.deleteAll(MifosGroup.class);
+        Loan.deleteAll(Loan.class);
+        Client.deleteAll(Client.class);
+        AttendanceType.deleteAll(AttendanceType.class);
+        Currency.deleteAll(Currency.class);
     }
 
     public interface SyncFinishListener {
-        public void onSyncFinish(String message);
+        public void onSyncFinish(String message, boolean isSyncable);
     }
 
     private class SaveCollectionSheetTask extends AsyncTask<CollectionSheetPayload, Void, Void> {
@@ -77,7 +85,7 @@ public class RepaymentTransactionSyncService {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.clear();
                         editor.commit();
-                        RepaymentTransaction.deleteAll(RepaymentTransaction.class);
+                        deleteAllOfflineCollectionSheetData();
                     }
                 } catch (RetrofitError error) {
 
@@ -91,7 +99,7 @@ public class RepaymentTransactionSyncService {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            syncFinishListener.onSyncFinish("Sync is completed successfully");
+            syncFinishListener.onSyncFinish("Sync is completed successfully", true);
         }
     }
 }
