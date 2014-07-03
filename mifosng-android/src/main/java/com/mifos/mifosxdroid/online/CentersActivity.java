@@ -68,6 +68,6 @@ public class CentersActivity extends ActionBarActivity
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_LIST);
         fragmentTransaction.replace(R.id.center_container, clientListFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
 }
