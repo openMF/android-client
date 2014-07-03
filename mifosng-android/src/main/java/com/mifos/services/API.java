@@ -60,6 +60,7 @@ public class API {
 
     public static final String ACCEPT_JSON = "Accept: application/json";
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
+    public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "Content-Type: multipart/form-data";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     /*
         As Mifos is a multi-tenant platform, all requests require you to specify a tenant
@@ -372,7 +373,31 @@ public class API {
                                        @Path("entityId") int entityId,
                                        Callback<List<Document>> documentListCallback);
 
+        /**
+         *
+         * @param entityType - Type for which document is being uploaded (Client, Loan or Savings etc)
+         * @param entityId - Id of Entity
+         * @param nameOfDocument - Document Name
+         * @param description - Mandatory - Document Description
+         * @param typedFile - Mandatory
+         * @param genericResponseCallback - Response Callback
+         */
+        @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_MULTIPART_FORM_DATA})
+        @Multipart
+        public void createDocument(@Path("entityType") String entityType,
+                                   @Path("entityId") int entityId,
+                                   @Part("name") String nameOfDocument,
+                                   @Part("description") String description,
+                                   @Part("file") TypedFile typedFile,
+                                   Callback<GenericResponse> genericResponseCallback);
+
     }
+
+    /**
+     * Service for management of Identifiers
+     */
+
 
     public interface IdentifierService {
 

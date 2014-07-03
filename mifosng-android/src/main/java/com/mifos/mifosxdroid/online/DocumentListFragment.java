@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
@@ -15,17 +16,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.objects.noncore.Document;
 import com.mifos.services.API;
+import com.mifos.services.GenericResponse;
 import com.mifos.utils.AsyncFileDownloader;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FileUtils;
 import com.mifos.utils.SafeUIBlockingUtility;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -33,16 +40,16 @@ import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 
 public class DocumentListFragment extends Fragment {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
-    private OnFragmentInteractionListener mListener;
+    private static final int FILE_SELECT_CODE = 0;
 
-    private String entityType;
-
-    private int entityId;
+    @InjectView(R.id.lv_documents)
+    ListView lv_documents;
 
     View rootView;
 
@@ -54,8 +61,14 @@ public class DocumentListFragment extends Fragment {
 
     ActionBar actionBar;
 
-    @InjectView(R.id.lv_documents)
-    ListView lv_documents;
+    private OnFragmentInteractionListener mListener;
+
+    private String entityType;
+    private int entityId;
+
+    public DocumentListFragment() {
+        // Required empty public constructor
+    }
 
     public static DocumentListFragment newInstance(String entityType, int entiyId) {
         DocumentListFragment fragment = new DocumentListFragment();
@@ -64,10 +77,6 @@ public class DocumentListFragment extends Fragment {
         args.putInt(Constants.ENTITY_ID, entiyId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public DocumentListFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -120,7 +129,7 @@ public class DocumentListFragment extends Fragment {
 
         menu.clear();
 
-        MenuItem menuItemAddNewDocument= menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu.NONE, getString(R.string.add_new));
+        MenuItem menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu.NONE, getString(R.string.add_new));
         menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable.ic_action_content_new));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -132,11 +141,15 @@ public class DocumentListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
+        int id = item.getItemId();
+
+        if (id == MENU_ITEM_ADD_NEW_DOCUMENT) {
+
+            openFilePicker();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void inflateDocumentList() {
@@ -182,6 +195,86 @@ public class DocumentListFragment extends Fragment {
             }
         });
 
+    }
+
+    private void openFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(getActivity(), "Please install a File Manager.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        public void onFragmentInteraction(Uri uri);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FILE_SELECT_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    // Get the Uri of the selected file
+                    Uri uri = data.getData();
+                    Log.d(getClass().getSimpleName(), "File Uri: " + uri.toString());
+                    // Get the path
+                    try {
+                        String path = FileUtils.getPath(getActivity(), uri);
+                        Log.d(getClass().getSimpleName(), "File Path: " + path);
+
+                        uploadFile(path);
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+
+                    }
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void uploadFile(String path) {
+
+        File file = new File(path);
+        System.out.println("File Name :" + file.getName());
+
+        String[] parts = file.getName().split("\\.");
+        System.out.println("Extension :"+parts[1]);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(parts[1]);
+        System.out.println("Mime Type = "+mimeType);
+
+        TypedFile typedFile = new TypedFile(mimeType, file);
+
+        safeUIBlockingUtility.safelyBlockUI();
+        API.documentService.createDocument(entityType, entityId, file.getName(), "Some Random Description",
+                typedFile, new Callback<GenericResponse>() {
+                    @Override
+                    public void success(GenericResponse genericResponse, Response response) {
+
+                        if (genericResponse != null) {
+                            System.out.println(genericResponse.toString());
+                        }
+
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+
+                        safeUIBlockingUtility.safelyUnBlockUI();
+
+                    }
+                }
+        );
 
     }
 
