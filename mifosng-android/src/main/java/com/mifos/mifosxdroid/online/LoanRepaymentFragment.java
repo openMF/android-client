@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
@@ -32,10 +34,10 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,7 +50,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentFragment extends Fragment {
+public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDatePickListener{
 
     View rootView;
 
@@ -84,6 +86,9 @@ public class LoanRepaymentFragment extends Fragment {
     @InjectView(R.id.bt_paynow) Button bt_paynow;
 
     private OnFragmentInteractionListener mListener;
+
+    DialogFragment mfDatePicker;
+
 
     public LoanRepaymentFragment() {
         // Required empty public constructor
@@ -257,6 +262,7 @@ public class LoanRepaymentFragment extends Fragment {
 
     }
 
+
     public interface OnFragmentInteractionListener {
 
     }
@@ -315,19 +321,32 @@ public class LoanRepaymentFragment extends Fragment {
 
     public void inflateRepaymentDate(){
 
-        Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        mfDatePicker = MFDatePicker.newInsance(this);
 
-        et_repaymentDate.setText(new StringBuilder().append(day)
-                .append(" - ").append(month + 1).append(" - ").append(year));
+
+        et_repaymentDate.setText(MFDatePicker.getDatePickedAsString());
 
         /*
             TODO Add Validation to make sure :
             1. Date Is in Correct Format
             2. Date Entered is not greater than Date Today i.e Date is not in future
          */
+
+        et_repaymentDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onDatePicked(String date) {
+
+        et_repaymentDate.setText(date);
 
     }
 

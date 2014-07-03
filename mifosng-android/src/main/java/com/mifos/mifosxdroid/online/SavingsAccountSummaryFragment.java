@@ -48,6 +48,7 @@ import retrofit.client.Response;
 public class SavingsAccountSummaryFragment extends Fragment {
 
     public static final int MENU_ITEM_DATA_TABLES = 1001;
+    public static final int MENU_ITEM_DOCUMENTS = 1004;
 
 
     @InjectView(R.id.tv_clientName) TextView tv_clientName;
@@ -257,6 +258,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
         menu.clear();
 
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string.documents));
 
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
@@ -302,7 +304,12 @@ public class SavingsAccountSummaryFragment extends Fragment {
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
             fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
-            ClientActivity.replaceFragment(fragmentTransaction);
+            fragmentTransaction.commit();
+        }
+
+        if (item.getItemId() == MENU_ITEM_DOCUMENTS) {
+
+            loadDocuments();
         }
 
         return super.onOptionsItemSelected(item);
@@ -431,4 +438,13 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
     }
 
+    public void loadDocuments() {
+
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_SAVINGS, savingsAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, documentListFragment);
+        fragmentTransaction.commit();
+
+    }
 }

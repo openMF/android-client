@@ -20,6 +20,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.noncore.Document;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.*;
@@ -56,6 +57,8 @@ public class API {
     public static UserAuthService userAuthService;
     public static GpsCoordinatesService gpsCoordinatesService;
     public static GroupService groupService;
+    public static DocumentService documentService;
+
     static {
         init();
     }
@@ -74,6 +77,7 @@ public class API {
         userAuthService = sRestAdapter.create(UserAuthService.class);
         gpsCoordinatesService = sRestAdapter.create(GpsCoordinatesService.class);
         groupService = sRestAdapter.create(GroupService.class);
+        documentService = sRestAdapter.create(DocumentService.class);
     }
 
     private static RestAdapter createRestAdapter(final String url) {
@@ -332,6 +336,17 @@ public class API {
 
 
     }
+
+    public interface DocumentService {
+
+        @GET("/{entityType}/{entityId}"+APIEndPoint.DOCUMENTS)
+        @Headers({CONTENT_TYPE_JSON})
+        public void getListOfDocuments(@Path("entityType") String entityType,
+                                       @Path("entityId") int entityId,
+                                       Callback<List<Document>> documentListCallback);
+
+    }
+
 
     /**
      * Service for authenticating users.

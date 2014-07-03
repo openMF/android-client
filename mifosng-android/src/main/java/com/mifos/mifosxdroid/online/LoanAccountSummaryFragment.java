@@ -64,6 +64,7 @@ public class LoanAccountSummaryFragment extends Fragment {
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
     public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
+    public static final int MENU_ITEM_DOCUMENTS = 1004;
 
     // Action Identifier in the onProcessTransactionClicked Method
     private int processLoanTransactionAction = -1;
@@ -306,6 +307,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
         menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string.documents));
 
         int SUBMENU_ITEM_ID = 0;
 
@@ -343,7 +345,12 @@ public class LoanAccountSummaryFragment extends Fragment {
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
             fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
-            ClientActivity.replaceFragment(fragmentTransaction);
+            fragmentTransaction.commit();
+        }
+
+        if (item.getItemId() == MENU_ITEM_DOCUMENTS) {
+
+            loadDocuments();
         }
 
 
@@ -477,6 +484,16 @@ public class LoanAccountSummaryFragment extends Fragment {
 
                     }
                 });
+
+    }
+
+    public void loadDocuments() {
+
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_LOANS, loanAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.global_container, documentListFragment);
+        fragmentTransaction.commit();
 
     }
 

@@ -22,39 +22,13 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         LoanRepaymentFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {
 
-    //TODO: Ask Vishwas about converting this approach into a HashMap Based approach
-    /**
-     * Control Menu Changes from Fragments
-     * change this Variable to True in the Fragment and Magic
-     * Happens in onPrepareOptionsMenu Method Below
-     */
-    public static Boolean didMenuDataChange = Boolean.FALSE;
-    public static Boolean shouldAddDataTables = Boolean.FALSE;
-    public static Boolean shouldAddSaveLocation = Boolean.FALSE;
-    public static Boolean shouldAddRepaymentSchedule = Boolean.FALSE;
-    public static Boolean shouldAddLoanTransactions = Boolean.FALSE;
-    /**
-     * Property to identify the type of data tables to be shown.
-     */
-    public static int idOfDataTableToBeShownInMenu = -1;
-
-    /**
-     * This list will contain list of data tables
-     * and will be used to inflate the Submenu Datatables
-     */
-    public static List<String> dataTableMenuItems = new ArrayList<String>();
-
-    private int clientId;
-
-    //TODO Try to shorten the code, this activity contains too much of repeated code
-    //Implement DRY - Don't Repeat Yourself Approach Here
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_global_container_layout);
         ButterKnife.inject(this);
-        clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
+        int clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ClientDetailsFragment clientDetailsFragment = ClientDetailsFragment.newInstance(clientId);
         fragmentTransaction.replace(R.id.global_container, clientDetailsFragment).commit();
@@ -100,18 +74,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * This method will perform Fragment Transactions, mostly replace.
-     * You create a FragmentTransaction in your fragment and then call this method in this
-     * activity.
-     * @param fragmentTransaction
-     */
 
-    public static void replaceFragment(FragmentTransaction fragmentTransaction) {
-
-        fragmentTransaction.commit();
-
-    }
 
     /*
      * Called when a Loan Account is Selected

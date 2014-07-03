@@ -127,14 +127,20 @@ public class ClientListFragment extends Fragment {
 
                     if(getActivity() != null) {
                         Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                        if(retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                            Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getActivity(), LogoutActivity.class));
-                            getActivity().finish();
+                        try {
+                            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                                Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getActivity(), LogoutActivity.class));
+                                getActivity().finish();
 
-                        }else {
-                            Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (NullPointerException npe) {
+                            Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+
                         }
+
 
                     }
                 }
