@@ -8,10 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.mifos.mifosxdroid.CenterDetailsActivity;
@@ -43,8 +40,11 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     MifosGroupListAdapter adapter = null;
     String tag = getClass().getSimpleName();
     View view;
+    @InjectView(R.id.tv_empty_group)
+    TextView tv_empty_group;
     private MenuItem syncItem;
     private String date;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_group, null);
@@ -90,6 +90,17 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         lv_group.setOnItemClickListener(this);
         lv_group.setEmptyView(progressGroup);
         adapter.notifyDataSetChanged();
+        if (groupList.size() == 0 && syncItem != null) {
+            MenuItemCompat.setActionView(syncItem, null);
+            SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            date = preferences.getString(CenterDetailsActivity.TRANSACTION_DATE_KEY, null);
+            int centerId = preferences.getInt(CenterDetailsActivity.CENTER_ID_KEY, -1);
+            tv_empty_group.setVisibility(View.VISIBLE);
+            tv_empty_group.setText("There is no data for center " + centerId + " on " + date);
+            progressGroup.setVisibility(View.GONE);
+
+        } else
+            tv_empty_group.setVisibility(View.GONE);
     }
 
     private Payload getPayload() {
@@ -192,8 +203,17 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     @Override
-    public void onSyncFinish(String message) {
+    public void onSyncFinish(String message, boolean isSyncable) {
         MenuItemCompat.setActionView(syncItem, null);
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        if (!isSyncable) {
+            SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+            getActivity().finish();
+            Intent intent = new Intent(getActivity(), CenterDetailsActivity.class);
+            startActivity(intent);
+        }
     }
 }

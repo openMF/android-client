@@ -68,7 +68,13 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         Set<Loan> loans = mapDue.keySet();
         for (Loan loan : loans) {
             int updatedDue = mapDue.get(loan);
-            new RepaymentTransaction(loan, updatedDue).save();
+            RepaymentTransaction repaymentTransaction = Select.from(RepaymentTransaction.class).where(Condition.prop("loan").eq(loan.getId())).first();
+            if (repaymentTransaction == null) {
+                repaymentTransaction = new RepaymentTransaction(loan, updatedDue);
+            } else {
+                repaymentTransaction.setTransactionAmount(updatedDue);
+            }
+            repaymentTransaction.save();
         }
     }
 
