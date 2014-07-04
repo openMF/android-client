@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -71,7 +72,10 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
         }
 
         Double accountBalance = savingsAccountList.get(i).getAccountBalance();
-        reusableViewHolder.tv_amount.setText(String.valueOf(accountBalance==null?"0.00":accountBalance));
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setMaximumFractionDigits(2);
+        decimalFormat.setMaximumIntegerDigits(10);
+        reusableViewHolder.tv_amount.setText(String.valueOf(accountBalance==null?"0.00": decimalFormat.format(accountBalance)));
         reusableViewHolder.tv_accountNumber.setText(savingsAccountList.get(i).getAccountNo());
 
         return view;
