@@ -77,7 +77,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
     @InjectView(R.id.tv_loanAccountNumber) TextView tv_loanAccountNumber;
     @InjectView(R.id.tv_in_arrears) TextView tv_inArrears;
     @InjectView(R.id.tv_amount_due) TextView tv_amountDue;
-    @InjectView(R.id.et_repayment_date) EditText et_repaymentDate;
+    @InjectView(R.id.tv_repayment_date) TextView tv_repaymentDate;
     @InjectView(R.id.et_amount) EditText et_amount;
     @InjectView(R.id.et_additional_payment) EditText et_additionalPayment;
     @InjectView(R.id.et_fees) EditText et_fees;
@@ -324,7 +324,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
         mfDatePicker = MFDatePicker.newInsance(this);
 
 
-        et_repaymentDate.setText(MFDatePicker.getDatePickedAsString());
+        tv_repaymentDate.setText(MFDatePicker.getDatePickedAsString());
 
         /*
             TODO Add Validation to make sure :
@@ -332,7 +332,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
             2. Date Entered is not greater than Date Today i.e Date is not in future
          */
 
-        et_repaymentDate.setOnClickListener(new View.OnClickListener() {
+        tv_repaymentDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -346,7 +346,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
     @Override
     public void onDatePicked(String date) {
 
-        et_repaymentDate.setText(date);
+        tv_repaymentDate.setText(date);
 
     }
 
@@ -358,7 +358,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
 
             String[][] data = {
-                    {"Repayment Date", et_repaymentDate.getText().toString()},
+                    {"Repayment Date", tv_repaymentDate.getText().toString()},
                     {"Payment Type", sp_paymentType.getSelectedItem().toString()},
                     {"Amount", et_amount.getText().toString()},
                     {"Addition Payment", et_additionalPayment.getText().toString()},
@@ -412,7 +412,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
     public void submitPayment(){
         //TODO Implement a proper builder method here
 
-        String dateString = et_repaymentDate.getEditableText().toString().replace(" - ", " ");
+        String dateString = tv_repaymentDate.getText().toString().replace("-", " ");
 
         final LoanRepaymentRequest loanRepaymentRequest = new LoanRepaymentRequest();
         loanRepaymentRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));

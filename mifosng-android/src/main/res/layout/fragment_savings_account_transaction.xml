@@ -81,7 +81,7 @@
             android:paddingTop="4dp">
 
             <TextView
-                android:id="@+id/tv_transaction_date"
+                android:id="@+id/transaction_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -89,15 +89,13 @@
                 android:text="@string/date"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText
-                android:id="@+id/et_transaction_date"
+            <TextView
+                android:id="@+id/tv_transaction_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:layout_weight="0.4"
-                android:gravity="left"
-                android:hint="yyyy-mm-dd"
-                android:inputType="date" />
+                android:gravity="left" />
 
         </TableRow>
 

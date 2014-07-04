@@ -155,13 +155,12 @@
                     android:text="@string/loan_repayment_date"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/et_repayment_date"
+                <TextView
+                    android:id="@+id/tv_repayment_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="date" />
+                    android:ems="10" />
             </TableRow>
 
             <TableRow

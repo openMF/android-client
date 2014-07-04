@@ -55,8 +55,8 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     TextView tv_clientName;
     @InjectView(R.id.tv_savingsAccountNumber)
     TextView tv_accountNumber;
-    @InjectView(R.id.et_transaction_date)
-    EditText et_transactionDate;
+    @InjectView(R.id.tv_transaction_date)
+    TextView tv_transactionDate;
     @InjectView(R.id.et_transaction_amount)
     EditText et_transactionAmount;
     @InjectView(R.id.sp_payment_type)
@@ -223,7 +223,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
         String[] headers = {"Field", "Value"};
         String[][] data = {
-                {"Transaction Date", et_transactionDate.getText().toString()},
+                {"Transaction Date", tv_transactionDate.getText().toString()},
                 {"Payment Type", sp_paymentType.getSelectedItem().toString()},
                 {"Amount", et_transactionAmount.getText().toString()}
         };
@@ -266,7 +266,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
     public void processTransaction() {
 
-        String dateString = et_transactionDate.getEditableText().toString().replace(" - ", " ");
+        String dateString = tv_transactionDate.getText().toString().replace("-", " ");
 
 
         final SavingsAccountTransactionRequest savingsAccountTransactionRequest = new SavingsAccountTransactionRequest();
@@ -324,7 +324,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
         mfDatePicker = MFDatePicker.newInsance(this);
 
 
-        et_transactionDate.setText(MFDatePicker.getDatePickedAsString());
+        tv_transactionDate.setText(MFDatePicker.getDatePickedAsString());
 
         /*
             TODO Add Validation to make sure :
@@ -332,7 +332,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
             2. Date Entered is not greater than Date Today i.e Date is not in future
          */
 
-        et_transactionDate.setOnClickListener(new View.OnClickListener() {
+        tv_transactionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -347,7 +347,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     @Override
     public void onDatePicked(String date) {
 
-        et_transactionDate.setText(date);
+        tv_transactionDate.setText(date);
 
     }
 
