@@ -70,7 +70,8 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.black));
         }
 
-        reusableViewHolder.tv_amount.setText(String.valueOf(savingsAccountList.get(i).getAccountBalance()));
+        Double accountBalance = savingsAccountList.get(i).getAccountBalance();
+        reusableViewHolder.tv_amount.setText(String.valueOf(accountBalance==null?"0.00":accountBalance));
         reusableViewHolder.tv_accountNumber.setText(savingsAccountList.get(i).getAccountNo());
 
         return view;

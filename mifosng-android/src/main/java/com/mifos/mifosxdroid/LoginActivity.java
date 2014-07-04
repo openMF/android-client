@@ -15,21 +15,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
+
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+
+import org.apache.http.HttpStatus;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 08/02/14.
@@ -135,7 +139,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     @Override
     public void failure(RetrofitError retrofitError) {
         progressDialog.dismiss();
-        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show();
+
+        if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
+            Toast.makeText(context, getString(R.string.error_login_failed), Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.bt_login)

@@ -139,6 +139,7 @@
     <string name="add_new">Add New</string>
 
     <!-- Error Messages -->
+    <string name="error_login_failed">Please try again, your credentials are not valid</string>
     <string name="message_no_identifiers_available">No Identifiers available for this client</string>
     <string name="message_field_required"> is mandatory and cannot be left blank</string>
     <string name="upload_document">Upload Document</string>

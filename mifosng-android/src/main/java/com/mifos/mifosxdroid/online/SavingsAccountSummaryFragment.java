@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.accounts.savings.Status;
 import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
@@ -49,54 +50,54 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_DOCUMENTS = 1004;
-
-
-    @InjectView(R.id.tv_clientName) TextView tv_clientName;
-    @InjectView(R.id.quickContactBadge_client) QuickContactBadge quickContactBadge;
-    @InjectView(R.id.tv_savings_product_short_name) TextView tv_savingsProductName;
-    @InjectView(R.id.tv_savingsAccountNumber) TextView tv_savingsAccountNumber;
-    @InjectView(R.id.tv_savings_account_balance) TextView tv_savingsAccountBalance;
-    @InjectView(R.id.tv_total_deposits) TextView tv_totalDeposits;
-    @InjectView(R.id.tv_total_withdrawals) TextView tv_totalWithdrawals;
-    @InjectView(R.id.lv_savings_transactions) ListView lv_Transactions;
-    @InjectView(R.id.tv_interest_earned) TextView tv_interestEarned;
-    @InjectView(R.id.bt_deposit) Button bt_deposit;
-    @InjectView(R.id.bt_withdrawal) Button bt_withdrawal;
-
-    private OnFragmentInteractionListener mListener;
-
     public static int savingsAccountNumber;
-
     public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
-
+    @InjectView(R.id.tv_clientName)
+    TextView tv_clientName;
+    @InjectView(R.id.quickContactBadge_client)
+    QuickContactBadge quickContactBadge;
+    @InjectView(R.id.tv_savings_product_short_name)
+    TextView tv_savingsProductName;
+    @InjectView(R.id.tv_savingsAccountNumber)
+    TextView tv_savingsAccountNumber;
+    @InjectView(R.id.tv_savings_account_balance)
+    TextView tv_savingsAccountBalance;
+    @InjectView(R.id.tv_total_deposits)
+    TextView tv_totalDeposits;
+    @InjectView(R.id.tv_total_withdrawals)
+    TextView tv_totalWithdrawals;
+    @InjectView(R.id.lv_savings_transactions)
+    ListView lv_Transactions;
+    @InjectView(R.id.tv_interest_earned)
+    TextView tv_interestEarned;
+    @InjectView(R.id.bt_deposit)
+    Button bt_deposit;
+    @InjectView(R.id.bt_withdrawal)
+    Button bt_withdrawal;
     View rootView;
-
     SafeUIBlockingUtility safeUIBlockingUtility;
-
     ActionBarActivity activity;
-
     SharedPreferences sharedPreferences;
-
     ActionBar actionBar;
-
     SavingsAccountWithAssociations savingsAccountWithAssociations;
-
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
     // Infinite Scroll View
     List<Transaction> listOfAllTransactions = new ArrayList<Transaction>();
     int countOfTransactionsInListView = 0;
     SavingsAccountTransactionsListAdapter savingsAccountTransactionsListAdapter;
-
     boolean LOADMORE; // variable to enable and disable loading of data into listview
-
     // variables to capture position of first visible items
     // so that while loading the listview does not scroll automatically
-    int index,top;
-
+    int index, top;
     // variables to control amount of data loading on each load
     int INITIAL = 0;
     int FINAL = 5;
+    private OnFragmentInteractionListener mListener;
+
+    public SavingsAccountSummaryFragment() {
+        // Required empty public constructor
+    }
 
     public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber) {
         SavingsAccountSummaryFragment fragment = new SavingsAccountSummaryFragment();
@@ -104,9 +105,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
         args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber);
         fragment.setArguments(args);
         return fragment;
-    }
-    public SavingsAccountSummaryFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -135,7 +133,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
         return rootView;
     }
 
-    public void inflateSavingsAccountSummary(){
+    public void inflateSavingsAccountSummary() {
 
         safeUIBlockingUtility.safelyBlockUI();
 
@@ -148,7 +146,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
                     @Override
                     public void success(SavingsAccountWithAssociations savingsAccountWithAssociations, Response response) {
 
-                        if(savingsAccountWithAssociations!=null) {
+                        if (savingsAccountWithAssociations != null) {
 
                             SavingsAccountSummaryFragment.this.savingsAccountWithAssociations = savingsAccountWithAssociations;
 
@@ -156,25 +154,32 @@ public class SavingsAccountSummaryFragment extends Fragment {
                             tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
                             tv_savingsAccountNumber.setText(savingsAccountWithAssociations.getAccountNo());
 
-                            if(savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null){
+                            if (savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null) {
                                 tv_interestEarned.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalInterestEarned()));
                             } else {
-                                tv_interestEarned.setText("0.00");
+                                tv_interestEarned.setText("0.0");
                             }
-                            tv_savingsAccountBalance.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getAccountBalance()));
-                            tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalDeposits()));
 
-                            if(savingsAccountWithAssociations.getSummary().getTotalWithdrawals() != null) {
+                            tv_savingsAccountBalance.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getAccountBalance()));
+
+                            if (savingsAccountWithAssociations.getSummary().getTotalDeposits() != null) {
+                                tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalDeposits()));
+                            } else {
+                                tv_totalDeposits.setText("0.0");
+                            }
+
+                            if (savingsAccountWithAssociations.getSummary().getTotalWithdrawals() != null) {
                                 tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalWithdrawals()));
                             } else {
-                                tv_totalWithdrawals.setText("0.00");
+                                tv_totalWithdrawals.setText("0.0");
                             }
 
                             savingsAccountTransactionsListAdapter
                                     = new SavingsAccountTransactionsListAdapter(getActivity().getApplicationContext(),
-                                    savingsAccountWithAssociations.getTransactions().size()< FINAL ?
-                                            savingsAccountWithAssociations.getTransactions():
-                                            savingsAccountWithAssociations.getTransactions().subList(INITIAL,FINAL));
+                                    savingsAccountWithAssociations.getTransactions().size() < FINAL ?
+                                            savingsAccountWithAssociations.getTransactions() :
+                                            savingsAccountWithAssociations.getTransactions().subList(INITIAL, FINAL)
+                            );
                             lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
 
                             // Cache transactions here
@@ -195,15 +200,18 @@ public class SavingsAccountSummaryFragment extends Fragment {
                                     //Display them as a Formatted string in a toast message
                                     Toast.makeText(getActivity(),
                                             String.format(getResources().getString(R.string.savings_transaction_detail),
-                                                    transactionId,runningBalance),
-                                            Toast.LENGTH_LONG).show();
+                                                    transactionId, runningBalance),
+                                            Toast.LENGTH_LONG
+                                    ).show();
 
                                 }
                             });
 
-                            safeUIBlockingUtility.safelyUnBlockUI();
+                            toggleTransactionCapabilityOfAccount(savingsAccountWithAssociations.getStatus());
 
                             inflateDataTablesList();
+
+                            safeUIBlockingUtility.safelyUnBlockUI();
 
                             enableInfiniteScrollOfTransactions();
 
@@ -218,7 +226,8 @@ public class SavingsAccountSummaryFragment extends Fragment {
                         Toast.makeText(activity, "Savings Account not found.", Toast.LENGTH_SHORT).show();
                         safeUIBlockingUtility.safelyUnBlockUI();
                     }
-                });
+                }
+        );
 
     }
 
@@ -325,16 +334,11 @@ public class SavingsAccountSummaryFragment extends Fragment {
         mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL);
     }
 
-    public interface OnFragmentInteractionListener {
-
-        public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
-    }
-
     /**
      * Use this method to fetch all datatables for a savings account and inflate them as
      * menu options
      */
-    public void inflateDataTablesList(){
+    public void inflateDataTablesList() {
 
         safeUIBlockingUtility.safelyBlockUI();
 
@@ -412,12 +416,11 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
         View v = lv_Transactions.getChildAt(0);
 
-        top = (v == null)? 0 : v.getTop();
+        top = (v == null) ? 0 : v.getTop();
 
         FINAL += 5;
 
-        if(FINAL > listOfAllTransactions.size())
-        {
+        if (FINAL > listOfAllTransactions.size()) {
             FINAL = listOfAllTransactions.size();
             savingsAccountTransactionsListAdapter =
                     new SavingsAccountTransactionsListAdapter(getActivity(),
@@ -446,5 +449,20 @@ public class SavingsAccountSummaryFragment extends Fragment {
         fragmentTransaction.replace(R.id.global_container, documentListFragment);
         fragmentTransaction.commit();
 
+    }
+
+    public void toggleTransactionCapabilityOfAccount(Status status) {
+
+        // If Savings account is not active, disable Deposit and Withdrawal Capability
+        if (!status.getActive()) {
+            bt_deposit.setEnabled(false);
+            bt_withdrawal.setEnabled(false);
+        }
+
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
     }
 }
