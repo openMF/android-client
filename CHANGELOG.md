@@ -8,8 +8,8 @@
 
 ##0.0.1-alpha
 ===
-
-Allows login/logout functionality with manually configurable mifos-instances. 
+Allows login/logout functionality with manually 
+configurable mifos-instances. 
 
 Functionality available post login :-
 
