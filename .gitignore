@@ -6,3 +6,4 @@
 build/
 mifosng-android/src/main/res/values/com_crashlytics_export_strings.xml
 mifosng-android/mifosng-android.apk
+mifosng-android/src/main/assets/crashlytics-build.properties

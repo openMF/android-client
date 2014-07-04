@@ -143,21 +143,33 @@ public class DocumentDialogFragment extends DialogFragment {
                 if (resultCode == Activity.RESULT_OK) {
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
+
                     Log.d(getClass().getSimpleName(), "File Uri: " + uri.toString());
                     // Get the path
                     try {
-                        filePath = FileUtils.getPath(getActivity(), uri);
-                        Log.d(getClass().getSimpleName(), "File Path: " + filePath);
 
-                        fileChoosen = new File(filePath);
+                        String scheme = uri.getScheme();
 
-                        tv_choose_file.setText(fileChoosen.getName());
+                        if (scheme.equals("file")) {
+                            filePath = FileUtils.getPath(getActivity(), uri);
+                            fileChoosen = new File(filePath);
+                            Log.d(getClass().getSimpleName(), "File Path: " + filePath);
+                        } else if (scheme.equals("content")) {
 
+                            Toast.makeText(getActivity(), "The application currently does not support file picking from apps other than File Managers.",
+                                    Toast.LENGTH_SHORT).show();
+                            resultCode = Activity.RESULT_CANCELED;
+                        }
+
+                        if(fileChoosen!=null) {
+                            tv_choose_file.setText(fileChoosen.getName());
+                        } else {
+                            break;
+                        }
                         bt_upload.setEnabled(true);
 
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
-
                     }
                 }
                 break;
@@ -224,5 +236,7 @@ public class DocumentDialogFragment extends DialogFragment {
         );
 
     }
+
+
 
 }
