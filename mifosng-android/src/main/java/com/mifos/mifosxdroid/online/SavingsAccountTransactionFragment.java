@@ -297,9 +297,6 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
                                         Toast.LENGTH_LONG).show();
                                 getActivity().getSupportFragmentManager().popBackStackImmediate();
 
-                            } else {
-                                //Transaction Type Not Set - So user should never reach here
-                                //TODO - Ask Vishwas about how to handle such events
                             }
                         }
 

@@ -383,7 +383,8 @@ public class API {
          * @param genericResponseCallback - Response Callback
          */
         @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_MULTIPART_FORM_DATA})
+        //For some reason you cannot set these headers for this request.
+        //@Headers({ACCEPT_JSON, CONTENT_TYPE_MULTIPART_FORM_DATA})
         @Multipart
         public void createDocument(@Path("entityType") String entityType,
                                    @Path("entityId") int entityId,

@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.MimeTypeMap;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -13,17 +12,12 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
-import java.io.File;
-
 import butterknife.ButterKnife;
 
 public class ClientActivity extends ActionBarActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
         LoanAccountSummaryFragment.OnFragmentInteractionListener,
         LoanRepaymentFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {
-
-    private static final int FILE_SELECT_CODE = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

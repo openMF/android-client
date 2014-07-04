@@ -4,11 +4,9 @@ public class ShortOfLengthException extends Exception{
 
     private int minimumCharacters;
     private String inputField;
-    public ShortOfLengthException(){
-        super();
-    }
 
     public ShortOfLengthException(String inputField,int minimumCharacters){
+        super();
         this.minimumCharacters = minimumCharacters;
         this.inputField = inputField;
     }

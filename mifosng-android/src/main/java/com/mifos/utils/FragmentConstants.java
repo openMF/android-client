@@ -5,16 +5,18 @@ package com.mifos.utils;
  */
 public class FragmentConstants {
 
-    public static String FRAG_CLIENT_DETAILS = "Client Details Fragment";
+    public static final String FRAG_DOCUMENT_LIST = "Document List Fragment";
 
-    public static String FRAG_LOAN_ACCOUNT_SUMMARY = "Loan Account Summary Fragment";
+    public static final String FRAG_CLIENT_DETAILS = "Client Details Fragment";
 
-    public static String FRAG_SAVINGS_ACCOUNT_SUMMARY = "Savings Account Summary Fragment";
+    public static final String FRAG_LOAN_ACCOUNT_SUMMARY = "Loan Account Summary Fragment";
 
-    public static String FRAG_CENTER_LIST = "Centers List Fragment";
+    public static final String FRAG_SAVINGS_ACCOUNT_SUMMARY = "Savings Account Summary Fragment";
 
-    public static String FRAG_GROUP_LIST = "Group List Fragment";
+    public static final String FRAG_CENTER_LIST = "Centers List Fragment";
 
-    public static String DFRAG_DATE_PICKER = "Date Picker";
+    public static final String FRAG_GROUP_LIST = "Group List Fragment";
+
+    public static final String DFRAG_DATE_PICKER = "Date Picker";
 
 }
