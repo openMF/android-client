@@ -28,7 +28,7 @@ import java.util.Iterator;
 public class DataTableUIBuilder {
 
 
-    public static LinearLayout getDataTableLayout(DataTable dataTable, JsonArray jsonElements, LinearLayout linearLayout, Context context){
+    public static LinearLayout getDataTableLayout(DataTable dataTable, JsonArray jsonElements, LinearLayout parentLayout, Context context){
 
         Log.i("Number of Column Headers", "" + dataTable.getColumnHeaderData().size());
 
@@ -76,13 +76,15 @@ public class DataTableUIBuilder {
 
             View v = new View(context);
             v.setBackgroundColor(context.getResources().getColor(R.color.black));
-            linearLayout.addView(tableLayout);
-            linearLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,1));
+            parentLayout.addView(tableLayout);
+            parentLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,5));
             Log.i("TABLE INDEX", ""+tableIndex);
             tableIndex++;
         }
 
-        return linearLayout;
+
+
+        return parentLayout;
 
     }
 

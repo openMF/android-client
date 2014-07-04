@@ -39,8 +39,9 @@ public class DataTableDataFragment extends Fragment {
 
     View rootView;
 
-    SafeUIBlockingUtility safeUIBlockingUtility;
+    LinearLayout linearLayout;
 
+    SafeUIBlockingUtility safeUIBlockingUtility;
 
     public static DataTableDataFragment newInstance(DataTable dataTable, int entityId) {
 
@@ -66,6 +67,8 @@ public class DataTableDataFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false);
 
+         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
+
         activity = (ActionBarActivity) getActivity();
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle(dataTable.getRegisteredTableName());
@@ -77,7 +80,7 @@ public class DataTableDataFragment extends Fragment {
             public void success(JsonArray jsonElements, Response response) {
 
                 if (jsonElements != null) {
-                    rootView = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, (LinearLayout) rootView, getActivity());
+                    linearLayout = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity());
                 }
             }
 
