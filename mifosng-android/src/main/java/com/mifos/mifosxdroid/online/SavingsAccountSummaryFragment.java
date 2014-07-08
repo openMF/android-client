@@ -455,8 +455,8 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
         // If Savings account is not active, disable Deposit and Withdrawal Capability
         if (!status.getActive()) {
-            bt_deposit.setEnabled(false);
-            bt_withdrawal.setEnabled(false);
+            bt_deposit.setVisibility(View.GONE);
+            bt_withdrawal.setVisibility(View.GONE);
         }
 
     }
