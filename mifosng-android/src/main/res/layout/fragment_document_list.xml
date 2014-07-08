@@ -16,16 +16,18 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#ffd1d1d1">
+            android:background="#ffd1d1d1"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:text="@string/name"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
 
             <TextView
@@ -33,11 +35,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:text="@string/description"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
-                android:layout_marginRight="48dp"/>
+                android:layout_marginRight="24dp"/>
 
         </TableRow>
 
