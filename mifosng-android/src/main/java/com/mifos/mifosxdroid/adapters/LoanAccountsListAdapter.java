@@ -60,14 +60,21 @@ public class LoanAccountsListAdapter extends BaseAdapter {
         }
 
         if(loanAccountList.get(i).getStatus().getActive()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_disbursed));
+
         } else if (loanAccountList.get(i).getStatus().getWaitingForDisbursal()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_yellow));
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_approved));
 
         } else if (loanAccountList.get(i).getStatus().getPendingApproval()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.blue));
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_submitted_and_pending_approval));
+
         } else {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.black));
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_closed));
+
         }
 
         //TODO : Change getProductName to Loan Amount Due

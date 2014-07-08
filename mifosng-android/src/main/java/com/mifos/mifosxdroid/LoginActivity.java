@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -26,6 +28,8 @@ import org.apache.http.HttpStatus;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -58,6 +62,12 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private String authenticationToken;
     private ProgressDialog progressDialog;
     private String tag = getClass().getSimpleName();
+
+    private Pattern domainNamePattern;
+    private Matcher domainNameMatcher;
+
+    private static final String DOMAIN_NAME_REGEX_PATTERN =  "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +89,41 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         else {
             Log.i(tag, "login button is not null");
         }
+
+        domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);
+
         tv_constructed_instance_url.setText(PROTOCOL_HTTPS + previouslyEnteredUrl + API_PATH);
         et_instanceURL.setText(previouslyEnteredUrl);
+
+        et_instanceURL.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                String textUnderConstruction = PROTOCOL_HTTPS + editable.toString() + API_PATH;
+                tv_constructed_instance_url.setText(textUnderConstruction);
+
+                if(!validateDomain(editable.toString())) {
+                    tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
+                } else {
+                    tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
+                }
+
+            }
+        });
     }
 
     public void setupUI()
@@ -96,6 +139,11 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
         String urlInputValue = et_instanceURL.getEditableText().toString();
         try {
+
+            if(!validateDomain(urlInputValue)) {
+                return false;
+            }
+
             String validDomain = validateInstanceUrl(urlInputValue);
             Log.d("Filtered URL", validDomain);
             String constructedURL = PROTOCOL_HTTPS + validDomain + API_PATH;
@@ -138,10 +186,13 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     @Override
     public void failure(RetrofitError retrofitError) {
-        progressDialog.dismiss();
-
-        if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
-            Toast.makeText(context, getString(R.string.error_login_failed), Toast.LENGTH_SHORT).show();
+        try {
+            progressDialog.dismiss();
+            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
+                Toast.makeText(context, getString(R.string.error_login_failed), Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            Toast.makeText(context, getString(R.string.error_unknown), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick(R.id.bt_login)
@@ -229,6 +280,12 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
         return filteredUrl;
 
+    }
+
+    public boolean validateDomain(final String hex) {
+
+        domainNameMatcher = domainNamePattern.matcher(hex);
+        return domainNameMatcher.matches();
     }
 
 }
