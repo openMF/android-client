@@ -146,6 +146,13 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
+    /**Image Loading Task for this instance
+      Creating an instance object because if the fragment detaches itself from the activity
+      The task might throw IllegalStateException
+      So it is important to kill the task before the fragment detaches itself from the activity
+    */
+    private ImageLoadingAsyncTask imageLoadingAsyncTask;
+
     public ClientDetailsFragment() {
         // Required empty public constructor
     }
@@ -215,7 +222,13 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     @Override
     public void onDetach() {
+
+        if (!imageLoadingAsyncTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            imageLoadingAsyncTask.cancel(true);
+        }
+
         super.onDetach();
+
     }
 
     @Override
@@ -371,14 +384,16 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     @Override
                     public void success(Response response, Response response2) {
                         Toast.makeText(activity, "Client image updated", Toast.LENGTH_SHORT).show();
-                        new ImageLoadingAsyncTask().execute(clientId);
+                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+                        imageLoadingAsyncTask.execute(clientId);
 
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         Toast.makeText(activity, "Failed to update image", Toast.LENGTH_SHORT).show();
-                        new ImageLoadingAsyncTask().execute(clientId);
+                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+                        imageLoadingAsyncTask.execute(clientId);
 
                     }
                 }
@@ -410,7 +425,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     // argument type from TypedFile to something else?
                     if (client.isImagePresent()) {
 
-                        new ImageLoadingAsyncTask().execute(client.getId());
+                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+                        imageLoadingAsyncTask.execute(client.getId());
 
                     }
 
