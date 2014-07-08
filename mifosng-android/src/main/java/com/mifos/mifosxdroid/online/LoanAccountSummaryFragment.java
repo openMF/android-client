@@ -194,7 +194,7 @@ public class LoanAccountSummaryFragment extends Fragment {
                 tv_loanAccountNumber.setText("#" + loanWithAssociations.getAccountNo());
                 tv_loan_officer.setText(loanWithAssociations.getLoanOfficerName());
                 //TODO Implement QuickContactBadge
-                quickContactBadge.setImageToDefault();
+                //quickContactBadge.setImageToDefault();
 
 
                 bt_processLoanTransaction.setEnabled(true);

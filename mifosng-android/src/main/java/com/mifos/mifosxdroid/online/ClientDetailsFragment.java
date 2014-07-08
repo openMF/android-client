@@ -707,8 +707,12 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public void onConnected(Bundle bundle) {
         locationAvailable.set(true);
         Log.d(getActivity().getLocalClassName(), "Connected to location services");
-        Log.d(getActivity().getLocalClassName(), "Current location: "
-                + mLocationClient.getLastLocation().toString());
+        try {
+            Log.d(getActivity().getLocalClassName(), "Current location: "
+                    + mLocationClient.getLastLocation().toString());
+        } catch (NullPointerException e) {
+            //Location client is Null
+        }
     }
 
     @Override
@@ -785,21 +789,23 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     public void saveLocation() {
 
-        if (locationAvailable.get()) {
-            final Location location = mLocationClient.getLastLocation();
+        try {
+
+            if (locationAvailable.get()) {
+                final Location location = mLocationClient.getLastLocation();
 
 
-            API.gpsCoordinatesService.setGpsCoordinates(clientId,
-                    new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
-                    new Callback<GpsCoordinatesResponse>() {
-                        @Override
-                        public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
-                            Toast.makeText(getActivity(), "Current location saved successfully: "
-                                    + location.toString(), Toast.LENGTH_SHORT).show();
-                        }
+                API.gpsCoordinatesService.setGpsCoordinates(clientId,
+                        new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
+                        new Callback<GpsCoordinatesResponse>() {
+                            @Override
+                            public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
+                                Toast.makeText(getActivity(), "Current location saved successfully: "
+                                        + location.toString(), Toast.LENGTH_SHORT).show();
+                            }
 
-                        @Override
-                        public void failure(RetrofitError retrofitError) {
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
 
                                 /*
                                   *  TODO:
@@ -808,45 +814,68 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                                   *  2. Implement a proper mechanism to read the error messages and perform actions based on them
                                   *
                                  */
-                            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
+                                if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
 
-                                API.gpsCoordinatesService.updateGpsCoordinates(clientId,
-                                        new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
-                                        new Callback<GpsCoordinatesResponse>() {
-                                            @Override
-                                            public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
+                                    API.gpsCoordinatesService.updateGpsCoordinates(clientId,
+                                            new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
+                                            new Callback<GpsCoordinatesResponse>() {
+                                                @Override
+                                                public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
 
-                                                Toast.makeText(getActivity(), "Current location updated successfully: "
-                                                        + location.toString(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getActivity(), "Current location updated successfully: "
+                                                            + location.toString(), Toast.LENGTH_SHORT).show();
 
+                                                }
+
+                                                @Override
+                                                public void failure(RetrofitError retrofitError) {
+
+                                                    Toast.makeText(getActivity(), "Current location could not be updated: "
+                                                            + location.toString(), Toast.LENGTH_SHORT).show();
+                                                }
                                             }
+                                    );
 
-                                            @Override
-                                            public void failure(RetrofitError retrofitError) {
+                                } else {
 
-                                                Toast.makeText(getActivity(), "Current location could not be updated: "
-                                                        + location.toString(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                );
+                                    Toast.makeText(getActivity(), "Current location could not be saved: "
+                                            + location.toString(), Toast.LENGTH_SHORT).show();
 
-                            } else {
-
-                                Toast.makeText(getActivity(), "Current location could not be saved: "
-                                        + location.toString(), Toast.LENGTH_SHORT).show();
+                                }
 
                             }
-
                         }
-                    }
-            );
+                );
 
-        } else {
-            // Display the connection status
-            Toast.makeText(getActivity(), "Location not available",
+            } else {
+                // Display the connection status
+                Toast.makeText(getActivity(), "Location not available",
+                        Toast.LENGTH_SHORT).show();
+                Log.w(getActivity().getLocalClassName(), "Location not available");
+            }
+        } catch (NullPointerException e) {
+            Toast.makeText(getActivity(), activity.getString(R.string.error_save_location_not_available),
                     Toast.LENGTH_SHORT).show();
-            Log.w(getActivity().getLocalClassName(), "Location not available");
         }
+    }
+
+    public void loadDocuments() {
+
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.global_container, documentListFragment);
+        fragmentTransaction.commit();
+
+    }
+
+    public void loadIdentifiers() {
+
+        ClientIdentifiersFragment clientIdentifiersFragment = ClientIdentifiersFragment.newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.global_container, clientIdentifiersFragment);
+        fragmentTransaction.commit();
 
     }
 
@@ -916,26 +945,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             }
 
         }
-    }
-
-    public void loadDocuments() {
-
-        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.global_container, documentListFragment);
-        fragmentTransaction.commit();
-
-    }
-
-    public void loadIdentifiers() {
-
-        ClientIdentifiersFragment clientIdentifiersFragment = ClientIdentifiersFragment.newInstance(clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.global_container, clientIdentifiersFragment);
-        fragmentTransaction.commit();
-
     }
 
 }
