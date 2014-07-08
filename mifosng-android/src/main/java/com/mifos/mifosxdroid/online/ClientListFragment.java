@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.mifos.mifosxdroid.CenterDetailsActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
@@ -18,13 +22,17 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
+
 import org.apache.http.HttpStatus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -126,8 +134,8 @@ public class ClientListFragment extends Fragment {
                 public void failure(RetrofitError retrofitError) {
 
                     if(getActivity() != null) {
-                        Log.i("Error", "" + retrofitError.getResponse().getStatus());
                         try {
+                            Log.i("Error", "" + retrofitError.getResponse().getStatus());
                             if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                                 Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getActivity(), LogoutActivity.class));
