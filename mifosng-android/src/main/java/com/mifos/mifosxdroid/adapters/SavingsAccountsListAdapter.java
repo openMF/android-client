@@ -62,13 +62,19 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
         }
 
         if(savingsAccountList.get(i).getStatus().getActive()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.savings_account_status_active));
+
         } else if (savingsAccountList.get(i).getStatus().getApproved()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_yellow));
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_approved));
+
         } else if (savingsAccountList.get(i).getStatus().getSubmittedAndPendingApproval()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.blue));
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_submitted_and_pending_approval));
+
         } else {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.black));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_closed));
         }
 
         Double accountBalance = savingsAccountList.get(i).getAccountBalance();

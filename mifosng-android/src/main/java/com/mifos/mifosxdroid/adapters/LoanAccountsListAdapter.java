@@ -65,15 +65,15 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
         } else if (loanAccountList.get(i).getStatus().getWaitingForDisbursal()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_approved));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_approved));
 
         } else if (loanAccountList.get(i).getStatus().getPendingApproval()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_submitted_and_pending_approval));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_submitted_and_pending_approval));
 
         } else {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_closed));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_closed));
 
         }
 

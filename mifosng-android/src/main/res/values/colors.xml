@@ -12,10 +12,15 @@
     <color name="blue">#ff003fff</color>
     <color name="red">#FF0000</color>
 
+    <!-- Color resources common to Accounts -->
+    <color name="status_submitted_and_pending_approval">#FFA500</color>
+    <color name="status_approved">#0536E4</color>
+
     <!-- Color resources for Loan Account Statuses -->
-    <color name="loan_status_submitted_and_pending_approval">#FFA500</color>
-    <color name="loan_status_approved">#0536E4</color>
     <color name="loan_status_disbursed">#008000</color>
-    <color name="loan_status_closed">#555555</color>
+    <color name="status_closed">#555555</color>
+
+    <!-- Color resources for Savings Account Statuses -->
+    <color name="savings_account_status_active">#008000</color>
 
 </resources>
