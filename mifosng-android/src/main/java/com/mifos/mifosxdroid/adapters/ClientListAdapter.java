@@ -8,13 +8,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import android.widget.Toast;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.db.Loan;
 
 import java.util.List;
 import java.util.Map;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class ClientListAdapter extends BaseAdapter {
@@ -103,11 +106,15 @@ public class ClientListAdapter extends BaseAdapter {
         public void onFocusChange(View v, boolean hasFocus) {
             if (!hasFocus) {
                 Loan loan =(Loan) (v.getTag());
-                int changedValue = Integer.parseInt(((EditText) v).getText().toString());
-                listPaidAmounts.put(loan, changedValue);
-                loan.totalDue = changedValue;
-                loan.save();
-                notifyDataSetChanged();
+                try {
+                    int changedValue = Integer.parseInt(((EditText) v).getText().toString());
+                    listPaidAmounts.put(loan, changedValue);
+                    loan.totalDue = changedValue;
+                    loan.save();
+                    notifyDataSetChanged();
+                } catch (NumberFormatException e) {
+                    Toast.makeText(context, context.getString(R.string.error_invalid_amount), Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

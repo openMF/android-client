@@ -149,6 +149,7 @@
     <string name="error_unknown">There was some error processing your request.</string>
     <string name="error_save_location_not_available">Location Unavailable, Please try again later!</string>
     <string name="list_all_clients">Client List</string>
+    <string name="error_invalid_amount">Invalid Amount Entered</string>
 
 
 </resources>
