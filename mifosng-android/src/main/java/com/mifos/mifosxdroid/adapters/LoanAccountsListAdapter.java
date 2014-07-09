@@ -71,6 +71,10 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_submitted_and_pending_approval));
 
+        } else if (loanAccountList.get(i).getStatus().getActive() && loanAccountList.get(i).getInArrears()) {
+
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.red));
+
         } else {
 
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_closed));

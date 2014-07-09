@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.mifos.mifosxdroid.CenterDetailsActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.objects.client.Client;
@@ -85,11 +84,6 @@ public class ClientListFragment extends Fragment {
             case R.id.mItem_search:
                 startActivity(new Intent(getActivity(), ClientSearchActivity.class));
                 break;
-
-            case R.id.offline_menu:
-                startActivity(new Intent(getActivity(), CenterDetailsActivity.class));
-                break;
-
             default: //DO NOTHING
                 break;
         }

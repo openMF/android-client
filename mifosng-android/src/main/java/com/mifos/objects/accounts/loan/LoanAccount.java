@@ -16,6 +16,10 @@ public class LoanAccount {
     private Status status;
     private LoanType loanType;
     private Integer loanCycle;
+    private Boolean inArrears;
+
+
+
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
@@ -117,9 +121,12 @@ public class LoanAccount {
         this.loanCycle = loanCycle;
     }
 
-    public LoanAccount withLoanCycle(Integer loanCycle) {
-        this.loanCycle = loanCycle;
-        return this;
+    public Boolean getInArrears() {
+        return inArrears;
+    }
+
+    public void setInArrears(Boolean inArrears) {
+        this.inArrears = inArrears;
     }
 
     @Override

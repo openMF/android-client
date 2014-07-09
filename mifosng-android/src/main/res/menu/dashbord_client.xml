@@ -13,12 +13,6 @@
         android:showAsAction="ifRoom"
         android:title="@string/center"/>
 
-    <item
-        android:id="@+id/offline_menu"
-        android:enabled="true"
-        android:showAsAction="ifRoom"
-        android:title="@string/offline" />
-
     <item android:id="@+id/logout"
         android:enabled="true"
         android:showAsAction="ifRoom"

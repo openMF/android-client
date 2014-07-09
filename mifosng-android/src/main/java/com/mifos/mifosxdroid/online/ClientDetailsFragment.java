@@ -277,7 +277,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         menu.clear();
         //TODO : Localisation of Menu Item Strings
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
-        menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, getString(R.string.action_save_location));
+        //TODO Enable Save Location
+        //menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, getString(R.string.action_save_location));
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
         menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
