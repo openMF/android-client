@@ -215,9 +215,14 @@ public class API {
 
     public interface ClientService {
 
+        //This is a default call and Loads client from 0 to 200
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CLIENTS)
         public void listAllClients(Callback<Page<Client>> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CLIENTS)
+        public void listAllClients(@Query("offset")int offset, @Query("limit")int limit, Callback<Page<Client>> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CLIENTS + "/{clientId}")
