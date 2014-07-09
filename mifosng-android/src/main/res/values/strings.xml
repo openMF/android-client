@@ -148,6 +148,7 @@
     <string name="error_request_timed_out">Request Timed Out</string>
     <string name="error_unknown">There was some error processing your request.</string>
     <string name="error_save_location_not_available">Location Unavailable, Please try again later!</string>
+    <string name="list_all_clients">Client List</string>
 
 
 </resources>

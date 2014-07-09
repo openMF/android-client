@@ -2,9 +2,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mifos.mifosxdroid.online.ClientSearchActivity" >
-    
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mItem_list"
+        android:enabled="true"
+        android:showAsAction="ifRoom"
+        android:title="@string/list_all_clients" />
+
+    <item android:id="@+id/item_centers"
+        android:enabled="true"
+        android:showAsAction="ifRoom"
+        android:title="@string/center"/>
+
+    <item android:id="@+id/logout"
+        android:enabled="true"
+        android:showAsAction="ifRoom"
+        android:title="@string/logout" />
 </menu>

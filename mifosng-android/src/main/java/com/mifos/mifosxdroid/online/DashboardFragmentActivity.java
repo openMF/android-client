@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
@@ -35,10 +36,13 @@ public class DashboardFragmentActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        getMenuInflater().inflate(R.menu.client_search, menu);
 
-
-
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -47,6 +51,9 @@ public class DashboardFragmentActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.item_centers:
                 startActivity(new Intent(this, CentersActivity.class));
+                break;
+            case R.id.mItem_list :
+                loadClientList();
                 break;
             case R.id.logout:
                 startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));
@@ -57,4 +64,17 @@ public class DashboardFragmentActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void loadClientList() {
+
+        ClientListFragment clientListFragment = new ClientListFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SEARCH);
+        fragmentTransaction.replace(R.id.dashboard_global_container, clientListFragment);
+        fragmentTransaction.commit();
+
+    }
+
 }
+
+
