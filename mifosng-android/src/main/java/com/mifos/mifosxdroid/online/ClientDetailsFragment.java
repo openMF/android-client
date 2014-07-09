@@ -48,6 +48,7 @@ import com.mifos.services.API;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.utils.Constants;
+import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
@@ -421,7 +422,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     tv_fullName.setText(client.getDisplayName());
                     tv_accountNumber.setText(client.getAccountNo());
                     tv_externalId.setText(client.getExternalId());
-                    tv_activationDate.setText(client.getFormattedActivationDateAsString());
+                    tv_activationDate.setText(DateHelper.getDateAsString(client.getActivationDate()));
                     tv_office.setText(client.getOfficeName());
 
                     // TODO: For some reason Retrofit always calls the failure() method even after
@@ -501,6 +502,9 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
                 final Iconify.IconValue listOpenIcon = Iconify.IconValue.fa_minus_circle;
                 final Iconify.IconValue listClosedIcon = Iconify.IconValue.fa_plus_circle;
+                tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
+                tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
+                Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
 
                 if (clientAccounts.getLoanAccounts().size() > 0) {
@@ -592,9 +596,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
                         }
                     });
-
-                    //Adding Icons to the TextView by this call
-                    Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
                     lv_accounts_savings.setAdapter(savingsAccountsListAdapter);
                     lv_accounts_savings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
