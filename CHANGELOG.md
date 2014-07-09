@@ -1,13 +1,13 @@
 #Changelog
-======
+
 
 #Releases
-===============
+
 
 1. 06 July 2014 - 0.0.1-alpha
 
 ##0.0.1-alpha
-===============
+
 Allows login/logout functionality with manually 
 configurable mifos-instances. 
 
