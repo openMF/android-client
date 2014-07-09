@@ -223,8 +223,11 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     @Override
     public void onDetach() {
 
-        if (!imageLoadingAsyncTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
-            imageLoadingAsyncTask.cancel(true);
+        if(imageLoadingAsyncTask != null) {
+
+            if (!imageLoadingAsyncTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+                imageLoadingAsyncTask.cancel(true);
+            }
         }
 
         super.onDetach();
