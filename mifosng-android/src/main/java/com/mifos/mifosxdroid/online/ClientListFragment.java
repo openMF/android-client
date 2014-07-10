@@ -51,7 +51,6 @@ public class ClientListFragment extends Fragment {
     private int limit = 200;
     private int index = 0;
     private int top = 0;
-
     public ClientListFragment() {
 
     }
@@ -75,7 +74,13 @@ public class ClientListFragment extends Fragment {
                 R.color.green_light,
                 R.color.orange_light,
                 R.color.red_light);
-
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Do Nothing For Now
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         fetchClientList();
 
@@ -109,49 +114,50 @@ public class ClientListFragment extends Fragment {
 
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
 
-                    offset += limit + 1;
-                    swipeRefreshLayout.setRefreshing(true);
+                        offset += limit + 1;
+                        swipeRefreshLayout.setRefreshing(true);
 
-                    API.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
-                        @Override
-                        public void success(Page<Client> clientPage, Response response) {
+                        API.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
+                            @Override
+                            public void success(Page<Client> clientPage, Response response) {
 
-                            clientList.addAll(clientPage.getPageItems());
-                            clientNameListAdapter.notifyDataSetChanged();
-                            index = lv_clients.getFirstVisiblePosition();
-                            View v = lv_clients.getChildAt(0);
-                            top = (v == null) ? 0 : v.getTop();
-                            lv_clients.setSelectionFromTop(index, top);
-                            swipeRefreshLayout.setRefreshing(false);
-
-                        }
-
-                        @Override
-                        public void failure(RetrofitError retrofitError) {
-
-                            swipeRefreshLayout.setRefreshing(false);
-
-                            if (getActivity() != null) {
-                                try {
-                                    Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                                    if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                        Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(getActivity(), LogoutActivity.class));
-                                        getActivity().finish();
-
-                                    } else {
-                                        Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (NullPointerException npe) {
-                                    Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
-
-                                }
-
+                                clientList.addAll(clientPage.getPageItems());
+                                clientNameListAdapter.notifyDataSetChanged();
+                                index = lv_clients.getFirstVisiblePosition();
+                                View v = lv_clients.getChildAt(0);
+                                top = (v == null) ? 0 : v.getTop();
+                                lv_clients.setSelectionFromTop(index, top);
+                                swipeRefreshLayout.setRefreshing(false);
 
                             }
 
-                        }
-                    });
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+
+                                swipeRefreshLayout.setRefreshing(false);
+
+                                if (getActivity() != null) {
+                                    try {
+                                        Log.i("Error", "" + retrofitError.getResponse().getStatus());
+                                        if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                                            Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getActivity(), LogoutActivity.class));
+                                            getActivity().finish();
+
+                                        } else {
+                                            Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (NullPointerException npe) {
+                                        Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+
+                                }
+
+                            }
+
+                        });
 
                 }
 
