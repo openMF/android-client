@@ -29,6 +29,9 @@ android {
     }
     buildTypes {
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 task nativeLibsToJar(type: Zip, description: 'create a jar archive of the native libs') {

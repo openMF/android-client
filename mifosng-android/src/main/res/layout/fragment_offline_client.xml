@@ -33,12 +33,10 @@
             android:id="@+id/tv_total_amt_paid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_clientName"
             android:background="@drawable/rounded_background"
-            android:inputType="number"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="10000000"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
     </LinearLayout>
