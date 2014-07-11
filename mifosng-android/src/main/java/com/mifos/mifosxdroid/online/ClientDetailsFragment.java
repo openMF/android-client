@@ -504,6 +504,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                 final Iconify.IconValue listClosedIcon = Iconify.IconValue.fa_plus_circle;
                 tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
                 tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
+
                 Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
 
@@ -619,6 +620,9 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     });
 
                 }
+
+
+                Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
                 safeUIBlockingUtility.safelyUnBlockUI();
 
