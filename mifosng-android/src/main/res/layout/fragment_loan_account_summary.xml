@@ -26,7 +26,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.8"
                 android:text="Client Name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:tag="normal"/>
 
             <QuickContactBadge
                 android:id="@+id/quickContactBadge_client"

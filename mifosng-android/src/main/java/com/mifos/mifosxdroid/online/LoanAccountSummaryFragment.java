@@ -190,6 +190,12 @@ public class LoanAccountSummaryFragment extends Fragment {
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
                 clientLoanWithAssociations = loanWithAssociations;
                 tv_clientName.setText(loanWithAssociations.getClientName());
+
+                try {
+                    Log.i("TAG", tv_clientName.getTag().toString());
+                }catch (Exception e) {
+
+                }
                 tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());
                 tv_loanAccountNumber.setText("#" + loanWithAssociations.getAccountNo());
                 tv_loan_officer.setText(loanWithAssociations.getLoanOfficerName());
