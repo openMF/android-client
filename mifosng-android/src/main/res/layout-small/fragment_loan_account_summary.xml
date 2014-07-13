@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_margin="@dimen/activity_vertical_margin">
 
 
         <LinearLayout
@@ -27,8 +26,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.8"
                 android:text="Client Name"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:tag="normal"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:tag="small"/>
 
             <QuickContactBadge
                 android:id="@+id/quickContactBadge_client"
@@ -70,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:text="Product Name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/tv_loanAccountNumber"
@@ -78,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:gravity="right"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
 
@@ -100,7 +99,7 @@
             android:layout_below="@id/divider_2"
             android:layout_marginTop="8dp"
             android:text="@string/loan_amount_disbursed"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/tv_amount_disbursed"
@@ -111,12 +110,12 @@
             android:layout_below="@+id/divider_2"
             android:layout_marginTop="8dp"
             android:gravity="right"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/loan_disbursement_date"
             android:id="@+id/loan_disbursement_date"
             android:layout_below="@+id/loan_amount_disbursed"
@@ -133,7 +132,7 @@
             android:layout_below="@+id/loan_amount_disbursed"
             android:layout_marginTop="8dp"
             android:gravity="right"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/in_arrears"
@@ -144,7 +143,7 @@
             android:layout_below="@+id/tv_disbursement_date"
             android:layout_marginTop="8dp"
             android:text="@string/loan_in_arrears"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/tv_in_arrears"
@@ -155,7 +154,7 @@
             android:layout_below="@+id/tv_disbursement_date"
             android:layout_marginTop="8dp"
             android:gravity="right"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/loan_officer"
@@ -166,7 +165,7 @@
             android:layout_below="@+id/tv_in_arrears"
             android:layout_marginTop="8dp"
             android:text="@string/loan_officer"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/tv_loan_officer"
@@ -178,7 +177,7 @@
             android:layout_below="@+id/tv_in_arrears"
             android:layout_marginTop="8dp"
             android:gravity="right"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
         <TableLayout
@@ -196,10 +195,6 @@
                 android:layout_height="fill_parent"
                 android:background="#ffd1d1d1">
 
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    >
 
                 <TextView
                     android:id="@+id/textView"
@@ -207,8 +202,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/summary"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/textView2"
@@ -217,8 +212,8 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:text="@string/original_loan"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/textView3"
@@ -227,8 +222,8 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:text="@string/amount_paid"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/textView4"
@@ -237,9 +232,8 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:text="@string/loan_balance"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-                </LinearLayout>
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
             </TableRow>
 
             <TableRow
@@ -247,46 +241,37 @@
                 android:layout_height="fill_parent"
                 android:padding="4dp">
 
-                <LinearLayout android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    >
+                    android:layout_weight="1"
+                    android:text="@string/loan_principal"
+                    android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/loan_principal"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/tv_principal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/tv_principal"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/tv_loan_principal_paid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/tv_loan_principal_paid"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <TextView
-                        android:id="@+id/tv_loan_principal_due"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                </LinearLayout>
-
-
+                <TextView
+                    android:id="@+id/tv_loan_principal_due"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:textSize="12sp" />
             </TableRow>
 
             <TableRow
@@ -294,11 +279,6 @@
                 android:layout_height="fill_parent"
                 android:background="#DEDEDE"
                 android:padding="4dp">
-
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    >
 
                 <TextView
                     android:id="@+id/textView6"
@@ -306,7 +286,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/loan_interest"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_interest"
@@ -314,7 +294,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_loan_interest_paid"
@@ -322,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                     />
 
                 <TextView
                     android:id="@+id/tv_loan_interest_due"
@@ -330,8 +310,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
+                    android:textSize="12sp" />
             </TableRow>
 
             <TableRow
@@ -339,17 +318,13 @@
                 android:layout_height="fill_parent"
                 android:padding="4dp">
 
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    >
                 <TextView
                     android:id="@+id/textView7"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/loan_fees"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_fees"
@@ -357,8 +332,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp"
+                     />
 
                 <TextView
                     android:id="@+id/tv_loan_fees_paid"
@@ -366,7 +341,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_loan_fees_due"
@@ -374,8 +349,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
+                    android:textSize="12sp" />
             </TableRow>
 
             <TableRow
@@ -384,17 +358,13 @@
                 android:background="#DEDEDE"
                 android:padding="4dp">
 
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    >
                 <TextView
                     android:id="@+id/textView8"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/loan_penalty"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_penalty"
@@ -402,8 +372,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp"
+                     />
 
                 <TextView
                     android:id="@+id/tv_loan_penalty_paid"
@@ -411,7 +381,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_loan_penalty_due"
@@ -419,27 +389,22 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
+                    android:textSize="12sp" />
+
             </TableRow>
 
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:padding="4dp"
-                >
+                android:padding="4dp">
 
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    >
                 <TextView
                     android:id="@+id/textView9"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/total"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_total"
@@ -447,7 +412,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_total_paid"
@@ -455,7 +420,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_total_due"
@@ -463,8 +428,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
+                    android:textSize="12sp"/>
+
             </TableRow>
 
         </TableLayout>
