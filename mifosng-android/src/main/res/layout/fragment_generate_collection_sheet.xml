@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Branch Office"
+            android:text="@string/office"
             android:id="@+id/label_branch_office"
             android:layout_weight="1"
             />
@@ -49,9 +49,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Meeting Calendar"
+            android:text="@string/meeting_date"
             android:layout_weight="1"
-            android:id="@+id/label_meeting_calendar" />
+            android:id="@+id/label_meeting_date" />
 
         <TextView
             android:layout_width="0dp"
@@ -75,7 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Staff"
+            android:text="@string/staff_name"
             android:layout_weight="1"
             android:id="@+id/label_staff" />
 
@@ -98,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Center"
+            android:text="@string/center"
             android:layout_weight="1"
             android:id="@+id/label_center_name" />
 
@@ -121,7 +121,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Group"
+            android:text="@string/group"
             android:layout_weight="1"
             android:id="@+id/label_group" />
 
@@ -135,7 +135,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Generate Collection Sheet"
+        android:text="@string/generate_collection_sheet"
         android:id="@+id/bt_generate_collection_sheet"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"

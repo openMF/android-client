@@ -12,7 +12,7 @@
     <item android:id="@+id/item_centers"
         android:enabled="true"
         app:showAsAction="never"
-        android:title="@string/center"/>
+        android:title="@string/center_list"/>
 
     <item android:id="@+id/item_collection_sheet"
         android:enabled="true"

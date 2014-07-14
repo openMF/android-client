@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 
 import com.mifos.mifosxdroid.R;
 
-/**
- * A simple {@link Fragment} subclass.
- *
- */
 public class GenerateCollectionSheetFragment extends Fragment {
+
+
 
 
     View rootView;
