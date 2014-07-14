@@ -55,6 +55,9 @@ public class DashboardFragmentActivity extends ActionBarActivity {
             case R.id.mItem_list :
                 loadClientList();
                 break;
+            case R.id.item_collection_sheet :
+                startActivity(new Intent(DashboardFragmentActivity.this, GenerateCollectionSheet.class));
+                break;
             case R.id.logout:
                 startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));
                 break;

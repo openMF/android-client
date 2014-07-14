@@ -152,6 +152,6 @@
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="process_loan_transaction">Process Loan Transaction</string>
     <string name="collection_sheet">Collection Sheet</string>
-
+    <string name="title_activity_generate_collection_sheet">GenerateCollectionSheet</string>
 
 </resources>
