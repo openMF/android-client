@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.Staff;
 import com.mifos.services.API;
 import com.mifos.utils.SafeUIBlockingUtility;
 
@@ -32,12 +33,15 @@ import retrofit.client.Response;
 
 public class GenerateCollectionSheetFragment extends Fragment {
 
-    @InjectView(R.id.sp_branch_offices)
-    Spinner sp_offices;
+    @InjectView(R.id.sp_branch_offices) Spinner sp_offices;
+    @InjectView(R.id.sp_loan_officers) Spinner sp_loan_officers;
 
 
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
+
     private List<String> officeNames;
+
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
@@ -106,8 +110,14 @@ public class GenerateCollectionSheetFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                        if (position > 0) {
-                            //inflateStaff
+                        int officeId = officeNameIdHashMap.get(officeNames.get(position));
+
+                        if ( officeId != -1) {
+
+                            inflateStaff(officeId);
+
+                        } else {
+                            //Please select a staff
                         }
 
                     }
@@ -132,6 +142,49 @@ public class GenerateCollectionSheetFragment extends Fragment {
         });
 
     }
+
+    public void inflateStaff(int officeId) {
+
+
+        API.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
+            @Override
+            public void success(List<Staff> staffs, Response response) {
+
+                List<String> staffNames = new ArrayList<String>();
+
+                staffNames.add(getString(R.string.spinner_staff));
+                staffNameIdHashMap.put(getString(R.string.spinner_staff),-1);
+
+                for (Staff staff : staffs) {
+                    staffNames.add(staff.getDisplayName());
+                    staffNameIdHashMap.put(staff.getDisplayName(),staff.getId());
+                }
+
+
+                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, staffNames);
+
+                staffAdapter.notifyDataSetChanged();
+
+                staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_loan_officers.setAdapter(staffAdapter);
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+
+            }
+        });
+
+
+    }
+
+
 
 
 

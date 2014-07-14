@@ -18,4 +18,5 @@ public class APIEndPoint {
     public static final String DOCUMENTS = "/documents";
     public static final String IDENTIFIERS = "/identifiers";
     public static final String OFFICES = "/offices";
+    public static final String STAFF = "/staff";
 }

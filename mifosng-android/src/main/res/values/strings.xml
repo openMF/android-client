@@ -159,5 +159,6 @@
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
+    <string name="spinner_staff">Select Loan Officer</string>
 
 </resources>

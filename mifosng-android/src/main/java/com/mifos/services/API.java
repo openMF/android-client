@@ -5,8 +5,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
-import com.mifos.objects.group.CenterWithAssociations;
-import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -21,10 +19,13 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
+import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.APIEndPoint;
@@ -84,6 +85,7 @@ public class API {
     public static DocumentService documentService;
     public static IdentifierService identifierService;
     public static OfficeService officeService;
+    public static StaffService staffService;
 
     static {
         init();
@@ -106,6 +108,7 @@ public class API {
         documentService = sRestAdapter.create(DocumentService.class);
         identifierService = sRestAdapter.create(IdentifierService.class);
         officeService = sRestAdapter.create(OfficeService.class);
+        staffService = sRestAdapter.create(StaffService.class);
     }
 
     private static RestAdapter createRestAdapter(final String url) {
@@ -477,6 +480,15 @@ public class API {
         @GET(APIEndPoint.OFFICES)
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         public void getAllOffices(Callback<List<Office>> listOfOfficesCallback);
+    }
+
+
+    public interface StaffService {
+
+        @GET(APIEndPoint.STAFF + "?status=all")
+        @Headers({ACCEPT_JSON,CONTENT_TYPE_JSON})
+        public void getStaffForOffice(@Query("officeId")int officeId, Callback<List<Staff>> staffListCallback);
+
     }
 
     static class MifosRestErrorHandler implements ErrorHandler {
