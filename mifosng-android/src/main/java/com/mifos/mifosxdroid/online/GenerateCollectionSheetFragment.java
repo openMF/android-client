@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.group.Center;
+import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.services.API;
@@ -36,23 +38,30 @@ import retrofit.client.Response;
 
 public class GenerateCollectionSheetFragment extends Fragment {
 
-    @InjectView(R.id.sp_branch_offices) Spinner sp_offices;
-    @InjectView(R.id.sp_loan_officers) Spinner sp_loan_officers;
-    @InjectView(R.id.sp_centers) Spinner sp_centers;
+    public static final String LIMIT = "limit";
+    public static final String ORDER_BY = "orderBy";
+    public static final String SORT_ORDER = "sortOrder";
+    public static final String ASCENDING = "ASC";
+    public static final String ORDER_BY_FIELD_NAME = "name";
+    public static final String STAFF_ID = "staffId";
+    @InjectView(R.id.sp_branch_offices)
+    Spinner sp_offices;
+    @InjectView(R.id.sp_loan_officers)
+    Spinner sp_loan_officers;
+    @InjectView(R.id.sp_centers)
+    Spinner sp_centers;
+    @InjectView(R.id.sp_groups)
+    Spinner sp_groups;
 
+    View rootView;
+    SafeUIBlockingUtility safeUIBlockingUtility;
+    ActionBarActivity activity;
+    SharedPreferences sharedPreferences;
+    ActionBar actionBar;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> centerNameIdHashMap = new HashMap<String, Integer>();
-
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
-
-    ActionBarActivity activity;
-
-    SharedPreferences sharedPreferences;
-
-    ActionBar actionBar;
+    private HashMap<String, Integer> groupNameIdHashMap = new HashMap<String, Integer>();
 
     public GenerateCollectionSheetFragment() {
         // Required empty public constructor
@@ -96,12 +105,12 @@ public class GenerateCollectionSheetFragment extends Fragment {
                 officeNameIdHashMap.put(getString(R.string.spinner_office), -1);
                 for (Office office : offices) {
                     officeNames.add(office.getName());
-                    officeNameIdHashMap.put(office.getName(),office.getId());
+                    officeNameIdHashMap.put(office.getName(), office.getId());
                     Log.i("Office", office.getName());
                 }
 
                 ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, officeNames);
+                        android.R.layout.simple_spinner_item, officeNames);
 
                 officeAdapter.notifyDataSetChanged();
 
@@ -114,10 +123,11 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
                         int officeId = officeNameIdHashMap.get(officeNames.get(position));
 
-                        if ( officeId != -1) {
+                        if (officeId != -1) {
 
                             inflateStaffSpinner(officeId);
                             inflateCenterSpinner(officeId, -1);
+                            inflateGroupSpinner(officeId, -1);
 
                         } else {
 
@@ -140,7 +150,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
-               System.out.println(retrofitError.getLocalizedMessage());
+                System.out.println(retrofitError.getLocalizedMessage());
 
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
@@ -158,11 +168,11 @@ public class GenerateCollectionSheetFragment extends Fragment {
                 final List<String> staffNames = new ArrayList<String>();
 
                 staffNames.add(getString(R.string.spinner_staff));
-                staffNameIdHashMap.put(getString(R.string.spinner_staff),-1);
+                staffNameIdHashMap.put(getString(R.string.spinner_staff), -1);
 
                 for (Staff staff : staffs) {
                     staffNames.add(staff.getDisplayName());
-                    staffNameIdHashMap.put(staff.getDisplayName(),staff.getId());
+                    staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
                 }
 
 
@@ -183,6 +193,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
                         if (staffId != -1) {
 
                             inflateCenterSpinner(officeId, staffId);
+                            inflateGroupSpinner(officeId, staffId);
 
                         } else {
 
@@ -213,29 +224,29 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
     }
 
-    public void inflateCenterSpinner(int officeId, int staffId) {
+    public void inflateCenterSpinner(final int officeId, int staffId) {
 
         Map<String, Object> params = new HashMap<String, Object>();
 
-        params.put("limit",-1);
-        params.put("orderBy","name");
-        params.put("sortOrder", "ASC");
+        params.put(LIMIT, -1);
+        params.put(ORDER_BY, ORDER_BY_FIELD_NAME);
+        params.put(SORT_ORDER, ASCENDING);
         if (staffId >= 0) {
-            params.put("staffId", staffId);
+            params.put(STAFF_ID, staffId);
         }
 
         API.centerService.getAllCentersInOffice(officeId, params, new Callback<List<Center>>() {
             @Override
             public void success(List<Center> centers, Response response) {
 
-                List<String> centerNames = new ArrayList<String>();
+                final List<String> centerNames = new ArrayList<String>();
 
                 centerNames.add(getString(R.string.spinner_center));
-                centerNameIdHashMap.put(getString(R.string.spinner_center),-1);
+                centerNameIdHashMap.put(getString(R.string.spinner_center), -1);
 
                 for (Center center : centers) {
                     centerNames.add(center.getName());
-                    staffNameIdHashMap.put(center.getName(),center.getId());
+                    centerNameIdHashMap.put(center.getName(), center.getId());
                 }
 
 
@@ -246,6 +257,30 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
                 centerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_centers.setAdapter(centerAdapter);
+
+                sp_centers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        int centerId = centerNameIdHashMap.get(centerNames.get(position));
+
+                        if (centerId != -1) {
+
+                            inflateGroupSpinner(centerId);
+
+                        } else {
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_center), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
             }
 
@@ -258,12 +293,91 @@ public class GenerateCollectionSheetFragment extends Fragment {
         });
 
 
+    }
+
+    public void inflateGroupSpinner(final int officeId, int staffId) {
+
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put(LIMIT, -1);
+        params.put(ORDER_BY, ORDER_BY_FIELD_NAME);
+        params.put(SORT_ORDER, ASCENDING);
+        if (staffId >= 0) {
+            params.put(STAFF_ID, staffId);
+        }
+
+
+        API.groupService.getAllGroupsInOffice(officeId, params, new Callback<List<Group>>() {
+            @Override
+            public void success(List<Group> groups, Response response) {
+
+                List<String> groupNames = new ArrayList<String>();
+
+                groupNames.add(getString(R.string.spinner_group));
+                groupNameIdHashMap.put(getString(R.string.spinner_group), -1);
+
+                for (Group group : groups) {
+                    groupNames.add(group.getName());
+                    groupNameIdHashMap.put(group.getName(), group.getId());
+                }
+
+
+                ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, groupNames);
+
+                groupAdapter.notifyDataSetChanged();
+
+                groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_groups.setAdapter(groupAdapter);
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
+
 
     }
 
+    public void inflateGroupSpinner(final int centerId) {
+
+        API.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
+            @Override
+            public void success(CenterWithAssociations centerWithAssociations, Response response) {
+
+                List<Group> groups = centerWithAssociations.getGroupMembers();
+
+                List<String> groupNames = new ArrayList<String>();
+
+                groupNames.add(getString(R.string.spinner_group));
+                groupNameIdHashMap.put(getString(R.string.spinner_group), -1);
+
+                for (Group group : groups) {
+                    groupNames.add(group.getName());
+                    groupNameIdHashMap.put(group.getName(), group.getId());
+                }
 
 
+                ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, groupNames);
 
+                groupAdapter.notifyDataSetChanged();
+
+                groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_groups.setAdapter(groupAdapter);
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
+
+
+    }
 
 
 }

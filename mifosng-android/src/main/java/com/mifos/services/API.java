@@ -20,6 +20,7 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
@@ -475,6 +476,10 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         public void getGroupWithAssociations(@Path("groupId") int groupId,
                                              Callback<GroupWithAssociations> groupWithAssociationsCallback);
+
+        @GET(APIEndPoint.GROUPS)
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params, Callback<List<Group>> listOfGroupsCallback);
 
     }
 

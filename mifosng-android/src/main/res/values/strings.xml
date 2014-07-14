@@ -159,7 +159,7 @@
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
     <string name="error_select_staff">Please Select a Staff</string>
-
+    <string name="error_select_center">Please Select a Center</string>
 
 
     <!-- DropDown Defaults -->
