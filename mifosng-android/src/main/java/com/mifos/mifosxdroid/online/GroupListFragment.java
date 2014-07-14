@@ -15,8 +15,8 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
-import com.mifos.objects.CenterWithAssociations;
-import com.mifos.objects.GroupWithAssociations;
+import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;

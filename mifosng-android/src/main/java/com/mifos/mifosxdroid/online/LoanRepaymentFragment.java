@@ -39,7 +39,6 @@ import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -285,12 +284,9 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
                     //Currently this method assumes that Positions are Unique for each paymentType
                     //TODO Implement a Duplication check on positions and sort them and add into listOfPaymentTypes
                     paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
-                    Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
-                    while(paymentTypeOptionIterator.hasNext())
-                    {
-                        PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
-                        listOfPaymentTypes.add(paymentTypeOption.getPosition(),paymentTypeOption.getName());
-                        paymentTypeHashMap.put(paymentTypeOption.getName(),paymentTypeOption.getId());
+                    for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
+                        listOfPaymentTypes.add(paymentTypeOption.getPosition(), paymentTypeOption.getName());
+                        paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
                     }
 
                     ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(),

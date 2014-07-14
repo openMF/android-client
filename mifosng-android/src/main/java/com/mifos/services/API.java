@@ -5,8 +5,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
-import com.mifos.objects.CenterWithAssociations;
-import com.mifos.objects.GroupWithAssociations;
+import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -20,9 +20,11 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.group.Center;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.organisation.Office;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.APIEndPoint;
@@ -81,6 +83,7 @@ public class API {
     public static GroupService groupService;
     public static DocumentService documentService;
     public static IdentifierService identifierService;
+    public static OfficeService officeService;
 
     static {
         init();
@@ -102,6 +105,7 @@ public class API {
         groupService = sRestAdapter.create(GroupService.class);
         documentService = sRestAdapter.create(DocumentService.class);
         identifierService = sRestAdapter.create(IdentifierService.class);
+        officeService = sRestAdapter.create(OfficeService.class);
     }
 
     private static RestAdapter createRestAdapter(final String url) {
@@ -187,7 +191,7 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
-        public void getAllCenters(Callback<List<com.mifos.objects.Center>> callback);
+        public void getAllCenters(Callback<List<Center>> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
@@ -404,7 +408,6 @@ public class API {
      * Service for management of Identifiers
      */
 
-
     public interface IdentifierService {
 
         @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS)
@@ -460,6 +463,20 @@ public class API {
         public void getGroupWithAssociations(@Path("groupId") int groupId,
                                              Callback<GroupWithAssociations> groupWithAssociationsCallback);
 
+    }
+
+    /**
+     * Serivce for interacting with Offices
+     */
+    public interface OfficeService {
+
+        /**
+         * Fetches List of All the Offices
+         * @param listOfOfficesCallback
+         */
+        @GET(APIEndPoint.OFFICES)
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void getAllOffices(Callback<List<Office>> listOfOfficesCallback);
     }
 
     static class MifosRestErrorHandler implements ErrorHandler {

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.Center;
+import com.mifos.objects.group.Center;
 
 import java.util.List;
 

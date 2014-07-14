@@ -1,4 +1,8 @@
-package com.mifos.objects;
+package com.mifos.objects.group;
+
+import com.mifos.objects.Status;
+import com.mifos.objects.Timeline;
+import com.mifos.objects.client.Client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by ishankhanna on 28/06/14.
+ * Created by ishankhanna on 29/06/14.
  */
-public class Group {
+public class GroupWithAssociations {
 
     List<Integer> activationDate = new ArrayList<Integer>();
     Boolean active;
@@ -21,6 +25,7 @@ public class Group {
     String staffName;
     Status status;
     Timeline timeline;
+    List<Client> clientMembers = new ArrayList<Client>();
     Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public List<Integer> getActivationDate() {
@@ -109,6 +114,14 @@ public class Group {
 
     public void setTimeline(Timeline timeline) {
         this.timeline = timeline;
+    }
+
+    public List<Client> getClientMembers() {
+        return clientMembers;
+    }
+
+    public void setClientMembers(List<Client> clientMembers) {
+        this.clientMembers = clientMembers;
     }
 
     public Map<String, Object> getAdditionalProperties() {

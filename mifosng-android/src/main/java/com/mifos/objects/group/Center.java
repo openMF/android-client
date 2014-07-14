@@ -1,4 +1,7 @@
-package com.mifos.objects;
+package com.mifos.objects.group;
+
+import com.mifos.objects.Status;
+import com.mifos.objects.Timeline;
 
 import java.util.ArrayList;
 import java.util.HashMap;

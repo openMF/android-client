@@ -157,4 +157,7 @@
     <string name="center">Center</string>
     <string name="generate_collection_sheet">Generate Collection Sheet</string>
 
+    <!-- DropDown Defaults -->
+    <string name="spinner_office">Select Office</string>
+
 </resources>
