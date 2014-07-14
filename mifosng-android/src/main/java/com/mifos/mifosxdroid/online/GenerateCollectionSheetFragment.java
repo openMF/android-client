@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.services.API;
@@ -24,6 +26,7 @@ import com.mifos.utils.SafeUIBlockingUtility;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -35,12 +38,11 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
     @InjectView(R.id.sp_branch_offices) Spinner sp_offices;
     @InjectView(R.id.sp_loan_officers) Spinner sp_loan_officers;
-
+    @InjectView(R.id.sp_centers) Spinner sp_centers;
 
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
-
-    private List<String> officeNames;
+    private HashMap<String, Integer> centerNameIdHashMap = new HashMap<String, Integer>();
 
     View rootView;
 
@@ -89,7 +91,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
             @Override
             public void success(List<Office> offices, Response response) {
 
-                officeNames = new ArrayList<String>();
+                final List<String> officeNames = new ArrayList<String>();
                 officeNames.add(getString(R.string.spinner_office));
                 officeNameIdHashMap.put(getString(R.string.spinner_office), -1);
                 for (Office office : offices) {
@@ -114,10 +116,13 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
                         if ( officeId != -1) {
 
-                            inflateStaff(officeId);
+                            inflateStaffSpinner(officeId);
+                            inflateCenterSpinner(officeId, -1);
 
                         } else {
-                            //Please select a staff
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+
                         }
 
                     }
@@ -143,14 +148,14 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
     }
 
-    public void inflateStaff(int officeId) {
+    public void inflateStaffSpinner(final int officeId) {
 
 
         API.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
 
-                List<String> staffNames = new ArrayList<String>();
+                final List<String> staffNames = new ArrayList<String>();
 
                 staffNames.add(getString(R.string.spinner_staff));
                 staffNameIdHashMap.put(getString(R.string.spinner_staff),-1);
@@ -169,6 +174,30 @@ public class GenerateCollectionSheetFragment extends Fragment {
                 staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_loan_officers.setAdapter(staffAdapter);
 
+                sp_loan_officers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        int staffId = staffNameIdHashMap.get(staffNames.get(position));
+
+                        if (staffId != -1) {
+
+                            inflateCenterSpinner(officeId, staffId);
+
+                        } else {
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
 
             }
 
@@ -184,7 +213,53 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
     }
 
+    public void inflateCenterSpinner(int officeId, int staffId) {
 
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("limit",-1);
+        params.put("orderBy","name");
+        params.put("sortOrder", "ASC");
+        if (staffId >= 0) {
+            params.put("staffId", staffId);
+        }
+
+        API.centerService.getAllCentersInOffice(officeId, params, new Callback<List<Center>>() {
+            @Override
+            public void success(List<Center> centers, Response response) {
+
+                List<String> centerNames = new ArrayList<String>();
+
+                centerNames.add(getString(R.string.spinner_center));
+                centerNameIdHashMap.put(getString(R.string.spinner_center),-1);
+
+                for (Center center : centers) {
+                    centerNames.add(center.getName());
+                    staffNameIdHashMap.put(center.getName(),center.getId());
+                }
+
+
+                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, centerNames);
+
+                centerAdapter.notifyDataSetChanged();
+
+                centerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_centers.setAdapter(centerAdapter);
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+            }
+        });
+
+
+
+    }
 
 
 

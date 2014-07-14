@@ -39,6 +39,7 @@ import com.mifos.utils.Constants;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.ErrorHandler;
@@ -56,6 +57,7 @@ import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.http.QueryMap;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -197,6 +199,12 @@ public class API {
         public void getAllCenters(Callback<List<Center>> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CENTERS)
+        public void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String,Object> additionalParams,
+                                          Callback<List<Center>> centersCallback);
+
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
         public void getAllGroupsForCenter(@Path("centerId") int centerId,
                                           Callback<CenterWithAssociations> centerWithAssociationsCallback);
@@ -209,6 +217,8 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
         public SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload);
+
+
 
     }
 
@@ -516,7 +526,3 @@ public class API {
 
     }
 }
-
-
-//TODO Swap Serach and Clietn List Farg
-

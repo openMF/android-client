@@ -44,6 +44,11 @@
     <string name="file_name">File Name</string>
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
+    <string name="collection_sheet">Collection Sheet</string>
+    <string name="title_activity_generate_collection_sheet">GenerateCollectionSheet</string>
+    <string name="meeting_date">Meeting Date</string>
+    <string name="center">Center</string>
+    <string name="generate_collection_sheet">Generate Collection Sheet</string>
 
     <!-- General Terms End Here -->
 
@@ -90,6 +95,8 @@
     <string name="complete">Complete</string>
     <string name="pending">Pending</string>
     <string name="overdue">Overdue</string>
+    <string name="process_loan_transaction">Process Loan Transaction</string>
+
     <!-- Loan Related Terminologies End Here -->
 
 
@@ -150,15 +157,15 @@
     <string name="error_save_location_not_available">Location Unavailable, Please try again later!</string>
     <string name="list_all_clients">Client List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
-    <string name="process_loan_transaction">Process Loan Transaction</string>
-    <string name="collection_sheet">Collection Sheet</string>
-    <string name="title_activity_generate_collection_sheet">GenerateCollectionSheet</string>
-    <string name="meeting_date">Meeting Date</string>
-    <string name="center">Center</string>
-    <string name="generate_collection_sheet">Generate Collection Sheet</string>
+    <string name="error_select_office">Please Select an Office</string>
+    <string name="error_select_staff">Please Select a Staff</string>
+
+
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
     <string name="spinner_staff">Select Loan Officer</string>
+    <string name="spinner_center">Select Center</string>
+    <string name="spinner_group">Select Group</string>
 
 </resources>
