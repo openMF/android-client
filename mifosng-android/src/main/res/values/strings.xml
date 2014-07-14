@@ -128,7 +128,7 @@
     <string name="title_center_detail">Center Detail</string>
     <string name="title_activity_centers">Centers</string>
     <string name="hello_world">Hello world!</string>
-    <string name="center">Center</string>
+    <string name="center">Center List</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="type">Type</string>
     <string name="upload">Upload</string>
@@ -150,6 +150,8 @@
     <string name="error_save_location_not_available">Location Unavailable, Please try again later!</string>
     <string name="list_all_clients">Client List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
+    <string name="process_loan_transaction">Process Loan Transaction</string>
+    <string name="collection_sheet">Collection Sheet</string>
 
 
 </resources>

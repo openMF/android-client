@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:padding="@dimen/default_vertical_padding">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,8 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.8"
-                android:tag="normal"
-                android:text="Client Name"
+                android:tag="large"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <QuickContactBadge
@@ -68,7 +67,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:text="Product Name"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -478,7 +476,7 @@
             android:layout_below="@+id/tbl_loanSummary"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:text="Process Loan Transaction" />
+            android:text="@string/process_loan_transaction" />
 
 
     </RelativeLayout>

@@ -6,16 +6,21 @@
     <item
         android:id="@+id/mItem_list"
         android:enabled="true"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/list_all_clients" />
 
     <item android:id="@+id/item_centers"
         android:enabled="true"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/center"/>
+
+    <item android:id="@+id/item_collection_sheet"
+        android:enabled="true"
+        app:showAsAction="never"
+        android:title="@string/collection_sheet"/>
 
     <item android:id="@+id/logout"
         android:enabled="true"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/logout" />
 </menu>
