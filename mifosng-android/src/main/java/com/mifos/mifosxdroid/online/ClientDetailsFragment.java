@@ -418,11 +418,18 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             public void success(final Client client, Response response) {
 
                 if (client != null) {
-                    actionBar.setTitle("Mifos Client - " + client.getLastname());
+                    actionBar.setTitle(getString(R.string.client) + " - " + client.getLastname());
                     tv_fullName.setText(client.getDisplayName());
                     tv_accountNumber.setText(client.getAccountNo());
                     tv_externalId.setText(client.getExternalId());
-                    tv_activationDate.setText(DateHelper.getDateAsString(client.getActivationDate()));
+
+                    try {
+                        tv_activationDate.setText(DateHelper.getDateAsString(client.getActivationDate()));
+                    }catch (IndexOutOfBoundsException e) {
+                        Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        tv_activationDate.setText("");
+                    }
                     tv_office.setText(client.getOfficeName());
 
                     // TODO: For some reason Retrofit always calls the failure() method even after

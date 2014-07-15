@@ -14,6 +14,7 @@
     <string name="search_results">Search Results</string>
     <string name="total">Total</string>
     <string name="client_name">Client Name</string>
+    <string name="client">Client</string>
     <string name="save">Save</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
     <string name="default_instance_url">demo.openmf.org</string>
@@ -160,7 +161,7 @@
     <string name="error_select_office">Please Select an Office</string>
     <string name="error_select_staff">Please Select a Staff</string>
     <string name="error_select_center">Please Select a Center</string>
-
+    <string name="error_client_inactive">Client Inactive</string>
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
