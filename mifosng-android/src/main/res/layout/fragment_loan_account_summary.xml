@@ -213,7 +213,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="@string/original_loan"
+                        android:text="@string/loan"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold" />
 
@@ -233,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="@string/loan_balance"
+                        android:text="@string/balance"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold" />
                 </LinearLayout>

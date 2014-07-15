@@ -77,9 +77,9 @@
     <string name="loan_charges_due">Charges Due</string>
     <string name="loan_total_due">Total Due</string>
     <string name="summary">Summary</string>
-    <string name="original_loan">Original Loan</string>
-    <string name="amount_paid">Amount Paid</string>
-    <string name="loan_balance">Loan Balance</string>
+    <string name="loan">Loan</string>
+    <string name="amount_paid">Amt. Paid</string>
+    <string name="balance">Balance</string>
     <string name="loan_principal">Principal</string>
     <string name="loan_interest">Interest</string>
     <string name="loan_fees">Fees</string>
