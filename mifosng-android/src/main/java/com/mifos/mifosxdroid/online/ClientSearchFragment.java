@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +90,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     }
 
 
-    public void findClients(String clientName) {
+    public void findClients(final String clientName) {
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
@@ -100,7 +99,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
             public void success(List<SearchedEntity> searchedEntities, Response response) {
 
                 Iterator<SearchedEntity> iterator = searchedEntities.iterator();
-                Log.i(TAG, "Results Found = " + searchedEntities.size());
+                clientNames.clear();
                 while (iterator.hasNext()) {
                     SearchedEntity searchedEntity = iterator.next();
                     clientNames.add("#" + searchedEntity.getEntityId() + " - " + searchedEntity.getEntityName());
