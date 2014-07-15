@@ -424,12 +424,14 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     tv_externalId.setText(client.getExternalId());
 
                     try {
+
                         tv_activationDate.setText(DateHelper.getDateAsString(client.getActivationDate()));
+
                     }catch (IndexOutOfBoundsException e) {
                         Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
-                    } finally {
                         tv_activationDate.setText("");
                     }
+
                     tv_office.setText(client.getOfficeName());
 
                     // TODO: For some reason Retrofit always calls the failure() method even after

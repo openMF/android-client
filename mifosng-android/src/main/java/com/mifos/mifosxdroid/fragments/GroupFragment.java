@@ -20,6 +20,7 @@ import com.mifos.objects.db.MifosGroup;
 import com.mifos.services.API;
 import com.mifos.services.RepaymentTransactionSyncService;
 import com.mifos.services.data.Payload;
+import com.mifos.utils.DateHelper;
 import com.mifos.utils.Network;
 import com.orm.query.Select;
 import retrofit.Callback;
@@ -113,56 +114,13 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
             final StringBuilder builder = new StringBuilder();
             builder.append(splittedDate[0]);
             builder.append(" ");
-            builder.append(getMonthName(month));
+            builder.append(DateHelper.getMonthName(month));
             builder.append(" ");
             builder.append(splittedDate[2]);
             payload.setTransactionDate(builder.toString());
         }
         return payload;
 
-    }
-
-    private String getMonthName(int month) {
-        String monthName = "";
-        switch (month) {
-            case 1:
-                monthName = "Jan";
-                break;
-            case 2:
-                monthName = "Feb";
-                break;
-            case 3:
-                monthName = "Mar";
-                break;
-            case 4:
-                monthName = "Apr";
-                break;
-            case 5:
-                monthName = "May";
-                break;
-            case 6:
-                monthName = "Jun";
-                break;
-            case 7:
-                monthName = "Jul";
-                break;
-            case 8:
-                monthName = "Aug";
-                break;
-            case 9:
-                monthName = "Sep";
-                break;
-            case 10:
-                monthName = "Oct";
-                break;
-            case 11:
-                monthName = "Nov";
-                break;
-            case 12:
-                monthName = "Dec";
-                break;
-        }
-        return monthName;
     }
 
     private void getData() {
