@@ -49,6 +49,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     SafeUIBlockingUtility safeUIBlockingUtility;
     private String searchQuery;
 
+    InputMethodManager inputMethodManager;
 
     public ClientSearchFragment() {
         // Required empty public constructor
@@ -62,7 +63,8 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        inputMethodManager = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -115,10 +117,8 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
                 lv_searchResults.setOnItemClickListener(ClientSearchFragment.this);
 
                 //If the search query returned one or more results close the keyboard
+                hideKeyboard();
 
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(et_searchById.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                 safeUIBlockingUtility.safelyUnBlockUI();
 
@@ -136,8 +136,19 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
 
     @Override
+    public void onPause() {
+
+        //Fragment getting detached, keyboard if open must be hidden
+        hideKeyboard();
+
+        super.onPause();
+    }
+
+    @Override
     public void onDetach() {
+
         super.onDetach();
+
     }
 
     @Override
@@ -149,5 +160,10 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
     }
 
+    public void hideKeyboard() {
+
+        inputMethodManager.hideSoftInputFromWindow(et_searchById.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+    }
 
 }
