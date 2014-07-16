@@ -23,6 +23,8 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -48,6 +50,7 @@ import retrofit.client.Response;
 
 public class SavingsAccountSummaryFragment extends Fragment {
 
+    public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_DOCUMENTS = 1004;
     public static int savingsAccountNumber;
@@ -266,6 +269,12 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
         menu.clear();
 
+        menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
+                .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+                        .colorRes(R.color.black)
+                        .actionBarSize())
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string.documents));
 
@@ -319,7 +328,12 @@ public class SavingsAccountSummaryFragment extends Fragment {
         if (item.getItemId() == MENU_ITEM_DOCUMENTS) {
 
             loadDocuments();
+
+        }  else if (id == MENU_ITEM_SEARCH) {
+
+            getActivity().finish();
         }
+
 
         return super.onOptionsItemSelected(item);
     }

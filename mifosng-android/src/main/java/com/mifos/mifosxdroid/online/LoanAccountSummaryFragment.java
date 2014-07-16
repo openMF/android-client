@@ -22,6 +22,8 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -51,6 +53,11 @@ import retrofit.client.Response;
 public class LoanAccountSummaryFragment extends Fragment {
 
 
+    public static final int MENU_ITEM_SEARCH = 2000;
+    public static final int MENU_ITEM_DATA_TABLES = 1001;
+    public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
+    public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
+    public static final int MENU_ITEM_DOCUMENTS = 1004;
     /*
         Set of Actions and Transactions that can be performed depending on the status of the Loan
         Actions are performed to change the status of the loan
@@ -60,29 +67,13 @@ public class LoanAccountSummaryFragment extends Fragment {
     private static final int ACTION_APPROVE_LOAN = 0;
     private static final int ACTION_DISBURSE_LOAN = 1;
     private static final int TRANSACTION_REPAYMENT = 2;
-
-    public static final int MENU_ITEM_DATA_TABLES = 1001;
-    public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
-    public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
-    public static final int MENU_ITEM_DOCUMENTS = 1004;
-
-    // Action Identifier in the onProcessTransactionClicked Method
-    private int processLoanTransactionAction = -1;
-
-    private OnFragmentInteractionListener mListener;
-
     public static int loanAccountNumber;
-
+    public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
     View rootView;
-
     SafeUIBlockingUtility safeUIBlockingUtility;
-
     ActionBarActivity activity;
-
     SharedPreferences sharedPreferences;
-
     ActionBar actionBar;
-
     @InjectView(R.id.view_status_indicator)
     View view_status_indicator;
     @InjectView(R.id.tv_clientName)
@@ -133,8 +124,14 @@ public class LoanAccountSummaryFragment extends Fragment {
     TextView tv_total_paid;
     @InjectView(R.id.bt_processLoanTransaction)
     Button bt_processLoanTransaction;
-
+    // Action Identifier in the onProcessTransactionClicked Method
+    private int processLoanTransactionAction = -1;
+    private OnFragmentInteractionListener mListener;
     private LoanWithAssociations clientLoanWithAssociations;
+
+    public LoanAccountSummaryFragment() {
+        // Required empty public constructor
+    }
 
     public static LoanAccountSummaryFragment newInstance(int loanAccountNumber) {
         LoanAccountSummaryFragment fragment = new LoanAccountSummaryFragment();
@@ -142,9 +139,6 @@ public class LoanAccountSummaryFragment extends Fragment {
         args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber);
         fragment.setArguments(args);
         return fragment;
-    }
-    public LoanAccountSummaryFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -175,7 +169,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         return rootView;
     }
 
-    private void inflateLoanAccountSummary(){
+    private void inflateLoanAccountSummary() {
 
         safeUIBlockingUtility.safelyBlockUI();
 
@@ -193,7 +187,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
                 try {
                     Log.i("TAG", tv_clientName.getTag().toString());
-                }catch (Exception e) {
+                } catch (Exception e) {
 
                 }
                 tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());
@@ -264,17 +258,16 @@ public class LoanAccountSummaryFragment extends Fragment {
     }
 
     @OnClick(R.id.bt_processLoanTransaction)
-    public void onProcessTransactionClicked(){
+    public void onProcessTransactionClicked() {
 
 
-        if(processLoanTransactionAction == TRANSACTION_REPAYMENT)
-        {
+        if (processLoanTransactionAction == TRANSACTION_REPAYMENT) {
             mListener.makeRepayment(clientLoanWithAssociations);
-        }else if(processLoanTransactionAction == ACTION_APPROVE_LOAN) {
+        } else if (processLoanTransactionAction == ACTION_APPROVE_LOAN) {
             approveLoan();
-        }else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
+        } else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
             disburseLoan();
-        }else {
+        } else {
             Log.i(getActivity().getLocalClassName(), "TRANSACTION ACTION NOT SET");
         }
 
@@ -290,7 +283,6 @@ public class LoanAccountSummaryFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
 
     /**
      * Prepare the Screen's standard options menu to be displayed.  This is
@@ -310,6 +302,12 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         menu.clear();
 
+        menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
+                .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+                .colorRes(R.color.black)
+                .actionBarSize())
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
         menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
@@ -319,7 +317,7 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         // Create a Sub Menu that holds a link to all data tables
         SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
-        if(dataTableSubMenu != null && loanDataTables != null && loanDataTables.size()>0) {
+        if (dataTableSubMenu != null && loanDataTables != null && loanDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = loanDataTables.iterator();
             while (dataTableIterator.hasNext()) {
                 dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator.next().getRegisteredTableName());
@@ -333,20 +331,20 @@ public class LoanAccountSummaryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Log.i("ID", ""+item.getItemId());
+        Log.i("ID", "" + item.getItemId());
 
-        if(item.getItemId() == MENU_ITEM_REPAYMENT_SCHEDULE) {
+        if (item.getItemId() == MENU_ITEM_REPAYMENT_SCHEDULE) {
             mListener.loadRepaymentSchedule(loanAccountNumber);
         }
 
-        if(item.getItemId() == MENU_ITEM_LOAN_TRANSACTIONS) {
+        if (item.getItemId() == MENU_ITEM_LOAN_TRANSACTIONS) {
             mListener.loadLoanTransactions(loanAccountNumber);
         }
 
         if (item.getItemId() >= 0 && item.getItemId() < loanDataTables.size()) {
 
             DataTableDataFragment dataTableDataFragment
-                        = DataTableDataFragment.newInstance(loanDataTables.get(item.getItemId()),
+                    = DataTableDataFragment.newInstance(loanDataTables.get(item.getItemId()),
                     loanAccountNumber);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
@@ -357,22 +355,15 @@ public class LoanAccountSummaryFragment extends Fragment {
         if (item.getItemId() == MENU_ITEM_DOCUMENTS) {
 
             loadDocuments();
+
+        } else if (item.getItemId() == MENU_ITEM_SEARCH) {
+
+            getActivity().finish();
         }
 
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    public interface OnFragmentInteractionListener {
-
-        public void makeRepayment(LoanWithAssociations loan);
-        public void loadRepaymentSchedule(int loanId);
-        public void loadLoanTransactions(int loanId);
-    }
-
-    public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
-
 
     /**
      * Use this method to fetch all datatables for client and inflate them as
@@ -413,7 +404,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         tv_amount_disbursed.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalDisbursed()));
         try {
             tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations.getTimeline().getActualDisbursementDate()));
-        }catch (IndexOutOfBoundsException exception) {
+        } catch (IndexOutOfBoundsException exception) {
             Toast.makeText(getActivity(), getResources().getString(R.string.loan_rejected_message), Toast.LENGTH_SHORT).show();
         }
         tv_in_arrears.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOverdue()));
@@ -448,29 +439,30 @@ public class LoanAccountSummaryFragment extends Fragment {
         API.loanService.approveLoanApplication(loanAccountNumber,
                 loanApprovalRequest,
                 new Callback<GenericResponse>() {
-            @Override
-            public void success(GenericResponse genericResponse, Response response) {
+                    @Override
+                    public void success(GenericResponse genericResponse, Response response) {
 
-                inflateLoanAccountSummary();
+                        inflateLoanAccountSummary();
 
-            }
+                    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
 
 
-            }
-        });
+                    }
+                }
+        );
 
     }
 
     //TODO : Add Support for Changing Dates
     public void disburseLoan() {
 
-        HashMap<String,Object> hashMap = new HashMap<String, Object>();
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("dateFormat", "dd MM yyyy");
         hashMap.put("actualDisbursementDate", DateHelper.getCurrentDateAsDateFormat());
-        hashMap.put("locale","en");
+        hashMap.put("locale", "en");
 
         API.loanService.disburseLoan(loanAccountNumber,
                 hashMap,
@@ -487,9 +479,9 @@ public class LoanAccountSummaryFragment extends Fragment {
                     public void failure(RetrofitError retrofitError) {
 
 
-
                     }
-                });
+                }
+        );
 
     }
 
@@ -501,6 +493,15 @@ public class LoanAccountSummaryFragment extends Fragment {
         fragmentTransaction.replace(R.id.global_container, documentListFragment);
         fragmentTransaction.commit();
 
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        public void makeRepayment(LoanWithAssociations loan);
+
+        public void loadRepaymentSchedule(int loanId);
+
+        public void loadLoanTransactions(int loanId);
     }
 
 }

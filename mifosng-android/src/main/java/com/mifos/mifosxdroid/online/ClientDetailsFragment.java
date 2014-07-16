@@ -36,6 +36,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
+import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
@@ -84,11 +85,11 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     /**
      * IDs for Inflation of Menus and their Items
      */
+    public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_SAVE_LOCATION = 1000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_DOCUMENTS = 1003;
     public static final int MENU_ITEM_IDENTIFIERS = 1004;
-
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
@@ -279,7 +280,13 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public void onPrepareOptionsMenu(Menu menu) {
 
         menu.clear();
-        //TODO : Localisation of Menu Item Strings
+
+        menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
+        .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+        .colorRes(R.color.black)
+        .actionBarSize())
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
         //TODO Enable Save Location
         //menu.add(Menu.NONE, MENU_ITEM_SAVE_LOCATION, Menu.NONE, getString(R.string.action_save_location));
@@ -339,6 +346,9 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         } else if (id == MENU_ITEM_IDENTIFIERS) {
 
             loadIdentifiers();
+        } else if (id == MENU_ITEM_SEARCH) {
+
+            getActivity().finish();
         }
 
 
