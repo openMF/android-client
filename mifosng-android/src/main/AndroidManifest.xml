@@ -43,9 +43,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".online.ClientSearchActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".GroupActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
@@ -102,10 +99,10 @@
         <activity
             android:name=".online.GenerateCollectionSheet"
             android:label="@string/title_activity_generate_collection_sheet"
-            android:parentActivityName=".online.ClientSearchActivity" >
+            android:parentActivityName=".online.DashboardFragmentActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mifos.mifosxdroid.online.ClientSearchActivity" />
+                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
         </activity>
     </application>
 

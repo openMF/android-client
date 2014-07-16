@@ -7,11 +7,15 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.objects.group.Center;
@@ -42,6 +46,14 @@ public class CenterListFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public CenterListFragment(){
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
 
     }
 
@@ -101,6 +113,32 @@ public class CenterListFragment extends Fragment {
 
         public void loadGroupsOfCenter(int centerId);
 
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        menu.findItem(R.id.mItem_search).setIcon(
+                new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+                .colorRes(R.color.black)
+                .actionBarSize());
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.mItem_search) {
+
+            getActivity().finish();
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

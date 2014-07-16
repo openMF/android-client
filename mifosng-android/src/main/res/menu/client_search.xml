@@ -1,26 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.mifos.mifosxdroid.online.ClientSearchActivity" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/mItem_list"
         android:enabled="true"
-        app:showAsAction="ifRoom"
-        android:title="@string/list_all_clients" />
+        android:title="@string/list_all_clients"
+        app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/item_centers"
+    <item
+        android:id="@+id/item_centers"
         android:enabled="true"
-        app:showAsAction="never"
-        android:title="@string/center_list"/>
+        android:title="@string/center_list"
+        app:showAsAction="never" />
 
-    <item android:id="@+id/item_collection_sheet"
+    <item
+        android:id="@+id/item_collection_sheet"
         android:enabled="true"
-        app:showAsAction="never"
-        android:title="@string/collection_sheet"/>
+        android:title="@string/collection_sheet"
+        app:showAsAction="never" />
 
-    <item android:id="@+id/logout"
+    <item
+        android:id="@+id/logout"
         android:enabled="true"
-        app:showAsAction="never"
-        android:title="@string/logout" />
+        android:title="@string/logout"
+        app:showAsAction="never" />
 </menu>

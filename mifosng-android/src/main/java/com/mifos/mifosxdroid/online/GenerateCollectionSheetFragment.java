@@ -106,7 +106,6 @@ public class GenerateCollectionSheetFragment extends Fragment {
                 for (Office office : offices) {
                     officeNames.add(office.getName());
                     officeNameIdHashMap.put(office.getName(), office.getId());
-                    Log.i("Office", office.getName());
                 }
 
                 ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
