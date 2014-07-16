@@ -13,4 +13,4 @@ https://mifosforge.jira.com/wiki/display/MIFOSX/Usability+and+Design - Product M
 # LICENSE
 
 This project is licensed under the open source MPL V2. See
-https://github.com/openMF/mifosx/blob/master/LICENSE.md
+https://github.com/openMF/android-client/blob/master/LICENSE.md
