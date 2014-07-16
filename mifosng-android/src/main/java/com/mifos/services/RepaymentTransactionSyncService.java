@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import com.mifos.mifosxdroid.CenterDetailsActivity;
+import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.objects.db.*;
 import com.mifos.services.data.BulkRepaymentTransactions;
 import com.mifos.services.data.CollectionSheetPayload;
@@ -21,9 +21,11 @@ public class RepaymentTransactionSyncService {
 
     private static final String TAG = RepaymentTransactionSyncService.class.getSimpleName();
     private SyncFinishListener syncFinishListener;
+    private long centerId;
 
-    public RepaymentTransactionSyncService(SyncFinishListener syncFinishListener) {
+    public RepaymentTransactionSyncService(SyncFinishListener syncFinishListener, long centerId) {
         this.syncFinishListener = syncFinishListener;
+        this.centerId = centerId;
     }
 
     public void syncRepayments() {
@@ -77,15 +79,14 @@ public class RepaymentTransactionSyncService {
 
             if (Network.isOnline(Constants.applicationContext)) {
                 try {
-                    SharedPreferences preferences = Constants.applicationContext.getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-                    int centerId = preferences.getInt(CenterDetailsActivity.CENTER_ID_KEY, -1);
-                    SaveResponse response = API.centerService.saveCollectionSheet(centerId, collectionSheetPayloads[0]);
+                    SharedPreferences preferences = Constants.applicationContext.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+                    SaveResponse response = API.centerService.saveCollectionSheet((int) centerId, collectionSheetPayloads[0]);
                     if (response != null) {
                         Log.i(TAG, "saveCollectionSheet - Response:" + response.toString());
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.clear();
                         editor.commit();
-                        deleteAllOfflineCollectionSheetData();
+                        //  deleteAllOfflineCollectionSheetData();
                     }
                 } catch (RetrofitError error) {
 

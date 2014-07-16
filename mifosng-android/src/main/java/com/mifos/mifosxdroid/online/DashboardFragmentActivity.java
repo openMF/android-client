@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.utils.FragmentConstants;
 
@@ -57,6 +57,10 @@ public class DashboardFragmentActivity extends ActionBarActivity {
                 break;
             case R.id.item_collection_sheet :
                 startActivity(new Intent(DashboardFragmentActivity.this, GenerateCollectionSheet.class));
+                break;
+            case R.id.item_offline_centers:
+                startActivity(new Intent(this, OfflineCenterInputActivity.class));
+                ;
                 break;
             case R.id.logout:
                 startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));

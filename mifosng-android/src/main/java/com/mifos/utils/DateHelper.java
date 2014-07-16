@@ -34,6 +34,65 @@ public class DateHelper {
         return date;
     }
 
+    public static String getDateAsStringUsedForCollectionSheetPayload(String date) {
+        final StringBuilder builder = new StringBuilder();
+        if (date != null) {
+            String[] splittedDate = date.split("-");
+            int month = Integer.parseInt(splittedDate[1]);
+            builder.append(splittedDate[0]);
+            builder.append("-");
+            builder.append(getMonthName(month));
+            builder.append("-");
+            builder.append(splittedDate[2]);
+        }
+        return builder.toString();
+        //Return as dd-mmm-yyyy
+
+    }
+   /* public static String getMonthName(int month) {
+        String monthName = "";
+        switch (month) {
+            case 1:
+                monthName = "Jan";
+                break;
+            case 2:
+                monthName = "Feb";
+                break;
+            case 3:
+                monthName = "Mar";
+                break;
+            case 4:
+                monthName = "Apr";
+                break;
+            case 5:
+                monthName = "May";
+                break;
+            case 6:
+                monthName = "Jun";
+                break;
+            case 7:
+                monthName = "Jul";
+                break;
+            case 8:
+                monthName = "Aug";
+                break;
+            case 9:
+                monthName = "Sep";
+                break;
+            case 10:
+                monthName = "Oct";
+                break;
+            case 11:
+                monthName = "Nov";
+                break;
+            case 12:
+                monthName = "Dec";
+                break;
+        }
+        return monthName;
+    }*/
+
+
 
     //Currently supports on "dd MM yyyy"
     public static String getCurrentDateAsDateFormat() {

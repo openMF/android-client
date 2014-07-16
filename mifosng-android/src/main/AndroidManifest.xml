@@ -80,7 +80,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".CenterDetailsActivity"
+                android:name=".OfflineCenterInputActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -104,6 +104,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
         </activity>
+        <activity
+                android:name=".CenterListActivity"
+                android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -18,7 +18,11 @@
         android:enabled="true"
         android:title="@string/collection_sheet"
         app:showAsAction="never" />
-
+    <item
+            android:id="@+id/item_offline_centers"
+            android:enabled="true"
+            android:title="@string/offline"
+            app:showAsAction="never"/>
     <item
         android:id="@+id/logout"
         android:enabled="true"

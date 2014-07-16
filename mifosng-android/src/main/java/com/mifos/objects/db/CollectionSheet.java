@@ -16,11 +16,12 @@ public class CollectionSheet extends SugarRecord<CollectionSheet> {
 //	     public LoanProduct loanProducts[];
 //	     public AttendanceTypeOptions attendanceTypeOptions[];
 
-    public void saveData(){
+    public void saveData(long centerId) {
 
         for (MifosGroup group : groups) {
 
             if (group.isNew()) {
+                group.setCenterId(centerId);
                 group.save();
             }
 

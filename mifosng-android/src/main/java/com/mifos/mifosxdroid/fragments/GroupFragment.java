@@ -11,21 +11,15 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.mifos.mifosxdroid.CenterDetailsActivity;
 import com.mifos.mifosxdroid.ClientActivity;
+import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
-import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.db.MeetingCenter;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.services.API;
 import com.mifos.services.RepaymentTransactionSyncService;
-import com.mifos.services.data.Payload;
-import com.mifos.utils.DateHelper;
-import com.mifos.utils.Network;
+import com.orm.query.Condition;
 import com.orm.query.Select;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,16 +39,20 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     TextView tv_empty_group;
     private MenuItem syncItem;
     private String date;
-
+    private long centerId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_group, null);
         setHasOptionsMenu(true);
         ButterKnife.inject(this, view);
-        getData();
+        init();
+
         return view;
     }
 
+    private void init() {
+        centerId = getActivity().getIntent().getLongExtra(CenterListFragment.CENTER_ID, -1);
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -66,6 +64,11 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_sync, menu);
         syncItem = menu.findItem(R.id.action_sync);
+        if (centerId != -1) {
+            List<MeetingCenter> center = Select.from(MeetingCenter.class).where(Condition.prop("center_id").eq(centerId)).list();
+            if (center.get(0).getIsSynced() == 1)
+                syncItem.setEnabled(false);
+        }
     }
 
     @Override
@@ -75,8 +78,10 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View syncProgress = inflater.inflate(R.layout.sync_progress, null);
             MenuItemCompat.setActionView(item, syncProgress);
-            RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService(this);
-            syncService.syncRepayments();
+            if (centerId != -1) {
+                RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService(this, centerId);
+                syncService.syncRepayments();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -91,11 +96,12 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         lv_group.setOnItemClickListener(this);
         lv_group.setEmptyView(progressGroup);
         adapter.notifyDataSetChanged();
-        if (groupList.size() == 0 && syncItem != null) {
-            MenuItemCompat.setActionView(syncItem, null);
-            SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-            date = preferences.getString(CenterDetailsActivity.TRANSACTION_DATE_KEY, null);
-            int centerId = preferences.getInt(CenterDetailsActivity.CENTER_ID_KEY, -1);
+        if (groupList.size() == 0) {
+            if (syncItem != null)
+                MenuItemCompat.setActionView(syncItem, null);
+
+            SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
             tv_empty_group.setVisibility(View.VISIBLE);
             tv_empty_group.setText("There is no data for center " + centerId + " on " + date);
             progressGroup.setVisibility(View.GONE);
@@ -104,52 +110,9 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
             tv_empty_group.setVisibility(View.GONE);
     }
 
-    private Payload getPayload() {
-        final Payload payload = new Payload();
-        SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-        date = preferences.getString(CenterDetailsActivity.TRANSACTION_DATE_KEY, null);
-        if (date != null) {
-            String[] splittedDate = date.split("-");
-            int month = Integer.parseInt(splittedDate[1]);
-            final StringBuilder builder = new StringBuilder();
-            builder.append(splittedDate[0]);
-            builder.append(" ");
-            builder.append(DateHelper.getMonthName(month));
-            builder.append(" ");
-            builder.append(splittedDate[2]);
-            payload.setTransactionDate(builder.toString());
-        }
-        return payload;
-
-    }
-
-    private void getData() {
-
-        if (Network.isOnline(getActivity().getApplicationContext())) {
-            SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-            int centerId = preferences.getInt(CenterDetailsActivity.CENTER_ID_KEY, -1);
-            API.centerService.getCenter(centerId, getPayload(), new Callback<CollectionSheet>() {
-                @Override
-                public void success(CollectionSheet collectionSheet, Response arg1) {
-
-                    if (collectionSheet != null) {
-                        collectionSheet.saveData();
-
-                        if (groupList.size() == 0)
-                            setAdapter();
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError arg0) {
-                    Toast.makeText(getActivity(), "There was some error fetching data.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
     private List<MifosGroup> getAllGroups() {
-        return Select.from(MifosGroup.class).list();
+        return Select.from(MifosGroup.class).where(Condition.prop("center_id").eq(centerId)).list();
+        //return Select.from(MifosGroup.class).list();
     }
 
     @Override
@@ -165,13 +128,22 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         MenuItemCompat.setActionView(syncItem, null);
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         if (!isSyncable) {
-            SharedPreferences preferences = getActivity().getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
             getActivity().finish();
-            Intent intent = new Intent(getActivity(), CenterDetailsActivity.class);
+            Intent intent = new Intent(getActivity(), OfflineCenterInputActivity.class);
             startActivity(intent);
+        } else
+            setCenterAsSynced();
+    }
+
+    private void setCenterAsSynced() {
+        if (centerId != -1) {
+            List<MeetingCenter> center = Select.from(MeetingCenter.class).where(com.orm.query.Condition.prop("center_id").eq(centerId)).list();
+            center.get(0).setIsSynced(1);
+            center.get(0).save();
         }
     }
 }

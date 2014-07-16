@@ -17,13 +17,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
-
 import org.apache.http.HttpStatus;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -31,19 +36,12 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 /**
  * Created by ishankhanna on 08/02/14.
  */
 public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
+    private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     public static String INSTANCE_URL_KEY = "instanceURL";
     public static String PROTOCOL_HTTP = "http://";
     public static String PROTOCOL_HTTPS = "https://";
@@ -54,7 +52,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     @InjectView(R.id.et_password) EditText et_password;
     @InjectView(R.id.bt_login) Button bt_login;
     @InjectView(R.id.tv_constructed_instance_url) TextView tv_constructed_instance_url;
-
     private String username;
     private String instanceURL;
     private String password;
@@ -62,11 +59,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private String authenticationToken;
     private ProgressDialog progressDialog;
     private String tag = getClass().getSimpleName();
-
     private Pattern domainNamePattern;
     private Matcher domainNameMatcher;
-
-    private static final String DOMAIN_NAME_REGEX_PATTERN =  "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -160,6 +154,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             Log.e(tag, "Invalid instance URL: " + urlInputValue, uriException);
             throw new ShortOfLengthException("Instance URL", 5);
         }
+
         username = et_username.getEditableText().toString();
         if (username.length() < 5) {
             throw new ShortOfLengthException("Username", 5);
@@ -245,7 +240,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         Log.d(tag, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.offline:
-                startActivity(new Intent(this, CenterDetailsActivity.class));
+                startActivity(new Intent(this, OfflineCenterInputActivity.class));
                 break;
 
             default: //DO NOTHING

@@ -2,10 +2,10 @@ package com.mifos.services.data;
 
 public class Payload
 {
-    String dateFormat="dd MMMM YYYY";
-    String locale="en";
-    int calendarId = 15;
-    String transactionDate = "30 June 2014";
+    private String dateFormat = "dd MMMM YYYY";
+    private String locale = "en";
+    private int calendarId;
+    private String transactionDate;
 
     public String getDateFormat()
     {

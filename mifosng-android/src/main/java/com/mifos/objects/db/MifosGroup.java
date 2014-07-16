@@ -11,13 +11,13 @@ import java.util.List;
 
 public class MifosGroup extends SugarRecord<MifosGroup>
 {
-    private int groupId;
-    private String groupName;
     public int staffId;
     public String staffName;
-
     public int levelId;
     public String levelName;
+    private long groupId;
+    private String groupName;
+    private long centerId;
     @Ignore
     private List<Client> clients;
 
@@ -52,16 +52,23 @@ public class MifosGroup extends SugarRecord<MifosGroup>
         this.groupName = groupName;
     }
 
-    public int getGroupId()
+    public long getGroupId()
     {
         return groupId;
     }
 
-    public void setGroupId(int groupId)
+    public void setGroupId(long groupId)
     {
         this.groupId = groupId;
     }
 
+    public long getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(long centerId) {
+        this.centerId = centerId;
+    }
 
     public String getStaffName() {
         return staffName;

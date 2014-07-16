@@ -17,7 +17,7 @@
     <string name="client">Client</string>
     <string name="save">Save</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
-    <string name="default_instance_url">demo.openmf.org</string>
+    <string name="default_instance_url">developer.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
@@ -50,7 +50,8 @@
     <string name="meeting_date">Meeting Date</string>
     <string name="center">Center</string>
     <string name="generate_collection_sheet">Generate Collection Sheet</string>
-
+    <string name="clear_data">Clear Data</string>
+    <string name="branch_id">Branch Id</string>
     <!-- General Terms End Here -->
 
 
@@ -168,5 +169,6 @@
     <string name="spinner_staff">Select Loan Officer</string>
     <string name="spinner_center">Select Center</string>
     <string name="spinner_group">Select Group</string>
+
 
 </resources>

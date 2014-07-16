@@ -13,23 +13,27 @@ import butterknife.OnClick;
 
 import java.util.Calendar;
 
-public class CenterDetailsActivity extends ActionBarActivity implements DatePickerDialog.OnDateSetListener {
+public class OfflineCenterInputActivity extends ActionBarActivity implements DatePickerDialog.OnDateSetListener {
     public static String PREF_CENTER_DETAILS = "pref_center_details";
-    public static String CENTER_ID_KEY = "pref_center_id";
+    public static String STAFF_ID_KEY = "pref_staff_id";
+    public static String BRANCH_ID_KEY = "pref_branch_id";
     public static String TRANSACTION_DATE_KEY = "pref_transaction_date";
-    @InjectView(R.id.et_center_id)
-    EditText etCenterId;
+    @InjectView(R.id.et_staff_id)
+    EditText etStaffId;
+    @InjectView(R.id.et_branch_id)
+    EditText etBranchId;
     @InjectView(R.id.tv_select_date)
     TextView tvSelectDate;
     @InjectView(R.id.btnSave)
     Button btnSave;
     private String date;
-    private int centerId;
+    private int staffId;
+    private int branchId;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (isCenterIdAvailable()) {
-            finishAndStartGroupActivity();
+            finishAndStartCenterListActivity();
         }
         setContentView(R.layout.activity_center_details);
         ButterKnife.inject(this);
@@ -37,8 +41,8 @@ public class CenterDetailsActivity extends ActionBarActivity implements DatePick
     }
 
     private boolean isCenterIdAvailable() {
-        SharedPreferences preferences = getSharedPreferences(CenterDetailsActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-        int centerId = preferences.getInt(CenterDetailsActivity.CENTER_ID_KEY, -1);
+        SharedPreferences preferences = getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        int centerId = preferences.getInt(OfflineCenterInputActivity.STAFF_ID_KEY, -1);
         if (centerId != -1)
             return true;
         else
@@ -55,21 +59,24 @@ public class CenterDetailsActivity extends ActionBarActivity implements DatePick
     public void OnClickSave(Button button) {
         if (getData()) {
             saveCenterIdToPref();
-            finishAndStartGroupActivity();
+            finishAndStartCenterListActivity();
         }
     }
 
-    private void finishAndStartGroupActivity() {
+    private void finishAndStartCenterListActivity() {
         finish();
-        Intent intent = new Intent(this, GroupActivity.class);
+        Intent intent = new Intent(this, CenterListActivity.class);
         startActivity(intent);
     }
 
     private boolean getData() {
         boolean isAllDetailsFilled = true;
-        if (etCenterId.getText().toString().length() > 0 && tvSelectDate.getText().toString().length() > 0) {
-            centerId = Integer.parseInt(etCenterId.getEditableText().toString());
+        if (etStaffId.getText().toString().length() > 0
+                && tvSelectDate.getText().toString().length() > 0
+                && etBranchId.getText().toString().length() > 0) {
+            staffId = Integer.parseInt(etStaffId.getEditableText().toString());
             date = tvSelectDate.getText().toString();
+            branchId = Integer.parseInt(etBranchId.getEditableText().toString());
         } else {
             isAllDetailsFilled = false;
             Toast.makeText(this, "Please fill all the details", Toast.LENGTH_SHORT).show();
@@ -101,7 +108,8 @@ public class CenterDetailsActivity extends ActionBarActivity implements DatePick
     private void saveCenterIdToPref() {
         SharedPreferences preferences = getSharedPreferences(PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(CENTER_ID_KEY, centerId);
+        editor.putInt(STAFF_ID_KEY, staffId);
+        editor.putInt(BRANCH_ID_KEY, branchId);
         editor.putString(TRANSACTION_DATE_KEY, date);
         editor.commit();
     }

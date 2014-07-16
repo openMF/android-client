@@ -9,7 +9,7 @@
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/enter_center_id"
+            android:text="@string/staff_id"
             android:padding="10dp"
             android:textSize="17sp"
             />
@@ -17,7 +17,26 @@
     <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/et_center_id"
+            android:id="@+id/et_staff_id"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
+            android:inputType="number"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"/>
+
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/branch_id"
+            android:padding="10dp"
+            android:textSize="17sp"
+            />
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_branch_id"
             android:padding="10dp"
             android:gravity="center_vertical"
             android:textSize="17sp"
