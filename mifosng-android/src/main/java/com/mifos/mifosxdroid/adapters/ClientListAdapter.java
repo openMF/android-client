@@ -25,7 +25,7 @@ public class ClientListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<Loan> listClient;
     private String tag = getClass().getSimpleName();
-    private Map<Loan, Integer> listPaidAmounts;
+    private Map<Loan, Double> listPaidAmounts;
     private EditFocusChangeListener editFocusChangeListener;
     private Context context;
 
@@ -37,7 +37,7 @@ public class ClientListAdapter extends BaseAdapter {
         this.editFocusChangeListener = new EditFocusChangeListener();
     }
 
-    public void setPaidAmount(Map<Loan, Integer> listPaidAmounts) {
+    public void setPaidAmount(Map<Loan, Double> listPaidAmounts) {
         this.listPaidAmounts = listPaidAmounts;
     }
 
@@ -57,7 +57,7 @@ public class ClientListAdapter extends BaseAdapter {
         return 0;
     }
 
-    public Map<Loan, Integer> getUpdatedDueList() {
+    public Map<Loan, Double> getUpdatedDueList() {
         ((Activity) context).getCurrentFocus().clearFocus();
         return listPaidAmounts;
     }
@@ -107,7 +107,7 @@ public class ClientListAdapter extends BaseAdapter {
             if (!hasFocus) {
                 Loan loan =(Loan) (v.getTag());
                 try {
-                    int changedValue = Integer.parseInt(((EditText) v).getText().toString());
+                    double changedValue = Double.parseDouble(((EditText) v).getText().toString());
                     listPaidAmounts.put(loan, changedValue);
                     loan.totalDue = changedValue;
                     loan.save();

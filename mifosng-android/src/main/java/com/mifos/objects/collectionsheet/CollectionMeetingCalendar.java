@@ -1,7 +1,9 @@
-package com.mifos.objects.collectionmeetingcalendar;
+package com.mifos.objects.collectionsheet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ishankhanna on 16/07/14.
@@ -14,7 +16,7 @@ public class CollectionMeetingCalendar {
     private List<Integer> createdDate = new ArrayList<Integer>();
     private Integer duration;
     private Integer entityId;
-    private CollectionEntityType entityType;
+    private EntityType entityType;
     private Integer firstReminder;
     private CollectionFrequency frequency;
     private String  humanReadable;
@@ -28,11 +30,12 @@ public class CollectionMeetingCalendar {
     private String recurrence;
     private List<List<Integer>> recurringDates = new ArrayList<List<Integer>>();
     private Boolean repeating;
-    private Day repeatsOnDay;
+    private EntityType repeatsOnDay;
     private Integer secondReminder;
     private List<Integer> startDate = new ArrayList<Integer>();
     private String title;
-    private MeetingType type;
+    private EntityType type;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getCalendarInstanceId() {
         return calendarInstanceId;
@@ -82,11 +85,11 @@ public class CollectionMeetingCalendar {
         this.entityId = entityId;
     }
 
-    public CollectionEntityType getEntityType() {
+    public EntityType getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(CollectionEntityType entityType) {
+    public void setEntityType(EntityType entityType) {
         this.entityType = entityType;
     }
 
@@ -194,11 +197,11 @@ public class CollectionMeetingCalendar {
         this.repeating = repeating;
     }
 
-    public Day getRepeatsOnDay() {
+    public EntityType getRepeatsOnDay() {
         return repeatsOnDay;
     }
 
-    public void setRepeatsOnDay(Day repeatsOnDay) {
+    public void setRepeatsOnDay(EntityType repeatsOnDay) {
         this.repeatsOnDay = repeatsOnDay;
     }
 
@@ -226,11 +229,19 @@ public class CollectionMeetingCalendar {
         this.title = title;
     }
 
-    public MeetingType getType() {
+    public EntityType getType() {
         return type;
     }
 
-    public void setType(MeetingType type) {
+    public void setType(EntityType type) {
         this.type = type;
+    }
+
+    public Map<String, Object> getAdditionalProperties() {
+        return additionalProperties;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
     }
 }

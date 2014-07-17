@@ -5,13 +5,13 @@ import com.orm.SugarRecord;
 public class RepaymentTransaction extends SugarRecord<RepaymentTransaction> {
 
     private Loan loan;
-    private int transactionAmount;
+    private double transactionAmount;
 
     public RepaymentTransaction(){
 
     }
 
-    public RepaymentTransaction(Loan loan, int transactionAmount) {
+    public RepaymentTransaction(Loan loan, double transactionAmount) {
         this.loan = loan;
         this.transactionAmount = transactionAmount;
     }
@@ -20,11 +20,11 @@ public class RepaymentTransaction extends SugarRecord<RepaymentTransaction> {
         return loan;
     }
 
-    public int getTransactionAmount() {
+    public double getTransactionAmount() {
         return transactionAmount;
     }
 
-    public void setTransactionAmount(int transactionAmount) {
+    public void setTransactionAmount(double transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
 }

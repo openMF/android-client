@@ -63,11 +63,11 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void saveUpdatedLoanToDB() {
-        Map<Loan, Integer> mapDue = adapter.getUpdatedDueList();
+        Map<Loan, Double> mapDue = adapter.getUpdatedDueList();
 
         Set<Loan> loans = mapDue.keySet();
         for (Loan loan : loans) {
-            int updatedDue = mapDue.get(loan);
+            double updatedDue = mapDue.get(loan);
             RepaymentTransaction repaymentTransaction = Select.from(RepaymentTransaction.class).where(Condition.prop("loan").eq(loan.getId())).first();
             if (repaymentTransaction == null) {
                 repaymentTransaction = new RepaymentTransaction(loan, updatedDue);
@@ -79,9 +79,9 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void updateTotalDue() {
-        Map<Loan, Integer> mapDue = adapter.getUpdatedDueList();
+        Map<Loan, Double> mapDue = adapter.getUpdatedDueList();
 
-        int totalAmountDue = 0;
+        double totalAmountDue = 0;
 
         Set<Loan> loans = mapDue.keySet();
 
@@ -108,9 +108,9 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void calculateTotalDueAmount() {
-        int totalAmountDue = 0;
+        double totalAmountDue = 0;
 
-        final Map<Loan, Integer> listPaidAmount = new LinkedHashMap<Loan, Integer>();
+        final Map<Loan, Double> listPaidAmount = new LinkedHashMap<Loan, Double>();
 
         List<Loan> loans = Select.from(Loan.class).list();
         for (Loan loan : loans) {

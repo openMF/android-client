@@ -5,12 +5,12 @@ import com.google.gson.Gson;
 public class BulkRepaymentTransactions
 {
     public int loanId;
-    public int transactionAmount;
+    public double transactionAmount;
 
     public BulkRepaymentTransactions() {
     }
 
-    public BulkRepaymentTransactions(int loanId, int transactionAmount) {
+    public BulkRepaymentTransactions(int loanId, double transactionAmount) {
         this.loanId = loanId;
         this.transactionAmount = transactionAmount;
     }

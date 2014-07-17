@@ -4,14 +4,14 @@ import com.google.gson.Gson;
 import com.orm.SugarRecord;
 
 public class Loan extends SugarRecord<Loan> {
-    public int disbursementAmount;
-    public int interestDue;
-    public int interestPaid;
+    public double disbursementAmount;
+    public double interestDue;
+    public double interestPaid;
     public int loanId;
-    public int chargesDue;
-    public int totalDue;
-    public int principalDue;
-    public int principalPaid;
+    public double chargesDue;
+    public double totalDue;
+    public double principalDue;
+    public double principalPaid;
     public String accountId;
     public int accountStatusId;
     public String productShortName;
@@ -60,7 +60,7 @@ public class Loan extends SugarRecord<Loan> {
         this.currency = currency;
     }
 
-    public int getDisbursementAmount() {
+    public double getDisbursementAmount() {
         return disbursementAmount;
     }
 

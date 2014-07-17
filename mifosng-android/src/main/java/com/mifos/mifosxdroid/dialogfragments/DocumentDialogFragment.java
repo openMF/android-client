@@ -43,6 +43,7 @@ import retrofit.mime.TypedFile;
  */
 public class DocumentDialogFragment extends DialogFragment {
 
+    public static final String TAG = "DocumentDialogFragment";
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
@@ -144,7 +145,7 @@ public class DocumentDialogFragment extends DialogFragment {
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
 
-                    Log.d(getClass().getSimpleName(), "File Uri: " + uri.toString());
+                    Log.d(TAG, "File Uri: " + uri.toString());
                     // Get the path
                     try {
 
@@ -153,7 +154,7 @@ public class DocumentDialogFragment extends DialogFragment {
                         if (scheme.equals("file")) {
                             filePath = FileUtils.getPath(getActivity(), uri);
                             fileChoosen = new File(filePath);
-                            Log.d(getClass().getSimpleName(), "File Path: " + filePath);
+                            Log.d(TAG, "File Path: " + filePath);
                         } else if (scheme.equals("content")) {
 
                             Toast.makeText(getActivity(), "The application currently does not support file picking from apps other than File Managers.",

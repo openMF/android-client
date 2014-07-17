@@ -55,6 +55,13 @@ public class Constants {
 
     public static final String ENTITY_ID = "entityId";
 
+    public static final String DATE_OF_COLLECTION = "dateOfCollection";
+
+    public static final String DATE_FORMAT = "dateFormat";
+
+    public static final String CALENDAR_INSTANCE_ID = "calendarInstanceId";
+
+
     /**
      * Constants to identify which Data Tables have to be shown
      */

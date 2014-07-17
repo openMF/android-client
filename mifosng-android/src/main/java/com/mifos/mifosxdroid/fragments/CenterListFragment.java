@@ -6,31 +6,54 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
-import com.mifos.objects.db.*;
+import com.mifos.objects.db.AttendanceType;
+import com.mifos.objects.db.Client;
+import com.mifos.objects.db.CollectionMeetingCalendar;
+import com.mifos.objects.db.Currency;
+import com.mifos.objects.db.EntityType;
+import com.mifos.objects.db.Loan;
+import com.mifos.objects.db.MeetingCenter;
+import com.mifos.objects.db.MeetingDate;
+import com.mifos.objects.db.MifosGroup;
+import com.mifos.objects.db.OfflineCenter;
+import com.mifos.objects.db.RepaymentTransaction;
+import com.mifos.objects.db.Status;
 import com.mifos.services.API;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.Network;
 import com.mifos.utils.SaveOfflineDataHelper;
 import com.orm.query.Select;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class CenterListFragment extends Fragment implements AdapterView.OnItemClickListener,
         SaveOfflineDataHelper.OfflineDataSaveListener {
 
+    public static final String TAG = "Center List Fragment";
     public static final String CENTER_ID = "offline_center_id";
     private final List<MeetingCenter> centerList = new ArrayList<MeetingCenter>();
     @InjectView(R.id.lv_center)
@@ -38,7 +61,6 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
     @InjectView(R.id.progress_center)
     ProgressBar progressCenter;
     CenterAdapter adapter = null;
-    String tag = getClass().getSimpleName();
     View view;
     @InjectView(R.id.tv_empty_center)
     TextView tv_empty_center;
@@ -102,13 +124,13 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
             int staffId = preferences.getInt(OfflineCenterInputActivity.STAFF_ID_KEY, -1);
             String meetingDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null));
             int branchId = preferences.getInt(OfflineCenterInputActivity.BRANCH_ID_KEY, -1);
-            Log.i(tag, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" + branchId);
+            Log.i(TAG, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" + branchId);
             //TODO -- Need to ask ---  Hardcoding date format and locale
             API.centerService.getCenterList("dd-MMM-yyyy", "en", meetingDate, branchId, staffId,
                     new Callback<List<OfflineCenter>>() {
                         @Override
                         public void success(List<OfflineCenter> centers, Response response) {
-                            Log.i(tag, "-----------Success-----Got the list of centers--------");
+                            Log.i(TAG, "-----------Success-----Got the list of centers--------");
                             for (OfflineCenter center : centers) {
                                 if (center != null) {
                                     SaveOfflineDataHelper helper = new SaveOfflineDataHelper(getActivity());

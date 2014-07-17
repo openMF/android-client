@@ -88,6 +88,15 @@ public class CenterListFragment extends Fragment {
                     }
                 });
 
+                lv_centers_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        mListener.loadCollectionSheetForCenter(centers.get(position).getId());
+                        return true;
+                    }
+                });
+
                 safeUIBlockingUtility.safelyUnBlockUI();
 
             }
@@ -112,6 +121,7 @@ public class CenterListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
 
         public void loadGroupsOfCenter(int centerId);
+        public void loadCollectionSheetForCenter(int centerId);
 
     }
 

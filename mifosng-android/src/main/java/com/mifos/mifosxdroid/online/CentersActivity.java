@@ -59,6 +59,16 @@ public class CentersActivity extends ActionBarActivity
     }
 
     @Override
+    public void loadCollectionSheetForCenter(int centerId) {
+        CollectionSheetFragment collectionSheetFragment = CollectionSheetFragment.newInstance(centerId, "18 July 2014", 161);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CENTER_LIST);
+        fragmentTransaction.replace(R.id.center_container, collectionSheetFragment);
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
     public void loadClientsOfGroup(List<Client> clientList) {
         ClientListFragment clientListFragment = ClientListFragment.newInstance(clientList);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

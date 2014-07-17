@@ -1,9 +1,9 @@
-package com.mifos.objects.collectionmeetingcalendar;
+package com.mifos.objects.collectionsheet;
 
 /**
  * Created by ishankhanna on 16/07/14.
  */
-public class MeetingType {
+public class CollectionFrequency {
 
     private Integer id;
     private String code;
@@ -32,5 +32,4 @@ public class MeetingType {
     public void setValue(String value) {
         this.value = value;
     }
-
 }

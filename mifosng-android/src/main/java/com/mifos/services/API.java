@@ -3,6 +3,7 @@ package com.mifos.services;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
@@ -29,18 +30,38 @@ import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
-import com.mifos.services.data.*;
+import com.mifos.services.data.APIEndPoint;
+import com.mifos.services.data.CollectionSheetPayload;
+import com.mifos.services.data.GpsCoordinatesRequest;
+import com.mifos.services.data.GpsCoordinatesResponse;
+import com.mifos.services.data.Payload;
+import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
-import retrofit.*;
-import retrofit.client.Response;
-import retrofit.http.*;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import retrofit.Callback;
+import retrofit.ErrorHandler;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.Headers;
+import retrofit.http.Multipart;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Part;
+import retrofit.http.Path;
+import retrofit.http.Query;
+import retrofit.http.QueryMap;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 public class API {
 
@@ -180,6 +201,11 @@ public class API {
         public void getAllCenters(Callback<List<Center>> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
+        public void getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int centerId,
+                                                                          Callback<CenterWithAssociations> centerWithAssociationsCallback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
         public void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String,Object> additionalParams,
                                           Callback<List<Center>> centersCallback);
@@ -190,10 +216,9 @@ public class API {
         public void getAllGroupsForCenter(@Path("centerId") int centerId,
                                           Callback<CenterWithAssociations> centerWithAssociationsCallback);
 
-        //TODO Remove Static Center Code
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
-        public void getCenter(@Path("centerId") long centerId, @Body Payload payload, Callback<CollectionSheet> callback);
+        public void getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload, Callback<CollectionSheet> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")

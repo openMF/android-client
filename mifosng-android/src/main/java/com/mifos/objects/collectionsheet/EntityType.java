@@ -1,9 +1,9 @@
-package com.mifos.objects.collectionmeetingcalendar;
+package com.mifos.objects.collectionsheet;
 
 /**
  * Created by ishankhanna on 16/07/14.
  */
-public class Day {
+public class EntityType {
 
     private Integer id;
     private String code;

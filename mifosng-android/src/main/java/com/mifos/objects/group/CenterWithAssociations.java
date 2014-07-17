@@ -2,6 +2,7 @@ package com.mifos.objects.group;
 
 import com.mifos.objects.Status;
 import com.mifos.objects.Timeline;
+import com.mifos.objects.collectionsheet.CollectionMeetingCalendar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class CenterWithAssociations {
     private List<Integer> activationDate = new ArrayList<Integer>();
     private Timeline timeline;
     private List<Group> groupMembers = new ArrayList<Group>();
+    private CollectionMeetingCalendar collectionMeetingCalendar = new CollectionMeetingCalendar();
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
