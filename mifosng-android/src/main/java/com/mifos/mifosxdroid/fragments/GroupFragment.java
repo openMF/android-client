@@ -7,10 +7,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
@@ -24,16 +32,19 @@ import com.orm.query.Select;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 
 public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
 
+    public static final String TAG = "Group Fragment";
     private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
     @InjectView(R.id.lv_group)
     ListView lv_group;
     @InjectView(R.id.progress_group)
     ProgressBar progressGroup;
     MifosGroupListAdapter adapter = null;
-    String tag = getClass().getSimpleName();
     View view;
     @InjectView(R.id.tv_empty_group)
     TextView tv_empty_group;
@@ -119,7 +130,7 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(getActivity(), ClientActivity.class);
         intent.putExtra("group_id", groupList.get(i).getId());
-        Log.i(tag, "onItemClick = Group ID:" + groupList.get(i).getId());
+        Log.i(TAG, "onItemClick = Group ID:" + groupList.get(i).getId());
         startActivity(intent);
     }
 

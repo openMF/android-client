@@ -68,6 +68,14 @@ public class Loan extends SugarRecord<Loan> {
         this.disbursementAmount = disbursementAmount;
     }
 
+    public double getTotalDue() {
+        return totalDue;
+    }
+
+    public void setTotalDue(double totalDue) {
+        this.totalDue = totalDue;
+    }
+
     public int getAccountStatusId() {
         return accountStatusId;
     }

@@ -1,21 +1,26 @@
 package com.mifos.mifosxdroid.online;
 
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
 import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.db.MifosGroup;
 import com.mifos.services.API;
 import com.mifos.services.data.Payload;
 import com.mifos.utils.Constants;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -34,6 +39,10 @@ public class CollectionSheetFragment extends Fragment {
     private String dateOfCollection; // Date of Meeting on which collection has to be done.
     private int calendarInstanceId;
     View rootView;
+
+    @InjectView(R.id.exlv_collection_sheet)
+    ExpandableListView expandableListView;
+
 
     public static CollectionSheetFragment newInstance(int centerId, String dateOfCollection, int calendarInstanceId) {
         CollectionSheetFragment fragment = new CollectionSheetFragment();
@@ -84,6 +93,9 @@ public class CollectionSheetFragment extends Fragment {
             public void success(CollectionSheet collectionSheet, Response response) {
 
                 Log.i(COLLECTION_SHEET_ONLINE, "Received");
+                List<MifosGroup> mifosGroups = collectionSheet.groups;
+                CollectionListAdapter collectionListAdapter = new CollectionListAdapter(getActivity(), mifosGroups);
+                expandableListView.setAdapter(collectionListAdapter);
 
             }
 
