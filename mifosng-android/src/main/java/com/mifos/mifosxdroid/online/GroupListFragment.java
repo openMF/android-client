@@ -1,3 +1,8 @@
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
@@ -15,9 +20,9 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
-import com.mifos.objects.client.Client;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.SafeUIBlockingUtility;

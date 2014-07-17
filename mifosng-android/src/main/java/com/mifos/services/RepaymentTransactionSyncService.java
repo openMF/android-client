@@ -1,21 +1,33 @@
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
 package com.mifos.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
-import com.mifos.objects.db.*;
+import com.mifos.objects.db.AttendanceType;
+import com.mifos.objects.db.Client;
+import com.mifos.objects.db.Currency;
+import com.mifos.objects.db.Loan;
+import com.mifos.objects.db.MifosGroup;
+import com.mifos.objects.db.RepaymentTransaction;
 import com.mifos.services.data.BulkRepaymentTransactions;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
 import com.orm.query.Select;
-import retrofit.RetrofitError;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.RetrofitError;
 
 public class RepaymentTransactionSyncService {
 
