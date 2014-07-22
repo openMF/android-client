@@ -19,6 +19,7 @@ import java.util.Calendar;
  */
 public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
+    public static final String TAG = "MFDatePicker";
     static String dateSet;
     static Calendar calendar;
 
@@ -38,7 +39,7 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
                 .toString();
     }
 
-    OnDatePickListener mListener;
+    OnDatePickListener onDatePickListener;
 
     public MFDatePicker(){
 
@@ -46,7 +47,7 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
 
     public static MFDatePicker newInsance(Fragment fragment) {
         MFDatePicker mfDatePicker = new MFDatePicker();
-        mfDatePicker.mListener = (OnDatePickListener) fragment;
+        mfDatePicker.onDatePickListener = (OnDatePickListener) fragment;
         return mfDatePicker;
     }
 
@@ -62,14 +63,14 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         //TODO Fix Single digit problem that fails with the locale
-        mListener.onDatePicked(
+        onDatePickListener.onDatePicked(
                 new StringBuilder()
-                .append(day < 10 ? "0"+day : day)
-                .append("-")
-                .append((month+1) < 10 ? "0"+(month+1) : month+1)
-                .append("-")
-                .append(year)
-                .toString()
+                        .append(day < 10 ? "0" + day : day)
+                        .append("-")
+                        .append((month + 1) < 10 ? "0" + (month + 1) : month + 1)
+                        .append("-")
+                        .append(year)
+                        .toString()
         );
 
     }
@@ -81,5 +82,11 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     public interface OnDatePickListener {
         public void onDatePicked(String date);
     }
+
+    public void setOnDatePickListener(OnDatePickListener onDatePickListener) {
+        this.onDatePickListener = onDatePickListener;
+    }
+
+
 
 }

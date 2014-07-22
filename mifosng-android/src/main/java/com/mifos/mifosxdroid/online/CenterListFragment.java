@@ -18,12 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
+import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
+import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.services.API;
 import com.mifos.utils.SafeUIBlockingUtility;
 
@@ -95,9 +98,37 @@ public class CenterListFragment extends Fragment {
 
                 lv_centers_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        mListener.loadCollectionSheetForCenter(centers.get(position).getId());
+                        safeUIBlockingUtility.safelyBlockUI();
+
+                        API.centerService.getCenterWithGroupMembersAndCollectionMeetingCalendar(centers.get(position).getId(), new Callback<CenterWithAssociations>() {
+                            @Override
+                            public void success(final CenterWithAssociations centerWithAssociations, Response response) {
+
+                                safeUIBlockingUtility.safelyUnBlockUI();
+                                MFDatePicker mfDatePicker = new MFDatePicker();
+                                mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
+                                    @Override
+                                    public void onDatePicked(String date) {
+
+                                        mListener.loadCollectionSheetForCenter(centers.get(position).getId(), date, centerWithAssociations.getCollectionMeetingCalendar().getId());
+
+                                    }
+                                });
+                                mfDatePicker.show(getActivity().getSupportFragmentManager(), MFDatePicker.TAG);
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+
+                                safeUIBlockingUtility.safelyUnBlockUI();
+                                Toast.makeText(getActivity(), "Cannot Generate Collection Sheet, There was some problem!", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
                         return true;
                     }
                 });
@@ -126,7 +157,7 @@ public class CenterListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
 
         public void loadGroupsOfCenter(int centerId);
-        public void loadCollectionSheetForCenter(int centerId);
+        public void loadCollectionSheetForCenter(int centerId, String collectionDate, int calenderInstanceId);
 
     }
 

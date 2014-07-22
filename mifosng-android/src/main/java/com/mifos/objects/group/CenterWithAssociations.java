@@ -143,6 +143,10 @@ public class CenterWithAssociations {
         this.groupMembers = groupMembers;
     }
 
+    public CollectionMeetingCalendar getCollectionMeetingCalendar() {
+        return collectionMeetingCalendar;
+    }
+
     public void setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
     }

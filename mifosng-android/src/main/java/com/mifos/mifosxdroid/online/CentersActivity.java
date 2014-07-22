@@ -64,8 +64,8 @@ public class CentersActivity extends ActionBarActivity
     }
 
     @Override
-    public void loadCollectionSheetForCenter(int centerId) {
-        CollectionSheetFragment collectionSheetFragment = CollectionSheetFragment.newInstance(centerId, "18 July 2014", 161);
+    public void loadCollectionSheetForCenter(int centerId, String collectionDate, int calenderInstanceId) {
+        CollectionSheetFragment collectionSheetFragment = CollectionSheetFragment.newInstance(centerId, collectionDate, calenderInstanceId);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CENTER_LIST);
         fragmentTransaction.replace(R.id.center_container, collectionSheetFragment);

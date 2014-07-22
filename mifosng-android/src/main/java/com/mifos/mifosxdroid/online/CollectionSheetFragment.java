@@ -161,7 +161,7 @@ public class CollectionSheetFragment extends Fragment {
         Payload payload = new Payload();
         payload.setCalendarId(calendarInstanceId);
         payload.setTransactionDate(dateOfCollection);
-        //payload.setDateFormat();
+        payload.setDateFormat("dd-MM-YYYY");
 
         API.centerService.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
             @Override
@@ -215,7 +215,7 @@ public class CollectionSheetFragment extends Fragment {
 
         collectionSheetPayload.setCalendarId(calendarInstanceId);
         collectionSheetPayload.setTransactionDate(dateOfCollection);
-
+        collectionSheetPayload.setDateFormat("dd-MM-YYYY");
         API.centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
             @Override
             public void success(SaveResponse saveResponse, Response response) {
