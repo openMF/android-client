@@ -7,7 +7,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="8dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -26,20 +27,21 @@
             android:layout_height="wrap_content"
             android:text="Raj Kumar Kaushikl"
             android:id="@+id/tv_clientName"
-            android:layout_weight="2.5" />
+            android:layout_weight="1" />
 
-        <EditText
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/et_amount"
-            android:layout_weight="1.5" />
+            android:id="@+id/tv_clientTotal"
+            android:layout_weight="1"/>
 
-        <Spinner
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/sp_attendance"
-            android:layout_weight="2.5" />
     </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_loans"
+        android:layout_gravity="center_horizontal" />
+
+
 </LinearLayout>

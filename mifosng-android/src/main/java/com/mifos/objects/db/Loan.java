@@ -85,6 +85,10 @@ public class Loan extends SugarRecord<Loan> {
         return accountStatusId;
     }
 
+    public String getProductShortName() {
+        return productShortName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
