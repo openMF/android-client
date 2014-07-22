@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
@@ -23,9 +24,15 @@ import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
 import com.mifos.services.API;
+import com.mifos.services.data.BulkRepaymentTransactions;
+import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.Payload;
+import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -136,7 +143,7 @@ public class CollectionSheetFragment extends Fragment {
                 break;
 
             case MENU_ITEM_SAVE :
-
+                    saveCollectionSheet();
                 break;
 
             case MENU_ITEM_SEARCH :
@@ -189,13 +196,47 @@ public class CollectionSheetFragment extends Fragment {
 
     }
 
-    public synchronized boolean saveCollectionSheet() {
+    public synchronized void saveCollectionSheet() {
+
+        CollectionSheetPayload collectionSheetPayload = new CollectionSheetPayload();
+
+        List<BulkRepaymentTransactions> bulkRepaymentTransactions = new ArrayList<BulkRepaymentTransactions>();
+
+        Iterator iterator = CollectionListAdapter.sRepaymentTransactions.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            HashMap.Entry repaymentTransaction = (HashMap.Entry) iterator.next();
+            bulkRepaymentTransactions.add(new BulkRepaymentTransactions((Integer) repaymentTransaction.getKey(), (Double) repaymentTransaction.getValue()));
+            iterator.remove();
+        }
+
+        collectionSheetPayload.bulkRepaymentTransactions = new BulkRepaymentTransactions[bulkRepaymentTransactions.size()];
+        bulkRepaymentTransactions.toArray(collectionSheetPayload.bulkRepaymentTransactions);
+
+        collectionSheetPayload.setCalendarId(calendarInstanceId);
+        collectionSheetPayload.setTransactionDate(dateOfCollection);
+
+        API.centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
+            @Override
+            public void success(SaveResponse saveResponse, Response response) {
+
+                if (saveResponse != null) {
+
+                    Toast.makeText(getActivity(), "Collection Sheet Saved Successfully", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
 
 
+            }
+        });
 
-
-
-        return false;
     }
 
 

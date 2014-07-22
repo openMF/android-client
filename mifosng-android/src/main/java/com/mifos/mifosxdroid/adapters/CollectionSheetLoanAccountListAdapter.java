@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.adapters;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,8 +74,7 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
             reusableViewHolder = (ReusableViewHolder) convertView.getTag();
         }
 
-        Log.i(TAG, "Loan Id = "+loans.get(position).getId() +"\n"+" Loan Total Due ="+ loans.get(position).getTotalDue()+"\n"+"Repayment Amount ="
-                + CollectionListAdapter.sRepaymentTransactions.get(loans.get(position).getLoanId()));
+
 
         Double transactionAmount = CollectionListAdapter.sRepaymentTransactions.get(loans.get(position).getLoanId());
 
@@ -101,7 +99,6 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
                 CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), Double.parseDouble(s.toString()));
 
                 /* TODO Fix Live update of Amounts
-                CollectionListAdapter.sMifosGroups.get(groupPosition).getClients().get(childPosition).getLoans().get(position).setTotalDue(Double.parseDouble(s.toString()));
                 CollectionSheetFragment.refreshFragment();
                 reusableViewHolder.et_amountPaid.requestFocus();
                 */

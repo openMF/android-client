@@ -230,6 +230,11 @@ public class API {
         public SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
+        public void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
+
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
         public void getCenterList(@Query("dateFormat") String dateFormat, @Query("locale") String locale,
                                   @Query("meetingDate") String meetingDate, @Query("officeId") int officeId,
