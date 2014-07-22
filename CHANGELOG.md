@@ -3,7 +3,20 @@
 
 #Releases
 
+2. 23 July 2014 - 0.1.0-alpha
 1. 14 July 2014 - 0.0.1-alpha
+
+##0.1.0-alpha
+
+Bug Fixes :
+[MIFOSX-1412] - Usability related issues with respect to mobile app android
+[MIFOSX-1384] - Not able to view particular loan details results in unexpected close of application
+[MIFOSX-1085] - Search for Clients by ID or Name on Mobile App
+
+What's New :
+* View Collection Sheet of a Center
+* Update Collection Sheet of a Center and Save it Back to the Server
+
 
 ##0.0.1-alpha
 
