@@ -29,6 +29,7 @@ import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -54,6 +56,7 @@ public class CollectionSheetFragment extends Fragment {
     private static final int MENU_ITEM_SEARCH = 2000;
     private static final int MENU_ITEM_REFRESH = 2001;
     private static final int MENU_ITEM_SAVE = 2002;
+    public static final String TAG = "Collection Sheet Fragment";
     private int centerId; // Center for which collection sheet is being generated
     private String dateOfCollection; // Date of Meeting on which collection has to be done.
     private int calendarInstanceId;
@@ -216,6 +219,9 @@ public class CollectionSheetFragment extends Fragment {
         collectionSheetPayload.setCalendarId(calendarInstanceId);
         collectionSheetPayload.setTransactionDate(dateOfCollection);
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
+
+        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
+
         API.centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
             @Override
             public void success(SaveResponse saveResponse, Response response) {
@@ -231,7 +237,21 @@ public class CollectionSheetFragment extends Fragment {
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
+
+
+                Response response = retrofitError.getResponse();
+                if (response != null) {
+
+                    if (response.getStatus() == 400 || response.getStatus() == 403) {
+
+                        MFErrorParser.ParseError(response, getActivity());
+
+                    }
+
+                    Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
+
+
+                }
 
 
             }

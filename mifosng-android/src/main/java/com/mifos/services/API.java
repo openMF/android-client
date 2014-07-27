@@ -8,7 +8,9 @@ package com.mifos.services;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
@@ -42,6 +44,9 @@ import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MFErrorResponse;
+
+import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -530,20 +535,43 @@ public class API {
         public Throwable handleError(RetrofitError retrofitError) {
 
             Response response = retrofitError.getResponse();
-            if (response != null && response.getStatus() == 401) {
-                Log.e("Status", "Authentication Error.");
+            if (response != null) {
+
+                if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                    Log.e("Status", "Authentication Error.");
 
 
-            } else if (response.getStatus() == 400) {
-                Log.d("Status", "Bad Request - Invalid Parameter or Data Integrity Issue.");
-                Log.d("URL", response.getUrl());
-                List<retrofit.client.Header> headersList = response.getHeaders();
-                Iterator<retrofit.client.Header> iterator = headersList.iterator();
-                while (iterator.hasNext()) {
-                    retrofit.client.Header header = iterator.next();
-                    Log.d("Header ", header.toString());
+                } else if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+
+                    MFErrorResponse mfErrorResponse = new Gson().fromJson(response.getBody().toString(), MFErrorResponse.class);
+                    Log.d("Status", "Bad Request - Invalid Parameter or Data Integrity Issue.");
+                    Log.d("URL", response.getUrl());
+                    List<retrofit.client.Header> headersList = response.getHeaders();
+                    Iterator<retrofit.client.Header> iterator = headersList.iterator();
+                    while (iterator.hasNext()) {
+                        retrofit.client.Header header = iterator.next();
+                        Log.d("Header ", header.toString());
+                    }
+                } else if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
+
+                    MFErrorResponse mfErrorResponse = new Gson().fromJson(response.getBody().toString(), MFErrorResponse.class);
+
+                    Toast.makeText(Constants.applicationContext, mfErrorResponse.getDefaultUserMessage(), Toast.LENGTH_LONG).show();
+
+                    Log.d("Status", "Bad Request - Invalid Parameter or Data Integrity Issue.");
+                    Log.d("URL", response.getUrl());
+                    List<retrofit.client.Header> headersList = response.getHeaders();
+                    Iterator<retrofit.client.Header> iterator = headersList.iterator();
+                    while (iterator.hasNext()) {
+                        retrofit.client.Header header = iterator.next();
+                        Log.d("Header ", header.toString());
+                    }
+
                 }
+
             }
+
+
 
             return retrofitError;
         }
