@@ -96,8 +96,11 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
             @Override
             public void afterTextChanged(Editable s) {
 
-                CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), Double.parseDouble(s.toString()));
-
+                try {
+                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), s.toString().equals("")?0.00:Double.parseDouble(s.toString()));
+                }catch (NumberFormatException e) {
+                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), 0.00);
+                }
                 /* TODO Fix Live update of Amounts
                 CollectionSheetFragment.refreshFragment();
                 reusableViewHolder.et_amountPaid.requestFocus();
