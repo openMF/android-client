@@ -14,15 +14,13 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.db.Loan;
 
 import java.util.List;
 import java.util.Map;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
 public class ClientListAdapter extends BaseAdapter {
@@ -114,13 +112,17 @@ public class ClientListAdapter extends BaseAdapter {
                 try {
                     double changedValue = Double.parseDouble(((EditText) v).getText().toString());
                     listPaidAmounts.put(loan, changedValue);
-                    loan.totalDue = changedValue;
-                    loan.save();
-                    notifyDataSetChanged();
+                    if (loan.totalDue != changedValue) {
+                        loan.totalDue = changedValue;
+                        loan.save();
+                        notifyDataSetChanged();
+                    }
                 } catch (NumberFormatException e) {
                     Toast.makeText(context, context.getString(R.string.error_invalid_amount), Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
+
+
 }

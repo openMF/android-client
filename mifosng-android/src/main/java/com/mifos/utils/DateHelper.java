@@ -5,6 +5,10 @@
 
 package com.mifos.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import com.mifos.mifosxdroid.OfflineCenterInputActivity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -177,4 +181,19 @@ public class DateHelper {
         return monthName;
     }
 
+    public static String getPayloadDate() {
+        SharedPreferences preferences = Constants.applicationContext.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
+        final StringBuilder builder = new StringBuilder();
+        if (date != null) {
+            String[] splittedDate = date.split("-");
+            int month = Integer.parseInt(splittedDate[1]);
+            builder.append(splittedDate[0]);
+            builder.append(" ");
+            builder.append(DateHelper.getMonthName(month));
+            builder.append(" ");
+            builder.append(splittedDate[2]);
+        }
+        return builder.toString();
+    }
 }

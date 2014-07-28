@@ -9,7 +9,7 @@ public class Payload
 {
     private String dateFormat = "dd MMMM YYYY";
     private String locale = "en";
-    private int calendarId;
+    private long calendarId;
     private String transactionDate;
 
     public String getDateFormat()
@@ -32,12 +32,12 @@ public class Payload
         this.locale = locale;
     }
 
-    public int getCalendarId()
+    public long getCalendarId()
     {
         return calendarId;
     }
 
-    public void setCalendarId(int calendarId)
+    public void setCalendarId(long calendarId)
     {
         this.calendarId = calendarId;
     }

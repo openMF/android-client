@@ -7,28 +7,18 @@ package com.mifos.utils;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.mifos.mifosxdroid.OfflineCenterInputActivity;
-import com.mifos.objects.db.CollectionMeetingCalendar;
-import com.mifos.objects.db.CollectionSheet;
-import com.mifos.objects.db.EntityType;
-import com.mifos.objects.db.MeetingCenter;
-import com.mifos.objects.db.MeetingDate;
-import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.db.Status;
+import com.mifos.objects.db.*;
 import com.mifos.services.API;
 import com.mifos.services.data.Payload;
 import com.orm.query.Select;
-
-import java.util.HashMap;
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class SaveOfflineDataHelper {
 
@@ -110,8 +100,7 @@ public class SaveOfflineDataHelper {
             collectionMeetingCalendar1.setRepeating(collectionMeetingCalendar.isRepeating());
             collectionMeetingCalendar1.setTitle(collectionMeetingCalendar.getTitle());
             collectionMeetingCalendar1.setEntityType(entityType);
-            //TODO this doesn't work why???
-            // collectionMeetingCalendar1.setId(collectionMeetingCalendar.getId());
+            collectionMeetingCalendar1.setCalendarId(collectionMeetingCalendar.getId());
             collectionMeetingCalendar1.save();
 
             MeetingCenter meetingCenter1 = new MeetingCenter();
@@ -144,20 +133,8 @@ public class SaveOfflineDataHelper {
 
     private Payload getPayload(Context context, MeetingCenter center) {
         final Payload payload = new Payload();
-        SharedPreferences preferences = context.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-        String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
-        if (date != null) {
-            String[] splittedDate = date.split("-");
-            int month = Integer.parseInt(splittedDate[1]);
-            final StringBuilder builder = new StringBuilder();
-            builder.append(splittedDate[0]);
-            builder.append(" ");
-            builder.append(DateHelper.getMonthName(month));
-            builder.append(" ");
-            builder.append(splittedDate[2]);
-            payload.setTransactionDate(builder.toString());
+        payload.setTransactionDate(DateHelper.getPayloadDate());
             payload.setCalendarId(center.getCollectionMeetingCalendar().getCalendarInstanceId());
-        }
         return payload;
     }
 

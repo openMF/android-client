@@ -11,48 +11,27 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.GroupActivity;
+import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
-import com.mifos.objects.db.AttendanceType;
-import com.mifos.objects.db.Client;
-import com.mifos.objects.db.CollectionMeetingCalendar;
-import com.mifos.objects.db.Currency;
-import com.mifos.objects.db.EntityType;
-import com.mifos.objects.db.Loan;
-import com.mifos.objects.db.MeetingCenter;
-import com.mifos.objects.db.MeetingDate;
-import com.mifos.objects.db.MifosGroup;
-import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.db.RepaymentTransaction;
-import com.mifos.objects.db.Status;
+import com.mifos.objects.db.*;
 import com.mifos.services.API;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.Network;
 import com.mifos.utils.SaveOfflineDataHelper;
 import com.orm.query.Select;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CenterListFragment extends Fragment implements AdapterView.OnItemClickListener,
@@ -125,13 +104,15 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
     private void getData() {
 
         if (Network.isOnline(getActivity().getApplicationContext())) {
+            String dateFormant = "dd-MMM-yyyy";
+            String locale = "en";
             SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
             int staffId = preferences.getInt(OfflineCenterInputActivity.STAFF_ID_KEY, -1);
             String meetingDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null));
             int branchId = preferences.getInt(OfflineCenterInputActivity.BRANCH_ID_KEY, -1);
             Log.i(TAG, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" + branchId);
-            //TODO -- Need to ask ---  Hardcoding date format and locale
-            API.centerService.getCenterList("dd-MMM-yyyy", "en", meetingDate, branchId, staffId,
+            //TODO -- Need to ask ---  Hard coding date format and locale
+            API.centerService.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
                     new Callback<List<OfflineCenter>>() {
                         @Override
                         public void success(List<OfflineCenter> centers, Response response) {
@@ -152,7 +133,10 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
 
                         @Override
                         public void failure(RetrofitError error) {
-
+                            Toast.makeText(getActivity(), "Please login to continue", Toast.LENGTH_LONG).show();
+                            getActivity().finish();
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            startActivity(intent);
                         }
                     });
         }
@@ -187,9 +171,8 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
-        Toast.makeText(getActivity(), "These is no data this input, please re-enter the details", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Offline data has been cleared.", Toast.LENGTH_LONG).show();
         getActivity().finish();
-        ;
         startActivity(new Intent(getActivity(), OfflineCenterInputActivity.class));
     }
 

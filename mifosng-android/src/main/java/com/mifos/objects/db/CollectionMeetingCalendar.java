@@ -17,6 +17,7 @@ import java.util.List;
 
 public class CollectionMeetingCalendar extends SugarRecord<CollectionMeetingCalendar> {
     private int calendarInstanceId;
+    private long calendarId;
     private int entityId;
     private EntityType entityType;
     private String title;
@@ -31,6 +32,14 @@ public class CollectionMeetingCalendar extends SugarRecord<CollectionMeetingCale
     public boolean isNew() {
         long count = Select.from(CollectionMeetingCalendar.class).where(Condition.prop("id").eq(id)).count();
         return count == 0;
+    }
+
+    public long getCalendarId() {
+        return calendarId;
+    }
+
+    public void setCalendarId(long calendarId) {
+        this.calendarId = calendarId;
     }
 
     public MeetingDate getMeetingCalendarDate() {

@@ -12,18 +12,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
@@ -36,9 +28,6 @@ import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
 public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
@@ -128,7 +117,6 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private List<MifosGroup> getAllGroups() {
         return Select.from(MifosGroup.class).where(Condition.prop("center_id").eq(centerId)).list();
-        //return Select.from(MifosGroup.class).list();
     }
 
     @Override
@@ -143,16 +131,9 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     public void onSyncFinish(String message, boolean isSyncable) {
         MenuItemCompat.setActionView(syncItem, null);
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-        if (!isSyncable) {
-            SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.clear();
-            editor.commit();
-            getActivity().finish();
-            Intent intent = new Intent(getActivity(), OfflineCenterInputActivity.class);
-            startActivity(intent);
-        } else
+        if (isSyncable) {
             setCenterAsSynced();
+        }
     }
 
     private void setCenterAsSynced() {
@@ -160,6 +141,7 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
             List<MeetingCenter> center = Select.from(MeetingCenter.class).where(com.orm.query.Condition.prop("center_id").eq(centerId)).list();
             center.get(0).setIsSynced(1);
             center.get(0).save();
+            getActivity().finish();
         }
     }
 }
