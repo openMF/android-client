@@ -76,6 +76,12 @@ public class DateHelper {
 
     }
 
+    /**
+     *
+     * @param integersOfDate
+     * @return date in format dd MMM yyyy
+     */
+
     public static String getDateAsString(List<Integer> integersOfDate) {
 
         StringBuilder stringBuilder = new StringBuilder();

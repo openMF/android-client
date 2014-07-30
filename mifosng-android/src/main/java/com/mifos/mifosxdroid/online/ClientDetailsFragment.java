@@ -66,9 +66,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.ButterKnife;
@@ -439,12 +444,20 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     tv_externalId.setText(client.getExternalId());
 
                     try {
-
-                        tv_activationDate.setText(DateHelper.getDateAsString(client.getActivationDate()));
+                        List<Integer> dateObj = client.getActivationDate();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+                        Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
+                        Locale currentLocale = getResources().getConfiguration().locale;
+                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, currentLocale);
+                        //Date date = new Date(dateObj.get(0),dateObj.get(1)-1,dateObj.get(2));
+                        String dateString = df.format(date);
+                        tv_activationDate.setText(dateString);
 
                     }catch (IndexOutOfBoundsException e) {
                         Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
                         tv_activationDate.setText("");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
 
                     tv_office.setText(client.getOfficeName());
