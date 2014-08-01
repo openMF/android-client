@@ -306,7 +306,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         int SUBMENU_ITEM_ID = 0;
 
         // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
+        SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
         if (dataTableSubMenu != null && clientDataTables != null && clientDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
             while (dataTableIterator.hasNext()) {

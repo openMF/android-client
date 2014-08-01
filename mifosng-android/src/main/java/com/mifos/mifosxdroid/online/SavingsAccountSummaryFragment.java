@@ -287,7 +287,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
         int SUBMENU_ITEM_ID = 0;
 
         // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
+        SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
         if (dataTableSubMenu != null && savingsAccountDataTables != null && savingsAccountDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = savingsAccountDataTables.iterator();
             while (dataTableIterator.hasNext()) {

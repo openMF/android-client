@@ -321,7 +321,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         int SUBMENU_ITEM_ID = 0;
 
         // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.getItem(0).getSubMenu();
+        SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
         if (dataTableSubMenu != null && loanDataTables != null && loanDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = loanDataTables.iterator();
             while (dataTableIterator.hasNext()) {
