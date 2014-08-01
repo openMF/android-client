@@ -101,7 +101,7 @@ public class DocumentDialogFragment extends DialogFragment {
 
         getDialog().setTitle(R.string.upload_document);
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        rootView = inflater.inflate(R.layout.document_dialog_fragment, container, false);
+        rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
 
         ButterKnife.inject(this,rootView);
 

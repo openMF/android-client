@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -403,8 +404,13 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int clientId, Callback<JsonArray> jsonArrayCallback);
+        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId, Callback<JsonArray> jsonArrayCallback);
 
+        //TODO Improve Body Implementation with Payload
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
+        public void createEntryInDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId, @Body JsonObject jsonDataForDataTableEntry,
+                                           Callback<GenericResponse> callback);
 
     }
 

@@ -7,21 +7,27 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.gson.JsonArray;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.dialogfragments.DataTableDataRowFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.utils.DataTableUIBuilder;
+import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import retrofit.Callback;
@@ -30,11 +36,12 @@ import retrofit.client.Response;
 
 
 public class DataTableDataFragment extends Fragment {
+    public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
     //private OnFragmentInteractionListener mListener;
 
-    private static DataTable dataTable;
-    private static int entityId;
+    private DataTable dataTable;
+    private int entityId;
 
     ActionBarActivity activity;
 
@@ -63,7 +70,7 @@ public class DataTableDataFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -72,7 +79,7 @@ public class DataTableDataFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false);
 
-         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
+        linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
 
         activity = (ActionBarActivity) getActivity();
         actionBar = activity.getSupportActionBar();
@@ -119,18 +126,37 @@ public class DataTableDataFragment extends Fragment {
         //mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//
-//    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+
+        MenuItem menuItemAddNewEntryToDataTable = menu.add(Menu.NONE, MEUN_ITEM_ADD_NEW_ENTRY, Menu.NONE, getString(R.string.add_new));
+        menuItemAddNewEntryToDataTable.setIcon(getResources().getDrawable(R.drawable.ic_action_content_new));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            menuItemAddNewEntryToDataTable.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == MEUN_ITEM_ADD_NEW_ENTRY) {
+
+            DataTableDataRowFragment dataTableDataRowFragment = DataTableDataRowFragment.newInstance(dataTable, entityId);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.addToBackStack(FragmentConstants.DFRAG_DATATABLE_ENTRY_FORM);
+            dataTableDataRowFragment.show(fragmentTransaction, "Document Dialog Fragment");
+
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

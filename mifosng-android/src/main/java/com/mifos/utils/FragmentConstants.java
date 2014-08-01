@@ -25,4 +25,5 @@ public class FragmentConstants {
     public static final String DFRAG_DATE_PICKER = "Date Picker";
 
     public static final String FRAG_CLIENT_SEARCH = "Client Search Fragment";
+    public static final String DFRAG_DATATABLE_ENTRY_FORM = "Data_Table_Entry_Form";
 }

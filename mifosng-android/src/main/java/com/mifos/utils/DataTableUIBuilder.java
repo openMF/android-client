@@ -36,8 +36,16 @@ public class DataTableUIBuilder {
     public static LinearLayout getDataTableLayout(DataTable dataTable, JsonArray jsonElements, LinearLayout parentLayout, Context context){
 
         Log.i("Number of Column Headers", "" + dataTable.getColumnHeaderData().size());
-
+        /**
+         * Create a Iterator with Json Elements to Iterate over the DataTable
+         * Response.
+         */
         Iterator<JsonElement> jsonElementIterator = jsonElements.iterator();
+
+        /*
+         * Each Row of the Data Table is Treated as a Table Here.
+         * Creating the First Table for First Row
+         */
         int tableIndex = 0;
         while(jsonElementIterator.hasNext())
         {
@@ -45,7 +53,11 @@ public class DataTableUIBuilder {
             tableLayout.setPadding(10,10,10,10);
 
             JsonElement jsonElement = jsonElementIterator.next();
-
+            /*
+            * Each Entry in a Data Table is Displayed in the
+            * form of a table where each row contains one Key-Value Pair
+            * i.e a Column Name - Column Value from the DataTable
+            */
             int rowIndex=0;
             while(rowIndex<dataTable.getColumnHeaderData().size())
             {

@@ -290,7 +290,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public void onPrepareOptionsMenu(Menu menu) {
 
         menu.clear();
-
+        //TODO Call Set As Action if SDK_VERSION > HONEYCOMB
         menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
         .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
         .colorRes(R.color.black)

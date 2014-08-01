@@ -5,6 +5,7 @@
 
 package com.mifos.services.data;
 
+//TODO Remove calendarId and TransactionDate from this Payload class;
 public class Payload
 {
     private String dateFormat = "dd MMMM YYYY";
