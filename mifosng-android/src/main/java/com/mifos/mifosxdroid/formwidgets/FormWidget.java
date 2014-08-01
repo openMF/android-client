@@ -20,6 +20,7 @@ public abstract class FormWidget {
     public static String SCHEMA_KEY_TYPE		= "type";
     public static String SCHEMA_KEY_BOOL 		= "BOOLEAN";
     public static String SCHEMA_KEY_INT  		= "INTEGER";
+    public static String SCHEMA_KEY_DECIMAL     = "DECIMAL";
     public static String SCHEMA_KEY_STRING 		= "STRING";
     public static String SCHEMA_KEY_TEXT        = "TEXT";
     public static String SCHEMA_KEY_CODELOOKUP  = "CODELOOKUP";
@@ -44,10 +45,12 @@ public abstract class FormWidget {
         layout = new LinearLayout( context );
         layout.setLayoutParams( defaultLayoutParams );
         layout.setOrientation( LinearLayout.VERTICAL );
-
+        layout.setPadding(4,4,4,4);
         property 		= name;
         displayText 	= name.replace("", " ");
         displayText 	= toTitleCase( displayText );
+
+
     }
 
     // -----------------------------------------------

@@ -29,7 +29,7 @@ public class ColumnHeader {
      *  system or defined manually by users
      */
 
-    List<ColumnValues> columnValues;
+    List<ColumnValue> columnValues;
 
     public String getColumnCode() {
         return columnCode;
@@ -87,11 +87,11 @@ public class ColumnHeader {
         this.isColumnPrimaryKey = isColumnPrimaryKey;
     }
 
-    public List<ColumnValues> getColumnValues() {
+    public List<ColumnValue> getColumnValues() {
         return columnValues;
     }
 
-    public void setColumnValues(List<ColumnValues> columnValues) {
+    public void setColumnValues(List<ColumnValue> columnValues) {
         this.columnValues = columnValues;
     }
 

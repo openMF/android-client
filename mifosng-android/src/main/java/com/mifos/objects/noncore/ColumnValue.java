@@ -8,7 +8,7 @@ package com.mifos.objects.noncore;
 /**
  * Created by ishankhanna on 16/06/14.
  */
-public class ColumnValues {
+public class ColumnValue {
 
     Integer id;
     String value;
