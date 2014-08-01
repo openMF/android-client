@@ -36,7 +36,7 @@ public class FormSpinner extends FormWidget {
 
     @Override
     public String getValue() {
-        return spinner.getSelectedItem().toString();
+        return spinner.getSelectedItem().toString()==null?"":spinner.getSelectedItem().toString();
     }
 
 }
