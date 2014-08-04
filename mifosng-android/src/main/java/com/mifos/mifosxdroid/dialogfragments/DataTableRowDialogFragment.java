@@ -46,7 +46,7 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 01/08/14.
  */
-public class DataTableDataRowFragment extends DialogFragment{
+public class DataTableRowDialogFragment extends DialogFragment{
 
     private DataTable dataTable;
     private int entityId;
@@ -71,13 +71,13 @@ public class DataTableDataRowFragment extends DialogFragment{
     Button bt_processForm;
 
     //TODO Check for Static vs Bundle Approach
-    public static DataTableDataRowFragment newInstance(DataTable dataTable, int entityId) {
-        DataTableDataRowFragment dataTableDataRowFragment = new DataTableDataRowFragment();
+    public static DataTableRowDialogFragment newInstance(DataTable dataTable, int entityId) {
+        DataTableRowDialogFragment dataTableRowDialogFragment = new DataTableRowDialogFragment();
         Bundle args = new Bundle();
-        dataTableDataRowFragment.dataTable = dataTable;
-        dataTableDataRowFragment.entityId = entityId;
-        dataTableDataRowFragment.setArguments(args);
-        return dataTableDataRowFragment;
+        dataTableRowDialogFragment.dataTable = dataTable;
+        dataTableRowDialogFragment.entityId = entityId;
+        dataTableRowDialogFragment.setArguments(args);
+        return dataTableRowDialogFragment;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class DataTableDataRowFragment extends DialogFragment{
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle(dataTable.getRegisteredTableName());
 
-        safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableDataRowFragment.this.getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableRowDialogFragment.this.getActivity());
 
         createForm();
 

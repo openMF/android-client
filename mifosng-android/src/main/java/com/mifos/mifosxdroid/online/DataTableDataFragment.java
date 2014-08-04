@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 
 import com.google.gson.JsonArray;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.dialogfragments.DataTableDataRowFragment;
+import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.utils.DataTableUIBuilder;
@@ -148,10 +148,10 @@ public class DataTableDataFragment extends Fragment {
 
         if (id == MEUN_ITEM_ADD_NEW_ENTRY) {
 
-            DataTableDataRowFragment dataTableDataRowFragment = DataTableDataRowFragment.newInstance(dataTable, entityId);
+            DataTableRowDialogFragment dataTableRowDialogFragment = DataTableRowDialogFragment.newInstance(dataTable, entityId);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.DFRAG_DATATABLE_ENTRY_FORM);
-            dataTableDataRowFragment.show(fragmentTransaction, "Document Dialog Fragment");
+            dataTableRowDialogFragment.show(fragmentTransaction, "Document Dialog Fragment");
 
 
         }
