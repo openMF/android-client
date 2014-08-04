@@ -307,11 +307,13 @@ public class LoanAccountSummaryFragment extends Fragment {
 
         menu.clear();
 
-        menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
-                .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+        MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
+        mItemSearchClient.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
                 .colorRes(R.color.black)
-                .actionBarSize())
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                .actionBarSize());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
 
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));

@@ -177,63 +177,6 @@ public class DataTableDataRowFragment extends DialogFragment{
 
         Map<String, Object> payload = new HashMap<String, Object>();
 
-//        for (ColumnHeader columnHeader : dataTable.getColumnHeaderData()) {
-//
-//            if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_STRING) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_TEXT)) {
-//
-//                FormEditText formEditText = (FormEditText) formWidgetsMap.get(columnHeader.getColumnName());
-//
-//                if (formEditText.getValue().equals(""))
-//                {
-//                    if (!columnHeader.getIsColumnNullable()) {
-//
-//                        throw new RequiredFieldException(columnHeader.getColumnName(), getString(R.string.message_field_required));
-//
-//                    }
-//                } else {
-//
-//                    payload.put(columnHeader.getColumnName(), formEditText.getValue());
-//
-//                }
-//
-//            } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_INT) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
-//
-//                FormNumericEditText formNumericEditText = (FormNumericEditText)formWidgetsMap.get(columnHeader.getColumnName());
-//
-//                if (formNumericEditText.getValue().equals(""))
-//                {
-//                    if (!columnHeader.getIsColumnNullable()) {
-//
-//                        throw new RequiredFieldException(columnHeader.getColumnName(), getString(R.string.message_field_required));
-//
-//                    }
-//                } else {
-//
-//                    payload.put(columnHeader.getColumnName(), formNumericEditText.getValue());
-//
-//                }
-//
-//            } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODELOOKUP) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODEVALUE)) {
-//
-//               FormSpinner formSpinner = (FormSpinner) formWidgetsMap.get(columnHeader.getColumnName());
-//
-//                if (formSpinner.getValue().equals(""))
-//                {
-//                    if (!columnHeader.getIsColumnNullable()) {
-//
-//                        throw new RequiredFieldException(columnHeader.getColumnName(), getString(R.string.message_field_required));
-//
-//                    }
-//                } else {
-//
-//                    payload.put(columnHeader.getColumnName(), formSpinner.getValue());
-//
-//                }
-//
-//            }
-//
-//        }
-
         Iterator<FormWidget> widgetIterator = formWidgets.iterator();
         while(widgetIterator.hasNext()) {
 
@@ -251,6 +194,7 @@ public class DataTableDataRowFragment extends DialogFragment{
 
                 System.out.println("DONE");
                 safeUIBlockingUtility.safelyUnBlockUI();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
 
             @Override

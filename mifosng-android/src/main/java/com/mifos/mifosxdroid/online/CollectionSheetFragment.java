@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.online;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -111,23 +112,30 @@ public class CollectionSheetFragment extends Fragment {
 
         menu.clear();
 
-        menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
-                .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+        MenuItem mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
+        mItemSearch.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
                         .colorRes(R.color.black)
-                        .actionBarSize())
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                        .actionBarSize());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        }
 
-        menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R.string.refresh))
-                .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_refresh)
-                        .colorRes(R.color.black)
-                        .actionBarSize())
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-        menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string.save))
-                .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_save)
+        MenuItem mItemRefresh = menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R.string.refresh));
+        mItemRefresh.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_refresh)
+                .colorRes(R.color.black)
+                .actionBarSize());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mItemRefresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
+
+        MenuItem mItemSave = menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string.save));
+        mItemSave.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_save)
                         .colorRes(R.color.black)
-                        .actionBarSize())
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                        .actionBarSize());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mItemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
 
 
         super.onPrepareOptionsMenu(menu);

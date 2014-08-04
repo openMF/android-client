@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -274,11 +275,13 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
         menu.clear();
 
-        menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
-                .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+        MenuItem mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
+        mItemSearch.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
                         .colorRes(R.color.black)
-                        .actionBarSize())
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                        .actionBarSize());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
 
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string.documents));

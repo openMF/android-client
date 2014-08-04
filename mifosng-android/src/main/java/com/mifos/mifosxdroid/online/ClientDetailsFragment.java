@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -290,12 +291,13 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public void onPrepareOptionsMenu(Menu menu) {
 
         menu.clear();
-        //TODO Call Set As Action if SDK_VERSION > HONEYCOMB
-        menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
-        .setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+        MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
+        mItemSearchClient.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
         .colorRes(R.color.black)
-        .actionBarSize())
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        .actionBarSize());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
 
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
         //TODO Enable Save Location
