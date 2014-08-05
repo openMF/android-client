@@ -1,3 +1,6 @@
+### Status
+[![Build Status](https://travis-ci.org/openmf/android-client.png)](https://travis-ci.org/openmf/android-client)
+
 # Android Client for MifosX
 
 This is an Android Application built on top of the MifosX platform for the mifos user community. This is a native Android Application written purely in Java.
