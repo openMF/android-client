@@ -1,5 +1,5 @@
 ### Status
-[![Build Status](https://travis-ci.org/openmf/android-client.svg)](https://travis-ci.org/openmf/android-client)
+[![Build Status](https://travis-ci.org/openMF/android-client.svg?branch=master)](https://travis-ci.org/openmf/android-client)
 
 # Android Client for MifosX
 
