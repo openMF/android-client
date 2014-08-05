@@ -3,8 +3,16 @@
 
 #Releases
 
-2. 23 July 2014 - 0.1.0-alpha
-1. 14 July 2014 - 0.0.1-alpha
+3. 31 July 2014 - v0.1.1-alpha
+2. 23 July 2014 - v0.1.0-alpha
+1. 14 July 2014 - v0.0.1-alpha
+
+##0.1.1-alpha
+
+What's new:
+* Offline Collection Sheet
+* Minor Bug Fixes
+* Mifos Json Error Parser
 
 ##0.1.0-alpha
 

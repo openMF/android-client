@@ -48,9 +48,9 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_group, null);
+        init();
         setHasOptionsMenu(true);
         ButterKnife.inject(this, view);
-        init();
 
         return view;
     }
