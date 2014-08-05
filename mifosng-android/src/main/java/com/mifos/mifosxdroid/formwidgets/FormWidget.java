@@ -25,6 +25,7 @@ public abstract class FormWidget {
     public static String SCHEMA_KEY_TEXT        = "TEXT";
     public static String SCHEMA_KEY_CODELOOKUP  = "CODELOOKUP";
     public static String SCHEMA_KEY_CODEVALUE   = "CODEVALUE";
+    public static String SCHEMA_KEY_DATE        = "DATE";
     public static String SCHEMA_KEY_PRIORITY	= "priority";
     public static String SCHEMA_KEY_DEFAULT		= "default";
     public static String SCHEMA_KEY_OPTIONS		= "options";

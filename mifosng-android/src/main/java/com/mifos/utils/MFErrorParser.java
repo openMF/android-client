@@ -6,7 +6,6 @@
 package com.mifos.utils;
 
 
-import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,7 +20,7 @@ import retrofit.client.Response;
 
 public class MFErrorParser {
 
-    public static void ParseError(Response response, Context context) {
+    public static void parseError(Response response) {
 
 
         try {
@@ -40,7 +39,7 @@ public class MFErrorParser {
 
             for (MFError mfError : mfErrorList) {
 
-                Toast.makeText(context, mfError.getDefaultUserMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(Constants.applicationContext, mfError.getDefaultUserMessage(), Toast.LENGTH_LONG).show();
 
             }
 

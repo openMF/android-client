@@ -66,6 +66,8 @@ public class Constants {
 
     public static final String CALENDAR_INSTANCE_ID = "calendarInstanceId";
 
+    public static final String LOCALE = "locale";
+
 
     /**
      * Constants to identify which Data Tables have to be shown

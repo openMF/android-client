@@ -29,6 +29,9 @@ import com.mifos.objects.noncore.ColumnValue;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
+import com.mifos.utils.Constants;
+import com.mifos.utils.DateHelper;
+import com.mifos.utils.MFErrorParser;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -130,7 +133,6 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
                     FormEditText formEditText = new FormEditText(getActivity(), columnHeader.getColumnName());
                     formWidgets.add(formEditText);
-                    formWidgetsMap.put(columnHeader.getColumnName(), formEditText);
                     linearLayout.addView(formEditText.getView());
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_INT) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
@@ -138,7 +140,6 @@ public class DataTableRowDialogFragment extends DialogFragment{
                     FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity(), columnHeader.getColumnName());
                     formWidgets.add(formNumericEditText);
 
-                    formWidgetsMap.put(columnHeader.getColumnName(), formNumericEditText);
                     linearLayout.addView(formNumericEditText.getView());
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODELOOKUP) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODEVALUE)) {
@@ -151,9 +152,15 @@ public class DataTableRowDialogFragment extends DialogFragment{
                     FormSpinner formSpinner = new FormSpinner(getActivity(), columnHeader.getColumnName(), columnValueStrings);
                     formWidgets.add(formSpinner);
 
-                    formWidgetsMap.put(columnHeader.getColumnName(), formSpinner);
                     linearLayout.addView(formSpinner.getView());
 
+                } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DATE)) {
+
+                    FormEditText formEditText = new FormEditText(getActivity(), columnHeader.getColumnName());
+                    formEditText.setIsDateField(true, getActivity().getSupportFragmentManager());
+                    formWidgets.add(formEditText);
+
+                    linearLayout.addView(formEditText.getView());
                 }
             }
 
@@ -175,8 +182,10 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
     public void onSaveActionRequested() throws RequiredFieldException {
 
-        Map<String, Object> payload = new HashMap<String, Object>();
 
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put(Constants.DATE_FORMAT, DateHelper.DATE_FORMAT_VALUE);
+        payload.put(Constants.LOCALE, "en");
         Iterator<FormWidget> widgetIterator = formWidgets.iterator();
         while(widgetIterator.hasNext()) {
 
@@ -186,13 +195,13 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
         }
 
+
         safeUIBlockingUtility.safelyBlockUI();
 
         API.dataTableService.createEntryInDataTable(dataTable.getRegisteredTableName(), entityId, payload, new Callback<GenericResponse>() {
             @Override
             public void success(GenericResponse genericResponse, Response response) {
 
-                System.out.println("DONE");
                 safeUIBlockingUtility.safelyUnBlockUI();
                 getActivity().getSupportFragmentManager().popBackStack();
             }
@@ -200,9 +209,9 @@ public class DataTableRowDialogFragment extends DialogFragment{
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println("FAILED");
+                MFErrorParser.parseError(retrofitError.getResponse());
                 safeUIBlockingUtility.safelyUnBlockUI();
-
+                getActivity().getSupportFragmentManager().popBackStack();
 
             }
         });

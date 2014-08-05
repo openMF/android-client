@@ -252,7 +252,7 @@ public class CollectionSheetFragment extends Fragment {
 
                     if (response.getStatus() == 400 || response.getStatus() == 403) {
 
-                        MFErrorParser.ParseError(response, getActivity());
+                        MFErrorParser.parseError(response);
 
                     }
 

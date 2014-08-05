@@ -21,6 +21,8 @@ import java.util.List;
 public class DateHelper {
 
 
+    public static final String DATE_FORMAT_VALUE = "dd MMM yyyy";
+
     public static String getCurrentDateAsString(){
 
         Calendar calendar = Calendar.getInstance();
