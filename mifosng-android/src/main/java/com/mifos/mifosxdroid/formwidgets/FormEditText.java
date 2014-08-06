@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 
 /**
@@ -70,15 +69,18 @@ public class FormEditText extends FormWidget{
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
 
-                    final MFDatePicker mfDatePicker = new MFDatePicker();
-                    mfDatePicker.setOnDatePickListener( new MFDatePicker.OnDatePickListener() {
-                        @Override
-                        public void onDatePicked(String date) {
-                            setValue(date);
-                            mfDatePicker.dismiss();
-                        }
-                    });
-                    mfDatePicker.show(fragmentManager, MFDatePicker.TAG);
+                    if (MotionEvent.ACTION_UP == event.getAction()) {
+
+                        final MFDatePicker mfDatePicker = new MFDatePicker();
+                        mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
+                            @Override
+                            public void onDatePicked(String date) {
+                                setValue(date);
+                                mfDatePicker.dismiss();
+                            }
+                        });
+                        mfDatePicker.show(fragmentManager, MFDatePicker.TAG);
+                    }
 
                     return true;
                 }
