@@ -16,13 +16,20 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.services.API;
+import com.mifos.services.GenericResponse;
 
 import java.util.Iterator;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 17/06/14.
@@ -32,8 +39,15 @@ import java.util.Iterator;
  */
 public class DataTableUIBuilder {
 
+    static int tableIndex;
+    static DataTableActionListener dataTableActionListener;
 
-    public static LinearLayout getDataTableLayout(DataTable dataTable, JsonArray jsonElements, LinearLayout parentLayout, Context context){
+    public static LinearLayout getDataTableLayout(final DataTable dataTable,
+                                                  JsonArray jsonElements,
+                                                  LinearLayout parentLayout,
+                                                  final Context context,
+                                                  final int entityId,
+                                                  DataTableActionListener mListener){
 
         Log.i("Number of Column Headers", "" + dataTable.getColumnHeaderData().size());
         /**
@@ -41,18 +55,18 @@ public class DataTableUIBuilder {
          * Response.
          */
         Iterator<JsonElement> jsonElementIterator = jsonElements.iterator();
-
+        dataTableActionListener = mListener;
         /*
          * Each Row of the Data Table is Treated as a Table Here.
          * Creating the First Table for First Row
          */
-        int tableIndex = 0;
+        tableIndex = 0;
         while(jsonElementIterator.hasNext())
         {
             TableLayout tableLayout = new TableLayout(context);
             tableLayout.setPadding(10,10,10,10);
 
-            JsonElement jsonElement = jsonElementIterator.next();
+           final JsonElement jsonElement = jsonElementIterator.next();
             /*
             * Each Entry in a Data Table is Displayed in the
             * form of a table where each row contains one Key-Value Pair
@@ -91,6 +105,44 @@ public class DataTableUIBuilder {
                 rowIndex++;
             }
 
+            tableLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Toast.makeText(context, "Update Row " + tableIndex, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            tableLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    Toast.makeText(context, "Deleting Row "+tableIndex, Toast.LENGTH_SHORT).show();
+
+                    API.dataTableService.deleteEntryOfDataTableManyToMany(dataTable.getRegisteredTableName(),
+                            entityId,
+                            Integer.parseInt(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(0).getColumnName()).toString()),
+                            new Callback<GenericResponse>() {
+                                @Override
+                                public void success(GenericResponse genericResponse, Response response) {
+
+                                    Toast.makeText(context, "Deleted Row " + tableIndex, Toast.LENGTH_SHORT).show();
+                                    dataTableActionListener.onRowDeleted();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError retrofitError) {
+
+
+                                }
+                            }
+                    );
+
+                    return false;
+                }
+            });
+
             View v = new View(context);
             v.setBackgroundColor(context.getResources().getColor(R.color.black));
             parentLayout.addView(tableLayout);
@@ -103,6 +155,12 @@ public class DataTableUIBuilder {
 
         return parentLayout;
 
+    }
+
+    public interface DataTableActionListener {
+
+        public void onUpdateActionRequested(JsonElement jsonElement);
+        public void onRowDeleted();
     }
 
 }

@@ -411,6 +411,11 @@ public class API {
         public void createEntryInDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId, @Body Map<String, Object> requestPayload,
                                            Callback<GenericResponse> callback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
+        public void deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId,
+                                                     @Path("dataTableRowId")int dataTableRowId, Callback<GenericResponse> callback);
+
     }
 
     /**

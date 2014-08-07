@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
@@ -35,7 +36,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class DataTableDataFragment extends Fragment {
+public class DataTableDataFragment extends Fragment implements DataTableUIBuilder.DataTableActionListener{
     public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
     //private OnFragmentInteractionListener mListener;
@@ -87,23 +88,7 @@ public class DataTableDataFragment extends Fragment {
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableDataFragment.this.getActivity());
 
-        API.dataTableService.getDataOfDataTable(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
-            @Override
-            public void success(JsonArray jsonElements, Response response) {
-
-                if (jsonElements != null) {
-                    linearLayout = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity());
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-
-            }
-
-        });
+        inflateView();
 
         return rootView;
     }
@@ -159,4 +144,36 @@ public class DataTableDataFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    public void inflateView() {
+
+        API.dataTableService.getDataOfDataTable(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
+            @Override
+            public void success(JsonArray jsonElements, Response response) {
+
+                if (jsonElements != null) {
+                    linearLayout = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity(), entityId, (DataTableUIBuilder.DataTableActionListener)getParentFragment());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
+
+            }
+
+        });
+
+    }
+
+
+    @Override
+    public void onUpdateActionRequested(JsonElement jsonElement) {
+
+    }
+
+    @Override
+    public void onRowDeleted() {
+        inflateView();
+    }
 }
