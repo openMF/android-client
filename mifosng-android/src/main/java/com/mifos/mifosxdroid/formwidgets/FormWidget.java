@@ -40,6 +40,7 @@ public abstract class FormWidget {
     protected String 		displayText;
     protected int 	 		priority;
     protected LinearLayout 	layout;
+    protected String        returnType;
 
     public FormWidget( Context context, String name )
     {
@@ -50,7 +51,7 @@ public abstract class FormWidget {
         property 		= name;
         displayText 	= name.replace("", " ");
         displayText 	= toTitleCase( displayText );
-
+        returnType = SCHEMA_KEY_TEXT;
 
     }
 
@@ -181,6 +182,11 @@ public abstract class FormWidget {
         return String.valueOf(chars);
     }
 
+    public String getReturnType() {
+        return returnType;
+    }
 
-
+    public void setReturnType(String returnType) {
+        this.returnType = returnType;
+    }
 }

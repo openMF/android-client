@@ -23,11 +23,10 @@ public class FormEditText extends FormWidget{
     protected EditText input;
 
     private Boolean isDateField;
-    private Context context;
+
     public FormEditText(Context context, String name) {
 
         super(context, name);
-        this.context = context;
         label = new TextView( context );
         label.setText( getDisplayText() );
         label.setLayoutParams( FormWidget.defaultLayoutParams );
@@ -35,7 +34,7 @@ public class FormEditText extends FormWidget{
         input = new EditText( context );
         input.setLayoutParams( FormWidget.defaultLayoutParams );
         input.setImeOptions( EditorInfo.IME_ACTION_DONE );
-
+        isDateField = false;
         layout.addView( label );
         layout.addView( input );
 

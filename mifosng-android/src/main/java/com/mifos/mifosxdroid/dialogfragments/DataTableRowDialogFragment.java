@@ -30,7 +30,6 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
 import com.mifos.utils.Constants;
-import com.mifos.utils.DateHelper;
 import com.mifos.utils.MFErrorParser;
 import com.mifos.utils.SafeUIBlockingUtility;
 
@@ -41,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -70,8 +68,6 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
     List<FormWidget> formWidgets = new ArrayList<FormWidget>();
 
-    @InjectView(R.id.bt_processForm)
-    Button bt_processForm;
 
     //TODO Check for Static vs Bundle Approach
     public static DataTableRowDialogFragment newInstance(DataTable dataTable, int entityId) {
@@ -135,23 +131,35 @@ public class DataTableRowDialogFragment extends DialogFragment{
                     formWidgets.add(formEditText);
                     linearLayout.addView(formEditText.getView());
 
-                } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_INT) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
+                } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_INT)) {
 
                     FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity(), columnHeader.getColumnName());
+                    formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_INT);
                     formWidgets.add(formNumericEditText);
-
                     linearLayout.addView(formNumericEditText.getView());
+
+
+                } else if(columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
+
+                    FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity(), columnHeader.getColumnName());
+                    formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_DECIMAL);
+                    formWidgets.add(formNumericEditText);
+                    linearLayout.addView(formNumericEditText.getView());
+
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODELOOKUP) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODEVALUE)) {
 
                     List<String> columnValueStrings = new ArrayList<String>();
+                    List<Integer> columnValueIds = new ArrayList<Integer>();
+
                     for (ColumnValue columnValue : columnHeader.getColumnValues()) {
                         columnValueStrings.add(columnValue.getValue());
+                        columnValueIds.add(columnValue.getId());
                     }
 
-                    FormSpinner formSpinner = new FormSpinner(getActivity(), columnHeader.getColumnName(), columnValueStrings);
+                    FormSpinner formSpinner = new FormSpinner(getActivity(), columnHeader.getColumnName(), columnValueStrings, columnValueIds);
+                    formSpinner.setReturnType(FormWidget.SCHEMA_KEY_CODEVALUE);
                     formWidgets.add(formSpinner);
-
                     linearLayout.addView(formSpinner.getView());
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DATE)) {
@@ -159,7 +167,6 @@ public class DataTableRowDialogFragment extends DialogFragment{
                     FormEditText formEditText = new FormEditText(getActivity(), columnHeader.getColumnName());
                     formEditText.setIsDateField(true, getActivity().getSupportFragmentManager());
                     formWidgets.add(formEditText);
-
                     linearLayout.addView(formEditText.getView());
                 }
             }
@@ -167,6 +174,11 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
         }
 
+        Button bt_processForm = new Button(getActivity());
+        bt_processForm.setLayoutParams( FormWidget.defaultLayoutParams );
+        bt_processForm.setText(getString(R.string.save));
+
+        linearLayout.addView(bt_processForm);
         bt_processForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,17 +196,24 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
 
         Map<String, Object> payload = new HashMap<String, Object>();
-        payload.put(Constants.DATE_FORMAT, DateHelper.DATE_FORMAT_VALUE);
+        payload.put(Constants.DATE_FORMAT, "dd-mm-YYYY");
         payload.put(Constants.LOCALE, "en");
         Iterator<FormWidget> widgetIterator = formWidgets.iterator();
         while(widgetIterator.hasNext()) {
 
             FormWidget formWidget = widgetIterator.next();
-            payload.put(formWidget.getPropertyName(), formWidget.getValue());
-
+            if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_INT)) {
+                payload.put(formWidget.getPropertyName(), Integer.parseInt(formWidget.getValue().equals("")?"0":formWidget.getValue()));
+            } else if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
+                payload.put(formWidget.getPropertyName(), Double.parseDouble(formWidget.getValue().equals("") ? "0.0" : formWidget.getValue()));
+            } else if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_CODEVALUE)) {
+                FormSpinner formSpinner = (FormSpinner) formWidget;
+                payload.put(formWidget.getPropertyName(), formSpinner.getIdOfSelectedItem(formWidget.getValue()));
+            } else {
+                payload.put(formWidget.getPropertyName(), formWidget.getValue());
+            }
 
         }
-
 
         safeUIBlockingUtility.safelyBlockUI();
 
