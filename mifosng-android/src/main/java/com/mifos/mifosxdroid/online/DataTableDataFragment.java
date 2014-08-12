@@ -151,7 +151,9 @@ public class DataTableDataFragment extends Fragment implements DataTableUIBuilde
             public void success(JsonArray jsonElements, Response response) {
 
                 if (jsonElements != null) {
-                    linearLayout = DataTableUIBuilder.getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity(), entityId, (DataTableUIBuilder.DataTableActionListener)getParentFragment());
+                    linearLayout.invalidate();
+                    DataTableUIBuilder.DataTableActionListener mListener = (DataTableUIBuilder.DataTableActionListener) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
+                    linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity(), entityId, mListener);
                 }
             }
 

@@ -349,7 +349,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     = DataTableDataFragment.newInstance(clientDataTables.get(id), clientId);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-            fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
+            fragmentTransaction.replace(R.id.global_container, dataTableDataFragment, FragmentConstants.FRAG_DATA_TABLE);
+
             fragmentTransaction.commit();
         } else if (id == MENU_ITEM_DOCUMENTS) {
 

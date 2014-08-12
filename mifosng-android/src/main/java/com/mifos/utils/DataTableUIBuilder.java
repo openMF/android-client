@@ -39,23 +39,22 @@ import retrofit.client.Response;
  */
 public class DataTableUIBuilder {
 
-    static int tableIndex;
-    static DataTableActionListener dataTableActionListener;
+    int tableIndex;
+    private DataTableActionListener dataTableActionListener;
 
-    public static LinearLayout getDataTableLayout(final DataTable dataTable,
+    public LinearLayout getDataTableLayout(final DataTable dataTable,
                                                   JsonArray jsonElements,
                                                   LinearLayout parentLayout,
                                                   final Context context,
                                                   final int entityId,
                                                   DataTableActionListener mListener){
-
+        dataTableActionListener = mListener;
         Log.i("Number of Column Headers", "" + dataTable.getColumnHeaderData().size());
         /**
          * Create a Iterator with Json Elements to Iterate over the DataTable
          * Response.
          */
         Iterator<JsonElement> jsonElementIterator = jsonElements.iterator();
-        dataTableActionListener = mListener;
         /*
          * Each Row of the Data Table is Treated as a Table Here.
          * Creating the First Table for First Row
@@ -139,7 +138,7 @@ public class DataTableUIBuilder {
                             }
                     );
 
-                    return false;
+                    return true;
                 }
             });
 
