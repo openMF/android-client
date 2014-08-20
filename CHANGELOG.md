@@ -3,9 +3,22 @@
 
 #Releases
 
-3. 31 July 2014 - v0.1.1-alpha
-2. 23 July 2014 - v0.1.0-alpha
-1. 14 July 2014 - v0.0.1-alpha
+4. 12 Aug 2014 - v0.2.0-alpha
+3. 31 Jul 2014 - v0.1.1-alpha
+2. 23 Jul 2014 - v0.1.0-alpha
+1. 14 Jul 2014 - v0.0.1-alpha
+
+##0.2.0-alpha
+Fixed #66 - App Crashed on Android 2.3 Due to setShowAsAction method.
+Fixed #65 - App Crashed on Android 2.3 due to a different lifecycle call.
+
+What's New?
+
+Data Table Row Entry : Add and/or Delete Rows in Data Tables for Clients, Loans, Savings etc.
+For Developers :
+
+Travis-CI Integrated
+Instrumentation Tests Configured (A Basic Test Written)
 
 ##0.1.1-alpha
 
