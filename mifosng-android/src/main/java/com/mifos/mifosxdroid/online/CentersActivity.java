@@ -75,7 +75,7 @@ public class CentersActivity extends ActionBarActivity
 
     @Override
     public void loadClientsOfGroup(List<Client> clientList) {
-        ClientListFragment clientListFragment = ClientListFragment.newInstance(clientList);
+        ClientListFragment clientListFragment = ClientListFragment.newInstance(clientList, true);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_LIST);
         fragmentTransaction.replace(R.id.center_container, clientListFragment);
