@@ -33,7 +33,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("default_key_store.jks")
+            storeFile file("../default_key_store.jks")
             storePassword "mifos1234"
             keyAlias "mifos"
             keyPassword "mifos1234"
@@ -60,6 +60,11 @@ task nativeLibsToJar(type: Zip, description: 'create a jar archive of the native
     extension 'jar'
     from fileTree(dir: 'src/main/libs', include: '**/*.so')
     into 'lib/'
+}
+
+task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it'){
+
+
 }
 
 tasks.withType(JavaCompile) {
