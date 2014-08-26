@@ -30,9 +30,24 @@ android {
         targetSdkVersion 19
     }
     sourceSets { main { java.srcDirs = ['src/main/java', 'src/instrumentTest/java/'] } }
+
+    signingConfigs {
+        release {
+            storeFile file("default_key_store.jks")
+            storePassword "mifos1234"
+            keyAlias "mifos"
+            keyPassword "mifos1234"
+        }
+    }
+
     productFlavors {
     }
+
     buildTypes {
+
+        release {
+            signingConfig signingConfigs.release
+        }
     }
     lintOptions {
         abortOnError false
