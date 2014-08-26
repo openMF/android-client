@@ -7,6 +7,7 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 
 import java.util.ArrayList;
@@ -189,6 +190,23 @@ public class DateHelper {
         return monthName;
     }
 
+    public static String getPayloadDate(Context context) {
+        if (Constants.applicationContext == null)
+            Log.i("DateHelper", "Application Context is null!");
+        SharedPreferences preferences = context.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
+        final StringBuilder builder = new StringBuilder();
+        if (date != null) {
+            String[] splittedDate = date.split("-");
+            int month = Integer.parseInt(splittedDate[1]);
+            builder.append(splittedDate[0]);
+            builder.append(" ");
+            builder.append(DateHelper.getMonthName(month));
+            builder.append(" ");
+            builder.append(splittedDate[2]);
+        }
+        return builder.toString();
+    }
     public static String getPayloadDate() {
         SharedPreferences preferences = Constants.applicationContext.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);

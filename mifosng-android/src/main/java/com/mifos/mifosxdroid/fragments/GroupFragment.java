@@ -70,8 +70,9 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         inflater.inflate(R.menu.menu_sync, menu);
         syncItem = menu.findItem(R.id.action_sync);
         if (centerId != -1) {
-            List<MeetingCenter> center = Select.from(MeetingCenter.class).where(Condition.prop("center_id").eq(centerId)).list();
-            if (center.get(0).getIsSynced() == 1)
+            List<MeetingCenter> center = new ArrayList<MeetingCenter>();
+            center.addAll(Select.from(MeetingCenter.class).where(Condition.prop("center_id").eq(centerId)).list());
+            if (center.size() > 0 && center.get(0).getIsSynced() == 1)
                 syncItem.setEnabled(false);
         }
     }
@@ -85,7 +86,7 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
             MenuItemCompat.setActionView(item, syncProgress);
             if (centerId != -1) {
                 RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService(this, centerId);
-                syncService.syncRepayments();
+                syncService.syncRepayments(getActivity());
             }
         }
         return super.onOptionsItemSelected(item);

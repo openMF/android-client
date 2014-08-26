@@ -133,7 +133,7 @@ public class SaveOfflineDataHelper {
 
     private Payload getPayload(Context context, MeetingCenter center) {
         final Payload payload = new Payload();
-        payload.setTransactionDate(DateHelper.getPayloadDate());
+        payload.setTransactionDate(DateHelper.getPayloadDate(context));
             payload.setCalendarId(center.getCollectionMeetingCalendar().getCalendarInstanceId());
         return payload;
     }

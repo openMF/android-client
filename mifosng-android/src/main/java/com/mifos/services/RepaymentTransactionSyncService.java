@@ -34,7 +34,7 @@ public class RepaymentTransactionSyncService {
         this.centerId = centerId;
     }
 
-    public void syncRepayments() {
+    public void syncRepayments(Context context) {
         List<RepaymentTransaction> transactions = Select.from(RepaymentTransaction.class).list();
         Log.i(TAG, "Fetching transactions from Database:" + transactions);
         List<MeetingCenter> centerList = Select.from(MeetingCenter.class).where(com.orm.query.Condition.prop("center_id").eq(centerId)).list();
@@ -57,7 +57,7 @@ public class RepaymentTransactionSyncService {
             CollectionSheetPayload payload = new CollectionSheetPayload();
             payload.bulkRepaymentTransactions = repaymentTransactionArray;
             payload.setCalendarId(center.getCollectionMeetingCalendar().getCalendarId());
-            payload.setTransactionDate(DateHelper.getPayloadDate());
+            payload.setTransactionDate(DateHelper.getPayloadDate(context));
             SaveCollectionSheetTask task = new SaveCollectionSheetTask();
             task.execute(payload);
         } else
