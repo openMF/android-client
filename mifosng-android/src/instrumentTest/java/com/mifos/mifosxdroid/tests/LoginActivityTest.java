@@ -20,7 +20,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     LoginActivity loginActivity;
     EditText et_instance;
-
+    EditText et_username;
     public LoginActivityTest() {
         super(LoginActivity.class);
     }
@@ -31,12 +31,14 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
         loginActivity = getActivity();
         et_instance = (EditText) loginActivity.findViewById(R.id.et_instanceURL);
+        et_username = (EditText) loginActivity.findViewById(R.id.et_username);
     }
 
     @SmallTest
     public void testEditTextsAreNotNull() {
 
         assertNotNull(et_instance);
+        assertNotNull(et_username);
 
     }
 
