@@ -11,27 +11,50 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
-import com.mifos.objects.db.*;
+import com.mifos.objects.db.AttendanceType;
+import com.mifos.objects.db.Client;
+import com.mifos.objects.db.CollectionMeetingCalendar;
+import com.mifos.objects.db.Currency;
+import com.mifos.objects.db.EntityType;
+import com.mifos.objects.db.Loan;
+import com.mifos.objects.db.MeetingCenter;
+import com.mifos.objects.db.MeetingDate;
+import com.mifos.objects.db.MifosGroup;
+import com.mifos.objects.db.OfflineCenter;
+import com.mifos.objects.db.RepaymentTransaction;
+import com.mifos.objects.db.Status;
 import com.mifos.services.API;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.Network;
 import com.mifos.utils.SaveOfflineDataHelper;
 import com.orm.query.Select;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class CenterListFragment extends Fragment implements AdapterView.OnItemClickListener,
@@ -133,10 +156,16 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
 
                         @Override
                         public void failure(RetrofitError error) {
-                            Toast.makeText(getActivity(), "Please login to continue", Toast.LENGTH_LONG).show();
-                            getActivity().finish();
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            startActivity(intent);
+                            try {
+                                Toast.makeText(getActivity(), getString(R.string.error_login_again), Toast.LENGTH_LONG).show();
+                            } catch (Exception ex) {
+                                Crashlytics.logException(ex);
+                            } finally {
+                                getActivity().finish();
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+
                         }
                     });
         }

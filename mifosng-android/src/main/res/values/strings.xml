@@ -176,6 +176,7 @@
     <string name="spinner_group">Select Group</string>
     <string name="total_due">Total Due</string>
     <string name="refresh">Refresh</string>
+    <string name="error_login_again">Please login to continue</string>
 
 
 </resources>
