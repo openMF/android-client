@@ -79,6 +79,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
         ButterKnife.inject(this, rootView);
 
 
+
         return rootView;
     }
 
@@ -107,6 +108,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
                 Iterator<SearchedEntity> iterator = searchedEntities.iterator();
                 clientNames.clear();
+                clientIds.clear();
                 while (iterator.hasNext()) {
                     SearchedEntity searchedEntity = iterator.next();
                     clientNames.add("#" + searchedEntity.getEntityId() + " - " + searchedEntity.getEntityName());
@@ -139,6 +141,10 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onPause() {
@@ -149,10 +155,43 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
         super.onPause();
     }
 
+    /*
+        There is a need for this method in the following cases :
+        1. If user entered a search query and went out of the app.
+        2. If user entered a search query and got some search results and went out of the app.
+     */
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String queryString = et_searchById.getEditableText().toString();
+
+        if(queryString != null && !(queryString.equals(""))) {
+            outState.putString(TAG+et_searchById.getId(),queryString);
+        }
+
+    }
+
     @Override
     public void onDetach() {
 
         super.onDetach();
+
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+
+            String queryString = savedInstanceState.getString(TAG+et_searchById.getId());
+
+            if (queryString != null && !(queryString.equals(""))) {
+                et_searchById.setText(queryString);
+
+            }
+        }
+
 
     }
 
