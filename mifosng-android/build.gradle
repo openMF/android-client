@@ -10,7 +10,7 @@ buildscript {
         maven { url 'http://download.crashlytics.com/maven' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.11.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
     }
 }
@@ -23,11 +23,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 20
+    buildToolsVersion '20'
     defaultConfig {
         minSdkVersion 10
-        targetSdkVersion 19
+        targetSdkVersion 20
     }
     sourceSets { main { java.srcDirs = ['src/main/java', 'src/instrumentTest/java/'] } }
 
@@ -79,10 +79,10 @@ dependencies {
     // You must install or update the Google Repository through the SDK manager to use this dependency.
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:appcompat-v7:19.1.0'
-    compile 'com.google.android.gms:play-services:4.4.52'
+    compile 'com.android.support:appcompat-v7:20.+'
+    compile 'com.google.android.gms:play-services:5.0.+'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.android.support:support-v4:20.+'
     compile 'com.jakewharton.fliptables:fliptables:1.0.1'
     compile 'javax.annotation:jsr250-api:1.0@jar'
     compile 'com.squareup.picasso:picasso-pollexor:2.1.1@jar'
