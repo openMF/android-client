@@ -5,6 +5,8 @@
 
 This is an Android Application built on top of the MifosX platform for the mifos user community. This is a native Android Application written purely in Java.
 
+The latest continously built APK can be downloaded from [https://vorburger.ci.cloudbees.com/job/MifosX_Android/](https://vorburger.ci.cloudbees.com/job/MifosX_Android/).
+
 # Wiki
 
 https://github.com/openMF/android-client/wiki
