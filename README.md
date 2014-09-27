@@ -1,9 +1,11 @@
 ### Status
-[![Build Status](https://travis-ci.org/openMF/android-client.svg?branch=master)](https://travis-ci.org/openmf/android-client)
+[![Build Status](https://travis-ci.org/openMF/android-client.svg?branch=master)](https://travis-ci.org/openMF/android-client)
 
 # Android Client for MifosX
 
 This is an Android Application built on top of the MifosX platform for the mifos user community. This is a native Android Application written purely in Java.
+
+The latest continously built APK can be downloaded from [https://vorburger.ci.cloudbees.com/job/MifosX_Android/](https://vorburger.ci.cloudbees.com/job/MifosX_Android/).
 
 # Wiki
 
