@@ -27,6 +27,7 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
+import com.mifos.utils.Constants;
 
 import org.apache.http.HttpStatus;
 
@@ -50,7 +51,6 @@ import retrofit.client.Response;
 public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-    public static String INSTANCE_URL_KEY = "instanceURL";
     public static String PROTOCOL_HTTP = "http://";
     public static String PROTOCOL_HTTPS = "https://";
     public static String API_PATH = "/mifosng-provider/api/v1";
@@ -66,7 +66,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private Context context;
     private String authenticationToken;
     private ProgressDialog progressDialog;
-    private String tag = getClass().getSimpleName();
+    private String TAG = "LoginActivity";
     private Pattern domainNamePattern;
     private Matcher domainNameMatcher;
 
@@ -78,7 +78,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         context = LoginActivity.this;
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String previouslyEnteredUrl = sharedPreferences.getString(INSTANCE_URL_KEY,
+        String previouslyEnteredUrl = sharedPreferences.getString(Constants.INSTANCE_URL_KEY,
                 getString(R.string.default_instance_url));
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
@@ -86,10 +86,10 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         setupUI();
         if(bt_login==null)
         {
-            Log.i(tag, "login button is null");
+            Log.i(TAG, "login button is null");
         }
         else {
-            Log.i(tag, "login button is not null");
+            Log.i(TAG, "login button is not null");
         }
 
         domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);
@@ -152,14 +152,14 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             tv_constructed_instance_url.setText(constructedURL);
             URL url = new URL(constructedURL);
             instanceURL = url.toURI().toString();
-            Log.d(tag, "instance URL: " + instanceURL);
+            Log.d(TAG, "instance URL: " + instanceURL);
             API.setInstanceUrl(instanceURL);
-            saveInstanceUrl(validDomain);
+            saveInstanceUrl(instanceURL);
         } catch (MalformedURLException e) {
-            Log.e(tag, "Invalid instance URL: " + urlInputValue, e);
+            Log.e(TAG, "Invalid instance URL: " + urlInputValue, e);
             throw new ShortOfLengthException("Instance URL", 5);
         } catch (URISyntaxException uriException) {
-            Log.e(tag, "Invalid instance URL: " + urlInputValue, uriException);
+            Log.e(TAG, "Invalid instance URL: " + urlInputValue, uriException);
             throw new ShortOfLengthException("Instance URL", 5);
         }
 
@@ -232,7 +232,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     public void saveInstanceUrl(String instanceURL) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(INSTANCE_URL_KEY, instanceURL);
+        editor.putString(Constants.INSTANCE_URL_KEY, instanceURL);
         editor.commit();
         editor.apply();
     }
@@ -245,7 +245,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(tag, "onOptionsItemSelected: " + item.getItemId());
+        Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.offline:
                 startActivity(new Intent(this, OfflineCenterInputActivity.class));

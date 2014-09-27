@@ -79,6 +79,8 @@ public class API {
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
     public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "Content-Type: multipart/form-data";
     public static final String HEADER_AUTHORIZATION = "Authorization";
+    public static final String INSTANCE_URL = "InstanceUrl";
+
     /*
         As Mifos is a multi-tenant platform, all requests require you to specify a tenant
         as a header in each request.
@@ -196,7 +198,17 @@ public class API {
     }
 
     public static synchronized String getInstanceUrl() {
-        return mInstanceUrl;
+
+        SharedPreferences pref = PreferenceManager
+                .getDefaultSharedPreferences(Constants.applicationContext);
+        String savedInstanceUrl = pref.getString(Constants.INSTANCE_URL_KEY, "NA");
+
+        if(savedInstanceUrl.equals("NA")){
+            return mInstanceUrl;
+        }else{
+            return savedInstanceUrl;
+        }
+
     }
 
     public static synchronized void setInstanceUrl(String url) {
