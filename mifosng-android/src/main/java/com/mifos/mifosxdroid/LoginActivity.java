@@ -51,6 +51,7 @@ import retrofit.client.Response;
 public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+    private static final String IP_ADDRESS_REGEX_PATTERN = "^(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))$";
     public static String PROTOCOL_HTTP = "http://";
     public static String PROTOCOL_HTTPS = "https://";
     public static String API_PATH = "/mifosng-provider/api/v1";
@@ -69,6 +70,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private String TAG = "LoginActivity";
     private Pattern domainNamePattern;
     private Matcher domainNameMatcher;
+    private Pattern ipAddressPattern;
+    private Matcher ipAddressMatcher;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         }
 
         domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);
+        ipAddressPattern = Pattern.compile(IP_ADDRESS_REGEX_PATTERN);
 
         tv_constructed_instance_url.setText(PROTOCOL_HTTPS + previouslyEnteredUrl + API_PATH);
         et_instanceURL.setText(previouslyEnteredUrl);
@@ -118,7 +123,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
                 String textUnderConstruction = PROTOCOL_HTTPS + editable.toString() + API_PATH;
                 tv_constructed_instance_url.setText(textUnderConstruction);
 
-                if(!validateDomain(editable.toString())) {
+                if(!validateURL(editable.toString())) {
                     tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
                 } else {
                     tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
@@ -142,7 +147,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         String urlInputValue = et_instanceURL.getEditableText().toString();
         try {
 
-            if(!validateDomain(urlInputValue)) {
+            if(!validateURL(urlInputValue)) {
                 return false;
             }
 
@@ -285,10 +290,13 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     }
 
-    public boolean validateDomain(final String hex) {
+    public boolean validateURL(final String hex) {
 
         domainNameMatcher = domainNamePattern.matcher(hex);
-        return domainNameMatcher.matches();
+        ipAddressMatcher = ipAddressPattern.matcher(hex);
+        if (domainNameMatcher.matches()) return true;
+        if (ipAddressMatcher.matches()) return true;
+        return false;
     }
 
 }
