@@ -164,10 +164,15 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        String queryString = et_searchById.getEditableText().toString();
+        try{
+            String queryString = et_searchById.getEditableText().toString();
 
-        if(queryString != null && !(queryString.equals(""))) {
-            outState.putString(TAG+et_searchById.getId(),queryString);
+            if(queryString != null && !(queryString.equals(""))) {
+                outState.putString(TAG+et_searchById.getId(),queryString);
+            }
+
+        }catch(NullPointerException npe){
+            //Looks like edit text didn't get initialized properly
         }
 
     }

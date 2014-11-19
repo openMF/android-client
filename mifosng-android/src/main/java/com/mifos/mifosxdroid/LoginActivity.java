@@ -151,7 +151,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
                 return false;
             }
 
-            String validDomain = validateInstanceUrl(urlInputValue);
+            String validDomain = sanitizeDomainNameInput(urlInputValue);
             Log.d("Filtered URL", validDomain);
             String constructedURL = PROTOCOL_HTTPS + validDomain + API_PATH;
             tv_constructed_instance_url.setText(constructedURL);
@@ -159,7 +159,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             instanceURL = url.toURI().toString();
             Log.d(TAG, "instance URL: " + instanceURL);
             API.setInstanceUrl(instanceURL);
-            saveInstanceUrl(instanceURL);
+            saveLastAccessedInstanceDomainName(validDomain);
         } catch (MalformedURLException e) {
             Log.e(TAG, "Invalid instance URL: " + urlInputValue, e);
             throw new ShortOfLengthException("Instance URL", 5);
@@ -228,6 +228,14 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         return false;
     }
 
+    /**
+     * After the user is authenticated the Base64
+     * encoded auth token is saved in Shared Preferences
+     * so that user can be logged in when returning to the app
+     * even if the app is terminated from the background.
+     *
+     * @param authenticationKey
+     */
     public void saveAuthenticationKey(String authenticationKey) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(User.AUTHENTICATION_KEY, authenticationKey);
@@ -235,7 +243,16 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         editor.apply();
     }
 
-    public void saveInstanceUrl(String instanceURL) {
+    /**
+     * Stores the domain name in shared preferences
+     * if the login was successful, so that it can be
+     * referenced later or with multiple login/logouts
+     * user doesn't need to type in the domain name
+     * over and over again.
+     *
+     * @param instanceURL
+     */
+    public void saveLastAccessedInstanceDomainName(String instanceURL) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.INSTANCE_URL_KEY, instanceURL);
         editor.commit();
@@ -263,7 +280,13 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         return super.onOptionsItemSelected(item);
     }
 
-    public String validateInstanceUrl(String url) {
+    /**
+     * Removing protocol names and trailing slashes
+     * from the user entered domain name.
+     * @param url
+     * @return filteredString
+     */
+    public String sanitizeDomainNameInput(String url) {
 
         String filteredUrl;
 
@@ -290,6 +313,14 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     }
 
+    /**
+     * Validates Domain name entered by user
+     * against valid domain name patterns
+     * and also IP address patterns.
+     * @param hex
+     * @return true if pattern is valid
+     * and false otherwise
+     */
     public boolean validateURL(final String hex) {
 
         domainNameMatcher = domainNamePattern.matcher(hex);
