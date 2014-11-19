@@ -20,6 +20,7 @@ public class SavingsAccount {
     private Currency currency;
     private Double accountBalance;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private DepositType depositType;
 
     public Integer getId() {
         return id;
@@ -110,6 +111,18 @@ public class SavingsAccount {
     public SavingsAccount withAccountBalance(Double accountBalance) {
         this.accountBalance = accountBalance;
         return this;
+    }
+
+    public DepositType getDepositType() {
+        return depositType;
+    }
+
+    public void setDepositType(DepositType depositType) {
+        this.depositType = depositType;
+    }
+
+    public boolean isRecurring() {
+        return this.getDepositType() == null ? false : this.getDepositType().isRecurring();
     }
 
     @Override
