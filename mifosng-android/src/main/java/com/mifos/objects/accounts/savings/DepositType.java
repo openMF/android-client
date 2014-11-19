@@ -48,4 +48,13 @@ public class DepositType {
     public boolean isRecurring() {
         return this.code == ServerTypes.RECURRING.getCode();
     }
+
+    @Override
+    public String toString() {
+        return "DepositType{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

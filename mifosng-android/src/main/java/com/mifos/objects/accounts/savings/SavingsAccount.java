@@ -136,6 +136,7 @@ public class SavingsAccount {
                 ", status=" + status +
                 ", currency=" + currency +
                 ", additionalProperties=" + additionalProperties +
+                ", depositType=" + depositType +
                 '}';
     }
 
