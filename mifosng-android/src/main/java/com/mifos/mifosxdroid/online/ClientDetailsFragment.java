@@ -122,12 +122,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     TextView tv_loanOfficer;
     @InjectView(R.id.tv_loanCycle)
     TextView tv_loanCycle;
-
-
-    @InjectView(R.id.tv_count_loan_accounts)
-    TextView tv_count_loan_accounts;
-    @InjectView(R.id.tv_count_savings_accounts)
-    TextView tv_count_savings_accounts;
     @InjectView(R.id.iv_clientImage)
     ImageView iv_clientImage;
 
@@ -531,29 +525,22 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                 accountAccordion = new AccountAccordion(getActivity());
 
                 if (clientAccounts.getLoanAccounts().size() > 0) {
-                    tv_count_loan_accounts.setText(String.valueOf(clientAccounts.getLoanAccounts().size()));
-                    ListView lv = AccountAccordion.Section.LOANS.getListView(getActivity());
+                    AccountAccordion.Section section = AccountAccordion.Section.LOANS;
                     final LoanAccountsListAdapter adapter = new LoanAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getLoanAccounts());
-                    lv.setAdapter(adapter);
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                             mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
-
                         }
                     });
                 }
 
                 if (clientAccounts.getNonRecurringSavingsAccounts().size() > 0) {
-                    tv_count_savings_accounts.setText(String.valueOf(clientAccounts.getNonRecurringSavingsAccounts().size()));
-                    ListView lv = AccountAccordion.Section.SAVINGS.getListView(getActivity());
+                    AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
                     final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getNonRecurringSavingsAccounts());
-                    lv.setAdapter(adapter);
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                             mListener.loadSavingsAccountSummary(adapter.getItem(i).getId());
                         }
                     });
@@ -562,8 +549,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                 safeUIBlockingUtility.safelyUnBlockUI();
 
                 inflateDataTablesList();
-
-
             }
 
             @Override
@@ -880,34 +865,45 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     private static class AccountAccordion {
 
         private enum Section {
-            LOANS(R.id.tv_toggle_loan_accounts, R.id.tv_toggle_loan_accounts_icon, R.id.lv_accounts_loans, R.string.loanAccounts),
-            SAVINGS(R.id.tv_toggle_savings_accounts, R.id.tv_toggle_savings_accounts_icon, R.id.lv_accounts_savings, R.string.savingAccounts);
+            LOANS(R.id.account_accordion_section_loans, R.string.loanAccounts),
+            SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts);
 
             private static final Iconify.IconValue LIST_OPEN_ICON = Iconify.IconValue.fa_minus_circle;
             private static final Iconify.IconValue LIST_CLOSED_ICON = Iconify.IconValue.fa_plus_circle;
 
-            private final int textViewId;
-            private final int iconViewId;
-            private final int listViewId;
+            private final int sectionId;
             private final int textViewStringId;
 
-            Section(int textViewId, int iconViewId, int listViewId, int textViewStringId) {
-                this.textViewId = textViewId;
-                this.iconViewId = iconViewId;
-                this.listViewId = listViewId;
+            Section(int sectionId, int textViewStringId) {
+                this.sectionId = sectionId;
                 this.textViewStringId = textViewStringId;
             }
 
             public TextView getTextView(Activity context) {
-                return (TextView)context.findViewById(this.textViewId);
+                return (TextView)getSectionView(context).findViewById(R.id.tv_toggle_accounts);
             }
 
             public TextView getIconView(Activity context) {
-                return (TextView)context.findViewById(this.iconViewId);
+                return (TextView)getSectionView(context).findViewById(R.id.tv_toggle_accounts_icon);
             }
 
             public ListView getListView(Activity context) {
-                return (ListView)context.findViewById(this.listViewId);
+                return (ListView)getSectionView(context).findViewById(R.id.lv_accounts);
+            }
+
+            public TextView getCountView(Activity context) {
+                return (TextView)getSectionView(context).findViewById(R.id.tv_count_accounts);
+            }
+
+            public View getSectionView(Activity context) {
+                return context.findViewById(this.sectionId);
+            }
+
+            public void connect(Activity context, ListAdapter adapter, AdapterView.OnItemClickListener onItemClickListener) {
+                getCountView(context).setText(String.valueOf(adapter.getCount()));
+                ListView listView = getListView(context);
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener(onItemClickListener);
             }
 
             public void open(Activity context) {
