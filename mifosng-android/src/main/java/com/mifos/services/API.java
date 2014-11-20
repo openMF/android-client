@@ -378,6 +378,7 @@ public class API {
         @GET("/{savingsAccountType}/{savingsAccountId}/transactions/template")
         public void getSavingsAccountTransactionTemplate(@Path("savingsAccountType") String savingsAccountType,
                                                          @Path("savingsAccountId") int savingsAccountId,
+                                                         @Query("command") String transactionType,
                                                          Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})

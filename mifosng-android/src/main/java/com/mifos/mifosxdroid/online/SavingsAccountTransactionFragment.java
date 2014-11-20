@@ -189,7 +189,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
     public void inflatePaymentOptions() {
 
-        API.savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), new Callback<SavingsAccountTransactionTemplate>() {
+        API.savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
             @Override
             public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
 
