@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -121,22 +122,12 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     TextView tv_loanOfficer;
     @InjectView(R.id.tv_loanCycle)
     TextView tv_loanCycle;
-    @InjectView(R.id.tv_toggle_loan_accounts_icon)
-    TextView tv_toggle_loan_accounts_icon;
-    @InjectView(R.id.tv_toggle_savings_accounts_icon)
-    TextView tv_toggle_savings_accounts_icon;
-    @InjectView(R.id.tv_toggle_loan_accounts)
-    TextView tv_toggle_loan_accounts;
-    @InjectView(R.id.tv_toggle_savings_accounts)
-    TextView tv_toggle_savings_accounts;
+
+
     @InjectView(R.id.tv_count_loan_accounts)
     TextView tv_count_loan_accounts;
     @InjectView(R.id.tv_count_savings_accounts)
     TextView tv_count_savings_accounts;
-    @InjectView(R.id.lv_accounts_loans)
-    ListView lv_accounts_loans;
-    @InjectView(R.id.lv_accounts_savings)
-    ListView lv_accounts_savings;
     @InjectView(R.id.iv_clientImage)
     ImageView iv_clientImage;
 
@@ -150,14 +141,14 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     ActionBar actionBar;
 
-    boolean isLoanAccountsListOpen = false;
-    boolean isSavingsAccountsListOpen = false;
     private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
     // Null if play services are not available.
     private LocationClient mLocationClient;
     // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
+
+    private AccountAccordion accountAccordion;
 
     /**Image Loading Task for this instance
       Creating an instance object because if the fragment detaches itself from the activity
@@ -537,132 +528,36 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     return;
                 }
 
-                final String loanAccountsStringResource = getResources().getString(R.string.loanAccounts);
-                final String savingsAccountsStringResource = getResources().getString(R.string.savingAccounts);
-
-                final Iconify.IconValue listOpenIcon = Iconify.IconValue.fa_minus_circle;
-                final Iconify.IconValue listClosedIcon = Iconify.IconValue.fa_plus_circle;
-                tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
-                tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
-
-                Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
-
+                accountAccordion = new AccountAccordion(getActivity());
 
                 if (clientAccounts.getLoanAccounts().size() > 0) {
-                    LoanAccountsListAdapter loanAccountsListAdapter =
-                            new LoanAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getLoanAccounts());
-                    tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
-                    tv_toggle_loan_accounts.setText(loanAccountsStringResource);
                     tv_count_loan_accounts.setText(String.valueOf(clientAccounts.getLoanAccounts().size()));
-                    tv_toggle_loan_accounts.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (!isLoanAccountsListOpen) {
-                                isLoanAccountsListOpen = true;
-
-                                tv_toggle_loan_accounts_icon.setText(listOpenIcon.formattedName());
-                                //TODO SIZE AND ANIMATION TO BE ADDED
-                                //Drop Down and Fold Up
-                                //Calculate Size of 1 cell and show a couple of them
-                                isSavingsAccountsListOpen = false;
-                                tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
-                                lv_accounts_savings.setVisibility(View.GONE);
-                                lv_accounts_loans.setVisibility(View.VISIBLE);
-                            } else {
-                                isLoanAccountsListOpen = false;
-                                tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
-                                //TODO SIZE AND ANIMATION TO BE ADDED
-                                //Drop Down and Fold Up
-                                //Calculate Size of 1 cell and show a couple of them
-                                lv_accounts_loans.setVisibility(View.GONE);
-                            }
-
-                            //Adding Icons to the TextView by this call
-                            Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
-
-                        }
-                    });
-                    lv_accounts_loans.setAdapter(loanAccountsListAdapter);
-                    lv_accounts_loans.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    ListView lv = AccountAccordion.Section.LOANS.getListView(getActivity());
+                    final LoanAccountsListAdapter adapter = new LoanAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getLoanAccounts());
+                    lv.setAdapter(adapter);
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                            mListener.loadLoanAccountSummary(clientAccounts.getLoanAccounts().get(i).getId());
+                            mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
 
-                        }
-                    });
-
-                    //This is used to handle touch events on the list view and consume them without
-                    //passing onto scroll view
-                    lv_accounts_loans.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                            view.getParent().requestDisallowInterceptTouchEvent(true);
-
-                            return false;
                         }
                     });
                 }
 
                 if (clientAccounts.getNonRecurringSavingsAccounts().size() > 0) {
-                    SavingsAccountsListAdapter savingsAccountsListAdapter =
-                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getNonRecurringSavingsAccounts());
-                    tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
-                    tv_toggle_savings_accounts.setText(savingsAccountsStringResource);
                     tv_count_savings_accounts.setText(String.valueOf(clientAccounts.getNonRecurringSavingsAccounts().size()));
-                    tv_toggle_savings_accounts.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (!isSavingsAccountsListOpen) {
-                                isSavingsAccountsListOpen = true;
-                                tv_toggle_savings_accounts_icon.setText(listOpenIcon.formattedName());
-                                //TODO SIZE AND ANIMATION TO BE ADDED
-                                //Drop Down and Fold Up
-                                //Calculate Size of 1 cell and show a couple of them
-                                isLoanAccountsListOpen = false;
-                                tv_toggle_loan_accounts_icon.setText(listClosedIcon.formattedName());
-                                lv_accounts_loans.setVisibility(View.GONE);
-                                lv_accounts_savings.setVisibility(View.VISIBLE);
-                            } else {
-                                isSavingsAccountsListOpen = false;
-                                tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
-                                //TODO SIZE AND ANIMATION TO BE ADDED
-                                //Drop Down and Fold Up
-                                //Calculate Size of 1 cell and show a couple of them
-                                lv_accounts_savings.setVisibility(View.GONE);
-                            }
-                            //Adding Icons to the TextView by this call
-                            Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
-
-                        }
-                    });
-
-                    lv_accounts_savings.setAdapter(savingsAccountsListAdapter);
-                    lv_accounts_savings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    ListView lv = AccountAccordion.Section.SAVINGS.getListView(getActivity());
+                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getNonRecurringSavingsAccounts());
+                    lv.setAdapter(adapter);
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                            mListener.loadSavingsAccountSummary(clientAccounts.getNonRecurringSavingsAccounts().get(i).getId());
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId());
                         }
                     });
-
-                    //This is used to handle touch events on the list view and consume them without
-                    //passing onto scroll view
-                    lv_accounts_savings.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                            view.getParent().requestDisallowInterceptTouchEvent(true);
-
-                            return false;
-                        }
-                    });
-
                 }
-
-
-                Iconify.addIcons(tv_toggle_loan_accounts_icon, tv_toggle_savings_accounts_icon);
 
                 safeUIBlockingUtility.safelyUnBlockUI();
 
@@ -819,36 +714,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             Toast.makeText(getActivity(), "Connection to location services failed.",
                     Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-    /**
-     * This method just passes on a users click from Icon to
-     * Savings Account Text View
-     * <p/>
-     * Clicking on this icon will trigger an action that gets
-     * triggered when the adjacent view is clicked i.e. SavingsAccounts Text View
-     */
-
-    @OnClick(R.id.tv_toggle_savings_accounts_icon)
-    public void onSavingsAccountToggleIconClicked() {
-
-        tv_toggle_savings_accounts.performClick();
-
-    }
-
-    /**
-     * This method just passes on a users click from Icon to
-     * Loan Account Text View.
-     * <p/>
-     * Clicking on this icon will trigger an action that gets
-     * triggered when the adjacent view is clicked i.e. LoanAccounts Text View
-     */
-
-    @OnClick(R.id.tv_toggle_loan_accounts_icon)
-    public void onLoanAccountsToggleIconClicked() {
-
-        tv_toggle_loan_accounts.performClick();
 
     }
 
@@ -1012,4 +877,130 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         }
     }
 
+    private static class AccountAccordion {
+
+        private enum Section {
+            LOANS(R.id.tv_toggle_loan_accounts, R.id.tv_toggle_loan_accounts_icon, R.id.lv_accounts_loans, R.string.loanAccounts),
+            SAVINGS(R.id.tv_toggle_savings_accounts, R.id.tv_toggle_savings_accounts_icon, R.id.lv_accounts_savings, R.string.savingAccounts);
+
+            private static final Iconify.IconValue LIST_OPEN_ICON = Iconify.IconValue.fa_minus_circle;
+            private static final Iconify.IconValue LIST_CLOSED_ICON = Iconify.IconValue.fa_plus_circle;
+
+            private final int textViewId;
+            private final int iconViewId;
+            private final int listViewId;
+            private final int textViewStringId;
+
+            Section(int textViewId, int iconViewId, int listViewId, int textViewStringId) {
+                this.textViewId = textViewId;
+                this.iconViewId = iconViewId;
+                this.listViewId = listViewId;
+                this.textViewStringId = textViewStringId;
+            }
+
+            public TextView getTextView(Activity context) {
+                return (TextView)context.findViewById(this.textViewId);
+            }
+
+            public TextView getIconView(Activity context) {
+                return (TextView)context.findViewById(this.iconViewId);
+            }
+
+            public ListView getListView(Activity context) {
+                return (ListView)context.findViewById(this.listViewId);
+            }
+
+            public void open(Activity context) {
+                TextView iconView = getIconView(context);
+                iconView.setText(LIST_OPEN_ICON.formattedName());
+                Iconify.addIcons(iconView);
+                //TODO SIZE AND ANIMATION TO BE ADDED
+                //Drop Down and Fold Up
+                //Calculate Size of 1 cell and show a couple of them
+                getListView(context).setVisibility(View.VISIBLE);
+            }
+
+            public void close(Activity context) {
+                TextView iconView = getIconView(context);
+                iconView.setText(LIST_CLOSED_ICON.formattedName());
+                Iconify.addIcons(iconView);
+                //TODO SIZE AND ANIMATION TO BE ADDED
+                //Drop Down and Fold Up
+                //Calculate Size of 1 cell and show a couple of them
+                getListView(context).setVisibility(View.GONE);
+            }
+
+            private void configureSection(Activity context, final AccountAccordion accordion) {
+                final ListView listView = getListView(context);
+                final TextView textView = getTextView(context);
+                final TextView iconView = getIconView(context);
+
+                View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (Section.this.equals(accordion.currentSection)) {
+                            accordion.setCurrentSection(null);
+                        } else if (listView != null && listView.getCount() > 0) {
+                            accordion.setCurrentSection(Section.this);
+                        }
+                    }
+                };
+
+                if (textView != null) {
+                    textView.setOnClickListener(onClickListener);
+                    textView.setText(context.getString(textViewStringId));
+                }
+
+                if (iconView != null) {
+                    iconView.setOnClickListener(onClickListener);
+                }
+
+                if (listView != null) {
+                    //This is used to handle touch events on the list view and consume them without
+                    //passing onto scroll view
+                    listView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                            view.getParent().requestDisallowInterceptTouchEvent(true);
+
+                            return false;
+                        }
+                    });
+                }
+
+                // initialize section in closed state
+                close(context);
+            }
+
+            public static void configure(Activity context, final AccountAccordion accordion) {
+                for (Section section : Section.values()) {
+                    section.configureSection(context, accordion);
+                }
+            }
+        }
+
+        private final Activity context;
+        private Section currentSection;
+
+        private AccountAccordion(Activity context) {
+            this.context = context;
+            Section.configure(context, this);
+        }
+
+        public void setCurrentSection(Section currentSection) {
+            // close previous section
+            if (this.currentSection != null) {
+                this.currentSection.close(context);
+            }
+
+            this.currentSection = currentSection;
+
+            // open new section
+            if (this.currentSection != null) {
+                this.currentSection.open(context);
+            }
+        }
+
+    }
 }
