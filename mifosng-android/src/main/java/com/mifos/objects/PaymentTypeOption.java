@@ -8,7 +8,7 @@ package com.mifos.objects;
 
 import com.google.gson.annotations.Expose;
 
-public class PaymentTypeOption {
+public class PaymentTypeOption implements Comparable<PaymentTypeOption>{
 
     @Expose
     private Integer id;
@@ -41,4 +41,22 @@ public class PaymentTypeOption {
         this.position = position;
     }
 
+    /**
+     * Compares two payment type options on the basis
+     * of their position specified.
+     * @param another
+     * @return
+     */
+
+    @Override
+    public int compareTo(PaymentTypeOption another) {
+
+        if (this.position < another.position) {
+            return -1;
+        } else if (this.position > another.position) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

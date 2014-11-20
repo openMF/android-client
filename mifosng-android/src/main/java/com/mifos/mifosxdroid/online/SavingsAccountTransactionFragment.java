@@ -41,6 +41,7 @@ import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -190,15 +191,24 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
                     List<String> listOfPaymentTypes = new ArrayList<String>();
 
-                    //Currently this method assumes that Positions are Unique for each paymentType
-                    //TODO Implement a Duplication check on positions and sort them and add into listOfPaymentTypes
                     paymentTypeOptionList = savingsAccountTransactionTemplate.getPaymentTypeOptions();
+
+                    /**
+                     * Sorting has to be done on the basis of
+                     * PaymentTypeOption.position because it is specified
+                     * by the users on Mifos X Platform.
+                     *
+                     */
+                    Collections.sort(paymentTypeOptionList);
+
                     Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
                     while (paymentTypeOptionIterator.hasNext()) {
                         PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
-                        listOfPaymentTypes.add(paymentTypeOption.getPosition(), paymentTypeOption.getName());
+                        listOfPaymentTypes.add(paymentTypeOption.getName());
                         paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
                     }
+
+
 
                     ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(),
                             android.R.layout.simple_spinner_item, listOfPaymentTypes);
