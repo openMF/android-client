@@ -119,6 +119,7 @@
     <string name="deposit">Deposit</string>
     <string name="withdrawal">Withdrawal</string>
     <string name="savingsAccountSummary">Savings Account Summary</string>
+    <string name="recurringAccountSummary">Recurring Account Summary</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <!-- Savings Account Related Terminologies End Here -->
 

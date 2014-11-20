@@ -151,7 +151,15 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        actionBar.setTitle(getResources().getString(R.string.savingsAccountSummary));
+        switch (savingsAccountType.getServerType()) {
+            case RECURRING:
+                actionBar.setTitle(getResources().getString(R.string.recurringAccountSummary));
+                break;
+            default:
+                actionBar.setTitle(getResources().getString(R.string.savingsAccountSummary));
+                break;
+        }
+
         /**
          * This Method will hit end point ?associations=transactions
          */

@@ -11,7 +11,7 @@ import com.mifos.services.data.APIEndPoint;
  */
 public class DepositType implements Parcelable {
 
-    private static enum ServerTypes {
+    public static enum ServerTypes {
         // TODO: Are these all the types?
         SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGSACCOUNTS),
         FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGSACCOUNTS),
@@ -71,6 +71,10 @@ public class DepositType implements Parcelable {
 
     public String getEndpoint() {
         return ServerTypes.fromId(getId()).getEndpoint();
+    }
+
+    public ServerTypes getServerType() {
+        return ServerTypes.fromId(getId());
     }
 
     @Override
