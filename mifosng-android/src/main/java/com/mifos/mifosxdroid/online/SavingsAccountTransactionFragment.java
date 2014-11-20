@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
+import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
@@ -208,8 +209,6 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
                         paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
                     }
 
-
-
                     ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(),
                             android.R.layout.simple_spinner_item, listOfPaymentTypes);
 
@@ -236,11 +235,21 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     @OnClick(R.id.bt_reviewTransaction)
     public void onReviewTransactionButtonClicked() {
 
+        /**
+         * Notify user if Amount field is blank and Review
+         * Transaction button is pressed.
+         */
+        if (et_transactionAmount.getEditableText().toString().isEmpty()) {
+            new RequiredFieldException(getString(R.string.amount),
+                    getString(R.string.message_field_required)).notifyUserWithToast(activity);
+            return;
+        }
+
         String[] headers = {"Field", "Value"};
         String[][] data = {
                 {"Transaction Date", tv_transactionDate.getText().toString()},
                 {"Payment Type", sp_paymentType.getSelectedItem().toString()},
-                {"Amount", et_transactionAmount.getText().toString()}
+                {"Amount", et_transactionAmount.getEditableText().toString()}
         };
 
         System.out.println(FlipTable.of(headers, data));
