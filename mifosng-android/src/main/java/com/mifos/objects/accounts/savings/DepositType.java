@@ -46,7 +46,7 @@ public class DepositType {
     }
 
     public boolean isRecurring() {
-        return this.code == ServerTypes.RECURRING.getCode();
+        return ServerTypes.RECURRING.getId().equals(this.getId());
     }
 
     @Override

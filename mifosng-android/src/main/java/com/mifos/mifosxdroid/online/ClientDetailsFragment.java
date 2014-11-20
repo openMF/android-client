@@ -605,12 +605,12 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     });
                 }
 
-                if (clientAccounts.getSavingsAccounts().size() > 0) {
+                if (clientAccounts.getNonRecurringSavingsAccounts().size() > 0) {
                     SavingsAccountsListAdapter savingsAccountsListAdapter =
-                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getSavingsAccounts());
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getNonRecurringSavingsAccounts());
                     tv_toggle_savings_accounts_icon.setText(listClosedIcon.formattedName());
                     tv_toggle_savings_accounts.setText(savingsAccountsStringResource);
-                    tv_count_savings_accounts.setText(String.valueOf(clientAccounts.getSavingsAccounts().size()));
+                    tv_count_savings_accounts.setText(String.valueOf(clientAccounts.getNonRecurringSavingsAccounts().size()));
                     tv_toggle_savings_accounts.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -643,7 +643,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                            mListener.loadSavingsAccountSummary(clientAccounts.getSavingsAccounts().get(i).getId());
+                            mListener.loadSavingsAccountSummary(clientAccounts.getNonRecurringSavingsAccounts().get(i).getId());
                         }
                     });
 
