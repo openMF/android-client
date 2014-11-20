@@ -74,7 +74,7 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 public class API {
-
+    public static final String TAG = API.class.getName();
     public static final String ACCEPT_JSON = "Accept: application/json";
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
     public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "Content-Type: multipart/form-data";
@@ -198,17 +198,7 @@ public class API {
     }
 
     public static synchronized String getInstanceUrl() {
-
-        SharedPreferences pref = PreferenceManager
-                .getDefaultSharedPreferences(Constants.applicationContext);
-        String savedInstanceUrl = pref.getString(Constants.INSTANCE_URL_KEY, "NA");
-
-        if(savedInstanceUrl.equals("NA")){
-            return mInstanceUrl;
-        }else{
-            return savedInstanceUrl;
-        }
-
+        return mInstanceUrl;
     }
 
     public static synchronized void setInstanceUrl(String url) {

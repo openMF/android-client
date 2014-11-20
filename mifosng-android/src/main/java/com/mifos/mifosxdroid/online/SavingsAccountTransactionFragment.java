@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
+import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
@@ -41,6 +42,7 @@ import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -190,13 +192,20 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
                     List<String> listOfPaymentTypes = new ArrayList<String>();
 
-                    //Currently this method assumes that Positions are Unique for each paymentType
-                    //TODO Implement a Duplication check on positions and sort them and add into listOfPaymentTypes
                     paymentTypeOptionList = savingsAccountTransactionTemplate.getPaymentTypeOptions();
+
+                    /**
+                     * Sorting has to be done on the basis of
+                     * PaymentTypeOption.position because it is specified
+                     * by the users on Mifos X Platform.
+                     *
+                     */
+                    Collections.sort(paymentTypeOptionList);
+
                     Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
                     while (paymentTypeOptionIterator.hasNext()) {
                         PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
-                        listOfPaymentTypes.add(paymentTypeOption.getPosition(), paymentTypeOption.getName());
+                        listOfPaymentTypes.add(paymentTypeOption.getName());
                         paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
                     }
 
@@ -226,11 +235,21 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     @OnClick(R.id.bt_reviewTransaction)
     public void onReviewTransactionButtonClicked() {
 
+        /**
+         * Notify user if Amount field is blank and Review
+         * Transaction button is pressed.
+         */
+        if (et_transactionAmount.getEditableText().toString().isEmpty()) {
+            new RequiredFieldException(getString(R.string.amount),
+                    getString(R.string.message_field_required)).notifyUserWithToast(activity);
+            return;
+        }
+
         String[] headers = {"Field", "Value"};
         String[][] data = {
                 {"Transaction Date", tv_transactionDate.getText().toString()},
                 {"Payment Type", sp_paymentType.getSelectedItem().toString()},
-                {"Amount", et_transactionAmount.getText().toString()}
+                {"Amount", et_transactionAmount.getEditableText().toString()}
         };
 
         System.out.println(FlipTable.of(headers, data));
