@@ -546,6 +546,17 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     });
                 }
 
+                if (clientAccounts.getRecurringSavingsAccounts().size() > 0) {
+                    AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
+                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getRecurringSavingsAccounts());
+                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId());
+                        }
+                    });
+                }
+
                 safeUIBlockingUtility.safelyUnBlockUI();
 
                 inflateDataTablesList();
@@ -866,7 +877,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         private enum Section {
             LOANS(R.id.account_accordion_section_loans, R.string.loanAccounts),
-            SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts);
+            SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts),
+            RECURRING(R.id.account_accordion_section_recurring, R.string.recurringAccount);
 
             private static final Iconify.IconValue LIST_OPEN_ICON = Iconify.IconValue.fa_minus_circle;
             private static final Iconify.IconValue LIST_CLOSED_ICON = Iconify.IconValue.fa_plus_circle;

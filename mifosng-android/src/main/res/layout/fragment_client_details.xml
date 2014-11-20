@@ -209,5 +209,13 @@
             android:layout_below="@+id/account_accordion_section_loans"
             />
 
+        <include
+            layout="@layout/view_account_accordion_section"
+            android:id="@+id/account_accordion_section_recurring"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/account_accordion_section_savings"
+            />
+
     </RelativeLayout>
 </ScrollView>
