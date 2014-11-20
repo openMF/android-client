@@ -52,9 +52,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     private static final String IP_ADDRESS_REGEX_PATTERN = "^(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))$";
-    public static String PROTOCOL_HTTP = "http://";
-    public static String PROTOCOL_HTTPS = "https://";
-    public static String API_PATH = "/mifosng-provider/api/v1";
+    public static final String PROTOCOL_HTTP = "http://";
+    public static final String PROTOCOL_HTTPS = "https://";
+    public static final String API_PATH = "/mifosng-provider/api/v1";
     SharedPreferences sharedPreferences;
     @InjectView(R.id.et_instanceURL) EditText et_instanceURL;
     @InjectView(R.id.et_username) EditText et_username;
@@ -67,7 +67,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private Context context;
     private String authenticationToken;
     private ProgressDialog progressDialog;
-    private String TAG = "LoginActivity";
+    private final static String TAG = "LoginActivity";
     private Pattern domainNamePattern;
     private Matcher domainNameMatcher;
     private Pattern ipAddressPattern;
@@ -120,7 +120,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             @Override
             public void afterTextChanged(Editable editable) {
 
-                String textUnderConstruction = PROTOCOL_HTTPS + editable.toString() + API_PATH;
+                String textUnderConstruction = constructInstanceUrl(editable.toString());
                 tv_constructed_instance_url.setText(textUnderConstruction);
 
                 if(!validateURL(editable.toString())) {
@@ -133,8 +133,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         });
     }
 
-    public void setupUI()
-    {
+    public void setupUI() {
         progressDialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Logging In");
         progressDialog.setCancelable(false);
@@ -146,14 +145,13 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
         String urlInputValue = et_instanceURL.getEditableText().toString();
         try {
-
             if(!validateURL(urlInputValue)) {
+                Log.e(TAG, "The url is invalid: " + urlInputValue);
                 return false;
             }
-
             String validDomain = sanitizeDomainNameInput(urlInputValue);
             Log.d("Filtered URL", validDomain);
-            String constructedURL = PROTOCOL_HTTPS + validDomain + API_PATH;
+            String constructedURL = constructInstanceUrl(validDomain);
             tv_constructed_instance_url.setText(constructedURL);
             URL url = new URL(constructedURL);
             instanceURL = url.toURI().toString();
@@ -181,6 +179,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         return true;
     }
 
+    public String constructInstanceUrl(String validDomain) {
+        return PROTOCOL_HTTPS + validDomain + API_PATH;
+    }
 
     @Override
     public void success(User user, Response response) {
