@@ -5,10 +5,10 @@
 
 package com.mifos.mifosxdroid.tests;
 
+import android.test.ActivityInstrumentationTestCase2;
+
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.view.View;
@@ -20,6 +20,15 @@ import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
+
+import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
+import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
+import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
+import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
+import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withContentDescription;
+import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 
 /**
  * Created by ishankhanna on 12/08/14.
@@ -187,6 +196,12 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         });
         getInstrumentation().waitForIdleSync();
         assertEquals(getActivity().constructInstanceUrl(TEST_URL_1), API.getInstanceUrl());
+    }
+
+    @SmallTest
+    public void testMoreOptions_displaysOfflineMenuItem() {
+        onView(withContentDescription("More options")).perform(click());
+        onView(withText(is(startsWith("Offline")))).check(matches(isDisplayed()));
     }
 
     private void enterMifosInstanceDomain(final String domain) {

@@ -4,7 +4,6 @@
  */
 
 buildscript {
-
     repositories {
         mavenCentral()
         maven { url 'http://download.crashlytics.com/maven' }
@@ -14,22 +13,34 @@ buildscript {
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
     }
 }
-apply plugin: 'android'
-apply plugin: 'crashlytics'
 
 repositories {
     mavenCentral()
     maven { url 'http://download.crashlytics.com/maven' }
 }
 
+apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
+
 android {
     compileSdkVersion 20
     buildToolsVersion '20'
+
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 20
+        // A test runner provided by https://code.google.com/p/android-test-kit/
+        testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
-    sourceSets { main { java.srcDirs = ['src/main/java', 'src/instrumentTest/java/'] } }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+        }
+        androidTest {
+            java.srcDirs = ['src/instrumentTest/java/']
+        }
+    }
 
     signingConfigs {
         release {
@@ -51,6 +62,13 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+
+    // Exclude duplicated Hamcrest LICENSE.txt from being packaged into the apk.
+    // This is a workaround for https://code.google.com/p/android/issues/detail?id=65445.
+    // The Hamcrest is used in tests.
+    packagingOptions {
+        exclude 'LICENSE.txt'
     }
 }
 
@@ -77,8 +95,6 @@ dependencies {
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     // You must install or update the Google Repository through the SDK manager to use this dependency.
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:appcompat-v7:20.+'
     compile 'com.google.android.gms:play-services:5.0.+'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
@@ -88,4 +104,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso-pollexor:2.1.1@jar'
     compile 'com.joanzapata.android:android-iconify:1.0.6'
     compile 'com.crashlytics.android:crashlytics:1.+'
+
+    // Test libraries provided by https://code.google.com/p/android-test-kit/
+    androidTestCompile 'com.jakewharton.espresso:espresso:1.1-r3'
+    androidTestCompile 'com.jakewharton.espresso:espresso-support-v4:1.1-r3'
 }
