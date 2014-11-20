@@ -50,6 +50,7 @@ import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.API;
@@ -541,7 +542,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId());
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(), adapter.getItem(i).getDepositType());
                         }
                     });
                 }
@@ -552,7 +553,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId());
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(), adapter.getItem(i).getDepositType());
                         }
                     });
                 }
@@ -809,7 +810,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         public void loadLoanAccountSummary(int loanAccountNumber);
 
-        public void loadSavingsAccountSummary(int savingsAccountNumber);
+        public void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType);
 
     }
 

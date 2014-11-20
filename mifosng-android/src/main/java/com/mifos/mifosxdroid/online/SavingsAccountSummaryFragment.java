@@ -33,6 +33,7 @@ import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
+import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
 import com.mifos.objects.accounts.savings.Transaction;
@@ -60,6 +61,8 @@ public class SavingsAccountSummaryFragment extends Fragment {
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_DOCUMENTS = 1004;
     public static int savingsAccountNumber;
+    public static DepositType savingsAccountType;
+
     public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -108,10 +111,11 @@ public class SavingsAccountSummaryFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber) {
+    public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber, DepositType type) {
         SavingsAccountSummaryFragment fragment = new SavingsAccountSummaryFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber);
+        args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -121,6 +125,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
+            savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
         }
 
         setHasOptionsMenu(true);
@@ -150,7 +155,9 @@ public class SavingsAccountSummaryFragment extends Fragment {
         /**
          * This Method will hit end point ?associations=transactions
          */
-        API.savingsAccountService.getSavingsAccountWithAssociations(savingsAccountNumber,
+
+
+        API.savingsAccountService.getSavingsAccountWithAssociations(savingsAccountType.getEndpoint(), savingsAccountNumber,
                 "transactions", new Callback<SavingsAccountWithAssociations>() {
                     @Override
                     public void success(SavingsAccountWithAssociations savingsAccountWithAssociations, Response response) {
@@ -348,12 +355,12 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
     @OnClick(R.id.bt_deposit)
     public void onDepositButtonClicked() {
-        mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT);
+        mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT, savingsAccountType);
     }
 
     @OnClick(R.id.bt_withdrawal)
     public void onWithdrawalButtonClicked() {
-        mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL);
+        mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType);
     }
 
     /**
@@ -485,6 +492,6 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
 
-        public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType);
+        public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType, DepositType accountType);
     }
 }

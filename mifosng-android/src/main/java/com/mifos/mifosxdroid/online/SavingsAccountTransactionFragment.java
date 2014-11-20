@@ -32,6 +32,7 @@ import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -81,6 +82,8 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     ActionBar actionBar;
     SharedPreferences sharedPreferences;
     String savingsAccountNumber;
+    private DepositType savingsAccountType;
+
     String transactionType;     //Defines if the Transaction is a Deposit to an Account or a Withdrawal from an Account
     String clientName;
     // Values to be fetched from Savings Account Template
@@ -102,12 +105,13 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
      * @param transactionType                Type of Transaction (Deposit or Withdrawal)
      * @return A new instance of fragment SavingsAccountTransactionDialogFragment.
      */
-    public static SavingsAccountTransactionFragment newInstance(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType) {
+    public static SavingsAccountTransactionFragment newInstance(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType, DepositType accountType) {
         SavingsAccountTransactionFragment fragment = new SavingsAccountTransactionFragment();
         Bundle args = new Bundle();
         args.putString(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations.getAccountNo());
         args.putString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE, transactionType);
         args.putString(Constants.CLIENT_NAME, savingsAccountWithAssociations.getClientName());
+        args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, accountType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -120,6 +124,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
             savingsAccountNumber = getArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER);
             transactionType = getArguments().getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE);
             clientName = getArguments().getString(Constants.CLIENT_NAME);
+            savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
 
         }
     }
@@ -184,7 +189,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
     public void inflatePaymentOptions() {
 
-        API.savingsAccountService.getSavingsAccountTransactionTemplate(Integer.parseInt(savingsAccountNumber), new Callback<SavingsAccountTransactionTemplate>() {
+        API.savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), new Callback<SavingsAccountTransactionTemplate>() {
             @Override
             public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
 
@@ -305,7 +310,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.savingsAccountService.processTransaction(Integer.parseInt(savingsAccountNumber), transactionType,
+        API.savingsAccountService.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType,
                 savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
                     @Override
                     public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {

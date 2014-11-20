@@ -44,6 +44,8 @@ public class Constants {
 
     public static final String SAVINGS_ACCOUNT_NUMBER = "savingsAccountNumber";
 
+    public static final String SAVINGS_ACCOUNT_TYPE = "savingsAccountType";
+
     public static final String SAVINGS_ACCOUNT_TRANSACTION_TYPE = "transactionType";
 
     public static final String SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT = "Deposit";

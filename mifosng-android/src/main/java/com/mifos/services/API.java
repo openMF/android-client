@@ -19,6 +19,8 @@ import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.savings.DepositType;
+import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -359,8 +361,9 @@ public class API {
          * Use this method to retrieve the Savings Account With Associations
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET(APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}")
-        public void getSavingsAccountWithAssociations(@Path("savingsAccountId") int savingsAccountId,
+        @GET("/{savingsAccountType}/{savingsAccountId}")
+        public void getSavingsAccountWithAssociations(@Path("savingsAccountType") String savingsAccountType,
+                                                      @Path("savingsAccountId") int savingsAccountId,
                                                       @Query("associations") String association,
                                                       Callback<SavingsAccountWithAssociations> savingsAccountWithAssociationsCallback);
 
@@ -372,12 +375,15 @@ public class API {
          * Use this method to retrieve the Savings Account Transaction Template
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET(APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}/transactions/template")
-        public void getSavingsAccountTransactionTemplate(@Path("savingsAccountId") int savingsAccountId, Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
+        @GET("/{savingsAccountType}/{savingsAccountId}/transactions/template")
+        public void getSavingsAccountTransactionTemplate(@Path("savingsAccountType") String savingsAccountType,
+                                                         @Path("savingsAccountId") int savingsAccountId,
+                                                         Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST(APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}/transactions")
-        public void processTransaction(@Path("savingsAccountId") int savingsAccountId,
+        @POST("/{savingsAccountType}/{savingsAccountId}/transactions")
+        public void processTransaction(@Path("savingsAccountType") String savingsAccountType,
+                                       @Path("savingsAccountId") int savingsAccountId,
                                               @Query("command") String transactionType,
                                               @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
                                               Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
