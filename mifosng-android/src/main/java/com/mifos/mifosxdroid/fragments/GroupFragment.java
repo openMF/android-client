@@ -12,10 +12,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
@@ -28,6 +36,9 @@ import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
@@ -68,13 +79,19 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_sync, menu);
-        syncItem = menu.findItem(R.id.action_sync);
-        if (centerId != -1) {
-            List<MeetingCenter> center = new ArrayList<MeetingCenter>();
-            center.addAll(Select.from(MeetingCenter.class).where(Condition.prop("center_id").eq(centerId)).list());
-            if (center.size() > 0 && center.get(0).getIsSynced() == 1)
-                syncItem.setEnabled(false);
+        try {
+            syncItem = menu.findItem(R.id.action_sync);
+            if (centerId != -1) {
+                List<MeetingCenter> center = new ArrayList<MeetingCenter>();
+                center.addAll(Select.from(MeetingCenter.class).where(Condition.prop("center_id").eq(centerId)).list());
+                if (center.size() > 0 && center.get(0).getIsSynced() == 1)
+                    syncItem.setEnabled(false);
+            }
+        } catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+            syncItem.setEnabled(false);
         }
+
     }
 
     @Override
