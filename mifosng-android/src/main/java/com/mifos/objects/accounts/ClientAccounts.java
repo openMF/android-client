@@ -46,6 +46,26 @@ public class ClientAccounts {
         return this;
     }
 
+    public List<SavingsAccount>getRecurringSavingsAccounts() {
+        return getSavingsAccounts(true);
+    }
+
+    public List<SavingsAccount>getNonRecurringSavingsAccounts() {
+        return getSavingsAccounts(false);
+    }
+
+    private List<SavingsAccount>getSavingsAccounts(boolean wantRecurring) {
+        List<SavingsAccount> result = new ArrayList<SavingsAccount>();
+        if (this.savingsAccounts != null) {
+            for (SavingsAccount account : savingsAccounts) {
+                if (account.isRecurring() == wantRecurring) {
+                    result.add(account);
+                }
+            }
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         return "ClientAccounts{" +
