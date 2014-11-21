@@ -21,6 +21,7 @@ import com.mifos.objects.User;
  */
 public class LogoutActivity extends ActionBarActivity {
     public final static String TAG = LogoutActivity.class.getSimpleName();
+    public static final String NA = "NA";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class LogoutActivity extends ActionBarActivity {
         Log.d(TAG, "logout");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(User.AUTHENTICATION_KEY, "NA");
+        editor.putString(User.AUTHENTICATION_KEY, NA);
         editor.commit();
         editor.apply();
         startActivity(new Intent(LogoutActivity.this, SplashScreenActivity.class));
