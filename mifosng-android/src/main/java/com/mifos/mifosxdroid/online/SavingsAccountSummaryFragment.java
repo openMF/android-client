@@ -244,11 +244,14 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
+                        try{
 
-                        Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-
-                        Toast.makeText(activity, "Savings Account not found.", Toast.LENGTH_SHORT).show();
+                            Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
+                        }catch(NullPointerException npe) {
+                            Toast.makeText(activity, "Internal Server Error", Toast.LENGTH_SHORT).show();
+                        }
                         safeUIBlockingUtility.safelyUnBlockUI();
+                        getFragmentManager().popBackStackImmediate();
                     }
                 }
         );

@@ -81,7 +81,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
