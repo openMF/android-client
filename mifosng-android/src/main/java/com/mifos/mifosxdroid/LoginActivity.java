@@ -61,6 +61,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     @InjectView(R.id.et_password) EditText et_password;
     @InjectView(R.id.bt_login) Button bt_login;
     @InjectView(R.id.tv_constructed_instance_url) TextView tv_constructed_instance_url;
+    @InjectView(R.id.et_tenantIdentifier) EditText et_tenantIdentifier;
     private String username;
     private String instanceURL;
     private String password;
@@ -72,6 +73,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private Matcher domainNameMatcher;
     private Pattern ipAddressPattern;
     private Matcher ipAddressMatcher;
+    private String tenantIdentifier;
 
 
     @Override
@@ -84,6 +86,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String previouslyEnteredUrl = sharedPreferences.getString(Constants.INSTANCE_URL_KEY,
                 getString(R.string.default_instance_url));
+
+        tenantIdentifier = sharedPreferences.getString(Constants.TENANT_IDENTIFIER_KEY,
+                "default");
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
         ButterKnife.inject(this);
@@ -141,8 +146,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     public boolean validateUserInputs() throws ShortOfLengthException {
 
-        //TODO Create All Validations Here for all input fields
-
         String urlInputValue = et_instanceURL.getEditableText().toString();
         try {
             if(!validateURL(urlInputValue)) {
@@ -176,6 +179,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             throw new ShortOfLengthException("Password", 6);
         }
 
+        if (!et_tenantIdentifier.getEditableText().toString().isEmpty()) {
+            API.setTenantIdentifier(et_tenantIdentifier.getEditableText().toString().trim());
+        }
         return true;
     }
 

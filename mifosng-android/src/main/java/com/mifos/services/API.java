@@ -19,8 +19,6 @@ import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
-import com.mifos.objects.accounts.savings.DepositType;
-import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -90,6 +88,7 @@ public class API {
     public static final String HEADER_MIFOS_TENANT_ID = "X-Mifos-Platform-TenantId";
     //This instance has more Data for Testing
     public static String mInstanceUrl = "https://demo.openmf.org/mifosng-provider/api/v1";
+    public static String mTenantIdentifier = "default";
     public static CenterService centerService;
     public static ClientAccountsService clientAccountsService;
     public static ClientService clientService;
@@ -112,7 +111,7 @@ public class API {
     static RestAdapter sRestAdapter;
 
     private static synchronized void init() {
-        sRestAdapter = createRestAdapter(getInstanceUrl());
+        sRestAdapter = createRestAdapter(getInstanceUrl(), getTenantIdentifier());
         centerService = sRestAdapter.create(CenterService.class);
         clientAccountsService = sRestAdapter.create(ClientAccountsService.class);
         clientService = sRestAdapter.create(ClientService.class);
@@ -129,13 +128,13 @@ public class API {
         staffService = sRestAdapter.create(StaffService.class);
     }
 
-    private static RestAdapter createRestAdapter(final String url) {
+    private static RestAdapter createRestAdapter(final String url, final String tenantIdentifier) {
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
-                        if (url.contains("developer")) {
-                            request.addHeader(HEADER_MIFOS_TENANT_ID, "developer");
+                        if (!tenantIdentifier.isEmpty()) {
+                            request.addHeader(HEADER_MIFOS_TENANT_ID, tenantIdentifier);
                         } else {
                             request.addHeader(HEADER_MIFOS_TENANT_ID, "default");
                         }
@@ -205,6 +204,15 @@ public class API {
 
     public static synchronized void setInstanceUrl(String url) {
         mInstanceUrl = url;
+        init();
+    }
+
+    public static synchronized String getTenantIdentifier() {
+        return mTenantIdentifier;
+    }
+
+    public static synchronized void setTenantIdentifier(String tenantIdentifier) {
+        mTenantIdentifier = tenantIdentifier;
         init();
     }
 

@@ -22,7 +22,7 @@
     <string name="client">Client</string>
     <string name="save">Save</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
-    <string name="default_instance_url">developer.openmf.org</string>
+    <string name="default_instance_url">demo.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
@@ -179,6 +179,10 @@
     <string name="total_due">Total Due</string>
     <string name="refresh">Refresh</string>
     <string name="error_login_again">Please login to continue</string>
+    <string name="default_port">80</string>
+    <string name="port">Port</string>
+    <string name="default_tenant">default</string>
+    <string name="tenant_identifier">Tenant Identifier</string>
 
 
 </resources>

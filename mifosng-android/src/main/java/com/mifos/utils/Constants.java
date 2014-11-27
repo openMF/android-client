@@ -16,6 +16,8 @@ public class Constants {
 
     public static String INSTANCE_URL_KEY = "instanceURL";
 
+    public static String TENANT_IDENTIFIER_KEY = "tenant identifier";
+
     public static String PROTOCOL_HTTP = "http://";
 
     public static String PROTOCOL_HTTPS = "https://";
