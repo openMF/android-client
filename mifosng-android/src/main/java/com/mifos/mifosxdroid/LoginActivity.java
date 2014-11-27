@@ -62,6 +62,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     @InjectView(R.id.bt_login) Button bt_login;
     @InjectView(R.id.tv_constructed_instance_url) TextView tv_constructed_instance_url;
     @InjectView(R.id.et_tenantIdentifier) EditText et_tenantIdentifier;
+    @InjectView(R.id.et_instancePort) EditText et_port;
     private String username;
     private String instanceURL;
     private String password;
@@ -73,8 +74,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private Matcher domainNameMatcher;
     private Pattern ipAddressPattern;
     private Matcher ipAddressMatcher;
-    private String tenantIdentifier;
-
+    private int port = 80;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +87,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         String previouslyEnteredUrl = sharedPreferences.getString(Constants.INSTANCE_URL_KEY,
                 getString(R.string.default_instance_url));
 
-        tenantIdentifier = sharedPreferences.getString(Constants.TENANT_IDENTIFIER_KEY,
-                "default");
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
         ButterKnife.inject(this);
@@ -125,7 +123,15 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             @Override
             public void afterTextChanged(Editable editable) {
 
-                String textUnderConstruction = constructInstanceUrl(editable.toString());
+                String textUnderConstruction;
+
+                if(!et_port.getEditableText().toString().isEmpty()) {
+                    port = Integer.valueOf(et_port.getEditableText().toString().trim());
+                    textUnderConstruction = constructInstanceUrlWithPort(editable.toString(), port);
+                } else {
+                    textUnderConstruction = constructInstanceUrl(editable.toString());
+                }
+
                 tv_constructed_instance_url.setText(textUnderConstruction);
 
                 if(!validateURL(editable.toString())) {
@@ -182,11 +188,16 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         if (!et_tenantIdentifier.getEditableText().toString().isEmpty()) {
             API.setTenantIdentifier(et_tenantIdentifier.getEditableText().toString().trim());
         }
+
         return true;
     }
 
     public String constructInstanceUrl(String validDomain) {
         return PROTOCOL_HTTPS + validDomain + API_PATH;
+    }
+
+    public String constructInstanceUrlWithPort(String validDomain, int port) {
+        return PROTOCOL_HTTPS + validDomain + ":" + port + API_PATH;
     }
 
     @Override
