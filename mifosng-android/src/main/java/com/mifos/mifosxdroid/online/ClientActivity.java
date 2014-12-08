@@ -33,7 +33,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         int clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ClientDetailsFragment clientDetailsFragment = ClientDetailsFragment.newInstance(clientId);
-        fragmentTransaction.replace(R.id.global_container, clientDetailsFragment).commit();
+        fragmentTransaction.replace(R.id.global_container, clientDetailsFragment, FragmentConstants.FRAG_CLIENT_DETAILS).commit();
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                 = LoanAccountSummaryFragment.newInstance(loanAccountNumber);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.global_container, loanAccountSummaryFragment).commit();
+        fragmentTransaction.replace(R.id.global_container, loanAccountSummaryFragment, FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY).commit();
 
     }
 
@@ -108,7 +108,7 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
                 = SavingsAccountSummaryFragment.newInstance(savingsAccountNumber, accountType);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.global_container, savingsAccountSummaryFragment).commit();
+        fragmentTransaction.replace(R.id.global_container, savingsAccountSummaryFragment, FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY).commit();
     }
 
     /*
@@ -179,11 +179,5 @@ public class ClientActivity extends ActionBarActivity implements ClientDetailsFr
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.global_container, savingsAccountTransactionFragment).commit();
-
     }
-
-
-
-
-
 }
