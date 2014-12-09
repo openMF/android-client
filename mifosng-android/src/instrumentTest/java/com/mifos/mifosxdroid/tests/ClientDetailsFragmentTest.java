@@ -14,23 +14,24 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.ClientDetailsFragment;
+import com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
 /**
  * Created by Gabriel Esteban on 07/12/14.
  */
-public class ClientActivityTest extends ActivityInstrumentationTestCase2<ClientActivity> {
+public class ClientDetailsFragmentTest extends ActivityInstrumentationTestCase2<ClientActivity> {
 
     ClientActivity clientActivity;
-    ClientDetailsFragment searchFragment;
+    ClientDetailsFragment detailsFragment;
 
     ImageView iv_client_image;
     TextView tv_full_name;
     TableLayout tbl_client_details;
     RelativeLayout loans, savings, recurring;
 
-    public ClientActivityTest() {
+    public ClientDetailsFragmentTest() {
         super(ClientActivity.class);
     }
 
@@ -45,12 +46,22 @@ public class ClientActivityTest extends ActivityInstrumentationTestCase2<ClientA
         Constants.applicationContext = getInstrumentation().getTargetContext().getApplicationContext();
         clientActivity = getActivity();
 
+        //waiting for the API
+        Thread.sleep(2000);
+
+        detailsFragment = (ClientDetailsFragment) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_CLIENT_DETAILS);
+
         iv_client_image = (ImageView) clientActivity.findViewById(R.id.iv_clientImage);
         tv_full_name = (TextView) clientActivity.findViewById(R.id.tv_fullName);
         tbl_client_details = (TableLayout) clientActivity.findViewById(R.id.tbl_clientDetails);
         loans = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_loans);
         savings = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_savings);
         recurring = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_recurring);
+    }
+
+    @SmallTest
+    public void testFragmentIsNotNull(){
+        assertNotNull(detailsFragment);
     }
 
     @SmallTest
@@ -76,23 +87,29 @@ public class ClientActivityTest extends ActivityInstrumentationTestCase2<ClientA
     }
 
     @SmallTest
-    public void testClientDocumentsFragmentShowed(){
+    public void testClientDocumentsFragmentShowed() throws InterruptedException {
         //clicking the button
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
         getInstrumentation().invokeMenuActionSync(clientActivity, ClientDetailsFragment.MENU_ITEM_DOCUMENTS, 0);
 
         //if something is wrong, invokeMenuActionSync will take an exception
 
+        //waiting for the API
+        Thread.sleep(2000);
+
         this.sendKeys(KeyEvent.KEYCODE_BACK);
     }
 
     @SmallTest
-    public void testClientIdentifiersFragmentShowed(){
+    public void testClientIdentifiersFragmentShowed() throws InterruptedException {
         //clicking the button
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
         getInstrumentation().invokeMenuActionSync(clientActivity, ClientDetailsFragment.MENU_ITEM_IDENTIFIERS, 0);
 
         //if something is wrong, invokeMenuActionSync will take an exception
+
+        //waiting for the API
+        Thread.sleep(2000);
 
         this.sendKeys(KeyEvent.KEYCODE_BACK);
     }
