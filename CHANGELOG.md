@@ -3,10 +3,32 @@
 
 #Releases
 
+5. 27 Nov 2014 - v0.3.0
 4. 12 Aug 2014 - v0.2.0-alpha
 3. 31 Jul 2014 - v0.1.1-alpha
 2. 23 Jul 2014 - v0.1.0-alpha
 1. 14 Jul 2014 - v0.0.1-alpha
+
+##0.3.0
+* Fixed #28 - Null Input on Savings Account Transaction was being processed
+* Fixed #65 - IndexOutOfBounds Exception while inflating menu on GroupFragment
+* Fixed #81 - PaymentTypeOptions List gave a IndexOutofBounds Exception SavingsAccountTransaction Fragment
+* Fixed #82 - PaymentTypeOptions List gave a IndexOutofBounds Exception LoanRepaymentTransaction Fragment
+* Fixed #83 - NullPointer Exception onSavedInstanceState
+* Fixed #84 - Null Input on Loan Account Transaction was being processed
+* Fixed #92 - Crash when Internal Server Error Occured
+* Fixed #94 - Crash when Internal Server Error Occured
+
+What's New?
+
+* Recurring Deposit Accounts Enabled
+* Multi Tenant Login
+* Instance URL Now Supports IP Addresses
+* User can Enter Custom PORT for the URL like 80, 443, 8080, 8888
+
+For Developers :
+
+*Espresso Integrated
 
 ##0.2.0-alpha
 * Fixed #66 - App Crashed on Android 2.3 Due to setShowAsAction method.
