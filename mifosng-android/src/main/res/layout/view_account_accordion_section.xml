@@ -23,7 +23,6 @@
         android:id="@+id/tv_toggle_accounts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lv_accounts_loans"
         android:layout_toRightOf="@id/tv_toggle_accounts_icon"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
