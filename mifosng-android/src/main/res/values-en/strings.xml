@@ -173,6 +173,10 @@
     <string name="error_login_again">Please login to continue</string>
     <string name="port">Port</string>
     <string name="tenant_identifier">Tenant Identifier</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="menu_remove_photo">Remove photo</string>
+    <string name="menu_take_photo">Take new photo</string>
+    <string name="toast_welcome">Welcome</string>
 
 
 </resources>
