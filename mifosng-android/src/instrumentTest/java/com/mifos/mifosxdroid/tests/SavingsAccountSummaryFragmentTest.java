@@ -68,7 +68,8 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
             this.value = value;
         }
          */
-        DepositType dt = new DepositType(100, "depositAccountType.savingsDeposit", "Savings");
+        DepositType dt = null;
+        //dt = new DepositType(100, "depositAccountType.savingsDeposit", "Savings");
 
         //Moving to SavingsAccountSummaryFragment with the following id and account type
         SavingsAccountSummaryFragment savingsAccountSummaryFragment
