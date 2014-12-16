@@ -68,11 +68,12 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
             this.value = value;
         }
          */
-        DepositType dt = new DepositType(100, "depositAccountType.savingsDeposit", "Savings");
+        DepositType depositType = null;
+        //depositType = new DepositType(100, "depositAccountType.savingsDeposit", "Savings");
 
         //Moving to SavingsAccountSummaryFragment with the following id and account type
         SavingsAccountSummaryFragment savingsAccountSummaryFragment
-                = SavingsAccountSummaryFragment.newInstance(419, dt);
+                = SavingsAccountSummaryFragment.newInstance(419, depositType);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.global_container, savingsAccountSummaryFragment).commit();

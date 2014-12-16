@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +25,13 @@ public class CentersListAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
     private List<Center> centers;
+    private Resources resources;
 
     public CentersListAdapter(Context context, List<Center> centers){
 
         layoutInflater = LayoutInflater.from(context);
         this.centers = centers;
+        resources = context.getResources();
 
     }
 
@@ -67,13 +70,13 @@ public class CentersListAdapter extends BaseAdapter {
         viewHolder.tv_office_id = (TextView) view.findViewById(R.id.tv_office_id);
         viewHolder.tv_office_name = (TextView) view.findViewById(R.id.tv_office_name);
 
-        viewHolder.tv_center_id.setText("Center ID : "+centers.get(i).getId());
+        viewHolder.tv_center_id.setText(resources.getString(R.string.center_id)+centers.get(i).getId());
         viewHolder.tv_center_name.setText(centers.get(i).getName());
 
-        viewHolder.tv_staff_id.setText("Staff ID : "+centers.get(i).getStaffId());
+        viewHolder.tv_staff_id.setText(resources.getString(R.string.staff_id)+centers.get(i).getStaffId());
         viewHolder.tv_staff_name.setText(centers.get(i).getStaffName());
 
-        viewHolder.tv_office_id.setText("Office ID : "+centers.get(i).getOfficeId());
+        viewHolder.tv_office_id.setText(resources.getString(R.string.office_id)+centers.get(i).getOfficeId());
         viewHolder.tv_office_name.setText(centers.get(i).getOfficeName());
 
         return view;

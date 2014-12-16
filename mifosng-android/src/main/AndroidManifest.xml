@@ -36,7 +36,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="Login"
+            android:label="@string/login"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.LogoutActivity"
@@ -44,7 +44,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.DashboardFragmentActivity"
-            android:label="Dashboard"
+            android:label="@string/dashboard"
             android:screenOrientation="portrait" >
         </activity>
         <activity
