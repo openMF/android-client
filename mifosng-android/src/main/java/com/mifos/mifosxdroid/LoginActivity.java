@@ -203,7 +203,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     @Override
     public void success(User user, Response response) {
         progressDialog.dismiss();
-        Toast.makeText(context, "Welcome " + user.getUsername(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getString(R.string.toast_welcome)+" " + user.getUsername(), Toast.LENGTH_SHORT).show();
         saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
         Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
         startActivity(intent);

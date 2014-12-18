@@ -8,8 +8,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/client_image_capture"
-        android:title="Take new photo" />
+        android:title="@string/menu_take_photo" />
     <item
         android:id="@+id/client_image_remove"
-        android:title="Remove photo" />
+        android:title="@string/menu_remove_photo" />
 </menu>

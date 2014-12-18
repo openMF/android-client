@@ -7,7 +7,6 @@
 <resources>
 
     <!-- General Terms Begin Here -->
-    <string name="app_name" translatable="false">MifosXDroid</string>
     <string name="datatables">Datatables</string>
     <string name="login">Login</string>
     <string name="search">Search</string>
@@ -22,7 +21,6 @@
     <string name="client">Client</string>
     <string name="save">Save</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
-    <string name="default_instance_url" translatable="false">demo.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
@@ -30,7 +28,6 @@
     <string name="mifos_instance_domain">Mifos Instance Domain</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="mifos" translatable="false">Mifos</string>
     <string name="full_name">Name</string>
     <string name="account_number">Account Number</string>
     <string name="external_id">External ID</string>
@@ -51,7 +48,6 @@
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
     <string name="collection_sheet">Collection Sheet</string>
-    <string name="title_activity_generate_collection_sheet" translatable="false">GenerateCollectionSheet</string>
     <string name="meeting_date">Meeting Date</string>
     <string name="center">Center</string>
     <string name="generate_collection_sheet">Generate Collection Sheet</string>
@@ -125,8 +121,6 @@
 
 
     <!-- Action Bar Fragment and Activity Titles Begin Here -->
-    <string name="title_activity_dash_board" translatable="false">DashBoardActivity</string>
-    <string name="title_activity_client" translatable="false">ClientActivity</string>
     <!-- Action Bar Fragment and Activity Titles End Here -->
 
 
@@ -143,9 +137,7 @@
     <string name="title_center_list">Groups</string>
     <string name="title_center_detail">Center Detail</string>
     <string name="title_activity_centers">Centers</string>
-    <string name="hello_world" translatable="false">Hello world!</string>
     <string name="center_list">Center List</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="type">Type</string>
     <string name="upload">Upload</string>
     <string name="choose_file">Click to Choose File</string>
@@ -179,13 +171,11 @@
     <string name="total_due">Total Due</string>
     <string name="refresh">Refresh</string>
     <string name="error_login_again">Please login to continue</string>
-    <string name="default_port" translatable="false">80</string>
     <string name="port">Port</string>
-    <string name="default_tenant" translatable="false">default</string>
     <string name="tenant_identifier">Tenant Identifier</string>
     <string name="dashboard">Dashboard</string>
-    <string name="menu_take_photo">Take new photo</string>
     <string name="menu_remove_photo">Remove photo</string>
+    <string name="menu_take_photo">Take new photo</string>
     <string name="toast_welcome">Welcome</string>
 
 
