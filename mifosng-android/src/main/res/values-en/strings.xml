@@ -177,6 +177,7 @@
     <string name="menu_remove_photo">Remove photo</string>
     <string name="menu_take_photo">Take new photo</string>
     <string name="toast_welcome">Welcome</string>
+    <string name="app_name">MifosXDroid</string>
 
 
 </resources>

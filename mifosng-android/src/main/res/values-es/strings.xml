@@ -41,7 +41,7 @@
     <string name="file_location">Posición</string>
     <string name="external_id">ID externa</string>
     <string name="error_unknown">Ha habido un problema procesando su solicitud,</string>
-    <string name="file_name">Nombre del archivo.</string>
+    <string name="file_name">Nombre del archivo</string>
     <string name="full_name">Nombre</string>
     <string name="group">Grupo</string>
     <string name="group_name">Nombre del grupo</string>
@@ -58,7 +58,7 @@
     <string name="title_center_list">Grupos</string>
     <string name="title_activity_centers">Centros</string>
     <string name="tenant_identifier">Tenant Identifier</string>
-    <string name="tap_to_select_date">Click para seleccionar una fecha</string>
+    <string name="tap_to_select_date">Aprieta para seleccionar una fecha</string>
     <string name="sync">Sincronizar</string>
     <string name="summary">Resumen</string>
     <string name="search">Buscar</string>
@@ -71,7 +71,7 @@
     <string name="loan_fees">Entrada</string>
     <string name="password">Contraseña</string>
     <string name="payment_type">Forma de pago</string>
-    <string name="refresh">Actulizar</string>
+    <string name="refresh">Actualizar</string>
     <string name="office">Oficina</string>
     <string name="remove">Borrar</string>
     <string name="login">Iniciar sesión</string>
@@ -104,7 +104,7 @@
     <string name="collection_sheet">Recolección de datos</string>
     <string name="datatables">Tablas de datos</string>
     <string name="error_request_timed_out">Tiempo limite superado.</string>
-    <string name="generate_collection_sheet">Generar hoja de recolección de datos.</string>
+    <string name="generate_collection_sheet">Generar hoja de recolección de datos</string>
     <string name="level_name">Nombre del nivel</string>
     <string name="savings_interest_earned">Intereses ganados</string>
     <string name="savings_account_balance">Balance de la cuenta</string>
@@ -114,7 +114,7 @@
     <string name="pending">Pendiente</string>
     <string name="recurringAccountSummary">Resumen de las cuentas periódicas</string>
     <string name="recurringAccount">Cuentas periódicas</string>
-    <string name="process_loan_transaction">Procesar prestamo</string>
+    <string name="process_loan_transaction">Procesar préstamo</string>
     <string name="break_down">Desglose</string>
     <string name="loan_total_due">Cantidad total</string>
     <string name="loan_repayment_schedule">Programación de reembolso de crédito</string>
@@ -144,4 +144,5 @@
     <string name="menu_remove_photo">Eliminar fotografía</string>
     <string name="menu_take_photo">Añadir nueva fotografía</string>
     <string name="toast_welcome">Bienvenido</string>
+    <string name="app_name">MifosXDroid</string>
 </resources>
