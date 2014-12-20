@@ -72,26 +72,31 @@ android {
     }
 }
 
-task nativeLibsToJar(type: Zip, description: 'create a jar archive of the native libs') {
-    destinationDir file("$buildDir/native-libs")
-    baseName 'native-libs'
-    extension 'jar'
-    from fileTree(dir: 'src/main/libs', include: '**/*.so')
-    into 'lib/'
-}
-
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it'){
 
 
 }
 
+task copyNativeLibs(type: Copy) {
+    from(new File(getProjectDir(), 'src/main/libs')) { include '**/*.so' }
+    into new File(buildDir, 'native-libs')
+}
+
 tasks.withType(JavaCompile) {
-    compileTask -> compileTask.dependsOn(nativeLibsToJar)
+    compileTask ->
+    compileTask.dependsOn(copyNativeLibs)
+}
+
+clean.dependsOn('cleanCopyNativeLibs')
+
+tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
+    pkgTask ->
+    pkgTask.jniFolders = new HashSet<File>()
+    pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
 }
 
 dependencies {
     compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
-    compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     // You must install or update the Google Repository through the SDK manager to use this dependency.
