@@ -100,7 +100,6 @@
     <orderEntry type="library" exported="" name="crashlytics-1.1.13" level="project" />
     <orderEntry type="library" exported="" name="sugar_cipher" level="project" />
     <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
-    <orderEntry type="library" exported="" name="native-libs" level="project" />
     <orderEntry type="library" exported="" name="butterknife-4.0.1" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.4.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="support-v4-19.0.1" level="project" />
