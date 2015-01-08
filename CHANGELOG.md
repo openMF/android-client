@@ -3,11 +3,22 @@
 
 #Releases
 
+6. 05 Jan 2015 - v0.4.0
 5. 27 Nov 2014 - v0.3.0
 4. 12 Aug 2014 - v0.2.0-alpha
 3. 31 Jul 2014 - v0.1.1-alpha
 2. 23 Jul 2014 - v0.1.0-alpha
 1. 14 Jul 2014 - v0.0.1-alpha
+
+##0.4.0
+
+What's New?
+
+*The app has been translated in Spanish and Catalan.
+
+For Developers :
+
+*More Basic Tests established by Google Code-In Students
 
 ##0.3.0
 * Fixed #28 - Null Input on Savings Account Transaction was being processed
