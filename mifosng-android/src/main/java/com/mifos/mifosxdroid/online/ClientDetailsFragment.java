@@ -36,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,6 +105,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public static final int MENU_ITEM_IDENTIFIERS = 1004;
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    private static final String TAG = "ClientDetailsFragment";
     public static int clientId;
     public static List<DataTable> clientDataTables = new ArrayList<DataTable>();
     @InjectView(R.id.tv_fullName)
@@ -124,6 +126,9 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     TextView tv_loanCycle;
     @InjectView(R.id.iv_clientImage)
     ImageView iv_clientImage;
+    @InjectView(R.id.pb_imageProgressBar)
+    ProgressBar pb_imageProgressBar;
+
 
     View rootView;
 
@@ -390,15 +395,26 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         }
     }
 
+    /**
+     * A service to upload the image of the client.
+     * @param pngFile - PNG images supported at the moment
+     */
     private void uploadImage(File pngFile) {
+
+
+        pb_imageProgressBar.setVisibility(View.VISIBLE);
         API.clientService.uploadClientImage(clientId,
                 new TypedFile("image/png", pngFile),
                 new Callback<Response>() {
+
+
                     @Override
                     public void success(Response response, Response response2) {
                         Toast.makeText(activity, "Client image updated", Toast.LENGTH_SHORT).show();
                         imageLoadingAsyncTask = new ImageLoadingAsyncTask();
                         imageLoadingAsyncTask.execute(clientId);
+
+
 
                     }
 
@@ -818,7 +834,16 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         Bitmap bmp;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pb_imageProgressBar.setVisibility(View.VISIBLE);
+
+            Log.d(TAG, "In PreExecute");
+        }
+
+        @Override
         protected Void doInBackground(Integer... integers) {
+            Log.d(TAG, "In backround now");
 
             SharedPreferences pref = PreferenceManager
                     .getDefaultSharedPreferences(Constants.applicationContext);
@@ -869,6 +894,9 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             } else {
                 iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
             }
+            Log.d(TAG, "In PostExecute now");
+
+            pb_imageProgressBar.setVisibility(View.GONE);
 
         }
     }

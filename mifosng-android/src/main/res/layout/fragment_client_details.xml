@@ -13,6 +13,8 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp">
 
+
+
         <ImageView
             android:id="@+id/iv_clientImage"
             android:layout_width="120dp"
@@ -24,7 +26,17 @@
             android:paddingBottom="8dp"
             android:paddingRight="8dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_dp_placeholder" />
+            android:src="@drawable/ic_dp_placeholder"
+            android:visibility="visible"/>
+
+        <ProgressBar
+            android:id="@+id/pb_imageProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            style="@android:style/Widget.ProgressBar.Small.Inverse"
+            android:visibility="visible">
+        </ProgressBar>
 
         <TextView
             android:id="@+id/tv_fullName"
