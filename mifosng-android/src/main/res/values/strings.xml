@@ -187,6 +187,8 @@
     <string name="menu_take_photo">Take new photo</string>
     <string name="menu_remove_photo">Remove photo</string>
     <string name="toast_welcome">Welcome</string>
+    <string name="client_image_updated">Client image updated</string>
+    <string name="failed_to_capture_image">Failed to capture image</string>
 
 
 </resources>
