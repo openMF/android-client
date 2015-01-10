@@ -145,4 +145,6 @@
     <string name="username">Usuari</string>
     <string name="withdrawal">Retirat</string>
     <string name="app_name">MifosXDroid</string>
+    <string name="client_image_updated">Client image updated</string>
+    <string name="failed_to_capture_image">Failed to capture image</string>
 </resources>

@@ -145,4 +145,5 @@
     <string name="menu_take_photo">Añadir nueva fotografía</string>
     <string name="toast_welcome">Bienvenido</string>
     <string name="app_name">MifosXDroid</string>
+    <string name="failed_to_capture_image">Failed to capture image</string>
 </resources>

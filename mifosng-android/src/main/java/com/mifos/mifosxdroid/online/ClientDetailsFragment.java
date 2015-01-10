@@ -130,6 +130,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     ProgressBar pb_imageProgressBar;
 
 
+
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
@@ -391,7 +392,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         } else if (resultCode == Activity.RESULT_CANCELED) {
             // User cancelled the image capture.
         } else {
-            Toast.makeText(activity, "Failed to capture image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, activity.getString(R.string.failed_to_capture_image), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -399,23 +400,21 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
      * A service to upload the image of the client.
      * @param pngFile - PNG images supported at the moment
      */
-    private void uploadImage(File pngFile) {
+    private void uploadImage(File  pngFile) {
 
-
+        final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(View.VISIBLE);
         API.clientService.uploadClientImage(clientId,
-                new TypedFile("image/png", pngFile),
+                new  TypedFile("image/png", pngFile),
                 new Callback<Response>() {
 
 
                     @Override
                     public void success(Response response, Response response2) {
-                        Toast.makeText(activity, "Client image updated", Toast.LENGTH_SHORT).show();
-                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                        imageLoadingAsyncTask.execute(clientId);
-
-
-
+                        Toast.makeText(activity, activity.getString(R.string.client_image_updated), Toast.LENGTH_SHORT).show();
+                        Bitmap  bitMap = BitmapFactory.decodeFile(imagePath);
+                        iv_clientImage.setImageBitmap(bitMap);
+                        pb_imageProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -423,7 +422,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                         Toast.makeText(activity, "Failed to update image", Toast.LENGTH_SHORT).show();
                         imageLoadingAsyncTask = new ImageLoadingAsyncTask();
                         imageLoadingAsyncTask.execute(clientId);
-
                     }
                 }
         );
@@ -843,7 +841,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         @Override
         protected Void doInBackground(Integer... integers) {
-            Log.d(TAG, "In backround now");
+            Log.d(TAG, "In background now");
 
             SharedPreferences pref = PreferenceManager
                     .getDefaultSharedPreferences(Constants.applicationContext);
