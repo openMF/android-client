@@ -147,4 +147,10 @@
     <string name="app_name">MifosXDroid</string>
     <string name="client_image_updated">Client image updated</string>
     <string name="failed_to_capture_image">Failed to capture image</string>
+    <string name="new_text">Nou Text</string>
+    <string name="small_text">Petit Text</string>
+    <string name="medium_text">Mitjà Text</string>
+    <string name="large_text">Gran Text</string>
+    <string name="product_name">Nom del Producte</string>
+    <string name="valid">Vàlid</string>
 </resources>
