@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.8"
-            android:text="Client Name"
+            android:text="@string/client_name"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <QuickContactBadge
@@ -59,7 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.6"
-            android:text="Product Name"
+            android:text="@string/product_name"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
