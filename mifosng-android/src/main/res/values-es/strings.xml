@@ -146,4 +146,10 @@
     <string name="toast_welcome">Bienvenido</string>
     <string name="app_name">MifosXDroid</string>
     <string name="failed_to_capture_image">Failed to capture image</string>
+    <string name="new_text">Nuevo Texto</string>
+    <string name="small_text">Pequeño Texto</string>
+    <string name="medium_text">Mediano Texto</string>
+    <string name="large_text">Texto Grande</string>
+    <string name="product_name">Nombre del Producto</string>
+    <string name="valid">Válido</string>
 </resources>
