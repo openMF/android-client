@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.30"
         android:gravity="center"
-        android:text="Withdrawal"
+        android:text="@string/withdrawal"
         android:textColor="@color/black" />
 
     <TextView

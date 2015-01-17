@@ -16,7 +16,7 @@
         android:layout_weight="0.4"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:text="@string/medium_text"
         android:id="@+id/tv_doc_name" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_weight="0.4"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:text="@string/medium_text"
         android:id="@+id/tv_doc_descrption" />
 
     <TextView

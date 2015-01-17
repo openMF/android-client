@@ -13,14 +13,14 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/new_text"
         android:id="@+id/tv_loan_shortname"
         android:layout_weight="1" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/new_text"
         android:id="@+id/tv_amountDue"
         android:layout_weight="1" />
 
