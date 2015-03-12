@@ -30,7 +30,7 @@
         android:id="@+id/tv_transaction_type"
         android:textColor="@color/black"
         style="@android:style/TextAppearance.Medium"
-        android:text="Withdrawal"
+        android:text="@string/withdrawal"
         android:gravity="center"/>
 
     <TextView

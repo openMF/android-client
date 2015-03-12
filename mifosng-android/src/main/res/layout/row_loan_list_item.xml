@@ -47,7 +47,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_account_id"
                 />
     </LinearLayout>
@@ -67,7 +67,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_account_status_id"
                 />
     </LinearLayout>
@@ -87,7 +87,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_product_short_name"
                 />
     </LinearLayout>
@@ -107,7 +107,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_disbursement_amount"
                 />
     </LinearLayout>
@@ -127,7 +127,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_principal_due"
                 />
     </LinearLayout>
@@ -147,7 +147,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_principal_paid"
                 />
     </LinearLayout>
@@ -167,7 +167,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_interest_due"
                 />
     </LinearLayout>
@@ -187,7 +187,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_interest_paid"
                 />
     </LinearLayout>
@@ -207,7 +207,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_loan_charges_due"
                 />
     </LinearLayout>
@@ -227,7 +227,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Valid"
+                android:text="@string/valid"
                 android:id="@+id/tv_amount_disbursed"
                 />
     </LinearLayout>
