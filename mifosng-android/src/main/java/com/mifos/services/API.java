@@ -305,7 +305,6 @@ public class API {
         @GET(APIEndPoint.SEARCH + "?resource=clients")
         public void searchClientsByName(@Query("query") String clientName,
                                         Callback<List<SearchedEntity>> listCallback);
-
     }
 
 
