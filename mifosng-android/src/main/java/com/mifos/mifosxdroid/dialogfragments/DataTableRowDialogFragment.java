@@ -27,10 +27,10 @@ import com.mifos.mifosxdroid.formwidgets.FormWidget;
 import com.mifos.objects.noncore.ColumnHeader;
 import com.mifos.objects.noncore.ColumnValue;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorParser;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -217,7 +217,7 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.dataTableService.createEntryInDataTable(dataTable.getRegisteredTableName(), entityId, payload, new Callback<GenericResponse>() {
+        ((MifosApplication) activity.getApplication()).api.dataTableService.createEntryInDataTable(dataTable.getRegisteredTableName(), entityId, payload, new Callback<GenericResponse>() {
             @Override
             public void success(GenericResponse genericResponse, Response response) {
 

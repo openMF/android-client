@@ -27,7 +27,7 @@ import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
-import com.mifos.services.API;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
@@ -79,7 +79,7 @@ public class CenterListFragment extends Fragment {
         safeUIBlockingUtility = new SafeUIBlockingUtility(actionBarActivity);
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.centerService.getAllCenters(new Callback<List<Center>>() {
+        ((MifosApplication)getActivity().getApplication()).api.centerService.getAllCenters(new Callback<List<Center>>() {
             @Override
             public void success(final List<Center> centers, Response response) {
 
@@ -102,7 +102,7 @@ public class CenterListFragment extends Fragment {
 
                         safeUIBlockingUtility.safelyBlockUI();
 
-                        API.centerService.getCenterWithGroupMembersAndCollectionMeetingCalendar(centers.get(position).getId(), new Callback<CenterWithAssociations>() {
+                        ((MifosApplication)getActivity().getApplication()).api.centerService.getCenterWithGroupMembersAndCollectionMeetingCalendar(centers.get(position).getId(), new Callback<CenterWithAssociations>() {
                             @Override
                             public void success(final CenterWithAssociations centerWithAssociations, Response response) {
 

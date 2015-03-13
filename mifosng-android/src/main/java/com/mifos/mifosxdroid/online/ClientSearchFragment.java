@@ -22,8 +22,8 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.SearchedEntity;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        API.searchService.searchClientsByName(clientName, new Callback<List<SearchedEntity>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.searchService.searchClientsByName(clientName, new Callback<List<SearchedEntity>>() {
             @Override
             public void success(List<SearchedEntity> searchedEntities, Response response) {
 

@@ -99,46 +99,22 @@ public class API {
     //This instance has more Data for Testing
     public static String mInstanceUrl = "https://demo.openmf.org/mifosng-provider/api/v1";
     public static String mTenantIdentifier = "default";
-    public static CenterService centerService;
-    public static ClientAccountsService clientAccountsService;
-    public static ClientService clientService;
-    public static DataTableService dataTableService;
-    public static LoanService loanService;
-    public static SavingsAccountService savingsAccountService;
-    public static SearchService searchService;
-    public static UserAuthService userAuthService;
-    public static GpsCoordinatesService gpsCoordinatesService;
-    public static GroupService groupService;
-    public static DocumentService documentService;
-    public static IdentifierService identifierService;
-    public static OfficeService officeService;
-    public static StaffService staffService;
+    public CenterService centerService;
+    public ClientAccountsService clientAccountsService;
+    public ClientService clientService;
+    public DataTableService dataTableService;
+    public LoanService loanService;
+    public SavingsAccountService savingsAccountService;
+    public SearchService searchService;
+    public UserAuthService userAuthService;
+    public GpsCoordinatesService gpsCoordinatesService;
+    public GroupService groupService;
+    public DocumentService documentService;
+    public IdentifierService identifierService;
+    public OfficeService officeService;
+    public StaffService staffService;
 
-    static {
-        init();
-    }
-
-    static RestAdapter sRestAdapter;
-
-    private static synchronized void init() {
-        sRestAdapter = createRestAdapter(getInstanceUrl(), getTenantIdentifier());
-        centerService = sRestAdapter.create(CenterService.class);
-        clientAccountsService = sRestAdapter.create(ClientAccountsService.class);
-        clientService = sRestAdapter.create(ClientService.class);
-        dataTableService = sRestAdapter.create(DataTableService.class);
-        loanService = sRestAdapter.create(LoanService.class);
-        savingsAccountService = sRestAdapter.create(SavingsAccountService.class);
-        searchService = sRestAdapter.create(SearchService.class);
-        userAuthService = sRestAdapter.create(UserAuthService.class);
-        gpsCoordinatesService = sRestAdapter.create(GpsCoordinatesService.class);
-        groupService = sRestAdapter.create(GroupService.class);
-        documentService = sRestAdapter.create(DocumentService.class);
-        identifierService = sRestAdapter.create(IdentifierService.class);
-        officeService = sRestAdapter.create(OfficeService.class);
-        staffService = sRestAdapter.create(StaffService.class);
-    }
-
-    private static RestAdapter createRestAdapter(final String url, final String tenantIdentifier) {
+    public API(final String url, final String tenantIdentifier) {
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
                 .setClient(new OkClient(getUnsafeOkHttpClient()))
                 .setRequestInterceptor(new RequestInterceptor() {
@@ -170,45 +146,24 @@ public class API {
                 .build();
         // TODO: This logging is sometimes excessive, e.g. for client image requests.
         restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
-        return restAdapter;
+
+        centerService = restAdapter.create(CenterService.class);
+        clientService = restAdapter.create(ClientService.class);
+        clientAccountsService = restAdapter.create(ClientAccountsService.class);
+        dataTableService = restAdapter.create(DataTableService.class);
+        loanService = restAdapter.create(LoanService.class);
+        savingsAccountService = restAdapter.create(SavingsAccountService.class);
+        searchService = restAdapter.create(SearchService.class);
+        userAuthService = restAdapter.create(UserAuthService.class);
+        gpsCoordinatesService = restAdapter.create(GpsCoordinatesService.class);
+        groupService = restAdapter.create(GroupService.class);
+        documentService = restAdapter.create(DocumentService.class);
+        identifierService = restAdapter.create(IdentifierService.class);
+        officeService = restAdapter.create(OfficeService.class);
+        staffService = restAdapter.create(StaffService.class);
     }
 
-    public static void changeRestAdapterLogLevel(RestAdapter.LogLevel logLevel) {
-        sRestAdapter.setLogLevel(logLevel);
-    }
-
-    public static void updateRestAdapterWithUnsafeOkHttpClient() {
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(getInstanceUrl())
-                .setClient(new OkClient(getUnsafeOkHttpClient()))
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader(HEADER_MIFOS_TENANT_ID, getTenantIdentifier());
-
-                        /*
-                            Look for the Auth token in the shared preferences
-                            and add it to the request. Because it is mandatory to
-                            supply the Authorization Header in every request
-                        */
-
-                        SharedPreferences pref = PreferenceManager
-                                .getDefaultSharedPreferences(Constants.applicationContext);
-                        String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-
-                        if (authToken != null && !"NA".equals(authToken)) {
-                            request.addHeader(HEADER_AUTHORIZATION, authToken);
-                        }
-
-                    }
-                })
-                .setErrorHandler(new MifosRestErrorHandler())
-                .build();
-        // TODO: This logging is sometimes excessive, e.g. for client image requests.
-        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
-        sRestAdapter = restAdapter;
-    }
-
-    private static OkHttpClient getUnsafeOkHttpClient() {
+    private  OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[] {
@@ -281,24 +236,6 @@ public class API {
         };
 
         return cb;
-    }
-
-    public static synchronized String getInstanceUrl() {
-        return mInstanceUrl;
-    }
-
-    public static synchronized void setInstanceUrl(String url) {
-        mInstanceUrl = url;
-        init();
-    }
-
-    public static synchronized String getTenantIdentifier() {
-        return mTenantIdentifier;
-    }
-
-    public static synchronized void setTenantIdentifier(String tenantIdentifier) {
-        mTenantIdentifier = tenantIdentifier;
-        init();
     }
 
     public interface CenterService {

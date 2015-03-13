@@ -28,10 +28,10 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.dialogfragments.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
-import com.mifos.services.API;
 import com.mifos.utils.AsyncFileDownloader;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
@@ -160,7 +160,7 @@ public class DocumentListFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.documentService.getListOfDocuments(entityType, entityId, new Callback<List<Document>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.documentService.getListOfDocuments(entityType, entityId, new Callback<List<Document>>() {
             @Override
             public void success(final List<Document> documents, Response response) {
 

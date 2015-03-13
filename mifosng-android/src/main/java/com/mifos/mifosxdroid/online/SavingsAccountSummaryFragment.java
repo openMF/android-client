@@ -38,9 +38,9 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
 import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -165,7 +165,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
          */
 
 
-        API.savingsAccountService.getSavingsAccountWithAssociations(savingsAccountType.getEndpoint(), savingsAccountNumber,
+        ((MifosApplication) getActivity().getApplicationContext()).api.savingsAccountService.getSavingsAccountWithAssociations(savingsAccountType.getEndpoint(), savingsAccountNumber,
                 "transactions", new Callback<SavingsAccountWithAssociations>() {
                     @Override
                     public void success(SavingsAccountWithAssociations savingsAccountWithAssociations, Response response) {
@@ -383,7 +383,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
         safeUIBlockingUtility.safelyBlockUI();
 
         //TODO change loan service to savings account service
-        API.dataTableService.getDatatablesOfSavingsAccount(new Callback<List<DataTable>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.dataTableService.getDatatablesOfSavingsAccount(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 

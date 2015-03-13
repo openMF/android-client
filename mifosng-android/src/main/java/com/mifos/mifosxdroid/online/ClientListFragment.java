@@ -23,8 +23,8 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 
 import org.apache.http.HttpStatus;
 
@@ -139,11 +139,9 @@ public class ClientListFragment extends Fragment {
             inflateClientList();
         } else {
 
-
             swipeRefreshLayout.setRefreshing(true);
             //Get a Client List
-            API.clientService.listAllClients(new Callback<Page<Client>>() {
-
+            ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(new Callback<Page<Client>>() {
                 @Override
                 public void success(Page<Client> page, Response response) {
                     clientList = page.getPageItems();
@@ -203,7 +201,7 @@ public class ClientListFragment extends Fragment {
                     offset += limit + 1;
                     swipeRefreshLayout.setRefreshing(true);
 
-                    API.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
+                    ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
                         @Override
                         public void success(Page<Client> clientPage, Response response) {
 

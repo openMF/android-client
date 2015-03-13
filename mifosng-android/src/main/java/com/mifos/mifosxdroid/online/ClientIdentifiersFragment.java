@@ -21,8 +21,8 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter;
 import com.mifos.objects.noncore.Identifier;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
@@ -119,7 +119,7 @@ public class ClientIdentifiersFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.identifierService.getListOfIdentifiers(clientId, new Callback<List<Identifier>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.identifierService.getListOfIdentifiers(clientId, new Callback<List<Identifier>>() {
             @Override
             public void success(List<Identifier> identifiers, Response response) {
 

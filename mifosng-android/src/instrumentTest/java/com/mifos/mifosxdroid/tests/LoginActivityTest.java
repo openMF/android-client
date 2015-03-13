@@ -195,7 +195,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
             }
         });
         getInstrumentation().waitForIdleSync();
-        assertEquals(getActivity().constructInstanceUrl(TEST_URL_1), API.getInstanceUrl());
+        assertEquals(getActivity().constructInstanceUrl(TEST_URL_1), ((MifosApplication)getActivity().getApplication()).api.getInstanceUrl());
     }
 
     @SmallTest

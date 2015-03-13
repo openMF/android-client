@@ -37,9 +37,9 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -274,7 +274,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
     public void inflatePaymentOptions(){
 
-        API.loanService.getLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.getLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
 
             @Override
             public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
@@ -433,7 +433,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
         Log.i("TAG", builtRequest);
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.loanService.submitPayment(Integer.parseInt(loanAccountNumber),
+        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.submitPayment(Integer.parseInt(loanAccountNumber),
                 loanRepaymentRequest,
                 new Callback<LoanRepaymentResponse>() {
                     @Override

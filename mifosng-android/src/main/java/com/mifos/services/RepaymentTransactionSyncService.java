@@ -9,19 +9,28 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
-import com.mifos.objects.db.*;
+import com.mifos.objects.db.AttendanceType;
+import com.mifos.objects.db.Client;
+import com.mifos.objects.db.Currency;
+import com.mifos.objects.db.Loan;
+import com.mifos.objects.db.MeetingCenter;
+import com.mifos.objects.db.MifosGroup;
+import com.mifos.objects.db.RepaymentTransaction;
 import com.mifos.services.data.BulkRepaymentTransactions;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.Network;
 import com.orm.query.Select;
-import retrofit.RetrofitError;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.RetrofitError;
 
 public class RepaymentTransactionSyncService {
 
@@ -90,7 +99,7 @@ public class RepaymentTransactionSyncService {
             if (Network.isOnline(Constants.applicationContext)) {
                 try {
                     SharedPreferences preferences = Constants.applicationContext.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-                    SaveResponse response = API.centerService.saveCollectionSheet((int) centerId, collectionSheetPayloads[0]);
+                    SaveResponse response = ((MifosApplication) Constants.applicationContext).api.centerService.saveCollectionSheet((int) centerId, collectionSheetPayloads[0]);
                     if (response != null) {
                         Log.i(TAG, "saveCollectionSheet - Response:" + response.toString());
                         SharedPreferences.Editor editor = preferences.edit();

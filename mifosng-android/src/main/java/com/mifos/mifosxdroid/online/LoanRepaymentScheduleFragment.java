@@ -25,8 +25,8 @@ import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Period;
 import com.mifos.objects.accounts.loan.RepaymentSchedule;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
@@ -139,7 +139,7 @@ public class LoanRepaymentScheduleFragment extends Fragment {
 
     public void inflateRepaymentSchedule() {
 
-        API.loanService.getLoanRepaymentSchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.getLoanRepaymentSchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
 

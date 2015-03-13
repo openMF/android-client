@@ -23,10 +23,10 @@ import android.widget.Toast;
 
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.io.File;
@@ -36,7 +36,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -211,8 +210,7 @@ public class DocumentDialogFragment extends DialogFragment {
         TypedFile typedFile = new TypedFile(mimeType, fileChoosen);
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.FULL);
-        API.documentService.createDocument(entityType, entityId, documentName, documentDescription,
+        ((MifosApplication)getActivity().getApplication()).api.documentService.createDocument(entityType, entityId, documentName, documentDescription,
                 typedFile, new Callback<GenericResponse>() {
                     @Override
                     public void success(GenericResponse genericResponse, Response response) {

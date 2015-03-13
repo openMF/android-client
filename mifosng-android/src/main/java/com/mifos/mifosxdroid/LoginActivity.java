@@ -28,6 +28,7 @@ import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 
 import org.apache.http.HttpStatus;
 
@@ -77,6 +78,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private Pattern ipAddressPattern;
     private Matcher ipAddressMatcher;
     private int port = 80;
+
+    private API api;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,7 +170,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             URL url = new URL(constructedURL);
             instanceURL = url.toURI().toString();
             Log.d(TAG, "instance URL: " + instanceURL);
-            API.setInstanceUrl(instanceURL);
+//            ((MifosApplication)getActivity().getApplication()).api.setInstanceUrl(instanceURL);
             saveLastAccessedInstanceDomainName(validDomain);
         } catch (MalformedURLException e) {
             Log.e(TAG, "Invalid instance URL: " + urlInputValue, e);
@@ -188,7 +191,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         }
 
         if (!et_tenantIdentifier.getEditableText().toString().isEmpty()) {
-            API.setTenantIdentifier(et_tenantIdentifier.getEditableText().toString().trim());
+//            ((MifosApplication)getActivity().getApplication()).api.setTenantIdentifier(et_tenantIdentifier.getEditableText().toString().trim());
         }
 
         return true;
@@ -204,6 +207,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     @Override
     public void success(User user, Response response) {
+        ((MifosApplication) getApplication()).api = api;
         progressDialog.dismiss();
         Toast.makeText(context, getString(R.string.toast_welcome)+" " + user.getUsername(), Toast.LENGTH_SHORT).show();
         saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
@@ -234,7 +238,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
      * that trusts any damn thing.
      */
     private void promptUserToByPassTheSSLHandshake(){
-        API.updateRestAdapterWithUnsafeOkHttpClient();
+
     }
 
     @OnClick(R.id.bt_login)
@@ -246,8 +250,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         try {
             if (validateUserInputs())
                 progressDialog.show();
-
-            API.userAuthService.authenticate(username, password, this);
+            api = new API(instanceURL, et_tenantIdentifier.getEditableText().toString().trim());
+            api.userAuthService.authenticate(username, password, this);
         } catch (ShortOfLengthException e) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
         }

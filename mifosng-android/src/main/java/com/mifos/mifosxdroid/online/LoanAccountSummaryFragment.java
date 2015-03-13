@@ -33,11 +33,11 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -183,7 +183,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         //TODO Implement cases to enable/disable repayment button
         bt_processLoanTransaction.setEnabled(false);
 
-        API.loanService.getLoanByIdWithAllAssociations(loanAccountNumber, new Callback<LoanWithAssociations>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.getLoanByIdWithAllAssociations(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
@@ -379,7 +379,7 @@ public class LoanAccountSummaryFragment extends Fragment {
     public void inflateDataTablesList() {
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.dataTableService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.dataTableService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
@@ -443,7 +443,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         LoanApprovalRequest loanApprovalRequest = new LoanApprovalRequest();
         loanApprovalRequest.setApprovedOnDate(DateHelper.getCurrentDateAsDateFormat());
 
-        API.loanService.approveLoanApplication(loanAccountNumber,
+        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.approveLoanApplication(loanAccountNumber,
                 loanApprovalRequest,
                 new Callback<GenericResponse>() {
                     @Override
@@ -471,7 +471,7 @@ public class LoanAccountSummaryFragment extends Fragment {
         hashMap.put("actualDisbursementDate", DateHelper.getCurrentDateAsDateFormat());
         hashMap.put("locale", "en");
 
-        API.loanService.disburseLoan(loanAccountNumber,
+        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.disburseLoan(loanAccountNumber,
                 hashMap,
                 new Callback<GenericResponse>() {
 

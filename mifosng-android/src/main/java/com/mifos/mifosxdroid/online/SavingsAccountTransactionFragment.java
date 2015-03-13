@@ -37,9 +37,9 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -189,7 +189,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
     public void inflatePaymentOptions() {
 
-        API.savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
             @Override
             public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
 
@@ -306,11 +306,11 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
         savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));
 
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
-        Log.i("Transaction Request Body", builtTransactionRequestAsJson);
+        Log.i("Transaction Body", builtTransactionRequestAsJson);
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.savingsAccountService.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType,
+        ((MifosApplication) getActivity().getApplicationContext()).api.savingsAccountService.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType,
                 savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
                     @Override
                     public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {
