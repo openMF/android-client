@@ -45,19 +45,29 @@ import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorResponse;
+import com.squareup.okhttp.OkHttpClient;
 
 import org.apache.http.HttpStatus;
 
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import retrofit.Callback;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -130,6 +140,7 @@ public class API {
 
     private static RestAdapter createRestAdapter(final String url, final String tenantIdentifier) {
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
+                .setClient(new OkClient(getUnsafeOkHttpClient()))
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
@@ -165,6 +176,80 @@ public class API {
     public static void changeRestAdapterLogLevel(RestAdapter.LogLevel logLevel) {
         sRestAdapter.setLogLevel(logLevel);
     }
+
+    public static void updateRestAdapterWithUnsafeOkHttpClient() {
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(getInstanceUrl())
+                .setClient(new OkClient(getUnsafeOkHttpClient()))
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader(HEADER_MIFOS_TENANT_ID, getTenantIdentifier());
+
+                        /*
+                            Look for the Auth token in the shared preferences
+                            and add it to the request. Because it is mandatory to
+                            supply the Authorization Header in every request
+                        */
+
+                        SharedPreferences pref = PreferenceManager
+                                .getDefaultSharedPreferences(Constants.applicationContext);
+                        String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
+
+                        if (authToken != null && !"NA".equals(authToken)) {
+                            request.addHeader(HEADER_AUTHORIZATION, authToken);
+                        }
+
+                    }
+                })
+                .setErrorHandler(new MifosRestErrorHandler())
+                .build();
+        // TODO: This logging is sometimes excessive, e.g. for client image requests.
+        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
+        sRestAdapter = restAdapter;
+    }
+
+    private static OkHttpClient getUnsafeOkHttpClient() {
+        try {
+            // Create a trust manager that does not validate certificate chains
+            final TrustManager[] trustAllCerts = new TrustManager[] {
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                    }
+            };
+
+            // Install the all-trusting trust manager
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            // Create an ssl socket factory with our all-trusting manager
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.setSslSocketFactory(sslSocketFactory);
+            okHttpClient.setHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            return okHttpClient;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     public static <T> Callback<T> getCallback(T t) {
         Callback<T> cb = new Callback<T>() {

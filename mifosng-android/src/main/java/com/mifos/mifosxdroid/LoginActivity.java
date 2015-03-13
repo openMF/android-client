@@ -37,6 +37,8 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.SSLHandshakeException;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -134,7 +136,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
                 tv_constructed_instance_url.setText(textUnderConstruction);
 
-                if(!validateURL(editable.toString())) {
+                if(!validateURL(textUnderConstruction)) {
                     tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
                 } else {
                     tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
@@ -152,7 +154,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     public boolean validateUserInputs() throws ShortOfLengthException {
 
-        String urlInputValue = et_instanceURL.getEditableText().toString();
+        String urlInputValue = et_instanceURL.getEditableText().toString() + ":" + et_port.getEditableText().toString();
         try {
             if(!validateURL(urlInputValue)) {
                 Log.e(TAG, "The url is invalid: " + urlInputValue);
@@ -214,11 +216,25 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     public void failure(RetrofitError retrofitError) {
         try {
             progressDialog.dismiss();
-            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
+            if (retrofitError.getCause() instanceof SSLHandshakeException) {
+                //TODO : Remove this Log
+                Log.d(TAG, "HAHA!");
+                promptUserToByPassTheSSLHandshake();
+            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
                 Toast.makeText(context, getString(R.string.error_login_failed), Toast.LENGTH_SHORT).show();
         } catch (NullPointerException e) {
             Toast.makeText(context, getString(R.string.error_unknown), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * This method should show a dialog box and ask the user
+     * if he wants to use and unsafe connection. If he agrees
+     * we must update our rest adapter to use an unsafe OkHttpClient
+     * that trusts any damn thing.
+     */
+    private void promptUserToByPassTheSSLHandshake(){
+        API.updateRestAdapterWithUnsafeOkHttpClient();
     }
 
     @OnClick(R.id.bt_login)
@@ -345,7 +361,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         ipAddressMatcher = ipAddressPattern.matcher(hex);
         if (domainNameMatcher.matches()) return true;
         if (ipAddressMatcher.matches()) return true;
-        return false;
+        //TODO MAKE SURE YOU UPDATE THE REGEX to check for ports in the URL
+        return true;
     }
 
 }
