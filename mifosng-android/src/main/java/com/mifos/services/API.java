@@ -149,7 +149,7 @@ public class API {
         restAdapterBuilder.setErrorHandler(new MifosRestErrorHandler());
         RestAdapter restAdapter = restAdapterBuilder.build();
         // TODO: This logging is sometimes excessive, e.g. for client image requests.
-        restAdapter.setLogLevel(RestAdapter.LogLevel.NONE);
+        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
 
         centerService = restAdapter.create(CenterService.class);
         clientService = restAdapter.create(ClientService.class);

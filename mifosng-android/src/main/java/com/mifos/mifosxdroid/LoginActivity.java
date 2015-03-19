@@ -79,7 +79,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private Matcher domainNameMatcher;
     private Pattern ipAddressPattern;
     private Matcher ipAddressMatcher;
-    private int port = 80;
+    private Integer port = null;
 
     private API api;
 
@@ -93,24 +93,22 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String previouslyEnteredUrl = sharedPreferences.getString(Constants.INSTANCE_URL_KEY,
                 getString(R.string.default_instance_url));
-
+        String previouslyEnteredPort = sharedPreferences.getString(Constants.INSTANCE_PORT_KEY,
+                "80");
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
         ButterKnife.inject(this);
         setupUI();
-        if(bt_login==null)
-        {
-            Log.i(TAG, "login button is null");
-        }
-        else {
-            Log.i(TAG, "login button is not null");
-        }
 
         domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);
         ipAddressPattern = Pattern.compile(IP_ADDRESS_REGEX_PATTERN);
 
         tv_constructed_instance_url.setText(PROTOCOL_HTTPS + previouslyEnteredUrl + API_PATH);
         et_instanceURL.setText(previouslyEnteredUrl);
+
+        if (!previouslyEnteredPort.equals("80")) {
+            et_port.setText(previouslyEnteredPort);
+        }
 
         et_instanceURL.addTextChangedListener(new TextWatcher() {
             @Override
@@ -130,25 +128,47 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             @Override
             public void afterTextChanged(Editable editable) {
 
-                String textUnderConstruction;
-
-                if(!et_port.getEditableText().toString().isEmpty()) {
-                    port = Integer.valueOf(et_port.getEditableText().toString().trim());
-                    textUnderConstruction = constructInstanceUrlWithPort(editable.toString(), port);
-                } else {
-                    textUnderConstruction = constructInstanceUrl(editable.toString());
-                }
-
-                tv_constructed_instance_url.setText(textUnderConstruction);
-
-                if(!validateURL(textUnderConstruction)) {
-                    tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
-                } else {
-                    tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
-                }
+                updateMyInstanceUrl();
 
             }
         });
+
+        et_port.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                updateMyInstanceUrl();
+            }
+        });
+    }
+
+    private void updateMyInstanceUrl() {
+        String textUnderConstruction;
+
+        if(!et_port.getEditableText().toString().isEmpty()) {
+            port = Integer.valueOf(et_port.getEditableText().toString().trim());
+            textUnderConstruction = constructInstanceUrl(et_instanceURL.getEditableText().toString(), port);
+        } else {
+            textUnderConstruction = constructInstanceUrl(et_instanceURL.getEditableText().toString(), null);
+        }
+
+        tv_constructed_instance_url.setText(textUnderConstruction);
+
+        if(!validateURL(textUnderConstruction)) {
+            tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
+        } else {
+            tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
+        }
     }
 
     public void setupUI() {
@@ -159,25 +179,22 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     public boolean validateUserInputs() throws ShortOfLengthException {
 
-        String urlInputValue = et_instanceURL.getEditableText().toString() + ":" + et_port.getEditableText().toString();
+        String urlInputValue = et_instanceURL.getEditableText().toString();
         try {
             if(!validateURL(urlInputValue)) {
-                Log.e(TAG, "The url is invalid: " + urlInputValue);
                 return false;
             }
             String validDomain = sanitizeDomainNameInput(urlInputValue);
-            Log.d("Filtered URL", validDomain);
-            String constructedURL = constructInstanceUrl(validDomain);
+            if (!et_port.getEditableText().toString().trim().isEmpty()) {
+                port = Integer.parseInt(et_port.getEditableText().toString());
+            }
+            String constructedURL = constructInstanceUrl(validDomain, port);
             tv_constructed_instance_url.setText(constructedURL);
             URL url = new URL(constructedURL);
             instanceURL = url.toURI().toString();
-            Log.d(TAG, "instance URL: " + instanceURL);
-            saveLastAccessedInstanceDomainName(validDomain);
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Invalid instance URL: " + urlInputValue, e);
             throw new ShortOfLengthException("Instance URL", 5);
         } catch (URISyntaxException uriException) {
-            Log.e(TAG, "Invalid instance URL: " + urlInputValue, uriException);
             throw new ShortOfLengthException("Instance URL", 5);
         }
 
@@ -198,12 +215,12 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         return true;
     }
 
-    public String constructInstanceUrl(String validDomain) {
-        return PROTOCOL_HTTPS + validDomain + API_PATH;
-    }
-
-    public String constructInstanceUrlWithPort(String validDomain, int port) {
-        return PROTOCOL_HTTPS + validDomain + ":" + port + API_PATH;
+    public String constructInstanceUrl(String validDomain, Integer port) {
+        if (port != null) {
+            return PROTOCOL_HTTPS + validDomain + ":" + port + API_PATH;
+        } else {
+            return PROTOCOL_HTTPS + validDomain + API_PATH;
+        }
     }
 
     @Override
@@ -211,6 +228,10 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         ((MifosApplication) getApplication()).api = api;
         progressDialog.dismiss();
         Toast.makeText(context, getString(R.string.toast_welcome)+" " + user.getUsername(), Toast.LENGTH_SHORT).show();
+        saveLastAccessedInstanceDomainName(et_instanceURL.getEditableText().toString());
+        if (!et_port.getEditableText().toString().trim().isEmpty()) {
+            saveLastAccessedInstancePort(et_port.getEditableText().toString());
+        }
         saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
         Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
         startActivity(intent);
@@ -245,7 +266,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
                 .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        login(false);
+                        login(true);
                     }
                 })
                 .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
@@ -261,14 +282,14 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
     @OnClick(R.id.bt_login)
     public void onLoginClick(Button button){
-        login(true);
+        login(false);
     }
 
-    private void login(boolean attemptASafeConnection) {
+    private void login(boolean shouldByPassSSLSecurity) {
         try {
             if (validateUserInputs())
                 progressDialog.show();
-            api = new API(instanceURL, et_tenantIdentifier.getEditableText().toString().trim(), attemptASafeConnection);
+            api = new API(instanceURL, et_tenantIdentifier.getEditableText().toString().trim(), shouldByPassSSLSecurity);
             api.userAuthService.authenticate(username, password, this);
         } catch (ShortOfLengthException e) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
@@ -278,7 +299,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     @OnEditorAction(R.id.et_password)
     public boolean passwordSubmitted(KeyEvent keyEvent) {
         if (keyEvent != null && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            login(true);
+            login(false);
             return true;
         }
         return false;
@@ -311,6 +332,22 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     public void saveLastAccessedInstanceDomainName(String instanceURL) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.INSTANCE_URL_KEY, instanceURL);
+        editor.commit();
+        editor.apply();
+    }
+
+    /**
+     * Stores the port in shared preferences
+     * if the login was successful, so that it can be
+     * referenced later or with multiple login/logouts
+     * user doesn't need to type in the domain name
+     * over and over again.
+     *
+     * @param instancePort
+     */
+    public void saveLastAccessedInstancePort(String instancePort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.INSTANCE_PORT_KEY, instancePort);
         editor.commit();
         editor.apply();
     }
