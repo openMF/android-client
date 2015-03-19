@@ -5,8 +5,10 @@
 
 package com.mifos.mifosxdroid;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -170,7 +172,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             URL url = new URL(constructedURL);
             instanceURL = url.toURI().toString();
             Log.d(TAG, "instance URL: " + instanceURL);
-//            ((MifosApplication)getActivity().getApplication()).api.setInstanceUrl(instanceURL);
             saveLastAccessedInstanceDomainName(validDomain);
         } catch (MalformedURLException e) {
             Log.e(TAG, "Invalid instance URL: " + urlInputValue, e);
@@ -191,7 +192,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         }
 
         if (!et_tenantIdentifier.getEditableText().toString().isEmpty()) {
-//            ((MifosApplication)getActivity().getApplication()).api.setTenantIdentifier(et_tenantIdentifier.getEditableText().toString().trim());
+
         }
 
         return true;
@@ -221,8 +222,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         try {
             progressDialog.dismiss();
             if (retrofitError.getCause() instanceof SSLHandshakeException) {
-                //TODO : Remove this Log
-                Log.d(TAG, "HAHA!");
                 promptUserToByPassTheSSLHandshake();
             } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
                 Toast.makeText(context, getString(R.string.error_login_failed), Toast.LENGTH_SHORT).show();
@@ -239,18 +238,37 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
      */
     private void promptUserToByPassTheSSLHandshake(){
 
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle("SSL Certificate Problem")
+                .setMessage("There is a problem with your SSLCertificate, would you like to continue? This connection would be unsafe.")
+                .setIcon(android.R.drawable.stat_sys_warning)
+                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        login(false);
+                    }
+                })
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
+        alertDialog.show();
+
     }
 
     @OnClick(R.id.bt_login)
     public void onLoginClick(Button button){
-        login();
+        login(true);
     }
 
-    private void login() {
+    private void login(boolean attemptASafeConnection) {
         try {
             if (validateUserInputs())
                 progressDialog.show();
-            api = new API(instanceURL, et_tenantIdentifier.getEditableText().toString().trim());
+            api = new API(instanceURL, et_tenantIdentifier.getEditableText().toString().trim(), attemptASafeConnection);
             api.userAuthService.authenticate(username, password, this);
         } catch (ShortOfLengthException e) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
@@ -260,7 +278,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     @OnEditorAction(R.id.et_password)
     public boolean passwordSubmitted(KeyEvent keyEvent) {
         if (keyEvent != null && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            login();
+            login(true);
             return true;
         }
         return false;

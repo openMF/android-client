@@ -114,10 +114,14 @@ public class API {
     public OfficeService officeService;
     public StaffService staffService;
 
-    public API(final String url, final String tenantIdentifier) {
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url)
-                .setClient(new OkClient(getUnsafeOkHttpClient()))
-                .setRequestInterceptor(new RequestInterceptor() {
+    public API(final String url, final String tenantIdentifier, boolean shouldByPassSSLSecurity) {
+
+        RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder();
+        restAdapterBuilder.setEndpoint(url);
+        if (shouldByPassSSLSecurity) {
+            restAdapterBuilder.setClient(new OkClient(getUnsafeOkHttpClient()));
+        }
+        restAdapterBuilder.setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
                         if (!tenantIdentifier.isEmpty()) {
@@ -141,11 +145,11 @@ public class API {
                         }
 
                     }
-                })
-                .setErrorHandler(new MifosRestErrorHandler())
-                .build();
+                });
+        restAdapterBuilder.setErrorHandler(new MifosRestErrorHandler());
+        RestAdapter restAdapter = restAdapterBuilder.build();
         // TODO: This logging is sometimes excessive, e.g. for client image requests.
-        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
+        restAdapter.setLogLevel(RestAdapter.LogLevel.NONE);
 
         centerService = restAdapter.create(CenterService.class);
         clientService = restAdapter.create(ClientService.class);
