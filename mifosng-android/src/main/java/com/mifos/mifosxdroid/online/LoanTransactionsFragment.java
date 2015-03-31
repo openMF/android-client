@@ -22,8 +22,8 @@ import android.widget.ExpandableListView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import butterknife.ButterKnife;
@@ -133,7 +133,7 @@ public class LoanTransactionsFragment extends Fragment {
 
     public void inflateLoanTransactions() {
 
-        API.loanService.getLoanWithTransactions(loanAccountNumber, new Callback<LoanWithAssociations>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.getLoanWithTransactions(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
 

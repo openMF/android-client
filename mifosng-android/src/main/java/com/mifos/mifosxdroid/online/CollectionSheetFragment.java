@@ -24,13 +24,13 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.services.API;
 import com.mifos.services.data.BulkRepaymentTransactions;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorParser;
+import com.mifos.utils.MifosApplication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +40,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -174,7 +173,7 @@ public class CollectionSheetFragment extends Fragment {
         payload.setTransactionDate(dateOfCollection);
         payload.setDateFormat("dd-MM-YYYY");
 
-        API.centerService.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
             @Override
             public void success(CollectionSheet collectionSheet, Response response) {
 
@@ -228,9 +227,7 @@ public class CollectionSheetFragment extends Fragment {
         collectionSheetPayload.setTransactionDate(dateOfCollection);
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
 
-        API.changeRestAdapterLogLevel(RestAdapter.LogLevel.NONE);
-
-        API.centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
             @Override
             public void success(SaveResponse saveResponse, Response response) {
 

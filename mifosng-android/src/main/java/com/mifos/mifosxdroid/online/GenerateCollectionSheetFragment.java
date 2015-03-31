@@ -30,7 +30,7 @@ import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
-import com.mifos.services.API;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.officeService.getAllOffices(new Callback<List<Office>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
             @Override
             public void success(List<Office> offices, Response response) {
 
@@ -201,7 +201,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
     public void inflateStaffSpinner(final int officeId) {
 
 
-        API.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
 
@@ -275,7 +275,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
             params.put(STAFF_ID, staffId);
         }
 
-        API.centerService.getAllCentersInOffice(officeId, params, new Callback<List<Center>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getAllCentersInOffice(officeId, params, new Callback<List<Center>>() {
             @Override
             public void success(List<Center> centers, Response response) {
 
@@ -347,7 +347,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
         }
 
 
-        API.groupService.getAllGroupsInOffice(officeId, params, new Callback<List<Group>>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.groupService.getAllGroupsInOffice(officeId, params, new Callback<List<Group>>() {
             @Override
             public void success(List<Group> groups, Response response) {
 
@@ -383,7 +383,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
     public void inflateGroupSpinner(final int centerId) {
 
-        API.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
             public void success(CenterWithAssociations centerWithAssociations, Response response) {
 

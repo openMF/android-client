@@ -23,8 +23,8 @@ import com.mifos.mifosxdroid.adapters.GroupListAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
@@ -121,7 +121,7 @@ public class GroupListFragment extends Fragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
             public void success(final CenterWithAssociations centerWithAssociations, Response response) {
 
@@ -135,7 +135,7 @@ public class GroupListFragment extends Fragment {
 
                             int groupId = centerWithAssociations.getGroupMembers().get(i).getId();
 
-                            API.groupService.getGroupWithAssociations(groupId,
+                            ((MifosApplication) getActivity().getApplicationContext()).api.groupService.getGroupWithAssociations(groupId,
                                     new Callback<GroupWithAssociations>() {
                                         @Override
                                         public void success(GroupWithAssociations groupWithAssociations, Response response) {

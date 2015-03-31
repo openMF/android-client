@@ -9,16 +9,23 @@ package com.mifos.utils;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-import com.mifos.objects.db.*;
-import com.mifos.services.API;
+
+import com.mifos.objects.db.CollectionMeetingCalendar;
+import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.db.EntityType;
+import com.mifos.objects.db.MeetingCenter;
+import com.mifos.objects.db.MeetingDate;
+import com.mifos.objects.db.OfflineCenter;
+import com.mifos.objects.db.Status;
 import com.mifos.services.data.Payload;
 import com.orm.query.Select;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class SaveOfflineDataHelper {
 
@@ -144,7 +151,7 @@ public class SaveOfflineDataHelper {
             MeetingCenter center = meetingCenterList[centerCount];
             final long centerId = center.getId();
             Log.i(tag, "Fetching Group data for Center Id:" + centerId);
-            API.centerService.getCollectionSheet(centerId, getPayload(context, center), new Callback<CollectionSheet>() {
+            ((MifosApplication) context.getApplicationContext()).api.centerService.getCollectionSheet(centerId, getPayload(context, center), new Callback<CollectionSheet>() {
                 @Override
                 public void success(CollectionSheet collectionSheet, Response arg1) {
                     if (collectionSheet != null) {

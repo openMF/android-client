@@ -26,9 +26,9 @@ import com.google.gson.JsonElement;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.API;
 import com.mifos.utils.DataTableUIBuilder;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import retrofit.Callback;
@@ -146,7 +146,7 @@ public class DataTableDataFragment extends Fragment implements DataTableUIBuilde
 
     public void inflateView() {
 
-        API.dataTableService.getDataOfDataTable(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
+        ((MifosApplication) getActivity().getApplicationContext()).api.dataTableService.getDataOfDataTable(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
             @Override
             public void success(JsonArray jsonElements, Response response) {
 

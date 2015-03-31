@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Identifier;
-import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
+import com.mifos.utils.MifosApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class IdentifierListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                API.identifierService.deleteIdentifier(clientId, identifier.getId(), new Callback<GenericResponse>() {
+                ((MifosApplication) context.getApplicationContext()).api.identifierService.deleteIdentifier(clientId, identifier.getId(), new Callback<GenericResponse>() {
                     @Override
                     public void success(GenericResponse genericResponse, Response response) {
 

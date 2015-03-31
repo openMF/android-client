@@ -22,7 +22,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.API;
 import com.mifos.services.GenericResponse;
 
 import java.util.Iterator;
@@ -119,7 +118,7 @@ public class DataTableUIBuilder {
 
                     Toast.makeText(context, "Deleting Row "+tableIndex, Toast.LENGTH_SHORT).show();
 
-                    API.dataTableService.deleteEntryOfDataTableManyToMany(dataTable.getRegisteredTableName(),
+                    ((MifosApplication) context.getApplicationContext()).api.dataTableService.deleteEntryOfDataTableManyToMany(dataTable.getRegisteredTableName(),
                             entityId,
                             Integer.parseInt(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(0).getColumnName()).toString()),
                             new Callback<GenericResponse>() {

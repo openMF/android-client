@@ -60,6 +60,7 @@ import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import org.apache.http.HttpStatus;
@@ -372,7 +373,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     }
 
     public void deleteClientImage() {
-        API.clientService.deleteClientImage(clientId, new Callback<Response>() {
+        ((MifosApplication)getActivity().getApplication()).api.clientService.deleteClientImage(clientId, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Toast.makeText(activity, "Image deleted", Toast.LENGTH_SHORT).show();
@@ -404,7 +405,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(View.VISIBLE);
-        API.clientService.uploadClientImage(clientId,
+        ((MifosApplication)getActivity().getApplication()).api.clientService.uploadClientImage(clientId,
                 new  TypedFile("image/png", pngFile),
                 new Callback<Response>() {
 
@@ -435,7 +436,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.clientService.getClient(clientId, new Callback<Client>() {
+        ((MifosApplication)getActivity().getApplication()).api.clientService.getClient(clientId, new Callback<Client>() {
             @Override
             public void success(final Client client, Response response) {
 
@@ -527,7 +528,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        API.clientAccountsService.getAllAccountsOfClient(clientId, new Callback<ClientAccounts>() {
+        ((MifosApplication)getActivity().getApplication()).api.clientAccountsService.getAllAccountsOfClient(clientId, new Callback<ClientAccounts>() {
             @Override
             public void success(final ClientAccounts clientAccounts, Response response) {
 
@@ -595,7 +596,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public void inflateDataTablesList() {
 
         safeUIBlockingUtility.safelyBlockUI();
-        API.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
+        ((MifosApplication)getActivity().getApplication()).api.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
@@ -735,7 +736,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                 final Location location = mLocationClient.getLastLocation();
 
 
-                API.gpsCoordinatesService.setGpsCoordinates(clientId,
+                ((MifosApplication)getActivity().getApplication()).api.gpsCoordinatesService.setGpsCoordinates(clientId,
                         new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                         new Callback<GpsCoordinatesResponse>() {
                             @Override
@@ -756,7 +757,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                                  */
                                 if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
 
-                                    API.gpsCoordinatesService.updateGpsCoordinates(clientId,
+                                    ((MifosApplication)getActivity().getApplication()).api.gpsCoordinatesService.updateGpsCoordinates(clientId,
                                             new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                                             new Callback<GpsCoordinatesResponse>() {
                                                 @Override
@@ -862,7 +863,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
-                httpURLConnection.setRequestProperty(API.HEADER_AUTHORIZATION, authToken);
+                httpURLConnection.setRequestProperty(((MifosApplication)getActivity().getApplication()).api.HEADER_AUTHORIZATION, authToken);
                 httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();
