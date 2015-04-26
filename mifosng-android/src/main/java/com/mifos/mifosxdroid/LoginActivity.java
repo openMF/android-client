@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -106,6 +107,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         tv_constructed_instance_url.setText(PROTOCOL_HTTPS + previouslyEnteredUrl + API_PATH);
         et_instanceURL.setText(previouslyEnteredUrl);
 
+        et_port.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (!previouslyEnteredPort.equals("80")) {
             et_port.setText(previouslyEnteredPort);
         }
