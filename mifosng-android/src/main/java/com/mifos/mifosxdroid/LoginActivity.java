@@ -167,7 +167,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
         tv_constructed_instance_url.setText(textUnderConstruction);
 
-        if(!validateURL(textUnderConstruction)) {
+        if(!validateURL(et_instanceURL.getEditableText().toString())) {
             tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
         } else {
             tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
@@ -453,7 +453,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         if (ipAddressMatcher.matches()) return true;
 
         //TODO MAKE SURE YOU UPDATE THE REGEX to check for ports in the URL
-        return true;
+        return false;
     }
 
 }
