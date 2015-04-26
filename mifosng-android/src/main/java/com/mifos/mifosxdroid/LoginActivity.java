@@ -159,6 +159,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             port = Integer.valueOf(et_port.getEditableText().toString().trim());
             textUnderConstruction = constructInstanceUrl(et_instanceURL.getEditableText().toString(), port);
         } else {
+            port = null;
             textUnderConstruction = constructInstanceUrl(et_instanceURL.getEditableText().toString(), null);
         }
 
@@ -420,6 +421,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         ipAddressMatcher = ipAddressPattern.matcher(hex);
         if (domainNameMatcher.matches()) return true;
         if (ipAddressMatcher.matches()) return true;
+
         //TODO MAKE SURE YOU UPDATE THE REGEX to check for ports in the URL
         return true;
     }
