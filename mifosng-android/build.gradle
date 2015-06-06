@@ -30,7 +30,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 20
         // A test runner provided by https://code.google.com/p/android-test-kit/
-        testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     sourceSets {
@@ -58,10 +58,13 @@ android {
 
         release {
             signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
     }
     lintOptions {
         abortOnError false
+        disable 'InvalidPackage'
     }
 
     // Exclude duplicated Hamcrest LICENSE.txt from being packaged into the apk.
@@ -99,6 +102,7 @@ dependencies {
     compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     // You must install or update the Google Repository through the SDK manager to use this dependency.
+    compile 'com.android.support:support-annotations:22.2.0'
     compile 'com.android.support:appcompat-v7:20.+'
     compile 'com.google.android.gms:play-services:5.0.+'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
@@ -111,7 +115,8 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     // Test libraries provided by https://code.google.com/p/android-test-kit/
-    androidTestCompile 'com.jakewharton.espresso:espresso:1.1-r3'
-    androidTestCompile 'com.jakewharton.espresso:espresso-support-v4:1.1-r3'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
+    androidTestCompile 'com.android.support.test:runner:0.3'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.jakewharton:butterknife:6.1.0'
 }
