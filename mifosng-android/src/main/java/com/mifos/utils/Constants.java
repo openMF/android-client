@@ -14,17 +14,19 @@ public class Constants {
 
     public static Context applicationContext;
 
-    public static String INSTANCE_URL_KEY = "instanceURL";
+    public static final String INSTANCE_URL_KEY = "instanceURL";
 
-    public static String INSTANCE_PORT_KEY = "instancePort";
+    public static final String INSTANCE_DOMAIN_KEY = "instanceDomain";
 
-    public static String TENANT_IDENTIFIER_KEY = "tenant identifier";
+    public static final String INSTANCE_PORT_KEY = "instancePort";
 
-    public static String PROTOCOL_HTTP = "http://";
+    public static final String TENANT_IDENTIFIER_KEY = "tenant identifier";
 
-    public static String PROTOCOL_HTTPS = "https://";
+    public static final String PROTOCOL_HTTP = "http://";
 
-    public static String API_PATH = "/mifosng-provider/api/v1";
+    public static final String PROTOCOL_HTTPS = "https://";
+
+    public static final String API_PATH = "/mifosng-provider/api/v1";
 
     public static final String ENTITY_TYPE_CLIENTS = "clients";
 
