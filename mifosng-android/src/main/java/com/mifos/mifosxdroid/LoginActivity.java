@@ -228,10 +228,15 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         ((MifosApplication) getApplication()).api = api;
         progressDialog.dismiss();
         Toast.makeText(context, getString(R.string.toast_welcome)+" " + user.getUsername(), Toast.LENGTH_SHORT).show();
+        saveLastAccessedInstanceUrl(instanceURL);
         saveLastAccessedInstanceDomainName(et_instanceURL.getEditableText().toString());
         if (!et_port.getEditableText().toString().trim().isEmpty()) {
             saveLastAccessedInstancePort(et_port.getEditableText().toString());
         }
+        String lastAccessedTenantIdentifier =
+                et_tenantIdentifier.getEditableText().toString().trim().isEmpty()
+                        || et_tenantIdentifier.getEditableText() == null ? "default" : et_tenantIdentifier.getEditableText().toString().trim();
+        saveLastAccessedTenant(lastAccessedTenantIdentifier);
         saveAuthenticationKey("Basic " + user.getBase64EncodedAuthenticationKey());
         Intent intent = new Intent(LoginActivity.this, DashboardFragmentActivity.class);
         startActivity(intent);
@@ -316,7 +321,6 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     public void saveAuthenticationKey(String authenticationKey) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(User.AUTHENTICATION_KEY, authenticationKey);
-        editor.commit();
         editor.apply();
     }
 
@@ -327,12 +331,23 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
      * user doesn't need to type in the domain name
      * over and over again.
      *
+     * @param instanceDomain
+     */
+    public void saveLastAccessedInstanceDomainName(String instanceDomain) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.INSTANCE_DOMAIN_KEY, instanceDomain);
+        editor.apply();
+    }
+
+    /**
+     * Stores the complete instance URL in shared preferences
+     * if the login was successful.
+
      * @param instanceURL
      */
-    public void saveLastAccessedInstanceDomainName(String instanceURL) {
+    public void saveLastAccessedInstanceUrl(String instanceURL) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.INSTANCE_URL_KEY, instanceURL);
-        editor.commit();
         editor.apply();
     }
 
@@ -340,7 +355,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
      * Stores the port in shared preferences
      * if the login was successful, so that it can be
      * referenced later or with multiple login/logouts
-     * user doesn't need to type in the domain name
+     * user doesn't need to type in the instance port
      * over and over again.
      *
      * @param instancePort
@@ -348,7 +363,20 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     public void saveLastAccessedInstancePort(String instancePort) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.INSTANCE_PORT_KEY, instancePort);
-        editor.commit();
+        editor.apply();
+    }
+
+    /**
+     * Stores the Tenant Identifier in shared preferences
+     * if the login was successful, so that it can be
+     * referenced later of with multiple login/logouts
+     * user doesn't need to type in the tenant identifier
+     * over and over again.
+     * @param tenantIdentifier
+     */
+    private void saveLastAccessedTenant(String tenantIdentifier) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.TENANT_IDENTIFIER_KEY, tenantIdentifier);
         editor.apply();
     }
 

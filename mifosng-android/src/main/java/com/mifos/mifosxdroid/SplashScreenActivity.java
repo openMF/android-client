@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
+import com.mifos.services.API;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosApplication;
 
 
 /**
@@ -61,7 +63,11 @@ public class SplashScreenActivity extends ActionBarActivity {
             //if authentication key is not present
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            String instanceURL = sharedPreferences.getString(Constants.INSTANCE_URL_KEY, null);
+            String tenantIdentifier = sharedPreferences.getString(Constants.TENANT_IDENTIFIER_KEY, null);
 
+            ((MifosApplication) getApplication()).api = new API(instanceURL, tenantIdentifier, false);
             //if authentication key is present open dashboard
             startActivity(new Intent(SplashScreenActivity.this, DashboardFragmentActivity.class));
         }
