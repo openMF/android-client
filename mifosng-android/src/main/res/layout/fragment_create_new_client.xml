@@ -1,0 +1,95 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="First Name :"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_client_first_name"
+
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:hint="enter client's first name"
+        android:id="@+id/et_client_first_name"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Last Name :"
+        android:textSize="20sp"
+        android:id="@+id/tv_client_last_name"
+
+        />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:hint="enter client's last name"
+        android:id="@+id/et_client_last_name"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Office :"
+        android:textSize="20sp"
+        android:id="@+id/tv_office"
+
+        />
+
+    <Spinner
+        android:id="@+id/sp_offices"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
+
+    <CheckBox
+        android:id="@+id/cb_client_active_status"
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Client Active "
+        android:checked="false"
+        />
+
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:id="@+id/tv_submission_date"
+
+        />
+
+
+    <Button
+        android:id="@+id/bt_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_marginRight="2dp"/>
+
+
+
+</LinearLayout>
