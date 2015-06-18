@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     Button bt_submit;
 
     int officeId;
-
+    Boolean result=true;
     private DialogFragment mfDatePicker;
     View rootView;
     String dateString;
@@ -177,22 +178,34 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     private void initiateClientCreation(ClientPayload clientPayload) {
 
         //TODO Validations
+        //Text validation : check for null value
+        if(!isValidFirstName())
+        {
+            Toast.makeText(getActivity()," First Name cannot be empty ",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(!isValidLastName())
+        {
+            Toast.makeText(getActivity()," Last Name cannot be empty ",Toast.LENGTH_LONG).show();
+            return;
+        }
+
 
         //Date validation : check for date less than or equal to current date
-        int i=checkDateValidation();
-
-        if(i==-1)
+        if(!isValidDate())
         {
-            Toast.makeText(getActivity()," Please enter  a valid date ",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity()," Enter a valid date ",Toast.LENGTH_LONG).show();
+            return;
         }
         else {
 
-            Toast.makeText(getActivity(), "Submit data", Toast.LENGTH_LONG).show();
+
             ((MifosApplication) getActivity().getApplicationContext()).api.clientService.createClient(clientPayload, new Callback<Client>() {
                 @Override
                 public void success(Client client, Response response) {
 
-
+                    Toast.makeText(getActivity(), "Submit data", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -200,7 +213,11 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
 
 
                 }
-            }); }
+
+
+            });
+        return;
+        }
 
    }
 
@@ -225,19 +242,38 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         tv_submissionDate.setText(date);
     }
 
-    public int checkDateValidation(){
-        int i;
-        List<Integer> date1= new ArrayList<>();
-        List<Integer> date2= new ArrayList<>();
-        date1 =DateHelper.getCurrentDateAsListOfIntegers();
-        date2 =DateHelper.getDateList(tv_submissionDate.getText().toString(), "-");
+    public boolean isValidFirstName(){
+
+        //TextUtils.isEmpty(editText.getText().toString()
+        if(TextUtils.isEmpty(et_clientFirstName.getText().toString()))
+            result =false;
+
+        return result;
+
+    }
+    public boolean isValidLastName(){
+
+        if(TextUtils.isEmpty((et_clientLastName.getText().toString())))
+            result =false;
+
+        return result;
+
+    }
+    public boolean isValidDate() {
+
+        List<Integer> date1 = new ArrayList<>();
+        List<Integer> date2 = new ArrayList<>();
+        date1 = DateHelper.getCurrentDateAsListOfIntegers();
+        date2 = DateHelper.getDateList(tv_submissionDate.getText().toString(), "-");
 
         Collections.reverse(date2);
         Log.d("reverse list ", date2.toString());
-        i=DateHelper.dateComparator(date1, date2);
+        int i = DateHelper.dateComparator(date1, date2);
         Log.d(" date1 date 2", " " + date1.toString() + date2.toString() + " " + i);
-
-        return i;
+        if(i==-1) {
+            result = false;
+        }
+        return result;
     }
 
 
