@@ -118,7 +118,8 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
 
 
 
-
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility.safelyBlockUI();
                 ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
 
                 @Override
@@ -135,21 +136,24 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                       sp_offices.setAdapter(officeAdapter);
                       sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                     @Override
-                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                      officeId = officeNameIdHashMap.get(officeList.get(i));
-                      Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+                          @Override
+                          public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                              officeId = officeNameIdHashMap.get(officeList.get(i));
+                              Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
 
-                    }
+                          }
 
-                     @Override
-                     public void onNothingSelected(AdapterView<?> adapterView) {
+                          @Override
+                          public void onNothingSelected(AdapterView<?> adapterView) {
 
-                     }
-              });
+                          }
+
+                      });
+                    safeUIBlockingUtility.safelyUnBlockUI();
            }
                    @Override
                      public void failure(RetrofitError error) {
+                       safeUIBlockingUtility.safelyUnBlockUI();
                    }
                 }
                 );
@@ -157,6 +161,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 ClientPayload clientPayload = new ClientPayload();
 
                 clientPayload.setFirstname(et_clientFirstName.getText().toString());
@@ -176,6 +181,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     }
 
     private void initiateClientCreation(ClientPayload clientPayload) {
+
 
         //TODO Validations
         //Text validation : check for null value
@@ -200,18 +206,24 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         }
         else {
 
+            safeUIBlockingUtility.safelyBlockUI();
 
             ((MifosApplication) getActivity().getApplicationContext()).api.clientService.createClient(clientPayload, new Callback<Client>() {
                 @Override
                 public void success(Client client, Response response) {
 
-                    Toast.makeText(getActivity(), "Submit data", Toast.LENGTH_LONG).show();
+                    safeUIBlockingUtility.safelyUnBlockUI();
+                    Toast.makeText(getActivity(),"Client created successfully ",Toast.LENGTH_LONG).show();
+
+
+
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
 
-
+                    safeUIBlockingUtility.safelyUnBlockUI();
+                    Toast.makeText(getActivity(),"Retry !! ",Toast.LENGTH_LONG).show();
                 }
 
 
