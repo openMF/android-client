@@ -41,6 +41,7 @@
     <string name="review_payment">Review Payment</string>
     <string name="center_name">Center Name</string>
     <string name="center_id">Center Id</string>
+    <string name="create_client">Create Client</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
@@ -195,6 +196,17 @@
     <string name="large_text">Large Text</string>
     <string name="product_name">Product Name</string>
     <string name="valid">Valid</string>
+
+    <string-array name="office_ids">
+        <item>Head Office</item>
+        <item>Office 1 </item>
+        <item>office 2</item>
+        <item>office 3</item>
+        <item>office 4</item>
+        <item>office 5</item>
+        <item>office 6</item>
+        <item>office 7</item>
+    </string-array>
 
 
 </resources>

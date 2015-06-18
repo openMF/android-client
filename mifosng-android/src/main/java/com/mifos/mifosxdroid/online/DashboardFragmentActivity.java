@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -23,7 +24,7 @@ import com.mifos.utils.FragmentConstants;
  */
 
 
-public class DashboardFragmentActivity extends ActionBarActivity {
+public class DashboardFragmentActivity extends ActionBarActivity implements CreateNewClientFragment.OnFragmentInteractionListener{
 
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
     public static Context context;
@@ -70,6 +71,9 @@ public class DashboardFragmentActivity extends ActionBarActivity {
             case R.id.logout:
                 startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));
                 break;
+            case R.id.item_create_new_client:
+                openCreateClient();
+
             default: //DO NOTHING
                 break;
         }
@@ -87,6 +91,19 @@ public class DashboardFragmentActivity extends ActionBarActivity {
 
     }
 
+    public void openCreateClient(){
+        CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CREATE_NEW_CLIENT);
+        //fragmentTransaction.add(createNewClientFragment, FragmentConstants.FRAG_CREATE_NEW_CLIENT);
+        fragmentTransaction.replace(R.id.dashboard_global_container, createNewClientFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }
 
 

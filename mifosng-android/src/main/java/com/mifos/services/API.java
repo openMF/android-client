@@ -38,6 +38,7 @@ import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.APIEndPoint;
+import com.mifos.services.data.ClientPayload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
@@ -114,6 +115,7 @@ public class API {
     public OfficeService officeService;
     public StaffService staffService;
 
+
     public API(final String url, final String tenantIdentifier, boolean shouldByPassSSLSecurity) {
 
         RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder();
@@ -166,6 +168,8 @@ public class API {
         officeService = restAdapter.create(OfficeService.class);
         staffService = restAdapter.create(StaffService.class);
     }
+
+
 
     private  OkHttpClient getUnsafeOkHttpClient() {
         try {
@@ -277,6 +281,13 @@ public class API {
         public void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
 
 
+        @Headers({ACCEPT_JSON,CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.CLIENTS + "")
+        public void uploadNewClientDetails();
+
+
+
+
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
         public void getCenterList(@Query("dateFormat") String dateFormat, @Query("locale") String locale,
@@ -323,8 +334,10 @@ public class API {
         @GET("/clients/{clientId}/images")
         public void getClientImage(@Path("clientId") int clientId, Callback<TypedString> callback);
 
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.CLIENTS)
+        void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
     }
-
     public interface SearchService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})

@@ -8,6 +8,7 @@ package com.mifos.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 
 import java.util.ArrayList;
@@ -98,8 +99,6 @@ public class DateHelper {
 
     }
 
-
-
     /**
      *
      * @return zero if both date1 and date2 are equal, positive int if date1 > date2
@@ -118,15 +117,15 @@ public class DateHelper {
         */
 
         //comparing years
-        if(date1.get(0)== date2.get(0)) {
+        if(date1.get(0).equals(date2.get(0))) {
 
             //now that years are equal lets compare months
 
-            if(date1.get(1) == date2.get(1)) {
+            if(date1.get(1).equals(date2.get(1))) {
 
                 //now that months are also equal lets compare days
 
-                if(date1.get(2) == date2.get(2)) {
+                if(date1.get(2).equals(date2.get(2))){
                     return 0;
                 } else if(date1.get(2) > date2.get(2)) {
                     return 1;
@@ -221,5 +220,15 @@ public class DateHelper {
             builder.append(splittedDate[2]);
         }
         return builder.toString();
+    }
+
+    public static List<Integer> getDateList(String date,String separator){
+        String[] splittedDate = date.split(separator);
+        List<Integer> dateList = new ArrayList<>();
+        for(int i=0;i<3;i++){
+            dateList.add(Integer.parseInt(splittedDate[i]));
+        }
+
+        return dateList;
     }
 }
