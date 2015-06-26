@@ -1,7 +1,12 @@
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
+
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -20,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.exceptions.InvalidTextInputException;
+import com.mifos.exceptions.RequiredFieldException;
+import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Client;
@@ -41,13 +49,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by dikshabhatia on 13/06/15.
- */
-
 
 public class CreateNewClientFragment extends Fragment implements MFDatePicker.OnDatePickListener {
-
 
 
     @InjectView(R.id.et_client_first_name)
@@ -68,19 +71,15 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     Button bt_submit;
 
     int officeId;
-    Boolean result=true;
+    Boolean result = true;
     private DialogFragment mfDatePicker;
     View rootView;
     String dateString;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    private OnFragmentInteractionListener mListener;
-
-
     public static CreateNewClientFragment newInstance() {
         CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
-
         return createNewClientFragment;
     }
 
@@ -98,65 +97,24 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_create_new_client,null);
+        rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
         ButterKnife.inject(this, rootView);
-
+        inflateOfficeSpinner();
         inflateSubmissionDate();
 
+        //client active checkbox onCheckedListener
         cb_clientActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
-                tv_submissionDate.setVisibility(View.VISIBLE);
-
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked)
+                    tv_submissionDate.setVisibility(View.VISIBLE);
+                else
+                    tv_submissionDate.setVisibility(View.GONE);
             }
         });
 
         dateString = tv_submissionDate.getText().toString();
-        Log.d("current date", DateHelper.getCurrentDateAsListOfIntegers().toString());
-        dateString=DateHelper.getDateAsStringUsedForCollectionSheetPayload(dateString).replace("-", " ");
-
-
-
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
-                ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
-
-                @Override
-                public void success(List<Office> offices, Response response) {
-                final List<String> officeList = new ArrayList<String>();
-
-                     for (Office office : offices) {
-                     officeList.add(office.getName());
-                      officeNameIdHashMap.put(office.getName(), office.getId());
-                     }
-                     ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                     android.R.layout.simple_spinner_item, officeList);
-                     officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                      sp_offices.setAdapter(officeAdapter);
-                      sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                          @Override
-                          public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                              officeId = officeNameIdHashMap.get(officeList.get(i));
-                              Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-
-                          }
-
-                          @Override
-                          public void onNothingSelected(AdapterView<?> adapterView) {
-
-                          }
-
-                      });
-                    safeUIBlockingUtility.safelyUnBlockUI();
-           }
-                   @Override
-                     public void failure(RetrofitError error) {
-                       safeUIBlockingUtility.safelyUnBlockUI();
-                   }
-                }
-                );
+        dateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(dateString).replace("-", " ");
 
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,74 +122,98 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
 
                 ClientPayload clientPayload = new ClientPayload();
 
-                clientPayload.setFirstname(et_clientFirstName.getText().toString());
-                clientPayload.setLastname(et_clientLastName.getText().toString());
+                clientPayload.setFirstname(et_clientFirstName.getEditableText().toString());
+                clientPayload.setLastname(et_clientLastName.getEditableText().toString());
                 clientPayload.setActive(cb_clientActiveStatus.isChecked());
                 clientPayload.setActivationDate(dateString);
                 clientPayload.setOfficeId(officeId);
 
                 initiateClientCreation(clientPayload);
 
-
             }
         });
 
         return rootView;
+    }
 
+    //inflating office list spinner
+    private void inflateOfficeSpinner() {
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility.safelyBlockUI();
+        ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
+
+               @Override
+               public void success(List<Office> offices, Response response) {
+                   final List<String> officeList = new ArrayList<String>();
+
+                   for (Office office : offices) {
+                       officeList.add(office.getName());
+                       officeNameIdHashMap.put(office.getName(), office.getId());
+                   }
+                   ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                           android.R.layout.simple_spinner_item, officeList);
+                   officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                   sp_offices.setAdapter(officeAdapter);
+                   sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                       @Override
+                       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                           officeId = officeNameIdHashMap.get(officeList.get(i));
+                           Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+
+                       }
+
+                       @Override
+                       public void onNothingSelected(AdapterView<?> adapterView) {
+
+                       }
+
+                   });
+                   safeUIBlockingUtility.safelyUnBlockUI();
+               }
+
+               @Override
+               public void failure(RetrofitError error) {
+                   safeUIBlockingUtility.safelyUnBlockUI();
+               }
+            }
+        );
     }
 
     private void initiateClientCreation(ClientPayload clientPayload) {
 
-
-        //TODO Validations
-        //Text validation : check for null value
-        if(!isValidFirstName())
-        {
-            Toast.makeText(getActivity()," First Name cannot be empty ",Toast.LENGTH_LONG).show();
+        //TextField validations
+        if (!isValidLastName()) {
             return;
         }
 
-        if(!isValidLastName())
-        {
-            Toast.makeText(getActivity()," Last Name cannot be empty ",Toast.LENGTH_LONG).show();
+        if (!isValidFirstName()) {
             return;
         }
-
 
         //Date validation : check for date less than or equal to current date
-        if(!isValidDate())
-        {
-            Toast.makeText(getActivity()," Enter a valid date ",Toast.LENGTH_LONG).show();
-            return;
-        }
-        else {
+        if (!isValidDate()) {
+            Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
+        } else {
 
             safeUIBlockingUtility.safelyBlockUI();
 
             ((MifosApplication) getActivity().getApplicationContext()).api.clientService.createClient(clientPayload, new Callback<Client>() {
                 @Override
                 public void success(Client client, Response response) {
-
                     safeUIBlockingUtility.safelyUnBlockUI();
-                    Toast.makeText(getActivity(),"Client created successfully ",Toast.LENGTH_LONG).show();
-
-
+                    Toast.makeText(getActivity(), "Client created successfully", Toast.LENGTH_LONG).show();
 
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-
                     safeUIBlockingUtility.safelyUnBlockUI();
-                    Toast.makeText(getActivity(),"Retry !! ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
                 }
-
-
             });
-        return;
         }
-
-   }
+    }
 
     public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
@@ -244,33 +226,68 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
-
-
     }
 
     @Override
     public void onDatePicked(String date) {
-
         tv_submissionDate.setText(date);
     }
 
-    public boolean isValidFirstName(){
+    public boolean isValidFirstName() {
+        try {
+            if (TextUtils.isEmpty(et_clientFirstName.getEditableText().toString())) {
+                throw new RequiredFieldException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_cannot_be_empty));
+            }
 
-        //TextUtils.isEmpty(editText.getText().toString()
-        if(TextUtils.isEmpty(et_clientFirstName.getText().toString()))
-            result =false;
+            if (et_clientFirstName.getEditableText().toString().trim().length() < 4 && et_clientFirstName.getEditableText().toString().trim().length() > 0) {
+                throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
+            }
+            if (!et_clientFirstName.getEditableText().toString().matches("[a-zA-Z]+")) {
+                throw new InvalidTextInputException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+            }
+        } catch (InvalidTextInputException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        } catch (ShortOfLengthException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        } catch (RequiredFieldException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        }
 
         return result;
-
     }
-    public boolean isValidLastName(){
 
-        if(TextUtils.isEmpty((et_clientLastName.getText().toString())))
-            result =false;
+    public boolean isValidLastName() {
+        result = true;
+        try {
+            if (TextUtils.isEmpty(et_clientLastName.getEditableText().toString())) {
+                throw new RequiredFieldException(getResources().getString(R.string.last_name), getResources().getString(R.string.error_cannot_be_empty));
+            }
+
+            if (et_clientLastName.getEditableText().toString().trim().length() < 4 && et_clientFirstName.getEditableText().toString().trim().length() > 0) {
+                throw new ShortOfLengthException(getResources().getString(R.string.last_name), 4);
+            }
+
+            if (!et_clientLastName.getEditableText().toString().matches("[a-zA-Z]+")) {
+                throw new InvalidTextInputException(getResources().getString(R.string.last_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+            }
+
+        } catch (InvalidTextInputException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        } catch (ShortOfLengthException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        } catch (RequiredFieldException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        }
 
         return result;
-
     }
+
     public boolean isValidDate() {
 
         List<Integer> date1 = new ArrayList<>();
@@ -279,55 +296,21 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         date2 = DateHelper.getDateList(tv_submissionDate.getText().toString(), "-");
 
         Collections.reverse(date2);
-        Log.d("reverse list ", date2.toString());
         int i = DateHelper.dateComparator(date1, date2);
-        Log.d(" date1 date 2", " " + date1.toString() + date2.toString() + " " + i);
-        if(i==-1) {
+        if (i == -1) {
             result = false;
         }
         return result;
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
 }
