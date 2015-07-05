@@ -5,6 +5,9 @@
 
 package com.mifos.exceptions;
 
+import android.content.Context;
+import android.widget.Toast;
+
 public class ShortOfLengthException extends Exception{
 
     private int minimumCharacters;
@@ -23,6 +26,8 @@ public class ShortOfLengthException extends Exception{
     }
 
 
-
+    public void notifyUserWithToast(Context context) {
+        Toast.makeText(context, toString(), Toast.LENGTH_SHORT).show();
+    }
 
 }

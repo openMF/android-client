@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -24,12 +23,10 @@ import com.mifos.utils.FragmentConstants;
  */
 
 
-public class DashboardFragmentActivity extends ActionBarActivity implements CreateNewClientFragment.OnFragmentInteractionListener{
+public class DashboardFragmentActivity extends ActionBarActivity {
 
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
     public static Context context;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,10 +97,6 @@ public class DashboardFragmentActivity extends ActionBarActivity implements Crea
         fragmentTransaction.commit();
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }
 
 
