@@ -16,6 +16,8 @@ import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.ToDoActivity;
+import com.mifos.mifosxdroid.fragments.ToDoFragment;
 import com.mifos.utils.FragmentConstants;
 
 /**
@@ -62,6 +64,9 @@ public class DashboardFragmentActivity extends ActionBarActivity {
             //case R.id.item_collection_sheet :
                 //startActivity(new Intent(DashboardFragmentActivity.this, GenerateCollectionSheet.class));
             //    break;
+            case R.id.mItem_to_do_list :
+                startActivity(new Intent(this, ToDoActivity.class));
+                break;
             case R.id.item_offline_centers:
                 startActivity(new Intent(this, OfflineCenterInputActivity.class));
                 break;
@@ -70,6 +75,7 @@ public class DashboardFragmentActivity extends ActionBarActivity {
                 break;
             case R.id.mItem_create_new_client:
                 openCreateClient();
+                break;
 
             default: //DO NOTHING
                 break;
@@ -94,6 +100,14 @@ public class DashboardFragmentActivity extends ActionBarActivity {
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CREATE_NEW_CLIENT);
         //fragmentTransaction.add(createNewClientFragment, FragmentConstants.FRAG_CREATE_NEW_CLIENT);
         fragmentTransaction.replace(R.id.dashboard_global_container, createNewClientFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void openToDoList(){
+        ToDoFragment toDoFragment = new ToDoFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack((FragmentConstants.FRAG_TO_DO_LIST));
+        fragmentTransaction.replace(R.id.dashboard_global_container,toDoFragment);
         fragmentTransaction.commit();
     }
 

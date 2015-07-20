@@ -2,8 +2,7 @@
 <!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
-  -->
-
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mifos.mifosxdroid"
     android:versionCode="3"
@@ -17,6 +16,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:name="com.mifos.utils.MifosApplication"
@@ -85,7 +89,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-                android:name=".OfflineCenterInputActivity"
+            android:name=".OfflineCenterInputActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -110,8 +114,20 @@
                 android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
         </activity>
         <activity
-                android:name=".CenterListActivity"
-                android:screenOrientation="portrait"/>
+            android:name=".CenterListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".uihelpers.ToDoActivity"
+            android:label="@string/title_activity_to_do" >
+        </activity>
+        <activity
+            android:name=".uihelpers.ToDoTaskActivity"
+            android:label="@string/title_activity_to_do_task" >
+        </activity>
+        <activity
+            android:name=".ToDoActivity"
+            android:label="@string/title_activity_to_do_task" >
+        </activity>
     </application>
 
 </manifest>
