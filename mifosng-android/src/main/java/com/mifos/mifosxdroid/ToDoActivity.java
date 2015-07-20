@@ -21,7 +21,7 @@ public class ToDoActivity extends ActionBarActivity {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ToDoFragment toDoFragment = ToDoFragment.newInstance();
-        fragmentTransaction.replace(R.id.to_do_task_container,toDoFragment);
+        fragmentTransaction.replace(R.id.to_do_container,toDoFragment);
         fragmentTransaction.commit();
     }
 
