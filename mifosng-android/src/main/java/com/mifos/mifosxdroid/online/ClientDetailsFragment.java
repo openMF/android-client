@@ -54,7 +54,6 @@ import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.API;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.utils.Constants;
@@ -615,7 +614,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i("DATATABLE", retrofitError.getLocalizedMessage());
                 safeUIBlockingUtility.safelyUnBlockUI();
 
             }

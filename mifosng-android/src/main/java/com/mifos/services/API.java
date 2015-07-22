@@ -126,7 +126,7 @@ public class API {
         restAdapterBuilder.setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
-                        if (!tenantIdentifier.isEmpty()) {
+                        if (tenantIdentifier != null  && !tenantIdentifier.isEmpty()) {
                             request.addHeader(HEADER_MIFOS_TENANT_ID, tenantIdentifier);
                         } else {
                             request.addHeader(HEADER_MIFOS_TENANT_ID, "default");
