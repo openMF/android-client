@@ -16,6 +16,7 @@ public class RequiredFieldException extends Exception {
     private String fieldName;
     private String localisedErrorMessage;
 
+
     public RequiredFieldException(String fieldName, String localisedErrorMessage) {
 
         this.fieldName = fieldName;
