@@ -12,7 +12,7 @@ import com.mifos.mifosxdroid.dialogfragments.ToDoDialogFragment;
 import com.mifos.mifosxdroid.fragments.ToDoFragment;
 
 
-public class ToDoActivity extends ActionBarActivity {
+public class ToDoActivity extends ActionBarActivity implements ToDoFragment.onToDoFragmentSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,4 +52,12 @@ public class ToDoActivity extends ActionBarActivity {
         toDoDialogFragment.show(this.getSupportFragmentManager(),"ToDoDiaologFragment");
 
     }
+
+    @Override
+    public void onTaskSelected(String task, String date,int position) {
+        DialogFragment dialogFragment = ToDoDialogFragment.newInstance(task,date,position);
+        dialogFragment.show(this.getSupportFragmentManager(),"ToDoDiaologFragment");
+
+    }
+
 }

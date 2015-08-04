@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.ToDoActivity;
-import com.mifos.mifosxdroid.fragments.ToDoFragment;
 import com.mifos.utils.FragmentConstants;
 
 /**
@@ -103,13 +102,7 @@ public class DashboardFragmentActivity extends ActionBarActivity {
         fragmentTransaction.commit();
     }
 
-    public void openToDoList(){
-        ToDoFragment toDoFragment = new ToDoFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.addToBackStack((FragmentConstants.FRAG_TO_DO_LIST));
-        fragmentTransaction.replace(R.id.dashboard_global_container,toDoFragment);
-        fragmentTransaction.commit();
-    }
+
 
 }
 

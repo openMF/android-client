@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,8 +25,11 @@ public class ToDoFragment extends Fragment{
     ListView lv_todo_list;
 
     View rootView;
+    onToDoFragmentSelectedListener mCallback;
 
     List<ToDo> list = new ArrayList<>();
+    String task;
+    String date;
 
     public static ToDoFragment newInstance() {
         ToDoFragment toDoFragment = new ToDoFragment();
@@ -47,22 +51,45 @@ public class ToDoFragment extends Fragment{
         rootView = inflater.inflate(R.layout.fragment_to_do, null);
         ButterKnife.inject(this, rootView);
 
-
+       /* long l =2;
+        ToDo toDo = ToDo.findById(ToDo.class,l);
+        toDo.delete();
+*/
         list = ToDo.listAll(ToDo.class);
-        ToDoListAdapter toDoListAdapter = new ToDoListAdapter(getActivity(),list);
+        final ToDoListAdapter toDoListAdapter = new ToDoListAdapter(getActivity(),list);
         lv_todo_list.setAdapter(toDoListAdapter);
 
         lv_todo_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                task = list.get(i).getTaskToBeDone();
+                date = list.get(i).getDateOfTask();
+                mCallback.onTaskSelected(task, date, i);
                 return false;
             }
+
+
         });
 
         return rootView;
     }
 
 
+    public interface onToDoFragmentSelectedListener{
+        public void onTaskSelected(String task ,String date,int position);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (onToDoFragmentSelectedListener) activity;
+        }
+        catch(ClassCastException e){
+            throw new ClassCastException(activity.toString() + " should implement onToDoFragmentSelectedListener" );
+        }
+
+    }
 }
 
