@@ -54,9 +54,10 @@ public class ToDoActivity extends ActionBarActivity implements ToDoFragment.onTo
     }
 
     @Override
-    public void onTaskSelected(String task, String date,int position) {
+    public void onTaskSelected(String task, String date,Long position) {
         DialogFragment dialogFragment = ToDoDialogFragment.newInstance(task,date,position);
         dialogFragment.show(this.getSupportFragmentManager(),"ToDoDiaologFragment");
+
 
     }
 

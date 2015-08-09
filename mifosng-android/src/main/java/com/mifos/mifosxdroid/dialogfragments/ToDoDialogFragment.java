@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.ToDoListAdapter;
+import com.mifos.mifosxdroid.fragments.ToDoFragment;
 import com.mifos.objects.db.ToDo;
 
 import java.util.ArrayList;
@@ -30,35 +29,35 @@ public static final String TAG ="ToDoDialogFragment";
     EditText et_enter_task;
     @InjectView(R.id.et_enter_date)
     EditText et_enter_date;
-    @InjectView(R.id.bt_save_task)
-    Button bt_save_task;
+    @InjectView(R.id.bt_right)
+    Button bt_right;
+    @InjectView(R.id.bt_left)
+    Button bt_left;
 
     View rootView;
     String task;
     String et_task;
     String et_date;
     String date_of_task;
-    //String bt_text="SAVE TASK";
-    List<ToDo> list_object = new ArrayList<>();
-    ToDoListAdapter toDoListAdapter = new ToDoListAdapter();
-    int position;
+
+    List<ToDo> list = new ArrayList<>();
+    Long position;
     int flag =1;
 
 
     public static ToDoDialogFragment newInstance(){
 
         ToDoDialogFragment toDoDialogFragment = new ToDoDialogFragment();
-
         return toDoDialogFragment;
     }
 
-    public static ToDoDialogFragment newInstance(@Nullable String task, @Nullable String date,int position){
+    public static ToDoDialogFragment newInstance(@Nullable String task, @Nullable String date,Long position){
 
         ToDoDialogFragment toDoDialogFragment = new ToDoDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString("task", task);
         bundle.putString("date", date);
-        bundle.putInt("position",position);
+        bundle.putLong("position", position);
 
         toDoDialogFragment.setArguments(bundle);
 
@@ -81,12 +80,10 @@ public static final String TAG ="ToDoDialogFragment";
         if (getArguments() != null) {
             et_task= getArguments().getString("task");
             et_date=getArguments().getString("date");
-            position=getArguments().getInt("position");
-            Log.d(" task  " + task, "Date " + date_of_task);
-            list_object=ToDo.listAll(ToDo.class);
+            position=getArguments().getLong("position");
+
             flag =0;
         }
-
     }
 
     @Override
@@ -100,13 +97,14 @@ public static final String TAG ="ToDoDialogFragment";
         setEditTextValue(et_task,et_date,position);
         }
 
-        bt_save_task.setOnClickListener(new View.OnClickListener() {
+
+        bt_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             if(bt_save_task.getText()!=null){
-                if(bt_save_task.getText().toString().equals("SAVE TASK")){
+             if(bt_right.getText()!=null){
+                if(bt_right.getText().toString().equals("SAVE")){
                     saveDataToTable();
-                    toDoListAdapter.notifyDataSetChanged();
+
                     ToDoDialogFragment.this.dismiss();
                 }
                 else{
@@ -120,60 +118,66 @@ public static final String TAG ="ToDoDialogFragment";
 
         });
 
+        bt_left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bt_left.getText()!=null){
+                    if(bt_left.getText().toString().equals("CANCEL")){
+
+                        ToDoDialogFragment.this.dismiss();
+                    }
+                    else{
+                       updateListItem(position);
+                    }
+                }
+                else {
+                    Toast.makeText(getActivity()," null object reference ",Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+
 
         return rootView;
 
     }
 
-    public void setEditTextValue(String task,String date,int position){
-        bt_save_task.setText("DELETE TASK");
+    public void setEditTextValue(String task,String date,Long position){
+        bt_right.setText("DELETE");
+        bt_left.setText("UPDATE");
         et_enter_task.setText(task);
         et_enter_date.setText(date);
-        task=et_enter_task.getEditableText().toString();
-        date=et_enter_date.getEditableText().toString();
-        Log.d("Position variable", String.valueOf(position + 1));
-        //deleteListItem(position);
-
-        /*if(toDo!=null){
-            toDo.setDateOfTask(date);
-            toDo.setTaskToBeDone(task);
-            toDo.save();
-            toDoListAdapter.notifyDataSetChanged();
-             }
-        else {
-            Toast.makeText(getActivity(), " null object", Toast.LENGTH_LONG).show();
-        }*/
-
-
 
     }
-    public void deleteListItem(int position){
-         //
-        Integer a = Integer.valueOf(position+1);
-        Toast.makeText(getActivity(),"Entered deleteListItem method",Toast.LENGTH_SHORT).show();
-        ToDo toDo = ToDo.findById(ToDo.class,a.longValue());
-        Toast.makeText(getActivity(),String.valueOf(position+1),Toast.LENGTH_SHORT).show();
 
-        List<ToDo> todo1 = ToDo.listAll(ToDo.class);
-        for(int i=0;i<todo1.size();i++){
-
-            Log.d(" Task " + i +": " + todo1.get(i).getTaskToBeDone(),"position of task" + todo1.get(i).getId());
-        }
-
+    public void updateListItem(Long position){
+        task=et_enter_task.getText().toString();
+        date_of_task=et_enter_date.getText().toString();
+        ToDo toDo = ToDo.findById(ToDo.class, position);
 
         if(toDo!=null){
+            toDo.setDateOfTask(date_of_task);
+            toDo.setTaskToBeDone(task);
+            toDo.save();
+            Toast.makeText(getActivity(),"Updated Successfully",Toast.LENGTH_SHORT).show();
+            notifyDataChanged();
+        }
+        else {
+            Toast.makeText(getActivity(), " null object", Toast.LENGTH_LONG).show();
+        }
 
-        Toast.makeText(getActivity(),toDo.getTaskToBeDone(),Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(),"Entered If",Toast.LENGTH_SHORT).show();
+    }
+    public void deleteListItem(Long position){
+
+        ToDo toDo = ToDo.findById(ToDo.class,position);
+
+        if(toDo!=null)
+        {
         toDo.delete();
 
-            List<ToDo> todo2 = ToDo.listAll(ToDo.class);
-            for(int i=0;i<todo2.size();i++){
-
-                Log.d(" inside IF Task " + i +": " + todo2.get(i).getTaskToBeDone(),"position of task" + todo2.get(i).getId());
-            }
-
-            ToDoDialogFragment.this.dismiss();}
+        Toast.makeText(getActivity(),"Deleted Successfully",Toast.LENGTH_SHORT).show();
+        notifyDataChanged();
+        }
         else {
             Toast.makeText(getActivity(),"ToDo Null",Toast.LENGTH_SHORT).show();
         }
@@ -181,12 +185,20 @@ public static final String TAG ="ToDoDialogFragment";
     }
 
     public void saveDataToTable(){
+
         task = et_enter_task.getEditableText().toString();
         date_of_task=et_enter_date.getEditableText().toString();
         ToDo toDo = new ToDo(task,date_of_task);
         toDo.save();
+        Toast.makeText(getActivity(),"Saved Successfully",Toast.LENGTH_SHORT).show();
+        notifyDataChanged();
 
     }
 
+    public void notifyDataChanged(){
+        ToDoDialogFragment.this.dismiss();
+        list=ToDo.listAll(ToDo.class);
+        ToDoFragment.toDoListAdapter.setMyList(list);
+    }
 
   }

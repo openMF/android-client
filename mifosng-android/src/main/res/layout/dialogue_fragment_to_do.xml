@@ -27,12 +27,24 @@
         android:fontFamily="sans-serif"
         android:hint="DD-MM-YYYY"/>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="SAVE TASK"
-        android:id="@+id/bt_save_task"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="CANCEL"
+        android:id="@+id/bt_left"
         android:layout_weight="1"/>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:id="@+id/bt_right"
+        android:layout_weight="1"/>
+        </LinearLayout>
 
 
 </LinearLayout>

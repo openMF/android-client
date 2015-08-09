@@ -24,7 +24,6 @@ public class ToDoListAdapter extends BaseAdapter {
     private List<ToDo> toDoList = new ArrayList<>();
     private LayoutInflater layoutInflater;
 
-
     public ToDoListAdapter(){
 
     }
@@ -50,6 +49,11 @@ public class ToDoListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int i) {
         return 0;
+    }
+
+    public void setMyList(List<ToDo> toDoList) {
+        this.toDoList = toDoList;
+        this.notifyDataSetChanged();
     }
 
     @Override

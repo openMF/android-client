@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ public class ToDoFragment extends Fragment{
 
     View rootView;
     onToDoFragmentSelectedListener mCallback;
+    public static String TAG="ToDoFragment";
+    public static ToDoListAdapter toDoListAdapter;
 
     List<ToDo> list = new ArrayList<>();
     String task;
@@ -51,23 +54,24 @@ public class ToDoFragment extends Fragment{
         rootView = inflater.inflate(R.layout.fragment_to_do, null);
         ButterKnife.inject(this, rootView);
 
-       /* long l =2;
-        ToDo toDo = ToDo.findById(ToDo.class,l);
-        toDo.delete();
-*/
         list = ToDo.listAll(ToDo.class);
-        final ToDoListAdapter toDoListAdapter = new ToDoListAdapter(getActivity(),list);
+        toDoListAdapter = new ToDoListAdapter(getActivity(),list);
         lv_todo_list.setAdapter(toDoListAdapter);
 
         lv_todo_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                task = list.get(i).getTaskToBeDone();
-                date = list.get(i).getDateOfTask();
-                mCallback.onTaskSelected(task, date, i);
+                ToDo toDo = list.get(i);
+
+                Log.d(" date : " +  toDo.getDateOfTask(),"task : " + toDo.getTaskToBeDone());
+                task = toDo.getTaskToBeDone();
+                date = toDo.getDateOfTask();
+
+                mCallback.onTaskSelected(task, date, toDo.getId());
+                Log.d("ToDo table position ", "" + toDo.getId());
+
                 return false;
             }
-
 
         });
 
@@ -76,7 +80,7 @@ public class ToDoFragment extends Fragment{
 
 
     public interface onToDoFragmentSelectedListener{
-        public void onTaskSelected(String task ,String date,int position);
+        public void onTaskSelected(String task ,String date,Long position);
     }
 
     @Override
@@ -91,5 +95,7 @@ public class ToDoFragment extends Fragment{
         }
 
     }
+
+
 }
 
