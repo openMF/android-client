@@ -79,6 +79,7 @@
     <string name="withdrawal">Retirado</string>
     <string name="title_center_detail">Detalles del centro</string>
     <string name="staff_name">Nombre del empleado</string>
+    <string name="staff">Personal</string>
     <string name="staff_id">ID del empleado</string>
     <string name="spinner_staff">Selecciona responsable de créditos</string>
     <string name="spinner_office">Selecciona Oficina</string>
