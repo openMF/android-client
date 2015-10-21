@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -106,6 +107,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         tv_constructed_instance_url.setText(PROTOCOL_HTTPS + previouslyEnteredUrl + API_PATH);
         et_instanceURL.setText(previouslyEnteredUrl);
 
+        et_port.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (!previouslyEnteredPort.equals("80")) {
             et_port.setText(previouslyEnteredPort);
         }
@@ -159,12 +161,13 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             port = Integer.valueOf(et_port.getEditableText().toString().trim());
             textUnderConstruction = constructInstanceUrl(et_instanceURL.getEditableText().toString(), port);
         } else {
+            port = null;
             textUnderConstruction = constructInstanceUrl(et_instanceURL.getEditableText().toString(), null);
         }
 
         tv_constructed_instance_url.setText(textUnderConstruction);
 
-        if(!validateURL(textUnderConstruction)) {
+        if(!validateURL(et_instanceURL.getEditableText().toString())) {
             tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
         } else {
             tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
@@ -448,8 +451,9 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
         ipAddressMatcher = ipAddressPattern.matcher(hex);
         if (domainNameMatcher.matches()) return true;
         if (ipAddressMatcher.matches()) return true;
+
         //TODO MAKE SURE YOU UPDATE THE REGEX to check for ports in the URL
-        return true;
+        return false;
     }
 
 }
