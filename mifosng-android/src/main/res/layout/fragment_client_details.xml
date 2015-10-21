@@ -11,7 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp">
+        android:layout_margin="16dp"
+        android:layout_marginBottom="10dp">
 
 
 
@@ -51,7 +52,8 @@
         <TableLayout
             android:id="@+id/tbl_clientDetails"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="180dp"
+            android:weightSum="7"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/tv_fullName"
@@ -60,7 +62,8 @@
 
             <TableRow
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
 
 
                 <TextView
@@ -81,6 +84,7 @@
 
             <TableRow
                 android:layout_width="fill_parent"
+                android:layout_weight="1"
                 android:layout_height="fill_parent">
 
                 <TextView
@@ -101,6 +105,7 @@
 
             <TableRow
                 android:layout_width="fill_parent"
+                android:layout_weight="1"
                 android:layout_height="fill_parent">
 
                 <TextView
@@ -121,6 +126,8 @@
 
             <TableRow
                 android:layout_width="fill_parent"
+                android:layout_weight="1"
+
                 android:layout_height="fill_parent">
 
 
@@ -142,6 +149,8 @@
 
             <TableRow
                 android:layout_width="fill_parent"
+                android:layout_weight="1"
+
                 android:layout_height="fill_parent">
 
 
@@ -163,6 +172,8 @@
 
             <TableRow
                 android:layout_width="fill_parent"
+                android:layout_weight="1"
+
                 android:layout_height="fill_parent">
 
 
@@ -184,6 +195,8 @@
 
             <TableRow
                 android:layout_width="fill_parent"
+                android:layout_weight="1"
+
                 android:layout_height="fill_parent">
 
 
@@ -210,6 +223,9 @@
             android:id="@+id/account_accordion_section_loans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+
             android:layout_below="@id/tbl_clientDetails"
             />
 
@@ -218,6 +234,8 @@
             android:id="@+id/account_accordion_section_savings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:layout_below="@+id/account_accordion_section_loans"
             />
 
@@ -225,6 +243,8 @@
             layout="@layout/view_account_accordion_section"
             android:id="@+id/account_accordion_section_recurring"
             android:layout_width="match_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/account_accordion_section_savings"
             />
