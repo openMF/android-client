@@ -16,6 +16,7 @@
     <string name="offline">Offline *</string>
     <string name="client_search_hint">enter client name or ID</string>
     <string name="search_results">Search Results</string>
+    <string name="client_search">Client Search</string>
     <string name="total">Total</string>
     <string name="client_name">Client Name</string>
     <string name="client">Client</string>
