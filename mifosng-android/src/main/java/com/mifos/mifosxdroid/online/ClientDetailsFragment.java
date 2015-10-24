@@ -53,6 +53,7 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientGroup;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
@@ -405,14 +406,14 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(View.VISIBLE);
         ((MifosApplication)getActivity().getApplication()).api.clientService.uploadClientImage(clientId,
-                new  TypedFile("image/png", pngFile),
+                new TypedFile("image/png", pngFile),
                 new Callback<Response>() {
 
 
                     @Override
                     public void success(Response response, Response response2) {
                         Toast.makeText(activity, activity.getString(R.string.client_image_updated), Toast.LENGTH_SHORT).show();
-                        Bitmap  bitMap = BitmapFactory.decodeFile(imagePath);
+                        Bitmap bitMap = BitmapFactory.decodeFile(imagePath);
                         iv_clientImage.setImageBitmap(bitMap);
                         pb_imageProgressBar.setVisibility(View.GONE);
                     }
@@ -444,6 +445,17 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     tv_fullName.setText(client.getDisplayName());
                     tv_accountNumber.setText(client.getAccountNo());
                     tv_externalId.setText(client.getExternalId());
+                    tv_loanOfficer.setText(client.getStaffName());
+                    List<ClientGroup> clientGroups = client.getGroups();
+                    if(!(clientGroups == null || clientGroups.isEmpty())){
+                        String groups = "";
+                        for(ClientGroup clientGroup: clientGroups){
+                            groups+=clientGroup.getName()+ ", ";
+                        }
+                        groups = groups.substring(0,groups.length() - 2);
+                        tv_group.setText(groups);
+                    }
+
 
                     try {
                         List<Integer> dateObj = client.getActivationDate();

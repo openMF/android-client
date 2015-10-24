@@ -36,6 +36,13 @@ public class Client {
     private int imageId;
     private boolean imagePresent;
     private String externalId;
+    private List<ClientGroup> groups = new ArrayList<ClientGroup>();//declared a new client group array
+    public List<ClientGroup> getGroups() {
+        return groups;
+    }
+    public void setGroups(List<ClientGroup> groups) {
+        this.groups = groups;
+    }
 
     public int getId() {
         return id;
