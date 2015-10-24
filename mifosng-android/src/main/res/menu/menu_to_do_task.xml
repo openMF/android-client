@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mifos.mifosxdroid.ToDoActivity">
+
+
+    <item android:id="@+id/mItem_add_task"
+        android:title="@string/add_task"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>

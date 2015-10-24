@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/to_do_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mifos.mifosxdroid.online.ToDoActivity">
+
+</FrameLayout>

@@ -200,6 +200,8 @@
     <string name="error_cannot_be_empty">cannot be empty</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
+    <string name="to_do_list">to_do_list</string>
+    <string name="add_new_task">addTask</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>
@@ -211,6 +213,9 @@
         <item>office 6</item>
         <item>office 7</item>
     </string-array>
+    <string name="title_activity_to_do">ToDoActivity</string>
+    <string name="title_activity_to_do_task">ToDoTaskActivity</string>
+    <string name="add_task">Add Task</string>
 
 
 </resources>

@@ -21,6 +21,8 @@
         android:paddingTop="10dp"
         android:layout_height="wrap_content"
         android:hint="enter client's first name"
+        android:lines="1"
+        android:inputType="textPersonName"
         android:id="@+id/et_client_first_name"/>
 
     <TextView
@@ -39,6 +41,8 @@
         android:paddingTop="10dp"
         android:layout_height="wrap_content"
         android:hint="enter client's last name"
+        android:lines="1"
+        android:inputType="textPersonName"
         android:id="@+id/et_client_last_name"/>
 
     <TextView

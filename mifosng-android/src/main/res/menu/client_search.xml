@@ -24,6 +24,13 @@
         android:title="@string/center_list"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/mItem_to_do_list"
+        android:enabled="true"
+        android:title="@string/to_do_list"
+        app:showAsAction="ifRoom" />
+
+
     <!--
     <item
         android:id="@+id/item_collection_sheet"

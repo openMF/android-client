@@ -242,7 +242,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
             if (et_clientFirstName.getEditableText().toString().trim().length() < 4 && et_clientFirstName.getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
             }
-            if (!et_clientFirstName.getEditableText().toString().matches("[a-zA-Z]+")) {
+            if (!et_clientFirstName.getEditableText().toString().matches("[a-zA-Z ]+")) {
                 throw new InvalidTextInputException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
