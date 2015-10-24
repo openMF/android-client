@@ -61,7 +61,7 @@ public class ToDoFragment extends Fragment{
         lv_todo_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                
+
                 list=ToDo.listAll(ToDo.class);
                 ToDoFragment.toDoListAdapter.setMyList(list);
 

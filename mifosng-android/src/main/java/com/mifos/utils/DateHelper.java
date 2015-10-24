@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by ishankhanna on 30/05/14.
+ *
  * <p>This is a helper class that will be used to convert List<Interger> Type Dates
  * from MifosX into Simple Strings or Date Formats</p>
  */
