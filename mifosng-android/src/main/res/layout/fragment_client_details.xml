@@ -78,7 +78,26 @@
                     android:layout_height="wrap_content"
                     android:text="20015063" />
             </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
 
+
+                <TextView
+                    android:id="@+id/tvs_mobileNumber"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:text="mobile number" />
+
+                <TextView
+                    android:id="@+id/tv_mobileNumber"
+                    android:layout_width="0dp"
+                    android:gravity="right"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:text="20015063" />
+            </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
