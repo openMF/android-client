@@ -40,6 +40,24 @@
         android:layout_height="wrap_content"
         android:hint="enter client's last name"
         android:id="@+id/et_client_last_name"/>
+        
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Mobile No :"
+        android:textSize="20sp"
+        android:id="@+id/tv_client_mobile_no"
+
+        />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:hint="enter client's mobile number"
+        android:id="@+id/et_client_mobile_no"/>
 
     <TextView
         android:layout_width="match_parent"
