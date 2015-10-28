@@ -7,6 +7,7 @@ public class ClientPayload extends DefaultPayload {
 
     private String firstname;
     private String lastname;
+    private String mobileNo;
     private int officeId;
     private boolean active;
     private String activationDate;
@@ -26,6 +27,13 @@ public class ClientPayload extends DefaultPayload {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+     public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
     }
 
     public int getOfficeId() {
