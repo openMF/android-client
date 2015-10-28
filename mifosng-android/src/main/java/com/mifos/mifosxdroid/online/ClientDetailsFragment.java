@@ -112,6 +112,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     TextView tv_fullName;
     @InjectView(R.id.tv_accountNumber)
     TextView tv_accountNumber;
+    @InjectView(R.id.tv_mobileNumber)
+    TextView tv_mobileNumber;
     @InjectView(R.id.tv_externalId)
     TextView tv_externalId;
     @InjectView(R.id.tv_activationDate)
@@ -443,6 +445,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     actionBar.setTitle(getString(R.string.client) + " - " + client.getLastname());
                     tv_fullName.setText(client.getDisplayName());
                     tv_accountNumber.setText(client.getAccountNo());
+                    tv_mobileNumber.setText(client.getMobileNo());
                     tv_externalId.setText(client.getExternalId());
 
                     try {
