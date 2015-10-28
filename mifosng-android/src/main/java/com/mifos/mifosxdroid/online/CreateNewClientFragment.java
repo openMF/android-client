@@ -61,6 +61,10 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     EditText et_clientLastName;
     @InjectView(R.id.tv_client_last_name)
     TextView tv_clientLastName;
+    @InjectView(R.id.et_client_mobile_no)
+    EditText et_clientMobileNo;
+    @InjectView(R.id.tv_client_mobile_no)
+    TextView tv_clientMobileNo;
     @InjectView(R.id.cb_client_active_status)
     CheckBox cb_clientActiveStatus;
     @InjectView(R.id.tv_submission_date)
@@ -124,6 +128,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
 
                 clientPayload.setFirstname(et_clientFirstName.getEditableText().toString());
                 clientPayload.setLastname(et_clientLastName.getEditableText().toString());
+                clientPayload.setMobileNo(et_clientMobileNo.getEditableText().toString());
                 clientPayload.setActive(cb_clientActiveStatus.isChecked());
                 clientPayload.setActivationDate(dateString);
                 clientPayload.setOfficeId(officeId);
