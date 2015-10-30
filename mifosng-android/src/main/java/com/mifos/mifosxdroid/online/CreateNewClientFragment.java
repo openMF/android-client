@@ -320,6 +320,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
 
     public void onDatePicked(String date) {
         tv_submissionDate.setText(date);
+        tv_dateofbirth.setText(date);
 
     }
     public void inflateDateofBirth() {
