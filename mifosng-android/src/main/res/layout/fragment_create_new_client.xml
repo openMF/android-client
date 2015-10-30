@@ -1,3 +1,8 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -5,9 +10,10 @@
     android:paddingRight="16dp"
     android:orientation="vertical">
 
+
     <TextView
         android:text="First Name :"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,32 +27,97 @@
         android:paddingTop="10dp"
         android:layout_height="wrap_content"
         android:hint="enter client's first name"
-        android:id="@+id/et_client_first_name"/>
-
+        android:id="@+id/et_client_first_name"
+        android:imeOptions="actionNext"
+        />
+    <TextView
+        android:text="Middle Name :"
+        android:textSize="16sp"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_client_middle_name"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:hint="enter client's middle name"
+        android:id="@+id/et_client_middle_name"
+        android:imeOptions="actionNext"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:text="Last Name :"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:id="@+id/tv_client_last_name"
 
         />
-
 
     <EditText
         android:layout_width="match_parent"
         android:paddingTop="10dp"
         android:layout_height="wrap_content"
         android:hint="enter client's last name"
-        android:id="@+id/et_client_last_name"/>
+        android:id="@+id/et_client_last_name"
+        android:imeOptions="actionNext"/>
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:text="Mobile Number :"
+    android:textSize="16sp"
+    android:id="@+id/tv_client_mobile_number"
 
+    />
+    <EditText
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:hint="enter client's mobile number"
+        android:id="@+id/et_client_mobile_no"
+        android:inputType="phone"
+        android:imeOptions="actionNext"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="External Id :"
+        android:textSize="16sp"
+        android:id="@+id/tv_client_external_id"
+
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:hint="enter client's external_id"
+        android:id="@+id/et_client_external_id"
+        android:inputType="phone"
+        android:imeOptions="actionNext"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Date of Birth :"
+        android:textSize="16sp"
+        android:id="@+id/tv_client_dateofbirth"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:textSize="20sp"
+        android:hint="select client's date of birth :"
+        android:id="@+id/tv_dateofbirth"
+        android:imeOptions="actionNext"
+        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:text="Office :"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:id="@+id/tv_office"
 
         />
@@ -57,7 +128,22 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:spinnerMode="dropdown"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Staff :"
+        android:textSize="16sp"
+        android:id="@+id/tv_staff"
 
+        />
+
+    <Spinner
+        android:id="@+id/sp_staff"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
     <CheckBox
         android:id="@+id/cb_client_active_status"
         android:layout_width="match_parent"
@@ -75,7 +161,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-
         android:textSize="20sp"
         android:visibility="gone"
         android:id="@+id/tv_submission_date"
@@ -93,3 +178,4 @@
 
 
 </LinearLayout>
+    </ScrollView>

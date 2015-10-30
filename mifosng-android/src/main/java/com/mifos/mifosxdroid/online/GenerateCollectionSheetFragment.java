@@ -290,8 +290,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
                 }
 
 
-                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, centerNames);
+                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, centerNames);
 
                 centerAdapter.notifyDataSetChanged();
 
