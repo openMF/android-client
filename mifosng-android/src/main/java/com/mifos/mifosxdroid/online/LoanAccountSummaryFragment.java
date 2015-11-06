@@ -14,7 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,8 +45,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -76,58 +76,58 @@ public class LoanAccountSummaryFragment extends Fragment {
     public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
-    ActionBarActivity activity;
+    AppCompatActivity activity;
     SharedPreferences sharedPreferences;
     ActionBar actionBar;
-    @InjectView(R.id.view_status_indicator)
+    @Bind(R.id.view_status_indicator)
     View view_status_indicator;
-    @InjectView(R.id.tv_clientName)
+    @Bind(R.id.tv_clientName)
     TextView tv_clientName;
-    @InjectView(R.id.quickContactBadge_client)
+    @Bind(R.id.quickContactBadge_client)
     QuickContactBadge quickContactBadge;
-    @InjectView(R.id.tv_loan_product_short_name)
+    @Bind(R.id.tv_loan_product_short_name)
     TextView tv_loan_product_short_name;
-    @InjectView(R.id.tv_loanAccountNumber)
+    @Bind(R.id.tv_loanAccountNumber)
     TextView tv_loanAccountNumber;
-    @InjectView(R.id.tv_amount_disbursed)
+    @Bind(R.id.tv_amount_disbursed)
     TextView tv_amount_disbursed;
-    @InjectView(R.id.tv_disbursement_date)
+    @Bind(R.id.tv_disbursement_date)
     TextView tv_disbursement_date;
-    @InjectView(R.id.tv_in_arrears)
+    @Bind(R.id.tv_in_arrears)
     TextView tv_in_arrears;
-    @InjectView(R.id.tv_loan_officer)
+    @Bind(R.id.tv_loan_officer)
     TextView tv_loan_officer;
-    @InjectView(R.id.tv_principal)
+    @Bind(R.id.tv_principal)
     TextView tv_principal;
-    @InjectView(R.id.tv_loan_principal_due)
+    @Bind(R.id.tv_loan_principal_due)
     TextView tv_loan_principal_due;
-    @InjectView(R.id.tv_loan_principal_paid)
+    @Bind(R.id.tv_loan_principal_paid)
     TextView tv_loan_principal_paid;
-    @InjectView(R.id.tv_interest)
+    @Bind(R.id.tv_interest)
     TextView tv_interest;
-    @InjectView(R.id.tv_loan_interest_due)
+    @Bind(R.id.tv_loan_interest_due)
     TextView tv_loan_interest_due;
-    @InjectView(R.id.tv_loan_interest_paid)
+    @Bind(R.id.tv_loan_interest_paid)
     TextView tv_loan_interest_paid;
-    @InjectView(R.id.tv_fees)
+    @Bind(R.id.tv_fees)
     TextView tv_fees;
-    @InjectView(R.id.tv_loan_fees_due)
+    @Bind(R.id.tv_loan_fees_due)
     TextView tv_loan_fees_due;
-    @InjectView(R.id.tv_loan_fees_paid)
+    @Bind(R.id.tv_loan_fees_paid)
     TextView tv_loan_fees_paid;
-    @InjectView(R.id.tv_penalty)
+    @Bind(R.id.tv_penalty)
     TextView tv_penalty;
-    @InjectView(R.id.tv_loan_penalty_due)
+    @Bind(R.id.tv_loan_penalty_due)
     TextView tv_loan_penalty_due;
-    @InjectView(R.id.tv_loan_penalty_paid)
+    @Bind(R.id.tv_loan_penalty_paid)
     TextView tv_loan_penalty_paid;
-    @InjectView(R.id.tv_total)
+    @Bind(R.id.tv_total)
     TextView tv_total;
-    @InjectView(R.id.tv_total_due)
+    @Bind(R.id.tv_total_due)
     TextView tv_total_due;
-    @InjectView(R.id.tv_total_paid)
+    @Bind(R.id.tv_total_paid)
     TextView tv_total_paid;
-    @InjectView(R.id.bt_processLoanTransaction)
+    @Bind(R.id.bt_processLoanTransaction)
     Button bt_processLoanTransaction;
     // Action Identifier in the onProcessTransactionClicked Method
     private int processLoanTransactionAction = -1;
@@ -163,11 +163,11 @@ public class LoanAccountSummaryFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false);
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(LoanAccountSummaryFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
         inflateLoanAccountSummary();
 

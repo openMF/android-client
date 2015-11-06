@@ -37,15 +37,15 @@ import java.util.Map;
 import java.util.Set;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 
 public class ClientFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     final private String tag = getClass().getSimpleName();
-    @InjectView(R.id.lv_clients)
+    @Bind(R.id.lv_clients)
     ListView lv_clients;
-    @InjectView(R.id.tv_total_amt_paid)
+    @Bind(R.id.tv_total_amt_paid)
     TextView tv_total_amt_paid;
     private ClientListAdapter adapter = null;
     private long groupId;
@@ -54,7 +54,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_offline_client, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         groupId = getArguments().getLong("group_id", 0);
         setAdapter();

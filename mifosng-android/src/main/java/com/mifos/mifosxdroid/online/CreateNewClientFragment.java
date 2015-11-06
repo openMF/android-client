@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -53,21 +53,21 @@ import retrofit.client.Response;
 public class CreateNewClientFragment extends Fragment implements MFDatePicker.OnDatePickListener {
 
 
-    @InjectView(R.id.et_client_first_name)
+    @Bind(R.id.et_client_first_name)
     EditText et_clientFirstName;
-    @InjectView(R.id.tv_client_first_name)
+    @Bind(R.id.tv_client_first_name)
     TextView tv_clientFirstName;
-    @InjectView(R.id.et_client_last_name)
+    @Bind(R.id.et_client_last_name)
     EditText et_clientLastName;
-    @InjectView(R.id.tv_client_last_name)
+    @Bind(R.id.tv_client_last_name)
     TextView tv_clientLastName;
-    @InjectView(R.id.cb_client_active_status)
+    @Bind(R.id.cb_client_active_status)
     CheckBox cb_clientActiveStatus;
-    @InjectView(R.id.tv_submission_date)
+    @Bind(R.id.tv_submission_date)
     TextView tv_submissionDate;
-    @InjectView(R.id.sp_offices)
+    @Bind(R.id.sp_offices)
     Spinner sp_offices;
-    @InjectView(R.id.bt_submit)
+    @Bind(R.id.bt_submit)
     Button bt_submit;
 
     int officeId;
@@ -98,7 +98,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         inflateOfficeSpinner();
         inflateSubmissionDate();
 

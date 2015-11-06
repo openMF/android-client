@@ -14,7 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,8 +47,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -61,7 +61,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    ActionBarActivity activity;
+    AppCompatActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -77,18 +77,18 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
     List<PaymentTypeOption> paymentTypeOptionList;
     HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
 
-    @InjectView(R.id.tv_clientName) TextView tv_clientName;
-    @InjectView(R.id.tv_loan_product_short_name) TextView tv_loanProductShortName;
-    @InjectView(R.id.tv_loanAccountNumber) TextView tv_loanAccountNumber;
-    @InjectView(R.id.tv_in_arrears) TextView tv_inArrears;
-    @InjectView(R.id.tv_amount_due) TextView tv_amountDue;
-    @InjectView(R.id.tv_repayment_date) TextView tv_repaymentDate;
-    @InjectView(R.id.et_amount) EditText et_amount;
-    @InjectView(R.id.et_additional_payment) EditText et_additionalPayment;
-    @InjectView(R.id.et_fees) EditText et_fees;
-    @InjectView(R.id.tv_total) TextView tv_total;
-    @InjectView(R.id.sp_payment_type) Spinner sp_paymentType;
-    @InjectView(R.id.bt_paynow) Button bt_paynow;
+    @Bind(R.id.tv_clientName) TextView tv_clientName;
+    @Bind(R.id.tv_loan_product_short_name) TextView tv_loanProductShortName;
+    @Bind(R.id.tv_loanAccountNumber) TextView tv_loanAccountNumber;
+    @Bind(R.id.tv_in_arrears) TextView tv_inArrears;
+    @Bind(R.id.tv_amount_due) TextView tv_amountDue;
+    @Bind(R.id.tv_repayment_date) TextView tv_repaymentDate;
+    @Bind(R.id.et_amount) EditText et_amount;
+    @Bind(R.id.et_additional_payment) EditText et_additionalPayment;
+    @Bind(R.id.et_fees) EditText et_fees;
+    @Bind(R.id.tv_total) TextView tv_total;
+    @Bind(R.id.sp_payment_type) Spinner sp_paymentType;
+    @Bind(R.id.bt_paynow) Button bt_paynow;
 
     private OnFragmentInteractionListener mListener;
 
@@ -136,12 +136,12 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
         // Inflate the layout for this fragment
 
         rootView = inflater.inflate(R.layout.fragment_loan_repayment, container, false);
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(LoanRepaymentFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle("Loan Repayment");
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
         inflateUI();
 

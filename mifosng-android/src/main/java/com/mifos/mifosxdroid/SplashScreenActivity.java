@@ -11,7 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +28,7 @@ import com.mifos.utils.MifosApplication;
  * This is the First Activity which can be used for initial checks, inits at app Startup
  */
 
-public class SplashScreenActivity extends ActionBarActivity {
+public class SplashScreenActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     String authenticationToken;
