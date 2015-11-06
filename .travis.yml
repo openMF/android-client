@@ -4,6 +4,7 @@ android:
   components:
     - build-tools-23.0.1
     - extra-android-support
+    - extra-google-google_play_services
     - extra-android-m2repository
     - android-23
 
