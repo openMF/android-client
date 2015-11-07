@@ -47,6 +47,7 @@ public class OfflineCenterInputActivity extends ActionBarActivity implements Dat
         }
         setContentView(R.layout.activity_center_details);
         ButterKnife.inject(this);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
