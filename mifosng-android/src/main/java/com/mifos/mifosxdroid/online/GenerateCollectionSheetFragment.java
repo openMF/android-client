@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,8 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -52,18 +52,18 @@ public class GenerateCollectionSheetFragment extends Fragment {
     public static final String ASCENDING = "ASC";
     public static final String ORDER_BY_FIELD_NAME = "name";
     public static final String STAFF_ID = "staffId";
-    @InjectView(R.id.sp_branch_offices)
+    @Bind(R.id.sp_branch_offices)
     Spinner sp_offices;
-    @InjectView(R.id.sp_loan_officers)
+    @Bind(R.id.sp_loan_officers)
     Spinner sp_loan_officers;
-    @InjectView(R.id.sp_centers)
+    @Bind(R.id.sp_centers)
     Spinner sp_centers;
-    @InjectView(R.id.sp_groups)
+    @Bind(R.id.sp_groups)
     Spinner sp_groups;
 
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
-    ActionBarActivity activity;
+    AppCompatActivity activity;
     SharedPreferences sharedPreferences;
     ActionBar actionBar;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
@@ -95,12 +95,12 @@ public class GenerateCollectionSheetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_generate_collection_sheet, container, false);
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(GenerateCollectionSheetFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
         inflateOfficeSpinner();
 

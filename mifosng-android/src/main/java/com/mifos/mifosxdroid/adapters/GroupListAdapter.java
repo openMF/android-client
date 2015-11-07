@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * Created by ishankhanna on 28/06/14.
@@ -89,12 +89,12 @@ public class GroupListAdapter extends BaseAdapter{
 
     public static class ReusableGroupViewHolder {
 
-        @InjectView(R.id.tv_group_name) TextView tv_groupName;
-        @InjectView(R.id.tv_office_name) TextView tv_officeName;
-        @InjectView(R.id.view_status_indicator) View view_statusIndicator;
-        @InjectView(R.id.tv_status_text) TextView tv_statusText;
+        @Bind(R.id.tv_group_name) TextView tv_groupName;
+        @Bind(R.id.tv_office_name) TextView tv_officeName;
+        @Bind(R.id.view_status_indicator) View view_statusIndicator;
+        @Bind(R.id.tv_status_text) TextView tv_statusText;
 
-        public ReusableGroupViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableGroupViewHolder(View view) { ButterKnife.bind(this, view); }
 
 
     }

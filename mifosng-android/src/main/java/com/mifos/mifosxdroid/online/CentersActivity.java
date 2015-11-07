@@ -7,7 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,7 +19,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class CentersActivity extends ActionBarActivity
+public class CentersActivity extends AppCompatActivity
         implements CenterListFragment.OnFragmentInteractionListener,
                    GroupListFragment.OnFragmentInteractionListener{
 
@@ -27,7 +27,7 @@ public class CentersActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_centers);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
         CenterListFragment centerListFragment = new CenterListFragment();

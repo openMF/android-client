@@ -19,7 +19,7 @@ import com.mifos.objects.client.Client;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * Created by ishankhanna on 27/02/14.
@@ -76,12 +76,12 @@ public class ClientNameListAdapter extends BaseAdapter {
 
      static class ReusableViewHolder{
 
-         @InjectView(R.id.tv_clientName) TextView tv_clientName;
-         @InjectView(R.id.tv_clientAccountNumber) TextView tv_clientAccountNumber;
-         @InjectView(R.id.quickContactBadge) QuickContactBadge quickContactBadge;
+         @Bind(R.id.tv_clientName) TextView tv_clientName;
+         @Bind(R.id.tv_clientAccountNumber) TextView tv_clientAccountNumber;
+         @Bind(R.id.quickContactBadge) QuickContactBadge quickContactBadge;
 
          public ReusableViewHolder(View view) {
-             ButterKnife.inject(this, view);
+             ButterKnife.bind(this, view);
          }
 
     }

@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +52,7 @@ public class DataTableRowDialogFragment extends DialogFragment{
     private DataTable dataTable;
     private int entityId;
 
-    ActionBarActivity activity;
+    AppCompatActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -101,10 +101,10 @@ public class DataTableRowDialogFragment extends DialogFragment{
 
         rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.ll_data_table_entry_form);
 
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle(dataTable.getRegisteredTableName());
 

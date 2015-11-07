@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,7 +46,7 @@ public class CenterListFragment extends Fragment {
     private View rootView;
     private ListView lv_centers_list;
     private SharedPreferences sharedPreferences;
-    private ActionBarActivity actionBarActivity;
+    private AppCompatActivity appCompatActivity;
     private List<Center> centers;
     private SafeUIBlockingUtility safeUIBlockingUtility;
     private CentersListAdapter centersListAdapter;
@@ -70,20 +70,20 @@ public class CenterListFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_centers_list,container,false);
 
-        actionBarActivity = (ActionBarActivity) getActivity();
+        appCompatActivity = (AppCompatActivity) getActivity();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(actionBarActivity);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appCompatActivity);
 
         setupUI();
 
-        safeUIBlockingUtility = new SafeUIBlockingUtility(actionBarActivity);
+        safeUIBlockingUtility = new SafeUIBlockingUtility(appCompatActivity);
 
         safeUIBlockingUtility.safelyBlockUI();
         ((MifosApplication)getActivity().getApplication()).api.centerService.getAllCenters(new Callback<List<Center>>() {
             @Override
             public void success(final List<Center> centers, Response response) {
 
-                centersListAdapter = new CentersListAdapter(actionBarActivity, centers);
+                centersListAdapter = new CentersListAdapter(appCompatActivity, centers);
 
                 lv_centers_list.setAdapter(centersListAdapter);
 

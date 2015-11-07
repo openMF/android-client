@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 
 public class LoanFragment extends Fragment
 {
-    @InjectView(R.id.lv_loan)
+    @Bind(R.id.lv_loan)
     ListView lv_loans;
     LoanListAdapter adapter = null;
     private int clientId;
@@ -39,7 +39,7 @@ public class LoanFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_loan, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         getClientId();
         setAdapter();
         return view;
