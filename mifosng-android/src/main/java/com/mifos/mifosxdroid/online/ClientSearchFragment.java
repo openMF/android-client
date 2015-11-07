@@ -5,7 +5,9 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,7 +81,6 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
         ButterKnife.inject(this, rootView);
 
 
-
         return rootView;
     }
 
@@ -106,30 +107,40 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
             @Override
             public void success(List<SearchedEntity> searchedEntities, Response response) {
 
-                Iterator<SearchedEntity> iterator = searchedEntities.iterator();
-                clientNames.clear();
-                clientIds.clear();
-                while (iterator.hasNext()) {
-                    SearchedEntity searchedEntity = iterator.next();
-                    clientNames.add("#" + searchedEntity.getEntityId() + " - " + searchedEntity.getEntityName());
-                    clientIds.add(searchedEntity.getEntityId());
+                if (!searchedEntities.isEmpty()) {
+                    Iterator<SearchedEntity> iterator = searchedEntities.iterator();
+                    clientNames.clear();
+                    clientIds.clear();
+                    while (iterator.hasNext()) {
+                        SearchedEntity searchedEntity = iterator.next();
+                        clientNames.add("#" + searchedEntity.getEntityId() + " - " + searchedEntity.getEntityName());
+                        clientIds.add(searchedEntity.getEntityId());
+                    }
+
+                    String[] clientNamesArrayForAdapter = clientNames.toArray(new String[clientNames.size()]);
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                            android.R.layout.simple_list_item_1, clientNamesArrayForAdapter);
+
+                    lv_searchResults.setAdapter(adapter);
+                    lv_searchResults.setOnItemClickListener(ClientSearchFragment.this);
+
+                    //If the search query returned one or more results close the keyboard
+                    hideKeyboard();
+                } else {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            getActivity());
+                    alertDialogBuilder.setTitle("Message");
+                    alertDialogBuilder
+                            .setMessage("No results found for entered query")
+                            .setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    }).create().show();
+
                 }
-
-                String[] clientNamesArrayForAdapter = clientNames.toArray(new String[clientNames.size()]);
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_list_item_1, clientNamesArrayForAdapter);
-
-                lv_searchResults.setAdapter(adapter);
-                lv_searchResults.setOnItemClickListener(ClientSearchFragment.this);
-
-                //If the search query returned one or more results close the keyboard
-                hideKeyboard();
-
-
                 safeUIBlockingUtility.safelyUnBlockUI();
-
-
             }
 
             @Override
@@ -164,14 +175,14 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        try{
+        try {
             String queryString = et_searchById.getEditableText().toString();
 
-            if(queryString != null && !(queryString.equals(""))) {
-                outState.putString(TAG+et_searchById.getId(),queryString);
+            if (queryString != null && !(queryString.equals(""))) {
+                outState.putString(TAG + et_searchById.getId(), queryString);
             }
 
-        }catch(NullPointerException npe){
+        } catch (NullPointerException npe) {
             //Looks like edit text didn't get initialized properly
         }
 
@@ -189,7 +200,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
 
-            String queryString = savedInstanceState.getString(TAG+et_searchById.getId());
+            String queryString = savedInstanceState.getString(TAG + et_searchById.getId());
 
             if (queryString != null && !(queryString.equals(""))) {
                 et_searchById.setText(queryString);

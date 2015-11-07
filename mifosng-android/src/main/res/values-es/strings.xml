@@ -63,6 +63,7 @@
     <string name="summary">Resumen</string>
     <string name="search">Buscar</string>
     <string name="search_results">Resultados de la búsqueda</string>
+    <string name="client_search">Búsqueda Cliente</string>
     <string name="save">Guardar</string>
     <string name="name">Nombre</string>
     <string name="meeting_date">Fecha de reunión</string>
