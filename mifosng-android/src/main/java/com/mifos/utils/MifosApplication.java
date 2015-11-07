@@ -5,6 +5,9 @@
 
 package com.mifos.utils;
 
+import android.content.Context;
+
+import com.mifos.mifosxdroid.manager.SpManager;
 import com.mifos.services.API;
 import com.orm.SugarApp;
 
@@ -13,6 +16,18 @@ import com.orm.SugarApp;
  */
 public class MifosApplication extends SugarApp {
 
-    public API api;
+    public static API api;
+    public static final SpManager spManager = new SpManager();
+    private static Context context;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = this;
+        spManager.init(this);
+    }
+
+    public static Context getContext() {
+        return context;
+    }
 }

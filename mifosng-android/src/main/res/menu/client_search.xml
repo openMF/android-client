@@ -24,19 +24,11 @@
         android:title="@string/center_list"
         app:showAsAction="never" />
 
-    <!--
     <item
-        android:id="@+id/item_collection_sheet"
+        android:id="@+id/item_offline_centers"
         android:enabled="true"
-        android:title="@string/collection_sheet"
+        android:title="@string/offline"
         app:showAsAction="never" />
-    -->
-
-    <item
-            android:id="@+id/item_offline_centers"
-            android:enabled="true"
-            android:title="@string/offline"
-            app:showAsAction="never"/>
 
     <item
         android:id="@+id/logout"

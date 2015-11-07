@@ -9,13 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.base.BaseActivity;
 import com.mifos.utils.FragmentConstants;
 
 /**
@@ -23,7 +23,7 @@ import com.mifos.utils.FragmentConstants;
  */
 
 
-public class DashboardFragmentActivity extends AppCompatActivity {
+public class DashboardFragmentActivity extends BaseActivity {
 
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
     public static Context context;
@@ -66,7 +66,7 @@ public class DashboardFragmentActivity extends AppCompatActivity {
                 startActivity(new Intent(this, OfflineCenterInputActivity.class));
                 break;
             case R.id.logout:
-                startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));
+                logout();
                 break;
             case R.id.mItem_create_new_client:
                 openCreateClient();

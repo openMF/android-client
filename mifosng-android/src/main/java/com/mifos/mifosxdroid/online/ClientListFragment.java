@@ -87,7 +87,7 @@ public class ClientListFragment extends Fragment {
         context = getActivity().getApplicationContext();
         ButterKnife.bind(this, rootView);
 
-        swipeRefreshLayout.setColorScheme(R.color.blue_light,
+        swipeRefreshLayout.setColorScheme(getResources().getColor(R.color.blue_light),
                 R.color.green_light,
                 R.color.orange_light,
                 R.color.red_light);
@@ -141,7 +141,7 @@ public class ClientListFragment extends Fragment {
 
             swipeRefreshLayout.setRefreshing(true);
             //Get a Client List
-            ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(new Callback<Page<Client>>() {
+            ((MifosApplication) getActivity().getApplication()).api.clientService.listAllClients(new Callback<Page<Client>>() {
                 @Override
                 public void success(Page<Client> page, Response response) {
                     clientList = page.getPageItems();
@@ -201,7 +201,7 @@ public class ClientListFragment extends Fragment {
                     offset += limit + 1;
                     swipeRefreshLayout.setRefreshing(true);
 
-                    ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
+                    ((MifosApplication) getActivity().getApplication()).api.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
                         @Override
                         public void success(Page<Client> clientPage, Response response) {
 
