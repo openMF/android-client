@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
@@ -10,45 +9,56 @@
 
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/et_search_by_id"
-        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="8dp"
-        android:hint="@string/client_search_hint"/>
+        android:layout_below="@+id/tv_title_client_search"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/client_search_hint" />
 
     <Button
+        android:id="@+id/bt_searchClient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/search"
-        android:id="@+id/bt_searchClient"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/et_search_by_id"
         android:layout_margin="8dp"
-        android:layout_below="@+id/et_search_by_id" />
+        android:layout_marginRight="10dp"
+        android:text="@string/search" />
 
     <TextView
+        android:id="@+id/tv_title_search_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/search_results"
-        android:id="@+id/tv_title_search_results"
+        android:layout_alignLeft="@+id/tv_title_client_search"
+        android:layout_alignStart="@+id/tv_title_client_search"
         android:layout_below="@+id/bt_searchClient"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="8dp"/>
+        android:text="@string/search_results"
+        android:textSize="20sp" />
 
     <ListView
+        android:id="@+id/lv_searchResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_searchResults"
-        android:layout_below="@+id/tv_title_search_results"
         android:layout_alignParentLeft="true"
-        android:layout_margin="8dp"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tv_title_search_results" />
+
+    <TextView
+        android:id="@+id/tv_title_client_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/client_search"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp" />
 
 
 </RelativeLayout>

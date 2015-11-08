@@ -85,8 +85,12 @@
             android:label="@string/title_activity_client"
             android:screenOrientation="portrait"></activity>
         <activity
+
             android:name=".OfflineCenterInputActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:parentActivityName=".online.DashboardFragmentActivity">
+        </activity>
+
         <activity
             android:name=".online.CentersActivity"
             android:label="@string/title_activity_centers"

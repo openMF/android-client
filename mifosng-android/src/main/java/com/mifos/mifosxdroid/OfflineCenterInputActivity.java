@@ -47,7 +47,7 @@ public class OfflineCenterInputActivity extends AppCompatActivity implements Dat
         }
         setContentView(R.layout.activity_center_details);
         ButterKnife.bind(this);
-
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private boolean isCenterIdAvailable() {
