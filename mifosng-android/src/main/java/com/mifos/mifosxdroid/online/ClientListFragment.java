@@ -82,6 +82,7 @@ public class ClientListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();

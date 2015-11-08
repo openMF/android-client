@@ -396,7 +396,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(View.VISIBLE);
-        ((MifosApplication) getActivity().getApplication()).api.clientService.uploadClientImage(clientId,
+        ((MifosApplication)getActivity().getApplication()).api.clientService.uploadClientImage(clientId,
                 new TypedFile("image/png", pngFile),
                 new Callback<Response>() {
 
@@ -464,6 +464,9 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
                         imageLoadingAsyncTask = new ImageLoadingAsyncTask();
                         imageLoadingAsyncTask.execute(client.getId());
 
+                    }else{
+                        iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+                        pb_imageProgressBar.setVisibility(View.GONE);
                     }
 
                     iv_clientImage.setOnClickListener(new View.OnClickListener() {
@@ -845,9 +848,8 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
             String mInstanceUrl = pref.getString(Constants.INSTANCE_URL_KEY,
                     getString(R.string.default_instance_url));
 
-            String url = Constants.PROTOCOL_HTTPS
-                    + mInstanceUrl
-                    + Constants.API_PATH + "/"
+            String url = mInstanceUrl
+                    + "/"
                     + "clients/"
                     + integers[0]
                     + "/images?maxHeight=120&maxWidth=120";

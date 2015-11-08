@@ -70,6 +70,14 @@ public class DashboardFragmentActivity extends AppCompatActivity {
                 break;
             case R.id.mItem_create_new_client:
                 openCreateClient();
+                break;
+            case android.R.id.home:
+                ClientSearchFragment clientSearchFragment =(ClientSearchFragment)
+                        getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_CLIENT_SEARCH);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.dashboard_global_container, clientSearchFragment, FragmentConstants.FRAG_CLIENT_SEARCH);
+                fragmentTransaction.commit();
+                break;
 
             default: //DO NOTHING
                 break;

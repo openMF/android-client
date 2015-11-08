@@ -126,6 +126,7 @@
     <string name="spinner_staff">Selecciona un responsable de crèdits</string>
     <string name="staff_id">ID de l\'empleat</string>
     <string name="staff_name">Nom de l\'empleat</string>
+    <string name="staff">Personal</string>
     <string name="summary">Resum</string>
     <string name="sync">Sincronitzar</string>
     <string name="tap_to_select_date">Prem per seleccionar una data</string>
