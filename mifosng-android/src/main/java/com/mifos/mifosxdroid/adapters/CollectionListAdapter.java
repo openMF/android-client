@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 17/07/14.
@@ -162,28 +162,28 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
 
     public static class MifosGroupReusableViewHolder {
 
-        @Bind(R.id.tv_groupName)
+        @InjectView(R.id.tv_groupName)
         TextView tv_groupName;
-        @Bind(R.id.tv_groupTotal)
+        @InjectView(R.id.tv_groupTotal)
         TextView tv_groupTotal;
 
         public MifosGroupReusableViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ButterKnife.inject(this, view);
         }
     }
 
     public static class ClientReusableViewHolder {
 
-        @Bind(R.id.tv_clientId)
+        @InjectView(R.id.tv_clientId)
         TextView tv_clientId;
-        @Bind(R.id.tv_clientName)
+        @InjectView(R.id.tv_clientName)
         TextView tv_clientName;
-        @Bind(R.id.tv_clientTotal)
+        @InjectView(R.id.tv_clientTotal)
         TextView tv_clientTotal;
-        @Bind(R.id.lv_loans)
+        @InjectView(R.id.lv_loans)
         ListView lv_loans;
         public ClientReusableViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ButterKnife.inject(this, view);
         }
 
     }

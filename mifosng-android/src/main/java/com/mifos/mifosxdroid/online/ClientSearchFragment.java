@@ -33,7 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -43,11 +43,11 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
     private static final String TAG = "Client Search Fragment";
 
-    @Bind(R.id.et_search_by_id)
+    @InjectView(R.id.et_search_by_id)
     EditText et_searchById;
-    @Bind(R.id.bt_searchClient)
+    @InjectView(R.id.bt_searchClient)
     Button bt_searchClient;
-    @Bind(R.id.lv_searchResults)
+    @InjectView(R.id.lv_searchResults)
     ListView lv_searchResults;
 
     View rootView;
@@ -79,7 +79,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
                              Bundle savedInstanceState) {
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
         rootView = inflater.inflate(R.layout.fragment_client_search, null);
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
 
 
         return rootView;

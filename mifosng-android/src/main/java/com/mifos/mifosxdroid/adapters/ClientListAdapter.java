@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.db.Loan;
 
@@ -91,15 +91,15 @@ public class ClientListAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        @Bind(R.id.tv_clientName)
+        @InjectView(R.id.tv_clientName)
         TextView tv_client_name;
-        @Bind(R.id.tv_product_short_name)
+        @InjectView(R.id.tv_product_short_name)
         TextView tv_product_short_name;
-        @Bind(R.id.et_amt_paid)
+        @InjectView(R.id.et_amt_paid)
         EditText et_amt_paid;
 
         public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ButterKnife.inject(this, view);
         }
 
     }

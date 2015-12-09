@@ -7,11 +7,11 @@ package com.mifos.mifosxdroid;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 
 import com.mifos.mifosxdroid.fragments.GroupFragment;
 
-public class GroupActivity extends AppCompatActivity
+public class GroupActivity extends ActionBarActivity
 {
     public void onCreate(Bundle savedInstanceState)
     {

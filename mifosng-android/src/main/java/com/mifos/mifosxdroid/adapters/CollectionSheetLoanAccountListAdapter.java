@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 21/07/14.
@@ -113,15 +113,15 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
 
     public static class ReusableViewHolder {
 
-        @Bind(R.id.tv_loan_shortname)
+        @InjectView(R.id.tv_loan_shortname)
         TextView tv_loanShortName;
-        @Bind(R.id.tv_amountDue)
+        @InjectView(R.id.tv_amountDue)
         TextView tv_amountDue;
-        @Bind(R.id.et_amountPaid)
+        @InjectView(R.id.et_amountPaid)
         EditText et_amountPaid;
 
         public ReusableViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ButterKnife.inject(this, view);
         }
     }
 

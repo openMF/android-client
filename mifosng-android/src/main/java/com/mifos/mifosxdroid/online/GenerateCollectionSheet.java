@@ -6,14 +6,14 @@
 package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
 
 
-public class GenerateCollectionSheet extends AppCompatActivity {
+public class GenerateCollectionSheet extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

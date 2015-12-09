@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 02/07/14.
@@ -89,14 +89,14 @@ public class DocumentListAdapter extends BaseAdapter {
 
     public static class ReusableDocumentViewHolder {
 
-        @Bind(R.id.tv_doc_name)
+        @InjectView(R.id.tv_doc_name)
         TextView tv_doc_name;
-        @Bind(R.id.tv_doc_descrption)
+        @InjectView(R.id.tv_doc_descrption)
         TextView tv_doc_description;
-        @Bind(R.id.tv_doc_location_icon)
+        @InjectView(R.id.tv_doc_location_icon)
         TextView tv_doc_location_icon;
 
-        public ReusableDocumentViewHolder(View view) { ButterKnife.bind(this, view); }
+        public ReusableDocumentViewHolder(View view) { ButterKnife.inject(this, view); }
 
     }
 }

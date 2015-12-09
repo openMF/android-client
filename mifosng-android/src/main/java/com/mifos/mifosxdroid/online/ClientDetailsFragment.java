@@ -21,7 +21,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,10 +41,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationClient;
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
@@ -81,15 +80,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 
-public class ClientDetailsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class ClientDetailsFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
     /*
     * Define a request code to send to Google Play services
     * This code is returned in Activity.onActivityResult
@@ -108,33 +108,34 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
     private static final String TAG = "ClientDetailsFragment";
     public static int clientId;
     public static List<DataTable> clientDataTables = new ArrayList<DataTable>();
-    @Bind(R.id.tv_fullName)
+    @InjectView(R.id.tv_fullName)
     TextView tv_fullName;
-    @Bind(R.id.tv_accountNumber)
+    @InjectView(R.id.tv_accountNumber)
     TextView tv_accountNumber;
-    @Bind(R.id.tv_externalId)
+    @InjectView(R.id.tv_externalId)
     TextView tv_externalId;
-    @Bind(R.id.tv_activationDate)
+    @InjectView(R.id.tv_activationDate)
     TextView tv_activationDate;
-    @Bind(R.id.tv_office)
+    @InjectView(R.id.tv_office)
     TextView tv_office;
-    @Bind(R.id.tv_group)
+    @InjectView(R.id.tv_group)
     TextView tv_group;
-    @Bind(R.id.tv_loanOfficer)
+    @InjectView(R.id.tv_loanOfficer)
     TextView tv_loanOfficer;
-    @Bind(R.id.tv_loanCycle)
+    @InjectView(R.id.tv_loanCycle)
     TextView tv_loanCycle;
-    @Bind(R.id.iv_clientImage)
+    @InjectView(R.id.iv_clientImage)
     ImageView iv_clientImage;
-    @Bind(R.id.pb_imageProgressBar)
+    @InjectView(R.id.pb_imageProgressBar)
     ProgressBar pb_imageProgressBar;
+
 
 
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    AppCompatActivity activity;
+    ActionBarActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -142,19 +143,18 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
     private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
-
-    private GoogleApiClient mGoogleApiClient;
+    // Null if play services are not available.
+    private LocationClient mLocationClient;
     // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
     private AccountAccordion accountAccordion;
 
-    /**
-     * Image Loading Task for this instance
-     * Creating an instance object because if the fragment detaches itself from the activity
-     * The task might throw IllegalStateException
-     * So it is important to kill the task before the fragment detaches itself from the activity
-     */
+    /**Image Loading Task for this instance
+      Creating an instance object because if the fragment detaches itself from the activity
+      The task might throw IllegalStateException
+      So it is important to kill the task before the fragment detaches itself from the activity
+    */
     private ImageLoadingAsyncTask imageLoadingAsyncTask;
 
     public ClientDetailsFragment() {
@@ -185,7 +185,16 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
         //Necessary Call to add and update the Menu in a Fragment
         setHasOptionsMenu(true);
+
         capturedClientImageFile = new File(getActivity().getExternalCacheDir(), "client_image.png");
+
+        // Initialize location client only if play services are available.
+        if (servicesConnected()) {
+            mLocationClient = new LocationClient(getActivity(), this, this);
+        } else {
+            mLocationClient = null;
+            locationAvailable.set(false);
+        }
     }
 
     @Override
@@ -194,11 +203,11 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
         // Inflate the layout for this fragment
 
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
-        activity = (AppCompatActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(ClientDetailsFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
         inflateClientInformation();
 
         return rootView;
@@ -218,7 +227,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
     @Override
     public void onDetach() {
 
-        if (imageLoadingAsyncTask != null) {
+        if(imageLoadingAsyncTask != null) {
 
             if (!imageLoadingAsyncTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
                 imageLoadingAsyncTask.cancel(true);
@@ -275,8 +284,8 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
         menu.clear();
         MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
         mItemSearchClient.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
-                .colorRes(R.color.black)
-                .actionBarSize());
+        .colorRes(R.color.black)
+        .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -363,7 +372,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
     }
 
     public void deleteClientImage() {
-        ((MifosApplication) getActivity().getApplication()).api.clientService.deleteClientImage(clientId, new Callback<Response>() {
+        ((MifosApplication)getActivity().getApplication()).api.clientService.deleteClientImage(clientId, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Toast.makeText(activity, "Image deleted", Toast.LENGTH_SHORT).show();
@@ -389,10 +398,9 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
     /**
      * A service to upload the image of the client.
-     *
      * @param pngFile - PNG images supported at the moment
      */
-    private void uploadImage(File pngFile) {
+    private void uploadImage(File  pngFile) {
 
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(View.VISIBLE);
@@ -427,7 +435,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        ((MifosApplication) getActivity().getApplication()).api.clientService.getClient(clientId, new Callback<Client>() {
+        ((MifosApplication)getActivity().getApplication()).api.clientService.getClient(clientId, new Callback<Client>() {
             @Override
             public void success(final Client client, Response response) {
 
@@ -447,7 +455,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
                         String dateString = df.format(date);
                         tv_activationDate.setText(dateString);
 
-                    } catch (IndexOutOfBoundsException e) {
+                    }catch (IndexOutOfBoundsException e) {
                         Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
                         tv_activationDate.setText("");
                     } catch (ParseException e) {
@@ -522,7 +530,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        ((MifosApplication) getActivity().getApplication()).api.clientAccountsService.getAllAccountsOfClient(clientId, new Callback<ClientAccounts>() {
+        ((MifosApplication)getActivity().getApplication()).api.clientAccountsService.getAllAccountsOfClient(clientId, new Callback<ClientAccounts>() {
             @Override
             public void success(final ClientAccounts clientAccounts, Response response) {
 
@@ -590,7 +598,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
     public void inflateDataTablesList() {
 
         safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication) getActivity().getApplication()).api.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
+        ((MifosApplication)getActivity().getApplication()).api.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
@@ -622,7 +630,8 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
      */
     boolean servicesConnected() {
         // Check that Google Play services is available
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+        int resultCode =
+                GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
 
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
@@ -644,12 +653,11 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
     @Override
     public void onStart() {
         super.onStart();
+
         // Connect the client.
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        if (mLocationClient != null) {
+            mLocationClient.connect();
+        }
     }
 
     /**
@@ -660,29 +668,30 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
     @Override
     public void onStop() {
         // Disconnecting the client invalidates it.
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.disconnect();
+        if (mLocationClient != null) {
+            mLocationClient.disconnect();
         }
+
         super.onStop();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
         locationAvailable.set(true);
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
         Log.d(getActivity().getLocalClassName(), "Connected to location services");
         try {
-            Log.d(getActivity().getLocalClassName(), "Current location: " + mLastLocation.toString());
+            Log.d(getActivity().getLocalClassName(), "Current location: "
+                    + mLocationClient.getLastLocation().toString());
         } catch (NullPointerException e) {
             //Location client is Null
         }
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
+    public void onDisconnected() {
         locationAvailable.set(false);
         Log.d(getActivity().getLocalClassName(), "Disconnected from location services");
+
     }
 
     @Override
@@ -725,11 +734,10 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
         try {
 
             if (locationAvailable.get()) {
-                final Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                ;
+                final Location location = mLocationClient.getLastLocation();
 
 
-                ((MifosApplication) getActivity().getApplication()).api.gpsCoordinatesService.setGpsCoordinates(clientId,
+                ((MifosApplication)getActivity().getApplication()).api.gpsCoordinatesService.setGpsCoordinates(clientId,
                         new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                         new Callback<GpsCoordinatesResponse>() {
                             @Override
@@ -750,7 +758,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
                                  */
                                 if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
 
-                                    ((MifosApplication) getActivity().getApplication()).api.gpsCoordinatesService.updateGpsCoordinates(clientId,
+                                    ((MifosApplication)getActivity().getApplication()).api.gpsCoordinatesService.updateGpsCoordinates(clientId,
                                             new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                                             new Callback<GpsCoordinatesResponse>() {
                                                 @Override
@@ -813,11 +821,6 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
     public interface OnFragmentInteractionListener {
 
         public void loadLoanAccountSummary(int loanAccountNumber);
@@ -860,7 +863,7 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
 
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
-                httpURLConnection.setRequestProperty(((MifosApplication) getActivity().getApplication()).api.HEADER_AUTHORIZATION, authToken);
+                httpURLConnection.setRequestProperty(((MifosApplication)getActivity().getApplication()).api.HEADER_AUTHORIZATION, authToken);
                 httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();
@@ -916,19 +919,19 @@ public class ClientDetailsFragment extends Fragment implements GoogleApiClient.C
             }
 
             public TextView getTextView(Activity context) {
-                return (TextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts);
+                return (TextView)getSectionView(context).findViewById(R.id.tv_toggle_accounts);
             }
 
             public TextView getIconView(Activity context) {
-                return (TextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts_icon);
+                return (TextView)getSectionView(context).findViewById(R.id.tv_toggle_accounts_icon);
             }
 
             public ListView getListView(Activity context) {
-                return (ListView) getSectionView(context).findViewById(R.id.lv_accounts);
+                return (ListView)getSectionView(context).findViewById(R.id.lv_accounts);
             }
 
             public TextView getCountView(Activity context) {
-                return (TextView) getSectionView(context).findViewById(R.id.tv_count_accounts);
+                return (TextView)getSectionView(context).findViewById(R.id.tv_count_accounts);
             }
 
             public View getSectionView(Activity context) {

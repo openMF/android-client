@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -63,20 +63,20 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
     public static final String TAG = "Center List Fragment";
     public static final String CENTER_ID = "offline_center_id";
     private final List<MeetingCenter> centerList = new ArrayList<MeetingCenter>();
-    @Bind(R.id.lv_center)
+    @InjectView(R.id.lv_center)
     ListView lv_center;
-    @Bind(R.id.progress_center)
+    @InjectView(R.id.progress_center)
     ProgressBar progressCenter;
     CenterAdapter adapter = null;
     View view;
-    @Bind(R.id.tv_empty_center)
+    @InjectView(R.id.tv_empty_center)
     TextView tv_empty_center;
     private String date;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_center_list, null);
-        ButterKnife.bind(this, view);
+        ButterKnife.inject(this, view);
         setHasOptionsMenu(true);
         if (getAllCenters().size() == 0)
             getData();

@@ -19,7 +19,7 @@ import com.mifos.utils.DateHelper;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 19/06/14.
@@ -91,12 +91,12 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
     public static class ReusableViewHolder {
 
 
-        @Bind(R.id.view_status_indicator) View view_status_indicator;
-        @Bind(R.id.tv_repayment_due_date) TextView tv_repaymentDueDate;
-        @Bind(R.id.tv_repayment_amount_due) TextView tv_repaymentAmountDue;
-        @Bind(R.id.tv_repayment_amount_paid) TextView tv_repaymentAmountPaid;
+        @InjectView(R.id.view_status_indicator) View view_status_indicator;
+        @InjectView(R.id.tv_repayment_due_date) TextView tv_repaymentDueDate;
+        @InjectView(R.id.tv_repayment_amount_due) TextView tv_repaymentAmountDue;
+        @InjectView(R.id.tv_repayment_amount_paid) TextView tv_repaymentAmountPaid;
 
-        public ReusableViewHolder(View view) { ButterKnife.bind(this, view); }
+        public ReusableViewHolder(View view) { ButterKnife.inject(this, view); }
 
     }
 

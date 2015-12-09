@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -62,7 +62,7 @@ public class CollectionSheetFragment extends Fragment {
     private int calendarInstanceId;
     View rootView;
 
-    @Bind(R.id.exlv_collection_sheet)
+    @InjectView(R.id.exlv_collection_sheet)
     ExpandableListView expandableListView;
 
     static CollectionListAdapter collectionListAdapter;
@@ -98,7 +98,7 @@ public class CollectionSheetFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_collection_sheet, container, false);
 
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
 
         fetchCollectionSheet();
 

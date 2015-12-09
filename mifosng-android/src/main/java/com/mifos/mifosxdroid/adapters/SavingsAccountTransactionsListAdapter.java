@@ -20,7 +20,7 @@ import com.mifos.utils.DateHelper;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 30/05/14.
@@ -83,15 +83,15 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
 
     public static class ReusableViewHolder {
 
-        @Bind(R.id.tv_transaction_date)
+        @InjectView(R.id.tv_transaction_date)
         TextView tv_transactionDate;
-        @Bind(R.id.tv_transaction_type)
+        @InjectView(R.id.tv_transaction_type)
         TextView tv_transactionType;
-        @Bind(R.id.tv_transaction_amount)
+        @InjectView(R.id.tv_transaction_amount)
         TextView tv_transactionAmount;
 
         public ReusableViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ButterKnife.inject(this, view);
         }
 
 
