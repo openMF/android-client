@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -44,9 +44,9 @@ import retrofit.client.Response;
 public class ClientListFragment extends Fragment {
 
 
-    @InjectView(R.id.lv_clients)
+    @Bind(R.id.lv_clients)
     ListView lv_clients;
-    @InjectView(R.id.swipe_container)
+    @Bind(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
     View rootView;
 
@@ -86,9 +86,9 @@ public class ClientListFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
-        swipeRefreshLayout.setColorScheme(R.color.blue_light,
+        swipeRefreshLayout.setColorScheme(getResources().getColor(R.color.blue_light),
                 R.color.green_light,
                 R.color.orange_light,
                 R.color.red_light);
@@ -142,7 +142,7 @@ public class ClientListFragment extends Fragment {
 
             swipeRefreshLayout.setRefreshing(true);
             //Get a Client List
-            ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(new Callback<Page<Client>>() {
+            ((MifosApplication) getActivity().getApplication()).api.clientService.listAllClients(new Callback<Page<Client>>() {
                 @Override
                 public void success(Page<Client> page, Response response) {
                     clientList = page.getPageItems();
@@ -202,7 +202,7 @@ public class ClientListFragment extends Fragment {
                     offset += limit + 1;
                     swipeRefreshLayout.setRefreshing(true);
 
-                    ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
+                    ((MifosApplication) getActivity().getApplication()).api.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
                         @Override
                         public void success(Page<Client> clientPage, Response response) {
 

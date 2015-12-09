@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,8 +26,8 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -35,7 +35,7 @@ import retrofit.client.Response;
 
 public class LoanTransactionsFragment extends Fragment {
 
-    @InjectView(R.id.elv_loan_transactions)
+    @Bind(R.id.elv_loan_transactions)
     ExpandableListView elv_loanTransactions;
 
     private int loanAccountNumber;
@@ -46,7 +46,7 @@ public class LoanTransactionsFragment extends Fragment {
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    ActionBarActivity activity;
+    AppCompatActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -78,11 +78,11 @@ public class LoanTransactionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_loan_transactions, container, false);
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(LoanTransactionsFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
         inflateLoanTransactions();
 

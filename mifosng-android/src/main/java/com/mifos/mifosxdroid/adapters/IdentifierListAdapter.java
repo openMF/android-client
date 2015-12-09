@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -109,20 +109,20 @@ public class IdentifierListAdapter extends BaseAdapter {
 
     public static class ReusableIdentifierViewHolder {
 
-        @InjectView(R.id.tv_identifier_id)
+        @Bind(R.id.tv_identifier_id)
         TextView tv_identifier_id;
-        @InjectView(R.id.tv_identifier_descrption)
+        @Bind(R.id.tv_identifier_descrption)
         TextView tv_identifier_descrption;
-        @InjectView(R.id.tv_identifier_type)
+        @Bind(R.id.tv_identifier_type)
         TextView tv_identifier_type;
-        @InjectView(R.id.tv_identifier_document)
+        @Bind(R.id.tv_identifier_document)
         TextView tv_identifier_document;
-        @InjectView(R.id.bt_move_identifier)
+        @Bind(R.id.bt_move_identifier)
         Button bt_move_identifier;
-        @InjectView(R.id.bt_delete_identifier)
+        @Bind(R.id.bt_delete_identifier)
         Button bt_delete_identifier;
 
-        public ReusableIdentifierViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableIdentifierViewHolder(View view) { ButterKnife.bind(this, view); }
 
 
     }

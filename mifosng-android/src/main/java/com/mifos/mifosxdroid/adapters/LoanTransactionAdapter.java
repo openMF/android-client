@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * Created by ishankhanna on 21/06/14.
@@ -154,25 +154,25 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
 
     public static class ReusableParentViewHolder {
 
-        @InjectView(R.id.tv_arrow) TextView tv_arrow;
-        @InjectView(R.id.tv_transaction_date) TextView tv_transactionDate;
-        @InjectView(R.id.tv_transaction_type) TextView tv_transactionType;
-        @InjectView(R.id.tv_transaction_amount) TextView tv_transactionAmount;
+        @Bind(R.id.tv_arrow) TextView tv_arrow;
+        @Bind(R.id.tv_transaction_date) TextView tv_transactionDate;
+        @Bind(R.id.tv_transaction_type) TextView tv_transactionType;
+        @Bind(R.id.tv_transaction_amount) TextView tv_transactionAmount;
 
-        public ReusableParentViewHolder(View view) { ButterKnife.inject(this,view); }
+        public ReusableParentViewHolder(View view) { ButterKnife.bind(this,view); }
 
     }
 
     public static class ReusableChildViewHolder {
 
-        @InjectView(R.id.tv_transaction_id) TextView tv_transactionId;
-        @InjectView(R.id.tv_office_name) TextView tv_officeName;
-        @InjectView(R.id.tv_principal) TextView tv_principal;
-        @InjectView(R.id.tv_interest) TextView tv_interest;
-        @InjectView(R.id.tv_fees) TextView tv_fees;
-        @InjectView(R.id.tv_penalties) TextView tv_penalties;
+        @Bind(R.id.tv_transaction_id) TextView tv_transactionId;
+        @Bind(R.id.tv_office_name) TextView tv_officeName;
+        @Bind(R.id.tv_principal) TextView tv_principal;
+        @Bind(R.id.tv_interest) TextView tv_interest;
+        @Bind(R.id.tv_fees) TextView tv_fees;
+        @Bind(R.id.tv_penalties) TextView tv_penalties;
 
-        public ReusableChildViewHolder(View view) { ButterKnife.inject(this,view); }
+        public ReusableChildViewHolder(View view) { ButterKnife.bind(this,view); }
 
     }
 
