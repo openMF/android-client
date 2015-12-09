@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +23,7 @@ import com.mifos.utils.FragmentConstants;
  */
 
 
-public class DashboardFragmentActivity extends ActionBarActivity {
+public class DashboardFragmentActivity extends AppCompatActivity {
 
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
     public static Context context;

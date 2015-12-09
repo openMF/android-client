@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -19,22 +19,22 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class OfflineCenterInputActivity extends ActionBarActivity implements DatePickerDialog.OnDateSetListener {
+public class OfflineCenterInputActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static String PREF_CENTER_DETAILS = "pref_center_details";
     public static String STAFF_ID_KEY = "pref_staff_id";
     public static String BRANCH_ID_KEY = "pref_branch_id";
     public static String TRANSACTION_DATE_KEY = "pref_transaction_date";
-    @InjectView(R.id.et_staff_id)
+    @Bind(R.id.et_staff_id)
     EditText etStaffId;
-    @InjectView(R.id.et_branch_id)
+    @Bind(R.id.et_branch_id)
     EditText etBranchId;
-    @InjectView(R.id.tv_select_date)
+    @Bind(R.id.tv_select_date)
     TextView tvSelectDate;
-    @InjectView(R.id.btnSave)
+    @Bind(R.id.btnSave)
     Button btnSave;
     private String date;
     private int staffId;
@@ -46,7 +46,7 @@ public class OfflineCenterInputActivity extends ActionBarActivity implements Dat
             finishAndStartCenterListActivity();
         }
         setContentView(R.layout.activity_center_details);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
     }

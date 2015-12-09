@@ -13,7 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,8 +47,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -64,31 +64,31 @@ public class SavingsAccountSummaryFragment extends Fragment {
     public static DepositType savingsAccountType;
 
     public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
-    @InjectView(R.id.tv_clientName)
+    @Bind(R.id.tv_clientName)
     TextView tv_clientName;
-    @InjectView(R.id.quickContactBadge_client)
+    @Bind(R.id.quickContactBadge_client)
     QuickContactBadge quickContactBadge;
-    @InjectView(R.id.tv_savings_product_short_name)
+    @Bind(R.id.tv_savings_product_short_name)
     TextView tv_savingsProductName;
-    @InjectView(R.id.tv_savingsAccountNumber)
+    @Bind(R.id.tv_savingsAccountNumber)
     TextView tv_savingsAccountNumber;
-    @InjectView(R.id.tv_savings_account_balance)
+    @Bind(R.id.tv_savings_account_balance)
     TextView tv_savingsAccountBalance;
-    @InjectView(R.id.tv_total_deposits)
+    @Bind(R.id.tv_total_deposits)
     TextView tv_totalDeposits;
-    @InjectView(R.id.tv_total_withdrawals)
+    @Bind(R.id.tv_total_withdrawals)
     TextView tv_totalWithdrawals;
-    @InjectView(R.id.lv_savings_transactions)
+    @Bind(R.id.lv_savings_transactions)
     ListView lv_Transactions;
-    @InjectView(R.id.tv_interest_earned)
+    @Bind(R.id.tv_interest_earned)
     TextView tv_interestEarned;
-    @InjectView(R.id.bt_deposit)
+    @Bind(R.id.bt_deposit)
     Button bt_deposit;
-    @InjectView(R.id.bt_withdrawal)
+    @Bind(R.id.bt_withdrawal)
     Button bt_withdrawal;
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
-    ActionBarActivity activity;
+    AppCompatActivity activity;
     SharedPreferences sharedPreferences;
     ActionBar actionBar;
     SavingsAccountWithAssociations savingsAccountWithAssociations;
@@ -136,11 +136,11 @@ public class SavingsAccountSummaryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false);
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(SavingsAccountSummaryFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
         inflateSavingsAccountSummary();
 

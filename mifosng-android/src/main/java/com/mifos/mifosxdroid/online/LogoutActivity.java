@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.mifos.mifosxdroid.SplashScreenActivity;
@@ -19,7 +19,7 @@ import com.mifos.objects.User;
 /**
  * Logout activity.
  */
-public class LogoutActivity extends ActionBarActivity {
+public class LogoutActivity extends AppCompatActivity {
     public final static String TAG = LogoutActivity.class.getSimpleName();
     public static final String NA = "NA";
 

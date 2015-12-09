@@ -13,7 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -43,8 +43,8 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLHandshakeException;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import retrofit.Callback;
@@ -54,7 +54,7 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends ActionBarActivity implements Callback<User>{
+public class LoginActivity extends AppCompatActivity implements Callback<User>{
 
     private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     private static final String IP_ADDRESS_REGEX_PATTERN = "^(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))$";
@@ -62,13 +62,13 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     public static final String PROTOCOL_HTTPS = "https://";
     public static final String API_PATH = "/mifosng-provider/api/v1";
     SharedPreferences sharedPreferences;
-    @InjectView(R.id.et_instanceURL) EditText et_instanceURL;
-    @InjectView(R.id.et_username) EditText et_username;
-    @InjectView(R.id.et_password) EditText et_password;
-    @InjectView(R.id.bt_login) Button bt_login;
-    @InjectView(R.id.tv_constructed_instance_url) TextView tv_constructed_instance_url;
-    @InjectView(R.id.et_tenantIdentifier) EditText et_tenantIdentifier;
-    @InjectView(R.id.et_instancePort) EditText et_port;
+    @Bind(R.id.et_instanceURL) EditText et_instanceURL;
+    @Bind(R.id.et_username) EditText et_username;
+    @Bind(R.id.et_password) EditText et_password;
+    @Bind(R.id.bt_login) Button bt_login;
+    @Bind(R.id.tv_constructed_instance_url) TextView tv_constructed_instance_url;
+    @Bind(R.id.et_tenantIdentifier) EditText et_tenantIdentifier;
+    @Bind(R.id.et_instancePort) EditText et_port;
     private String username;
     private String instanceURL;
     private String password;
@@ -98,7 +98,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
                 "80");
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         setupUI();
 
         domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);

@@ -38,20 +38,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 
 public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
 
     public static final String TAG = "Group Fragment";
     private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
-    @InjectView(R.id.lv_group)
+    @Bind(R.id.lv_group)
     ListView lv_group;
-    @InjectView(R.id.progress_group)
+    @Bind(R.id.progress_group)
     ProgressBar progressGroup;
     MifosGroupListAdapter adapter = null;
     View view;
-    @InjectView(R.id.tv_empty_group)
+    @Bind(R.id.tv_empty_group)
     TextView tv_empty_group;
     private MenuItem syncItem;
     private String date;
@@ -61,7 +61,7 @@ public class GroupFragment extends Fragment implements AdapterView.OnItemClickLi
         view = inflater.inflate(R.layout.fragment_group, null);
         init();
         setHasOptionsMenu(true);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         return view;
     }
