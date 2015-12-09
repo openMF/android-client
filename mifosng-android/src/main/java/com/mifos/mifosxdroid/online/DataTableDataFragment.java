@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +44,7 @@ public class DataTableDataFragment extends Fragment implements DataTableUIBuilde
     private DataTable dataTable;
     private int entityId;
 
-    AppCompatActivity activity;
+    ActionBarActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -82,7 +82,7 @@ public class DataTableDataFragment extends Fragment implements DataTableUIBuilde
 
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
 
-        activity = (AppCompatActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle(dataTable.getRegisteredTableName());
 

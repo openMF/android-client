@@ -14,7 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +48,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -59,26 +59,26 @@ import retrofit.client.Response;
 public class SavingsAccountTransactionFragment extends Fragment implements MFDatePicker.OnDatePickListener{
 
 
-    @Bind(R.id.tv_clientName)
+    @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
-    @Bind(R.id.tv_savingsAccountNumber)
+    @InjectView(R.id.tv_savingsAccountNumber)
     TextView tv_accountNumber;
-    @Bind(R.id.tv_transaction_date)
+    @InjectView(R.id.tv_transaction_date)
     TextView tv_transactionDate;
-    @Bind(R.id.et_transaction_amount)
+    @InjectView(R.id.et_transaction_amount)
     EditText et_transactionAmount;
-    @Bind(R.id.sp_payment_type)
+    @InjectView(R.id.sp_payment_type)
     Spinner sp_paymentType;
-    @Bind(R.id.bt_reviewTransaction)
+    @InjectView(R.id.bt_reviewTransaction)
     Button bt_reviewTransaction;
-    @Bind(R.id.bt_cancelTransaction)
+    @InjectView(R.id.bt_cancelTransaction)
     Button bt_cancelTransaction;
 
 
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
-    AppCompatActivity activity;
+    ActionBarActivity activity;
     ActionBar actionBar;
     SharedPreferences sharedPreferences;
     String savingsAccountNumber;
@@ -136,7 +136,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
         rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container, false);
 
-        activity = (AppCompatActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
 
@@ -149,7 +149,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
         else
             actionBar.setTitle(getResources().getString(R.string.savingsAccount) + " "+ getResources().getString(R.string.withdrawal));
 
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
 
         inflateUI();
 

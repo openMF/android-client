@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +27,8 @@ import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -36,7 +36,7 @@ import retrofit.client.Response;
 
 public class ClientIdentifiersFragment extends Fragment {
 
-    @Bind(R.id.lv_identifiers)
+    @InjectView(R.id.lv_identifiers)
     ListView lv_identifiers;
 
     private OnFragmentInteractionListener mListener;
@@ -45,7 +45,7 @@ public class ClientIdentifiersFragment extends Fragment {
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    AppCompatActivity activity;
+    ActionBarActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -80,11 +80,11 @@ public class ClientIdentifiersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_client_identifiers, container, false);
-        activity = (AppCompatActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
         actionBar.setTitle(getString(R.string.identifiers));
 
         loadIdentifiers();

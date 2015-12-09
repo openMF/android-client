@@ -7,7 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,7 +20,7 @@ import com.mifos.utils.FragmentConstants;
 
 import butterknife.ButterKnife;
 
-public class ClientActivity extends AppCompatActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
+public class ClientActivity extends ActionBarActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
         LoanAccountSummaryFragment.OnFragmentInteractionListener,
         LoanRepaymentFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {
@@ -29,7 +29,7 @@ public class ClientActivity extends AppCompatActivity implements ClientDetailsFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_global_container_layout);
-        ButterKnife.bind(this);
+        ButterKnife.inject(this);
         int clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ClientDetailsFragment clientDetailsFragment = ClientDetailsFragment.newInstance(clientId);

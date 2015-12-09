@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,8 +31,8 @@ import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -42,18 +42,18 @@ public class LoanRepaymentScheduleFragment extends Fragment {
 
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
-    AppCompatActivity activity;
+    ActionBarActivity activity;
     SharedPreferences sharedPreferences;
     ActionBar actionBar;
-    @Bind(R.id.lv_repayment_schedule)
+    @InjectView(R.id.lv_repayment_schedule)
     ListView lv_repaymentSchedule;
-    @Bind(R.id.tv_total_paid)
+    @InjectView(R.id.tv_total_paid)
     TextView tv_totalPaid;
-    @Bind(R.id.tv_total_upcoming)
+    @InjectView(R.id.tv_total_upcoming)
     TextView tv_totalUpcoming;
-    @Bind(R.id.tv_total_overdue)
+    @InjectView(R.id.tv_total_overdue)
     TextView tv_totalOverdue;
-    @Bind(R.id.flrs_footer)
+    @InjectView(R.id.flrs_footer)
     View flrs_footer;
     private int loanAccountNumber;
     private OnFragmentInteractionListener mListener;
@@ -87,12 +87,12 @@ public class LoanRepaymentScheduleFragment extends Fragment {
         // Inflate the layout for this fragment
 
         rootView = inflater.inflate(R.layout.fragment_loan_repayment_schedule, container, false);
-        activity = (AppCompatActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(LoanRepaymentScheduleFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.loan_repayment_schedule));
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
 
         inflateRepaymentSchedule();
 

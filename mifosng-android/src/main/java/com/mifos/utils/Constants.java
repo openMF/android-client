@@ -91,4 +91,5 @@ public class Constants {
     public static final String DATA_TABLE_LOAN_NAME = "More Loan Info";
     public static final String DATA_TABLE_SAVINGS_ACCOUNTS_NAME = "More Savings Account Info";
 
+
 }

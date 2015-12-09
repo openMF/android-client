@@ -14,7 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,8 +36,8 @@ import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -46,14 +46,14 @@ public class DocumentListFragment extends Fragment {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
-    @Bind(R.id.lv_documents)
+    @InjectView(R.id.lv_documents)
     ListView lv_documents;
 
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    AppCompatActivity activity;
+    ActionBarActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -96,11 +96,11 @@ public class DocumentListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_document_list, container, false);
-        activity = (AppCompatActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
 
         inflateDocumentList();
 

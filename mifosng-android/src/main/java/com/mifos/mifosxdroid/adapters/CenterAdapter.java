@@ -19,7 +19,7 @@ import com.mifos.objects.db.MeetingCenter;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 
 
 public class CenterAdapter extends BaseAdapter {
@@ -67,13 +67,13 @@ public class CenterAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        @Bind(R.id.tv_center_name)
+        @InjectView(R.id.tv_center_name)
         TextView tv_center_name;
-        @Bind(R.id.iv_center_synced)
+        @InjectView(R.id.iv_center_synced)
         ImageView ivCenterSynced;
 
         public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ButterKnife.inject(this, view);
         }
     }
 }

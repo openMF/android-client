@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +29,8 @@ import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -39,14 +39,14 @@ import retrofit.client.Response;
 public class GroupListFragment extends Fragment {
 
 
-    @Bind(R.id.lv_group_list)
+    @InjectView(R.id.lv_group_list)
     ListView lv_groupList;
 
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    AppCompatActivity activity;
+    ActionBarActivity activity;
 
     SharedPreferences sharedPreferences;
 
@@ -81,11 +81,11 @@ public class GroupListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_group_list, container, false);
-        activity = (AppCompatActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
         safeUIBlockingUtility = new SafeUIBlockingUtility(GroupListFragment.this.getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         actionBar = activity.getSupportActionBar();
-        ButterKnife.bind(this, rootView);
+        ButterKnife.inject(this, rootView);
         actionBar.setTitle(getResources().getString(R.string.group));
 
         inflateGroupList();

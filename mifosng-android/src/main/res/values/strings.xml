@@ -202,7 +202,6 @@
     <string name="error_cannot_be_empty">cannot be empty</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
-    <string name="connection_settings"><u>Connection settings</u></string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

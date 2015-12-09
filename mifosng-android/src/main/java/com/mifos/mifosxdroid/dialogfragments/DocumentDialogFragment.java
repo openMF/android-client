@@ -33,7 +33,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -54,10 +54,10 @@ public class DocumentDialogFragment extends DialogFragment {
 
     private OnDialogFragmentInteractionListener mListener;
 
-    @Bind(R.id.et_document_name) EditText et_document_name;
-    @Bind(R.id.et_document_description) EditText et_document_description;
-    @Bind(R.id.tv_choose_file) TextView tv_choose_file;
-    @Bind(R.id.bt_upload) Button bt_upload;
+    @InjectView(R.id.et_document_name) EditText et_document_name;
+    @InjectView(R.id.et_document_description) EditText et_document_description;
+    @InjectView(R.id.tv_choose_file) TextView tv_choose_file;
+    @InjectView(R.id.bt_upload) Button bt_upload;
 
     private static final int FILE_SELECT_CODE = 0;
 
@@ -102,7 +102,7 @@ public class DocumentDialogFragment extends DialogFragment {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
 
-        ButterKnife.bind(this,rootView);
+        ButterKnife.inject(this,rootView);
 
         return rootView;
     }
