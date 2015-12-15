@@ -5,14 +5,14 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:orientation="vertical">
 
 
     <TextView
-        android:text="First Name :"
+        android:text="@string/fname"
         android:textSize="16sp"
         android:paddingTop="10dp"
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         android:imeOptions="actionNext"
         />
     <TextView
-        android:text="Middle Name :"
+        android:text="@string/mname"
         android:textSize="16sp"
         android:paddingTop="10dp"
         android:layout_width="match_parent"
@@ -49,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:text="Last Name :"
+        android:text="@string/lname"
         android:textSize="16sp"
         android:id="@+id/tv_client_last_name"
 
@@ -66,7 +66,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:text="Mobile Number :"
+    android:text="@string/mnumber"
     android:textSize="16sp"
     android:id="@+id/tv_client_mobile_number"
 
@@ -83,7 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:text="External Id :"
+        android:text="@string/external_id"
         android:textSize="16sp"
         android:id="@+id/tv_client_external_id"
 
@@ -100,7 +100,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:text="Date of Birth :"
+        android:text="@string/gender"
+        android:textSize="16sp"
+        android:id="@+id/tv_client_gender"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:textSize="20sp"
+        android:hint="select client's gender :"
+        android:id="@+id/tv_gender"
+        android:imeOptions="actionNext"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="@string/dob"
         android:textSize="16sp"
         android:id="@+id/tv_client_dateofbirth"/>
     <TextView
@@ -116,7 +132,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:text="Office :"
+        android:text="@string/client_type"
+        android:textSize="16sp"
+        android:id="@+id/tv_client_type"
+
+        />
+
+    <Spinner
+        android:id="@+id/sp_client_type"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="@string/client_classification"
+        android:textSize="16sp"
+        android:id="@+id/tv_client_classification"
+
+        />
+
+    <Spinner
+        android:id="@+id/sp_client_classification"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="@string/office_name"
         android:textSize="16sp"
         android:id="@+id/tv_office"
 
@@ -132,7 +180,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:text="Staff :"
+        android:text="@string/staff_names"
         android:textSize="16sp"
         android:id="@+id/tv_staff"
 
@@ -150,7 +198,7 @@
         android:paddingTop="10dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Client Active "
+        android:text="@string/client_active"
         android:checked="false"
         />
 
@@ -172,7 +220,7 @@
         android:id="@+id/bt_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:text="@string/submit"
         android:layout_marginRight="2dp"/>
 
 

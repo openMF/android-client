@@ -130,6 +130,25 @@
     <string name="title_activity_client" translatable="false">ClientActivity</string>
     <!-- Action Bar Fragment and Activity Titles End Here -->
 
+    <!-- Create Client Terms -->
+
+    <string name="fname">First Name</string>
+    <string name="mname">Middle Name</string>
+    <string name="lname">Last Name</string>
+    <string name="mnumber">Mobile Number</string>
+    <string name="dob">Date of Birth</string>
+    <string name="office_name">Office</string>
+    <string name="staff_names">Staff</string>
+    <string name="client_active">Client Active</string>
+    <string name="submit">Submit</string>
+    <string name="gender">Gender</string>
+    <string name="client_type">Client</string>
+    <string name="client_classification">Client Classification</string>
+
+
+
+
+
 
     <!-- Menu Item Names Begin Here -->
     <string name="action_settings">Settings</string>
@@ -204,6 +223,7 @@
     <string name="last_name">Last name</string>
     <string name="middle_name">Middle name</string>
     <string name="phone_number_not_valid">Phone number not valid</string>
+
 
     <string-array name="office_ids">
         <item>Head Office</item>
