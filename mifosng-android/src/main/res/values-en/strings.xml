@@ -16,6 +16,7 @@
     <string name="offline">Offline *</string>
     <string name="client_search_hint">enter client name or ID</string>
     <string name="search_results">Search Results</string>
+    <string name="client_search">Client Search</string>
     <string name="total">Total</string>
     <string name="client_name">Client Name</string>
     <string name="client">Client</string>
@@ -61,9 +62,8 @@
     <string name="inactive">InActive</string>
     <!-- Group Terms End Here -->
 
-
-    <!-- Loan Related Terminologies Begin Here -->
     <string name="staff">Loan Officer</string>
+    <string name="loan_officer">Loan Officer</string>
     <string name="loan_cycle">Loan Cycle</string>
     <string name="loan_status">Status</string>
     <string name="loan_in_arrears">In Arrears</string>

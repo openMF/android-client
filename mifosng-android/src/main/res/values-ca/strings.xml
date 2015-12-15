@@ -71,7 +71,6 @@
     <string name="loan_interest">Interessos</string>
     <string name="loan_interest_due">Interessos a pagar</string>
     <string name="loan_interest_paid">Interessos pagats</string>
-    <string name="staff">Responsable de crèdits</string>
     <string name="loan_penalty">Sanció</string>
     <string name="loan_principal">Capital</string>
     <string name="loan_principal_due">Capital endeudat</string>
@@ -126,6 +125,7 @@
     <string name="spinner_staff">Selecciona un responsable de crèdits</string>
     <string name="staff_id">ID de l\'empleat</string>
     <string name="staff_name">Nom de l\'empleat</string>
+    <string name="staff">Personal</string>
     <string name="summary">Resum</string>
     <string name="sync">Sincronitzar</string>
     <string name="tap_to_select_date">Prem per seleccionar una data</string>

@@ -63,6 +63,7 @@
     <string name="summary">Resumen</string>
     <string name="search">Buscar</string>
     <string name="search_results">Resultados de la búsqueda</string>
+    <string name="client_search">Búsqueda Cliente</string>
     <string name="save">Guardar</string>
     <string name="name">Nombre</string>
     <string name="meeting_date">Fecha de reunión</string>
@@ -79,6 +80,7 @@
     <string name="withdrawal">Retirado</string>
     <string name="title_center_detail">Detalles del centro</string>
     <string name="staff_name">Nombre del empleado</string>
+    <string name="staff">Personal</string>
     <string name="staff_id">ID del empleado</string>
     <string name="spinner_staff">Selecciona responsable de créditos</string>
     <string name="spinner_office">Selecciona Oficina</string>
@@ -124,7 +126,6 @@
     <string name="loan">Crédito</string>
     <string name="loanAccountSummary">Resumen de las cuentas de crédito</string>
     <string name="loanAccounts">Cuentas de crédito</string>
-    <string name="staff">Responsable de créditos</string>
     <string name="loan_interest_paid">Intereses pagados</string>
     <string name="loan_interest_due">Intereses a pagar</string>
     <string name="loan_interest">Intereses</string>
