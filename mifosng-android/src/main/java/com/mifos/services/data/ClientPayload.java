@@ -15,7 +15,7 @@ public class ClientPayload extends DefaultPayload {
     private String dateOfBirth;
     private String mobileNo;
     private String externalId;
-
+    private int genderId;
 
     public String getFirstname() {
         return firstname;
@@ -24,24 +24,23 @@ public class ClientPayload extends DefaultPayload {
     public void setMiddlename(String mobilenumber) {
         this.middlename = middlename;
     }
+
     public String getMiddlename() {
         return middlename;
     }
-    public String getMobileno() {
-        return mobileNo;
-    }
-    public void setMobileno(String mobileNo) {
-        this.mobileNo = mobileNo;
-    }
+
     public String getExternalId() {
         return externalId;
     }
+
     public void setExternalId(String externalId) {
         this.externalId = externalId;
     }
+
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
+
     public String getLastname() {
         return lastname;
     }
@@ -73,13 +72,7 @@ public class ClientPayload extends DefaultPayload {
     public void setActivationDate(String activationDate) {
         this.activationDate = activationDate;
     }
-    public String getDateofBirth() {
-        return dateOfBirth;
-    }
 
-    public void setDateofBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
     public String getSubmittedOnDate() {
         return submittedOnDate;
     }
@@ -87,4 +80,29 @@ public class ClientPayload extends DefaultPayload {
     public void setSubmittedOnDate(String submittedOnDate) {
         this.submittedOnDate = submittedOnDate;
     }
+
+    public Integer getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(Integer genderId) {
+        this.genderId = genderId;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
 }
+

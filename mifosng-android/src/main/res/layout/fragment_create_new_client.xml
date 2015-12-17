@@ -103,15 +103,12 @@
         android:text="@string/gender"
         android:textSize="16sp"
         android:id="@+id/tv_client_gender"/>
-    <TextView
-        android:layout_width="match_parent"
+    <Spinner
+        android:id="@+id/sp_gender"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:textSize="20sp"
-        android:hint="select client's gender :"
-        android:id="@+id/tv_gender"
-        android:imeOptions="actionNext"
-        />
+        android:spinnerMode="dropdown"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

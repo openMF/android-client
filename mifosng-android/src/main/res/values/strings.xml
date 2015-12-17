@@ -189,6 +189,8 @@
     <string name="list_all_clients">Client List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
+    <string name="error_select_gender">Please Select Gender</string>
+    <string name="error_select_client_type">Please Select Client Type</string>
     <string name="error_select_staff">Please Select a Staff</string>
     <string name="error_select_center">Please Select a Center</string>
     <string name="error_client_inactive">Client Inactive</string>
