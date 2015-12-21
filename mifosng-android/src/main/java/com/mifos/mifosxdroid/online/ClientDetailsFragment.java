@@ -53,6 +53,7 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientGroup;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
@@ -444,6 +445,17 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                     tv_fullName.setText(client.getDisplayName());
                     tv_accountNumber.setText(client.getAccountNo());
                     tv_externalId.setText(client.getExternalId());
+                    tv_loanOfficer.setText(client.getStaffName());
+                    List<ClientGroup> clientGroups = client.getGroups();
+                    if(!(clientGroups == null || clientGroups.isEmpty())){
+                        String groups = "";
+                        for(ClientGroup clientGroup: clientGroups){
+                            groups+=clientGroup.getName()+ ", ";
+                        }
+                        groups = groups.substring(0,groups.length() - 2);
+                        tv_group.setText(groups);
+                    }
+
 
                     try {
                         List<Integer> dateObj = client.getActivationDate();
