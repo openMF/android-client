@@ -13,7 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -21,8 +21,10 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,10 +53,12 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static android.view.View.*;
+
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends ActionBarActivity implements Callback<User>{
+public class LoginActivity extends AppCompatActivity implements Callback<User> {
 
     private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     private static final String IP_ADDRESS_REGEX_PATTERN = "^(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))$";
@@ -62,13 +66,24 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     public static final String PROTOCOL_HTTPS = "https://";
     public static final String API_PATH = "/mifosng-provider/api/v1";
     SharedPreferences sharedPreferences;
-    @InjectView(R.id.et_instanceURL) EditText et_instanceURL;
-    @InjectView(R.id.et_username) EditText et_username;
-    @InjectView(R.id.et_password) EditText et_password;
-    @InjectView(R.id.bt_login) Button bt_login;
-    @InjectView(R.id.tv_constructed_instance_url) TextView tv_constructed_instance_url;
-    @InjectView(R.id.et_tenantIdentifier) EditText et_tenantIdentifier;
-    @InjectView(R.id.et_instancePort) EditText et_port;
+    @InjectView(R.id.et_instanceURL)
+    EditText et_instanceURL;
+    @InjectView(R.id.et_username)
+    EditText et_username;
+    @InjectView(R.id.et_password)
+    EditText et_password;
+    @InjectView(R.id.bt_login)
+    Button bt_login;
+    @InjectView(R.id.tv_constructed_instance_url)
+    TextView tv_constructed_instance_url;
+    @InjectView(R.id.bt_connectionSettings)
+    TextView bt_connectionSettings;
+    @InjectView(R.id.et_tenantIdentifier)
+    EditText et_tenantIdentifier;
+    @InjectView(R.id.et_instancePort)
+    EditText et_port;
+    @InjectView(R.id.ll_connectionSettings)
+    LinearLayout ll_connectionSettings;
     private String username;
     private String instanceURL;
     private String password;
@@ -112,17 +127,25 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
             et_port.setText(previouslyEnteredPort);
         }
 
+        bt_connectionSettings.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ll_connectionSettings.getVisibility() == VISIBLE)
+                    ll_connectionSettings.setVisibility(GONE);
+                else
+                    ll_connectionSettings.setVisibility(VISIBLE);
+
+            }
+        });
         et_instanceURL.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
 
 
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
 
 
             }
@@ -134,6 +157,8 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
             }
         });
+
+
 
         et_port.addTextChangedListener(new TextWatcher() {
             @Override
@@ -157,7 +182,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     private void updateMyInstanceUrl() {
         String textUnderConstruction;
 
-        if(!et_port.getEditableText().toString().isEmpty()) {
+        if (!et_port.getEditableText().toString().isEmpty()) {
             port = Integer.valueOf(et_port.getEditableText().toString().trim());
             textUnderConstruction = constructInstanceUrl(et_instanceURL.getEditableText().toString(), port);
         } else {
@@ -167,7 +192,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
         tv_constructed_instance_url.setText(textUnderConstruction);
 
-        if(!validateURL(et_instanceURL.getEditableText().toString())) {
+        if (!validateURL(et_instanceURL.getEditableText().toString())) {
             tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.red));
         } else {
             tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
@@ -184,7 +209,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
         String urlInputValue = et_instanceURL.getEditableText().toString();
         try {
-            if(!validateURL(urlInputValue)) {
+            if (!validateURL(urlInputValue)) {
                 return false;
             }
             String validDomain = sanitizeDomainNameInput(urlInputValue);
@@ -230,7 +255,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     public void success(User user, Response response) {
         ((MifosApplication) getApplication()).api = api;
         progressDialog.dismiss();
-        Toast.makeText(context, getString(R.string.toast_welcome)+" " + user.getUsername(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getString(R.string.toast_welcome) + " " + user.getUsername(), Toast.LENGTH_SHORT).show();
         saveLastAccessedInstanceUrl(instanceURL);
         saveLastAccessedInstanceDomainName(et_instanceURL.getEditableText().toString());
         if (!et_port.getEditableText().toString().trim().isEmpty()) {
@@ -265,7 +290,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
      * we must update our rest adapter to use an unsafe OkHttpClient
      * that trusts any damn thing.
      */
-    private void promptUserToByPassTheSSLHandshake(){
+    private void promptUserToByPassTheSSLHandshake() {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("SSL Certificate Problem")
@@ -289,7 +314,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     }
 
     @OnClick(R.id.bt_login)
-    public void onLoginClick(Button button){
+    public void onLoginClick(Button button) {
         login(false);
     }
 
@@ -345,7 +370,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     /**
      * Stores the complete instance URL in shared preferences
      * if the login was successful.
-
+     *
      * @param instanceURL
      */
     public void saveLastAccessedInstanceUrl(String instanceURL) {
@@ -375,6 +400,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
      * referenced later of with multiple login/logouts
      * user doesn't need to type in the tenant identifier
      * over and over again.
+     *
      * @param tenantIdentifier
      */
     private void saveLastAccessedTenant(String tenantIdentifier) {
@@ -407,6 +433,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
     /**
      * Removing protocol names and trailing slashes
      * from the user entered domain name.
+     *
      * @param url
      * @return filteredString
      */
@@ -414,23 +441,23 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
 
         String filteredUrl;
 
-        if(url.contains("https://")) {
+        if (url.contains("https://")) {
 
             //Strip https:// from the URL
-            filteredUrl = url.replace("https://","");
+            filteredUrl = url.replace("https://", "");
 
-        }else if(url.contains("http://")) {
+        } else if (url.contains("http://")) {
 
             //String http:// from the URL
-            filteredUrl = url.replace("http://","");
-        }else{
+            filteredUrl = url.replace("http://", "");
+        } else {
 
             //String URL doesn't include protocol
             filteredUrl = url;
         }
 
-        if(filteredUrl.charAt(filteredUrl.length()-1) == '/') {
-            filteredUrl = filteredUrl.replace("/","");
+        if (filteredUrl.charAt(filteredUrl.length() - 1) == '/') {
+            filteredUrl = filteredUrl.replace("/", "");
         }
 
         return filteredUrl;
@@ -441,6 +468,7 @@ public class LoginActivity extends ActionBarActivity implements Callback<User>{
      * Validates Domain name entered by user
      * against valid domain name patterns
      * and also IP address patterns.
+     *
      * @param hex
      * @return true if pattern is valid
      * and false otherwise
