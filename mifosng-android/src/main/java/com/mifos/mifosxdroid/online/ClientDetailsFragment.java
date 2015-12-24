@@ -41,9 +41,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
@@ -88,8 +89,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 
-public class ClientDetailsFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener {
+public class ClientDetailsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     /*
     * Define a request code to send to Google Play services
     * This code is returned in Activity.onActivityResult
@@ -130,7 +130,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     ProgressBar pb_imageProgressBar;
 
 
-
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
@@ -144,17 +143,18 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
     // Null if play services are not available.
-    private LocationClient mLocationClient;
+    private GoogleApiClient mGoogleApiClient;
     // True if play services are available and location services are connected.
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
     private AccountAccordion accountAccordion;
 
-    /**Image Loading Task for this instance
-      Creating an instance object because if the fragment detaches itself from the activity
-      The task might throw IllegalStateException
-      So it is important to kill the task before the fragment detaches itself from the activity
-    */
+    /**
+     * Image Loading Task for this instance
+     * Creating an instance object because if the fragment detaches itself from the activity
+     * The task might throw IllegalStateException
+     * So it is important to kill the task before the fragment detaches itself from the activity
+     */
     private ImageLoadingAsyncTask imageLoadingAsyncTask;
 
     public ClientDetailsFragment() {
@@ -187,14 +187,6 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         setHasOptionsMenu(true);
 
         capturedClientImageFile = new File(getActivity().getExternalCacheDir(), "client_image.png");
-
-        // Initialize location client only if play services are available.
-        if (servicesConnected()) {
-            mLocationClient = new LocationClient(getActivity(), this, this);
-        } else {
-            mLocationClient = null;
-            locationAvailable.set(false);
-        }
     }
 
     @Override
@@ -227,7 +219,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     @Override
     public void onDetach() {
 
-        if(imageLoadingAsyncTask != null) {
+        if (imageLoadingAsyncTask != null) {
 
             if (!imageLoadingAsyncTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
                 imageLoadingAsyncTask.cancel(true);
@@ -284,8 +276,8 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         menu.clear();
         MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
         mItemSearchClient.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
-        .colorRes(R.color.black)
-        .actionBarSize());
+                .colorRes(R.color.black)
+                .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -372,7 +364,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     }
 
     public void deleteClientImage() {
-        ((MifosApplication)getActivity().getApplication()).api.clientService.deleteClientImage(clientId, new Callback<Response>() {
+        ((MifosApplication) getActivity().getApplication()).api.clientService.deleteClientImage(clientId, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Toast.makeText(activity, "Image deleted", Toast.LENGTH_SHORT).show();
@@ -398,13 +390,14 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
     /**
      * A service to upload the image of the client.
+     *
      * @param pngFile - PNG images supported at the moment
      */
-    private void uploadImage(File  pngFile) {
+    private void uploadImage(File pngFile) {
 
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(View.VISIBLE);
-        ((MifosApplication)getActivity().getApplication()).api.clientService.uploadClientImage(clientId,
+        ((MifosApplication) getActivity().getApplication()).api.clientService.uploadClientImage(clientId,
                 new TypedFile("image/png", pngFile),
                 new Callback<Response>() {
 
@@ -435,7 +428,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        ((MifosApplication)getActivity().getApplication()).api.clientService.getClient(clientId, new Callback<Client>() {
+        ((MifosApplication) getActivity().getApplication()).api.clientService.getClient(clientId, new Callback<Client>() {
             @Override
             public void success(final Client client, Response response) {
 
@@ -455,7 +448,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                         String dateString = df.format(date);
                         tv_activationDate.setText(dateString);
 
-                    }catch (IndexOutOfBoundsException e) {
+                    } catch (IndexOutOfBoundsException e) {
                         Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
                         tv_activationDate.setText("");
                     } catch (ParseException e) {
@@ -472,7 +465,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                         imageLoadingAsyncTask = new ImageLoadingAsyncTask();
                         imageLoadingAsyncTask.execute(client.getId());
 
-                    }else{
+                    } else {
                         iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
                         pb_imageProgressBar.setVisibility(View.GONE);
                     }
@@ -530,7 +523,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        ((MifosApplication)getActivity().getApplication()).api.clientAccountsService.getAllAccountsOfClient(clientId, new Callback<ClientAccounts>() {
+        ((MifosApplication) getActivity().getApplication()).api.clientAccountsService.getAllAccountsOfClient(clientId, new Callback<ClientAccounts>() {
             @Override
             public void success(final ClientAccounts clientAccounts, Response response) {
 
@@ -598,7 +591,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     public void inflateDataTablesList() {
 
         safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication)getActivity().getApplication()).api.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
+        ((MifosApplication) getActivity().getApplication()).api.dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
 
@@ -653,11 +646,11 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     @Override
     public void onStart() {
         super.onStart();
-
-        // Connect the client.
-        if (mLocationClient != null) {
-            mLocationClient.connect();
-        }
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     /**
@@ -668,30 +661,34 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
     @Override
     public void onStop() {
         // Disconnecting the client invalidates it.
-        if (mLocationClient != null) {
-            mLocationClient.disconnect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
         }
-
         super.onStop();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 
     @Override
     public void onConnected(Bundle bundle) {
         locationAvailable.set(true);
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
         Log.d(getActivity().getLocalClassName(), "Connected to location services");
         try {
-            Log.d(getActivity().getLocalClassName(), "Current location: "
-                    + mLocationClient.getLastLocation().toString());
+            Log.d(getActivity().getLocalClassName(), "Current location: " + mLastLocation.toString());
         } catch (NullPointerException e) {
             //Location client is Null
         }
     }
 
     @Override
-    public void onDisconnected() {
+    public void onConnectionSuspended(int i) {
         locationAvailable.set(false);
         Log.d(getActivity().getLocalClassName(), "Disconnected from location services");
-
     }
 
     @Override
@@ -734,10 +731,10 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
         try {
 
             if (locationAvailable.get()) {
-                final Location location = mLocationClient.getLastLocation();
+                final Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
 
-                ((MifosApplication)getActivity().getApplication()).api.gpsCoordinatesService.setGpsCoordinates(clientId,
+                ((MifosApplication) getActivity().getApplication()).api.gpsCoordinatesService.setGpsCoordinates(clientId,
                         new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                         new Callback<GpsCoordinatesResponse>() {
                             @Override
@@ -758,7 +755,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
                                  */
                                 if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
 
-                                    ((MifosApplication)getActivity().getApplication()).api.gpsCoordinatesService.updateGpsCoordinates(clientId,
+                                    ((MifosApplication) getActivity().getApplication()).api.gpsCoordinatesService.updateGpsCoordinates(clientId,
                                             new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                                             new Callback<GpsCoordinatesResponse>() {
                                                 @Override
@@ -863,7 +860,7 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
 
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
-                httpURLConnection.setRequestProperty(((MifosApplication)getActivity().getApplication()).api.HEADER_AUTHORIZATION, authToken);
+                httpURLConnection.setRequestProperty(((MifosApplication) getActivity().getApplication()).api.HEADER_AUTHORIZATION, authToken);
                 httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();
@@ -919,19 +916,19 @@ public class ClientDetailsFragment extends Fragment implements GooglePlayService
             }
 
             public TextView getTextView(Activity context) {
-                return (TextView)getSectionView(context).findViewById(R.id.tv_toggle_accounts);
+                return (TextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts);
             }
 
             public TextView getIconView(Activity context) {
-                return (TextView)getSectionView(context).findViewById(R.id.tv_toggle_accounts_icon);
+                return (TextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts_icon);
             }
 
             public ListView getListView(Activity context) {
-                return (ListView)getSectionView(context).findViewById(R.id.lv_accounts);
+                return (ListView) getSectionView(context).findViewById(R.id.lv_accounts);
             }
 
             public TextView getCountView(Activity context) {
-                return (TextView)getSectionView(context).findViewById(R.id.tv_count_accounts);
+                return (TextView) getSectionView(context).findViewById(R.id.tv_count_accounts);
             }
 
             public View getSectionView(Activity context) {

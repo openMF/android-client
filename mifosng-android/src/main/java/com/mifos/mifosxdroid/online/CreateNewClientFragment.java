@@ -97,7 +97,8 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getActivity().getActionBar() != null)
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
         ButterKnife.inject(this, rootView);
         inflateOfficeSpinner();
@@ -143,41 +144,41 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         safeUIBlockingUtility.safelyBlockUI();
         ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
 
-               @Override
-               public void success(List<Office> offices, Response response) {
-                   final List<String> officeList = new ArrayList<String>();
+                                                                                                       @Override
+                                                                                                       public void success(List<Office> offices, Response response) {
+                                                                                                           final List<String> officeList = new ArrayList<String>();
 
-                   for (Office office : offices) {
-                       officeList.add(office.getName());
-                       officeNameIdHashMap.put(office.getName(), office.getId());
-                   }
-                   ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                           android.R.layout.simple_spinner_item, officeList);
-                   officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                   sp_offices.setAdapter(officeAdapter);
-                   sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                                                                           for (Office office : offices) {
+                                                                                                               officeList.add(office.getName());
+                                                                                                               officeNameIdHashMap.put(office.getName(), office.getId());
+                                                                                                           }
+                                                                                                           ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                                                                                                                   android.R.layout.simple_spinner_item, officeList);
+                                                                                                           officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                                                                           sp_offices.setAdapter(officeAdapter);
+                                                                                                           sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                       @Override
-                       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                           officeId = officeNameIdHashMap.get(officeList.get(i));
-                           Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+                                                                                                               @Override
+                                                                                                               public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                                                                                                   officeId = officeNameIdHashMap.get(officeList.get(i));
+                                                                                                                   Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
 
-                       }
+                                                                                                               }
 
-                       @Override
-                       public void onNothingSelected(AdapterView<?> adapterView) {
+                                                                                                               @Override
+                                                                                                               public void onNothingSelected(AdapterView<?> adapterView) {
 
-                       }
+                                                                                                               }
 
-                   });
-                   safeUIBlockingUtility.safelyUnBlockUI();
-               }
+                                                                                                           });
+                                                                                                           safeUIBlockingUtility.safelyUnBlockUI();
+                                                                                                       }
 
-               @Override
-               public void failure(RetrofitError error) {
-                   safeUIBlockingUtility.safelyUnBlockUI();
-               }
-            }
+                                                                                                       @Override
+                                                                                                       public void failure(RetrofitError error) {
+                                                                                                           safeUIBlockingUtility.safelyUnBlockUI();
+                                                                                                       }
+                                                                                                   }
         );
     }
 
