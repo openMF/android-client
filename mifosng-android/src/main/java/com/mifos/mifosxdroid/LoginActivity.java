@@ -6,14 +6,12 @@
 package com.mifos.mifosxdroid;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -29,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.exceptions.ShortOfLengthException;
+import com.mifos.mifosxdroid.core.BaseActivity;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
@@ -53,13 +52,16 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static android.view.View.*;
+import static android.view.View.GONE;
+import static android.view.View.OnClickListener;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends AppCompatActivity implements Callback<User> {
+public class LoginActivity extends BaseActivity implements Callback<User> {
 
+    private final static String TAG = LoginActivity.class.getSimpleName();
     private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     private static final String IP_ADDRESS_REGEX_PATTERN = "^(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))$";
     public static final String PROTOCOL_HTTP = "http://";
@@ -89,14 +91,12 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
     private String password;
     private Context context;
     private String authenticationToken;
-    private ProgressDialog progressDialog;
-    private final static String TAG = "LoginActivity";
+
     private Pattern domainNamePattern;
     private Matcher domainNameMatcher;
     private Pattern ipAddressPattern;
     private Matcher ipAddressMatcher;
     private Integer port = null;
-
     private API api;
 
     @Override
@@ -107,14 +107,11 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
         context = LoginActivity.this;
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String previouslyEnteredUrl = sharedPreferences.getString(Constants.INSTANCE_URL_KEY,
-                getString(R.string.default_instance_url));
-        String previouslyEnteredPort = sharedPreferences.getString(Constants.INSTANCE_PORT_KEY,
-                "80");
+        String previouslyEnteredUrl = sharedPreferences.getString(Constants.INSTANCE_URL_KEY, getString(R.string.default_instance_url));
+        String previouslyEnteredPort = sharedPreferences.getString(Constants.INSTANCE_PORT_KEY, "80");
         authenticationToken = sharedPreferences.getString(User.AUTHENTICATION_KEY, "NA");
 
         ButterKnife.inject(this);
-        setupUI();
 
         domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);
         ipAddressPattern = Pattern.compile(IP_ADDRESS_REGEX_PATTERN);
@@ -140,40 +137,30 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
         et_instanceURL.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
                 updateMyInstanceUrl();
-
             }
         });
-
 
 
         et_port.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 updateMyInstanceUrl();
             }
         });
@@ -197,12 +184,6 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
         } else {
             tv_constructed_instance_url.setTextColor(getResources().getColor(R.color.deposit_green));
         }
-    }
-
-    public void setupUI() {
-        progressDialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Logging In");
-        progressDialog.setCancelable(false);
     }
 
     public boolean validateUserInputs() throws ShortOfLengthException {
@@ -239,7 +220,6 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
         if (!et_tenantIdentifier.getEditableText().toString().isEmpty()) {
 
         }
-
         return true;
     }
 
@@ -254,7 +234,7 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
     @Override
     public void success(User user, Response response) {
         ((MifosApplication) getApplication()).api = api;
-        progressDialog.dismiss();
+        hideProgress();
         Toast.makeText(context, getString(R.string.toast_welcome) + " " + user.getUsername(), Toast.LENGTH_SHORT).show();
         saveLastAccessedInstanceUrl(instanceURL);
         saveLastAccessedInstanceDomainName(et_instanceURL.getEditableText().toString());
@@ -274,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
     @Override
     public void failure(RetrofitError retrofitError) {
         try {
-            progressDialog.dismiss();
+            hideProgress();
             if (retrofitError.getCause() instanceof SSLHandshakeException) {
                 promptUserToByPassTheSSLHandshake();
             } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
@@ -321,7 +301,7 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
     private void login(boolean shouldByPassSSLSecurity) {
         try {
             if (validateUserInputs())
-                progressDialog.show();
+                showProgress("Logging In");
             api = new API(instanceURL, et_tenantIdentifier.getEditableText().toString().trim(), shouldByPassSSLSecurity);
             api.userAuthService.authenticate(username, password, this);
         } catch (ShortOfLengthException e) {
@@ -422,9 +402,6 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
             case R.id.offline:
                 startActivity(new Intent(this, OfflineCenterInputActivity.class));
                 break;
-
-            default: //DO NOTHING
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -483,5 +460,4 @@ public class LoginActivity extends AppCompatActivity implements Callback<User> {
         //TODO MAKE SURE YOU UPDATE THE REGEX to check for ports in the URL
         return false;
     }
-
 }

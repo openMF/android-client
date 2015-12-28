@@ -10,6 +10,4 @@
     android:background="#FFFFFF"
     tools:context=".SplashScreenActivity$PlaceholderFragment">
 
-
-
 </RelativeLayout>

@@ -8,4 +8,8 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <style name="FrameLayout.Container" parent="FrameLayout.Base">
+        <item name="android:id">@id/container</item>
+    </style>
+
 </resources>
