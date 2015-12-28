@@ -11,14 +11,15 @@
     </style>
 
     <style name="MaterialAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--<item name="android:icon">@drawable/old_ic_launcher</item>-->
         <item name="colorAccent">@color/accent</item>
         <item name="colorPrimaryDark">@color/primary_light</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorButtonNormal">@color/primary</item>
         <item name="android:buttonStyle">@style/AppTheme.Button</item>
+        <item name="buttonStyle">@style/AppTheme.Button</item>
+        <item name="android:textViewStyle">@style/AppTheme.Text</item>
+
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="popupMenuStyle">@style/popupMenuStyle</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
@@ -32,9 +33,14 @@
         <item name="color">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.Button" parent="Theme.AppCompat.Light">
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.Text" parent="android:Widget.TextView">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/primary_text</item>
     </style>
 
 </resources>

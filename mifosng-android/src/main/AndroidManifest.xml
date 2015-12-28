@@ -46,6 +46,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.DashboardFragmentActivity"
+            android:theme="@style/MaterialAppTheme"
             android:label="@string/dashboard"
             android:screenOrientation="portrait"></activity>
         <activity

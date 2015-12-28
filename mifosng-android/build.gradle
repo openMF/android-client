@@ -102,11 +102,9 @@ tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
 dependencies {
     compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
     // You must install or update the Support Repository through the SDK manager to use this dependency.
-    // You must install or update the Google Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:support-annotations:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.google.android.gms:play-services-location:8.3.0'
-    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:design:23.1.1'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.jakewharton.fliptables:fliptables:1.0.1'
@@ -116,9 +114,13 @@ dependencies {
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
+
+
     // Test libraries provided by https://code.google.com/p/android-test-kit/
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+
 
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.jakewharton:butterknife:6.1.0'

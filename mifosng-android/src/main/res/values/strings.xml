@@ -15,7 +15,7 @@
     <string name="staff_name">Staff Name</string>
     <string name="level_name">Level Name</string>
     <string name="offline">Offline *</string>
-    <string name="client_search_hint">enter client name or ID</string>
+    <string name="client_search_hint">Client name or ID</string>
     <string name="search_results">Search Results</string>
     <string name="client_search">Client Search</string>
     <string name="total">Total</string>

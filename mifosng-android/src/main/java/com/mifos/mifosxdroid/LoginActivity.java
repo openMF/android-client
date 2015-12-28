@@ -24,10 +24,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
@@ -235,7 +235,7 @@ public class LoginActivity extends BaseActivity implements Callback<User> {
     public void success(User user, Response response) {
         ((MifosApplication) getApplication()).api = api;
         hideProgress();
-        Toast.makeText(context, getString(R.string.toast_welcome) + " " + user.getUsername(), Toast.LENGTH_SHORT).show();
+        Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " " + user.getUsername());
         saveLastAccessedInstanceUrl(instanceURL);
         saveLastAccessedInstanceDomainName(et_instanceURL.getEditableText().toString());
         if (!et_port.getEditableText().toString().trim().isEmpty()) {
@@ -257,10 +257,13 @@ public class LoginActivity extends BaseActivity implements Callback<User> {
             hideProgress();
             if (retrofitError.getCause() instanceof SSLHandshakeException) {
                 promptUserToByPassTheSSLHandshake();
-            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
-                Toast.makeText(context, getString(R.string.error_login_failed), Toast.LENGTH_SHORT).show();
+            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_login_failed));
+            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                Toaster.show(findViewById(android.R.id.content), "Internal server error");
+            }
         } catch (NullPointerException e) {
-            Toast.makeText(context, getString(R.string.error_unknown), Toast.LENGTH_SHORT).show();
+            Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
         }
     }
 
@@ -271,7 +274,6 @@ public class LoginActivity extends BaseActivity implements Callback<User> {
      * that trusts any damn thing.
      */
     private void promptUserToByPassTheSSLHandshake() {
-
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("SSL Certificate Problem")
                 .setMessage("There is a problem with your SSLCertificate, would you like to continue? This connection would be unsafe.")
@@ -305,7 +307,7 @@ public class LoginActivity extends BaseActivity implements Callback<User> {
             api = new API(instanceURL, et_tenantIdentifier.getEditableText().toString().trim(), shouldByPassSSLSecurity);
             api.userAuthService.authenticate(username, password, this);
         } catch (ShortOfLengthException e) {
-            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+            Toaster.show(findViewById(android.R.id.content), e.toString());
         }
     }
 

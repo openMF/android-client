@@ -14,9 +14,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
 
 import java.util.Calendar;
 
@@ -35,8 +35,6 @@ public class OfflineCenterInputActivity extends BaseActivity implements DatePick
     EditText etBranchId;
     @InjectView(R.id.tv_select_date)
     TextView tvSelectDate;
-    @InjectView(R.id.btnSave)
-    Button btnSave;
     private String date;
     private int staffId;
     private int branchId;
@@ -90,7 +88,7 @@ public class OfflineCenterInputActivity extends BaseActivity implements DatePick
             branchId = Integer.parseInt(etBranchId.getEditableText().toString());
         } else {
             isAllDetailsFilled = false;
-            Toast.makeText(this, "Please fill all the details", Toast.LENGTH_SHORT).show();
+            Toaster.show(findViewById(android.R.id.content), "Please fill all the details");
         }
         return isAllDetailsFilled;
     }

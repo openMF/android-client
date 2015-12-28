@@ -5,17 +5,13 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/RelativeLayout.Base"
-    android:layout_marginTop="0dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
 
     <include layout="@layout/toolbar" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:orientation="vertical"
+        style="@style/LinearLayout.Base"
         android:padding="10dp">
 
         <android.support.design.widget.TextInputLayout
@@ -30,26 +26,6 @@
 
         </android.support.design.widget.TextInputLayout>
 
-
-        <!--<TextView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="10dp"-->
-        <!--android:text="@string/staff_id"-->
-        <!--android:textSize="17sp" />-->
-
-        <!--<EditText-->
-        <!--android:id="@+id/et_staff_id"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="10dp"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:inputType="number"-->
-        <!--android:padding="10dp"-->
-        <!--android:textSize="17sp" />-->
-
-
         <android.support.design.widget.TextInputLayout
             android:id="@+id/branchWrapper"
             style="@style/TextInput.Offline">
@@ -62,31 +38,12 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <!--<TextView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="10dp"-->
-        <!--android:text="@string/branch_id"-->
-        <!--android:textSize="17sp" />-->
-
-        <!--<EditText-->
-        <!--android:id="@+id/et_branch_id"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="10dp"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:inputType="number"-->
-        <!--android:padding="10dp"-->
-        <!--android:textSize="17sp" />-->
 
         <TextView
             android:id="@+id/tv_select_date"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/tap_to_select_date"
-            android:textSize="17sp" />
+            style="@style/TextView.BaseWidth"
+            android:layout_margin="5dp"
+            android:hint="@string/tap_to_select_date" />
 
         <Button
             android:id="@+id/btnSave"
@@ -94,5 +51,5 @@
             android:text="@string/save" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
 
