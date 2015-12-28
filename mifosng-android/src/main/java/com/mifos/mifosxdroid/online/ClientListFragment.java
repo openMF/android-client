@@ -65,7 +65,8 @@ public class ClientListFragment extends Fragment {
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
-        clientListFragment.setClientList(clientList);
+        if (clientList != null)
+            clientListFragment.setClientList(clientList);
         return clientListFragment;
     }
 

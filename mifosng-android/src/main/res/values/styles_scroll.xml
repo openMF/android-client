@@ -9,7 +9,7 @@
     </style>
 
     <style name="ScrollView.Login" parent="ScrollView.Base">
-        <item name="android:layout_margin">@dimen/activity_horizontal_margin</item>
+        <item name="android:padding">10dp</item>
     </style>
 
 

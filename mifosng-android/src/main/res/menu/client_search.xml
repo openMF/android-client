@@ -10,13 +10,13 @@
         android:id="@+id/mItem_list"
         android:enabled="true"
         android:title="@string/list_all_clients"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/mItem_create_new_client"
         android:enabled="true"
         android:title="@string/create_client"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/item_centers"
@@ -33,10 +33,10 @@
     -->
 
     <item
-            android:id="@+id/item_offline_centers"
-            android:enabled="true"
-            android:title="@string/offline"
-            app:showAsAction="never"/>
+        android:id="@+id/item_offline_centers"
+        android:enabled="true"
+        android:title="@string/offline"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/logout"
