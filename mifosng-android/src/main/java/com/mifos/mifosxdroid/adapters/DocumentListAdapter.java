@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.joanzapata.android.iconify.Iconify;
+import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Document;
 
@@ -75,14 +75,15 @@ public class DocumentListAdapter extends BaseAdapter {
         reusableDocumentViewHolder.tv_doc_name.setText(document.getName());
         reusableDocumentViewHolder.tv_doc_description.setText(document.getDescription()==null?"-":document.getDescription());
 
-        Iconify.IconValue cloudIcon = Iconify.IconValue.fa_download;
+        MaterialIcons cloudIcon = MaterialIcons.md_cloud_download;
+//        Iconify.IconValue cloudIcon = Iconify.IconValue.fa_download;
 
         //TODO Implement Local Storage Check to show File Download Info
         //Iconify.IconValue storageIcon = Iconify.IconValue.fa_hdd_o;
 
-        reusableDocumentViewHolder.tv_doc_location_icon.setText(cloudIcon.formattedName());
+        reusableDocumentViewHolder.tv_doc_location_icon.setText(cloudIcon.character());
 
-        Iconify.addIcons(reusableDocumentViewHolder.tv_doc_location_icon);
+//        Iconify.addIcons(reusableDocumentViewHolder.tv_doc_location_icon);
 
         return view;
     }

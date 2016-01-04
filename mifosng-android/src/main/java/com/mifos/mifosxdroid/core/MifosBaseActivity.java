@@ -1,3 +1,8 @@
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
 package com.mifos.mifosxdroid.core;
 
 import android.app.ProgressDialog;
@@ -5,13 +10,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
 
 /**
  * @author fomenkoo
  */
-public class BaseActivity extends AppCompatActivity {
+public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback {
 
     private ProgressDialog progress;
     protected Toolbar toolbar;
@@ -42,14 +48,21 @@ public class BaseActivity extends AppCompatActivity {
         setActionBarTitle(getResources().getString(title));
     }
 
-    public int getActionbarHeight() {
-        return toolbar.getHeight();
-    }
-
     public Toolbar getToolbar() {
         return toolbar;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void showProgress(String message) {
         if (progress == null) {
             progress = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
@@ -57,11 +70,23 @@ public class BaseActivity extends AppCompatActivity {
         }
         progress.setMessage(message);
         progress.show();
+
     }
 
+    @Override
+    public void setToolbarTitle(String title) {
+        setActionBarTitle(title);
+    }
+
+    @Override
     public void hideProgress() {
         if (progress != null && progress.isShowing())
             progress.dismiss();
+    }
+
+    @Override
+    public void logout() {
+        // To be implemented
     }
 
     public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {

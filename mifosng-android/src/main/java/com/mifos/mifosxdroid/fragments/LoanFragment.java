@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.Loan;
 import com.orm.query.Condition;
 import com.orm.query.Select;
@@ -26,8 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class LoanFragment extends Fragment
-{
+public class LoanFragment extends MifosBaseFragment {
     @InjectView(R.id.lv_loan)
     ListView lv_loans;
     LoanListAdapter adapter = null;
@@ -36,8 +35,7 @@ public class LoanFragment extends Fragment
     final List<Loan> loansClientHave = new ArrayList<Loan>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loan, null);
         ButterKnife.inject(this, view);
         getClientId();
@@ -45,22 +43,19 @@ public class LoanFragment extends Fragment
         return view;
     }
 
-    private int getClientId()
-    {
+    private int getClientId() {
         clientId = getArguments().getInt("clientId", 0);
         return clientId;
     }
 
-    private void setAdapter()
-    {
+    private void setAdapter() {
         getLoans();
         if (adapter == null)
             adapter = new LoanListAdapter(getActivity(), loansClientHave);
         lv_loans.setAdapter(adapter);
     }
 
-    private List<Loan> getLoans()
-    {
+    private List<Loan> getLoans() {
         loansClientHave.clear();
         List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)).list();
         Log.i(tag, "Looking for loan with client ID:" + clientId);

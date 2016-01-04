@@ -1,233 +1,160 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    style="@style/ScrollView.Base">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp">
+    <LinearLayout style="@style/LinearLayout.Base">
 
+        <LinearLayout style="@style/LinearLayout.Width">
 
+            <FrameLayout
+                android:layout_width="75dp"
+                android:layout_height="75dp">
 
-        <ImageView
-            android:id="@+id/iv_clientImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:adjustViewBounds="false"
-            android:paddingBottom="8dp"
-            android:paddingRight="8dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_dp_placeholder"
-            android:visibility="visible"/>
+                <ProgressBar
+                    android:id="@+id/pb_imageProgressBar"
+                    style="@style/ProgressBar.Base"
+                    android:layout_gravity="center" />
 
-        <ProgressBar
-            android:id="@+id/pb_imageProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            style="@android:style/Widget.ProgressBar.Small.Inverse"
-            android:visibility="visible">
-        </ProgressBar>
+                <com.mifos.mifosxdroid.views.CircularImageView
+                    android:id="@+id/iv_clientImage"
+                    style="@style/ClientImage"
+                    android:layout_gravity="center" />
 
-        <TextView
-            android:id="@+id/tv_fullName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/iv_clientImage"
-            android:text="@string/full_name"
-            android:textSize="24dp"
-            android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_fullName"
+                style="@style/TextView.Client" />
+
+        </LinearLayout>
+
 
         <TableLayout
             android:id="@+id/tbl_clientDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/tv_fullName"
-            android:layout_toRightOf="@+id/iv_clientImage">
-
+            style="@style/Table">
 
             <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
+                android:id="@+id/row_account"
+                style="@style/TableRow">
 
                 <TextView
-                    android:id="@+id/tvs_accountNumber"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
+                    style="@style/TextView.Row"
                     android:text="@string/account_number" />
 
                 <TextView
                     android:id="@+id/tv_accountNumber"
-                    android:layout_width="0dp"
-                    android:gravity="right"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
-                    android:text="20015063" />
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:id="@+id/row_external"
+                style="@style/TableRow">
 
                 <TextView
-                    android:id="@+id/tvs_externalId"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
+                    style="@style/TextView.Row"
                     android:text="@string/external_id" />
 
                 <TextView
                     android:id="@+id/tv_externalId"
-                    android:gravity="right"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
-                    android:text="" />
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:id="@+id/row_activation"
+                style="@style/TableRow">
 
                 <TextView
-                    android:id="@+id/tvs_activationDate"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
+                    style="@style/TextView.Row"
                     android:text="@string/activation_date" />
 
                 <TextView
                     android:id="@+id/tv_activationDate"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:gravity="right"
-                    android:layout_height="wrap_content"
-                    android:text="" />
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
+                android:id="@+id/row_office"
+                style="@style/TableRow">
 
                 <TextView
-                    android:id="@+id/tvs_office"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
+                    style="@style/TextView.Row"
                     android:text="@string/office" />
 
                 <TextView
                     android:id="@+id/tv_office"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:gravity="right"
-                    android:layout_height="wrap_content"
-                    android:text="" />
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
+                android:id="@+id/row_group"
+                style="@style/TableRow"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tvs_group"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
+                    style="@style/TextView.Row"
                     android:text="@string/group" />
 
                 <TextView
                     android:id="@+id/tv_group"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:gravity="right"
-                    android:layout_height="wrap_content"
-                    android:text="" />
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
+                android:id="@+id/row_staff"
+                style="@style/TableRow"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tvs_loanOfficer"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
+                    style="@style/TextView.Row"
                     android:text="@string/staff" />
 
                 <TextView
                     android:id="@+id/tv_loanOfficer"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    style="@style/TextView.Row"
                     android:gravity="right"
-                    android:layout_height="wrap_content"
                     android:text="" />
             </TableRow>
 
             <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
+                android:id="@+id/row_loan"
+                android:visibility="gone"
+                style="@style/TableRow">
 
                 <TextView
-                    android:id="@+id/tvs_loanCycle"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
+                    style="@style/TextView.Row"
                     android:text="@string/loan_cycle" />
 
                 <TextView
                     android:id="@+id/tv_loanCycle"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    style="@style/TextView.Row"
                     android:gravity="right"
-                    android:layout_height="wrap_content"
                     android:text="" />
             </TableRow>
 
         </TableLayout>
 
         <include
-            layout="@layout/view_account_accordion_section"
+            android:layout_marginTop="10dp"
             android:id="@+id/account_accordion_section_loans"
+            layout="@layout/view_account_accordion_section"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tbl_clientDetails"
-            />
+            android:layout_height="wrap_content" />
 
         <include
-            layout="@layout/view_account_accordion_section"
             android:id="@+id/account_accordion_section_savings"
+            layout="@layout/view_account_accordion_section"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/account_accordion_section_loans"
-            />
+            android:layout_height="wrap_content" />
 
         <include
-            layout="@layout/view_account_accordion_section"
             android:id="@+id/account_accordion_section_recurring"
+            layout="@layout/view_account_accordion_section"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/account_accordion_section_savings"
-            />
+            android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>
