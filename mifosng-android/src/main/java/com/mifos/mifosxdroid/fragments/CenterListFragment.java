@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +28,7 @@ import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.AttendanceType;
 import com.mifos.objects.db.Client;
 import com.mifos.objects.db.CollectionMeetingCalendar;
@@ -57,7 +57,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CenterListFragment extends Fragment implements AdapterView.OnItemClickListener,
+public class CenterListFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener,
         SaveOfflineDataHelper.OfflineDataSaveListener {
 
     public static final String TAG = "Center List Fragment";
@@ -135,7 +135,7 @@ public class CenterListFragment extends Fragment implements AdapterView.OnItemCl
             int branchId = preferences.getInt(OfflineCenterInputActivity.BRANCH_ID_KEY, -1);
             Log.i(TAG, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" + branchId);
             //TODO -- Need to ask ---  Hard coding date format and locale
-            ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
+            MifosApplication.getApi().centerService.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
                     new Callback<List<OfflineCenter>>() {
                         @Override
                         public void success(List<OfflineCenter> centers, Response response) {

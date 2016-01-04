@@ -6,11 +6,10 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:appcompat="http://schemas.android.com/apk/res-auto">
+    xmlns:appcompat="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_save"
         android:title="@string/save"
-        appcompat:showAsAction="always"
-       />
+        appcompat:showAsAction="always" />
 </menu>

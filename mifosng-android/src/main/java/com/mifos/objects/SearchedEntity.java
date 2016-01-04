@@ -95,5 +95,8 @@ public class SearchedEntity {
         return this;
     }
 
+    public String getDescription() {
+        return "#" + getEntityId() + " - " + getEntityName();
+    }
 
 }

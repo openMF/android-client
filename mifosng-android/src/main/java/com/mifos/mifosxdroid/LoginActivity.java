@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.exceptions.ShortOfLengthException;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
@@ -59,7 +59,7 @@ import static android.view.View.VISIBLE;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends BaseActivity implements Callback<User> {
+public class LoginActivity extends MifosBaseActivity implements Callback<User> {
 
     private final static String TAG = LoginActivity.class.getSimpleName();
     private static final String DOMAIN_NAME_REGEX_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";

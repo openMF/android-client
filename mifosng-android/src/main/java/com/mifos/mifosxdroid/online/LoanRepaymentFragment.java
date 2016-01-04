@@ -5,16 +5,12 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,6 +27,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
@@ -40,7 +37,6 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,45 +51,47 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDatePickListener{
+public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
 
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
-
-    ActionBarActivity activity;
-
-    SharedPreferences sharedPreferences;
-
-    ActionBar actionBar;
+    private View rootView;
+    private SharedPreferences sharedPreferences;
 
     // Arguments Passed From the Loan Account Summary Fragment
-    String clientName;
-    String loanAccountNumber;
-    String loanProductName;
-    Double amountInArrears;
+    private String clientName;
+    private String loanAccountNumber;
+    private String loanProductName;
+    private Double amountInArrears;
 
     // Values fetched from Loan Repayment Template
     List<PaymentTypeOption> paymentTypeOptionList;
     HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
 
-    @InjectView(R.id.tv_clientName) TextView tv_clientName;
-    @InjectView(R.id.tv_loan_product_short_name) TextView tv_loanProductShortName;
-    @InjectView(R.id.tv_loanAccountNumber) TextView tv_loanAccountNumber;
-    @InjectView(R.id.tv_in_arrears) TextView tv_inArrears;
-    @InjectView(R.id.tv_amount_due) TextView tv_amountDue;
-    @InjectView(R.id.tv_repayment_date) TextView tv_repaymentDate;
-    @InjectView(R.id.et_amount) EditText et_amount;
-    @InjectView(R.id.et_additional_payment) EditText et_additionalPayment;
-    @InjectView(R.id.et_fees) EditText et_fees;
-    @InjectView(R.id.tv_total) TextView tv_total;
-    @InjectView(R.id.sp_payment_type) Spinner sp_paymentType;
-    @InjectView(R.id.bt_paynow) Button bt_paynow;
-
-    private OnFragmentInteractionListener mListener;
+    @InjectView(R.id.tv_clientName)
+    TextView tv_clientName;
+    @InjectView(R.id.tv_loan_product_short_name)
+    TextView tv_loanProductShortName;
+    @InjectView(R.id.tv_loanAccountNumber)
+    TextView tv_loanAccountNumber;
+    @InjectView(R.id.tv_in_arrears)
+    TextView tv_inArrears;
+    @InjectView(R.id.tv_amount_due)
+    TextView tv_amountDue;
+    @InjectView(R.id.tv_repayment_date)
+    TextView tv_repaymentDate;
+    @InjectView(R.id.et_amount)
+    EditText et_amount;
+    @InjectView(R.id.et_additional_payment)
+    EditText et_additionalPayment;
+    @InjectView(R.id.et_fees)
+    EditText et_fees;
+    @InjectView(R.id.tv_total)
+    TextView tv_total;
+    @InjectView(R.id.sp_payment_type)
+    Spinner sp_paymentType;
+    @InjectView(R.id.bt_paynow)
+    Button bt_paynow;
 
     DialogFragment mfDatePicker;
-
 
     public LoanRepaymentFragment() {
         // Required empty public constructor
@@ -102,8 +100,7 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
     public static LoanRepaymentFragment newInstance(LoanWithAssociations loanWithAssociations) {
         LoanRepaymentFragment fragment = new LoanRepaymentFragment();
         Bundle args = new Bundle();
-        if(loanWithAssociations != null)
-        {
+        if (loanWithAssociations != null) {
             args.putString(Constants.CLIENT_NAME, loanWithAssociations.getClientName());
             args.putString(Constants.LOAN_PRODUCT_NAME, loanWithAssociations.getLoanProductName());
             args.putString(Constants.LOAN_ACCOUNT_NUMBER, loanWithAssociations.getAccountNo());
@@ -131,44 +128,19 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         rootView = inflater.inflate(R.layout.fragment_loan_repayment, container, false);
-        activity = (ActionBarActivity) getActivity();
-        safeUIBlockingUtility = new SafeUIBlockingUtility(LoanRepaymentFragment.this.getActivity());
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        actionBar = activity.getSupportActionBar();
-        actionBar.setTitle("Loan Repayment");
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        setToolbarTitle("Loan Repayment");
         ButterKnife.inject(this, rootView);
-
         inflateUI();
-
         return rootView;
     }
 
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public void inflateUI(){
-
-        safeUIBlockingUtility.safelyBlockUI();
+    public void inflateUI() {
+        hideProgress();
 
         tv_clientName.setText(clientName);
         tv_loanProductShortName.setText(loanProductName);
@@ -211,11 +183,11 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                try{
+                try {
                     tv_total.setText(String.valueOf(calculateTotal()));
-                }catch (NumberFormatException nfe){
+                } catch (NumberFormatException nfe) {
                     et_additionalPayment.setText("0");
-                }finally {
+                } finally {
                     tv_total.setText(String.valueOf(calculateTotal()));
                 }
             }
@@ -236,11 +208,11 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                try{
+                try {
                     tv_total.setText(String.valueOf(calculateTotal()));
-                }catch (NumberFormatException nfe){
+                } catch (NumberFormatException nfe) {
                     et_fees.setText("0");
-                }finally {
+                } finally {
                     tv_total.setText(String.valueOf(calculateTotal()));
                 }
             }
@@ -259,11 +231,11 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
     }
 
-    public Double calculateTotal(){
+    public Double calculateTotal() {
 
         return Double.parseDouble(et_amount.getText().toString())
-                +Double.parseDouble(et_additionalPayment.getText().toString())
-                +Double.parseDouble(et_fees.getText().toString());
+                + Double.parseDouble(et_additionalPayment.getText().toString())
+                + Double.parseDouble(et_fees.getText().toString());
 
     }
 
@@ -272,15 +244,14 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
     }
 
-    public void inflatePaymentOptions(){
+    public void inflatePaymentOptions() {
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.getLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
+        MifosApplication.getApi().loanService.getLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
 
             @Override
             public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
 
-                if(loanRepaymentTemplate != null)
-                {
+                if (loanRepaymentTemplate != null) {
                     tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
 
                     inflateRepaymentDate();
@@ -308,45 +279,34 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
                     paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_paymentType.setAdapter(paymentTypeAdapter);
 
-                    et_amount.setText(String.valueOf(loanRepaymentTemplate.getPrincipalPortion()+loanRepaymentTemplate.getInterestPortion()));
+                    et_amount.setText(String.valueOf(loanRepaymentTemplate.getPrincipalPortion() + loanRepaymentTemplate.getInterestPortion()));
                     et_additionalPayment.setText("0.0");
                     et_fees.setText(String.valueOf(loanRepaymentTemplate.getFeeChargesPortion()));
 
                 }
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
         });
 
     }
 
-    public void inflateRepaymentDate(){
-
+    public void inflateRepaymentDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
-
-
         tv_repaymentDate.setText(MFDatePicker.getDatePickedAsString());
-
         /*
             TODO Add Validation to make sure :
             1. Date Is in Correct Format
             2. Date Entered is not greater than Date Today i.e Date is not in future
          */
-
         tv_repaymentDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
-
             }
         });
 
@@ -354,13 +314,11 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
 
     @Override
     public void onDatePicked(String date) {
-
         tv_repaymentDate.setText(date);
-
     }
 
     @OnClick(R.id.bt_paynow)
-    public void onPayNowButtonClicked(){
+    public void onPayNowButtonClicked() {
 
         try {
             String[] headers = {"Field", "Value"};
@@ -406,19 +364,19 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
                         }
                     })
                     .show();
-        }catch (NullPointerException npe) {
-            Toast.makeText(getActivity(),"Please make sure every field has a value, before submitting repayment!",Toast.LENGTH_LONG).show();
+        } catch (NullPointerException npe) {
+            Toast.makeText(getActivity(), "Please make sure every field has a value, before submitting repayment!", Toast.LENGTH_LONG).show();
         }
 
 
     }
 
     @OnClick(R.id.bt_cancelPayment)
-    public void onCancelPaymentButtonClicked(){
+    public void onCancelPaymentButtonClicked() {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
-    public void submitPayment(){
+    public void submitPayment() {
         //TODO Implement a proper builder method here
 
         String dateString = tv_repaymentDate.getText().toString().replace("-", " ");
@@ -432,26 +390,25 @@ public class LoanRepaymentFragment extends Fragment implements MFDatePicker.OnDa
         String builtRequest = new Gson().toJson(loanRepaymentRequest);
         Log.i("TAG", builtRequest);
 
-        safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.submitPayment(Integer.parseInt(loanAccountNumber),
+        showProgress();
+        MifosApplication.getApi().loanService.submitPayment(Integer.parseInt(loanAccountNumber),
                 loanRepaymentRequest,
                 new Callback<LoanRepaymentResponse>() {
                     @Override
                     public void success(LoanRepaymentResponse loanRepaymentResponse, Response response) {
 
-                        if (loanRepaymentResponse != null)
-                        {
-                            Toast.makeText(getActivity(),"Payment Successful, Transaction ID = "+loanRepaymentResponse.getResourceId(),
+                        if (loanRepaymentResponse != null) {
+                            Toast.makeText(getActivity(), "Payment Successful, Transaction ID = " + loanRepaymentResponse.getResourceId(),
                                     Toast.LENGTH_LONG).show();
                         }
-                        safeUIBlockingUtility.safelyUnBlockUI();
+                        hideProgress();
                         getActivity().getSupportFragmentManager().popBackStackImmediate();
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
-                        Toast.makeText(getActivity(),"Payment Failed",Toast.LENGTH_SHORT).show();
-                        safeUIBlockingUtility.safelyUnBlockUI();
+                        Toast.makeText(getActivity(), "Payment Failed", Toast.LENGTH_SHORT).show();
+                        hideProgress();
                     }
                 });
     }

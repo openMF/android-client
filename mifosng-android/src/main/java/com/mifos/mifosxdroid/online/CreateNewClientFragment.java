@@ -142,7 +142,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     private void inflateOfficeSpinner() {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
+        MifosApplication.getApi().officeService.getAllOffices(new Callback<List<Office>>() {
 
                                                                                                        @Override
                                                                                                        public void success(List<Office> offices, Response response) {
@@ -200,7 +200,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
 
             safeUIBlockingUtility.safelyBlockUI();
 
-            ((MifosApplication) getActivity().getApplicationContext()).api.clientService.createClient(clientPayload, new Callback<Client>() {
+            MifosApplication.getApi().clientService.createClient(clientPayload, new Callback<Client>() {
                 @Override
                 public void success(Client client, Response response) {
                     safeUIBlockingUtility.safelyUnBlockUI();

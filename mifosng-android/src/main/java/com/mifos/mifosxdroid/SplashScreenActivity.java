@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
@@ -28,7 +28,7 @@ import com.mifos.utils.MifosApplication;
  * This is the First Activity which can be used for initial checks, inits at app Startup
  */
 
-public class SplashScreenActivity extends BaseActivity {
+public class SplashScreenActivity extends MifosBaseActivity {
 
     private SharedPreferences sharedPreferences;
     private String authenticationToken;

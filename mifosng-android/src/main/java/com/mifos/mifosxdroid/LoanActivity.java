@@ -7,35 +7,32 @@ package com.mifos.mifosxdroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.fragments.LoanFragment;
 
 
-public class LoanActivity extends ActionBarActivity
-{
+public class LoanActivity extends MifosBaseActivity {
     private int clientId;
     private Intent intentForExtras;
-    public void onCreate(Bundle savedInstanceState)
-    {
+
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_global_container_layout);
+        setContentView(R.layout.activity_toolbar_container);
         init();
         setFragment();
     }
-    private void init()
-    {
+
+    private void init() {
         intentForExtras = getIntent();
-        clientId = intentForExtras.getIntExtra("clientId",0);
+        clientId = intentForExtras.getIntExtra("clientId", 0);
     }
-    private void setFragment()
-    {
-        FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+
+    private void setFragment() {
         LoanFragment fragment = new LoanFragment();
         Bundle arguments = new Bundle();
         arguments.putInt("clientId", clientId);
         fragment.setArguments(arguments);
-        fragmentTransaction.replace(R.id.global_container,fragment).commit();
+        replaceFragment(fragment, false, R.id.container);
     }
 }
