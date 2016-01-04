@@ -26,7 +26,7 @@ public class DashboardFragmentActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        replaceFragment(ClientSearchFragment.newInstance(), false, R.id.container);
+        replaceFragment(new ClientSearchFragment(), false, R.id.container);
     }
 
     @Override

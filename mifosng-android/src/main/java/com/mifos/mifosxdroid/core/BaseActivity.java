@@ -11,7 +11,7 @@ import com.mifos.mifosxdroid.R;
 /**
  * @author fomenkoo
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements BaseActivityCallback {
 
     private ProgressDialog progress;
     protected Toolbar toolbar;
@@ -50,6 +50,7 @@ public class BaseActivity extends AppCompatActivity {
         return toolbar;
     }
 
+    @Override
     public void showProgress(String message) {
         if (progress == null) {
             progress = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
@@ -57,11 +58,18 @@ public class BaseActivity extends AppCompatActivity {
         }
         progress.setMessage(message);
         progress.show();
+
     }
 
+    @Override
     public void hideProgress() {
         if (progress != null && progress.isShowing())
             progress.dismiss();
+    }
+
+    @Override
+    public void logout() {
+        // To be implemented
     }
 
     public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {

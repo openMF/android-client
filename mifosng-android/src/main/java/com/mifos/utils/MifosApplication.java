@@ -5,6 +5,7 @@
 
 package com.mifos.utils;
 
+import android.content.Context;
 import android.graphics.Typeface;
 
 import com.mifos.services.API;
@@ -21,6 +22,21 @@ public class MifosApplication extends SugarApp {
     // Contains fonts to re-user
     public static final Map<Integer, Typeface> typefaceManager = new HashMap<>();
 
-    public API api;
+    public static API api;
 
+    private static Context context;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = this;
+    }
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static API getApi() {
+        return api;
+    }
 }
