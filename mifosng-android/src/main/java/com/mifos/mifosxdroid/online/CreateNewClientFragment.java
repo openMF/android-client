@@ -148,7 +148,8 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getActivity().getActionBar() != null)
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
         ButterKnife.inject(this, rootView);
         inflateOfficeSpinner();
@@ -547,6 +548,8 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
             }
         });
     }
+
+
 
     private void initiateClientCreation(ClientPayload clientPayload) {
 

@@ -1,199 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ This project is licensed under the open source MPL V2.
-  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
-  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/RelativeLayout.Base">
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin">
+    <include layout="@layout/toolbar" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ScrollView
+        style="@style/ScrollView.Login"
+        android:layout_below="@+id/toolbar">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="@string/mifos"
-        android:textSize="30sp"
-        android:id="@+id/tv_title"
-        android:textColor="#ff003fff"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"/>
+        <LinearLayout style="@style/LinearLayout.Base">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ll_URL"
-        android:orientation="horizontal"
-        android:layout_below="@id/tv_title"
-        android:weightSum="4">
+            <TextView style="@style/TextView.AppTitle" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/mifos_instance_domain"
-            android:id="@+id/tv_title_instance"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="3"
-            />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/userWrapper"
+                style="@style/TextInput.Base">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/port"
-            android:id="@+id/tv_title_instance_port"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            />
+                <EditText
+                    android:id="@+id/et_username"
+                    style="@style/EditText.Username"
+                    android:nextFocusDown="@+id/et_password" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_URL_INPUTS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="4"
-        android:orientation="horizontal"
-        android:layout_below="@+id/ll_URL">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_instanceURL"
-            android:inputType="text"
-            android:hint="@string/default_instance_url"
-            android:minWidth="200dp"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/et_instancePort"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="3"
-             />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_instancePort"
-            android:inputType="text"
-            android:hint="@string/default_port"
-            android:minWidth="200dp"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/et_tenantIdentifier"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:maxLength="9" />
-    </LinearLayout>
+            </android.support.design.widget.TextInputLayout>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_constructed_instance_url"
-        android:layout_below="@id/ll_URL_INPUTS"
-        android:layout_alignLeft="@id/ll_URL"
-        android:layout_marginTop="16dp"/>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordWrapper"
+                style="@style/TextInput.Base">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll_TENANT_IDENTIFIER"
-            android:orientation="horizontal"
-            android:layout_below="@id/tv_constructed_instance_url"
-            android:weightSum="4"
-            android:paddingTop="4dp">
+                <EditText
+                    android:id="@+id/et_password"
+                    style="@style/EditText.Password"
+                    android:nextFocusDown="@+id/bt_login" />
+            </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/tenant_identifier"
-                android:id="@+id/tv_tenant_identifier"
-                android:layout_weight="2"
-                />
+                android:id="@+id/bt_connectionSettings"
+                style="@style/TextView.ConnectionSettings" />
 
-            <EditText
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/ll_connectionSettings"
+                style="@style/LinearLayout.Base"
                 android:layout_height="wrap_content"
-                android:id="@+id/et_tenantIdentifier"
-                android:inputType="text"
-                android:hint="@string/default_tenant"
-                android:minWidth="200dp"
-                android:imeOptions="actionNext"
-                android:nextFocusDown="@+id/et_username"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="2"
-                />
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
+                <LinearLayout style="@style/LinearLayout.Width">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/urlWrapper"
+                        style="@style/TextInput.Base.Weight"
+                        android:layout_weight="3">
+
+                        <EditText
+                            android:id="@+id/et_instanceURL"
+                            style="@style/EditText.Connection"
+                            android:hint="Instance URL"
+                            android:nextFocusDown="@+id/et_instancePort" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/portWrapper"
+                        style="@style/TextInput.Base.Weight"
+                        android:layout_weight="1">
+
+                        <EditText
+                            android:id="@+id/et_instancePort"
+                            style="@style/EditText.Connection"
+                            android:hint="Port"
+                            android:inputType="number"
+                            android:maxLength="9"
+                            android:nextFocusDown="@+id/et_tenantIdentifier" />
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_constructed_instance_url"
+                    style="@style/TextView.Base"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="16dp" />
+
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+
+                    <EditText
+                        android:id="@+id/et_tenantIdentifier"
+                        style="@style/EditText.Tenant"
+                        android:hint="@string/tenant_identifier"
+                        android:nextFocusDown="@+id/bt_login" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/bt_login"
+                style="@style/Button.Login" />
 
         </LinearLayout>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/et_username"
-        android:hint="@string/username"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:nextFocusDown="@+id/et_password"
-        android:layout_below="@+id/tv_title_username"
-        android:layout_alignLeft="@+id/tv_title_username"
-        android:layout_alignStart="@+id/tv_title_username"
-        android:layout_alignRight="@+id/ll_URL"
-        android:layout_alignEnd="@+id/ll_URL" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/et_password"
-        android:hint="@string/password"
-        android:imeOptions="actionDone"
-        android:imeActionLabel="@string/login"
-        android:nextFocusDown="@+id/bt_login"
-        android:layout_below="@+id/tv_title_password"
-        android:layout_alignLeft="@+id/tv_title_password"
-        android:layout_alignStart="@+id/tv_title_password"
-        android:layout_alignRight="@+id/et_username"
-        android:layout_alignEnd="@+id/et_username" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:id="@+id/bt_login"
-        android:layout_below="@+id/et_password"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/username"
-        android:id="@+id/tv_title_username"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/ll_TENANT_IDENTIFIER"
-        android:layout_alignLeft="@+id/ll_TENANT_IDENTIFIER"
-        android:layout_alignStart="@+id/ll_URL" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/password"
-        android:layout_marginTop="16dp"
-        android:id="@+id/tv_title_password"
-        android:layout_below="@+id/et_username"
-        android:layout_alignLeft="@+id/et_username"
-        android:layout_alignStart="@+id/et_username" />
+    </ScrollView>
 
 </RelativeLayout>
-</ScrollView>

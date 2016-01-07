@@ -3,62 +3,32 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
 
+    <TextView style="@style/TextView.Search" />
 
-    <EditText
-        android:id="@+id/et_search_by_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_title_client_search"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/client_search_hint" />
+    <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+        <EditText
+            android:id="@+id/et_search_by_id"
+            style="@style/EditText.BaseWidth"
+            android:hint="@string/client_search_hint" />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/bt_searchClient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/et_search_by_id"
-        android:layout_margin="8dp"
-        android:layout_marginRight="10dp"
+        style="@style/Button.Base"
+        android:layout_marginTop="10dp"
         android:text="@string/search" />
 
     <TextView
         android:id="@+id/tv_title_search_results"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_title_client_search"
-        android:layout_alignStart="@+id/tv_title_client_search"
-        android:layout_below="@+id/bt_searchClient"
-        android:text="@string/search_results"
-        android:textSize="20sp" />
+        style="@style/TextView.Search.Results"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/lv_searchResults"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_title_search_results" />
-
-    <TextView
-        android:id="@+id/tv_title_client_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="@string/client_search"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="24sp" />
-
-
-</RelativeLayout>
+        android:layout_height="wrap_content" />
+</LinearLayout>

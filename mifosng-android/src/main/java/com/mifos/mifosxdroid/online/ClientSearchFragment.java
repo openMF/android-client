@@ -20,9 +20,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MifosApplication;
@@ -41,26 +41,23 @@ import retrofit.client.Response;
 
 public class ClientSearchFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    private static final String TAG = "Client Search Fragment";
+    private static final String TAG = ClientSearchFragment.class.getSimpleName();
 
     @InjectView(R.id.et_search_by_id)
     EditText et_searchById;
+
     @InjectView(R.id.bt_searchClient)
     Button bt_searchClient;
+
     @InjectView(R.id.lv_searchResults)
     ListView lv_searchResults;
 
-    View rootView;
     List<String> clientNames = new ArrayList<String>();
     List<Integer> clientIds = new ArrayList<Integer>();
     SafeUIBlockingUtility safeUIBlockingUtility;
     private String searchQuery;
 
     InputMethodManager inputMethodManager;
-
-    public ClientSearchFragment() {
-        // Required empty public constructor
-    }
 
     public static ClientSearchFragment newInstance() {
         ClientSearchFragment fragment = new ClientSearchFragment();
@@ -70,38 +67,27 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inputMethodManager = (InputMethodManager) getActivity().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
+        inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-        rootView = inflater.inflate(R.layout.fragment_client_search, null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_client_search, null);
         ButterKnife.inject(this, rootView);
-
-
         return rootView;
     }
 
     @OnClick(R.id.bt_searchClient)
     public void performSearch() {
-
         if (!et_searchById.getEditableText().toString().trim().isEmpty()) {
             searchQuery = et_searchById.getEditableText().toString().trim();
             findClients(searchQuery);
-
         } else {
-            Toast.makeText(getActivity(), "No Search Query Entered!", Toast.LENGTH_SHORT).show();
+            Toaster.show(et_searchById, "No Search Query Entered!");
         }
-
-
     }
 
-
     public void findClients(final String clientName) {
-
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
         ((MifosApplication) getActivity().getApplicationContext()).api.searchService.searchClientsByName(clientName, new Callback<List<SearchedEntity>>() {
@@ -129,8 +115,7 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
                     //If the search query returned one or more results close the keyboard
                     hideKeyboard();
                 } else {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                            getActivity());
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Message");
                     alertDialogBuilder
                             .setMessage("No results found for entered query")
@@ -139,7 +124,6 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
                             dialog.dismiss();
                         }
                     }).create().show();
-
                 }
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
@@ -149,8 +133,6 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
         });
-
-
     }
 
     @Override
@@ -160,10 +142,8 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onPause() {
-
         //Fragment getting detached, keyboard if open must be hidden
         hideKeyboard();
-
         super.onPause();
     }
 
@@ -172,7 +152,6 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
         1. If user entered a search query and went out of the app.
         2. If user entered a search query and got some search results and went out of the app.
      */
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -186,35 +165,26 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
         } catch (NullPointerException npe) {
             //Looks like edit text didn't get initialized properly
         }
-
     }
 
     @Override
     public void onDetach() {
-
         super.onDetach();
-
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-
             String queryString = savedInstanceState.getString(TAG + et_searchById.getId());
-
             if (queryString != null && !(queryString.equals(""))) {
                 et_searchById.setText(queryString);
-
             }
         }
-
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
         Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
         clientActivityIntent.putExtra(Constants.CLIENT_ID, clientIds.get(i));
         startActivity(clientActivityIntent);
@@ -222,9 +192,6 @@ public class ClientSearchFragment extends Fragment implements AdapterView.OnItem
     }
 
     public void hideKeyboard() {
-
         inputMethodManager.hideSoftInputFromWindow(et_searchById.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-
     }
-
 }

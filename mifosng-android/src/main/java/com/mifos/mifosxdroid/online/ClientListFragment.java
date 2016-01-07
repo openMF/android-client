@@ -65,7 +65,8 @@ public class ClientListFragment extends Fragment {
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
-        clientListFragment.setClientList(clientList);
+        if (clientList != null)
+            clientListFragment.setClientList(clientList);
         return clientListFragment;
     }
 
@@ -82,7 +83,8 @@ public class ClientListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getActivity().getActionBar() != null)
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
@@ -142,7 +144,7 @@ public class ClientListFragment extends Fragment {
 
             swipeRefreshLayout.setRefreshing(true);
             //Get a Client List
-            ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(new Callback<Page<Client>>() {
+            ((MifosApplication) getActivity().getApplication()).api.clientService.listAllClients(new Callback<Page<Client>>() {
                 @Override
                 public void success(Page<Client> page, Response response) {
                     clientList = page.getPageItems();
@@ -202,7 +204,7 @@ public class ClientListFragment extends Fragment {
                     offset += limit + 1;
                     swipeRefreshLayout.setRefreshing(true);
 
-                    ((MifosApplication)getActivity().getApplication()).api.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
+                    ((MifosApplication) getActivity().getApplication()).api.clientService.listAllClients(offset, limit, new Callback<Page<Client>>() {
                         @Override
                         public void success(Page<Client> clientPage, Response response) {
 
