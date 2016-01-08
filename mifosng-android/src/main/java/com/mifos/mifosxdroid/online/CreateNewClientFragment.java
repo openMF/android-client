@@ -71,12 +71,8 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     private static final String TAG = "CreateNewClient";
     @InjectView(R.id.et_client_first_name)
     EditText et_clientFirstName;
-    @InjectView(R.id.tv_client_first_name)
-    TextView tv_clientFirstName;
     @InjectView(R.id.et_client_last_name)
     EditText et_clientLastName;
-    @InjectView(R.id.tv_client_last_name)
-    TextView tv_clientLastName;
     @InjectView(R.id.et_client_middle_name)
     EditText et_clientMiddleName;
     @InjectView(R.id.et_client_mobile_no)
@@ -565,9 +561,8 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
             return;
         }
         if (!isValidMobileNo()) {
-            return;
         }
-        //Date validation : check for date less than or equal to current date
+
         else {
 
                 safeUIBlockingUtility.safelyBlockUI();
