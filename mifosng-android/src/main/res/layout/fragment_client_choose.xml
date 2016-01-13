@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/TextView.Search.Results"
+        android:textSize="20sp"
+        android:text="@string/choose_client" />
+
+    <ListView
+        android:id="@+id/lv_clients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true" />
+</LinearLayout>
