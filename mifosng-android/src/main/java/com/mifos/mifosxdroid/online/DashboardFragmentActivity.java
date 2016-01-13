@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -45,9 +46,9 @@ public class DashboardFragmentActivity extends BaseActivity {
             case R.id.mItem_list:
                 loadClientList();
                 break;
-            //case R.id.item_collection_sheet :
-            //startActivity(new Intent(DashboardFragmentActivity.this, GenerateCollectionSheet.class));
-            //    break;
+            case R.id.item_survey:
+                loadClientListForSurvey();
+                break;
             case R.id.item_offline_centers:
                 startActivity(new Intent(this, OfflineCenterInputActivity.class));
                 break;
@@ -66,7 +67,9 @@ public class DashboardFragmentActivity extends BaseActivity {
     public void loadClientList() {
         replaceFragment(ClientListFragment.newInstance(null), true, R.id.container);
     }
-
+    public void loadClientListForSurvey() {
+        replaceFragment(ClientChooseFragment.newInstance(), true, R.id.container);
+    }
     public void openCreateClient() {
         replaceFragment(CreateNewClientFragment.newInstance(), true, R.id.container);
     }

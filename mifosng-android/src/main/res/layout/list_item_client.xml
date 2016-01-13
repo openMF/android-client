@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LinearLayout.Width"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/ImageView.ListIcon"
+        tools:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/name"
+        style="@style/TextView.BaseWidth"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        tools:text="Client name" />
+</LinearLayout>
