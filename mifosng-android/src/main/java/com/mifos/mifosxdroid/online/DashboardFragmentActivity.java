@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.utils.FragmentConstants;
 
 /**
  * Created by ishankhanna on 09/02/14.
@@ -42,6 +44,9 @@ public class DashboardFragmentActivity extends BaseActivity {
             case R.id.item_centers:
                 startActivity(new Intent(this, CentersActivity.class));
                 break;
+            case R.id.item_survey:
+                loadClientListForSurvey();
+                break;
             case R.id.mItem_list:
                 loadClientList();
                 break;
@@ -65,6 +70,9 @@ public class DashboardFragmentActivity extends BaseActivity {
 
     public void loadClientList() {
         replaceFragment(ClientListFragment.newInstance(null), true, R.id.container);
+    }
+    public void loadClientListForSurvey() {
+        replaceFragment(ClientChooseFragment.newInstance(), true, R.id.container);
     }
 
     public void openCreateClient() {
