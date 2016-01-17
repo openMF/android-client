@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 /**
- * Created by nunspecified on 16-01-15.
+ * Created by Nasim Banu on 15 Jan 2016.
  */
 public class BaseFragment extends Fragment {
     private BaseActivityCallback callback;
