@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by nunspecified on 16-01-15.
+ * Created by Nasim Banu on 15 Jan 2016.
  */
 public abstract class BaseListAdapter<T> extends BaseAdapter {
     private final Object mLock = new Object();
