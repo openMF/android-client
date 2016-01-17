@@ -43,6 +43,7 @@
     <string name="center_name">Center Name</string>
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
+    <string name="choose_client">Please choose a Client from the list</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
