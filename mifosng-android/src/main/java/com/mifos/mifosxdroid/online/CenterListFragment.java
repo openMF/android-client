@@ -9,8 +9,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,15 +18,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.joanzapata.android.iconify.IconDrawable;
-import com.joanzapata.android.iconify.Iconify;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
+import com.mifos.mifosxdroid.core.BaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
 
@@ -39,18 +35,15 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 11/03/14.
  */
-public class CenterListFragment extends Fragment {
+public class CenterListFragment extends BaseFragment {
 
     private static final String TAG = "CenterListFragment";
 
     private View rootView;
     private ListView lv_centers_list;
     private SharedPreferences sharedPreferences;
-    private ActionBarActivity actionBarActivity;
     private List<Center> centers;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
     private CentersListAdapter centersListAdapter;
-
     private OnFragmentInteractionListener mListener;
 
     public CenterListFragment(){
@@ -70,20 +63,17 @@ public class CenterListFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_centers_list,container,false);
 
-        actionBarActivity = (ActionBarActivity) getActivity();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(actionBarActivity);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         setupUI();
 
-        safeUIBlockingUtility = new SafeUIBlockingUtility(actionBarActivity);
 
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress();
         ((MifosApplication)getActivity().getApplication()).api.centerService.getAllCenters(new Callback<List<Center>>() {
             @Override
             public void success(final List<Center> centers, Response response) {
-
-                centersListAdapter = new CentersListAdapter(actionBarActivity, centers);
+                centersListAdapter = new CentersListAdapter(getActivity(), centers);
 
                 lv_centers_list.setAdapter(centersListAdapter);
 
@@ -100,13 +90,13 @@ public class CenterListFragment extends Fragment {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        safeUIBlockingUtility.safelyBlockUI();
+                        showProgress();
 
                         ((MifosApplication)getActivity().getApplication()).api.centerService.getCenterWithGroupMembersAndCollectionMeetingCalendar(centers.get(position).getId(), new Callback<CenterWithAssociations>() {
                             @Override
                             public void success(final CenterWithAssociations centerWithAssociations, Response response) {
 
-                                safeUIBlockingUtility.safelyUnBlockUI();
+                                hideProgress();
                                 MFDatePicker mfDatePicker = new MFDatePicker();
                                 mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
                                     @Override
@@ -122,25 +112,20 @@ public class CenterListFragment extends Fragment {
 
                             @Override
                             public void failure(RetrofitError retrofitError) {
-
-                                safeUIBlockingUtility.safelyUnBlockUI();
+                                hideProgress();
                                 Toast.makeText(getActivity(), "Cannot Generate Collection Sheet, There was some problem!", Toast.LENGTH_SHORT).show();
-
                             }
                         });
 
                         return true;
                     }
                 });
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                safeUIBlockingUtility.safelyUnblockUIForFailure(TAG, "Couldn't Fetch List of Centers");
-
+                hideProgress();
             }
         });
 
@@ -164,12 +149,6 @@ public class CenterListFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-        menu.findItem(R.id.mItem_search).setIcon(
-                new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
-                .colorRes(R.color.black)
-                .actionBarSize());
-
     }
 
     @Override

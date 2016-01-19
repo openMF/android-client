@@ -12,9 +12,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +27,7 @@ import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.BaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.savings.DepositType;
@@ -40,7 +38,6 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,8 +53,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SavingsAccountTransactionFragment extends Fragment implements MFDatePicker.OnDatePickListener{
-
+public class SavingsAccountTransactionFragment extends BaseFragment implements MFDatePicker.OnDatePickListener {
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -75,13 +71,9 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     Button bt_cancelTransaction;
 
 
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
-    ActionBarActivity activity;
-    ActionBar actionBar;
-    SharedPreferences sharedPreferences;
-    String savingsAccountNumber;
+    private View rootView;
+    private SharedPreferences sharedPreferences;
+    private String savingsAccountNumber;
     private DepositType savingsAccountType;
 
     String transactionType;     //Defines if the Transaction is a Deposit to an Account or a Withdrawal from an Account
@@ -136,23 +128,16 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
         rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container, false);
 
-        activity = (ActionBarActivity) getActivity();
 
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
-        actionBar = activity.getSupportActionBar();
 
         if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT))
-            actionBar.setTitle(getResources().getString(R.string.savingsAccount) + " "+ getResources().getString(R.string.deposit));
+            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " + getResources().getString(R.string.deposit));
         else
-            actionBar.setTitle(getResources().getString(R.string.savingsAccount) + " "+ getResources().getString(R.string.withdrawal));
-
+            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " + getResources().getString(R.string.withdrawal));
         ButterKnife.inject(this, rootView);
-
         inflateUI();
-
         return rootView;
     }
 
@@ -174,22 +159,18 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     }
 
     public void inflateUI() {
-
-        safeUIBlockingUtility.safelyBlockUI();
-
+        showProgress();
         tv_clientName.setText(clientName);
         tv_accountNumber.setText(savingsAccountNumber);
         //TODO Implement QuickContactBadge here
 
         inflateRepaymentDate();
-
         inflatePaymentOptions();
-
     }
 
     public void inflatePaymentOptions() {
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
+        MifosApplication.getApi().savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
             @Override
             public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
 
@@ -221,16 +202,12 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
                     sp_paymentType.setAdapter(paymentTypeAdapter);
 
                 }
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
         });
 
@@ -246,7 +223,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
          */
         if (et_transactionAmount.getEditableText().toString().isEmpty()) {
             new RequiredFieldException(getString(R.string.amount),
-                    getString(R.string.message_field_required)).notifyUserWithToast(activity);
+                    getString(R.string.message_field_required)).notifyUserWithToast(getActivity());
             return;
         }
 
@@ -308,9 +285,9 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
 
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress();
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.savingsAccountService.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType,
+        MifosApplication.getApi().savingsAccountService.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType,
                 savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
                     @Override
                     public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {
@@ -328,15 +305,13 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
 
                             }
                         }
-
-                        safeUIBlockingUtility.safelyUnBlockUI();
-
+                        hideProgress();
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         Toast.makeText(getActivity(), "Transaction Failed", Toast.LENGTH_SHORT).show();
-                        safeUIBlockingUtility.safelyUnBlockUI();
+                        hideProgress();
                     }
                 }
         );
@@ -348,7 +323,7 @@ public class SavingsAccountTransactionFragment extends Fragment implements MFDat
     }
 
 
-    public void inflateRepaymentDate(){
+    public void inflateRepaymentDate() {
 
         mfDatePicker = MFDatePicker.newInsance(this);
 

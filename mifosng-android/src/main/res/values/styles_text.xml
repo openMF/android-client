@@ -22,6 +22,24 @@
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
     </style>
 
+    <style name="TextView.Row" parent="TextView.Base">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="TextView.Row.Value" parent="TextView.Row">
+        <item name="android:gravity">right</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="TextView.Client" parent="TextView.Base">
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
     <style name="TextView.ConnectionSettings" parent="TextView.Base">
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginTop">10dp</item>

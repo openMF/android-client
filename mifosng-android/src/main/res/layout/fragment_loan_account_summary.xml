@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
@@ -475,8 +474,7 @@
 
         <Button
             android:id="@+id/bt_processLoanTransaction"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tbl_loanSummary"
             android:layout_marginBottom="8dp"

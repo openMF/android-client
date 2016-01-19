@@ -7,11 +7,9 @@ package com.mifos.mifosxdroid.online;
 
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,16 +20,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.joanzapata.android.iconify.IconDrawable;
-import com.joanzapata.android.iconify.Iconify;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.BaseFragment;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +42,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class GenerateCollectionSheetFragment extends Fragment {
+public class GenerateCollectionSheetFragment extends BaseFragment {
 
     public static final String LIMIT = "limit";
     public static final String ORDER_BY = "orderBy";
@@ -61,11 +59,8 @@ public class GenerateCollectionSheetFragment extends Fragment {
     @InjectView(R.id.sp_groups)
     Spinner sp_groups;
 
-    View rootView;
-    SafeUIBlockingUtility safeUIBlockingUtility;
-    ActionBarActivity activity;
-    SharedPreferences sharedPreferences;
-    ActionBar actionBar;
+    private View rootView;
+    private SharedPreferences sharedPreferences;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> centerNameIdHashMap = new HashMap<String, Integer>();
@@ -95,16 +90,9 @@ public class GenerateCollectionSheetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_generate_collection_sheet, container, false);
-        activity = (ActionBarActivity) getActivity();
-        safeUIBlockingUtility = new SafeUIBlockingUtility(GenerateCollectionSheetFragment.this.getActivity());
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        actionBar = activity.getSupportActionBar();
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
-
         inflateOfficeSpinner();
-
-
         return rootView;
     }
 
@@ -113,9 +101,9 @@ public class GenerateCollectionSheetFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
 
         menu.findItem(R.id.mItem_search).setIcon(
-                new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
-                .colorRes(R.color.black)
-                .actionBarSize());
+                new IconDrawable(getActivity(), MaterialIcons.md_search)
+                        .colorRes(Color.WHITE)
+                        .actionBarSize());
 
     }
 
@@ -135,9 +123,9 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
     public void inflateOfficeSpinner() {
 
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress();
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
+        MifosApplication.getApi().officeService.getAllOffices(new Callback<List<Office>>() {
             @Override
             public void success(List<Office> offices, Response response) {
 
@@ -183,7 +171,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                hideProgress();
 
             }
 
@@ -192,7 +180,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                hideProgress();
             }
         });
 
@@ -201,7 +189,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
     public void inflateStaffSpinner(final int officeId) {
 
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
+        MifosApplication.getApi().staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
 
@@ -275,7 +263,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
             params.put(STAFF_ID, staffId);
         }
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getAllCentersInOffice(officeId, params, new Callback<List<Center>>() {
+        MifosApplication.getApi().centerService.getAllCentersInOffice(officeId, params, new Callback<List<Center>>() {
             @Override
             public void success(List<Center> centers, Response response) {
 
@@ -347,7 +335,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
         }
 
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.groupService.getAllGroupsInOffice(officeId, params, new Callback<List<Group>>() {
+        MifosApplication.getApi().groupService.getAllGroupsInOffice(officeId, params, new Callback<List<Group>>() {
             @Override
             public void success(List<Group> groups, Response response) {
 
@@ -383,7 +371,7 @@ public class GenerateCollectionSheetFragment extends Fragment {
 
     public void inflateGroupSpinner(final int centerId) {
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
+        MifosApplication.getApi().centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
             public void success(CenterWithAssociations centerWithAssociations, Response response) {
 

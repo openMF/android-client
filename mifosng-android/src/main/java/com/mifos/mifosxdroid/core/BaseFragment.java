@@ -38,6 +38,10 @@ public class BaseFragment extends Fragment {
         return ((BaseActivity) getActivity()).getToolbar();
     }
 
+    protected void showProgress() {
+        showProgress("Working...");
+    }
+
     protected void showProgress(String message) {
         if (callback != null)
             callback.showProgress(message);
@@ -50,6 +54,10 @@ public class BaseFragment extends Fragment {
 
     protected void logout() {
         callback.logout();
+    }
+
+    protected void setToolbarTitle(String title) {
+        callback.setToolbarTitle(title);
     }
 
     public void hideKeyboard(View view) {

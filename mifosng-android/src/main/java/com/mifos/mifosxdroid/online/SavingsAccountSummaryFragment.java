@@ -7,13 +7,11 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,10 +27,12 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joanzapata.android.iconify.IconDrawable;
-import com.joanzapata.android.iconify.Iconify;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
+import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
@@ -41,7 +41,6 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -55,7 +54,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SavingsAccountSummaryFragment extends Fragment {
+public class SavingsAccountSummaryFragment extends BaseFragment {
 
     public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
@@ -86,12 +85,10 @@ public class SavingsAccountSummaryFragment extends Fragment {
     Button bt_deposit;
     @InjectView(R.id.bt_withdrawal)
     Button bt_withdrawal;
-    View rootView;
-    SafeUIBlockingUtility safeUIBlockingUtility;
-    ActionBarActivity activity;
-    SharedPreferences sharedPreferences;
-    ActionBar actionBar;
-    SavingsAccountWithAssociations savingsAccountWithAssociations;
+    private View rootView;
+    private SharedPreferences sharedPreferences;
+
+    private SavingsAccountWithAssociations savingsAccountWithAssociations;
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
     // Infinite Scroll View
@@ -132,40 +129,28 @@ public class SavingsAccountSummaryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false);
-        activity = (ActionBarActivity) getActivity();
-        safeUIBlockingUtility = new SafeUIBlockingUtility(SavingsAccountSummaryFragment.this.getActivity());
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        actionBar = activity.getSupportActionBar();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
-
         inflateSavingsAccountSummary();
-
         return rootView;
     }
 
     public void inflateSavingsAccountSummary() {
-
-        safeUIBlockingUtility.safelyBlockUI();
-
+        hideProgress();
         switch (savingsAccountType.getServerType()) {
             case RECURRING:
-                actionBar.setTitle(getResources().getString(R.string.recurringAccountSummary));
+                setToolbarTitle(getResources().getString(R.string.recurringAccountSummary));
                 break;
             default:
-                actionBar.setTitle(getResources().getString(R.string.savingsAccountSummary));
+                setToolbarTitle(getResources().getString(R.string.savingsAccountSummary));
                 break;
         }
-
         /**
          * This Method will hit end point ?associations=transactions
          */
-
-
-        ((MifosApplication) getActivity().getApplicationContext()).api.savingsAccountService.getSavingsAccountWithAssociations(savingsAccountType.getEndpoint(), savingsAccountNumber,
+        MifosApplication.getApi().savingsAccountService.getSavingsAccountWithAssociations(savingsAccountType.getEndpoint(), savingsAccountNumber,
                 "transactions", new Callback<SavingsAccountWithAssociations>() {
                     @Override
                     public void success(SavingsAccountWithAssociations savingsAccountWithAssociations, Response response) {
@@ -234,23 +219,19 @@ public class SavingsAccountSummaryFragment extends Fragment {
                             toggleTransactionCapabilityOfAccount(savingsAccountWithAssociations.getStatus());
 
                             inflateDataTablesList();
-
-                            safeUIBlockingUtility.safelyUnBlockUI();
-
+                            hideProgress();
                             enableInfiniteScrollOfTransactions();
-
                         }
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
-                        try{
-
+                        try {
                             Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-                        }catch(NullPointerException npe) {
-                            Toast.makeText(activity, "Internal Server Error", Toast.LENGTH_SHORT).show();
+                        } catch (NullPointerException npe) {
+                            Toaster.show(rootView, "Internal Server Error");
                         }
-                        safeUIBlockingUtility.safelyUnBlockUI();
+                        hideProgress();
                         getFragmentManager().popBackStackImmediate();
                     }
                 }
@@ -294,9 +275,9 @@ public class SavingsAccountSummaryFragment extends Fragment {
         menu.clear();
 
         MenuItem mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
-        mItemSearch.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
-                        .colorRes(R.color.black)
-                        .actionBarSize());
+        mItemSearch.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
+                .colorRes(Color.WHITE)
+                .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -343,11 +324,10 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
         if (id >= 0 && id < savingsAccountDataTables.size()) {
 
-            DataTableDataFragment dataTableDataFragment
-                    = DataTableDataFragment.newInstance(savingsAccountDataTables.get(id), savingsAccountNumber);
+            DataTableDataFragment dataTableDataFragment = DataTableDataFragment.newInstance(savingsAccountDataTables.get(id), savingsAccountNumber);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
-            fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
+            fragmentTransaction.replace(R.id.container, dataTableDataFragment);
             fragmentTransaction.commit();
         }
 
@@ -355,7 +335,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
 
             loadDocuments();
 
-        }  else if (id == MENU_ITEM_SEARCH) {
+        } else if (id == MENU_ITEM_SEARCH) {
 
             getActivity().finish();
         }
@@ -380,13 +360,12 @@ public class SavingsAccountSummaryFragment extends Fragment {
      */
     public void inflateDataTablesList() {
 
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress("Working...");
 
         //TODO change loan service to savings account service
-        ((MifosApplication) getActivity().getApplicationContext()).api.dataTableService.getDatatablesOfSavingsAccount(new Callback<List<DataTable>>() {
+        MifosApplication.getApi().dataTableService.getDatatablesOfSavingsAccount(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
-
                 if (dataTables != null) {
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
                     savingsAccountDataTables.clear();
@@ -395,16 +374,12 @@ public class SavingsAccountSummaryFragment extends Fragment {
                         savingsAccountDataTables.add(dataTable);
                     }
                 }
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i("DATATABLE", retrofitError.getLocalizedMessage());
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
         });
 
@@ -486,7 +461,7 @@ public class SavingsAccountSummaryFragment extends Fragment {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_SAVINGS, savingsAccountNumber);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
-        fragmentTransaction.replace(R.id.global_container, documentListFragment);
+        fragmentTransaction.replace(R.id.container, documentListFragment);
         fragmentTransaction.commit();
 
     }

@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.online;
 
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,10 +19,11 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-import com.joanzapata.android.iconify.IconDrawable;
-import com.joanzapata.android.iconify.Iconify;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
+import com.mifos.mifosxdroid.core.BaseFragment;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
 import com.mifos.services.data.BulkRepaymentTransactions;
@@ -47,9 +49,8 @@ import retrofit.client.Response;
  * A simple {@link Fragment} subclass.
  * Use the {@link CollectionSheetFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
-public class CollectionSheetFragment extends Fragment {
+public class CollectionSheetFragment extends BaseFragment {
 
 
     public static final String COLLECTION_SHEET_ONLINE = "Collection Sheet Online";
@@ -60,7 +61,7 @@ public class CollectionSheetFragment extends Fragment {
     private int centerId; // Center for which collection sheet is being generated
     private String dateOfCollection; // Date of Meeting on which collection has to be done.
     private int calendarInstanceId;
-    View rootView;
+    private View rootView;
 
     @InjectView(R.id.exlv_collection_sheet)
     ExpandableListView expandableListView;
@@ -76,6 +77,7 @@ public class CollectionSheetFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public CollectionSheetFragment() {
         // Required empty public constructor
     }
@@ -112,26 +114,26 @@ public class CollectionSheetFragment extends Fragment {
         menu.clear();
 
         MenuItem mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
-        mItemSearch.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
-                        .colorRes(R.color.black)
-                        .actionBarSize());
+        mItemSearch.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
+                .colorRes(Color.WHITE)
+                .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         }
 
 
         MenuItem mItemRefresh = menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R.string.refresh));
-        mItemRefresh.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_refresh)
-                .colorRes(R.color.black)
+        mItemRefresh.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_refresh)
+                .colorRes(Color.WHITE)
                 .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemRefresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
 
         MenuItem mItemSave = menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string.save));
-        mItemSave.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_save)
-                        .colorRes(R.color.black)
-                        .actionBarSize());
+        mItemSave.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_save)
+                .colorRes(Color.WHITE)
+                .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -148,15 +150,15 @@ public class CollectionSheetFragment extends Fragment {
 
         switch (id) {
 
-            case MENU_ITEM_REFRESH :
-                    refreshFragment();
+            case MENU_ITEM_REFRESH:
+                refreshFragment();
                 break;
 
-            case MENU_ITEM_SAVE :
-                    saveCollectionSheet();
+            case MENU_ITEM_SAVE:
+                saveCollectionSheet();
                 break;
 
-            case MENU_ITEM_SEARCH :
+            case MENU_ITEM_SEARCH:
                 break;
 
 
@@ -173,7 +175,7 @@ public class CollectionSheetFragment extends Fragment {
         payload.setTransactionDate(dateOfCollection);
         payload.setDateFormat("dd-MM-YYYY");
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
+        MifosApplication.getApi().centerService.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
             @Override
             public void success(CollectionSheet collectionSheet, Response response) {
 
@@ -195,7 +197,6 @@ public class CollectionSheetFragment extends Fragment {
 
 
     }
-
 
 
     //Called from within the Adapters to show changes when payment amounts are updated
@@ -227,7 +228,7 @@ public class CollectionSheetFragment extends Fragment {
         collectionSheetPayload.setTransactionDate(dateOfCollection);
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
+        MifosApplication.getApi().centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
             @Override
             public void success(SaveResponse saveResponse, Response response) {
 
@@ -241,7 +242,6 @@ public class CollectionSheetFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
 
 
                 Response response = retrofitError.getResponse();

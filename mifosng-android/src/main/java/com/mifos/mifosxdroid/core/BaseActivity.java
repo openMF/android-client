@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
 
@@ -42,12 +43,18 @@ public class BaseActivity extends AppCompatActivity implements BaseActivityCallb
         setActionBarTitle(getResources().getString(title));
     }
 
-    public int getActionbarHeight() {
-        return toolbar.getHeight();
-    }
-
     public Toolbar getToolbar() {
         return toolbar;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -59,6 +66,11 @@ public class BaseActivity extends AppCompatActivity implements BaseActivityCallb
         progress.setMessage(message);
         progress.show();
 
+    }
+
+    @Override
+    public void setToolbarTitle(String title) {
+        setActionBarTitle(title);
     }
 
     @Override

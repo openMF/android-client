@@ -10,18 +10,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
+import com.mifos.mifosxdroid.core.BaseActivity;
 import com.mifos.objects.User;
 import com.mifos.utils.Constants;
 
 /**
  * Logout activity.
  */
-public class LogoutActivity extends ActionBarActivity {
+public class LogoutActivity extends BaseActivity {
     public final static String TAG = LogoutActivity.class.getSimpleName();
     public static final String NA = "NA";
 

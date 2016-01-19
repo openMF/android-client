@@ -6,9 +6,9 @@ package com.mifos.mifosxdroid.core;
 public interface BaseActivityCallback {
     void showProgress(String message);
 
+    void setToolbarTitle(String title);
+
     void hideProgress();
 
     void logout();
-
-    int getActionbarHeight();
 }

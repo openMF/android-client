@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.LoanActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientListAdapter;
+import com.mifos.mifosxdroid.core.BaseFragment;
 import com.mifos.objects.db.Client;
 import com.mifos.objects.db.Loan;
 import com.mifos.objects.db.RepaymentTransaction;
@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class ClientFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ClientFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     final private String tag = getClass().getSimpleName();
     @InjectView(R.id.lv_clients)
