@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.online;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -25,8 +24,6 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.BaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
@@ -298,9 +295,7 @@ public class LoanAccountSummaryFragment extends BaseFragment {
         menu.clear();
 
         MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
-        mItemSearchClient.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
-                .colorRes(Color.WHITE)
-                .actionBarSize());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
