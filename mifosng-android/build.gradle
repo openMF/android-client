@@ -17,6 +17,7 @@ buildscript {
 repositories {
     mavenCentral()
     maven { url 'http://download.crashlytics.com/maven' }
+    maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 }
 
 apply plugin: 'com.android.application'
@@ -114,6 +115,7 @@ dependencies {
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
 
     // Test libraries provided by https://code.google.com/p/android-test-kit/
