@@ -100,10 +100,10 @@ public class GenerateCollectionSheetFragment extends BaseFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        menu.findItem(R.id.mItem_search).setIcon(
-                new IconDrawable(getActivity(), MaterialIcons.md_search)
-                        .colorRes(Color.WHITE)
-                        .actionBarSize());
+//        menu.findItem(R.id.mItem_search).setIcon(
+//                new IconDrawable(getActivity(), MaterialIcons.md_search)
+//                        .colorRes(Color.WHITE)
+//                        .actionBarSize());
 
     }
 

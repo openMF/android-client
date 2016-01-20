@@ -275,9 +275,9 @@ public class SavingsAccountSummaryFragment extends BaseFragment {
         menu.clear();
 
         MenuItem mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
-        mItemSearch.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
-                .colorRes(Color.WHITE)
-                .actionBarSize());
+//        mItemSearch.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
+//                .colorRes(Color.WHITE)
+//                .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
