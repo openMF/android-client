@@ -40,7 +40,6 @@
     <string name="group">Group</string>
     <string name="cancel">Cancel</string>
     <string name="review_payment">Review Payment</string>
-    <string name="choose_client">Please choose a Client from the list</string>
     <string name="center_name">Center Name</string>
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
@@ -149,7 +148,6 @@
     <string name="title_activity_centers">Centers</string>
     <string name="hello_world" translatable="false">Hello world!</string>
     <string name="center_list">Center List</string>
-    <string name="survey">Survey</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="type">Type</string>
     <string name="upload">Upload</string>
