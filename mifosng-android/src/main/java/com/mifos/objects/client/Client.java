@@ -20,6 +20,7 @@ public class Client {
 
     private int id;
     private String accountNo;
+    private String mobileNo;
     private Status status;
     private boolean active;
     private List<Integer> activationDate = new ArrayList<Integer>();
@@ -51,6 +52,13 @@ public class Client {
 
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
+    }
+     public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
     }
 
     public Status getStatus() {
