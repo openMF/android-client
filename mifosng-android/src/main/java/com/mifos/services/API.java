@@ -47,7 +47,6 @@ import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorResponse;
 import com.squareup.okhttp.OkHttpClient;
-import com.mifos.objects.survey.Survey;
 
 import org.apache.http.HttpStatus;
 
@@ -115,7 +114,6 @@ public class API {
     public IdentifierService identifierService;
     public OfficeService officeService;
     public StaffService staffService;
-    public SurveyService surveyService;
 
 
     public API(final String url, final String tenantIdentifier, boolean shouldByPassSSLSecurity) {
@@ -169,7 +167,6 @@ public class API {
         identifierService = restAdapter.create(IdentifierService.class);
         officeService = restAdapter.create(OfficeService.class);
         staffService = restAdapter.create(StaffService.class);
-        surveyService = restAdapter.create(SurveyService.class);
     }
 
 
@@ -341,19 +338,6 @@ public class API {
         @POST(APIEndPoint.CLIENTS)
         void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
     }
-
-    public interface SurveyService {
-
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET(APIEndPoint.SURVEYS)
-        public void getAllSurveys(Callback<List<Survey>> callback);
-
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET(APIEndPoint.SURVEYS + "/{surveyId}")
-        public void getSurvey(@Path("surveyId") int surveyId, Callback<Survey> surveyCallback);
-
-    }
-
     public interface SearchService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
