@@ -111,8 +111,7 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         }
 
         Iconify.addIcons(reusableParentViewHolder.tv_arrow);
-        reusableParentViewHolder.tv_transactionDate.setText(
-                DateHelper.getDateAsString(parents.get(i).getDate()));
+        reusableParentViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(parents.get(i).getDate()));
         reusableParentViewHolder.tv_transactionType.setText(
                 parents.get(i).getType().getValue());
         reusableParentViewHolder.tv_transactionAmount.setText(
