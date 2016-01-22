@@ -44,6 +44,7 @@
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
     <string name="create_center">Create Center</string>
+    <string name="create_group">Create Group</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>

@@ -23,6 +23,11 @@
         android:title="@string/create_center"
         app:showAsAction="never" />
     <item
+        android:id="@+id/mItem_create_new_group"
+        android:enabled="true"
+        android:title="@string/create_group"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/item_centers"
         android:enabled="true"
         android:title="@string/center_list"

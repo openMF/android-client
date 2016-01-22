@@ -2,26 +2,27 @@
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+
 package com.mifos.services.data;
 
 /**
  * Created by nellyk on 1/22/2016.
  */
-public class CenterPayload {
+public class GroupPayload {
 
-    private String centername;
+    private String groupname;
     private int officeId;
     private boolean active;
     private String activationDate;
     private String submittedOnDate;
     private String externalId;
 
-    public String getCenterName() {
-        return centername;
+    public String getGroupName() {
+        return groupname;
     }
 
-    public void setCenterName(String centername) {
-        this.centername = centername;
+    public void setGroupName(String centername) {
+        this.groupname = centername;
     }
 
     public int getOfficeId() {

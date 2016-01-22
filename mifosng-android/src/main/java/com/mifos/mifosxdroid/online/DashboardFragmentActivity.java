@@ -60,6 +60,9 @@ public class DashboardFragmentActivity extends BaseActivity {
             case R.id.mItem_create_new_center:
                 openCreateCenter();
                 break;
+            case R.id.mItem_create_new_group:
+                openCreateGroup();
+                break;
             default: //DO NOTHING
                 break;
         }
@@ -76,6 +79,9 @@ public class DashboardFragmentActivity extends BaseActivity {
 
     public void openCreateCenter() {
         replaceFragment(CreateNewCenterFragment.newInstance(), true, R.id.container);
+    }
+    public void openCreateGroup() {
+        replaceFragment(CreateNewGroupFragment.newInstance(), true, R.id.container);
     }
 }
 
