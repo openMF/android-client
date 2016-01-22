@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.joanzapata.android.iconify.Iconify;
+import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Transaction;
 import com.mifos.objects.accounts.loan.Type;
@@ -36,7 +36,7 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
     List<Parent> parents;
     List<Child> children;
 
-    public LoanTransactionAdapter(Context context, List<Transaction> transactionList){
+    public LoanTransactionAdapter(Context context, List<Transaction> transactionList) {
 
         this.layoutInflater = LayoutInflater.from(context);
         this.transactionList = transactionList;
@@ -95,22 +95,22 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int i, boolean isExpanded, View view, ViewGroup viewGroup) {
 
         ReusableParentViewHolder reusableParentViewHolder;
-        if(view == null) {
-            view = layoutInflater.inflate(R.layout.row_loan_transaction_item,null);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_loan_transaction_item, null);
             reusableParentViewHolder = new ReusableParentViewHolder(view);
             view.setTag(reusableParentViewHolder);
-        }else {
+        } else {
             reusableParentViewHolder = (ReusableParentViewHolder) view.getTag();
         }
-        Iconify.IconValue contractedIconValue = Iconify.IconValue.fa_plus_circle;
-        Iconify.IconValue expandedIconValue = Iconify.IconValue.fa_minus_circle;
-        if(!isExpanded){
-            reusableParentViewHolder.tv_arrow.setText(contractedIconValue.formattedName());
-        }else{
-            reusableParentViewHolder.tv_arrow.setText(expandedIconValue .formattedName());
+        MaterialIcons contractedIconValue = MaterialIcons.md_add_circle_outline;
+        MaterialIcons expandedIconValue = MaterialIcons.md_remove_circle_outline;
+        if (!isExpanded) {
+            reusableParentViewHolder.tv_arrow.setText(contractedIconValue.character());
+        } else {
+            reusableParentViewHolder.tv_arrow.setText(expandedIconValue.character());
         }
 
-        Iconify.addIcons(reusableParentViewHolder.tv_arrow);
+//        Iconify.addIcons(reusableParentViewHolder.tv_arrow);
         reusableParentViewHolder.tv_transactionDate.setText(
                 DateHelper.getDateAsString(parents.get(i).getDate()));
         reusableParentViewHolder.tv_transactionType.setText(
@@ -125,8 +125,8 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
     public View getChildView(int i, int i2, boolean b, View view, ViewGroup viewGroup) {
 
         ReusableChildViewHolder reusableChildViewHolder;
-        if(view == null) {
-            view = layoutInflater.inflate(R.layout.row_loan_transaction_item_detail,null);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_loan_transaction_item_detail, null);
             reusableChildViewHolder = new ReusableChildViewHolder(view);
             view.setTag(reusableChildViewHolder);
         } else {
@@ -154,25 +154,39 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
 
     public static class ReusableParentViewHolder {
 
-        @InjectView(R.id.tv_arrow) TextView tv_arrow;
-        @InjectView(R.id.tv_transaction_date) TextView tv_transactionDate;
-        @InjectView(R.id.tv_transaction_type) TextView tv_transactionType;
-        @InjectView(R.id.tv_transaction_amount) TextView tv_transactionAmount;
+        @InjectView(R.id.tv_arrow)
+        TextView tv_arrow;
+        @InjectView(R.id.tv_transaction_date)
+        TextView tv_transactionDate;
+        @InjectView(R.id.tv_transaction_type)
+        TextView tv_transactionType;
+        @InjectView(R.id.tv_transaction_amount)
+        TextView tv_transactionAmount;
 
-        public ReusableParentViewHolder(View view) { ButterKnife.inject(this,view); }
+        public ReusableParentViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
 
     }
 
     public static class ReusableChildViewHolder {
 
-        @InjectView(R.id.tv_transaction_id) TextView tv_transactionId;
-        @InjectView(R.id.tv_office_name) TextView tv_officeName;
-        @InjectView(R.id.tv_principal) TextView tv_principal;
-        @InjectView(R.id.tv_interest) TextView tv_interest;
-        @InjectView(R.id.tv_fees) TextView tv_fees;
-        @InjectView(R.id.tv_penalties) TextView tv_penalties;
+        @InjectView(R.id.tv_transaction_id)
+        TextView tv_transactionId;
+        @InjectView(R.id.tv_office_name)
+        TextView tv_officeName;
+        @InjectView(R.id.tv_principal)
+        TextView tv_principal;
+        @InjectView(R.id.tv_interest)
+        TextView tv_interest;
+        @InjectView(R.id.tv_fees)
+        TextView tv_fees;
+        @InjectView(R.id.tv_penalties)
+        TextView tv_penalties;
 
-        public ReusableChildViewHolder(View view) { ButterKnife.inject(this,view); }
+        public ReusableChildViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
 
     }
 
