@@ -17,7 +17,7 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
@@ -33,7 +33,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class GroupListFragment extends BaseFragment {
+public class GroupListFragment extends MifosBaseFragment {
 
 
     @InjectView(R.id.lv_group_list)

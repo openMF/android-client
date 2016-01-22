@@ -19,7 +19,7 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientSearchAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.utils.Constants;
@@ -35,7 +35,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ClientSearchFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class ClientSearchFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener {
 
     private static final String TAG = ClientSearchFragment.class.getSimpleName();
 

@@ -45,7 +45,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.User;
@@ -88,7 +88,7 @@ import retrofit.mime.TypedFile;
 import static android.view.View.*;
 
 
-public class ClientDetailsFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class ClientDetailsFragment extends MifosBaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;

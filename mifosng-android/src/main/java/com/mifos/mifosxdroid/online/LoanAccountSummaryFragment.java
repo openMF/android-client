@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -51,7 +51,7 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 09/05/14.
  */
-public class LoanAccountSummaryFragment extends BaseFragment {
+public class LoanAccountSummaryFragment extends MifosBaseFragment {
 
 
     public static final int MENU_ITEM_SEARCH = 2000;

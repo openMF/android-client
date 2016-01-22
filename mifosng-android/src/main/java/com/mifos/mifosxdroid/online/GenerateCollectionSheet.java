@@ -10,10 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 
 
-public class GenerateCollectionSheet extends BaseActivity {
+public class GenerateCollectionSheet extends MifosBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

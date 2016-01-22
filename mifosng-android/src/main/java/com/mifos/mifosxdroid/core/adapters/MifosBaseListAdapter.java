@@ -1,3 +1,8 @@
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
 package com.mifos.mifosxdroid.core.adapters;
 
 import android.content.Context;
@@ -16,7 +21,7 @@ import java.util.List;
 /**
  * @author fomenkoo
  */
-public abstract class BaseListAdapter<T> extends BaseAdapter {
+public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
     private final Object mLock = new Object();
 
     private List<T> list;
@@ -24,7 +29,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
     private int layoutId;
     private LayoutInflater inflater;
 
-    public BaseListAdapter(Context context, List<T> list, int layoutId) {
+    public MifosBaseListAdapter(Context context, List<T> list, int layoutId) {
         this.context = context;
         this.layoutId = layoutId;
         this.list = list;

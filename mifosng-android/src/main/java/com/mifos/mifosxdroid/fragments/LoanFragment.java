@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.Loan;
 import com.orm.query.Condition;
 import com.orm.query.Select;
@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class LoanFragment extends BaseFragment {
+public class LoanFragment extends MifosBaseFragment {
     @InjectView(R.id.lv_loan)
     ListView lv_loans;
     LoanListAdapter adapter = null;

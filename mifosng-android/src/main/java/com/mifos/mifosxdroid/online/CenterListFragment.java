@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -35,7 +35,7 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 11/03/14.
  */
-public class CenterListFragment extends BaseFragment {
+public class CenterListFragment extends MifosBaseFragment {
 
     private static final String TAG = "CenterListFragment";
 

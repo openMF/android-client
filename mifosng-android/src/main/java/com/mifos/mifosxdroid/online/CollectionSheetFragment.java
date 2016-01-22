@@ -23,7 +23,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
 import com.mifos.services.data.BulkRepaymentTransactions;
@@ -50,7 +50,7 @@ import retrofit.client.Response;
  * Use the {@link CollectionSheetFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CollectionSheetFragment extends BaseFragment {
+public class CollectionSheetFragment extends MifosBaseFragment {
 
 
     public static final String COLLECTION_SHEET_ONLINE = "Collection Sheet Online";

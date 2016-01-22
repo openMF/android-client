@@ -28,7 +28,7 @@ import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.AttendanceType;
 import com.mifos.objects.db.Client;
 import com.mifos.objects.db.CollectionMeetingCalendar;
@@ -57,7 +57,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CenterListFragment extends BaseFragment implements AdapterView.OnItemClickListener,
+public class CenterListFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener,
         SaveOfflineDataHelper.OfflineDataSaveListener {
 
     public static final String TAG = "Center List Fragment";

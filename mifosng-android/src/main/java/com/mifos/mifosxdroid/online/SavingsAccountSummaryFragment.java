@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,11 +26,9 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -54,7 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SavingsAccountSummaryFragment extends BaseFragment {
+public class SavingsAccountSummaryFragment extends MifosBaseFragment {
 
     public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;

@@ -13,12 +13,12 @@ import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class DashboardFragmentActivity extends BaseActivity {
+public class DashboardFragmentActivity extends MifosBaseActivity {
 
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
 

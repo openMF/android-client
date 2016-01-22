@@ -22,7 +22,7 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.dialogfragments.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AsyncFileDownloader;
@@ -38,7 +38,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DocumentListFragment extends BaseFragment {
+public class DocumentListFragment extends MifosBaseFragment {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 

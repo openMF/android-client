@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.online;
 
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -20,10 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
@@ -42,7 +39,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class GenerateCollectionSheetFragment extends BaseFragment {
+public class GenerateCollectionSheetFragment extends MifosBaseFragment {
 
     public static final String LIMIT = "limit";
     public static final String ORDER_BY = "orderBy";

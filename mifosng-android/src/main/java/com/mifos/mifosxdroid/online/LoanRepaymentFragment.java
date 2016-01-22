@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
@@ -51,7 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentFragment extends BaseFragment implements MFDatePicker.OnDatePickListener {
+public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
 
     private View rootView;
     private SharedPreferences sharedPreferences;

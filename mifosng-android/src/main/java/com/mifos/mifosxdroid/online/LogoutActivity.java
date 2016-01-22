@@ -14,14 +14,14 @@ import android.util.Log;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.User;
 import com.mifos.utils.Constants;
 
 /**
  * Logout activity.
  */
-public class LogoutActivity extends BaseActivity {
+public class LogoutActivity extends MifosBaseActivity {
     public final static String TAG = LogoutActivity.class.getSimpleName();
     public static final String NA = "NA";
 

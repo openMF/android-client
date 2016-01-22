@@ -18,7 +18,7 @@ import android.widget.ExpandableListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MifosApplication;
@@ -30,7 +30,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanTransactionsFragment extends BaseFragment {
+public class LoanTransactionsFragment extends MifosBaseFragment {
 
     @InjectView(R.id.elv_loan_transactions)
     ExpandableListView elv_loanTransactions;

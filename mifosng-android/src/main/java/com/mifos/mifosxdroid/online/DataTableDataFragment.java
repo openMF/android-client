@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.DataTableUIBuilder;
@@ -32,7 +32,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class DataTableDataFragment extends BaseFragment implements DataTableUIBuilder.DataTableActionListener {
+public class DataTableDataFragment extends MifosBaseFragment implements DataTableUIBuilder.DataTableActionListener {
     public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
     private DataTable dataTable;

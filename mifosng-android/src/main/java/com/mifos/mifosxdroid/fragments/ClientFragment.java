@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.LoanActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.Client;
 import com.mifos.objects.db.Loan;
 import com.mifos.objects.db.RepaymentTransaction;
@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class ClientFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class ClientFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener {
 
     final private String tag = getClass().getSimpleName();
     @InjectView(R.id.lv_clients)

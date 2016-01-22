@@ -8,11 +8,11 @@ package com.mifos.mifosxdroid;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.fragments.ClientFragment;
 
 
-public class ClientActivity extends BaseActivity {
+public class ClientActivity extends MifosBaseActivity {
 
     private long groupId;
     private Intent intentForExtras;

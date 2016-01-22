@@ -8,11 +8,11 @@ package com.mifos.mifosxdroid;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.fragments.LoanFragment;
 
 
-public class LoanActivity extends BaseActivity {
+public class LoanActivity extends MifosBaseActivity {
     private int clientId;
     private Intent intentForExtras;
 

@@ -1,3 +1,8 @@
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
@@ -9,7 +14,7 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.adapters.BaseListAdapter;
+import com.mifos.mifosxdroid.core.adapters.MifosBaseListAdapter;
 import com.mifos.objects.SearchedEntity;
 
 import java.util.List;
@@ -17,7 +22,7 @@ import java.util.List;
 /**
  * @author fomenkoo
  */
-public class ClientSearchAdapter extends BaseListAdapter<SearchedEntity> {
+public class ClientSearchAdapter extends MifosBaseListAdapter<SearchedEntity> {
 
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private TextDrawable.IBuilder mDrawableBuilder;
@@ -40,19 +45,19 @@ public class ClientSearchAdapter extends BaseListAdapter<SearchedEntity> {
             holder = (ViewHolder) convertView.getTag();
         }
         item = getItem(position);
-        holder.textView.setText(item.getDescription());
+        holder.name.setText(item.getDescription());
         TextDrawable drawable = mDrawableBuilder.build(String.valueOf(item.getEntityName().charAt(0)), mColorGenerator.getColor(item.getEntityName()));
-        holder.imageView.setImageDrawable(drawable);
+        holder.icon.setImageDrawable(drawable);
         return convertView;
     }
 
     class ViewHolder {
-        private ImageView imageView;
-        private TextView textView;
+        private ImageView icon;
+        private TextView name;
 
         public ViewHolder(View view) {
-            imageView = (ImageView) view.findViewById(R.id.icon);
-            textView = (TextView) view.findViewById(R.id.name);
+            icon = (ImageView) view.findViewById(R.id.icon);
+            name = (TextView) view.findViewById(R.id.name);
         }
     }
 }

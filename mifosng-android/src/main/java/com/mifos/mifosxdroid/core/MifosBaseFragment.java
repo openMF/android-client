@@ -1,3 +1,8 @@
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
 package com.mifos.mifosxdroid.core;
 
 import android.app.Activity;
@@ -11,7 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 /**
  * @author fomenkoo
  */
-public class BaseFragment extends Fragment {
+public class MifosBaseFragment extends Fragment {
 
     private BaseActivityCallback callback;
     private Activity activity;
@@ -24,7 +29,7 @@ public class BaseFragment extends Fragment {
         try {
             callback = (BaseActivityCallback) activity;
         } catch (ClassCastException e) {
-            // Stub
+            throw new ClassCastException(activity.toString() + " must implement BaseActivityCallback");
         }
     }
 
@@ -35,7 +40,7 @@ public class BaseFragment extends Fragment {
     }
 
     public Toolbar getToolbar() {
-        return ((BaseActivity) getActivity()).getToolbar();
+        return ((MifosBaseActivity) getActivity()).getToolbar();
     }
 
     protected void showProgress() {

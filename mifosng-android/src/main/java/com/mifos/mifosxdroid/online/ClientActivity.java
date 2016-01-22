@@ -8,7 +8,7 @@ package com.mifos.mifosxdroid.online;
 import android.os.Bundle;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -16,7 +16,7 @@ import com.mifos.utils.Constants;
 
 import butterknife.ButterKnife;
 
-public class ClientActivity extends BaseActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
+public class ClientActivity extends MifosBaseActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
         LoanAccountSummaryFragment.OnFragmentInteractionListener,
         LoanRepaymentFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {

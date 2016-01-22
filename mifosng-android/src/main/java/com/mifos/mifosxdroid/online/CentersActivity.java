@@ -10,12 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.client.Client;
 
 import java.util.List;
 
-public class CentersActivity extends BaseActivity implements CenterListFragment.OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener {
+public class CentersActivity extends MifosBaseActivity implements CenterListFragment.OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

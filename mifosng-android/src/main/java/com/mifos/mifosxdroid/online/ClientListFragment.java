@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
@@ -41,7 +41,7 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class ClientListFragment extends BaseFragment {
+public class ClientListFragment extends MifosBaseFragment {
 
 
     @InjectView(R.id.lv_clients)

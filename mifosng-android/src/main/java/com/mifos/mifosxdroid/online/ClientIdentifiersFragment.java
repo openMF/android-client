@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MifosApplication;
@@ -30,7 +30,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class ClientIdentifiersFragment extends BaseFragment {
+public class ClientIdentifiersFragment extends MifosBaseFragment {
 
     @InjectView(R.id.lv_identifiers)
     ListView lv_identifiers;

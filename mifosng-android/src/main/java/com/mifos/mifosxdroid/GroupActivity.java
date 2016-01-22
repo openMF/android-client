@@ -7,10 +7,10 @@ package com.mifos.mifosxdroid;
 
 import android.os.Bundle;
 
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.fragments.GroupFragment;
 
-public class GroupActivity extends BaseActivity {
+public class GroupActivity extends MifosBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);

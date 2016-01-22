@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
-import com.mifos.mifosxdroid.core.BaseFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Period;
 import com.mifos.objects.accounts.loan.RepaymentSchedule;
@@ -34,7 +34,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentScheduleFragment extends BaseFragment {
+public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
 
     private View rootView;
     private SharedPreferences sharedPreferences;
