@@ -17,7 +17,11 @@
         android:enabled="true"
         android:title="@string/create_client"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/mItem_create_new_center"
+        android:enabled="true"
+        android:title="@string/create_center"
+        app:showAsAction="never" />
     <item
         android:id="@+id/item_centers"
         android:enabled="true"

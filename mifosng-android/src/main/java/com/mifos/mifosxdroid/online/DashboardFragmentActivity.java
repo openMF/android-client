@@ -57,6 +57,9 @@ public class DashboardFragmentActivity extends BaseActivity {
             case R.id.mItem_create_new_client:
                 openCreateClient();
                 break;
+            case R.id.mItem_create_new_center:
+                openCreateCenter();
+                break;
             default: //DO NOTHING
                 break;
         }
@@ -69,6 +72,10 @@ public class DashboardFragmentActivity extends BaseActivity {
 
     public void openCreateClient() {
         replaceFragment(CreateNewClientFragment.newInstance(), true, R.id.container);
+    }
+
+    public void openCreateCenter() {
+        replaceFragment(CreateNewCenterFragment.newInstance(), true, R.id.container);
     }
 }
 

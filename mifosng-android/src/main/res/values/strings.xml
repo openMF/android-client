@@ -43,6 +43,7 @@
     <string name="center_name">Center Name</string>
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
+    <string name="create_center">Create Center</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
@@ -147,10 +148,14 @@
     <string name="client_type">Client</string>
     <string name="client_classification">Client Classification</string>
 
+    <!-- Create Center Terms -->
+    <string name="centername">Name</string>
+    <string name="center_submission_date">Submitted On</string>
+    <string name="center_add_group">Add Group</string>
+    <string name="center_active">Active</string>
+    <string name="groupname">Name</string>
 
-
-
-
+    <string name="center_add_client">Add Client</string>
 
     <!-- Menu Item Names Begin Here -->
     <string name="action_settings">Settings</string>
