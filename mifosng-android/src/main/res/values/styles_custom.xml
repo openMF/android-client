@@ -5,5 +5,10 @@
   -->
 
 <resources>
-    <color name="mifosxtheme_color">#669900</color>
+
+    <style name="ClientImage">
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">75dp</item>
+    </style>
+
 </resources>

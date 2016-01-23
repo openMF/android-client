@@ -13,20 +13,20 @@ import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class DashboardFragmentActivity extends BaseActivity {
+public class DashboardFragmentActivity extends MifosBaseActivity {
 
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-        replaceFragment(ClientSearchFragment.newInstance(), false, R.id.container);
+        setContentView(R.layout.activity_toolbar_container);
+        replaceFragment(new ClientSearchFragment(), false, R.id.container);
     }
 
     @Override

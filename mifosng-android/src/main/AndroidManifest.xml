@@ -22,13 +22,12 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Mifosxactionbar">
+        android:theme="@style/MaterialAppTheme">
 
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/MaterialAppTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,17 +37,15 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/login"
-            android:screenOrientation="portrait"
-            android:theme="@style/MaterialAppTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".online.LogoutActivity"
             android:label="@string/logout"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.DashboardFragmentActivity"
-            android:theme="@style/MaterialAppTheme"
             android:label="@string/dashboard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".GroupActivity"
             android:configChanges="orientation|screenSize"
@@ -60,6 +57,39 @@
         <activity
             android:name=".LoanActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".online.ClientActivity"
+            android:label="@string/title_activity_client"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".OfflineCenterInputActivity"
+            android:label="Offline Center Input"
+            android:parentActivityName=".online.DashboardFragmentActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".online.CentersActivity"
+            android:label="@string/title_activity_centers"
+            android:parentActivityName=".online.DashboardFragmentActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
+        </activity>
+
+
+        <activity
+            android:name=".online.GenerateCollectionSheet"
+            android:label="@string/title_activity_generate_collection_sheet"
+            android:parentActivityName=".online.DashboardFragmentActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
+        </activity>
+        <activity
+            android:name=".CenterListActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -81,40 +111,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".online.ClientActivity"
-            android:label="@string/title_activity_client"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".OfflineCenterInputActivity"
-            android:theme="@style/MaterialAppTheme"
-            android:label="Offline Center Input"
-            android:parentActivityName=".online.DashboardFragmentActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".online.CentersActivity"
-            android:label="@string/title_activity_centers"
-            android:parentActivityName=".online.DashboardFragmentActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
-        </activity>
-
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="b781afbde2e7db1df8455861d3f5d59c158f3bff" />
 
-        <activity
-            android:name=".online.GenerateCollectionSheet"
-            android:label="@string/title_activity_generate_collection_sheet"
-            android:parentActivityName=".online.DashboardFragmentActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
-        </activity>
-        <activity
-            android:name=".CenterListActivity"
-            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

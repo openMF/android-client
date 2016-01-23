@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
 <resources>
 
     <style name="TextView" parent="AppTheme.Text" />
@@ -20,6 +25,24 @@
 
     <style name="TextView.Title" parent="TextView.Base">
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="TextView.Row" parent="TextView.Base">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="TextView.Row.Value" parent="TextView.Row">
+        <item name="android:gravity">right</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="TextView.Client" parent="TextView.Base">
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
     </style>
 
     <style name="TextView.ConnectionSettings" parent="TextView.Base">

@@ -9,9 +9,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,10 +18,10 @@ import android.widget.ExpandableListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,7 +30,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanTransactionsFragment extends Fragment {
+public class LoanTransactionsFragment extends MifosBaseFragment {
 
     @InjectView(R.id.elv_loan_transactions)
     ExpandableListView elv_loanTransactions;
@@ -41,16 +38,8 @@ public class LoanTransactionsFragment extends Fragment {
     private int loanAccountNumber;
 
     private OnFragmentInteractionListener mListener;
-
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
-
-    ActionBarActivity activity;
-
-    SharedPreferences sharedPreferences;
-
-    ActionBar actionBar;
+    private View rootView;
+    private SharedPreferences sharedPreferences;
 
     public static LoanTransactionsFragment newInstance(int loanAccountNumber) {
         LoanTransactionsFragment fragment = new LoanTransactionsFragment();
@@ -58,9 +47,6 @@ public class LoanTransactionsFragment extends Fragment {
         args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber);
         fragment.setArguments(args);
         return fragment;
-    }
-    public LoanTransactionsFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -74,18 +60,12 @@ public class LoanTransactionsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_loan_transactions, container, false);
-        activity = (ActionBarActivity) getActivity();
-        safeUIBlockingUtility = new SafeUIBlockingUtility(LoanTransactionsFragment.this.getActivity());
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        actionBar = activity.getSupportActionBar();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
-
         inflateLoanTransactions();
-
         return rootView;
     }
 
@@ -121,9 +101,7 @@ public class LoanTransactionsFragment extends Fragment {
      */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-
         menu.clear();
-
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -132,17 +110,16 @@ public class LoanTransactionsFragment extends Fragment {
     }
 
     public void inflateLoanTransactions() {
-
-        ((MifosApplication) getActivity().getApplicationContext()).api.loanService.getLoanWithTransactions(loanAccountNumber, new Callback<LoanWithAssociations>() {
+        MifosApplication.getApi().loanService.getLoanWithTransactions(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
 
-                if(loanWithAssociations != null) {
+                if (loanWithAssociations != null) {
 
                     Log.i("Transaction List Size", "" + loanWithAssociations.getTransactions().size());
 
                     LoanTransactionAdapter loanTransactionAdapter =
-                            new LoanTransactionAdapter(getActivity(),loanWithAssociations.getTransactions());
+                            new LoanTransactionAdapter(getActivity(), loanWithAssociations.getTransactions());
                     elv_loanTransactions.setAdapter(loanTransactionAdapter);
                     elv_loanTransactions.setGroupIndicator(null);
                 }
@@ -154,9 +131,5 @@ public class LoanTransactionsFragment extends Fragment {
 
             }
         });
-
     }
-
-
-
 }

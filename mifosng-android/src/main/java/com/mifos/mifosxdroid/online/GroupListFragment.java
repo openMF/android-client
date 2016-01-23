@@ -9,9 +9,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +17,12 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.List;
 
@@ -36,25 +33,17 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class GroupListFragment extends Fragment {
+public class GroupListFragment extends MifosBaseFragment {
 
 
     @InjectView(R.id.lv_group_list)
     ListView lv_groupList;
 
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
-
-    ActionBarActivity activity;
-
-    SharedPreferences sharedPreferences;
-
-    ActionBar actionBar;
-
+    private View rootView;
+    private SharedPreferences sharedPreferences;
     private OnFragmentInteractionListener mListener;
 
-    int centerId;
+    private int centerId;
 
     public static GroupListFragment newInstance(int centerId) {
         GroupListFragment fragment = new GroupListFragment();
@@ -62,10 +51,6 @@ public class GroupListFragment extends Fragment {
         args.putInt(Constants.CENTER_ID, centerId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public GroupListFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -81,12 +66,9 @@ public class GroupListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_group_list, container, false);
-        activity = (ActionBarActivity) getActivity();
-        safeUIBlockingUtility = new SafeUIBlockingUtility(GroupListFragment.this.getActivity());
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        actionBar = activity.getSupportActionBar();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
-        actionBar.setTitle(getResources().getString(R.string.group));
+        setToolbarTitle(getResources().getString(R.string.group));
 
         inflateGroupList();
 
@@ -119,9 +101,9 @@ public class GroupListFragment extends Fragment {
 
     public void inflateGroupList() {
 
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress();
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
+        MifosApplication.getApi().centerService.getAllGroupsForCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
             public void success(final CenterWithAssociations centerWithAssociations, Response response) {
 
@@ -135,12 +117,12 @@ public class GroupListFragment extends Fragment {
 
                             int groupId = centerWithAssociations.getGroupMembers().get(i).getId();
 
-                            ((MifosApplication) getActivity().getApplicationContext()).api.groupService.getGroupWithAssociations(groupId,
+                            MifosApplication.getApi().groupService.getGroupWithAssociations(groupId,
                                     new Callback<GroupWithAssociations>() {
                                         @Override
                                         public void success(GroupWithAssociations groupWithAssociations, Response response) {
 
-                                            if(groupWithAssociations != null) {
+                                            if (groupWithAssociations != null) {
                                                 mListener.loadClientsOfGroup(groupWithAssociations.getClientMembers());
                                             }
                                         }
@@ -153,15 +135,14 @@ public class GroupListFragment extends Fragment {
 
                         }
                     });
-                    safeUIBlockingUtility.safelyUnBlockUI();
+                    hideProgress();
                 }
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
         });
 
