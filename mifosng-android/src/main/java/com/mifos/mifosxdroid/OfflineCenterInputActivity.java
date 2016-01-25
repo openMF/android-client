@@ -15,7 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.mifos.mifosxdroid.core.BaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 
 import java.util.Calendar;
@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class OfflineCenterInputActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener {
+public class OfflineCenterInputActivity extends MifosBaseActivity implements DatePickerDialog.OnDateSetListener {
     public static String PREF_CENTER_DETAILS = "pref_center_details";
     public static String STAFF_ID_KEY = "pref_staff_id";
     public static String BRANCH_ID_KEY = "pref_branch_id";

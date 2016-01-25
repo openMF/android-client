@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.online;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
@@ -41,14 +41,14 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class ClientListFragment extends Fragment {
+public class ClientListFragment extends MifosBaseFragment {
 
 
     @InjectView(R.id.lv_clients)
     ListView lv_clients;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
-    View rootView;
+    private View rootView;
 
     List<Client> clientList = new ArrayList<Client>();
     private Context context;
@@ -81,10 +81,10 @@ public class ClientListFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();

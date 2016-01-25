@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
@@ -52,6 +51,7 @@
     <string name="file_name">File Name</string>
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
+    <string name="more_info">More client info</string>
     <string name="collection_sheet">Collection Sheet</string>
     <string name="title_activity_generate_collection_sheet" translatable="false">GenerateCollectionSheet</string>
     <string name="meeting_date">Meeting Date</string>

@@ -91,7 +91,6 @@ public class API {
     public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "Content-Type: multipart/form-data";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String INSTANCE_URL = "InstanceUrl";
-
     /*
         As Mifos is a multi-tenant platform, all requests require you to specify a tenant
         as a header in each request.
@@ -115,7 +114,6 @@ public class API {
     public OfficeService officeService;
     public StaffService staffService;
 
-
     public API(final String url, final String tenantIdentifier, boolean shouldByPassSSLSecurity) {
 
         RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder();
@@ -124,30 +122,26 @@ public class API {
             restAdapterBuilder.setClient(new OkClient(getUnsafeOkHttpClient()));
         }
         restAdapterBuilder.setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        if (tenantIdentifier != null  && !tenantIdentifier.isEmpty()) {
-                            request.addHeader(HEADER_MIFOS_TENANT_ID, tenantIdentifier);
-                        } else {
-                            request.addHeader(HEADER_MIFOS_TENANT_ID, "default");
-                        }
-
+            @Override
+            public void intercept(RequestFacade request) {
+                if (tenantIdentifier != null && !tenantIdentifier.isEmpty()) {
+                    request.addHeader(HEADER_MIFOS_TENANT_ID, tenantIdentifier);
+                } else {
+                    request.addHeader(HEADER_MIFOS_TENANT_ID, "default");
+                }
                         /*
                             Look for the Auth token in the shared preferences
                             and add it to the request. Because it is mandatory to
                             supply the Authorization Header in every request
                         */
 
-                        SharedPreferences pref = PreferenceManager
-                                .getDefaultSharedPreferences(Constants.applicationContext);
-                        String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-
-                        if (authToken != null && !"NA".equals(authToken)) {
-                            request.addHeader(HEADER_AUTHORIZATION, authToken);
-                        }
-
-                    }
-                });
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Constants.applicationContext);
+                String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
+                if (authToken != null && !"NA".equals(authToken)) {
+                    request.addHeader(HEADER_AUTHORIZATION, authToken);
+                }
+            }
+        });
         restAdapterBuilder.setErrorHandler(new MifosRestErrorHandler());
         RestAdapter restAdapter = restAdapterBuilder.build();
         // TODO: This logging is sometimes excessive, e.g. for client image requests.
@@ -170,11 +164,10 @@ public class API {
     }
 
 
-
-    private  OkHttpClient getUnsafeOkHttpClient() {
+    private OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[] {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
@@ -211,7 +204,6 @@ public class API {
             throw new RuntimeException(e);
         }
     }
-
 
 
     public static <T> Callback<T> getCallback(T t) {
@@ -259,7 +251,7 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
-        public void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String,Object> additionalParams,
+        public void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> additionalParams,
                                           Callback<List<Center>> centersCallback);
 
 
@@ -281,11 +273,9 @@ public class API {
         public void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
 
 
-        @Headers({ACCEPT_JSON,CONTENT_TYPE_JSON})
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.CLIENTS + "")
         public void uploadNewClientDetails();
-
-
 
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
@@ -313,7 +303,7 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CLIENTS)
-        public void listAllClients(@Query("offset")int offset, @Query("limit")int limit, Callback<Page<Client>> callback);
+        public void listAllClients(@Query("offset") int offset, @Query("limit") int limit, Callback<Page<Client>> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CLIENTS + "/{clientId}")
@@ -338,6 +328,7 @@ public class API {
         @POST(APIEndPoint.CLIENTS)
         void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
     }
+
     public interface SearchService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
@@ -376,7 +367,7 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
         public void disburseLoan(@Path("loanId") int loanId,
-                                 @Body HashMap<String,Object> genericRequest,
+                                 @Body HashMap<String, Object> genericRequest,
                                  Callback<GenericResponse> genericResponseCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
@@ -388,7 +379,7 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
         public void getLoanRepaymentSchedule(@Path("loanId") int loanId,
-                                              Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
+                                             Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
@@ -399,12 +390,11 @@ public class API {
     public interface SavingsAccountService {
 
         /**
-         *
-         * @param savingsAccountId - savingsAccountId for which information is requested
-         * @param association - Mention Type of Association Needed, Like :- all, transactions etc.
+         * @param savingsAccountId                       - savingsAccountId for which information is requested
+         * @param association                            - Mention Type of Association Needed, Like :- all, transactions etc.
          * @param savingsAccountWithAssociationsCallback - callback to receive the response
-         *
-         * Use this method to retrieve the Savings Account With Associations
+         *                                               <p/>
+         *                                               Use this method to retrieve the Savings Account With Associations
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/{savingsAccountType}/{savingsAccountId}")
@@ -414,11 +404,10 @@ public class API {
                                                       Callback<SavingsAccountWithAssociations> savingsAccountWithAssociationsCallback);
 
         /**
-         *
-         * @param savingsAccountId - savingsAccountId for which information is requested
+         * @param savingsAccountId                          - savingsAccountId for which information is requested
          * @param savingsAccountTransactionTemplateCallback - Savings Account Transaction Template Callback
-         *
-         * Use this method to retrieve the Savings Account Transaction Template
+         *                                                  <p/>
+         *                                                  Use this method to retrieve the Savings Account Transaction Template
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/{savingsAccountType}/{savingsAccountId}/transactions/template")
@@ -431,9 +420,9 @@ public class API {
         @POST("/{savingsAccountType}/{savingsAccountId}/transactions")
         public void processTransaction(@Path("savingsAccountType") String savingsAccountType,
                                        @Path("savingsAccountId") int savingsAccountId,
-                                              @Query("command") String transactionType,
-                                              @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
-                                              Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
+                                       @Query("command") String transactionType,
+                                       @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
+                                       Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
 
 
     }
@@ -469,7 +458,7 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
         public void deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId,
-                                                     @Path("dataTableRowId")int dataTableRowId, Callback<GenericResponse> callback);
+                                                     @Path("dataTableRowId") int dataTableRowId, Callback<GenericResponse> callback);
 
     }
 
@@ -479,19 +468,18 @@ public class API {
 
     public interface DocumentService {
 
-        @GET("/{entityType}/{entityId}"+APIEndPoint.DOCUMENTS)
+        @GET("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
         @Headers({CONTENT_TYPE_JSON})
         public void getListOfDocuments(@Path("entityType") String entityType,
                                        @Path("entityId") int entityId,
                                        Callback<List<Document>> documentListCallback);
 
         /**
-         *
-         * @param entityType - Type for which document is being uploaded (Client, Loan or Savings etc)
-         * @param entityId - Id of Entity
-         * @param nameOfDocument - Document Name
-         * @param description - Mandatory - Document Description
-         * @param typedFile - Mandatory
+         * @param entityType              - Type for which document is being uploaded (Client, Loan or Savings etc)
+         * @param entityId                - Id of Entity
+         * @param nameOfDocument          - Document Name
+         * @param description             - Mandatory - Document Description
+         * @param typedFile               - Mandatory
          * @param genericResponseCallback - Response Callback
          */
         @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
@@ -579,6 +567,7 @@ public class API {
 
         /**
          * Fetches List of All the Offices
+         *
          * @param listOfOfficesCallback
          */
         @GET(APIEndPoint.OFFICES)
@@ -590,8 +579,8 @@ public class API {
     public interface StaffService {
 
         @GET(APIEndPoint.STAFF + "?status=all")
-        @Headers({ACCEPT_JSON,CONTENT_TYPE_JSON})
-        public void getStaffForOffice(@Query("officeId")int officeId, Callback<List<Staff>> staffListCallback);
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void getStaffForOffice(@Query("officeId") int officeId, Callback<List<Staff>> staffListCallback);
 
     }
 
@@ -635,7 +624,6 @@ public class API {
                 }
 
             }
-
 
 
             return retrofitError;
