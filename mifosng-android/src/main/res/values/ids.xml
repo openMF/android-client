@@ -5,5 +5,5 @@
   -->
 
 <resources>
-    <color name="mifosxtheme_color">#669900</color>
+    <item name="container" type="id" />
 </resources>

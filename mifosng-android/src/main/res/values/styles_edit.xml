@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<resources>
+
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="colorControlNormal">@color/primary</item>
+        <item name="colorControlActivated">@color/primary_light</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="EditText.Base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="EditText.BaseWidth">
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="EditText.Username" parent="EditText.BaseWidth">
+        <item name="android:hint">@string/username</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="EditText.Password" parent="EditText.BaseWidth">
+        <item name="android:ems">10</item>
+        <item name="android:hint">@string/password</item>
+        <item name="android:imeActionLabel">@string/login</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">textPassword</item>
+    </style>
+
+    <style name="EditText.Base.Weight" parent="EditText.Base">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="EditText.Connection" parent="EditText.Base.Weight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:inputType">text</item>
+        <item name="android:minWidth">200dp</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="EditText.Tenant" parent="EditText.Connection">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+
+</resources>

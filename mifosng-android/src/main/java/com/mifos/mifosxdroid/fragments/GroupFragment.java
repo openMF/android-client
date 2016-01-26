@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.MeetingCenter;
 import com.mifos.objects.db.MifosGroup;
 import com.mifos.services.RepaymentTransactionSyncService;
@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class GroupFragment extends Fragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
+public class GroupFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
 
     public static final String TAG = "Group Fragment";
     private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();

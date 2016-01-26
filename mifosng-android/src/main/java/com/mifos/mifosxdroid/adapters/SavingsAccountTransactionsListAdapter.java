@@ -66,8 +66,7 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_transactionDate.setText(
-                DateHelper.getDateAsString(listOfTransactions.get(i).getDate()));
+        reusableViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(listOfTransactions.get(i).getDate()));
         reusableViewHolder.tv_transactionType.setText(listOfTransactions.get(i).getTransactionType().getValue());
         reusableViewHolder.tv_transactionAmount.setText(listOfTransactions.get(i).getCurrency().getDisplaySymbol()
                         +" "+String.valueOf(listOfTransactions.get(i).getAmount()));

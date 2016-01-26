@@ -1,53 +1,147 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:orientation="vertical">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/LinearLayout.Base">
+
+        <TextView style="@style/TextView.CreateClient" />
+
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+            <EditText
+                android:id="@+id/et_client_first_name"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/fname"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+                <requestFocus />
+            </android.support.design.widget.TextInputLayout>
+
+
+
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+            <EditText
+                android:id="@+id/et_client_middle_name"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/mname"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+            <EditText
+                android:id="@+id/et_client_last_name"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/lname"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <EditText
+                android:id="@+id/et_client_mobile_no"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/mobile_no"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <EditText
+                android:id="@+id/et_client_external_id"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/external_id"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
     <TextView
-        android:text="First Name :"
-        android:textSize="20sp"
-        android:paddingTop="10dp"
+        android:id="@+id/tv_client_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_client_first_name"
+        android:paddingTop="16dp"
+        android:text="@string/gender"
+        android:textSize="16sp"/>
+    <Spinner
+        android:id="@+id/sp_gender"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
 
+    <TextView
+        android:id="@+id/tv_client_dateofbirth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="16dp"
+        android:text="@string/dob"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/tv_dateofbirth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="select client's date of birth :"
+        android:imeOptions="actionNext"
+        android:paddingBottom="16dp"
+        android:paddingTop="10dp"
+        android:textSize="20sp"
+        />
+    <TextView
+        android:id="@+id/tv_client_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:text="@string/client_type"
+        android:textSize="16sp"
 
         />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:paddingTop="10dp"
+    <Spinner
+        android:id="@+id/sp_client_type"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="enter client's first name"
-        android:id="@+id/et_client_first_name"/>
-
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
     <TextView
+        android:id="@+id/tv_client_classification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:text="Last Name :"
-        android:textSize="20sp"
-        android:id="@+id/tv_client_last_name"
+        android:text="@string/client_classification"
+        android:textSize="16sp"
 
         />
 
-
-    <EditText
-        android:layout_width="match_parent"
-        android:paddingTop="10dp"
+    <Spinner
+        android:id="@+id/sp_client_classification"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="enter client's last name"
-        android:id="@+id/et_client_last_name"/>
-
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:text="Office :"
-        android:textSize="20sp"
         android:id="@+id/tv_office"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="@string/office_name"
+        android:textSize="16sp"
 
         />
 
@@ -57,39 +151,50 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:spinnerMode="dropdown"/>
+    <TextView
+        android:id="@+id/tv_staff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="@string/staff_names"
+        android:textSize="16sp"
 
+        />
+
+    <Spinner
+        android:id="@+id/sp_staff"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"/>
     <CheckBox
         android:id="@+id/cb_client_active_status"
         android:layout_width="match_parent"
-        android:paddingTop="10dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Client Active "
         android:checked="false"
+        android:paddingTop="10dp"
+        android:text="@string/client_active"
         />
 
-
-
-
     <TextView
+        android:id="@+id/tv_submission_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-
         android:textSize="20sp"
         android:visibility="gone"
-        android:id="@+id/tv_submission_date"
 
         />
 
 
     <Button
         android:id="@+id/bt_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        android:layout_marginRight="2dp"/>
-
+        style="@style/Button.Base"
+        android:layout_marginTop="10dp"
+        android:text="@string/submit"
+        />
 
 
 </LinearLayout>
+    </ScrollView>

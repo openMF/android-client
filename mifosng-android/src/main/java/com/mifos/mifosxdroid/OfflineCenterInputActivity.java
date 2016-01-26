@@ -10,12 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
 
 import java.util.Calendar;
 
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class OfflineCenterInputActivity extends ActionBarActivity implements DatePickerDialog.OnDateSetListener {
+public class OfflineCenterInputActivity extends MifosBaseActivity implements DatePickerDialog.OnDateSetListener {
     public static String PREF_CENTER_DETAILS = "pref_center_details";
     public static String STAFF_ID_KEY = "pref_staff_id";
     public static String BRANCH_ID_KEY = "pref_branch_id";
@@ -34,8 +35,6 @@ public class OfflineCenterInputActivity extends ActionBarActivity implements Dat
     EditText etBranchId;
     @InjectView(R.id.tv_select_date)
     TextView tvSelectDate;
-    @InjectView(R.id.btnSave)
-    Button btnSave;
     private String date;
     private int staffId;
     private int branchId;
@@ -47,7 +46,7 @@ public class OfflineCenterInputActivity extends ActionBarActivity implements Dat
         }
         setContentView(R.layout.activity_center_details);
         ButterKnife.inject(this);
-
+        showBackButton();
     }
 
     private boolean isCenterIdAvailable() {
@@ -89,7 +88,7 @@ public class OfflineCenterInputActivity extends ActionBarActivity implements Dat
             branchId = Integer.parseInt(etBranchId.getEditableText().toString());
         } else {
             isAllDetailsFilled = false;
-            Toast.makeText(this, "Please fill all the details", Toast.LENGTH_SHORT).show();
+            Toaster.show(findViewById(android.R.id.content), "Please fill all the details");
         }
         return isAllDetailsFilled;
     }

@@ -10,16 +10,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.User;
+import com.mifos.utils.Constants;
 
 /**
  * Logout activity.
  */
-public class LogoutActivity extends ActionBarActivity {
+public class LogoutActivity extends MifosBaseActivity {
     public final static String TAG = LogoutActivity.class.getSimpleName();
     public static final String NA = "NA";
 
@@ -34,6 +36,7 @@ public class LogoutActivity extends ActionBarActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(User.AUTHENTICATION_KEY, NA);
+        editor.putString(Constants.INSTANCE_URL_KEY, getString(R.string.default_instance_url));
         editor.commit();
         editor.apply();
         startActivity(new Intent(LogoutActivity.this, SplashScreenActivity.class));

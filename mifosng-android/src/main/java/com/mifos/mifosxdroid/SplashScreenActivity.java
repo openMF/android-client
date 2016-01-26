@@ -11,12 +11,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
 import com.mifos.services.API;
@@ -28,24 +28,21 @@ import com.mifos.utils.MifosApplication;
  * This is the First Activity which can be used for initial checks, inits at app Startup
  */
 
-public class SplashScreenActivity extends ActionBarActivity {
+public class SplashScreenActivity extends MifosBaseActivity {
 
-    SharedPreferences sharedPreferences;
-    String authenticationToken;
-
-    Context context;
+    private SharedPreferences sharedPreferences;
+    private String authenticationToken;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        getSupportActionBar().hide();
+
         Crashlytics.start(this);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+            replaceFragment(new PlaceholderFragment(), false, R.id.container);
         }
 
         context = SplashScreenActivity.this.getApplicationContext();

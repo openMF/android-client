@@ -6,63 +6,50 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:padding="10dp"
-              android:layout_height="match_parent">
+    style="@style/LinearLayout.Base">
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/staff_id"
-            android:padding="10dp"
-            android:textSize="17sp"
-            />
+    <include layout="@layout/toolbar" />
 
-    <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_staff_id"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:textSize="17sp"
-            android:inputType="number"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/LinearLayout.Base"
+        android:padding="10dp">
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/branch_id"
-            android:padding="10dp"
-            android:textSize="17sp"
-            />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/staffWrapper"
+            style="@style/TextInput.Offline">
 
-    <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_branch_id"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:textSize="17sp"
-            android:inputType="number"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"/>
+            <EditText
+                android:id="@+id/et_staff_id"
+                style="@style/EditText.BaseWidth"
+                android:hint="@string/staff_id"
+                android:nextFocusDown="@+id/et_password" />
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/tap_to_select_date"
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/branchWrapper"
+            style="@style/TextInput.Offline">
+
+            <EditText
+                android:id="@+id/et_branch_id"
+                style="@style/EditText.BaseWidth"
+                android:hint="@string/branch_id"
+                android:nextFocusDown="@+id/et_password" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <TextView
             android:id="@+id/tv_select_date"
-            android:textSize="17sp"
-            android:layout_marginBottom="10dp"
-            android:padding="10dp"/>
+            style="@style/TextView.BaseWidth"
+            android:layout_margin="5dp"
+            android:hint="@string/tap_to_select_date" />
 
-    <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:text="@string/save"
-            android:layout_margin="10dp"
-            android:id="@+id/btnSave"/>
+        <Button
+            android:id="@+id/btnSave"
+            style="@style/Button.Base"
+            android:text="@string/save" />
+    </LinearLayout>
+
 </LinearLayout>
+
