@@ -446,7 +446,6 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
         MifosApplication.getApi().officeService.getAllOffices(new Callback<List<Office>>() {
-
             @Override
             public void success(List<Office> offices, Response response) {
                 final List<String> officeList = new ArrayList<String>();
@@ -496,7 +495,6 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
         });
-
     }
     public void inflateStaffSpinner(final int officeId) {
 
