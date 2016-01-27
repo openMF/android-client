@@ -327,6 +327,11 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.CLIENTS)
         void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CLIENTS + "/template")
+        public void getClientTemplate(Callback<Response> clientCallback);
+
     }
 
     public interface SearchService {

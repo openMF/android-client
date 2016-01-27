@@ -1,0 +1,124 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/LinearLayout.Base">
+        <TextView style="@style/TextView.CreateGroup" />
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <EditText
+                android:id="@+id/et_group_name"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/groupname"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+            <requestFocus />
+        </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:id="@+id/tv_office"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/office_name"
+            android:textSize="16sp"
+
+            />
+
+        <Spinner
+            android:id="@+id/sp_offices"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:spinnerMode="dropdown"/>
+        <TextView
+            android:id="@+id/tv_staff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/staff_names"
+            android:textSize="16sp"
+
+            />
+
+        <Spinner
+            android:id="@+id/sp_staff"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:spinnerMode="dropdown"/>
+        <TextView
+            android:id="@+id/tv_group_submissiondate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="16dp"
+            android:text="@string/center_submission_date"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tv_group_submission_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="date"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            />
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <EditText
+                android:id="@+id/et_group_external_id"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/external_id"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <CheckBox
+            android:id="@+id/cb_group_active_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:paddingTop="10dp"
+            android:text="@string/center_active"
+            />
+
+
+
+
+        <TextView
+            android:id="@+id/tv_center_active_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:textSize="20sp"
+            android:visibility="gone"
+
+            />
+        <Spinner
+            android:id="@+id/sp_add_client"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:spinnerMode="dropdown"/>
+        <Button
+            android:id="@+id/bt_add_c"
+            style="@style/Button.Base"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/center_add_client" />
+
+        <Button
+            android:id="@+id/bt_submit"
+            style="@style/Button.Base"
+            android:layout_marginTop="10dp"
+            android:text="@string/submit"
+            />
+
+
+    </LinearLayout>
+</ScrollView>

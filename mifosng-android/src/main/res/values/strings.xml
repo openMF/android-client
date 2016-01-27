@@ -42,6 +42,8 @@
     <string name="center_name">Center Name</string>
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
+    <string name="create_center">Create Center</string>
+    <string name="create_group">Create Group</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
@@ -132,6 +134,29 @@
     <string name="title_activity_client" translatable="false">ClientActivity</string>
     <!-- Action Bar Fragment and Activity Titles End Here -->
 
+    <!-- Create Client Terms -->
+
+    <string name="fname">First Name</string>
+    <string name="mname">Middle Name</string>
+    <string name="lname">Last Name</string>
+    <string name="mnumber">Mobile Number</string>
+    <string name="dob">Date of Birth</string>
+    <string name="office_name">Office</string>
+    <string name="staff_names">Staff</string>
+    <string name="client_active">Client Active</string>
+    <string name="submit">Submit</string>
+    <string name="gender">Gender</string>
+    <string name="client_type">Client</string>
+    <string name="client_classification">Client Classification</string>
+
+    <!-- Create Center Terms -->
+    <string name="centername">Name</string>
+    <string name="center_submission_date">Submitted On</string>
+    <string name="center_add_group">Add Group</string>
+    <string name="center_active">Active</string>
+    <string name="groupname">Name</string>
+
+    <string name="center_add_client">Add Client</string>
 
     <!-- Menu Item Names Begin Here -->
     <string name="action_settings">Settings</string>
@@ -170,6 +195,8 @@
     <string name="list_all_clients">Client List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
+    <string name="error_select_gender">Please Select Gender</string>
+    <string name="error_select_client_type">Please Select Client Type</string>
     <string name="error_select_staff">Please Select a Staff</string>
     <string name="error_select_center">Please Select a Center</string>
     <string name="error_client_inactive">Client Inactive</string>
@@ -177,6 +204,7 @@
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
     <string name="spinner_staff">Select Loan Officer</string>
+    <string name="staff_spinner">Select Staff</string>
     <string name="spinner_center">Select Center</string>
     <string name="spinner_group">Select Group</string>
     <string name="total_due">Total Due</string>
@@ -201,7 +229,11 @@
     <string name="error_should_contain_only">should contain only</string>
     <string name="error_cannot_be_empty">cannot be empty</string>
     <string name="first_name">First name</string>
+    <string name="mobile_no">Mobile Number</string>
     <string name="last_name">Last name</string>
+    <string name="middle_name">Middle name</string>
+    <string name="phone_number_not_valid">Phone number not valid</string>
+
 
     <string-array name="office_ids">
         <item>Head Office</item>
