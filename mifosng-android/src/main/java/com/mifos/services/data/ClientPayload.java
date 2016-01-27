@@ -19,7 +19,7 @@ public class ClientPayload extends DefaultPayload {
     private String dateOfBirth;
     private String mobileNo;
     private String externalId;
-    private int genderId;
+    //private int genderId;
 
     public String getFirstname() {
         return firstname;
@@ -85,13 +85,13 @@ public class ClientPayload extends DefaultPayload {
         this.submittedOnDate = submittedOnDate;
     }
 
-    public Integer getGenderId() {
+  /*  public Integer getGenderId() {
         return genderId;
     }
 
     public void setGenderId(Integer genderId) {
         this.genderId = genderId;
-    }
+    }*/
 
     public String getDateOfBirth() {
         return dateOfBirth;

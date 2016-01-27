@@ -99,7 +99,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     Button bt_submit;
 
     int officeId;
-    int genderId;
+   //int genderId;
     int staffId;
     Boolean result = true;
     View rootView;
@@ -185,7 +185,8 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                 clientPayload.setActivationDate(dateString);
                 clientPayload.setDateOfBirth(dateofbirthstring);
                 clientPayload.setOfficeId(officeId);
-                clientPayload.setGenderId(genderId);
+                //clientPayload.setGenderId(genderId);
+                //TODO capture client classification and client type
 
 
                 initiateClientCreation(clientPayload);
@@ -441,7 +442,6 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
             }
         });
     }
-    //inflating office list spinner
     private void inflateOfficeSpinner() {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
@@ -496,7 +496,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
             }
         });
     }
-    public void inflateStaffSpinner(final int officeId) {
+    public  void  inflateStaffSpinner(final int officeId) {
 
 
         ((MifosApplication) getActivity().getApplicationContext()).api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
@@ -549,27 +549,36 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         if (!isValidLastName()) {
             return;
         }
+        if (!isValidMobileNo()) {
+            return;
+        }
+        //Date validation : check for date less than or equal to current date
+        if (!isValidDate()) {
+            Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
+        }
+        if (!isValidDateofBirth()) {
+            Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
 
-        else {
+        } else {
 
-                safeUIBlockingUtility.safelyBlockUI();
+            safeUIBlockingUtility.safelyBlockUI();
 
-            MifosApplication.getApi().clientService.createClient(clientPayload, new Callback<Client>() {
+            ((MifosApplication) getActivity().getApplicationContext()).api.clientService.createClient(clientPayload, new Callback<Client>() {
                 @Override
                 public void success(Client client, Response response) {
                     safeUIBlockingUtility.safelyUnBlockUI();
                     Toast.makeText(getActivity(), "Client created successfully", Toast.LENGTH_LONG).show();
 
-                    }
+                }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
+                @Override
+                public void failure(RetrofitError error) {
+                    safeUIBlockingUtility.safelyUnBlockUI();
+                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+                }
+            });
         }
+    }
 
 
     public void inflateSubmissionDate() {
@@ -689,6 +698,35 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         return result;
     }
 
+    public boolean isValidDate() {
+
+        List<Integer> date1 = new ArrayList<>();
+        List<Integer> date2 = new ArrayList<>();
+        date1 = DateHelper.getCurrentDateAsListOfIntegers();
+        date2 = DateHelper.getDateList(tv_submissionDate.getText().toString(), "-");
+
+        Collections.reverse(date2);
+        int i = DateHelper.dateComparator(date1, date2);
+        if (i == -1) {
+            result = false;
+        }
+        return result;
+    }
+
+    public boolean isValidDateofBirth() {
+
+        List<Integer> date1 = new ArrayList<>();
+        List<Integer> date2 = new ArrayList<>();
+        date1 = DateHelper.getCurrentDateAsListOfIntegers();
+        date2 = DateHelper.getDateList(tv_dateofbirth.getText().toString(), "-");
+
+        Collections.reverse(date2);
+        int i = DateHelper.dateComparator(date1, date2);
+        if (i == -1) {
+            result = false;
+        }
+        return result;
+    }
 
     public boolean isValidMobileNo() {
 
