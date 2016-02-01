@@ -98,6 +98,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
     private Matcher ipAddressMatcher;
     private Integer port = null;
     private API api;
+    public static final String PREFS_NAME = "MY_PREFS";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -236,6 +237,10 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         ((MifosApplication) getApplication()).api = api;
         hideProgress();
         Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " " + user.getUsername());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edt = sharedPreferences.edit();
+        edt.putInt("USER_ID", user.getUserId());
+        edt.commit();
         saveLastAccessedInstanceUrl(instanceURL);
         saveLastAccessedInstanceDomainName(et_instanceURL.getEditableText().toString());
         if (!et_port.getEditableText().toString().trim().isEmpty()) {
