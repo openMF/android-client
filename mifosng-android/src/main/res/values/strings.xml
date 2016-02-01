@@ -148,6 +148,7 @@
     <string name="title_activity_centers">Centers</string>
     <string name="hello_world" translatable="false">Hello world!</string>
     <string name="center_list">Center List</string>
+    <string name="survey">Survey</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="type">Type</string>
     <string name="upload">Upload</string>

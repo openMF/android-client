@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
+
+
+    <include layout="@layout/toolbar"
+        />
+    <com.mifos.mifosxdroid.widgets.NonSwipeableViewPager
+        android:id="@+id/surveyPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout android:orientation="horizontal"
+        android:gravity="center" android:measureWithLargestChild="true"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_weight="0">
+
+        <Button android:id="@+id/btnNext"
+            android:layout_width="200dp" android:layout_height="wrap_content"
+            android:text="Next">
+        </Button>
+
+
+    </LinearLayout>
+</LinearLayout>
