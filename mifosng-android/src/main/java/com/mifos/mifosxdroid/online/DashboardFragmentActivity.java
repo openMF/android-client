@@ -18,7 +18,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class DashboardFragmentActivity extends MifosBaseActivity {
+public class DashboardFragmentActivity extends MifosBaseActivity implements SurveyListFragment.OnFragmentInteractionListener {
 
     public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
 
@@ -45,9 +45,9 @@ public class DashboardFragmentActivity extends MifosBaseActivity {
             case R.id.mItem_list:
                 loadClientList();
                 break;
-            //case R.id.item_collection_sheet :
-            //startActivity(new Intent(DashboardFragmentActivity.this, GenerateCollectionSheet.class));
-            //    break;
+            case R.id.item_survey:
+                loadClientListForSurvey();
+                break;
             case R.id.item_offline_centers:
                 startActivity(new Intent(this, OfflineCenterInputActivity.class));
                 break;
@@ -62,9 +62,20 @@ public class DashboardFragmentActivity extends MifosBaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void loadSurveyQuestion(int surveyId) {
+
+        Intent myIntent = new Intent(DashboardFragmentActivity.this, SurveyQuestion.class);
+        myIntent.putExtra("SurveyId", surveyId);
+        startActivity(myIntent);
+
+    }
 
     public void loadClientList() {
         replaceFragment(ClientListFragment.newInstance(null), true, R.id.container);
+    }
+    public void loadClientListForSurvey() {
+        replaceFragment(ClientChooseFragment.newInstance(), true, R.id.container);
     }
 
     public void openCreateClient() {

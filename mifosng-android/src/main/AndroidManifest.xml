@@ -47,6 +47,10 @@
             android:label="@string/dashboard"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".online.SurveyQuestion"
+            android:label="Survey"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".GroupActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />

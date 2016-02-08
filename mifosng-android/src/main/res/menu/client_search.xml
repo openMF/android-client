@@ -17,6 +17,11 @@
         android:enabled="true"
         android:title="@string/create_client"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/item_survey"
+        android:enabled="true"
+        android:title="@string/survey"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/item_centers"

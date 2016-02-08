@@ -35,6 +35,8 @@ import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.survey.Scorecard;
+import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.APIEndPoint;
@@ -83,6 +85,9 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
+import com.mifos.objects.survey.Survey;
+import com.mifos.services.data.ScorecardPayload;
+import com.mifos.objects.survey.Scorecard;
 
 public class API {
     public static final String TAG = API.class.getName();
@@ -113,6 +118,7 @@ public class API {
     public IdentifierService identifierService;
     public OfficeService officeService;
     public StaffService staffService;
+    public SurveyService surveyService;
 
     public API(final String url, final String tenantIdentifier, boolean shouldByPassSSLSecurity) {
 
@@ -161,6 +167,7 @@ public class API {
         identifierService = restAdapter.create(IdentifierService.class);
         officeService = restAdapter.create(OfficeService.class);
         staffService = restAdapter.create(StaffService.class);
+        surveyService = restAdapter.create(SurveyService.class);
     }
 
 
@@ -327,6 +334,22 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.CLIENTS)
         void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
+    }
+    public interface SurveyService {
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.SURVEYS)
+        public void getAllSurveys(Callback<List<Survey>> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.SURVEYS + "/{surveyId}")
+        public void getSurvey(@Path("surveyId") int surveyId, Callback<Survey> surveyCallback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.SURVEYS + "/{surveyId}/scorecards")
+        public void submitScore(@Path("surveyId") int surveyId,@Body ScorecardPayload scorecardPayload, Callback<Scorecard> callback);
+
+
     }
 
     public interface SearchService {
