@@ -63,7 +63,21 @@ public class DateHelper {
         //Return as dd-mmm-yyyy
 
     }
+    public static String getDateAsStringUsedForDateofBirth(String date) {
+        final StringBuilder builder = new StringBuilder();
+        if (date != null) {
+            String[] splittedDate = date.split("-");
+            int month = Integer.parseInt(splittedDate[1]);
+            builder.append(splittedDate[0]);
+            builder.append("-");
+            builder.append(getMonthName(month));
+            builder.append("-");
+            builder.append(splittedDate[2]);
+        }
+        return builder.toString();
+        //Return as dd-mmm-yyyy
 
+    }
     //Currently supports on "dd MM yyyy"
     public static String getCurrentDateAsDateFormat() {
 

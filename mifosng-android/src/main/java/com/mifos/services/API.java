@@ -40,10 +40,12 @@ import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.APIEndPoint;
+import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ClientPayload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.GpsCoordinatesRequest;
 import com.mifos.services.data.GpsCoordinatesResponse;
+import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
 import com.mifos.utils.Constants;
@@ -248,6 +250,10 @@ public class API {
     public interface CenterService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.CENTERS)
+        void createCenter(@Body CenterPayload centerPayload, Callback<Center> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
         public void getAllCenters(Callback<List<Center>> callback);
 
@@ -334,6 +340,11 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.CLIENTS)
         void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CLIENTS + "/template")
+        public void getClientTemplate(Callback<Response> clientCallback);
+
     }
     public interface SurveyService {
 
@@ -580,6 +591,10 @@ public class API {
         @GET(APIEndPoint.GROUPS)
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         public void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params, Callback<List<Group>> listOfGroupsCallback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.GROUPS)
+        void createGroup(@Body GroupPayload groupPayload, Callback<Group> callback);
 
     }
 
