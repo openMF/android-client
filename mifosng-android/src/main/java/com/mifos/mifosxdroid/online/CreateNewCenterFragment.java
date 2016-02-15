@@ -170,6 +170,7 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                 centerPayload.setActivationDate(dateString);
                 centerPayload.setSubmissionDate(dateofsubmissionstring);
                 centerPayload.setOfficeId(officeId);
+                centerPayload.setStaffId(staffId);
 
 
                 initiateCenterCreation(centerPayload);
@@ -204,16 +205,11 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                         officeId = officeNameIdHashMap.get(officeList.get(i));
                         Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
                         if (officeId != -1) {
-
                             inflateStaffSpinner(officeId);
 
-
                         } else {
-
                             Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-
                         }
-
                     }
 
                     @Override
@@ -239,7 +235,6 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
     public void inflateStaffSpinner(final int officeId) {
 
-
         ((MifosApplication) getActivity().getApplicationContext()).api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
@@ -259,7 +254,11 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
                         staffId = staffNameIdHashMap.get(staffNames.get(position));
                         Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
+                        if (staffId != -1) {
 
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

@@ -21,6 +21,8 @@
     <string name="client_name">Client Name</string>
     <string name="client">Client</string>
     <string name="save">Save</string>
+    <string name="due_date">Due Date</string>
+    <string name="locale">Locale</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
     <string name="default_instance_url" translatable="false">demo.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
@@ -34,6 +36,8 @@
     <string name="full_name">Name</string>
     <string name="account_number">Account Number</string>
     <string name="external_id">External ID</string>
+    <string name="nominal">Nominal annual intrest </string>
+    <string name="submittedon">Submitted On</string>
     <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
     <string name="group">Group</string>
@@ -43,18 +47,23 @@
     <string name="center_name">Center Name</string>
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
+    <string name="create_savings_account">Add Savings Account</string>
     <string name="create_center">Create Center</string>
     <string name="create_group">Create Group</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
+    <string name="charge_id">Charge Id</string>
     <string name="transactions">Transactions</string>
     <string name="name">Name</string>
+    <string name="charge_name">Charge Name</string>
     <string name="description">Description</string>
     <string name="file_name">File Name</string>
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
     <string name="more_info">More client info</string>
+    <string name="charges">Charges </string>
+    <string name="savings_account">Add Savings Account</string>
     <string name="collection_sheet">Collection Sheet</string>
     <string name="title_activity_generate_collection_sheet" translatable="false">GenerateCollectionSheet</string>
     <string name="meeting_date">Meeting Date</string>
@@ -143,12 +152,18 @@
     <string name="mnumber">Mobile Number</string>
     <string name="dob">Date of Birth</string>
     <string name="office_name">Office</string>
+    <string name="interest_p_period">Interest Posting Period</string>
     <string name="staff_names">Staff</string>
     <string name="client_active">Client Active</string>
     <string name="submit">Submit</string>
     <string name="gender">Gender</string>
     <string name="client_type">Client</string>
+    <string name="interest_calc">Interest calculated using</string>
+    <string name="product">Savings Products</string>
+    <string name="field_officer">Field Officer</string>
     <string name="client_classification">Client Classification</string>
+    <string name="interest_comp">Intrest Compounding Period</string>
+    <string name="days_in_year">Days in year</string>
 
     <!-- Create Center Terms -->
     <string name="centername">Name</string>
@@ -182,10 +197,12 @@
     <string name="remove">Remove</string>
     <string name="identifiers">Identifiers</string>
     <string name="add_new">Add New</string>
+    <string name="add_charge">Add Charges</string>
 
     <!-- Error Messages -->
     <string name="error_login_failed">Please try again, your credentials are not valid</string>
     <string name="message_no_identifiers_available">No Identifiers available for this client</string>
+    <string name="message_no_charges_available">No Charges available for this client</string>
     <string name="message_field_required"> is mandatory and cannot be left blank</string>
     <string name="upload_document">Upload Document</string>
     <string name="uploaded_successfully">%1$s Uploaded Successfully</string>
@@ -196,6 +213,10 @@
     <string name="list_all_clients">Client List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
+    <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
+    <string name="interestCalculationDaysInYearTypeAdapterId">Please Days in Year</string>
+
+    <string name="error_select_intrested_cmp">Please Select the Interest Compound Period </string>
     <string name="error_select_gender">Please Select Gender</string>
     <string name="error_select_client_type">Please Select Client Type</string>
     <string name="error_select_staff">Please Select a Staff</string>
@@ -223,6 +244,8 @@
     <string name="failed_to_capture_image">Failed to capture image</string>
     <string name="new_text">New Text</string>
     <string name="small_text">Small Text</string>
+    <string name="duedate">Due Date</string>
+    <string name="charge_text">Small Text</string>
     <string name="medium_text">Medium Text</string>
     <string name="large_text">Large Text</string>
     <string name="product_name">Product Name</string>
@@ -234,6 +257,10 @@
     <string name="last_name">Last name</string>
     <string name="middle_name">Middle name</string>
     <string name="phone_number_not_valid">Phone number not valid</string>
+    <string name="error_select_charge">Select Charge</string>
+    <string name="error_select_product">Select Savings Product</string>
+    <string name="error_select_officer">Select Officer</string>
+
 
 
     <string-array name="office_ids">

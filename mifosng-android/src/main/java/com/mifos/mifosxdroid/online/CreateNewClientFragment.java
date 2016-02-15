@@ -99,8 +99,10 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     Button bt_submit;
 
     int officeId;
-   //int genderId;
+    int clientTypeId;
     int staffId;
+    int genderId;
+    int clientClassificationId;
     Boolean result = true;
     View rootView;
     String dateString;
@@ -112,6 +114,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
     public CreateNewClientFragment() {
         // Required empty public constructor
     }
@@ -185,8 +188,10 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                 clientPayload.setActivationDate(dateString);
                 clientPayload.setDateOfBirth(dateofbirthstring);
                 clientPayload.setOfficeId(officeId);
-                //clientPayload.setGenderId(genderId);
-                //TODO capture client classification and client type
+                clientPayload.setStaffId(staffId);
+                clientPayload.setGenderId(genderId);
+                clientPayload.setClientTypeId(clientTypeId);
+                clientPayload.setClientClassificationId(clientClassificationId);
 
 
                 initiateClientCreation(clientPayload);
@@ -205,14 +210,14 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                // you can use this array to find the gender ID based on name
                 final ArrayList<GenderOptions> genderOption = new ArrayList<GenderOptions>();
                 // you can use this array to populate your spinner
-                ArrayList<String> genderNames = new ArrayList<String>();
+                final ArrayList<String> genderNames = new ArrayList<String>();
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
+                String line;
                 try {
                     reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
 
-                    String line;
 
                     while ((line = reader.readLine()) != null) {
                         sb.append(line);
@@ -224,18 +229,13 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                         JSONArray genderOptions=obj.getJSONArray("genderOptions");
                         for(int i=0;i<genderOptions.length();i++){
                             JSONObject genderObject = genderOptions.getJSONObject(i);
-
                             GenderOptions gender = new GenderOptions();
-                           /* gender.get("id");
-                            gender.get("name");*/
                             gender.setId(genderObject.optInt("id"));
                             gender.setName(genderObject.optString("name"));
-
                             genderOption.add(gender);
                             genderNames.add(genderObject.optString("name"));
                             genderNameIdHashMap.put(gender.getName(), gender.getId());
                         }
-
 
                     }
                     String stringResult = sb.toString();
@@ -246,15 +246,43 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                         android.R.layout.simple_spinner_item, genderNames);
                 genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spGender.setAdapter(genderAdapter);
+                spGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        genderId = genderNameIdHashMap.get(genderNames.get(i));
+                        Log.d("genderId " + genderNames.get(i), String.valueOf(genderId));
+                        if (genderId != -1) {
+
+
+
+                        } else {
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
                 safeUIBlockingUtility.safelyUnBlockUI();
 
             }
-            @Override
-            public void failure(RetrofitError error) {
 
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+                safeUIBlockingUtility.safelyUnBlockUI();
             }
         });
+
     }
     private void inflateClientClassificationOptions() {
         ((MifosApplication) getActivity().getApplicationContext()).api.clientService.getClientTemplate(new Callback<Response>() {
@@ -264,7 +292,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                 // you can use this array to find the gender ID based on name
                 final List<ClientClassificationOptions> clientClassificationOptions = new ArrayList<ClientClassificationOptions>();
                 // you can use this array to populate your spinner
-                ArrayList<String> ClientClassificationNames = new ArrayList<String>();
+               final ArrayList<String> ClientClassificationNames = new ArrayList<String>();
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -286,14 +314,12 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                             JSONObject clientClassificationObject = clientClassification.getJSONObject(i);
 
                             ClientClassificationOptions clientClassifications = new ClientClassificationOptions();
-                           /* gender.get("id");
-                            gender.get("name");*/
                             clientClassifications.setId(clientClassificationObject.optInt("id"));
                             clientClassifications.setName(clientClassificationObject.optString("name"));
 
                             clientClassificationOptions.add(clientClassifications);
                             ClientClassificationNames.add(clientClassificationObject.optString("name"));
-                            clientTypeNameIdHashMap.put(clientClassifications.getName(), clientClassifications.getId());
+                            clientClassificationNameIdHashMap.put(clientClassifications.getName(), clientClassifications.getId());
                         }
 
 
@@ -306,22 +332,53 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                         android.R.layout.simple_spinner_item, ClientClassificationNames);
                 ClientClassificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spClientClassification.setAdapter(ClientClassificationAdapter);
-            }
-            @Override
-            public void failure(RetrofitError error) {
+                spClientClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        clientClassificationId = clientClassificationNameIdHashMap.get(ClientClassificationNames.get(i));
+                        Log.d("clientClassificationId" + ClientClassificationNames.get(i), String.valueOf(clientClassificationId));
+                        if (clientClassificationId != -1) {
+
+
+                        } else {
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_client_type), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                safeUIBlockingUtility.safelyUnBlockUI();
 
             }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+                safeUIBlockingUtility.safelyUnBlockUI();
+            }
         });
+
     }
     private void inflateClientTypeOptions() {
         ((MifosApplication) getActivity().getApplicationContext()).api.clientService.getClientTemplate(new Callback<Response>() {
             @Override
-            public void success(Response result, Response response) {
+
+            public void success(final Response result, Response response) {
                 Log.d(TAG, "");
-                // you can use this array to find the gender ID based on name
+
                 final List<ClientTypeOptions> clienttypeoptions = new ArrayList<ClientTypeOptions>();
                 // you can use this array to populate your spinner
-                ArrayList<String> ClientTypeNames = new ArrayList<String>();
+                final ArrayList<String> ClientTypeNames = new ArrayList<String>();
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -335,19 +392,14 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                         sb.append(line);
                     }
 
-
                     JSONObject obj = new JSONObject(sb.toString());
                     if(obj.has("clientTypeOptions")){
                         JSONArray clientTypeOptions=obj.getJSONArray("clientTypeOptions");
                         for(int i=0;i<clientTypeOptions.length();i++){
                             JSONObject clientTypeObject = clientTypeOptions.getJSONObject(i);
-
                             ClientTypeOptions clienttype = new ClientTypeOptions();
-                           /* gender.get("id");
-                            gender.get("name");*/
                             clienttype.setId(clientTypeObject.optInt("id"));
                             clienttype.setName(clientTypeObject.optString("name"));
-
                             clienttypeoptions.add(clienttype);
                             ClientTypeNames.add(clientTypeObject.optString("name"));
                             clientTypeNameIdHashMap.put(clienttype.getName(), clienttype.getId());
@@ -359,16 +411,47 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
                 } catch (Exception e) {
                     Log.e(TAG,"",e);
                 }
-                ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                final ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, ClientTypeNames);
                 clientTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spClientType.setAdapter(clientTypeAdapter);
-            }
-            @Override
-            public void failure(RetrofitError error) {
+                spClientType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        clientTypeId = clientTypeNameIdHashMap.get(ClientTypeNames.get(i));
+                        Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
+                        if (clientTypeId != -1) {
+
+
+
+                        } else {
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                safeUIBlockingUtility.safelyUnBlockUI();
 
             }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+                safeUIBlockingUtility.safelyUnBlockUI();
+            }
         });
+
     }
     //inflating office list spinner
     private void inflateOfficeSpinner() {
@@ -379,7 +462,6 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
             @Override
             public void success(List<Office> offices, Response response) {
                 final List<String> officeList = new ArrayList<String>();
-
                 for (Office office : offices) {
                     officeList.add(office.getName());
                     officeNameIdHashMap.put(office.getName(), office.getId());
@@ -427,8 +509,7 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
         });
 
     }
-    public  void  inflateStaffSpinner(final int officeId) {
-
+    public void inflateStaffSpinner(final int officeId) {
 
         ((MifosApplication) getActivity().getApplicationContext()).api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
             @Override
@@ -449,7 +530,11 @@ public class CreateNewClientFragment extends Fragment implements MFDatePicker.On
 
                         staffId = staffNameIdHashMap.get(staffNames.get(position));
                         Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
+                        if (staffId != -1) {
 
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

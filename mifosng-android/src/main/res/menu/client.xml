@@ -13,7 +13,16 @@
         android:enabled="true"
         android:title="@string/more_info"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/charges"
+        android:enabled="true"
+        android:title="@string/charges"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/add_savings"
+        android:enabled="true"
+        android:title="@string/savings_account"
+        app:showAsAction="never" />
     <item
         android:id="@+id/documents"
         android:enabled="true"

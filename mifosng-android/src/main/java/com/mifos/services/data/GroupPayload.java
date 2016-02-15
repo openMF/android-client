@@ -16,6 +16,23 @@ public class GroupPayload {
     private String activationDate;
     private String submittedOnDate;
     private String externalId;
+    private int staffId;
+
+    public int getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
+    }
+
+    public String getGroupname() {
+        return groupname;
+    }
+
+    public void setGroupname(String groupname) {
+        this.groupname = groupname;
+    }
 
     public String getGroupName() {
         return groupname;

@@ -38,37 +38,37 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DocumentListFragment extends MifosBaseFragment {
+    public class DocumentListFragment extends MifosBaseFragment {
 
-    public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
+        public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
-    @InjectView(R.id.lv_documents)
-    ListView lv_documents;
+        @InjectView(R.id.lv_documents)
+        ListView lv_documents;
 
-    private View rootView;
-    private SharedPreferences sharedPreferences;
+        private View rootView;
+        private SharedPreferences sharedPreferences;
 
-    private String entityType;
-    private int entityId;
+        private String entityType;
+        private int entityId;
 
-    public static DocumentListFragment newInstance(String entityType, int entiyId) {
-        DocumentListFragment fragment = new DocumentListFragment();
-        Bundle args = new Bundle();
-        args.putString(Constants.ENTITY_TYPE, entityType);
-        args.putInt(Constants.ENTITY_ID, entiyId);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            entityType = getArguments().getString(Constants.ENTITY_TYPE);
-            entityId = getArguments().getInt(Constants.ENTITY_ID);
+        public static DocumentListFragment newInstance(String entityType, int entiyId) {
+            DocumentListFragment fragment = new DocumentListFragment();
+            Bundle args = new Bundle();
+            args.putString(Constants.ENTITY_TYPE, entityType);
+            args.putInt(Constants.ENTITY_ID, entiyId);
+            fragment.setArguments(args);
+            return fragment;
         }
-        setHasOptionsMenu(true);
-    }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            if (getArguments() != null) {
+                entityType = getArguments().getString(Constants.ENTITY_TYPE);
+                entityId = getArguments().getInt(Constants.ENTITY_ID);
+            }
+            setHasOptionsMenu(true);
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

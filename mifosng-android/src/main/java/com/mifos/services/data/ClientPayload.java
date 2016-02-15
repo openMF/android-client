@@ -13,13 +13,41 @@ public class ClientPayload extends DefaultPayload {
     private String lastname;
     private String middlename;
     private int officeId;
+    private int staffId;
+    private int genderId;
     private boolean active;
     private String activationDate;
     private String submittedOnDate;
     private String dateOfBirth;
     private String mobileNo;
     private String externalId;
-    //private int genderId;
+    private int clientTypeId;
+    private int clientClassificationId;
+
+
+    public int getClientClassificationId() {
+        return clientClassificationId;
+    }
+
+    public void setClientClassificationId(int clientClassificationId) {
+        this.clientClassificationId = clientClassificationId;
+    }
+
+    public int getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(int genderId) {
+        this.genderId = genderId;
+    }
+
+    public int getClientTypeId() {
+        return clientTypeId;
+    }
+
+    public void setClientTypeId(int clientTypeId) {
+        this.clientTypeId = clientTypeId;
+    }
 
     public String getFirstname() {
         return firstname;
@@ -27,6 +55,14 @@ public class ClientPayload extends DefaultPayload {
 
     public void setMiddlename(String mobilenumber) {
         this.middlename = middlename;
+    }
+
+    public int getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
     }
 
     public String getMiddlename() {
@@ -84,14 +120,6 @@ public class ClientPayload extends DefaultPayload {
     public void setSubmittedOnDate(String submittedOnDate) {
         this.submittedOnDate = submittedOnDate;
     }
-
-  /*  public Integer getGenderId() {
-        return genderId;
-    }
-
-    public void setGenderId(Integer genderId) {
-        this.genderId = genderId;
-    }*/
 
     public String getDateOfBirth() {
         return dateOfBirth;
