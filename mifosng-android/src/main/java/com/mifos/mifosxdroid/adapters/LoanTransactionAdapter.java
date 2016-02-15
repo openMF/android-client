@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
+import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Transaction;
@@ -109,6 +109,9 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         } else {
             reusableParentViewHolder.tv_arrow.setText(expandedIconValue.character());
         }
+
+        Iconify.addIcons(reusableParentViewHolder.tv_arrow);
+        reusableParentViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(parents.get(i).getDate()));
 
 //        Iconify.addIcons(reusableParentViewHolder.tv_arrow);
         reusableParentViewHolder.tv_transactionDate.setText(

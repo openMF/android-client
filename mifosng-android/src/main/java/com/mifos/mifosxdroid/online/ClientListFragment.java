@@ -48,9 +48,8 @@ public class ClientListFragment extends MifosBaseFragment {
     ListView lv_clients;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
-    private View rootView;
-
     List<Client> clientList = new ArrayList<Client>();
+    private View rootView;
     private Context context;
     private int offset = 0;
     private int limit = 200;
@@ -188,6 +187,10 @@ public class ClientListFragment extends MifosBaseFragment {
         return clientList;
     }
 
+    public void setClientList(List<Client> clientList) {
+        this.clientList = clientList;
+    }
+
     public void setInfiniteScrollListener(final ClientNameListAdapter clientNameListAdapter) {
 
         lv_clients.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -252,10 +255,6 @@ public class ClientListFragment extends MifosBaseFragment {
             }
         });
 
-    }
-
-    public void setClientList(List<Client> clientList) {
-        this.clientList = clientList;
     }
 
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {

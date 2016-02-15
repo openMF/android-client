@@ -62,8 +62,6 @@
     <string name="inactive">InActive</string>
     <!-- Group Terms End Here -->
 
-
-    <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
     <string name="staff">Staff</string>
     <string name="loan_cycle">Loan Cycle</string>

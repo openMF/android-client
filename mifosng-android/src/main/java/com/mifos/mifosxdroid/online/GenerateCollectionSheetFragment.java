@@ -275,8 +275,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment {
                 }
 
 
-                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, centerNames);
+                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, centerNames);
 
                 centerAdapter.notifyDataSetChanged();
 
