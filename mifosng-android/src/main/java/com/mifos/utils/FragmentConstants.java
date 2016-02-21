@@ -12,6 +12,8 @@ public class FragmentConstants {
 
     public static final String FRAG_DOCUMENT_LIST = "Document List Fragment";
 
+    public static final String FRAG_CHARGE_LIST = "Charge List Fragment";
+
     public static final String FRAG_CLIENT_DETAILS = "Client Details Fragment";
 
     public static final String FRAG_LOAN_ACCOUNT_SUMMARY = "Loan Account Summary Fragment";
@@ -23,6 +25,7 @@ public class FragmentConstants {
     public static final String FRAG_GROUP_LIST = "Group List Fragment";
 
     public static final String DFRAG_DATE_PICKER = "Date Picker";
+
     public static final String FRAG_CREATE_NEW_CLIENT = "Create new client fragment";
 
     public static final String FRAG_CLIENT_SEARCH = "Client Search Fragment";

@@ -130,8 +130,4 @@ public class DocumentListFragment extends MifosBaseFragment {
             }
         });
     }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 }

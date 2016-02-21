@@ -126,7 +126,6 @@
     <string name="loan">Crédito</string>
     <string name="loanAccountSummary">Resumen de las cuentas de crédito</string>
     <string name="loanAccounts">Cuentas de crédito</string>
-    <string name="loan_officer">Responsable de créditos</string>
     <string name="loan_interest_paid">Intereses pagados</string>
     <string name="loan_interest_due">Intereses a pagar</string>
     <string name="loan_interest">Intereses</string>

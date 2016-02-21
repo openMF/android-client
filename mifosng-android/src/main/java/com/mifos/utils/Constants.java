@@ -64,6 +64,8 @@ public class Constants {
 
     public static final String ENTITY_ID = "entityId";
 
+    public static final String CHARGE_ID = "chargeId";
+
     public static final String DATE_OF_COLLECTION = "dateOfCollection";
 
     public static final String DATE_FORMAT = "dateFormat";

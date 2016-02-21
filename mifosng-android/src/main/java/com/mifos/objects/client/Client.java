@@ -23,6 +23,7 @@ public class Client {
     private Status status;
     private boolean active;
     private List<Integer> activationDate = new ArrayList<Integer>();
+    private List<Integer> dobDate = new ArrayList<Integer>();
     private String firstname;
     private String middlename;
     private String lastname;
@@ -36,6 +37,14 @@ public class Client {
     private int imageId;
     private boolean imagePresent;
     private String externalId;
+
+    public List<Integer> getDobDate() {
+        return dobDate;
+    }
+
+    public void setDobDate(List<Integer> dobDate) {
+        this.dobDate = dobDate;
+    }
 
     public int getId() {
         return id;
@@ -181,24 +190,6 @@ public class Client {
         this.externalId = externalId;
     }
 
-    public String getFormattedActivationDateAsString()
-    {
-        //TODO Format Date Based on Current Locale
-        /**
-         * Integer List Contains
-         * YYYY
-         * MM
-         * DD
-         */
-
-        Calendar calendar = Calendar.getInstance();
-        // Note, java.util.Calendar month is zero-indexed.
-        calendar.set(activationDate.get(0),activationDate.get(1)-1,activationDate.get(2));
-
-        DateFormat dateFormat = DateFormat.getDateInstance();
-        return dateFormat.format(calendar.getTime()).toString();
-
-    }
     @Override
     public String toString() {
         return "Client{" +

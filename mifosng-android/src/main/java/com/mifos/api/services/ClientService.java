@@ -48,4 +48,7 @@ public interface ClientService {
 
     @POST(APIEndPoint.CLIENTS)
     void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
+
+    @GET(APIEndPoint.CLIENTS + "/template")
+    void getClientTemplate(Callback<Response> callback);
 }

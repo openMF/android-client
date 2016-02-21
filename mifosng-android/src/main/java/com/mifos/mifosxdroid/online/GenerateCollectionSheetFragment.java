@@ -196,9 +196,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment {
                     centerNames.add(center.getName());
                     centerNameIdHashMap.put(center.getName(), center.getId());
                 }
-                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, centerNames);
-
+                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, centerNames);
                 centerAdapter.notifyDataSetChanged();
                 centerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_centers.setAdapter(centerAdapter);

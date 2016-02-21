@@ -58,7 +58,30 @@
         <item name="android:text">@string/client_search</item>
         <item name="android:textSize">24sp</item>
     </style>
-
+    <style name="TextView.CreateClient" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">@string/create_client</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+    <style name="TextView.CreateSavingsAccount" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">@string/create_savings_account</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+    <style name="TextView.CreateCenter" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">@string/create_center</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+    <style name="TextView.CreateGroup" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">@string/create_center</item>
+        <item name="android:textSize">24sp</item>
+    </style>
     <style name="TextView.Search.Results" parent="TextView.Search">
         <item name="android:text">@string/search_results</item>
         <item name="android:textSize">20sp</item>

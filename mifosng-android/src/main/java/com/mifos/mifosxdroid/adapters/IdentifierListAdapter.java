@@ -76,7 +76,6 @@ public class IdentifierListAdapter extends BaseAdapter {
         }
 
         final Identifier identifier = identifiers.get(i);
-
         reusableIdentifierViewHolder.tv_identifier_id.setText(String.valueOf(identifier.getId()));
         reusableIdentifierViewHolder.tv_identifier_descrption.setText(identifier.getDescription()==null?"":identifier.getDescription());
         reusableIdentifierViewHolder.tv_identifier_type.setText(identifier.getDocumentType().getName());

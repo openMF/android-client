@@ -125,6 +125,10 @@ public class ClientListFragment extends MifosBaseFragment {
         }
     }
 
+    public void setClientList(List<Client> clientList) {
+        this.clientList = clientList;
+    }
+
     public void setInfiniteScrollListener(final ClientNameListAdapter clientNameListAdapter) {
         lv_clients.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -158,10 +162,6 @@ public class ClientListFragment extends MifosBaseFragment {
                 }
             }
         });
-    }
-
-    public void setClientList(List<Client> clientList) {
-        this.clientList = clientList;
     }
 
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {

@@ -103,6 +103,12 @@ public class ApiManager extends BaseApiManager {
         getClientsApi().createClient(payload, callback);
     }
 
+    // Creating client
+    public void getClientTemplate(Callback<Response> callback) {
+        getClientsApi().getClientTemplate(callback);
+    }
+
+
     //
     // Centers API
     //
