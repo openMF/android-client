@@ -5,11 +5,9 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -28,7 +27,6 @@ import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AsyncFileDownloader;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 
 import java.util.List;
 
@@ -46,8 +44,6 @@ public class DocumentListFragment extends MifosBaseFragment {
     ListView lv_documents;
 
     private View rootView;
-    private SharedPreferences sharedPreferences;
-
     private String entityType;
     private int entityId;
 
@@ -74,7 +70,6 @@ public class DocumentListFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_document_list, container, false);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
         inflateDocumentList();
         return rootView;
@@ -106,8 +101,8 @@ public class DocumentListFragment extends MifosBaseFragment {
     }
 
     public void inflateDocumentList() {
-        showProgress("Working");
-        MifosApplication.getApi().documentService.getListOfDocuments(entityType, entityId, new Callback<List<Document>>() {
+        showProgress();
+        App.apiManager.getDocumentsList(entityType, entityId, new Callback<List<Document>>() {
             @Override
             public void success(final List<Document> documents, Response response) {
                 if (documents != null) {

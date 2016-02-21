@@ -7,9 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,12 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
@@ -36,7 +35,6 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +52,6 @@ import retrofit.client.Response;
 public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
 
     private View rootView;
-    private SharedPreferences sharedPreferences;
 
     // Arguments Passed From the Loan Account Summary Fragment
     private String clientName;
@@ -63,8 +60,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
     private Double amountInArrears;
 
     // Values fetched from Loan Repayment Template
-    List<PaymentTypeOption> paymentTypeOptionList;
-    HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
+    private List<PaymentTypeOption> paymentTypeOptionList;
+    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<>();
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -91,11 +88,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
     @InjectView(R.id.bt_paynow)
     Button bt_paynow;
 
-    DialogFragment mfDatePicker;
-
-    public LoanRepaymentFragment() {
-        // Required empty public constructor
-    }
+    private DialogFragment mfDatePicker;
 
     public static LoanRepaymentFragment newInstance(LoanWithAssociations loanWithAssociations) {
         LoanRepaymentFragment fragment = new LoanRepaymentFragment();
@@ -116,7 +109,6 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
             clientName = getArguments().getString(Constants.CLIENT_NAME);
             loanAccountNumber = getArguments().getString(Constants.LOAN_ACCOUNT_NUMBER);
             loanProductName = getArguments().getString(Constants.LOAN_PRODUCT_NAME);
@@ -129,9 +121,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_loan_repayment, container, false);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         setToolbarTitle("Loan Repayment");
         ButterKnife.inject(this, rootView);
         inflateUI();
@@ -141,7 +131,6 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
 
     public void inflateUI() {
         hideProgress();
-
         tv_clientName.setText(clientName);
         tv_loanProductShortName.setText(loanProductName);
         tv_loanAccountNumber.setText(loanAccountNumber);
@@ -224,48 +213,31 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
         });
 
         inflateRepaymentDate();
-
         inflatePaymentOptions();
-
         tv_total.setText(String.valueOf(calculateTotal()));
-
     }
 
     public Double calculateTotal() {
-
         return Double.parseDouble(et_amount.getText().toString())
                 + Double.parseDouble(et_additionalPayment.getText().toString())
                 + Double.parseDouble(et_fees.getText().toString());
-
     }
 
-
-    public interface OnFragmentInteractionListener {
-
-    }
 
     public void inflatePaymentOptions() {
-
-        MifosApplication.getApi().loanService.getLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
+        App.apiManager.getLoanRepayTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
 
             @Override
             public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
 
                 if (loanRepaymentTemplate != null) {
                     tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
-
                     inflateRepaymentDate();
-
                     List<String> listOfPaymentTypes = new ArrayList<String>();
-
                     paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
-
-                    /**
-                     * Sorting has to be done on the basis of
-                     * PaymentTypeOption.position because it is specified
-                     * by the users on Mifos X Platform.
-                     *
-                     */
+                    // Sorting has to be done on the basis of
+                    // PaymentTypeOption.position because it is specified
+                    // by the users on Mifos X Platform.
                     Collections.sort(paymentTypeOptionList);
 
                     for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
@@ -273,9 +245,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
                         paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
                     }
 
-                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                            android.R.layout.simple_spinner_item, listOfPaymentTypes);
-
+                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
                     paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_paymentType.setAdapter(paymentTypeAdapter);
 
@@ -319,11 +289,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
 
     @OnClick(R.id.bt_paynow)
     public void onPayNowButtonClicked() {
-
         try {
             String[] headers = {"Field", "Value"};
-
-
             String[][] data = {
                     {"Repayment Date", tv_repaymentDate.getText().toString()},
                     {"Payment Type", sp_paymentType.getSelectedItem().toString()},
@@ -332,7 +299,6 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
                     {"Fees", et_fees.getText().toString()},
                     {"Total", String.valueOf(calculateTotal())}
             };
-
             System.out.println(FlipTable.of(headers, data));
 
             String formReviewString = new StringBuilder().append(data[0][0] + " : " + data[0][1])
@@ -347,8 +313,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
                     .append("\n")
                     .append(data[5][0] + " : " + data[5][1]).toString();
 
-
-            AlertDialog confirmPaymentDialog = new AlertDialog.Builder(getActivity())
+            new AlertDialog.Builder(getActivity())
                     .setTitle("Review Payment Details")
                     .setMessage(formReviewString)
                     .setPositiveButton("Pay Now", new DialogInterface.OnClickListener() {
@@ -365,10 +330,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
                     })
                     .show();
         } catch (NullPointerException npe) {
-            Toast.makeText(getActivity(), "Please make sure every field has a value, before submitting repayment!", Toast.LENGTH_LONG).show();
+            Toaster.show(rootView, "Please make sure every field has a value, before submitting repayment!");
         }
-
-
     }
 
     @OnClick(R.id.bt_cancelPayment)
@@ -378,38 +341,32 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
 
     public void submitPayment() {
         //TODO Implement a proper builder method here
-
         String dateString = tv_repaymentDate.getText().toString().replace("-", " ");
-
-        final LoanRepaymentRequest loanRepaymentRequest = new LoanRepaymentRequest();
-        loanRepaymentRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));
-        loanRepaymentRequest.setLocale("en");
-        loanRepaymentRequest.setTransactionAmount(String.valueOf(calculateTotal()));
-        loanRepaymentRequest.setDateFormat("dd MM yyyy");
-        loanRepaymentRequest.setTransactionDate(dateString);
-        String builtRequest = new Gson().toJson(loanRepaymentRequest);
+        final LoanRepaymentRequest request = new LoanRepaymentRequest();
+        request.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));
+        request.setLocale("en");
+        request.setTransactionAmount(String.valueOf(calculateTotal()));
+        request.setDateFormat("dd MM yyyy");
+        request.setTransactionDate(dateString);
+        String builtRequest = new Gson().toJson(request);
         Log.i("TAG", builtRequest);
 
         showProgress();
-        MifosApplication.getApi().loanService.submitPayment(Integer.parseInt(loanAccountNumber),
-                loanRepaymentRequest,
-                new Callback<LoanRepaymentResponse>() {
-                    @Override
-                    public void success(LoanRepaymentResponse loanRepaymentResponse, Response response) {
 
-                        if (loanRepaymentResponse != null) {
-                            Toast.makeText(getActivity(), "Payment Successful, Transaction ID = " + loanRepaymentResponse.getResourceId(),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        hideProgress();
-                        getActivity().getSupportFragmentManager().popBackStackImmediate();
-                    }
+        App.apiManager.submitPayment(Integer.parseInt(loanAccountNumber), request, new Callback<LoanRepaymentResponse>() {
+            @Override
+            public void success(LoanRepaymentResponse resp, Response response) {
+                if (resp != null)
+                    Toaster.show(rootView, "Payment Successful, Transaction ID = " + resp.getResourceId());
+                hideProgress();
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toast.makeText(getActivity(), "Payment Failed", Toast.LENGTH_SHORT).show();
-                        hideProgress();
-                    }
-                });
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Toaster.show(rootView, "Payment Failed");
+                hideProgress();
+            }
+        });
     }
 }

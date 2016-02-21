@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -37,7 +36,6 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.item_centers:
                 startActivity(new Intent(this, CentersActivity.class));
@@ -52,7 +50,7 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
                 startActivity(new Intent(this, OfflineCenterInputActivity.class));
                 break;
             case R.id.logout:
-                startActivity(new Intent(DashboardFragmentActivity.this, LogoutActivity.class));
+                logout();
                 break;
             case R.id.mItem_create_new_client:
                 openCreateClient();
@@ -62,20 +60,20 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void loadSurveyQuestion(int surveyId) {
-
         Intent myIntent = new Intent(DashboardFragmentActivity.this, SurveyQuestion.class);
         myIntent.putExtra("SurveyId", surveyId);
         startActivity(myIntent);
-
     }
 
     public void loadClientList() {
         replaceFragment(ClientListFragment.newInstance(null), true, R.id.container);
     }
+
     public void loadClientListForSurvey() {
-        replaceFragment(ClientChooseFragment.newInstance(), true, R.id.container);
+        replaceFragment(new ClientChooseFragment(), true, R.id.container);
     }
 
     public void openCreateClient() {

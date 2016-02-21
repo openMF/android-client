@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ This project is licensed under the open source MPL V2.
-  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
-  -->
-
-<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/ab_texture_tile_mifosxactionbar"
-    android:tileMode="repeat" />

@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.tests;
 
 import android.content.Intent;
-import android.os.Parcel;
 import android.support.v4.app.FragmentTransaction;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
@@ -11,16 +10,12 @@ import android.test.suitebuilder.annotation.Suppress;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.ClientActivity;
-import com.mifos.mifosxdroid.online.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.utils.Constants;
@@ -59,7 +54,6 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
         clientActivityIntent.putExtra(Constants.CLIENT_ID, "000001026");
         setActivityIntent(clientActivityIntent);
 
-        Constants.applicationContext = getInstrumentation().getTargetContext().getApplicationContext();
         clientActivity = getActivity();
         /*
         Test made with the following constructor on DepositType
@@ -134,24 +128,24 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
 
     /**
      * Should be tested alone because sometimes it can cause problems with the Application Context.
-     *
+     * <p/>
      * Maybe it should be reviewed the {@link com.mifos.mifosxdroid.online.DocumentListFragment},
      * because is who is throwing out a NullPointerException after closing the fragment. The method who
      * throws the exception is inflateDocumentList on the API request.
-     *
+     * <p/>
      * Here the logcat output:
      * java.lang.NullPointerException: Attempt to invoke virtual method 'android.content.Context android.support.v4.app.FragmentActivity.getApplicationContext()' on a null object reference
-     *        at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:201)
-     *        at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:169)
-     *        at retrofit.CallbackRunnable$1.run(CallbackRunnable.java:41)
-     *        at android.os.Handler.handleCallback(Handler.java:739)
-     *        at android.os.Handler.dispatchMessage(Handler.java:95)
-     *        at android.os.Looper.loop(Looper.java:135)
-     *        at android.app.ActivityThread.main(ActivityThread.java:5221)
-     *        at java.lang.reflect.Method.invoke(Native Method)
-     *        at java.lang.reflect.Method.invoke(Method.java:372)
-     *        at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:899)
-     *        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:694)
+     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:201)
+     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:169)
+     * at retrofit.CallbackRunnable$1.run(CallbackRunnable.java:41)
+     * at android.os.Handler.handleCallback(Handler.java:739)
+     * at android.os.Handler.dispatchMessage(Handler.java:95)
+     * at android.os.Looper.loop(Looper.java:135)
+     * at android.app.ActivityThread.main(ActivityThread.java:5221)
+     * at java.lang.reflect.Method.invoke(Native Method)
+     * at java.lang.reflect.Method.invoke(Method.java:372)
+     * at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:899)
+     * at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:694)
      *
      * @throws InterruptedException
      */
