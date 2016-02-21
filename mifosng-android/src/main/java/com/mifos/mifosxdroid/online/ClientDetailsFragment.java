@@ -51,6 +51,7 @@ import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
+import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.services.data.GpsCoordinatesRequest;
@@ -96,6 +97,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
+    List<Charges> chargesList = new ArrayList<Charges>();
     public static List<DataTable> clientDataTables = new ArrayList<>();
     @InjectView(R.id.tv_fullName)
     TextView tv_fullName;
@@ -207,10 +209,16 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
             case R.id.documents:
                 loadDocuments();
                 break;
-
+            case R.id.charges:
+                loadClientCharges();
+                break;
+            case R.id.add_savings:
+                addsavingsaccount();
+                break;
             case R.id.identifiers:
                 loadIdentifiers();
                 break;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -575,6 +583,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         fragmentTransaction.commit();
     }
 
+    public void loadClientCharges() {
+        ClientChargeFragment clientChargeFragment = ClientChargeFragment.newInstance(clientId,chargesList);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, clientChargeFragment);
+        fragmentTransaction.commit();
+    }
+
     public void loadIdentifiers() {
         ClientIdentifiersFragment clientIdentifiersFragment = ClientIdentifiersFragment.newInstance(clientId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -582,6 +598,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         fragmentTransaction.replace(R.id.container, clientIdentifiersFragment);
         fragmentTransaction.commit();
     }
+    public void addsavingsaccount() {
+        SavingsAccountFragment savingsAccountFragment = SavingsAccountFragment.newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, savingsAccountFragment);
+        fragmentTransaction.commit();
+    }
+
 
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);

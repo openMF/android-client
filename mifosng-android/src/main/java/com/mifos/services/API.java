@@ -22,8 +22,10 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Center;
@@ -34,6 +36,7 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
@@ -41,6 +44,7 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.APIEndPoint;
 import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.ClientPayload;
 import com.mifos.services.data.CollectionSheetPayload;
 import com.mifos.services.data.GpsCoordinatesRequest;
@@ -48,6 +52,8 @@ import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.Payload;
 import com.mifos.services.data.SaveResponse;
+import com.mifos.services.data.SavingsPayload;
+import com.mifos.services.data.ScorecardPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorResponse;
 import com.squareup.okhttp.OkHttpClient;
@@ -87,9 +93,6 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
-import com.mifos.objects.survey.Survey;
-import com.mifos.services.data.ScorecardPayload;
-import com.mifos.objects.survey.Scorecard;
 
 public class API {
     public static final String TAG = API.class.getName();
@@ -109,8 +112,10 @@ public class API {
     public CenterService centerService;
     public ClientAccountsService clientAccountsService;
     public ClientService clientService;
+    public ChargeService chargeService;
     public DataTableService dataTableService;
     public LoanService loanService;
+    public CreateSavingsAccountService createSavingsAccountService;
     public SavingsAccountService savingsAccountService;
     public SearchService searchService;
     public UserAuthService userAuthService;
@@ -157,6 +162,7 @@ public class API {
 
         centerService = restAdapter.create(CenterService.class);
         clientService = restAdapter.create(ClientService.class);
+        chargeService = restAdapter.create(ChargeService.class);
         clientAccountsService = restAdapter.create(ClientAccountsService.class);
         dataTableService = restAdapter.create(DataTableService.class);
         loanService = restAdapter.create(LoanService.class);
@@ -170,6 +176,7 @@ public class API {
         officeService = restAdapter.create(OfficeService.class);
         staffService = restAdapter.create(StaffService.class);
         surveyService = restAdapter.create(SurveyService.class);
+        createSavingsAccountService= restAdapter.create(CreateSavingsAccountService.class);
     }
 
 
@@ -307,6 +314,49 @@ public class API {
 
     }
 
+    public interface ChargeService {
+
+        /**
+         * Fetches List of All the charges
+         *
+         *
+         */
+
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CHARGES)
+        public void listAllCharges(Callback<Response> chargesCallback);
+
+        @GET(APIEndPoint.CHARGES)
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void getAllChargesS(Callback<List<Charges>> listOfChargesCallback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
+        public void getListOfCharges(@Path("clientId") int clientId,Callback<Page<Charges>> chargeListCallback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.CLIENTS +"/{clientId}/charges")
+        void createCharges(@Path("clientId") int clientId,@Body ChargesPayload chargesPayload, Callback<Charges> callback);
+
+    }
+    public interface CreateSavingsAccountService {
+
+
+        @GET(APIEndPoint.CREATESAVINGSPRODUCTS)
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        public void getAllSavingsAccounts(Callback<List<ProductSavings>> listOfSavingsCallback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
+        void createSavingsAccount(@Body SavingsPayload savingsPayload, Callback<Savings> callback);
+
+        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
+        @GET(APIEndPoint.CREATESAVINGSPRODUCTS +"/template")
+        public void getSavingsAccountTemplate(Callback<Response> clientCallback);
+
+    }
+
     public interface ClientService {
 
         //This is a default call and Loads client from 0 to 200
@@ -345,7 +395,9 @@ public class API {
         @GET(APIEndPoint.CLIENTS + "/template")
         public void getClientTemplate(Callback<Response> clientCallback);
 
+
     }
+
     public interface SurveyService {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})

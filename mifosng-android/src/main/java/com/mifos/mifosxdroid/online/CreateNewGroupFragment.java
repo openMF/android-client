@@ -69,6 +69,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.mifos.utils.MifosApplication.*;
+
 
 public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnDatePickListener {
 
@@ -170,6 +172,7 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
                 groupPayload.setActivationDate(dateString);
                 groupPayload.setSubmissionDate(dateofsubmissionstring);
                 groupPayload.setOfficeId(officeId);
+                groupPayload.setStaffId(staffId);
 
 
                 initiateGroupCreation(groupPayload);
@@ -183,11 +186,11 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
     private void inflateOfficeSpinner() {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
+        api.officeService.getAllOffices(new Callback<List<Office>>() {
 
             @Override
             public void success(List<Office> offices, Response response) {
-                final List<String> officeList = new ArrayList<String>();
+                final ArrayList<String> officeList = new ArrayList<String>();
 
                 for (Office office : offices) {
                     officeList.add(office.getName());
@@ -239,12 +242,11 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
 
     public void inflateStaffSpinner(final int officeId) {
 
-
-        ((MifosApplication) getActivity().getApplicationContext()).api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
+        api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
 
-                final List<String> staffNames = new ArrayList<String>();
+                final List<String> staffNames = new ArrayList<>();
                 for (Staff staff : staffs) {
                     staffNames.add(staff.getDisplayName());
                     staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
@@ -259,7 +261,11 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
 
                         staffId = staffNameIdHashMap.get(staffNames.get(position));
                         Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
+                        if (staffId != -1) {
 
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -279,7 +285,6 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
     }
 
 
-
     private void initiateGroupCreation(GroupPayload groupPayload) {
         //TextField validations
 
@@ -290,7 +295,7 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
 
             safeUIBlockingUtility.safelyBlockUI();
 
-            ((MifosApplication) getActivity().getApplicationContext()).api.groupService.createGroup(groupPayload, new Callback<Group>() {
+            api.groupService.createGroup(groupPayload, new Callback<Group>() {
                 @Override
                 public void success(Group group, Response response) {
                     safeUIBlockingUtility.safelyUnBlockUI();

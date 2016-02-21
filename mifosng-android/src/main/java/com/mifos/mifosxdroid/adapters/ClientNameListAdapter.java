@@ -66,8 +66,7 @@ public class ClientNameListAdapter extends BaseAdapter {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_clientName.setText(pageItems.get(position).getFirstname()+" "
-                +pageItems.get(position).getLastname());
+        reusableViewHolder.tv_clientName.setText(pageItems.get(position).getFirstname()+" " +pageItems.get(position).getLastname());
 
         reusableViewHolder.tv_clientAccountNumber.setText(pageItems.get(position).getAccountNo().toString());
 

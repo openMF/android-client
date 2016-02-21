@@ -11,6 +11,7 @@ public class CenterPayload {
 
     private String centername;
     private int officeId;
+    private int staffId;
     private boolean active;
     private String activationDate;
     private String submittedOnDate;
@@ -54,6 +55,14 @@ public class CenterPayload {
 
     public void setSubmissionDate(String submittedOnDate) {
         this.submittedOnDate = submittedOnDate;
+    }
+
+    public int getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
     }
 
     public String getExternalId() {
