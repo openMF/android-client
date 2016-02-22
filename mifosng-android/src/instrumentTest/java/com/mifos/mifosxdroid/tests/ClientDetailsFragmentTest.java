@@ -43,10 +43,7 @@ public class ClientDetailsFragmentTest extends ActivityInstrumentationTestCase2<
         Intent clientActivityIntent = new Intent();
         clientActivityIntent.putExtra(Constants.CLIENT_ID, "000000001");
         setActivityIntent(clientActivityIntent);
-
-        Constants.applicationContext = getInstrumentation().getTargetContext().getApplicationContext();
         clientActivity = getActivity();
-
         //waiting for the API
         Thread.sleep(2000);
 

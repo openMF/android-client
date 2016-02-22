@@ -4,43 +4,40 @@
  */
 
 package com.mifos.mifosxdroid.online;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import com.mifos.mifosxdroid.adapters.SurveyPagerAdapter;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.adapters.SurveyPagerAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.survey.Survey;
-import com.mifos.utils.MifosApplication;
 import com.mifos.utils.MyPreference;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import android.support.v7.app.AppCompatActivity;
 
 
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionFragment.OnAnswerSelectedListener{
+public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionFragment.OnAnswerSelectedListener {
     private static final int CONTENT_VIEW_ID = 10101010;
     public Communicator fragmentCommunicator;
     private ViewPager pager = null;
@@ -49,7 +46,7 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
     AppCompatActivity activity;
     private PagerAdapter mPagerAdapter = null;
     public static final String ID = "id";
-    public static  int surveyId ;
+    public static int surveyId;
     public static int qid;
     public static int pfqid;
     public static int pfrid;
@@ -69,7 +66,7 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
         context = SurveyQuestion.this;
         myPreference = new MyPreference();
         myPreference.resetScorecard(this);
-        btnNext = (Button) findViewById(R.id.btnNext );
+        btnNext = (Button) findViewById(R.id.btnNext);
 
         fragments = new Vector<Fragment>();
 
@@ -81,7 +78,7 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
         edt.commit();
 
 
-        ((MifosApplication)this.getApplication()).api.surveyService.getSurvey(surveyId, new Callback<Survey>() {
+        App.apiManager.getSurvey(surveyId, new Callback<Survey>() {
             @Override
             public void success(final Survey survey, Response response) {
 
@@ -111,7 +108,7 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
                             answerList.clear();
                         }
 
-                        fragments.add(SurveyLastFragment.newInstance(1,"You have reached the end of Survey"));
+                        fragments.add(SurveyLastFragment.newInstance(1, "You have reached the end of Survey"));
                         mPagerAdapter.notifyDataSetChanged();
 
                     }
@@ -159,29 +156,29 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
             }
 
         });
-        Button btnNext = (Button) findViewById(R.id.btnNext );
+        Button btnNext = (Button) findViewById(R.id.btnNext);
         btnNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(fragmentCommunicator != null)
-                    fragmentCommunicator.passDataToFragment(pfqid,pfrid,pfrvalue);
+                if (fragmentCommunicator != null)
+                    fragmentCommunicator.passDataToFragment(pfqid, pfrid, pfrvalue);
                 int current = pager.getCurrentItem();
 
                 if (current < fragments.size())
                     pager.setCurrentItem(current + 1, true);
 
-            }});
+            }
+        });
 
 
     }
 
     @Override
-    public void answer(int id, int fqid,int frid,int frValue) {
-        pfqid= fqid;
-        pfrid= frid;
-        pfrvalue=frValue;
+    public void answer(int id, int fqid, int frid, int frValue) {
+        pfqid = fqid;
+        pfrid = frid;
+        pfrvalue = frValue;
 
     }
-
 
 
 }

@@ -5,16 +5,8 @@
 
 package com.mifos.mifosxdroid.online;
 
-/**
- * Created by nellyk on 1/22/2016.
- */
-
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,39 +21,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.exceptions.InvalidTextInputException;
-import com.mifos.exceptions.RequiredFieldException;
-import com.mifos.exceptions.ShortOfLengthException;
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.client.Client;
 import com.mifos.objects.group.Center;
-import com.mifos.objects.organisation.ClientClassificationOptions;
-import com.mifos.objects.organisation.ClientTypeOptions;
-import com.mifos.objects.organisation.GenderOptions;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.services.data.CenterPayload;
-import com.mifos.services.data.ClientPayload;
-import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
-import com.mifos.utils.SafeUIBlockingUtility;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -69,11 +42,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * Created by nellyk on 1/22/2016.
+ */
+public class CreateNewCenterFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
 
-public class CreateNewCenterFragment extends Fragment implements MFDatePicker.OnDatePickListener {
-
-
-    private static final String TAG = "CreateNewCenter";
     @InjectView(R.id.et_center_name)
     EditText et_centerName;
     @InjectView(R.id.et_center_external_id)
@@ -93,63 +66,31 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
     int officeId;
     int staffId;
-    Boolean result = true;
-    View rootView;
-    String dateString;
-    String dateofsubmissionstring;
-    SafeUIBlockingUtility safeUIBlockingUtility;
+    private View rootView;
+    private String dateString;
+    private String dateofsubmissionstring;
     private DialogFragment mfDatePicker;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
-    public CreateNewCenterFragment() {
-        // Required empty public constructor
-    }
 
     public static CreateNewCenterFragment newInstance() {
         CreateNewCenterFragment createNewCenterFragment = new CreateNewCenterFragment();
         return createNewCenterFragment;
     }
 
-    public static boolean isValidMsisdn(String msisdn) {
-        if (msisdn == null || msisdn.trim().isEmpty()) {
-            return false;
-        }
-        String expression = "^[+]?\\d{10,13}$";
-        Pattern pattern;
-        Matcher matcher;
-        pattern = Pattern.compile(expression);
-        matcher = pattern.matcher(msisdn);
-        return matcher.matches();
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        if (getActivity().getActionBar() != null)
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_center, null);
         ButterKnife.inject(this, rootView);
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
-
-
         //client active checkbox onCheckedListener
         cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked)
-                    tv_submissionDate.setVisibility(View.VISIBLE);
-                else
-                    tv_submissionDate.setVisibility(View.GONE);
+                tv_submissionDate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -171,20 +112,16 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                 centerPayload.setSubmissionDate(dateofsubmissionstring);
                 centerPayload.setOfficeId(officeId);
                 centerPayload.setStaffId(staffId);
-
-
                 initiateCenterCreation(centerPayload);
-
             }
         });
-
         return rootView;
     }
+
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication) getActivity().getApplicationContext()).api.officeService.getAllOffices(new Callback<List<Office>>() {
+        showProgress();
+        App.apiManager.getOffices(new Callback<List<Office>>() {
 
             @Override
             public void success(List<Office> offices, Response response) {
@@ -206,7 +143,6 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                         Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
                         if (officeId != -1) {
                             inflateStaffSpinner(officeId);
-
                         } else {
                             Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
                         }
@@ -217,25 +153,18 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
                     }
                 });
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
+                hideProgress();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
-                System.out.println(retrofitError.getLocalizedMessage());
-
-                safeUIBlockingUtility.safelyUnBlockUI();
+                hideProgress();
             }
         });
-
     }
 
     public void inflateStaffSpinner(final int officeId) {
-
-        ((MifosApplication) getActivity().getApplicationContext()).api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
+        App.apiManager.getStaffInOffice(officeId, new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
 
@@ -244,8 +173,7 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                     staffNames.add(staff.getDisplayName());
                     staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
                 }
-                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, staffNames);
+                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, staffNames);
                 staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_staff.setAdapter(staffAdapter);
                 sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -267,57 +195,48 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                     }
 
                 });
-                safeUIBlockingUtility.safelyUnBlockUI();
+                hideProgress();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                hideProgress();
+            }
+        });
+    }
+
+    private void initiateCenterCreation(CenterPayload centerPayload) {
+        showProgress();
+        App.apiManager.createCenter(centerPayload, new Callback<Center>() {
+            @Override
+            public void success(Center center, Response response) {
+                Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
+                hideProgress();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                hideProgress();
+                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
             }
         });
     }
 
 
-    private void initiateCenterCreation(CenterPayload centerPayload) {
-
-            safeUIBlockingUtility.safelyBlockUI();
-
-            ((MifosApplication) getActivity().getApplicationContext()).api.centerService.createCenter(centerPayload, new Callback<Center>() {
-                @Override
-                public void success(Center center, Response response) {
-                    safeUIBlockingUtility.safelyUnBlockUI();
-                    Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
-
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    safeUIBlockingUtility.safelyUnBlockUI();
-                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
-
     public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
-
         tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
-
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
-
     }
 
     public void inflateDateofBirth() {
         newDatePicker = MFDatePicker.newInsance(this);
-
         tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
-
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -325,50 +244,9 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
             }
 
         });
-
-
     }
 
     public void onDatePicked(String date) {
         tv_submissionDate.setText(date);
-
     }
-
-    public boolean isValidFirstName() {
-        try {
-            if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
-                throw new RequiredFieldException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_cannot_be_empty));
-            }
-
-            if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
-            }
-            if (!et_centerName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
-            }
-        } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (RequiredFieldException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        }
-
-        return result;
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 }

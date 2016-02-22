@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.core;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.SplashScreenActivity;
+import com.mifos.utils.PrefManager;
 
 /**
  * @author fomenkoo
@@ -86,7 +89,9 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
     @Override
     public void logout() {
-        // To be implemented
+        PrefManager.clearToken();
+        startActivity(new Intent(this, SplashScreenActivity.class));
+        finish();
     }
 
     public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {

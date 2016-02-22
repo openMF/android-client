@@ -5,7 +5,6 @@
 
 package com.mifos.mifosxdroid;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -14,18 +13,12 @@ import com.mifos.mifosxdroid.fragments.LoanFragment;
 
 public class LoanActivity extends MifosBaseActivity {
     private int clientId;
-    private Intent intentForExtras;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
-        init();
+        clientId = getIntent().getIntExtra("clientId", 0);
         setFragment();
-    }
-
-    private void init() {
-        intentForExtras = getIntent();
-        clientId = intentForExtras.getIntExtra("clientId", 0);
     }
 
     private void setFragment() {

@@ -5,7 +5,6 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -19,13 +18,13 @@ import android.widget.LinearLayout;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.DataTableUIBuilder;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -37,7 +36,6 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
 
     private DataTable dataTable;
     private int entityId;
-    private SharedPreferences sharedPreferences;
     private View rootView;
     private LinearLayout linearLayout;
 
@@ -55,8 +53,7 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
@@ -90,12 +87,10 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
     }
 
     public void inflateView() {
-
         showProgress();
-        MifosApplication.getApi().dataTableService.getDataOfDataTable(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
+        App.apiManager.getDataTableInfo(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
             @Override
             public void success(JsonArray jsonElements, Response response) {
-
                 if (jsonElements != null) {
                     linearLayout.invalidate();
                     DataTableUIBuilder.DataTableActionListener mListener = (DataTableUIBuilder.DataTableActionListener) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
@@ -111,7 +106,6 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
             }
         });
     }
-
 
     @Override
     public void onUpdateActionRequested(JsonElement jsonElement) {

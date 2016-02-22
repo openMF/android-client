@@ -30,7 +30,7 @@ import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.MeetingCenter;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.services.RepaymentTransactionSyncService;
+import com.mifos.api.RepaymentTransactionSyncService;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 

@@ -7,8 +7,8 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class DateHelper {
 
     public static final String DATE_FORMAT_VALUE = "dd MMM yyyy";
 
-    public static String getCurrentDateAsString(){
+    public static String getCurrentDateAsString() {
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -42,7 +42,7 @@ public class DateHelper {
         List<Integer> date = new ArrayList<Integer>();
         Calendar calendar = Calendar.getInstance();
         date.add(calendar.get(Calendar.YEAR));
-        date.add(calendar.get(Calendar.MONTH)+1);
+        date.add(calendar.get(Calendar.MONTH) + 1);
         date.add(calendar.get(Calendar.DAY_OF_MONTH));
 
         return date;
@@ -95,7 +95,6 @@ public class DateHelper {
     }
 
     /**
-     *
      * @param integersOfDate
      * @return date in format dd MMM yyyy
      */
@@ -114,7 +113,6 @@ public class DateHelper {
     }
 
     /**
-     *
      * @return zero if both date1 and date2 are equal, positive int if date1 > date2
      * and negative int if date1 < date2
      */
@@ -131,29 +129,29 @@ public class DateHelper {
         */
 
         //comparing years
-        if(date1.get(0).equals(date2.get(0))) {
+        if (date1.get(0).equals(date2.get(0))) {
 
             //now that years are equal lets compare months
 
-            if(date1.get(1).equals(date2.get(1))) {
+            if (date1.get(1).equals(date2.get(1))) {
 
                 //now that months are also equal lets compare days
 
-                if(date1.get(2).equals(date2.get(2))){
+                if (date1.get(2).equals(date2.get(2))) {
                     return 0;
-                } else if(date1.get(2) > date2.get(2)) {
+                } else if (date1.get(2) > date2.get(2)) {
                     return 1;
                 } else {
                     return -1;
                 }
 
-            } else if(date1.get(1) > date2.get(1)) {
+            } else if (date1.get(1) > date2.get(1)) {
                 return 1;
             } else {
                 return -1;
             }
 
-        }else if(date1.get(0) > date2.get(0)) {
+        } else if (date1.get(0) > date2.get(0)) {
             return 1;
         } else {
             return -1;
@@ -204,8 +202,6 @@ public class DateHelper {
     }
 
     public static String getPayloadDate(Context context) {
-        if (Constants.applicationContext == null)
-            Log.i("DateHelper", "Application Context is null!");
         SharedPreferences preferences = context.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
         final StringBuilder builder = new StringBuilder();
@@ -220,8 +216,9 @@ public class DateHelper {
         }
         return builder.toString();
     }
+
     public static String getPayloadDate() {
-        SharedPreferences preferences = Constants.applicationContext.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = App.getContext().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
         final StringBuilder builder = new StringBuilder();
         if (date != null) {
@@ -236,10 +233,10 @@ public class DateHelper {
         return builder.toString();
     }
 
-    public static List<Integer> getDateList(String date,String separator){
+    public static List<Integer> getDateList(String date, String separator) {
         String[] splittedDate = date.split(separator);
         List<Integer> dateList = new ArrayList<>();
-        for(int i=0;i<3;i++){
+        for (int i = 0; i < 3; i++) {
             dateList.add(Integer.parseInt(splittedDate[i]));
         }
 

@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.mifos.utils.MifosApplication"
+        android:name="com.mifos.App"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -37,10 +37,6 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/login"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".online.LogoutActivity"
-            android:label="@string/logout"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.DashboardFragmentActivity"

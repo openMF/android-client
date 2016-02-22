@@ -5,11 +5,9 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -28,7 +27,6 @@ import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AsyncFileDownloader;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 
 import java.util.List;
 
@@ -38,43 +36,40 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-    public class DocumentListFragment extends MifosBaseFragment {
+public class DocumentListFragment extends MifosBaseFragment {
 
-        public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
+    public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
-        @InjectView(R.id.lv_documents)
-        ListView lv_documents;
+    @InjectView(R.id.lv_documents)
+    ListView lv_documents;
 
-        private View rootView;
-        private SharedPreferences sharedPreferences;
+    private View rootView;
+    private String entityType;
+    private int entityId;
 
-        private String entityType;
-        private int entityId;
+    public static DocumentListFragment newInstance(String entityType, int entiyId) {
+        DocumentListFragment fragment = new DocumentListFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.ENTITY_TYPE, entityType);
+        args.putInt(Constants.ENTITY_ID, entiyId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-        public static DocumentListFragment newInstance(String entityType, int entiyId) {
-            DocumentListFragment fragment = new DocumentListFragment();
-            Bundle args = new Bundle();
-            args.putString(Constants.ENTITY_TYPE, entityType);
-            args.putInt(Constants.ENTITY_ID, entiyId);
-            fragment.setArguments(args);
-            return fragment;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            entityType = getArguments().getString(Constants.ENTITY_TYPE);
+            entityId = getArguments().getInt(Constants.ENTITY_ID);
         }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            if (getArguments() != null) {
-                entityType = getArguments().getString(Constants.ENTITY_TYPE);
-                entityId = getArguments().getInt(Constants.ENTITY_ID);
-            }
-            setHasOptionsMenu(true);
-        }
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_document_list, container, false);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
         inflateDocumentList();
         return rootView;
@@ -106,8 +101,8 @@ import retrofit.client.Response;
     }
 
     public void inflateDocumentList() {
-        showProgress("Working");
-        MifosApplication.getApi().documentService.getListOfDocuments(entityType, entityId, new Callback<List<Document>>() {
+        showProgress();
+        App.apiManager.getDocumentsList(entityType, entityId, new Callback<List<Document>>() {
             @Override
             public void success(final List<Document> documents, Response response) {
                 if (documents != null) {
@@ -134,9 +129,5 @@ import retrofit.client.Response;
                 hideProgress();
             }
         });
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 }
