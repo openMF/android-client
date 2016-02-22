@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 
 public class ClientActivity extends MifosBaseActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
         LoanAccountSummaryFragment.OnFragmentInteractionListener,
-        LoanRepaymentFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {
 
     @Override

@@ -3,7 +3,7 @@ package com.mifos.objects.accounts.savings;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mifos.services.data.APIEndPoint;
+import com.mifos.api.model.APIEndPoint;
 
 /*
  * This project is licensed under the open source MPL V2.

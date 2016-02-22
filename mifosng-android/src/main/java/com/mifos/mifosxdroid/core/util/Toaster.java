@@ -10,7 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mifos.utils.MifosApplication;
+import com.mifos.App;
 
 /**
  * @author fomenkoo
@@ -26,6 +26,6 @@ public class Toaster {
     }
 
     public static void show(View view, int res) {
-        show(view, MifosApplication.getContext().getResources().getString(res));
+        show(view, App.getContext().getResources().getString(res));
     }
 }

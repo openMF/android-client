@@ -5,29 +5,26 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
+import com.mifos.App;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.savings.DepositType;
@@ -37,7 +34,6 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,29 +61,16 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
     EditText et_transactionAmount;
     @InjectView(R.id.sp_payment_type)
     Spinner sp_paymentType;
-    @InjectView(R.id.bt_reviewTransaction)
-    Button bt_reviewTransaction;
-    @InjectView(R.id.bt_cancelTransaction)
-    Button bt_cancelTransaction;
-
 
     private View rootView;
-    private SharedPreferences sharedPreferences;
     private String savingsAccountNumber;
     private DepositType savingsAccountType;
-
-    String transactionType;     //Defines if the Transaction is a Deposit to an Account or a Withdrawal from an Account
-    String clientName;
+    private String transactionType;     //Defines if the Transaction is a Deposit to an Account or a Withdrawal from an Account
+    private String clientName;
     // Values to be fetched from Savings Account Template
-    List<PaymentTypeOption> paymentTypeOptionList;
-    HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
-    private OnFragmentInteractionListener mListener;
-
+    private List<PaymentTypeOption> paymentTypeOptionList;
+    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
     private DialogFragment mfDatePicker;
-
-    public SavingsAccountTransactionFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -112,26 +95,16 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
             savingsAccountNumber = getArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER);
             transactionType = getArguments().getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE);
             clientName = getArguments().getString(Constants.CLIENT_NAME);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
-
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container, false);
-
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-
         if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT))
             setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " + getResources().getString(R.string.deposit));
         else
@@ -141,66 +114,35 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            //mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     public void inflateUI() {
         showProgress();
         tv_clientName.setText(clientName);
         tv_accountNumber.setText(savingsAccountNumber);
         //TODO Implement QuickContactBadge here
-
         inflateRepaymentDate();
         inflatePaymentOptions();
     }
 
     public void inflatePaymentOptions() {
-
-        MifosApplication.getApi().savingsAccountService.getSavingsAccountTransactionTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
+        App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
             @Override
             public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
-
                 if (savingsAccountTransactionTemplate != null) {
-
-                    List<String> listOfPaymentTypes = new ArrayList<String>();
-
+                    List<String> listOfPaymentTypes = new ArrayList<>();
                     paymentTypeOptionList = savingsAccountTransactionTemplate.getPaymentTypeOptions();
-
-                    /**
-                     * Sorting has to be done on the basis of
-                     * PaymentTypeOption.position because it is specified
-                     * by the users on Mifos X Platform.
-                     *
-                     */
+                    // Sorting has to be done on the basis of
+                    // PaymentTypeOption.position because it is specified
+                    // by the users on Mifos X Platform.
                     Collections.sort(paymentTypeOptionList);
-
                     Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
                     while (paymentTypeOptionIterator.hasNext()) {
                         PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
                         listOfPaymentTypes.add(paymentTypeOption.getName());
                         paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
                     }
-
-                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                            android.R.layout.simple_spinner_item, listOfPaymentTypes);
-
+                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
                     paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_paymentType.setAdapter(paymentTypeAdapter);
-
                 }
                 hideProgress();
             }
@@ -210,52 +152,38 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
                 hideProgress();
             }
         });
-
-
     }
 
     @OnClick(R.id.bt_reviewTransaction)
     public void onReviewTransactionButtonClicked() {
-
-        /**
-         * Notify user if Amount field is blank and Review
-         * Transaction button is pressed.
-         */
+        // Notify user if Amount field is blank and Review
+        // Transaction button is pressed.
         if (et_transactionAmount.getEditableText().toString().isEmpty()) {
-            new RequiredFieldException(getString(R.string.amount),
-                    getString(R.string.message_field_required)).notifyUserWithToast(getActivity());
+            new RequiredFieldException(getString(R.string.amount), getString(R.string.message_field_required)).notifyUserWithToast(getActivity());
             return;
         }
-
         String[] headers = {"Field", "Value"};
         String[][] data = {
                 {"Transaction Date", tv_transactionDate.getText().toString()},
                 {"Payment Type", sp_paymentType.getSelectedItem().toString()},
                 {"Amount", et_transactionAmount.getEditableText().toString()}
         };
-
         System.out.println(FlipTable.of(headers, data));
-
         StringBuilder formReviewStringBuilder = new StringBuilder();
-
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {
                 formReviewStringBuilder.append(data[i][j]);
-                if (j == 0) {
+                if (j == 0)
                     formReviewStringBuilder.append(" : ");
-                }
             }
             formReviewStringBuilder.append("\n");
         }
-
-
-        AlertDialog confirmPaymentDialog = new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(getActivity())
                 .setTitle("Review Payment Details")
                 .setMessage(formReviewStringBuilder.toString())
                 .setPositiveButton("Process Transaction", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         processTransaction();
                     }
                 })
@@ -266,15 +194,10 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
                     }
                 })
                 .show();
-
-
     }
 
     public void processTransaction() {
-
         String dateString = tv_transactionDate.getText().toString().replace("-", " ");
-
-
         final SavingsAccountTransactionRequest savingsAccountTransactionRequest = new SavingsAccountTransactionRequest();
         savingsAccountTransactionRequest.setLocale("en");
         savingsAccountTransactionRequest.setDateFormat("dd MM yyyy");
@@ -284,25 +207,17 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
 
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
-
         showProgress();
-
-        MifosApplication.getApi().savingsAccountService.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType,
-                savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
+        App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
                     @Override
                     public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {
-
                         if (savingsAccountTransactionResponse != null) {
                             if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
-                                Toast.makeText(getActivity(), "Deposit Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId(),
-                                        Toast.LENGTH_LONG).show();
+                                Toaster.show(rootView, "Deposit Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
                                 getActivity().getSupportFragmentManager().popBackStackImmediate();
-
                             } else if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
-                                Toast.makeText(getActivity(), "Withdrawal Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId(),
-                                        Toast.LENGTH_LONG).show();
+                                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
                                 getActivity().getSupportFragmentManager().popBackStackImmediate();
-
                             }
                         }
                         hideProgress();
@@ -310,7 +225,7 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
-                        Toast.makeText(getActivity(), "Transaction Failed", Toast.LENGTH_SHORT).show();
+                        Toaster.show(rootView, "Transaction Failed");
                         hideProgress();
                     }
                 }
@@ -322,41 +237,22 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
-
     public void inflateRepaymentDate() {
-
         mfDatePicker = MFDatePicker.newInsance(this);
-
-
         tv_transactionDate.setText(MFDatePicker.getDatePickedAsString());
-
-        /*
-            TODO Add Validation to make sure :
-            1. Date Is in Correct Format
-            2. Date Entered is not greater than Date Today i.e Date is not in future
-         */
-
+        // TODO Add Validation to make sure :
+        // 1. Date Is in Correct Format
+        // 2. Date Entered is not greater than Date Today i.e Date is not in future
         tv_transactionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
-
             }
         });
-
     }
-
 
     @Override
     public void onDatePicked(String date) {
-
         tv_transactionDate.setText(date);
-
     }
-
-
-    public interface OnFragmentInteractionListener {
-    }
-
 }

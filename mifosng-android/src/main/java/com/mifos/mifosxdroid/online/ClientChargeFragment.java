@@ -7,12 +7,11 @@ package com.mifos.mifosxdroid.online;
 /**
  * Created by nellyk on 1/22/2016.
  */
+
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -22,22 +21,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
-import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.dialogfragments.ChargeDialogFragment;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 
 import org.apache.http.HttpStatus;
 
@@ -169,7 +164,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
 
             swipeRefreshLayout.setRefreshing(true);
             //Get a Client List
-            MifosApplication.getApi().chargeService.getListOfCharges(clientId, new Callback<Page<Charges>>() {
+            App.apiManager.getClientCharges(clientId, new Callback<Page<Charges>>() {
                 @Override
                    public void success(Page<Charges> page, Response response) {
                        chargesList = page.getPageItems();
@@ -187,9 +182,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
                                Log.i("Error", "" + retrofitError.getResponse().getStatus());
                                if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                                    Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                                   startActivity(new Intent(getActivity(), LogoutActivity.class));
-                                   getActivity().finish();
-
+                                   logout();
                                } else {
                                    Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
                                }
@@ -223,7 +216,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
 
                     swipeRefreshLayout.setRefreshing(true);
 
-                    MifosApplication.getApi().chargeService.getListOfCharges(clientId, new Callback<Page<Charges>>() {
+                    App.apiManager.getClientCharges(clientId, new Callback<Page<Charges>>() {
 
                         @Override
                         public void success(Page<Charges> chargesPage, Response response) {
@@ -249,9 +242,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
                                     Log.i("Error", "" + retrofitError.getResponse().getStatus());
                                     if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                                         Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(getActivity(), LogoutActivity.class));
-                                        getActivity().finish();
-
+                                        logout();
                                     } else {
                                         Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
                                     }
