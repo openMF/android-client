@@ -5,8 +5,10 @@
 
 
 package com.mifos.mifosxdroid.online;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,19 +16,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-
-import com.mifos.mifosxdroid.R;
-import com.mifos.objects.survey.ScorecardValues;
-import com.mifos.utils.MyPreference;
-import com.mifos.services.data.ScorecardPayload;
-import com.mifos.utils.MifosApplication;
-import com.mifos.objects.survey.Scorecard;
-import android.content.SharedPreferences;
 import android.widget.Toast;
+
+import com.mifos.App;
+import com.mifos.mifosxdroid.R;
+import com.mifos.objects.survey.Scorecard;
+import com.mifos.objects.survey.ScorecardValues;
+import com.mifos.api.model.ScorecardPayload;
+import com.mifos.utils.MyPreference;
+
 import java.util.Date;
 import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -34,7 +36,7 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyLastFragment extends Fragment implements Communicator{
+public class SurveyLastFragment extends Fragment implements Communicator {
     public static final String QUESTION = "question";
     public static final String PREFS_NAME = "MY_PREFS";
     SharedPreferences sharedPreferences;
@@ -53,7 +55,6 @@ public class SurveyLastFragment extends Fragment implements Communicator{
     public static int rvalue;
 
 
-
     public static final SurveyLastFragment newInstance(int id, String question) {
         SurveyLastFragment fragment = new SurveyLastFragment();
         Bundle bundle = new Bundle();
@@ -62,11 +63,12 @@ public class SurveyLastFragment extends Fragment implements Communicator{
         fragment.setArguments(bundle);
         return fragment;
     }
+
     @Override
-    public void onAttach(Activity activity){
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = getActivity();
-        ((SurveyQuestion)context).fragmentCommunicator = this;
+        ((SurveyQuestion) context).fragmentCommunicator = this;
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -92,17 +94,17 @@ public class SurveyLastFragment extends Fragment implements Communicator{
 
     }
 
-    public void setQuestion(String question){
+    public void setQuestion(String question) {
         tvQuestion.setText(question);
     }
 
 
     @Override
-    public void passDataToFragment(int someValue,int someValue1,int someValue2){
+    public void passDataToFragment(int someValue, int someValue1, int someValue2) {
 
-        qid= someValue;
-        rid= someValue1;
-        rvalue=someValue2;
+        qid = someValue;
+        rid = someValue1;
+        rvalue = someValue2;
 
         ScorecardValues scorevalue = new ScorecardValues();
 
@@ -130,22 +132,17 @@ public class SurveyLastFragment extends Fragment implements Communicator{
         scorecardPayload.setCreatedOn(date);
         scorecardPayload.setScorecardValues(scorecardValues);
 
-
-        ((MifosApplication) getActivity().getApplication()).api.surveyService.submitScore(surveyId, scorecardPayload, new Callback<Scorecard>() {
+        App.apiManager.submitScore(surveyId, scorecardPayload, new Callback<Scorecard>() {
             @Override
             public void success(Scorecard scorecard, Response response) {
-
                 Toast.makeText(getActivity(), "Scorecard created successfully", Toast.LENGTH_LONG).show();
-
             }
 
             @Override
             public void failure(RetrofitError error) {
-
                 Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     @Override
@@ -154,8 +151,6 @@ public class SurveyLastFragment extends Fragment implements Communicator{
         myPreference = new MyPreference();
         myPreference.resetScorecard(activity);
         super.onStop();
-
     }
-
 }
 

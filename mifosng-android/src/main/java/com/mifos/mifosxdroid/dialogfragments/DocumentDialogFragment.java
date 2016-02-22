@@ -23,10 +23,10 @@ import android.widget.Toast;
 
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.services.GenericResponse;
+import com.mifos.api.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
-import com.mifos.utils.MifosApplication;
+import com.mifos.App;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.io.File;
@@ -42,7 +42,7 @@ import retrofit.mime.TypedFile;
 
 /**
  * Created by ishankhanna on 04/07/14.
- *
+ * <p/>
  * Use this Dialog Fragment to Create and/or Update Documents
  */
 public class DocumentDialogFragment extends DialogFragment {
@@ -54,10 +54,14 @@ public class DocumentDialogFragment extends DialogFragment {
 
     private OnDialogFragmentInteractionListener mListener;
 
-    @InjectView(R.id.et_document_name) EditText et_document_name;
-    @InjectView(R.id.et_document_description) EditText et_document_description;
-    @InjectView(R.id.tv_choose_file) TextView tv_choose_file;
-    @InjectView(R.id.bt_upload) Button bt_upload;
+    @InjectView(R.id.et_document_name)
+    EditText et_document_name;
+    @InjectView(R.id.et_document_description)
+    EditText et_document_description;
+    @InjectView(R.id.tv_choose_file)
+    TextView tv_choose_file;
+    @InjectView(R.id.bt_upload)
+    Button bt_upload;
 
     private static final int FILE_SELECT_CODE = 0;
 
@@ -102,7 +106,7 @@ public class DocumentDialogFragment extends DialogFragment {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
 
-        ButterKnife.inject(this,rootView);
+        ButterKnife.inject(this, rootView);
 
         return rootView;
     }
@@ -119,7 +123,7 @@ public class DocumentDialogFragment extends DialogFragment {
 
     }
 
-    public void validateInput() throws RequiredFieldException{
+    public void validateInput() throws RequiredFieldException {
 
         documentName = et_document_name.getEditableText().toString();
 
@@ -166,7 +170,7 @@ public class DocumentDialogFragment extends DialogFragment {
                             resultCode = Activity.RESULT_CANCELED;
                         }
 
-                        if(fileChoosen!=null) {
+                        if (fileChoosen != null) {
                             tv_choose_file.setText(fileChoosen.getName());
                         } else {
                             break;
@@ -203,14 +207,14 @@ public class DocumentDialogFragment extends DialogFragment {
 
 
         String[] parts = fileChoosen.getName().split("\\.");
-        System.out.println("Extension :"+parts[1]);
+        System.out.println("Extension :" + parts[1]);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(parts[1]);
-        System.out.println("Mime Type = "+mimeType);
+        System.out.println("Mime Type = " + mimeType);
 
         TypedFile typedFile = new TypedFile(mimeType, fileChoosen);
 
         safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication)getActivity().getApplication()).api.documentService.createDocument(entityType, entityId, documentName, documentDescription,
+        App.apiManager.createDocument(entityType, entityId, documentName, documentDescription,
                 typedFile, new Callback<GenericResponse>() {
                     @Override
                     public void success(GenericResponse genericResponse, Response response) {
@@ -240,7 +244,6 @@ public class DocumentDialogFragment extends DialogFragment {
         );
 
     }
-
 
 
 }
