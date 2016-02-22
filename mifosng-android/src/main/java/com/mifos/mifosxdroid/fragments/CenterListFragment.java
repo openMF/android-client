@@ -42,7 +42,7 @@ import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.db.RepaymentTransaction;
 import com.mifos.objects.db.Status;
 import com.mifos.utils.DateHelper;
-import com.mifos.utils.MifosApplication;
+import com.mifos.App;
 import com.mifos.utils.Network;
 import com.mifos.utils.SaveOfflineDataHelper;
 import com.orm.query.Select;
@@ -135,7 +135,8 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
             int branchId = preferences.getInt(OfflineCenterInputActivity.BRANCH_ID_KEY, -1);
             Log.i(TAG, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" + branchId);
             //TODO -- Need to ask ---  Hard coding date format and locale
-            MifosApplication.getApi().centerService.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
+
+            App.apiManager.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
                     new Callback<List<OfflineCenter>>() {
                         @Override
                         public void success(List<OfflineCenter> centers, Response response) {

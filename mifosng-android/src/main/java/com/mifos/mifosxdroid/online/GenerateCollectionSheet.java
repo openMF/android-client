@@ -27,9 +27,4 @@ public class GenerateCollectionSheet extends MifosBaseActivity {
         getMenuInflater().inflate(R.menu.generate_collection_sheet, menu);
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 }

@@ -7,16 +7,12 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.mifos.mifosxdroid.R;
-import com.mifos.objects.User;
-import com.mifos.services.API;
+import com.mifos.api.ApiRequestInterceptor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,11 +28,11 @@ import java.net.URL;
  */
 public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
 
-    Context context;
-    String fileName;
-    InputStream inputStream;
-    OutputStream outputStream;
-    SafeUIBlockingUtility safeUIBlockingUtility;
+    private Context context;
+    private String fileName;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    private SafeUIBlockingUtility safeUIBlockingUtility;
 
     public AsyncFileDownloader(Context context, String fileName) {
         this.context = context;
@@ -57,15 +53,8 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
 
     @Override
     protected File doInBackground(String... strings) {
-
-        SharedPreferences pref = PreferenceManager
-                .getDefaultSharedPreferences(Constants.applicationContext);
-        String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-        String mInstanceUrl = pref.getString(Constants.INSTANCE_URL_KEY,
-                context.getString(R.string.default_instance_url));
-
         String url = Constants.PROTOCOL_HTTPS
-                + mInstanceUrl
+                + PrefManager.getInstanceUrl()
                 + Constants.API_PATH + "/"
                 + strings[0] + "/" // {entityType}
                 + strings[1] + "/"//{entityId}
@@ -73,76 +62,47 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
                 + strings[2] + "/" //{documentId}
                 + "attachment";
 
-        File documentFile = new File(Environment.getExternalStorageDirectory().getPath()+"/"
-                + fileName);
+        File documentFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + fileName);
         try {
-
             HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
-
             httpURLConnection.setRequestMethod("GET");
-            httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
-            httpURLConnection.setRequestProperty(API.HEADER_AUTHORIZATION, authToken);
-            //httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
+            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT, "default");
+            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken());
             httpURLConnection.setDoInput(true);
             httpURLConnection.connect();
             Log.i("Connected", "True");
             inputStream = httpURLConnection.getInputStream();
 
-
-
-            if(!documentFile.exists())
+            if (!documentFile.exists())
                 documentFile.createNewFile();
 
             outputStream = new FileOutputStream(documentFile);
-
-
-            int read = 0;
-
+            int read;
             byte[] bytes = new byte[1024];
-
-            while ((read = inputStream.read(bytes)) != -1) {
+            while ((read = inputStream.read(bytes)) != -1)
                 outputStream.write(bytes, 0, read);
-            }
-
             httpURLConnection.disconnect();
             Log.i("Connected", "False");
-
         } catch (MalformedURLException e) {
-
             e.printStackTrace();
-
         } catch (IOException ioe) {
-
             ioe.printStackTrace();
-
         } finally {
             if (inputStream != null) {
                 try {
-
                     inputStream.close();
-
                 } catch (IOException e) {
-
                     e.printStackTrace();
-
                 }
             }
             if (outputStream != null) {
                 try {
-
                     outputStream.close();
-
                 } catch (IOException e) {
-
                     e.printStackTrace();
-
                 }
-
             }
-
         }
-
-
         return documentFile;
     }
 
@@ -156,11 +116,10 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
         super.onPostExecute(file);
         safeUIBlockingUtility.safelyUnBlockUI();
         Intent intent = new Intent(Intent.ACTION_VIEW);
-
         //TODO Add Support for maximum Mime Types
         String fileType = "";
 
-        if(fileName.contains(".pdf")) {
+        if (fileName.contains(".pdf")) {
             fileType = "application/pdf";
         } else if (fileName.contains(".rtf")) {
             fileType = "application/rtf";
@@ -175,7 +134,6 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
         } else if (fileName.contains(".xls")) {
             fileType = "application/vnd.ms-excel";
         }
-
         intent.setDataAndType(Uri.fromFile(file), fileType);
         context.startActivity(intent);
     }

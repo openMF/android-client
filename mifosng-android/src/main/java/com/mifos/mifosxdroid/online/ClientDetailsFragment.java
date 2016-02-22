@@ -8,14 +8,12 @@ package com.mifos.mifosxdroid.online;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.PopupMenu;
@@ -42,24 +40,25 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
+import com.mifos.App;
+import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.model.GpsCoordinatesRequest;
+import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.CircularImageView;
-import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.data.GpsCoordinatesRequest;
-import com.mifos.services.data.GpsCoordinatesResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
+import com.mifos.utils.PrefManager;
 
 import org.apache.http.HttpStatus;
 
@@ -86,7 +85,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
-import static android.view.View.*;
+import static android.view.View.GONE;
+import static android.view.View.OnClickListener;
+import static android.view.View.OnTouchListener;
+import static android.view.View.VISIBLE;
 
 
 public class ClientDetailsFragment extends MifosBaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -130,7 +132,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     TableRow rowLoan;
 
     private View rootView;
-    private SharedPreferences sharedPreferences;
     private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
     // Null if play services are not available.
@@ -175,7 +176,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
         inflateClientInformation();
         return rootView;
@@ -234,7 +234,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     }
 
     public void deleteClientImage() {
-        MifosApplication.getApi().clientService.deleteClientImage(clientId, new Callback<Response>() {
+        App.apiManager.deleteClientImage(clientId, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Toaster.show(rootView, "Image deleted");
@@ -256,16 +256,13 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     private void uploadImage(File pngFile) {
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(VISIBLE);
-        MifosApplication.getApi().clientService.uploadClientImage(clientId,
+        App.apiManager.uploadClientImage(clientId,
                 new TypedFile("image/png", pngFile),
                 new Callback<Response>() {
-
-
                     @Override
                     public void success(Response response, Response response2) {
                         Toaster.show(rootView, R.string.client_image_updated);
-                        Bitmap bitMap = BitmapFactory.decodeFile(imagePath);
-                        iv_clientImage.setImageBitmap(bitMap);
+                        iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
                         pb_imageProgressBar.setVisibility(GONE);
                     }
 
@@ -285,7 +282,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      */
     public void getClientDetails() {
         showProgress("Working...");
-        MifosApplication.getApi().clientService.getClient(clientId, new Callback<Client>() {
+        App.apiManager.getClient(clientId, new Callback<Client>() {
             @Override
             public void success(final Client client, Response response) {
 
@@ -373,9 +370,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      * of the client and inflate them in the fragment
      */
     public void inflateClientsAccounts() {
-
-        showProgress("Working...");
-        MifosApplication.getApi().clientAccountsService.getAllAccountsOfClient(clientId, new Callback<ClientAccounts>() {
+        showProgress();
+        App.apiManager.getClientAccounts(clientId, new Callback<ClientAccounts>() {
             @Override
             public void success(final ClientAccounts clientAccounts, Response response) {
                 // Proceed only when the fragment is added to the activity.
@@ -432,8 +428,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress("Working...");
-        MifosApplication.getApi().dataTableService.getDatatablesOfClient(new Callback<List<DataTable>>() {
+        showProgress();
+        App.apiManager.getClientDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
                 if (dataTables != null) {
@@ -526,8 +522,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         try {
             if (locationAvailable.get()) {
                 final Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                MifosApplication.getApi().gpsCoordinatesService.setGpsCoordinates(clientId,
-                        new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
+                App.apiManager.sendGpsData(clientId, new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                         new Callback<GpsCoordinatesResponse>() {
                             @Override
                             public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
@@ -544,8 +539,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                                   *
                                  */
                                 if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
-                                    MifosApplication.getApi().gpsCoordinatesService.updateGpsCoordinates(clientId,
-                                            new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
+                                    App.apiManager.updateGpsData(clientId, new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
                                             new Callback<GpsCoordinatesResponse>() {
                                                 @Override
                                                 public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
@@ -751,10 +745,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
         @Override
         protected Void doInBackground(Integer... integers) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Constants.applicationContext);
-            String authToken = pref.getString(User.AUTHENTICATION_KEY, "NA");
-            String mInstanceUrl = pref.getString(Constants.INSTANCE_URL_KEY, getString(R.string.default_instance_url));
-            String url = mInstanceUrl
+            String url = PrefManager.getInstanceUrl()
                     + "/"
                     + "clients/"
                     + integers[0]
@@ -763,8 +754,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
             try {
                 HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
                 httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setRequestProperty("X-Mifos-Platform-TenantId", "default");
-                httpURLConnection.setRequestProperty(((MifosApplication) getActivity().getApplication()).api.HEADER_AUTHORIZATION, authToken);
+                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT, "default");
+                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken());
                 httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();

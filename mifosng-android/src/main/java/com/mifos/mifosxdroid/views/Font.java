@@ -7,7 +7,7 @@ package com.mifos.mifosxdroid.views;
 
 import android.graphics.Typeface;
 
-import com.mifos.utils.MifosApplication;
+import com.mifos.App;
 
 import java.io.File;
 
@@ -24,10 +24,10 @@ public enum Font {
 
     Font(String pathToFont, String fontName) {
         this.fontName = fontName;
-        typeface = MifosApplication.typefaceManager.get(fontName.hashCode());
+        typeface = App.typefaceManager.get(fontName.hashCode());
         if (typeface == null) {
-            typeface = Typeface.createFromAsset(MifosApplication.getSugarContext().getApplicationContext().getAssets(), pathToFont + File.separator + fontName);
-            MifosApplication.typefaceManager.put(fontName.hashCode(), typeface);
+            typeface = Typeface.createFromAsset(App.getSugarContext().getApplicationContext().getAssets(), pathToFont + File.separator + fontName);
+            App.typefaceManager.put(fontName.hashCode(), typeface);
         }
     }
 

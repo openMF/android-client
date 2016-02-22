@@ -14,7 +14,6 @@ import android.widget.ListView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
-import com.mifos.utils.Constants;
 
 /**
  * Created by Gabriel Esteban on 12/12/14.
@@ -34,16 +33,11 @@ public class ClientListFragmentTest extends ActivityInstrumentationTestCase2<Das
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
-        Constants.applicationContext = getInstrumentation().getTargetContext().getApplicationContext();
         dashboardActivity = getActivity();
-
         //starting client list fragment
         dashboardActivity.loadClientList();
-
         //API wait for charging all clients
         Thread.sleep(8000);
-
         //instantiating view objects
         lv_clients = (ListView) dashboardActivity.findViewById(R.id.lv_clients);
         swipeRefreshLayout = (SwipeRefreshLayout) dashboardActivity.findViewById(R.id.swipe_container);

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Charges;
@@ -26,7 +27,6 @@ import com.mifos.services.data.ChargesPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -41,17 +41,14 @@ import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
- *
+ * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
 public class ChargeDialogFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "ChargeDialogFragment";
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
-
-    private OnDialogFragmentInteractionListener mListener;
+    private View rootView;
+    private SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
@@ -117,49 +114,34 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
                 chargesPayload.setDueDate(duedateString);
                 chargesPayload.setDateFormat("dd MMMM yyyy");
                 chargesPayload.setChargeId(Id);
-
                 initiateChargesCreation(chargesPayload);
-
             }
         });
-
         return rootView;
     }
 
     @Override
     public void onDatePicked(String date) {
         charge_due_date.setText(date);
-
-    }
-
-
-    public interface OnDialogFragmentInteractionListener {
-
-
     }
 
     private void inflateChargesSpinner() {
-
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication) getActivity().getApplicationContext()).api.chargeService.getAllChargesS(new Callback<List<Charges>>() {
+        App.apiManager.getAllChargesV2(new Callback<List<Charges>>() {
 
             @Override
             public void success(List<Charges> charges, Response response) {
                 final List<String> chargesList = new ArrayList<String>();
-
                 for (Charges chargesname : charges) {
                     chargesList.add(chargesname.getName());
                     chargeNameIdHashMap.put(chargesname.getName(), chargesname.getId());
 
                 }
-                ArrayAdapter<String> chargeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, chargesList);
+                ArrayAdapter<String> chargeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, chargesList);
                 chargeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_charge_name.setAdapter(chargeAdapter);
                 sp_charge_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         Id = chargeNameIdHashMap.get(chargesList.get(i));
@@ -168,11 +150,8 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
 
 
                         } else {
-
                             Toast.makeText(getActivity(), getString(R.string.error_select_charge), Toast.LENGTH_SHORT).show();
-
                         }
-
                     }
 
                     @Override
@@ -180,56 +159,41 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
 
                     }
                 });
-
                 safeUIBlockingUtility.safelyUnBlockUI();
-
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
-                System.out.println(retrofitError.getLocalizedMessage());
-
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
         });
-
     }
 
     private void initiateChargesCreation(ChargesPayload chargesPayload) {
-
         safeUIBlockingUtility.safelyBlockUI();
+        App.apiManager.createCharges(clientId, chargesPayload, new Callback<Charges>() {
+            @Override
+            public void success(Charges charges, Response response) {
+                safeUIBlockingUtility.safelyUnBlockUI();
+                Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG).show();
+            }
 
-                MifosApplication.getApi().chargeService.createCharges(clientId, chargesPayload, new Callback<Charges>() {
-                    @Override
-                    public void success(Charges charges, Response response) {
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG).show();
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-
-        }
-
+            @Override
+            public void failure(RetrofitError error) {
+                safeUIBlockingUtility.safelyUnBlockUI();
+                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     public void inflatedueDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
-
         charge_due_date.setText(MFDatePicker.getDatePickedAsString());
-
         charge_due_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
-
     }
 }
