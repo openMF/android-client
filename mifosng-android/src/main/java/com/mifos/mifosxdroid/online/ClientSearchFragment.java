@@ -5,8 +5,6 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,13 +15,13 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientSearchAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.utils.Constants;
-import com.mifos.utils.MifosApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,30 +65,23 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
             Toaster.show(et_searchById, "No Search Query Entered!");
     }
 
-    public void findClients(final String clientName) {
-        showProgress("Working");
-        MifosApplication.getApi().searchService.searchClientsByName(clientName, new Callback<List<SearchedEntity>>() {
+    public void findClients(final String name) {
+        showProgress();
+
+        App.apiManager.searchClientsByName(name, new Callback<List<SearchedEntity>>() {
             @Override
-            public void success(List<SearchedEntity> res, Response response) {
-                if (!res.isEmpty()) {
-                    clients = res;
-                    adapter.setList(res);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                    dialog.setTitle("Message");
-                    dialog.setMessage("No results found for entered query")
-                            .setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    }).create().show();
-                }
+            public void success(List<SearchedEntity> result, Response response) {
+                clients = result;
+                adapter.setList(result);
+                adapter.notifyDataSetChanged();
+
+                if (result.isEmpty())
+                    showAlertDialog("Message", "No results found for entered query");
                 hideProgress();
             }
 
             @Override
-            public void failure(RetrofitError retrofitError) {
+            public void failure(RetrofitError error) {
                 hideProgress();
             }
         });

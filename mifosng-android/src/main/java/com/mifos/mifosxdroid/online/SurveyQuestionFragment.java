@@ -5,13 +5,11 @@
 
 
 package com.mifos.mifosxdroid.online;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.mifos.objects.survey.Survey;
-import com.mifos.objects.survey.ScorecardValues;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +18,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Bundle;
+
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.objects.survey.ScorecardValues;
 import com.mifos.objects.survey.Survey;
-import com.mifos.utils.MifosApplication;
 import com.mifos.utils.MyPreference;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -32,9 +32,9 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyQuestionFragment extends Fragment implements View.OnClickListener{
+public class SurveyQuestionFragment extends Fragment implements View.OnClickListener {
     public interface OnAnswerSelectedListener {
-        public void answer(int id, int qid,int rid,int rvalue);
+        public void answer(int id, int qid, int rid, int rvalue);
     }
 
     // static Strings to retrieve the  question and its answers and show them.
@@ -64,7 +64,7 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
     private int rValue;
     MyPreference myPreference;
 
-    public static final SurveyQuestionFragment newInstance(int id, String question,int sid, String[] answers) {
+    public static final SurveyQuestionFragment newInstance(int id, String question, int sid, String[] answers) {
         SurveyQuestionFragment fragment = new SurveyQuestionFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ID, id);
@@ -95,7 +95,7 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
 
         Id = getArguments().getInt(ID);
         surveyId = getArguments().getInt(SID);
-        answerarray =getArguments().getStringArray(ANSWERS);
+        answerarray = getArguments().getStringArray(ANSWERS);
         setQuestion(getArguments().getString(QUESTION));
         // setAnswers(getArguments().getStringArray(ANSWERS));
         ViewGroup hourButtonLayout = (ViewGroup) view.findViewById(R.id.radio1);
@@ -139,19 +139,18 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
     }
 
 
-    public void setQuestion(String question){
+    public void setQuestion(String question) {
         tvQuestion.setText(question);
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
 
         switch (v.getId()) {
 
             case R.id.bt_next:
 
-                ((MifosApplication)getActivity().getApplication()).api.surveyService.getSurvey(surveyId, new Callback<Survey>() {
+                App.apiManager.getSurvey(surveyId, new Callback<Survey>() {
                     @Override
                     public void success(final Survey survey, Response response) {
 
@@ -184,11 +183,8 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
                                 scorevalue.setQuestionId(qId);
                                 scorevalue.setResponseId(rId);
                                 scorevalue.setValue(rValue);
-                                // MyPreference myPreference = MyPreference.getInstance(mActivity);
                                 myPreference.addScorecard(activity, scorevalue);
-                                mCallback.answer(Id,qId,rId,rValue);
-
-
+                                mCallback.answer(Id, qId, rId, rValue);
                             }
                         }
                     }
@@ -199,22 +195,8 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
 
                     }
                 });
-
                 break;
-
         }
-
-    }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-    @Override
-    public void onPause() {
-
-        super.onPause();
-
     }
 }
 

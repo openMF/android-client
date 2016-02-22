@@ -5,10 +5,9 @@
 
 package com.mifos.mifosxdroid.tests;
 
-import android.test.ActivityInstrumentationTestCase2;
-
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.test.suitebuilder.annotation.Suppress;
@@ -16,12 +15,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.R;
-import com.mifos.services.API;
 import com.mifos.utils.Constants;
-import com.mifos.utils.MifosApplication;
+import com.mifos.utils.PrefManager;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -74,93 +71,57 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     }
 
     @SmallTest
-    public void testURLInstance1(){
-
+    public void testURLInstance1() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
 
-        /*
-            Set URL and check the color of the message, it turns green
-            only if the URL matches the pattern specified
-         */
+        // Set URL and check the color of the message, it turns green
+        // only if the URL matches the pattern specified
         enterMifosInstanceDomain(TEST_URL_1);
-
-        assertEquals(TEST_URL_1, et_mifos_domain.getText().toString());
-        assertEquals(loginActivity.getResources().getColor(R.color.deposit_green), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @SmallTest
-    public void testURLInstance2(){
-
+    public void testURLInstance2() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
-
         enterMifosInstanceDomain(TEST_URL_2);
-
-        assertEquals(TEST_URL_2, et_mifos_domain.getText().toString());
-        assertEquals(loginActivity.getResources().getColor(R.color.deposit_green), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
     }
 
 
     @SmallTest
-    public void testURLInstance3(){
-
+    public void testURLInstance3() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
 
-        /*
-            Set URL and check the color of the message, it turns green
-            only if the URL matches the pattern specified
-         */
         enterMifosInstanceDomain(TEST_URL_3);
-
-        assertEquals(TEST_URL_3, et_mifos_domain.getText().toString());
-        assertEquals(loginActivity.getResources().getColor(R.color.deposit_green), tv_constructed_instance_url.getCurrentTextColor());
-
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @SmallTest
-    public void testURLInstance4(){
-
+    public void testURLInstance4() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
-
-        /*
-            Set URL and check the color of the message, it turns green
-            only if the URL matches the pattern specified
-         */
         enterMifosInstanceDomain(TEST_URL_4);
-
-        assertEquals(TEST_URL_4, et_mifos_domain.getText().toString());
-        assertEquals(loginActivity.getResources().getColor(R.color.deposit_green), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @SmallTest
-    public void testURLInstance5(){
-
+    public void testURLInstance5() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
-
-        /*
-            Set URL and check the color of the message, it turns green
-            only if the URL matches the pattern specified
-         */
         enterMifosInstanceDomain(TEST_URL_5);
-
-        assertEquals(TEST_URL_5, et_mifos_domain.getText().toString());
-        assertEquals(loginActivity.getResources().getColor(R.color.deposit_green), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @MediumTest
     public void testSaveLastAccessedInstanceDomainName_savesProvidedString() {
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(getInstrumentation().getTargetContext());
+        PrefManager.setInstanceDomain(TEST_URL_1);
+        assertEquals(TEST_URL_1, PrefManager.getInstanceDomain());
 
-        saveLastAccessedInstanceDomainName(TEST_URL_1);
-        assertEquals(TEST_URL_1, sharedPreferences.getString(Constants.INSTANCE_URL_KEY, "NA"));
-
-        saveLastAccessedInstanceDomainName(TEST_URL_2);
-        assertEquals(TEST_URL_2, sharedPreferences.getString(Constants.INSTANCE_URL_KEY, "NA"));
+        PrefManager.setInstanceDomain(TEST_URL_2);
+        assertEquals(TEST_URL_2, PrefManager.getInstanceDomain());
     }
 
     @MediumTest
@@ -171,16 +132,12 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    getActivity().validateUserInputs();
-                } catch (ShortOfLengthException e) {
-                    // ignore
-                }
+                getActivity().validateUserInputs();
             }
         });
         getInstrumentation().waitForIdleSync();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
-        assertEquals(TEST_URL_1, sharedPreferences.getString(Constants.INSTANCE_URL_KEY, "NA"));
+        assertEquals(TEST_URL_1, sharedPreferences.getString(Constants.INSTANCE_URL_KEY, ""));
     }
 
     @MediumTest
@@ -192,16 +149,10 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    getActivity().validateUserInputs();
-                } catch (ShortOfLengthException e) {
-                    // ignore
-                }
+                getActivity().validateUserInputs();
             }
         });
         getInstrumentation().waitForIdleSync();
-        assertEquals(getActivity().constructInstanceUrl(TEST_URL_1, 80),
-                ((MifosApplication)getActivity().getApplication()).api.mInstanceUrl);
     }
 
     @SmallTest
@@ -231,7 +182,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
-                getActivity().saveLastAccessedInstanceDomainName(domain);
+                PrefManager.setInstanceDomain(domain);
             }
         });
         getInstrumentation().waitForIdleSync();
