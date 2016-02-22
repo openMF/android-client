@@ -8,6 +8,13 @@ package com.mifos.api;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.mifos.api.model.ClientPayload;
+import com.mifos.api.model.CollectionSheetPayload;
+import com.mifos.api.model.GpsCoordinatesRequest;
+import com.mifos.api.model.GpsCoordinatesResponse;
+import com.mifos.api.model.Payload;
+import com.mifos.api.model.SaveResponse;
+import com.mifos.api.model.ScorecardPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -18,8 +25,10 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Center;
@@ -30,18 +39,16 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
-import com.mifos.api.model.ClientPayload;
-import com.mifos.api.model.CollectionSheetPayload;
-import com.mifos.api.model.GpsCoordinatesRequest;
-import com.mifos.api.model.GpsCoordinatesResponse;
-import com.mifos.api.model.Payload;
-import com.mifos.api.model.SaveResponse;
-import com.mifos.api.model.ScorecardPayload;
+import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.ChargesPayload;
+import com.mifos.services.data.GroupPayload;
+import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;
 import java.util.List;
@@ -146,6 +153,10 @@ public class ApiManager extends BaseApiManager {
 
     public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId, int staffId, Callback<List<OfflineCenter>> callback) {
         getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId, callback);
+    }
+
+    public void createCenter(CenterPayload centerPayload, Callback<Center> callback) {
+        getCenterApi().createCenter(centerPayload, callback);
     }
 
     //
@@ -273,6 +284,10 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().getAllGroupsInOffice(office, params, callback);
     }
 
+    public void createGroup(GroupPayload groupPayload, Callback<Group> callback) {
+
+    }
+
     //
     // Documents API
     //
@@ -308,5 +323,39 @@ public class ApiManager extends BaseApiManager {
     //
     public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
         getStaffApi().getStaffForOffice(officeId, callback);
+    }
+
+    //
+    // Charge API
+    //
+    public void getAllCharges(Callback<Response> callback) {
+
+    }
+
+    public void getAllChargesV2(Callback<List<Charges>> callback) {
+
+    }
+
+    public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
+
+    }
+
+    public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
+
+    }
+
+    //
+    // SavingsAccount API?
+    //
+    public void getSavingsAccounts(Callback<List<ProductSavings>> callback) {
+
+    }
+
+    public void createSavingsAccount(SavingsPayload savingsPayload, Callback<Savings> callback) {
+
+    }
+
+    public void getSavingsAccountTemplate(Callback<Response> clientCallback) {
+
     }
 }

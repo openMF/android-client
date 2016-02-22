@@ -1,13 +1,14 @@
 package com.mifos.api.services;
 
-import com.mifos.objects.db.CollectionSheet;
-import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.group.Center;
-import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
+import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.db.OfflineCenter;
+import com.mifos.objects.group.Center;
+import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.services.data.CenterPayload;
 
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,8 @@ public interface CenterService {
     @POST(APIEndPoint.CLIENTS + "")
     void uploadNewClientDetails();
 
+    @POST(APIEndPoint.CENTERS)
+    void createCenter(@Body CenterPayload centerPayload, Callback<Center> callback);
 
     @GET(APIEndPoint.CENTERS)
     void getCenterList(@Query("dateFormat") String dateFormat, @Query("locale") String locale,

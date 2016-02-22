@@ -19,9 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.accounts.savings.FieldOfficerOptions;
 import com.mifos.objects.accounts.savings.InterestCalculationType;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.InterestCalculationDaysInYearType;
@@ -32,7 +32,6 @@ import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import org.json.JSONArray;
@@ -52,21 +51,17 @@ import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
- *
+ * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
 public class SavingsAccountFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "SavingsAccountFragment";
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
-
-    private OnDialogFragmentInteractionListener mListener;
+    private View rootView;
+    private SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_product)
     Spinner sp_product;
-
     @InjectView(R.id.et_client_external_id)
     EditText et_client_external_id;
     @InjectView(R.id.tv_submittedon_date)
@@ -90,20 +85,12 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
     private int interestCalculationDaysInYearTypeId;
-    String submittion_date;
+    private String submittion_date;
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
-
-
     private HashMap<String, Integer> interestCalculationTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> interestPostingPeriodTypeNameIdHashMap = new HashMap<String, Integer>();
-
-    private HashMap<String,Integer> interestCompoundingPeriodTypeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String,Integer> interestCalculationDaysInYearHashMap = new HashMap<String, Integer>();
-
-
-
-
-    private String chargeName;
+    private HashMap<String, Integer> interestCompoundingPeriodTypeNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> interestCalculationDaysInYearHashMap = new HashMap<String, Integer>();
 
     public static SavingsAccountFragment newInstance(int clientId) {
         SavingsAccountFragment savingsAccountFragment = new SavingsAccountFragment();
@@ -123,10 +110,6 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        if (getActivity().getActionBar() != null)
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_add_savings_account, null);
         ButterKnife.inject(this, rootView);
         inflatesubmissionDate();
@@ -157,29 +140,20 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 savingsPayload.getInterestCalculationDaysInYearType();
 
                 initiateSavingCreation(savingsPayload);
-
             }
         });
-
         return rootView;
     }
 
     @Override
     public void onDatePicked(String date) {
         tv_submittedon_date.setText(date);
-
-    }
-
-
-    public interface OnDialogFragmentInteractionListener {
-
-
     }
 
     private void inflateSavingsSpinner() {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        ((MifosApplication) getActivity().getApplicationContext()).api.createSavingsAccountService.getAllSavingsAccounts(new Callback<List<ProductSavings>>() {
+        App.apiManager.getSavingsAccounts(new Callback<List<ProductSavings>>() {
 
             @Override
             public void success(List<ProductSavings> savings, Response response) {
@@ -188,10 +162,8 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 for (ProductSavings savingsname : savings) {
                     savingsList.add(savingsname.getName());
                     savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
-
                 }
-                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, savingsList);
+                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, savingsList);
                 savingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_product.setAdapter(savingsAdapter);
                 sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -200,14 +172,9 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                         productId = savingsNameIdHashMap.get(savingsList.get(i));
                         Log.d("productId " + savingsList.get(i), String.valueOf(productId));
                         if (productId != -1) {
-
-
                         } else {
-
                             Toast.makeText(getActivity(), getString(R.string.error_select_product), Toast.LENGTH_SHORT).show();
-
                         }
-
                     }
 
                     @Override
@@ -215,28 +182,21 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
                     }
                 });
-
                 safeUIBlockingUtility.safelyUnBlockUI();
-
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
-                System.out.println(retrofitError.getLocalizedMessage());
-
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
         });
-
     }
+
     private void inflateInterestPostingPeriodType() {
-        ((MifosApplication) getActivity().getApplicationContext()).api.createSavingsAccountService.getSavingsAccountTemplate(new Callback<Response>() {
+        App.apiManager.getSavingsAccountTemplate(new Callback<Response>() {
+
             @Override
-
             public void success(final Response result, Response response) {
-                Log.d(TAG, "");
-
                 final List<InterestPostingPeriodType> interestPostingPeriodType = new ArrayList<InterestPostingPeriodType>();
                 // you can use this array to populate your spinner
                 final ArrayList<String> InterestPostingPeriodTypeNames = new ArrayList<String>();
@@ -244,9 +204,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
                 try {
-
                     reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
                     String line;
 
                     while ((line = reader.readLine()) != null) {
@@ -313,8 +271,9 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         });
 
     }
+
     private void inflateInterestCalculationTypeSpinner() {
-        ((MifosApplication) getActivity().getApplicationContext()).api.createSavingsAccountService.getSavingsAccountTemplate(new Callback<Response>() {
+        App.apiManager.getSavingsAccountTemplate(new Callback<Response>() {
             @Override
 
             public void success(final Response result, Response response) {
@@ -395,92 +354,94 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
             }
         });
     }
+
     private void inflateinterestCalculationDaysInYearType() {
-        ((MifosApplication) getActivity().getApplicationContext()).api.createSavingsAccountService.getSavingsAccountTemplate(new Callback<Response>() {
+        App.apiManager.getSavingsAccountTemplate(new Callback<Response>() {
             @Override
 
             public void success(final Response result, Response response) {
-                 Log.d(TAG, "");
+                Log.d(TAG, "");
 
-                 final List<InterestCalculationDaysInYearType> interestCalculationDaysInYearType = new ArrayList<InterestCalculationDaysInYearType>();
-                 // you can use this array to populate your spinner
-                 final ArrayList<String> InterestCalculationDaysInYearTypeNames = new ArrayList<String>();
-                 //Try to get response body
-                 BufferedReader reader = null;
-                 StringBuilder sb = new StringBuilder();
-                 try {
+                final List<InterestCalculationDaysInYearType> interestCalculationDaysInYearType = new ArrayList<InterestCalculationDaysInYearType>();
+                // you can use this array to populate your spinner
+                final ArrayList<String> InterestCalculationDaysInYearTypeNames = new ArrayList<String>();
+                //Try to get response body
+                BufferedReader reader = null;
+                StringBuilder sb = new StringBuilder();
+                try {
 
-                     reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
 
-                     String line;
+                    String line;
 
-                     while ((line = reader.readLine()) != null) {
-                         sb.append(line);
-                     }
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
 
-                     JSONObject obj = new JSONObject(sb.toString());
-                     if (obj.has("interestCalculationDaysInYearTypeOptions")) {
-                         JSONArray interestCalculationDaysInYearTypes = obj.getJSONArray("interestCalculationDaysInYearTypeOptions");
-                         for (int i = 0; i < interestCalculationDaysInYearTypes.length(); i++) {
-                             JSONObject interestCalculationDaysInYearTypeObject = interestCalculationDaysInYearTypes.getJSONObject(i);
-                             InterestCalculationDaysInYearType interestCalculationDaysInYearT = new InterestCalculationDaysInYearType();
-                             interestCalculationDaysInYearT.setId(interestCalculationDaysInYearTypeObject.optInt("id"));
-                             interestCalculationDaysInYearT.setValue(interestCalculationDaysInYearTypeObject.optString("value"));
-                             interestCalculationDaysInYearType.add(interestCalculationDaysInYearT);
-                             InterestCalculationDaysInYearTypeNames.add(interestCalculationDaysInYearTypeObject.optString("value"));
-                             interestCalculationDaysInYearHashMap.put(interestCalculationDaysInYearT.getValue(), interestCalculationDaysInYearT.getId());
-                         }
+                    JSONObject obj = new JSONObject(sb.toString());
+                    if (obj.has("interestCalculationDaysInYearTypeOptions")) {
+                        JSONArray interestCalculationDaysInYearTypes = obj.getJSONArray("interestCalculationDaysInYearTypeOptions");
+                        for (int i = 0; i < interestCalculationDaysInYearTypes.length(); i++) {
+                            JSONObject interestCalculationDaysInYearTypeObject = interestCalculationDaysInYearTypes.getJSONObject(i);
+                            InterestCalculationDaysInYearType interestCalculationDaysInYearT = new InterestCalculationDaysInYearType();
+                            interestCalculationDaysInYearT.setId(interestCalculationDaysInYearTypeObject.optInt("id"));
+                            interestCalculationDaysInYearT.setValue(interestCalculationDaysInYearTypeObject.optString("value"));
+                            interestCalculationDaysInYearType.add(interestCalculationDaysInYearT);
+                            InterestCalculationDaysInYearTypeNames.add(interestCalculationDaysInYearTypeObject.optString("value"));
+                            interestCalculationDaysInYearHashMap.put(interestCalculationDaysInYearT.getValue(), interestCalculationDaysInYearT.getId());
+                        }
 
 
-                     }
-                     String stringResult = sb.toString();
-                 } catch (Exception e) {
-                     Log.e(TAG, "", e);
-                 }
-                 final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                         android.R.layout.simple_spinner_item, InterestCalculationDaysInYearTypeNames);
+                    }
+                    String stringResult = sb.toString();
+                } catch (Exception e) {
+                    Log.e(TAG, "", e);
+                }
+                final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, InterestCalculationDaysInYearTypeNames);
                 interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_days_in_year.setAdapter(interestCalculationDaysInYearTypeAdapter);
                 sp_days_in_year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                     @Override
-                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                         interestCalculationDaysInYearTypeId =interestCalculationDaysInYearHashMap.get(InterestCalculationDaysInYearTypeNames.get(i));
-                         Log.d("interestCalculationD" + InterestCalculationDaysInYearTypeNames.get(i), String.valueOf(interestCalculationDaysInYearTypeId));
-                         if (interestCalculationDaysInYearTypeId != -1) {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        interestCalculationDaysInYearTypeId = interestCalculationDaysInYearHashMap.get(InterestCalculationDaysInYearTypeNames.get(i));
+                        Log.d("interestCalculationD" + InterestCalculationDaysInYearTypeNames.get(i), String.valueOf(interestCalculationDaysInYearTypeId));
+                        if (interestCalculationDaysInYearTypeId != -1) {
 
 
-                         } else {
+                        } else {
 
-                             Toast.makeText(getActivity(), getString(R.string.interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT).show();
 
-                         }
+                        }
 
-                     }
+                    }
 
-                     @Override
-                     public void onNothingSelected(AdapterView<?> parent) {
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
 
-                     }
-                 });
+                    }
+                });
 
-                 safeUIBlockingUtility.safelyUnBlockUI();
+                safeUIBlockingUtility.safelyUnBlockUI();
 
-             }
+            }
 
-             @Override
-             public void failure(RetrofitError retrofitError) {
+            @Override
+            public void failure(RetrofitError retrofitError) {
 
-                 System.out.println(retrofitError.getLocalizedMessage());
+                System.out.println(retrofitError.getLocalizedMessage());
 
-                 safeUIBlockingUtility.safelyUnBlockUI();
-             }
-         });
+                safeUIBlockingUtility.safelyUnBlockUI();
+            }
+        });
 
     }
+
     private void InterestCompoundingPeriodType() {
 
-        ((MifosApplication) getActivity().getApplicationContext()).api.createSavingsAccountService.getSavingsAccountTemplate(new Callback<Response>() {
+        App.apiManager.getSavingsAccountTemplate(new Callback<Response>() {
             @Override
 
             public void success(final Response result, Response response) {
@@ -562,16 +523,18 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         });
 
     }
+
     private void initiateSavingCreation(SavingsPayload savingsPayload) {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        MifosApplication.getApi().createSavingsAccountService.createSavingsAccount( savingsPayload, new Callback<Savings>() {
+        App.apiManager.createSavingsAccount(savingsPayload, new Callback<Savings>() {
             @Override
             public void success(Savings savings, Response response) {
                 safeUIBlockingUtility.safelyUnBlockUI();
                 Toast.makeText(getActivity(), "The Savings Account has been submitted for Approval", Toast.LENGTH_LONG).show();
             }
+
             @Override
             public void failure(RetrofitError error) {
                 safeUIBlockingUtility.safelyUnBlockUI();
@@ -581,9 +544,9 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
 
     }
+
     public void inflatesubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
-
         tv_submittedon_date.setText(MFDatePicker.getDatePickedAsString());
 
         tv_submittedon_date.setOnClickListener(new View.OnClickListener() {
