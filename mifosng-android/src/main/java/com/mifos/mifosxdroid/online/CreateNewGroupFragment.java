@@ -10,10 +10,8 @@ package com.mifos.mifosxdroid.online;
  */
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,35 +27,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.App;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.client.Client;
 import com.mifos.objects.group.Group;
-import com.mifos.objects.organisation.ClientClassificationOptions;
-import com.mifos.objects.organisation.ClientTypeOptions;
-import com.mifos.objects.organisation.GenderOptions;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.services.data.GroupPayload;
-import com.mifos.services.data.ClientPayload;
-import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 import com.mifos.utils.SafeUIBlockingUtility;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -69,10 +54,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static com.mifos.utils.MifosApplication.*;
 
-
-public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewGroupFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
 
 
     private static final String TAG = "CreateNewGroup";
@@ -88,8 +71,6 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
     Spinner sp_offices;
     @InjectView(R.id.sp_staff)
     Spinner sp_staff;
-    @InjectView(R.id.sp_add_client)
-    Spinner sp_add_client;
     @InjectView(R.id.bt_submit)
     Button bt_submit;
 
@@ -104,9 +85,7 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
-    public CreateNewGroupFragment() {
-        // Required empty public constructor
-    }
+
 
     public static CreateNewGroupFragment newInstance() {
         CreateNewGroupFragment createNewGroupFragment = new CreateNewGroupFragment();
@@ -128,15 +107,10 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        if (getActivity().getActionBar() != null)
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_group, null);
         ButterKnife.inject(this, rootView);
         inflateOfficeSpinner();
@@ -186,7 +160,7 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
     private void inflateOfficeSpinner() {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        api.officeService.getAllOffices(new Callback<List<Office>>() {
+        App.apiManager.getOffices(new Callback<List<Office>>() {
 
             @Override
             public void success(List<Office> offices, Response response) {
@@ -242,7 +216,7 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
 
     public void inflateStaffSpinner(final int officeId) {
 
-        api.staffService.getStaffForOffice(officeId, new Callback<List<Staff>>() {
+        App.apiManager.getStaffInOffice(officeId, new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
 
@@ -294,8 +268,7 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
         else {
 
             safeUIBlockingUtility.safelyBlockUI();
-
-            api.groupService.createGroup(groupPayload, new Callback<Group>() {
+            App.apiManager.createGroup(groupPayload, new Callback<Group>() {
                 @Override
                 public void success(Group group, Response response) {
                     safeUIBlockingUtility.safelyUnBlockUI();

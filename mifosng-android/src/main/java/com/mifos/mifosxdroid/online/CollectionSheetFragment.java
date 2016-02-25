@@ -26,13 +26,13 @@ import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.services.data.BulkRepaymentTransactions;
-import com.mifos.services.data.CollectionSheetPayload;
-import com.mifos.services.data.Payload;
-import com.mifos.services.data.SaveResponse;
+import com.mifos.api.model.BulkRepaymentTransactions;
+import com.mifos.api.model.CollectionSheetPayload;
+import com.mifos.api.model.Payload;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorParser;
-import com.mifos.utils.MifosApplication;
+import com.mifos.App;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,7 +175,7 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         payload.setTransactionDate(dateOfCollection);
         payload.setDateFormat("dd-MM-YYYY");
 
-        MifosApplication.getApi().centerService.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
+        App.apiManager.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
             @Override
             public void success(CollectionSheet collectionSheet, Response response) {
 
@@ -228,12 +228,10 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         collectionSheetPayload.setTransactionDate(dateOfCollection);
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
 
-        MifosApplication.getApi().centerService.saveCollectionSheet(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
+        App.apiManager.saveCollectionSheetAsync(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
             @Override
             public void success(SaveResponse saveResponse, Response response) {
-
                 if (saveResponse != null) {
-
                     Toast.makeText(getActivity(), "Collection Sheet Saved Successfully", Toast.LENGTH_SHORT).show();
 
                 }

@@ -20,9 +20,8 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
-import com.mifos.mifosxdroid.online.LogoutActivity;
-import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.PrefManager;
 
 /**
  * Created by Gabriel Esteban on 06/12/14.
@@ -50,8 +49,6 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
         bt_searchClient = (Button) dashboardActivity.findViewById(R.id.bt_searchClient);
         lv_searchResults = (ListView) dashboardActivity.findViewById(R.id.lv_searchResults);
         tv_title_search = (TextView) dashboardActivity.findViewById(R.id.tv_title_search_results);
-
-        Constants.applicationContext = dashboardActivity.getApplicationContext();
     }
 
     @SmallTest
@@ -134,14 +131,8 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
      */
     @MediumTest
     public void testLogoutActivityStarted(){
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(LogoutActivity.class.getName(), null, false);
-
-        //clicking the button
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
         getInstrumentation().invokeMenuActionSync(getActivity(), R.id.logout, 0);
-
-        Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 2000);
-        assertNotNull(startedActivity);
-        assertEquals(true, getInstrumentation().checkMonitorHit(monitor, 1));
+        assertEquals("", PrefManager.getToken());
     }
 }

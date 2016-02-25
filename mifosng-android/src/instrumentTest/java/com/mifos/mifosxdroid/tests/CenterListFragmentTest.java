@@ -10,7 +10,6 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CentersActivity;
-import com.mifos.utils.Constants;
 
 /**
  * Created by Gabriel Esteban on 12/12/14.
@@ -29,13 +28,9 @@ public class CenterListFragmentTest extends ActivityInstrumentationTestCase2<Cen
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
-        Constants.applicationContext = getInstrumentation().getTargetContext().getApplicationContext();
         centersActivity = getActivity();
-
         //API wait for charging all centers
         Thread.sleep(6000);
-
         //instantiating view objects
         lv_centers_list = (ListView) centersActivity.findViewById(R.id.lv_center_list);
     }

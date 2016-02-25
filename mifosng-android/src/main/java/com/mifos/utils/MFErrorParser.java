@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.mifos.App;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,14 +36,11 @@ public class MFErrorParser {
             Log.d("MFErrorParser", out.toString());
             MFErrorResponse mfErrorResponse = new Gson().fromJson(out.toString(), MFErrorResponse.class);
             System.out.println(mfErrorResponse.toString());
-            List<MFError> mfErrorList =  mfErrorResponse.getErrors();
+            List<MFError> mfErrorList = mfErrorResponse.getErrors();
 
             for (MFError mfError : mfErrorList) {
-
-                Toast.makeText(Constants.applicationContext, mfError.getDefaultUserMessage(), Toast.LENGTH_LONG).show();
-
+                Toast.makeText(App.getContext(), mfError.getDefaultUserMessage(), Toast.LENGTH_LONG).show();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IllegalStateException e) {
