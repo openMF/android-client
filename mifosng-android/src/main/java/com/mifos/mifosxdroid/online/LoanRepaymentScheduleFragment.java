@@ -5,9 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -23,7 +22,6 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Period;
 import com.mifos.objects.accounts.loan.RepaymentSchedule;
 import com.mifos.utils.Constants;
-import com.mifos.utils.MifosApplication;
 
 import java.util.List;
 
@@ -36,8 +34,7 @@ import retrofit.client.Response;
 
 public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
 
-    private View rootView;
-    private SharedPreferences sharedPreferences;
+
     @InjectView(R.id.lv_repayment_schedule)
     ListView lv_repaymentSchedule;
     @InjectView(R.id.tv_total_paid)
@@ -47,7 +44,7 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
     @InjectView(R.id.tv_total_overdue)
     TextView tv_totalOverdue;
     private int loanAccountNumber;
-    private OnFragmentInteractionListener mListener;
+    private View rootView;
 
     public static LoanRepaymentScheduleFragment newInstance(int loanAccountNumber) {
         LoanRepaymentScheduleFragment fragment = new LoanRepaymentScheduleFragment();
@@ -60,39 +57,20 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
-        }
-
         setHasOptionsMenu(false);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_repayment_schedule, container, false);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         setToolbarTitle(getResources().getString(R.string.loan_repayment_schedule));
         ButterKnife.inject(this, rootView);
-
         inflateRepaymentSchedule();
-
         return rootView;
     }
 
-    /**
-     * Prepare the Screen's standard options menu to be displayed.  This is
-     * called right before the menu is shown, every time it is shown.  You can
-     * use this method to efficiently enable/disable items or otherwise
-     * dynamically modify the contents.  See
-     * {@link android.app.Activity#onPrepareOptionsMenu(android.view.Menu) Activity.onPrepareOptionsMenu}
-     * for more information.
-     *
-     * @param menu The options menu as last shown or first initialized by
-     *             onCreateOptionsMenu().
-     * @see #setHasOptionsMenu
-     * @see #onCreateOptionsMenu
-     */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
@@ -101,14 +79,13 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
 
     public void inflateRepaymentSchedule() {
         showProgress();
-        MifosApplication.getApi().loanService.getLoanRepaymentSchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
+        App.apiManager.getLoanRepaySchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
 
                 List<Period> listOfActualPeriods = loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods();
 
-                LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter =
-                        new LoanRepaymentScheduleAdapter(getActivity(), listOfActualPeriods);
+                LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter = new LoanRepaymentScheduleAdapter(getActivity(), listOfActualPeriods);
                 lv_repaymentSchedule.setAdapter(loanRepaymentScheduleAdapter);
 
                 String totalRepaymentsCompleted = getResources().getString(R.string.complete) + " : ";
@@ -118,11 +95,9 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
                 tv_totalPaid.setText(totalRepaymentsCompleted + String.valueOf(
                         RepaymentSchedule.getNumberOfRepaymentsComplete(listOfActualPeriods)
                 ));
-
                 tv_totalOverdue.setText(totalRepaymentsOverdue + String.valueOf(
                         RepaymentSchedule.getNumberOfRepaymentsOverDue(listOfActualPeriods)
                 ));
-
                 tv_totalUpcoming.setText(totalRepaymentsPending + String.valueOf(
                         RepaymentSchedule.getNumberOfRepaymentsPending(listOfActualPeriods)
                 ));
@@ -135,9 +110,5 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
                 hideProgress();
             }
         });
-    }
-
-    public interface OnFragmentInteractionListener {
-
     }
 }

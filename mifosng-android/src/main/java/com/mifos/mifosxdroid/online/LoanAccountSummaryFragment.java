@@ -5,12 +5,9 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,17 +21,17 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.services.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.MifosApplication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +68,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     public static int loanAccountNumber;
     public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
     private View rootView;
-    private SharedPreferences sharedPreferences;
 
     @InjectView(R.id.view_status_indicator)
     View view_status_indicator;
@@ -128,10 +124,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     private OnFragmentInteractionListener mListener;
     private LoanWithAssociations clientLoanWithAssociations;
 
-    public LoanAccountSummaryFragment() {
-        // Required empty public constructor
-    }
-
     public static LoanAccountSummaryFragment newInstance(int loanAccountNumber) {
         LoanAccountSummaryFragment fragment = new LoanAccountSummaryFragment();
         Bundle args = new Bundle();
@@ -143,89 +135,63 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
-        }
-
         //Necessary Call to add and update the Menu in a Fragment
         setHasOptionsMenu(true);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
-
         inflateLoanAccountSummary();
-
         return rootView;
     }
 
     private void inflateLoanAccountSummary() {
-
-        showProgress("Working...");
-
+        showProgress();
         setToolbarTitle(getResources().getString(R.string.loanAccountSummary));
-
         //TODO Implement cases to enable/disable repayment button
         bt_processLoanTransaction.setEnabled(false);
 
-        MifosApplication.getApi().loanService.getLoanByIdWithAllAssociations(loanAccountNumber, new Callback<LoanWithAssociations>() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        App.apiManager.getLoanById(loanAccountNumber, new Callback<LoanWithAssociations>() {
+
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
                 clientLoanWithAssociations = loanWithAssociations;
                 tv_clientName.setText(loanWithAssociations.getClientName());
-
-                try {
-                    Log.i("TAG", tv_clientName.getTag().toString());
-                } catch (Exception e) {
-
-                }
                 tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());
                 tv_loanAccountNumber.setText("#" + loanWithAssociations.getAccountNo());
                 tv_loan_officer.setText(loanWithAssociations.getLoanOfficerName());
                 //TODO Implement QuickContactBadge
                 //quickContactBadge.setImageToDefault();
 
-
                 bt_processLoanTransaction.setEnabled(true);
                 if (loanWithAssociations.getStatus().getActive()) {
                     inflateLoanSummary(loanWithAssociations);
-                    /*
-                     *   if Loan is already active
-                     *   the Transaction Would be Make Repayment
-                     */
+                    // if Loan is already active
+                    // the Transaction Would be Make Repayment
                     view_status_indicator.setBackgroundColor(getResources().getColor(R.color.light_green));
                     bt_processLoanTransaction.setText("Make Repayment");
                     processLoanTransactionAction = TRANSACTION_REPAYMENT;
 
                 } else if (loanWithAssociations.getStatus().getPendingApproval()) {
-
-                    /*
-                     *  if Loan is Pending for Approval
-                     *  the Action would be Approve Loan
-                     */
+                    // if Loan is Pending for Approval
+                    // the Action would be Approve Loan
                     view_status_indicator.setBackgroundColor(getResources().getColor(R.color.blue));
                     bt_processLoanTransaction.setText("Approve Loan");
                     processLoanTransactionAction = ACTION_APPROVE_LOAN;
                 } else if (loanWithAssociations.getStatus().getWaitingForDisbursal()) {
-                    /*
-                     *  if Loan is Waiting for Disbursal
-                     *  the Action would be Disburse Loan
-                     */
+                    // if Loan is Waiting for Disbursal
+                    // the Action would be Disburse Loan
                     view_status_indicator.setBackgroundColor(getResources().getColor(R.color.light_yellow));
                     bt_processLoanTransaction.setText("Disburse Loan");
                     processLoanTransactionAction = ACTION_DISBURSE_LOAN;
                 } else if (loanWithAssociations.getStatus().getClosedObligationsMet()) {
                     inflateLoanSummary(loanWithAssociations);
-                    /*
-                     *  if Loan is Closed after the obligations are met
-                     *  the make payment will be disabled so that no more payment can be collected
-                     */
+                    // if Loan is Closed after the obligations are met
+                    // the make payment will be disabled so that no more payment can be collected
                     view_status_indicator.setBackgroundColor(getResources().getColor(R.color.black));
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Make Repayment");
@@ -241,7 +207,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(getTag(), retrofitError.getLocalizedMessage());
                 Toaster.show(rootView, "Loan Account not found.");
                 hideProgress();
             }
@@ -251,8 +216,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
 
     @OnClick(R.id.bt_processLoanTransaction)
     public void onProcessTransactionClicked() {
-
-
         if (processLoanTransactionAction == TRANSACTION_REPAYMENT) {
             mListener.makeRepayment(clientLoanWithAssociations);
         } else if (processLoanTransactionAction == ACTION_APPROVE_LOAN) {
@@ -262,7 +225,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
         } else {
             Log.i(getActivity().getLocalClassName(), "TRANSACTION ACTION NOT SET");
         }
-
     }
 
     @Override
@@ -271,35 +233,16 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
-    /**
-     * Prepare the Screen's standard options menu to be displayed.  This is
-     * called right before the menu is shown, every time it is shown.  You can
-     * use this method to efficiently enable/disable items or otherwise
-     * dynamically modify the contents.  See
-     * {@link android.app.Activity#onPrepareOptionsMenu(android.view.Menu) Activity.onPrepareOptionsMenu}
-     * for more information.
-     *
-     * @param menu The options menu as last shown or first initialized by
-     *             onCreateOptionsMenu().
-     * @see #setHasOptionsMenu
-     * @see #onCreateOptionsMenu
-     */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-
         menu.clear();
-
         MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
-
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
         menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
@@ -316,44 +259,29 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
                 SUBMENU_ITEM_ID++;
             }
         }
-
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        Log.i("ID", "" + item.getItemId());
-
-        if (item.getItemId() == MENU_ITEM_REPAYMENT_SCHEDULE) {
+        if (item.getItemId() == MENU_ITEM_REPAYMENT_SCHEDULE)
             mListener.loadRepaymentSchedule(loanAccountNumber);
-        }
 
-        if (item.getItemId() == MENU_ITEM_LOAN_TRANSACTIONS) {
+        if (item.getItemId() == MENU_ITEM_LOAN_TRANSACTIONS)
             mListener.loadLoanTransactions(loanAccountNumber);
-        }
 
         if (item.getItemId() >= 0 && item.getItemId() < loanDataTables.size()) {
-
-            DataTableDataFragment dataTableDataFragment
-                    = DataTableDataFragment.newInstance(loanDataTables.get(item.getItemId()),
-                    loanAccountNumber);
+            DataTableDataFragment dataTableDataFragment = DataTableDataFragment.newInstance(loanDataTables.get(item.getItemId()), loanAccountNumber);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
             fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
             fragmentTransaction.commit();
         }
 
-        if (item.getItemId() == MENU_ITEM_DOCUMENTS) {
-
+        if (item.getItemId() == MENU_ITEM_DOCUMENTS)
             loadDocuments();
-
-        } else if (item.getItemId() == MENU_ITEM_SEARCH) {
-
+        else if (item.getItemId() == MENU_ITEM_SEARCH)
             getActivity().finish();
-        }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -362,9 +290,8 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
      * menu options
      */
     public void inflateDataTablesList() {
-
-        showProgress("Working...");
-        MifosApplication.getApi().dataTableService.getDatatablesOfLoan(new Callback<List<DataTable>>() {
+        showProgress();
+        App.apiManager.getLoanDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
                 if (dataTables != null) {
@@ -383,7 +310,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
                 hideProgress();
             }
         });
-
     }
 
     public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {
@@ -413,17 +339,13 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
         tv_total.setText(String.valueOf(loanWithAssociations.getSummary().getTotalExpectedRepayment()));
         tv_total_due.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOutstanding()));
         tv_total_paid.setText(String.valueOf(loanWithAssociations.getSummary().getTotalRepayment()));
-
     }
 
     //TODO : Add Support for Changing Dates
     public void approveLoan() {
-        LoanApprovalRequest loanApprovalRequest = new LoanApprovalRequest();
-        loanApprovalRequest.setApprovedOnDate(DateHelper.getCurrentDateAsDateFormat());
-
-        MifosApplication.getApi().loanService.approveLoanApplication(loanAccountNumber,
-                loanApprovalRequest,
-                new Callback<GenericResponse>() {
+        LoanApprovalRequest request = new LoanApprovalRequest();
+        request.setApprovedOnDate(DateHelper.getCurrentDateAsDateFormat());
+        App.apiManager.approveLoan(loanAccountNumber, request, new Callback<GenericResponse>() {
                     @Override
                     public void success(GenericResponse genericResponse, Response response) {
                         inflateLoanAccountSummary();
@@ -439,14 +361,12 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
 
     //TODO : Add Support for Changing Dates
     public void disburseLoan() {
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("dateFormat", "dd MM yyyy");
-        hashMap.put("actualDisbursementDate", DateHelper.getCurrentDateAsDateFormat());
-        hashMap.put("locale", "en");
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("dateFormat", "dd MM yyyy");
+        map.put("actualDisbursementDate", DateHelper.getCurrentDateAsDateFormat());
+        map.put("locale", "en");
 
-        MifosApplication.getApi().loanService.disburseLoan(loanAccountNumber,
-                hashMap,
-                new Callback<GenericResponse>() {
+        App.apiManager.disputeLoan(loanAccountNumber, map, new Callback<GenericResponse>() {
 
                     @Override
                     public void success(GenericResponse genericResponse, Response response) {

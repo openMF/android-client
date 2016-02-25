@@ -60,7 +60,6 @@ public class LoanFragment extends MifosBaseFragment {
         List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)).list();
         Log.i(tag, "Looking for loan with client ID:" + clientId);
         Log.i(tag, "Loans in ClientFragment from DB:" + loanList.toString());
-
         loansClientHave.addAll(loanList);
         return loansClientHave;
     }
