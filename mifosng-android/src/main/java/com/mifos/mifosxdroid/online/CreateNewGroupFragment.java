@@ -283,7 +283,7 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
     private void initiateGroupCreation(GroupPayload groupPayload) {
         //TextField validations
 
-        if (!isValidFirstName()) {
+        if (!isValidGroupName()) {
             return;
         }
         else {
@@ -344,24 +344,11 @@ public class CreateNewGroupFragment extends Fragment implements MFDatePicker.OnD
 
     }
 
-    public boolean isValidFirstName() {
+    public boolean isValidGroupName() {
         try {
             if (TextUtils.isEmpty(et_groupName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_cannot_be_empty));
             }
-
-            if (et_groupName.getEditableText().toString().trim().length() < 4 && et_groupName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
-            }
-            if (!et_groupName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
-            }
-        } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
         } catch (RequiredFieldException e) {
             e.notifyUserWithToast(getActivity());
             result = false;

@@ -281,6 +281,12 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
 
+        if (!isValidCentreName()) {
+            return;
+        }
+
+        else {
+
             safeUIBlockingUtility.safelyBlockUI();
 
             ((MifosApplication) getActivity().getApplicationContext()).api.centerService.createCenter(centerPayload, new Callback<Center>() {
@@ -297,6 +303,7 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                     Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
                 }
             });
+        }
         }
 
 
@@ -335,24 +342,11 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
     }
 
-    public boolean isValidFirstName() {
+    public boolean isValidCentreName() {
         try {
             if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_cannot_be_empty));
             }
-
-            if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
-            }
-            if (!et_centerName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
-            }
-        } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
         } catch (RequiredFieldException e) {
             e.notifyUserWithToast(getActivity());
             result = false;

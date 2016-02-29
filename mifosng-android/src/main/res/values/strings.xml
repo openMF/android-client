@@ -227,7 +227,7 @@
     <string name="large_text">Large Text</string>
     <string name="product_name">Product Name</string>
     <string name="valid">Valid</string>
-    <string name="error_should_contain_only">should contain only</string>
+    <string name="error_should_contain_only">should contain only </string>
     <string name="error_cannot_be_empty">cannot be empty</string>
     <string name="first_name">First name</string>
     <string name="mobile_no">Mobile Number</string>
