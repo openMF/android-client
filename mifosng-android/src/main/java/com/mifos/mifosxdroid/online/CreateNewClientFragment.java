@@ -437,15 +437,13 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         if (!isValidFirstName()) {
             return;
         }
-        if (!isValidMiddleName()) {
-            return;
-        }
         if (!isValidLastName()) {
             return;
         }
-        if (!isValidMobileNo()) {
+        //Mobile number validation is kept here commented so that if needed we can reuse it
+        /*if (!isValidMobileNo()) {
             return;
-        }
+        }*/
         //Date validation : check for date less than or equal to current date
         if (!isValidDate()) {
             Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
@@ -511,70 +509,30 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
             if (TextUtils.isEmpty(et_clientFirstName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_cannot_be_empty));
             }
-            if (et_clientFirstName.getEditableText().toString().trim().length() < 4 && et_clientFirstName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
-            }
             if (!et_clientFirstName.getEditableText().toString().matches("[a-zA-Z]+")) {
                 throw new InvalidTextInputException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
             }
-        } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
         } catch (RequiredFieldException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        }
+        catch (InvalidTextInputException e) {
             e.notifyUserWithToast(getActivity());
             result = false;
         }
         return result;
     }
-
-    public boolean isValidMiddleName() {
-        try {
-            if (TextUtils.isEmpty(et_clientMiddleName.getEditableText().toString())) {
-                throw new RequiredFieldException(getResources().getString(R.string.middle_name), getResources().getString(R.string.error_cannot_be_empty));
-            }
-
-            if (et_clientMiddleName.getEditableText().toString().trim().length() < 4 && et_clientMiddleName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.middle_name), 4);
-            }
-            if (!et_clientMiddleName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.middle_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
-            }
-        } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (RequiredFieldException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        }
-
-        return result;
-    }
-
     public boolean isValidLastName() {
         result = true;
         try {
             if (TextUtils.isEmpty(et_clientLastName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.last_name), getResources().getString(R.string.error_cannot_be_empty));
             }
-
-            if (et_clientLastName.getEditableText().toString().trim().length() < 4 && et_clientFirstName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.last_name), 4);
-            }
-
             if (!et_clientLastName.getEditableText().toString().matches("[a-zA-Z]+")) {
                 throw new InvalidTextInputException(getResources().getString(R.string.last_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
             }
 
         } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
             e.notifyUserWithToast(getActivity());
             result = false;
         } catch (RequiredFieldException e) {

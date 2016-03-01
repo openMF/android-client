@@ -5,8 +5,10 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +24,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +76,8 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     private String dateString;
     private String dateofsubmissionstring;
     private DialogFragment mfDatePicker;
+    Boolean result = true;
+    SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
@@ -207,21 +215,27 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
         showProgress();
-        App.apiManager.createCenter(centerPayload, new Callback<Center>() {
-            @Override
-            public void success(Center center, Response response) {
-                Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
-                hideProgress();
-            }
+        if (!isValidCentreName()) {
+            return;
+        } else {
+            {
+                showProgress();
+                App.apiManager.createCenter(centerPayload, new Callback<Center>() {
+                    @Override
+                    public void success(Center client, Response response) {
+                        hideProgress();
+                        Toaster.show(rootView, "Client created successfully");
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                hideProgress();
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+                    @Override
+                    public void failure(RetrofitError error) {
+                        hideProgress();
+                        Toaster.show(rootView, "Error creating client");
+                    }
+                });
             }
-        });
+        }
     }
-
 
     public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
@@ -248,5 +262,23 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
 
     public void onDatePicked(String date) {
         tv_submissionDate.setText(date);
+    }
+
+    public boolean isValidCentreName() {
+        try {
+            if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
+                throw new RequiredFieldException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_cannot_be_empty));
+            }
+        } catch (RequiredFieldException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        }
+        return result;
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
     }
 }

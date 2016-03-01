@@ -6,6 +6,8 @@
 package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +73,10 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        ((MifosBaseActivity) getActivity()).replaceFragment(new SurveyListFragment(), false, R.id.container);
+        FragmentManager fragmentManager=getFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container,new SurveyListFragment() , "SurveyListFragment");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
