@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/RelativeLayout.Base">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
 
     <ScrollView
         style="@style/ScrollView.Login"
@@ -44,7 +45,8 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone">
 
-                <LinearLayout style="@style/LinearLayout.Width">
+                <LinearLayout style="@style/LinearLayout.Width"
+                    android:baselineAligned="false">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/urlWrapper"
@@ -81,6 +83,7 @@
                     android:id="@+id/tv_constructed_instance_url"
                     style="@style/TextView.Base"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginTop="16dp" />
 
 
