@@ -1,0 +1,17 @@
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mifos.mifosxdroid.online.ClientActivity">
+
+    <item
+        android:id="@+id/save_pin"
+        android:enabled="true"
+        android:title="Save pin"
+        app:showAsAction="always" />
+
+</menu>

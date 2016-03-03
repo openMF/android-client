@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -92,6 +93,19 @@
             android:name=".CenterListActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".activity.PinpointClientActivity"
+            android:label="@string/pinpoint"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.PathTrackingActivity"
+            android:label="@string/track_path"
+            android:screenOrientation="portrait" />
+
+
+        <service android:name=".LocationService" />
+
         <meta-data
             android:name="DATABASE"
             android:value="mifos.db" />
@@ -115,6 +129,9 @@
             android:name="com.crashlytics.ApiKey"
             android:value="b781afbde2e7db1df8455861d3f5d59c158f3bff" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAfMi31d35olEcgYDRTB28gXV8kbH7LOMw" />
     </application>
 
 </manifest>

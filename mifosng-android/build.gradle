@@ -112,6 +112,8 @@ dependencies {
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4.2'
+
     compile 'com.android.support:design:23.1.1'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:23.0.1'

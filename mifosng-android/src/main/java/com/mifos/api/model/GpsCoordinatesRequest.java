@@ -5,6 +5,8 @@
 
 package com.mifos.api.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Represents the GPS coordinates request to set the client location.
  */
@@ -20,6 +22,12 @@ public class GpsCoordinatesRequest
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
+    public GpsCoordinatesRequest(LatLng latLng) {
+        this.latitude = latLng.latitude;
+        this.longitude = latLng.longitude;
+    }
+
 
     public double getLongitude() {
         return longitude;

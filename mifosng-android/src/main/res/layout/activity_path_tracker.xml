@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
+
+    <include layout="@layout/toolbar" />
+
+    <Button
+        android:id="@+id/start"
+        style="@style/Button.Base"
+        android:enabled="false"
+        android:text="Start tracking" />
+
+    <Button
+        android:id="@+id/stop"
+        style="@style/Button.Base"
+        android:enabled="false"
+        android:text="Stop tracking" />
+
+</LinearLayout>
