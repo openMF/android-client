@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -83,12 +84,19 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
         if (etStaffId.getText().toString().length() > 0
                 && tvSelectDate.getText().toString().length() > 0
                 && etBranchId.getText().toString().length() > 0) {
-            staffId = Integer.parseInt(etStaffId.getEditableText().toString());
             date = tvSelectDate.getText().toString();
-            branchId = Integer.parseInt(etBranchId.getEditableText().toString());
+            try {
+                staffId = Integer.parseInt(etStaffId.getEditableText().toString());
+                branchId = Integer.parseInt(etBranchId.getEditableText().toString());
+            }
+            catch (NumberFormatException e){
+                Log.d("OfflineCenter", "Entered text not int");
+                Toaster.show(findViewById(android.R.id.content), "Please enter integers and try again");
+                isAllDetailsFilled = false;
+            }
         } else {
             isAllDetailsFilled = false;
-            Toaster.show(findViewById(android.R.id.content), "Please fill all the details");
+            Toaster.show(findViewById(android.R.id.content), "Please fill all the details correctly");
         }
         return isAllDetailsFilled;
     }
