@@ -98,11 +98,13 @@ public class ClientListFragment extends MifosBaseFragment {
         });
         // If the parent fragment is Group Fragment then the list of clients does not
         // require an infinite scroll as all the clients will be loaded at once
+        hideProgress();
         if (isInfiniteScrollEnabled)
             setInfiniteScrollListener(clientNameListAdapter);
     }
 
     public void fetchClientList() {
+        showProgress();
         if (clientList.size() > 0) {
             inflateClientList();
         } else {
@@ -120,6 +122,7 @@ public class ClientListFragment extends MifosBaseFragment {
                 public void failure(RetrofitError retrofitError) {
                     swipeRefreshLayout.setRefreshing(false);
                     Toaster.show(rootView, "There was some error fetching list.");
+                    hideProgress();
                 }
             });
         }
