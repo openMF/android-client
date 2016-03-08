@@ -26,6 +26,7 @@ import com.mifos.objects.survey.ScorecardValues;
 import com.mifos.api.model.ScorecardPayload;
 import com.mifos.utils.MyPreference;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -91,6 +92,9 @@ public class SurveyLastFragment extends Fragment implements Communicator {
         super.onActivityCreated(savedInstanceState);
         myPreference = new MyPreference();
         scorecardValues = myPreference.getScorecards(activity);
+        if(scorecardValues == null) {
+            scorecardValues = new ArrayList<ScorecardValues>();
+        }
 
     }
 
