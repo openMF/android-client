@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.exceptions.InvalidTextInputException;
+import com.mifos.exceptions.RequiredFieldException;
+import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -67,6 +71,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     int officeId;
     int staffId;
     private View rootView;
+    Boolean result = true;
     private String dateString;
     private String dateofsubmissionstring;
     private DialogFragment mfDatePicker;
@@ -206,20 +211,26 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     }
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
-        showProgress();
-        App.apiManager.createCenter(centerPayload, new Callback<Center>() {
-            @Override
-            public void success(Center center, Response response) {
-                Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
-                hideProgress();
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                hideProgress();
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
+        if (!isValidCenterName()) {
+            return;
+        }
+        else {
+            showProgress();
+            App.apiManager.createCenter(centerPayload, new Callback<Center>() {
+                @Override
+                public void success(Center center, Response response) {
+                    Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
+                    hideProgress();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    hideProgress();
+                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
 
@@ -248,5 +259,29 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
 
     public void onDatePicked(String date) {
         tv_submissionDate.setText(date);
+    }
+
+    public boolean isValidCenterName() {
+        try {
+            if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
+                throw new RequiredFieldException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_cannot_be_empty));
+            }
+            if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName.getEditableText().toString().trim().length() > 0) {
+                throw new ShortOfLengthException(getResources().getString(R.string.center_name), 4);
+            }
+            if (!et_centerName.getEditableText().toString().matches("[a-zA-Z]+")) {
+                throw new InvalidTextInputException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+            }
+        } catch (InvalidTextInputException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        } catch (ShortOfLengthException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        } catch (RequiredFieldException e) {
+            e.notifyUserWithToast(getActivity());
+            result = false;
+        }
+        return result;
     }
 }
