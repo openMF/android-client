@@ -59,7 +59,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CreateNewClientFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewClientFragment extends MifosBaseFragment {
 
     private static final String TAG = "CreateNewClient";
 
@@ -473,7 +473,12 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 
 
     public void inflateSubmissionDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInsance(new MFDatePicker.OnDatePickListener() {
+            @Override
+            public void onDatePicked(String date) {
+                tv_submissionDate.setText(date);
+            }
+        });
         tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -481,29 +486,22 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
-
     }
 
     public void inflateDateofBirth() {
-        newDatePicker = MFDatePicker.newInsance(this);
-
+        newDatePicker = MFDatePicker.newInsance(new MFDatePicker.OnDatePickListener() {
+            @Override
+            public void onDatePicked(String date) {
+                tv_dateofbirth.setText(date);
+            }
+        });
         tv_dateofbirth.setText(MFDatePicker.getDatePickedAsString());
-
         tv_dateofbirth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
-
         });
-
-
-    }
-
-    public void onDatePicked(String date) {
-        tv_submissionDate.setText(date);
-        tv_dateofbirth.setText(date);
-
     }
 
     public boolean isValidFirstName() {
