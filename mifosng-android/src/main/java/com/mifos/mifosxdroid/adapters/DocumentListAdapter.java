@@ -80,8 +80,10 @@ public class DocumentListAdapter extends BaseAdapter {
 
         //TODO Implement Local Storage Check to show File Download Info
         //Iconify.IconValue storageIcon = Iconify.IconValue.fa_hdd_o;
+        try{
+            reusableDocumentViewHolder.tv_doc_location_icon.setText(cloudIcon.character());
+        }catch(Exception e){}
 
-        reusableDocumentViewHolder.tv_doc_location_icon.setText(cloudIcon.character());
 
 //        Iconify.addIcons(reusableDocumentViewHolder.tv_doc_location_icon);
 
