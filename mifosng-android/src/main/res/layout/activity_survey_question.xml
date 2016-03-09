@@ -11,7 +11,7 @@
 
     <include layout="@layout/toolbar"
         />
-    <com.mifos.mifosxdroid.widgets.NonSwipeableViewPager
+    <android.support.v4.view.ViewPager
         android:id="@+id/surveyPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,13 +21,23 @@
         android:gravity="center" android:measureWithLargestChild="true"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_weight="0">
+        <Button android:id="@+id/btnPrevious"
+            android:layout_width="200dp" android:layout_height="wrap_content"
+            android:visibility= "gone"
+            android:text="Previous">
+        </Button>
 
         <Button android:id="@+id/btnNext"
-            android:layout_width="200dp" android:layout_height="wrap_content"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:visibility= "visible"
             android:text="Next">
+        </Button>
+        <Button android:id="@+id/btnSubmit"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:visibility= "invisible"
+            android:text="Submit">
         </Button>
 
 
     </LinearLayout>
 </LinearLayout>
-

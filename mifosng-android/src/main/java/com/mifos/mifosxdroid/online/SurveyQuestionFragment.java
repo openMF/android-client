@@ -5,11 +5,13 @@
 
 
 package com.mifos.mifosxdroid.online;
-
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import com.mifos.objects.survey.Survey;
+import com.mifos.objects.survey.ScorecardValues;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +20,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.HashSet;
+import java.util.List;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.survey.ScorecardValues;
-import com.mifos.objects.survey.Survey;
+import com.mifos.App;
 import com.mifos.utils.MyPreference;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -32,9 +33,9 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyQuestionFragment extends Fragment implements View.OnClickListener {
+public class SurveyQuestionFragment extends Fragment {
     public interface OnAnswerSelectedListener {
-        public void answer(int id, int qid, int rid, int rvalue);
+        public void answer(int id, int qid,int rid,int rvalue,int chk);
     }
 
     // static Strings to retrieve the  question and its answers and show them.
@@ -44,10 +45,16 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
     public static final String ANSWERS = "answers";
     public static final String ID = "id";
     public static final String SID = "sid";
+    public static final String QSIZE = "qsize";
+    //public static final int chk = 1;
+    SharedPreferences sharedPreferences;
 
     private OnAnswerSelectedListener mCallback;
+    List<ScorecardValues> scorecardValues ;
+    ScorecardValues scorevalue;
 
     private TextView tvQuestion;
+    private TextView tvQuestionNo;
     private RadioGroup radioGroup1;
     RadioButton button1;
     RadioButton btn;
@@ -55,20 +62,25 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
     Context thiscontext;
     private Activity activity;
     private String text1;
+    private boolean selected;
 
     private int Id;
     private int surveyId;
     private String[] answerarray;
     private int qId;
+    private int qSize;
+    private int qNo;
     private int rId;
+
     private int rValue;
     MyPreference myPreference;
 
-    public static final SurveyQuestionFragment newInstance(int id, String question, int sid, String[] answers) {
+    public static final SurveyQuestionFragment newInstance(int id, String question,int sid, String[] answers,int qsize) {
         SurveyQuestionFragment fragment = new SurveyQuestionFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ID, id);
         bundle.putInt(SID, sid);
+        bundle.putInt(QSIZE, qsize);
         bundle.putString(QUESTION, question);
         bundle.putStringArray(ANSWERS, answers);
         fragment.setArguments(bundle);
@@ -86,17 +98,17 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_survey_question, container, false);
         tvQuestion = (TextView) view.findViewById(R.id.survey_question_textView);
+        tvQuestionNo = (TextView) view.findViewById(R.id.survey_question_no);
         thiscontext = container.getContext();
         radioGroup1 = (RadioGroup) view.findViewById(R.id.radio1);
-        btnNext = (Button) view.findViewById(R.id.bt_next);
-
-
-        btnNext.setOnClickListener(this);
-
         Id = getArguments().getInt(ID);
+        qNo = Id+1;
         surveyId = getArguments().getInt(SID);
-        answerarray = getArguments().getStringArray(ANSWERS);
+        qSize = getArguments().getInt(QSIZE);
+        answerarray =getArguments().getStringArray(ANSWERS);
         setQuestion(getArguments().getString(QUESTION));
+
+
         // setAnswers(getArguments().getStringArray(ANSWERS));
         ViewGroup hourButtonLayout = (ViewGroup) view.findViewById(R.id.radio1);
         for (int i = 0; i < answerarray.length; i++) {
@@ -110,10 +122,54 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
                     for (int i = 0; i < mRadioGroup2.getChildCount(); i++) {
                         btn = (RadioButton) mRadioGroup2.getChildAt(i);
                         int t = mRadioGroup2.getId();
+
                         System.out.println(t);
 
                         if (btn.getId() == checkedId2) {
+
                             text1 = btn.getText().toString();
+                            App.apiManager.getSurvey(surveyId, new Callback<Survey>() {
+                                @Override
+                                public void success(final Survey survey, Response response) {
+
+                                    if (survey != null) {
+
+                                        String qa = tvQuestion.getText().toString();
+                                        int ival = 0;
+                                        int k = 0;
+
+
+                                        if (survey.getQuestionDatas() != null && survey.getQuestionDatas().size() > 0) {
+                                            for (int i = 0; i < survey.getQuestionDatas().size(); i++) {
+                                                if (survey.getQuestionDatas().get(i).getText().equals(qa)) {
+                                                    qId = survey.getQuestionDatas().get(i).getQuestionId();
+                                                    ival = i;
+                                                    qSize = survey.getQuestionDatas().size();
+                                                }
+                                            }
+
+                                            for (int j = 0; j < survey.getQuestionDatas().get(ival).getResponseDatas().size(); j++) {
+                                                if (survey.getQuestionDatas().get(ival).getResponseDatas().get(j).getText().equals(text1)) {
+                                                    rId = survey.getQuestionDatas().get(ival).getResponseDatas().get(j).getResponseId();
+                                                    rValue = survey.getQuestionDatas().get(ival).getResponseDatas().get(j).getValue();
+
+                                                }
+
+
+                                            }
+                                            int chk = 1;
+                                            mCallback.answer(Id, qId, rId, rValue, chk);
+
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError retrofitError) {
+                                    Toast.makeText(getActivity(), "survey not found", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
 
                             return;
                         }
@@ -122,7 +178,7 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
             });
         }
 
-
+        tvQuestionNo.setText("question " + qNo + " of " +qSize);
         return view;
     }
 
@@ -138,65 +194,20 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
         }
     }
 
-
-    public void setQuestion(String question) {
+    public void setQuestion(String question){
         tvQuestion.setText(question);
+
     }
 
     @Override
-    public void onClick(View v) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        switch (v.getId()) {
+    }
+    @Override
+    public void onPause() {
 
-            case R.id.bt_next:
+        super.onPause();
 
-                App.apiManager.getSurvey(surveyId, new Callback<Survey>() {
-                    @Override
-                    public void success(final Survey survey, Response response) {
-
-                        if (survey != null) {
-
-                            String qa = tvQuestion.getText().toString();
-                            int ival = 0;
-                            int k = 0;
-
-                            if (survey.getQuestionDatas() != null && survey.getQuestionDatas().size() > 0) {
-                                for (int i = 0; i < survey.getQuestionDatas().size(); i++) {
-                                    if (survey.getQuestionDatas().get(i).getText().equals(qa)) {
-                                        qId = survey.getQuestionDatas().get(i).getQuestionId();
-                                        ival = i;
-                                    }
-                                }
-
-                                for (int j = 0; j < survey.getQuestionDatas().get(ival).getResponseDatas().size(); j++) {
-                                    if (survey.getQuestionDatas().get(ival).getResponseDatas().get(j).getText().equals(text1)) {
-                                        rId = survey.getQuestionDatas().get(ival).getResponseDatas().get(j).getResponseId();
-                                        rValue = survey.getQuestionDatas().get(ival).getResponseDatas().get(j).getValue();
-
-                                    }
-
-
-                                }
-
-                                ScorecardValues scorevalue = new ScorecardValues();
-
-                                scorevalue.setQuestionId(qId);
-                                scorevalue.setResponseId(rId);
-                                scorevalue.setValue(rValue);
-                                myPreference.addScorecard(activity, scorevalue);
-                                mCallback.answer(Id, qId, rId, rValue);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toast.makeText(getActivity(), "survey not found", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-                break;
-        }
     }
 }
-

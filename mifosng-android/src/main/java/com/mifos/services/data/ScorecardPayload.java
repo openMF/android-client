@@ -2,14 +2,15 @@
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.api.model;
+package com.mifos.services.data;
 import com.mifos.objects.survey.ScorecardValues;
 
 import java.util.Date;
 import java.util.List;
 
+
 /**
- * Created by Nasim Banu on 28,January,2016.
+ * Created by Nasim Banu on 09,March,2016.
  */
 public class ScorecardPayload {
     private int userId;
@@ -50,5 +51,4 @@ public class ScorecardPayload {
         this.scorecardValues = scorecardValues;
     }
 }
-
 

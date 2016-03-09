@@ -18,15 +18,13 @@ import java.util.List;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class MyPreference {
+public class  MyPreference {
     public static final String PREFS_NAME = "MY_PREFS";
     public static final String SCOREVALUES = "Score_Values";
     public static final String question_id = "question_id";
     public static final String response_id = "response_id";
     public static final String response_value = "response_value";
 
-    //Context mcontext;
-    // private SharedPreferences sharedPreference;
 
     public MyPreference (){
         super();
@@ -60,7 +58,23 @@ public class MyPreference {
     }
 
 
-
+    public boolean checkScoreQid(Context context,ScorecardValues checkProduct) {
+        boolean check = false;
+        List<ScorecardValues> scorecardValues = getScorecards(context);
+        if (scorecardValues != null) {
+            for (ScorecardValues product : scorecardValues) {
+                if (product.getQuestionId() == checkProduct.getQuestionId()) {
+                    product.setResponseId(checkProduct.getResponseId()) ;
+                    product.setValue(checkProduct.getValue());
+                    // removeFavorite(context,product);
+                    check = true;
+                    break;
+                }
+            }
+            saveScorecards(context, scorecardValues);
+        }
+        return check;
+    }
 
     public void resetScorecard(Context context) {
         SharedPreferences settings;
@@ -95,4 +109,3 @@ public class MyPreference {
         return (ArrayList<ScorecardValues>) scorecardValues;
     }
 }
-

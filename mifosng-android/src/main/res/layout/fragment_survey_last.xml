@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:text="Thanks for taking Survey "
+        android:text="Press submit button to post your responses. "
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="italic" />
 
