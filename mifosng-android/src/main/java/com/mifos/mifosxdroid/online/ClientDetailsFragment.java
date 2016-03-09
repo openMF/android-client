@@ -109,6 +109,12 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     TextView tv_externalId;
     @InjectView(R.id.tv_activationDate)
     TextView tv_activationDate;
+    @InjectView(R.id.tv_staffOfficer)
+    TextView tv_staffOfficer;
+    @InjectView(R.id.tv_loanCycle)
+    TextView tv_loan_cycle_number;
+    @InjectView(R.id.tv_groupNames)
+    TextView tv_groupNames;
     @InjectView(R.id.tv_office)
     TextView tv_office;
     @InjectView(R.id.iv_clientImage)
@@ -290,7 +296,16 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                     setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
                     tv_fullName.setText(client.getDisplayName());
                     tv_accountNumber.setText(client.getAccountNo());
+                    tv_staffOfficer.setText(client.getStaffName());
+                    tv_groupNames.setText(client.getAllGroupName());
                     tv_externalId.setText(client.getExternalId());
+
+                    if(TextUtils.isEmpty(client.getAllGroupName()) || client.getAllGroupName() == null)
+                        rowGroup.setVisibility(View.GONE);
+
+                    if (TextUtils.isEmpty(client.getStaffName()) || client.getStaffName() == null)
+                        rowStaff.setVisibility(View.GONE);
+
                     if (TextUtils.isEmpty(client.getAccountNo()))
                         rowAccount.setVisibility(GONE);
 
@@ -374,6 +389,11 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         App.apiManager.getClientAccounts(clientId, new Callback<ClientAccounts>() {
             @Override
             public void success(final ClientAccounts clientAccounts, Response response) {
+                if(!clientAccounts.isNullOrEmpty()){
+                    tv_loan_cycle_number.setText(String.format("%d", clientAccounts.getLoanAccounts().get(0).getLoanCycle()));
+                }
+                else rowLoan.setVisibility(GONE);
+
                 // Proceed only when the fragment is added to the activity.
                 if (!isAdded()) {
                     return;

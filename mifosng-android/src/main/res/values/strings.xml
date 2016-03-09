@@ -35,6 +35,11 @@
     <string name="mifos" translatable="false">Mifos</string>
     <string name="full_name">Name</string>
     <string name="account_number">Account Number</string>
+
+    <string name="row_loan_cycle">Loan Cycle</string>
+    <string name="row_staff_officer_name">Staff</string>
+    <string name="row_group_name">Group</string>
+
     <string name="external_id">External ID</string>
     <string name="nominal">Nominal annual intrest </string>
     <string name="submittedon">Submitted On</string>

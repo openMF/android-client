@@ -29,6 +29,10 @@ public class ClientDetailsFragmentTest extends ActivityInstrumentationTestCase2<
 
     ImageView iv_client_image;
     TextView tv_full_name;
+    TextView tv_loan_officer_name;
+    TextView tv_loan_cycle_number;
+    TextView tv_group_name;
+
     TableLayout tbl_client_details;
     RelativeLayout loans, savings, recurring;
 
@@ -51,6 +55,11 @@ public class ClientDetailsFragmentTest extends ActivityInstrumentationTestCase2<
 
         iv_client_image = (ImageView) clientActivity.findViewById(R.id.iv_clientImage);
         tv_full_name = (TextView) clientActivity.findViewById(R.id.tv_fullName);
+
+        tv_group_name = (TextView) clientActivity.findViewById(R.id.tv_groupName);
+        tv_loan_cycle_number = (TextView) clientActivity.findViewById(R.id.tv_loanCycle);
+        tv_loan_officer_name = (TextView) clientActivity.findViewById(R.id.tv_loanOfficer);
+
         tbl_client_details = (TableLayout) clientActivity.findViewById(R.id.tbl_clientDetails);
         loans = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_loans);
         savings = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_savings);
