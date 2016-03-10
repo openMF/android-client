@@ -239,6 +239,7 @@
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
     <string name="menu_remove_photo">Remove photo</string>
+	<string name="menu_gallery_photo">Upload from Gallery</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
     <string name="failed_to_capture_image">Failed to capture image</string>
@@ -263,7 +264,7 @@
 
 
 
-    <string-array name="office_ids">
+	<string-array name="office_ids">
         <item>Head Office</item>
         <item>Office 1 </item>
         <item>office 2</item>
