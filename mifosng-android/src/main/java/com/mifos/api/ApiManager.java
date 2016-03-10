@@ -15,6 +15,7 @@ import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.api.model.ScorecardPayload;
+import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;

@@ -15,38 +15,43 @@ import com.mifos.objects.client.Client;
 
 import java.util.List;
 
-public class CentersActivity extends MifosBaseActivity implements CenterListFragment.OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener {
-
+public class CentersActivity extends MifosBaseActivity implements
+        CenterListFragment.OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener
+{
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         replaceFragment(new CenterListFragment(), false, R.id.container);
     }
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.centers, menu);
         return true;
     }
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void loadGroupsOfCenter(int centerId) {
+    public void loadGroupsOfCenter(int centerId)
+    {
         replaceFragment(GroupListFragment.newInstance(centerId), true, R.id.container);
     }
 
     @Override
-    public void loadCollectionSheetForCenter(int centerId, String collectionDate, int calenderInstanceId) {
+    public void loadCollectionSheetForCenter(int centerId, String collectionDate, int calenderInstanceId)
+    {
         replaceFragment(CollectionSheetFragment.newInstance(centerId, collectionDate, calenderInstanceId), true, R.id.container);
     }
 
     @Override
-    public void loadClientsOfGroup(List<Client> clientList) {
+    public void loadClientsOfGroup(List<Client> clientList)
+    {
         replaceFragment(ClientListFragment.newInstance(clientList, true), true, R.id.container);
     }
 }
