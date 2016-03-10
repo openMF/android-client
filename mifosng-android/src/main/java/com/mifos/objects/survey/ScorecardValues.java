@@ -47,4 +47,11 @@ public class ScorecardValues {
     public void setValue(Integer value) {
         this.value = value;
     }
+    public boolean equals(ScorecardValues v) {
+        if (v == null) return false;
+
+        return ((this.questionId == v.questionId)
+                && (this.responseId == v.responseId)
+                && (this.value == v.value));
+    }
 }

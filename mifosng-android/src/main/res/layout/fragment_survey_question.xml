@@ -17,7 +17,7 @@
 
         android:padding="20dp"
         android:background="@color/primary"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/survey_question_textView"
@@ -26,8 +26,17 @@
             android:layout_gravity="center"
             android:textSize="25sp"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="20dip"
+
             android:text="Question"/>
+        <TextView
+            android:id="@+id/survey_question_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+
+            />
 
     </LinearLayout>
     <RadioGroup
@@ -42,15 +51,10 @@
     <View android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1" ></View>
-    <Button
-        android:id="@+id/bt_next"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity= "center"
 
-        android:text="Save" />
 
 
 </LinearLayout>
+
 
 
