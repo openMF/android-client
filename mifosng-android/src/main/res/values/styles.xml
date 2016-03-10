@@ -12,7 +12,7 @@
 
     <style name="MaterialAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/accent</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryDark">@color/primary_light</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorButtonNormal">@color/primary</item>
         <item name="android:buttonStyle">@style/AppTheme.Button</item>

@@ -4,6 +4,7 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.api.model.APIEndPoint;

@@ -31,7 +31,8 @@ public class DocumentListAdapter extends BaseAdapter {
     Context context;
     List<Document> documents = new ArrayList<Document>();
 
-    public DocumentListAdapter(Context context, List<Document> documents) {
+    public DocumentListAdapter(Context context, List<Document> documents)
+    {
 
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
@@ -60,13 +61,14 @@ public class DocumentListAdapter extends BaseAdapter {
 
         ReusableDocumentViewHolder reusableDocumentViewHolder;
 
-        if (view == null) {
-
+        if (view == null)
+        {
             view = layoutInflater.inflate(R.layout.row_document_list, null);
             reusableDocumentViewHolder = new ReusableDocumentViewHolder(view);
             view.setTag(reusableDocumentViewHolder);
-        } else {
-
+        }
+        else
+        {
             reusableDocumentViewHolder = (ReusableDocumentViewHolder) view.getTag();
         }
 
@@ -97,7 +99,10 @@ public class DocumentListAdapter extends BaseAdapter {
         @InjectView(R.id.tv_doc_location_icon)
         TextView tv_doc_location_icon;
 
-        public ReusableDocumentViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableDocumentViewHolder(View view)
+        {
+            ButterKnife.inject(this, view);
+        }
 
     }
 }
