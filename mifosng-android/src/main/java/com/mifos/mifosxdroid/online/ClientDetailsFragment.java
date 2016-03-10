@@ -1,20 +1,17 @@
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.net.Uri;
+
+import android.media.Image;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.provider.MediaStore;
+
+
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
@@ -24,7 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
+
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -60,9 +57,28 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 
+
+
+
+
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+
+
+
+
 import org.apache.http.HttpStatus;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -134,6 +150,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     private View rootView;
     private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
+    private File uploadedClientImage;
     // Null if play services are not available.
     private GoogleApiClient mGoogleApiClient;
     // True if play services are available and location services are connected.
@@ -193,8 +210,24 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK)
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
             uploadImage(capturedClientImageFile);
+        }
+        try {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                selectedImagePath = getPath(selectedImageUri);
+                System.out.println("Image Path : " + selectedImagePath);
+                File uploadImg = new File(selectedImagePath);
+                pb_imageProgressBar.setVisibility(VISIBLE);
+                iv_clientImage.setImageURI(selectedImageUri);
+                uploadImage(uploadImg);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -247,13 +280,30 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
             }
         });
     }
+    private static final int SELECT_PICTURE = 1;
+    void  uploadImageFromGallery()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
 
-    /**
-     * A service to upload the image of the client.
-     *
-     * @param pngFile - PNG images supported at the moment
-     */
-    private void uploadImage(File pngFile) {
+    private String selectedImagePath;
+
+
+
+    @Deprecated
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+
+    private void uploadImage(final File pngFile) {
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(VISIBLE);
         App.apiManager.uploadClientImage(clientId,
@@ -268,13 +318,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
-                        Toaster.show(rootView, "Failed to update image");
+
                         imageLoadingAsyncTask = new ImageLoadingAsyncTask();
                         imageLoadingAsyncTask.execute(clientId);
                     }
                 }
         );
     }
+
 
     /**
      * Use this method to fetch and inflate client details
@@ -342,6 +393,10 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                                             break;
                                         case R.id.client_image_remove:
                                             deleteClientImage();
+                                            break;
+
+                                        case R.id.client_image_upload:
+                                            uploadImageFromGallery();
                                             break;
                                         default:
                                             Log.e("ClientDetailsFragment", "Unrecognized client image menu item");
