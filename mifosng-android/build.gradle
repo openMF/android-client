@@ -28,7 +28,7 @@ apply plugin: 'crashlytics'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         minSdkVersion 11

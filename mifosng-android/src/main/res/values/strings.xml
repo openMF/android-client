@@ -238,6 +238,7 @@
     <string name="tenant_identifier">Tenant Identifier</string>
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
+    <string name="menu_upload_photo">Upload Photo</string>
     <string name="menu_remove_photo">Remove photo</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
@@ -273,6 +274,7 @@
         <item>office 6</item>
         <item>office 7</item>
     </string-array>
+    <string name="center_activation_date">Activation Date</string>
 
 
 </resources>

@@ -178,7 +178,8 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
      * that trusts any damn thing.
      */
     private void promptUserToByPassTheSSLHandshake() {
-        new AlertDialog.Builder(this)
+        login(true);
+       /* new AlertDialog.Builder(this)
                 .setTitle("SSL Certificate Problem")
                 .setMessage("There is a problem with your SSLCertificate, would you like to continue? This connection would be unsafe.")
                 .setIcon(android.R.drawable.stat_sys_warning)
@@ -194,7 +195,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
                         finish();
                     }
                 })
-                .create().show();
+                .create().show();*/
     }
 
     @OnClick(R.id.bt_login)

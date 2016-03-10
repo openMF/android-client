@@ -99,14 +99,19 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
             view = layoutInflater.inflate(R.layout.row_loan_transaction_item, null);
             reusableParentViewHolder = new ReusableParentViewHolder(view);
             view.setTag(reusableParentViewHolder);
-        } else {
+        }
+        else
+        {
             reusableParentViewHolder = (ReusableParentViewHolder) view.getTag();
         }
         MaterialIcons contractedIconValue = MaterialIcons.md_add_circle_outline;
         MaterialIcons expandedIconValue = MaterialIcons.md_remove_circle_outline;
-        if (!isExpanded) {
+        if (!isExpanded)
+        {
             reusableParentViewHolder.tv_arrow.setText(contractedIconValue.character());
-        } else {
+        }
+        else
+        {
             reusableParentViewHolder.tv_arrow.setText(expandedIconValue.character());
         }
 

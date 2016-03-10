@@ -26,38 +26,48 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     protected Toolbar toolbar;
 
     @Override
-    public void setContentView(int layoutResID) {
+    public void setContentView(int layoutResID)
+    {
         super.setContentView(layoutResID);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
+        if (toolbar != null)
+        {
             setSupportActionBar(toolbar);
         }
     }
 
-    public void setActionBarTitle(String title) {
-        if (getSupportActionBar() != null && getTitle() != null) {
+    public void setActionBarTitle(String title)
+    {
+        if (getSupportActionBar() != null && getTitle() != null)
+        {
             setTitle(title);
         }
     }
 
-    protected void showBackButton() {
-        if (getSupportActionBar() != null) {
+    protected void showBackButton()
+    {
+        if (getSupportActionBar() != null)
+        {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
-    protected void setActionBarTitle(int title) {
+    protected void setActionBarTitle(int title)
+    {
         setActionBarTitle(getResources().getString(title));
     }
 
-    public Toolbar getToolbar() {
+    public Toolbar getToolbar()
+    {
         return toolbar;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -66,8 +76,10 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     }
 
     @Override
-    public void showProgress(String message) {
-        if (progress == null) {
+    public void showProgress(String message)
+    {
+        if (progress == null)
+        {
             progress = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
             progress.setCancelable(false);
         }

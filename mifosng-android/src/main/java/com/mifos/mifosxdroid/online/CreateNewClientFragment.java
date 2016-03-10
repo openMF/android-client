@@ -591,10 +591,11 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         List<Integer> date2 = DateHelper.getDateList(tv_submissionDate.getText().toString(), "-");
 
         Collections.reverse(date2);
-        int i = DateHelper.dateComparator(date1, date2);
+        int i = DateHelper.dateComparator(date2, date1);
         if (i == -1) {
             result = false;
         }
+
         return result;
     }
 
@@ -606,7 +607,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         date2 = DateHelper.getDateList(tv_dateofbirth.getText().toString(), "-");
 
         Collections.reverse(date2);
-        int i = DateHelper.dateComparator(date1, date2);
+        int i = DateHelper.dateComparator(date2, date1);
         if (i == -1) {
             result = false;
         }
