@@ -9,6 +9,9 @@
     <item
         android:id="@+id/client_image_capture"
         android:title="@string/menu_take_photo" />
+	<item
+		android:id="@+id/client_image_gallery"
+		android:title="@string/menu_gallery_photo" />
     <item
         android:id="@+id/client_image_remove"
         android:title="@string/menu_remove_photo" />
