@@ -27,7 +27,7 @@
         android:enabled="true"
         android:title="@string/create_group"
         app:showAsAction="never" />
-     <item
+    <item
         android:id="@+id/item_survey"
         android:enabled="true"
         android:title="@string/survey"
@@ -39,13 +39,11 @@
         android:title="@string/center_list"
         app:showAsAction="never" />
 
-    <!--
     <item
-        android:id="@+id/item_collection_sheet"
+        android:id="@+id/track"
         android:enabled="true"
-        android:title="@string/collection_sheet"
+        android:title="@string/track_path"
         app:showAsAction="never" />
-    -->
 
     <item
         android:id="@+id/item_offline_centers"

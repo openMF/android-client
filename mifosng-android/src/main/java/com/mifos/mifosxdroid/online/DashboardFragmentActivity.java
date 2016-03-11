@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 
 /**
@@ -61,6 +62,11 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
             case R.id.mItem_create_new_group:
                 openCreateGroup();
                 break;
+
+            case R.id.track:
+                startActivity(new Intent(this, PathTrackingActivity.class));
+                break;
+
             default: //DO NOTHING
                 break;
         }
@@ -73,6 +79,7 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
         myIntent.putExtra("SurveyId", surveyId);
         startActivity(myIntent);
     }
+
     public void loadClientList() {
         replaceFragment(ClientListFragment.newInstance(null), true, R.id.container);
     }
@@ -89,6 +96,7 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
         replaceFragment(CreateNewCenterFragment.newInstance(), true, R.id.container);
 
     }
+
     public void openCreateGroup() {
         replaceFragment(CreateNewGroupFragment.newInstance(), true, R.id.container);
     }
