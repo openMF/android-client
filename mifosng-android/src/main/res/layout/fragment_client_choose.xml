@@ -12,7 +12,8 @@
         android:id="@+id/tv_title"
         style="@style/TextView.Search.Results"
         android:textSize="20sp"
-        android:text="Select a Client from the list" />
+        android:text="Select a Client from the list"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/lv_clients"
