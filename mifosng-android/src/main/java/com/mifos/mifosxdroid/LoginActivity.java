@@ -26,6 +26,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.objects.User;
+import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
@@ -167,7 +168,13 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
                 Toaster.show(findViewById(android.R.id.content), "Internal server error");
             }
         } catch (NullPointerException e) {
-            Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
+            if(Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to Internet") )
+            {
+                Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
+            }
+            else {
+                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
+            }
         }
     }
 

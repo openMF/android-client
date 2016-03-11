@@ -62,6 +62,7 @@
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
     <string name="more_info">More client info</string>
+    <string name="pinpoint">Pinpoint location</string>
     <string name="charges">Charges </string>
     <string name="savings_account">Add Savings Account</string>
     <string name="collection_sheet">Collection Sheet</string>
@@ -189,6 +190,7 @@
     <string name="title_activity_centers">Centers</string>
     <string name="hello_world" translatable="false">Hello world!</string>
     <string name="center_list">Center List</string>
+    <string name="track_path">Track my path</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="type">Type</string>
     <string name="upload">Upload</string>
@@ -262,9 +264,7 @@
     <string name="error_select_product">Select Savings Product</string>
     <string name="error_select_officer">Select Officer</string>
 
-
-
-	<string-array name="office_ids">
+    <string-array name="office_ids">
         <item>Head Office</item>
         <item>Office 1 </item>
         <item>office 2</item>
