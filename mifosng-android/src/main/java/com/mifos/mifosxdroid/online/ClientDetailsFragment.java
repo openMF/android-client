@@ -32,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -44,7 +43,9 @@ import com.mifos.App;
 import com.mifos.api.OauthOkHttpClient;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
+import com.mifos.api.ApiRequestInterceptor;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -60,9 +61,6 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 import com.squareup.picasso.Picasso;
-
-import org.apache.http.HttpStatus;
-
 import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -73,14 +71,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
-
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
 import static android.view.View.OnTouchListener;
@@ -212,7 +208,11 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
             case R.id.identifiers:
                 loadIdentifiers();
                 break;
-
+            case R.id.pinpoint:
+                Intent i = new Intent(getActivity(), PinpointClientActivity.class);
+                i.putExtra(PinpointClientActivity.EXTRA_CLIENT_ID, clientId);
+                startActivity(i);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -507,57 +507,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         }
     }
 
-    public void saveLocation() {
-        try {
-            if (locationAvailable.get()) {
-                final Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                App.apiManager.sendGpsData(clientId, new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
-                        new Callback<GpsCoordinatesResponse>() {
-                            @Override
-                            public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
-                                Toaster.show(rootView, "Current location saved successfully: " + location.toString());
-                            }
-
-                            @Override
-                            public void failure(RetrofitError retrofitError) {
-                                /*
-                                  *  TODO:
-                                  *  1. Ask Vishwas about how to parse the error json response?
-                                  *     Does it follow a pattern that can be mapped here
-                                  *  2. Implement a proper mechanism to read the error messages and perform actions based on them
-                                  *
-                                 */
-                                if (retrofitError.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && retrofitError.getResponse().getBody().toString().contains("already exists")) {
-                                    App.apiManager.updateGpsData(clientId, new GpsCoordinatesRequest(location.getLatitude(), location.getLongitude()),
-                                            new Callback<GpsCoordinatesResponse>() {
-                                                @Override
-                                                public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
-                                                    Toaster.show(rootView, "Current location updated successfully: " + location.toString());
-                                                }
-
-                                                @Override
-                                                public void failure(RetrofitError retrofitError) {
-                                                    Toaster.show(rootView, "Current location could not be updated: " + location.toString());
-                                                }
-                                            }
-                                    );
-                                } else {
-                                    Toaster.show(rootView, "Current location could not be saved: " + location.toString());
-                                }
-                            }
-                        }
-                );
-
-            } else {
-                // Display the connection status
-                Toaster.show(rootView, "Location not available");
-                Log.w(TAG, "Location not available");
-            }
-        } catch (NullPointerException e) {
-            Toaster.show(rootView, R.string.error_save_location_not_available);
-        }
-    }
-
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -567,7 +516,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     }
 
     public void loadClientCharges() {
-        ClientChargeFragment clientChargeFragment = ClientChargeFragment.newInstance(clientId,chargesList);
+        ClientChargeFragment clientChargeFragment = ClientChargeFragment.newInstance(clientId, chargesList);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, clientChargeFragment);
@@ -581,6 +530,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         fragmentTransaction.replace(R.id.container, clientIdentifiersFragment);
         fragmentTransaction.commit();
     }
+
     public void addsavingsaccount() {
         SavingsAccountFragment savingsAccountFragment = SavingsAccountFragment.newInstance(clientId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
