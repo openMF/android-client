@@ -20,6 +20,10 @@ public class ClientAccounts {
     private List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+    public boolean isNullOrEmpty() {
+        return((loanAccounts == null) || loanAccounts.isEmpty());
+    }
+
     public List<LoanAccount> getLoanAccounts() {
         return loanAccounts;
     }

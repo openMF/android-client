@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
@@ -38,6 +39,8 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
 
     @InjectView(R.id.lv_clients)
     ListView results;
+    @InjectView(R.id.tv_title)
+    TextView tv_Title;
     private View root;
     private List<Client> clients = new ArrayList<>();
     private ClientChooseAdapter adapter;
@@ -49,6 +52,7 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
         adapter = new ClientChooseAdapter(getContext(), clients, R.layout.list_item_client);
         results.setAdapter(adapter);
         results.setOnItemClickListener(this);
+        showProgress("Fetching client list");
         loadClients();
         return root;
     }
@@ -57,6 +61,8 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
         App.apiManager.listClients(new Callback<Page<Client>>() {
             @Override
             public void success(Page<Client> page, Response response) {
+                hideProgress();
+                tv_Title.setVisibility(View.VISIBLE);
                 clients = page.getPageItems();
                 adapter.setList(clients);
                 adapter.notifyDataSetChanged();
@@ -64,6 +70,7 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                hideProgress();
                 Toaster.show(root, "Cannot get clients, There might be some problem!");
             }
         });

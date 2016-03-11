@@ -91,37 +91,34 @@
 
             <TableRow
                 android:id="@+id/row_group"
-                style="@style/TableRow"
-                android:visibility="gone">
+                style="@style/TableRow">
 
                 <TextView
                     style="@style/TextView.Row"
                     android:text="@string/group" />
 
                 <TextView
-                    android:id="@+id/tv_group"
+                    android:id="@+id/tv_groupNames"
                     style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_staff"
-                style="@style/TableRow"
-                android:visibility="gone">
+                style="@style/TableRow">
 
                 <TextView
                     style="@style/TextView.Row"
                     android:text="@string/staff" />
 
                 <TextView
-                    android:id="@+id/tv_loanOfficer"
-                    style="@style/TextView.Row"
+                    android:id="@+id/tv_staffOfficer"
+                    style="@style/TextView.Row.Value"
                     android:gravity="right"
                     android:text="" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_loan"
-                android:visibility="gone"
                 style="@style/TableRow">
 
                 <TextView
@@ -130,7 +127,7 @@
 
                 <TextView
                     android:id="@+id/tv_loanCycle"
-                    style="@style/TextView.Row"
+                    style="@style/TextView.Row.Value"
                     android:gravity="right"
                     android:text="" />
             </TableRow>
