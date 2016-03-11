@@ -13,6 +13,13 @@
         android:enabled="true"
         android:title="@string/more_info"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/pinpoint"
+        android:enabled="true"
+        android:title="@string/pinpoint"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/charges"
         android:enabled="true"
