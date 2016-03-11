@@ -56,11 +56,6 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 
-<<<<<<< HEAD
-
-
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -72,13 +67,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 
-
-
-
 import org.apache.http.HttpStatus;
 
-=======
->>>>>>> refs/remotes/openMF/master
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
