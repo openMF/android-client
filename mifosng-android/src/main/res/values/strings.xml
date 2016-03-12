@@ -274,6 +274,8 @@
         <item>office 6</item>
         <item>office 7</item>
     </string-array>
+    <string name="pinpoint">PinPoint</string>
+    <string name="track_path">Track Path</string>
 
 
 </resources>
