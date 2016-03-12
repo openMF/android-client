@@ -49,6 +49,7 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.CircularImageView;
+import com.mifos.objects.AccountSummary;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Charges;
@@ -112,6 +113,12 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     CircularImageView iv_clientImage;
     @InjectView(R.id.pb_imageProgressBar)
     ProgressBar pb_imageProgressBar;
+    @InjectView(R.id.tv_staffOfficer)
+    TextView tv_staffOfficer;
+    @InjectView(R.id.tv_loanCycle)
+    TextView tv_loan_cycle_number;
+    @InjectView(R.id.tv_groupNames)
+    TextView tv_groupNames;
 
     @InjectView(R.id.row_account)
     TableRow rowAccount;
@@ -226,6 +233,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     public void inflateClientInformation() {
         getClientDetails();
+        getClientSummaryDetails();
     }
 
     public void captureClientImage() {
@@ -278,6 +286,25 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     }
 
     /**
+     * To fetch client's loan cycle number
+     * from account summary
+     */
+
+    public void getClientSummaryDetails() {
+        App.apiManager.getClientSummary(clientId, false , new Callback<List <AccountSummary>>() {
+            @Override
+            public void success(List <AccountSummary> summary, Response response) {
+                tv_loan_cycle_number.setText(String.format("%d", summary.get(0).getLoanCycle()));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toaster.show(rootView, "Error fetching Summary.");
+            }
+        });
+    }
+
+    /**
      * Use this method to fetch and inflate client details
      * in the fragment
      */
@@ -291,12 +318,20 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                     setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
                     tv_fullName.setText(client.getDisplayName());
                     tv_accountNumber.setText(client.getAccountNo());
+                    tv_staffOfficer.setText(client.getStaffName());
+                    tv_groupNames.setText(client.getAllGroupName());
                     tv_externalId.setText(client.getExternalId());
                     if (TextUtils.isEmpty(client.getAccountNo()))
                         rowAccount.setVisibility(GONE);
 
                     if (TextUtils.isEmpty(client.getExternalId()))
                         rowExternal.setVisibility(GONE);
+
+                    if (TextUtils.isEmpty(client.getAllGroupName()) || client.getAllGroupName() == null)
+                        rowGroup.setVisibility(View.GONE);
+
+                    if (TextUtils.isEmpty(client.getStaffName()))
+                        rowStaff.setVisibility(View.GONE);
 
                     try {
                         List<Integer> dateObj = client.getActivationDate();

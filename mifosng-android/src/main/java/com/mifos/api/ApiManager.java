@@ -15,6 +15,7 @@ import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.api.model.ScorecardPayload;
+import com.mifos.objects.AccountSummary;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -90,6 +91,10 @@ public class ApiManager extends BaseApiManager {
 
     public void getClient(int id, Callback<Client> callback) {
         getClientsApi().getClient(id, callback);
+    }
+
+    public void getClientSummary(int id, boolean genericSet, Callback<List<AccountSummary>> callback) {
+        getAccountSummaryApi().getSummary(id, genericSet, callback);
     }
 
     public void uploadClientImage(int id, TypedFile image, Callback<Response> callback) {

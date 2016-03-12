@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.mifos.api.services.AuthService;
 import com.mifos.api.services.CenterService;
 import com.mifos.api.services.ChargeService;
+import com.mifos.api.services.ClientAccountSummaryService;
 import com.mifos.api.services.ClientAccountsService;
 import com.mifos.api.services.ClientService;
 import com.mifos.api.services.CreateSavingsAccountService;
@@ -53,6 +54,7 @@ public class BaseApiManager {
     private OfficeService officeApi;
     private StaffService staffApi;
     private SurveyService surveyApi;
+    private ClientAccountSummaryService accountSummaryApi;
 
     public BaseApiManager() {
         createAuthApi();
@@ -73,6 +75,7 @@ public class BaseApiManager {
         surveyApi = createApi(SurveyService.class, API_ENDPOINT);
         chargeService = createApi(ChargeService.class, API_ENDPOINT);
         createSavingsAccountService = createApi(CreateSavingsAccountService.class, API_ENDPOINT);
+        accountSummaryApi = createApi(ClientAccountSummaryService.class, API_ENDPOINT);
     }
 
     public void setupEndpoint(String instanceUrl) {
@@ -113,6 +116,10 @@ public class BaseApiManager {
 
     protected ClientService getClientsApi() {
         return clientsApi;
+    }
+
+    protected ClientAccountSummaryService getAccountSummaryApi() {
+        return accountSummaryApi;
     }
 
     protected DataTableService getDataTableApi() {
