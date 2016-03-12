@@ -54,6 +54,8 @@ public class PathTrackingActivity extends MifosBaseActivity implements ServiceCo
                 service.stopLogging();
             }
         });
+
+        showBackButton();
     }
 
     @Override
