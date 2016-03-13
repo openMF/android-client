@@ -37,6 +37,8 @@ import com.mifos.objects.organisation.ClientClassificationOptions;
 import com.mifos.objects.organisation.ClientTypeOptions;
 import com.mifos.objects.organisation.GenderOptions;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.objects.templates.clients.Options;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
@@ -108,6 +110,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
+	private ClientsTemplate clientstemplate = new ClientsTemplate();
 
     public static CreateNewClientFragment newInstance() {
         CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
@@ -134,9 +137,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
-        inflateGenderSpinner();
-        inflateClientTypeOptions();
-        inflateClientClassificationOptions();
+	    getClientTemplate();
 
         //client active checkbox onCheckedListener
         cb_clientActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -175,217 +176,115 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     }
 
     private void inflateGenderSpinner() {
-        showProgress();
-        App.apiManager.getClientTemplate(new Callback<Response>() {
-            @Override
-            public void success(Response result, Response response) {
-                // you can use this array to find the gender ID based on name
-                final ArrayList<GenderOptions> genderOption = new ArrayList<GenderOptions>();
-                // you can use this array to populate your spinner
-                final ArrayList<String> genderNames = new ArrayList<String>();
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                String line;
-                try {
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("genderOptions")) {
-                        JSONArray genderOptions = obj.getJSONArray("genderOptions");
-                        for (int i = 0; i < genderOptions.length(); i++) {
-                            JSONObject genderObject = genderOptions.getJSONObject(i);
-                            GenderOptions gender = new GenderOptions();
-                            gender.setId(genderObject.optInt("id"));
-                            gender.setName(genderObject.optString("name"));
-                            genderOption.add(gender);
-                            genderNames.add(genderObject.optString("name"));
-                            genderNameIdHashMap.put(gender.getName(), gender.getId());
-                        }
+	    final ArrayList<String> genderNames = FilterListObject(clientstemplate.getGenderOptions());
+	    ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(getActivity(),
+			    android.R.layout.simple_spinner_item, genderNames);
+	    genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    spGender.setAdapter(genderAdapter);
+	    spGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(TAG, "", e);
-                }
-                ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, genderNames);
-                genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spGender.setAdapter(genderAdapter);
-                spGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        genderId = genderNameIdHashMap.get(genderNames.get(i));
-                        Log.d("genderId " + genderNames.get(i), String.valueOf(genderId));
-                        if (genderId != -1) {
+		    @Override
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+			    genderId = clientstemplate.getGenderOptions().get(i).getId();
+			    Log.d("genderId " + genderNames.get(i), String.valueOf(genderId));
+			    if (genderId != -1) {
 
 
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-                        }
-                    }
+			    }
+			    else {
+				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+			    }
+		    }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });
+		    }
+	    });
 
     }
 
     private void inflateClientClassificationOptions() {
-        App.apiManager.getClientTemplate(new Callback<Response>() {
-            @Override
-            public void success(Response result, Response response) {
-                Log.d(TAG, "");
-                // you can use this array to find the gender ID based on name
-                final List<ClientClassificationOptions> clientClassificationOptions = new ArrayList<ClientClassificationOptions>();
-                // you can use this array to populate your spinner
-                final ArrayList<String> ClientClassificationNames = new ArrayList<String>();
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-                    String line;
+	    final ArrayList<String> ClientClassificationNames = FilterListObject(clientstemplate
+			    .getClientClassificationOptions());
+	    ArrayAdapter<String> ClientClassificationAdapter = new ArrayAdapter<String>(getActivity(),
+			    android.R.layout.simple_spinner_item, ClientClassificationNames);
+	    ClientClassificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    spClientClassification.setAdapter(ClientClassificationAdapter);
+	    spClientClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
+		    @Override
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+			    clientClassificationId = clientstemplate.getClientClassificationOptions()
+					    .get(i).getId();
+			    Log.d("clientClassificationId" + ClientClassificationNames.get(i), String.valueOf(clientClassificationId));
+			    if (clientClassificationId != -1) {
 
+			    }
+			    else {
 
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("clientClassificationOptions")) {
-                        JSONArray clientClassification = obj.getJSONArray("clientClassificationOptions");
-                        for (int i = 0; i < clientClassification.length(); i++) {
-                            JSONObject clientClassificationObject = clientClassification.getJSONObject(i);
+				    Toast.makeText(getActivity(), getString(R.string.error_select_client_type), Toast.LENGTH_SHORT).show();
 
-                            ClientClassificationOptions clientClassifications = new ClientClassificationOptions();
-                            clientClassifications.setId(clientClassificationObject.optInt("id"));
-                            clientClassifications.setName(clientClassificationObject.optString("name"));
+			    }
 
-                            clientClassificationOptions.add(clientClassifications);
-                            ClientClassificationNames.add(clientClassificationObject.optString("name"));
-                            clientClassificationNameIdHashMap.put(clientClassifications.getName(), clientClassifications.getId());
-                        }
+		    }
 
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(TAG, "", e);
-                }
-                ArrayAdapter<String> ClientClassificationAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, ClientClassificationNames);
-                ClientClassificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spClientClassification.setAdapter(ClientClassificationAdapter);
-                spClientClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        clientClassificationId = clientClassificationNameIdHashMap.get(ClientClassificationNames.get(i));
-                        Log.d("clientClassificationId" + ClientClassificationNames.get(i), String.valueOf(clientClassificationId));
-                        if (clientClassificationId != -1) {
-
-                        } else {
-
-                            Toast.makeText(getActivity(), getString(R.string.error_select_client_type), Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });
+		    }
+	    });
     }
 
     private void inflateClientTypeOptions() {
-        App.apiManager.getClientTemplate(new Callback<Response>() {
-            @Override
+	    final ArrayList<String> ClientTypeNames = FilterListObject(clientstemplate
+			    .getClientTypeOptions());
+	    final ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(getActivity(),
+			    android.R.layout.simple_spinner_item, ClientTypeNames);
+	    clientTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    spClientType.setAdapter(clientTypeAdapter);
+	    spClientType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            public void success(final Response result, Response response) {
-                final List<ClientTypeOptions> clienttypeoptions = new ArrayList<ClientTypeOptions>();
-                // you can use this array to populate your spinner
-                final ArrayList<String> ClientTypeNames = new ArrayList<String>();
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("clientTypeOptions")) {
-                        JSONArray clientTypeOptions = obj.getJSONArray("clientTypeOptions");
-                        for (int i = 0; i < clientTypeOptions.length(); i++) {
-                            JSONObject clientTypeObject = clientTypeOptions.getJSONObject(i);
-                            ClientTypeOptions clienttype = new ClientTypeOptions();
-                            clienttype.setId(clientTypeObject.optInt("id"));
-                            clienttype.setName(clientTypeObject.optString("name"));
-                            clienttypeoptions.add(clienttype);
-                            ClientTypeNames.add(clientTypeObject.optString("name"));
-                            clientTypeNameIdHashMap.put(clienttype.getName(), clienttype.getId());
-                        }
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(TAG, "", e);
-                }
-                final ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, ClientTypeNames);
-                clientTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spClientType.setAdapter(clientTypeAdapter);
-                spClientType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		    @Override
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+			    clientTypeId = clientstemplate.getClientTypeOptions().get(i).getId();
+			    Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
+			    if (clientTypeId != -1) {
+			    }
+			    else {
+				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+			    }
+		    }
 
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        clientTypeId = clientTypeNameIdHashMap.get(ClientTypeNames.get(i));
-                        Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
-                        if (clientTypeId != -1) {
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-                        }
-                    }
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parent) {
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });
+		    }
+	    });
 
     }
+
+	private void getClientTemplate(){
+		showProgress();
+		App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
+			@Override
+			public void success(ClientsTemplate clientsTemplate, Response response) {
+
+				if (response.getStatus() == 200) {
+					clientstemplate = clientsTemplate;
+					inflateGenderSpinner();
+					inflateClientTypeOptions();
+					inflateClientClassificationOptions();
+				}
+				hideProgress();
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+				hideProgress();
+			}
+		});
+	}
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
@@ -620,4 +519,14 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         }
         return result;
     }
+
+	public ArrayList<String> FilterListObject(List<Options> optionsList){
+
+		ArrayList<String> optionsNameList = new ArrayList<>();
+		for(Options options : optionsList){
+			optionsNameList.add(options.getName());
+		}
+		return optionsNameList;
+	}
+
 }
