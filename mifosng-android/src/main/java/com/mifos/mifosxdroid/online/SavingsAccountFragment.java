@@ -28,6 +28,7 @@ import com.mifos.objects.organisation.InterestCalculationDaysInYearType;
 import com.mifos.objects.organisation.InterestCompoundingPeriod;
 import com.mifos.objects.organisation.InterestPostingPeriodType;
 import com.mifos.objects.organisation.ProductSavings;
+import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
@@ -91,6 +92,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     private HashMap<String, Integer> interestPostingPeriodTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> interestCompoundingPeriodTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> interestCalculationDaysInYearHashMap = new HashMap<String, Integer>();
+	private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
     public static SavingsAccountFragment newInstance(int clientId) {
         SavingsAccountFragment savingsAccountFragment = new SavingsAccountFragment();
@@ -590,7 +592,25 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
 	private void getSavingsAccountTemplateAPI(){
 
-		//App.apiManager.getSavingsAccountTemplateTemp
+		App.apiManager.getSavingsAccountTemplateTemp(new Callback<SavingProductsTemplate>()
+		{
+			@Override
+			public void success(SavingProductsTemplate savingProductsTemplate, Response response)
+			{
+				if(response.getStatus() == 200)
+				{
+					savingproductstemplate = savingProductsTemplate;
+				}
+			}
+
+			@Override
+			public void failure(RetrofitError error)
+			{
+				System.out.println(error.getLocalizedMessage());
+
+				safeUIBlockingUtility.safelyUnBlockUI();
+			}
+		});
 
 	}
 }
