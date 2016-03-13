@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
+import com.mifos.objects.InterestType;
 import com.mifos.objects.accounts.savings.InterestCalculationType;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.InterestCalculationDaysInYearType;
@@ -597,7 +598,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 			@Override
 			public void success(SavingProductsTemplate savingProductsTemplate, Response response)
 			{
-				if(response.getStatus() == 200)
+				if (response.getStatus() == 200)
 				{
 					savingproductstemplate = savingProductsTemplate;
 				}
@@ -612,5 +613,15 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 			}
 		});
 
+	}
+
+	private List filterListObject(SavingProductsTemplate savingProductsTemplate ) {
+
+		List<String> InterestValueList = new ArrayList<>();
+		for(InterestType interestType : savingProductsTemplate.getInterestCompoundingPeriodTypeOptions()) {
+			InterestValueList.add(interestType.getValue());
+		}
+
+		return InterestValueList;
 	}
 }
