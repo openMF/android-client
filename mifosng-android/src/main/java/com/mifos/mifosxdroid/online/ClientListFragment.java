@@ -85,6 +85,12 @@ public class ClientListFragment extends MifosBaseFragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        lv_clients.setVisibility(View.GONE);
+        super.onDestroyView();
+    }
+
     public void inflateClientList() {
         ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(getContext(), clientList);
         lv_clients.setAdapter(clientNameListAdapter);
