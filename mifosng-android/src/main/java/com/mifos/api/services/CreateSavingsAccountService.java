@@ -32,5 +32,5 @@ public interface CreateSavingsAccountService {
     void getSavingsAccountTemplate(Callback<Response> clientCallback);
 
 	@GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
-	void getSavingsAccountTemplateTemp(Callback<SavingProductsTemplate> clientCallback);
+	void getSavingsAccountTemplateTemp(Callback<SavingProductsTemplate> savingProductsTemplateCallback);
 }
