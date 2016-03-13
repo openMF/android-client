@@ -17,8 +17,109 @@ public class AccountOptions {
 	private String nameDecorated;
 	private TagId tagId;
 
+	public Integer getId()
+	{
+		return id;
+	}
+
+	public void setId(Integer id)
+	{
+		this.id = id;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public Integer getGlCode()
+	{
+		return glCode;
+	}
+
+	public void setGlCode(Integer glCode)
+	{
+		this.glCode = glCode;
+	}
+
+	public Boolean getDisabled()
+	{
+		return disabled;
+	}
+
+	public void setDisabled(Boolean disabled)
+	{
+		this.disabled = disabled;
+	}
+
+	public Boolean getManualEntriesAllowed()
+	{
+		return manualEntriesAllowed;
+	}
+
+	public void setManualEntriesAllowed(Boolean manualEntriesAllowed)
+	{
+		this.manualEntriesAllowed = manualEntriesAllowed;
+	}
+
+	public InterestType getType()
+	{
+		return type;
+	}
+
+	public void setType(InterestType type)
+	{
+		this.type = type;
+	}
+
+	public InterestType getUsage()
+	{
+		return usage;
+	}
+
+	public void setUsage(InterestType usage)
+	{
+		this.usage = usage;
+	}
+
+	public String getNameDecorated()
+	{
+		return nameDecorated;
+	}
+
+	public void setNameDecorated(String nameDecorated)
+	{
+		this.nameDecorated = nameDecorated;
+	}
+
+	public TagId getTagId()
+	{
+		return tagId;
+	}
+
+	public void setTagId(TagId tagId)
+	{
+		this.tagId = tagId;
+	}
 
 	public class TagId{
+
 		private Integer id;
+
+		public Integer getId()
+		{
+			return id;
+		}
+
+		public void setId(Integer id)
+		{
+			this.id = id;
+		}
+
 	}
 }
