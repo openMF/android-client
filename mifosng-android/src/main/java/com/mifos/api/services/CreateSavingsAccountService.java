@@ -7,6 +7,7 @@ package com.mifos.api.services;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.ProductSavings;
+import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.SavingsPayload;
 
 import java.util.List;
@@ -29,4 +30,7 @@ public interface CreateSavingsAccountService {
 
     @GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
     void getSavingsAccountTemplate(Callback<Response> clientCallback);
+
+	@GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
+	void getSavingsAccountTemplateTemp(Callback<SavingProductsTemplate> clientCallback);
 }

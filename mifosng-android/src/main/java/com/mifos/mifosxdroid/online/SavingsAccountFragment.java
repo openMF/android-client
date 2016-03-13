@@ -557,4 +557,10 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         });
 
     }
+
+	private void getSavingsAccountTemplateAPI(){
+
+		//App.apiManager.getSavingsAccountTemplate();
+
+	}
 }
