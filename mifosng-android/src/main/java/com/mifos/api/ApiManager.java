@@ -44,6 +44,7 @@ import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
@@ -348,7 +349,8 @@ public class ApiManager extends BaseApiManager {
         getCreateSavingsAccountService().createSavingsAccount(savingsPayload, callback);
     }
 
-    public void getSavingsAccountTemplate(Callback<Response> clientCallback) {
-        getCreateSavingsAccountService().getSavingsAccountTemplate(clientCallback);
-    }
+	public void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback) {
+		getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
+	}
+
 }
