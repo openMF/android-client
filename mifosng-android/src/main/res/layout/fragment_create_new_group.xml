@@ -77,6 +77,7 @@
                 android:paddingBottom="16dp"
                 android:singleLine="true"/>
         </android.support.design.widget.TextInputLayout>
+
         <CheckBox
             android:id="@+id/cb_group_active_status"
             android:layout_width="match_parent"
@@ -87,18 +88,26 @@
             android:text="@string/center_active"
             />
 
-
-
-
         <TextView
-            android:id="@+id/tv_center_active_date"
+            android:id="@+id/tv_group_activationdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:textSize="20sp"
-            android:visibility="gone"
-
+            android:paddingBottom="10dp"
+            android:paddingTop="16dp"
+            android:text="@string/activation_date"
+            android:textSize="16sp"
             />
+
+        <TextView
+            android:id="@+id/tv_group_activation_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="date"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
+            />
+
         <Spinner
             android:id="@+id/sp_add_client"
             android:layout_width="fill_parent"

@@ -65,8 +65,12 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     EditText et_groupexternalId;
     @InjectView(R.id.cb_group_active_status)
     CheckBox cb_groupActiveStatus;
+    @InjectView(R.id.tv_group_activation_date)
+    TextView tv_activationDate;
     @InjectView(R.id.tv_group_submission_date)
     TextView tv_submissionDate;
+    @InjectView(R.id.tv_group_activationdate)
+    TextView tv_actDate;
     @InjectView(R.id.sp_offices)
     Spinner sp_offices;
     @InjectView(R.id.sp_staff)
@@ -77,6 +81,9 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     int officeId;
     int staffId;
     Boolean result = true;
+    Boolean onTick;
+    Boolean onSubmit;
+    Boolean onActivate;
     View rootView;
     String dateString;
     String dateofsubmissionstring;
@@ -116,6 +123,11 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
+        onSubmit = false;
+        onTick = false;
+        onActivate = false;
+        tv_activationDate.setVisibility(View.GONE);
+        tv_actDate.setVisibility(View.GONE);
 
 
         //client active checkbox onCheckedListener
@@ -123,9 +135,20 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked)
-                    tv_submissionDate.setVisibility(View.VISIBLE);
+                {
+                    tv_actDate.setVisibility(View.VISIBLE);
+                    tv_activationDate.setVisibility(View.VISIBLE);
+                    onTick = true;
+                    inflateActivationDate();
+                }
                 else
-                    tv_submissionDate.setVisibility(View.GONE);
+                {
+                    tv_activationDate.setVisibility(View.GONE);
+                    tv_actDate.setVisibility(View.GONE);
+                    onTick = false;
+
+
+                }
             }
         });
 
@@ -288,11 +311,27 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
 
 
     public void inflateSubmissionDate() {
+        onSubmit=true;
         mfDatePicker = MFDatePicker.newInsance(this);
 
         tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
 
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+            }
+        });
+
+    }
+
+    public void inflateActivationDate() {
+        onActivate=true;
+        mfDatePicker = MFDatePicker.newInsance(this);
+
+        tv_activationDate.setText(MFDatePicker.getDatePickedAsString());
+        class ActDate{}
+        tv_activationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
@@ -318,9 +357,28 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     }
 
     public void onDatePicked(String date) {
-        tv_submissionDate.setText(date);
+
+        if(onTick!=true) {
+
+            tv_submissionDate.setText(date);
+
+        }
+        else if(onTick==true && onSubmit==true) {
+
+            tv_submissionDate.setText(date);
+
+        }
+        else if(onTick==true && onActivate==true) {
+
+            tv_activationDate.setText(date);
+
+        }
+        else tv_activationDate.setText(date);
+
+
 
     }
+
 
     public boolean isValidFirstName() {
         try {
