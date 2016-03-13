@@ -206,349 +206,147 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     }
 
     private void inflateInterestPostingPeriodType() {
-        App.apiManager.getSavingsAccountTemplate(new Callback<Response>()
-        {
 
-	        @Override
-	        public void success(final Response result, Response response)
-	        {
-		        final List<InterestPostingPeriodType> interestPostingPeriodType = new ArrayList<InterestPostingPeriodType>();
-		        // you can use this array to populate your spinner
-		        final ArrayList<String> InterestPostingPeriodTypeNames = new ArrayList<String>();
-		        //Try to get response body
-		        BufferedReader reader = null;
-		        StringBuilder sb = new StringBuilder();
-		        try
-		        {
-			        reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-			        String line;
+	    final ArrayList<String> InterestPostingPeriodTypeNames = filterListObject(savingproductstemplate);
 
-			        while ((line = reader.readLine()) != null)
-			        {
-				        sb.append(line);
-			        }
+	    final ArrayAdapter<String> interestPostingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
+			    android.R.layout.simple_spinner_item, InterestPostingPeriodTypeNames);
+	    interestPostingPeriodTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    sp_interest_p_period.setAdapter(interestPostingPeriodTypeAdapter);
+	    sp_interest_p_period.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+	    {
 
-			        JSONObject obj = new JSONObject(sb.toString());
-			        if (obj.has("interestPostingPeriodTypeOptions"))
-			        {
-				        JSONArray interestPostingPeriodTypes = obj.getJSONArray("interestPostingPeriodTypeOptions");
-				        for (int i = 0; i < interestPostingPeriodTypes.length(); i++)
-				        {
-					        JSONObject interestPostingPeriodTypesObject = interestPostingPeriodTypes.getJSONObject(i);
-					        InterestPostingPeriodType interestPostingPeriod = new InterestPostingPeriodType();
-					        interestPostingPeriod.setId(interestPostingPeriodTypesObject.optInt("id"));
-					        interestPostingPeriod.setValue(interestPostingPeriodTypesObject.optString("value"));
-					        interestPostingPeriodType.add(interestPostingPeriod);
-					        InterestPostingPeriodTypeNames.add(interestPostingPeriodTypesObject.optString("value"));
-					        interestPostingPeriodTypeNameIdHashMap.put(interestPostingPeriod.getValue(), interestPostingPeriod.getId());
-				        }
+		    @Override
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+		    {
+			    interestPostingPeriodTypeId = savingproductstemplate.getInterestPostingPeriodTypeOptions().get(i).getId();
+			    Log.d("interestPosting " + InterestPostingPeriodTypeNames.get(i), String.valueOf(interestPostingPeriodTypeId));
+			    if (interestPostingPeriodTypeId != -1)
+			    {
 
 
-			        }
-			        String stringResult = sb.toString();
-		        }
-		        catch (Exception e)
-		        {
-			        Log.e(TAG, "", e);
-		        }
-		        final ArrayAdapter<String> interestPostingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
-				        android.R.layout.simple_spinner_item, InterestPostingPeriodTypeNames);
-		        interestPostingPeriodTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		        sp_interest_p_period.setAdapter(interestPostingPeriodTypeAdapter);
-		        sp_interest_p_period.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-		        {
+			    }
+			    else
+			    {
 
-			        @Override
-			        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
-			        {
-				        interestPostingPeriodTypeId = interestPostingPeriodTypeNameIdHashMap.get(InterestPostingPeriodTypeNames.get(i));
-				        Log.d("interestPosting " + InterestPostingPeriodTypeNames.get(i), String.valueOf(interestPostingPeriodTypeId));
-				        if (interestPostingPeriodTypeId != -1)
-				        {
+				    Toast.makeText(getActivity(), getString(R.string.interestPostingPeriodTypeId), Toast.LENGTH_SHORT).show();
 
+			    }
 
-				        }
-				        else
-				        {
+		    }
 
-					        Toast.makeText(getActivity(), getString(R.string.interestPostingPeriodTypeId), Toast.LENGTH_SHORT).show();
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parent)
+		    {
 
-				        }
-
-			        }
-
-			        @Override
-			        public void onNothingSelected(AdapterView<?> parent)
-			        {
-
-			        }
-		        });
-
-		        safeUIBlockingUtility.safelyUnBlockUI();
-
-	        }
-
-	        @Override
-	        public void failure(RetrofitError retrofitError)
-	        {
-
-		        System.out.println(retrofitError.getLocalizedMessage());
-
-		        safeUIBlockingUtility.safelyUnBlockUI();
-	        }
-        });
+		    }
+	    });
 
     }
 
     private void inflateInterestCalculationTypeSpinner() {
-        App.apiManager.getSavingsAccountTemplate(new Callback<Response>() {
-            @Override
 
-            public void success(final Response result, Response response) {
-                Log.d(TAG, "");
+	    final ArrayList<String> interestCalculationTypeNames = filterListObject(savingproductstemplate);
+	    final ArrayAdapter<String> interestCalculationTypeAdapter = new ArrayAdapter<String>(getActivity(),
+			    android.R.layout.simple_spinner_item, interestCalculationTypeNames);
+	    interestCalculationTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    sp_interest_calc.setAdapter(interestCalculationTypeAdapter);
+	    sp_interest_calc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                final List<InterestCalculationType> interestCalculationType = new ArrayList<>();
-                // you can use this array to populate your spinner
-                final ArrayList<String> interestCalculationTypeNames = new ArrayList<String>();
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("interestCalculationTypeOptions")) {
-                        JSONArray interestCalculationTypes = obj.getJSONArray("interestCalculationTypeOptions");
-                        for (int i = 0; i < interestCalculationTypes.length(); i++) {
-                            JSONObject interestCalculationTypesObject = interestCalculationTypes.getJSONObject(i);
-                            InterestCalculationType interestCalculationTypet = new InterestCalculationType();
-                            interestCalculationTypet.setId(interestCalculationTypesObject.optInt("id"));
-                            interestCalculationTypet.setValue(interestCalculationTypesObject.optString("value"));
-                            interestCalculationType.add(interestCalculationTypet);
-                            interestCalculationTypeNames.add(interestCalculationTypesObject.optString("value"));
-                            interestCalculationTypeNameIdHashMap.put(interestCalculationTypet.getValue(), interestCalculationTypet.getId());
-                        }
+		    @Override
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+			    interestCalculationTypeAdapterId = savingproductstemplate.getInterestCalculationTypeOptions().get(i).getId();
+			    Log.d("interestCalculation " + interestCalculationTypeNames.get(i), String.valueOf(interestCalculationTypeAdapterId));
+			    if (interestCalculationTypeAdapterId != -1) {
 
 
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(TAG, "", e);
-                }
-                final ArrayAdapter<String> interestCalculationTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, interestCalculationTypeNames);
-                interestCalculationTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_interest_calc.setAdapter(interestCalculationTypeAdapter);
-                sp_interest_calc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			    } else {
 
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        interestCalculationTypeAdapterId = interestCalculationTypeNameIdHashMap.get(interestCalculationTypeNames.get(i));
-                        Log.d("interestCalculation " + interestCalculationTypeNames.get(i), String.valueOf(interestCalculationTypeAdapterId));
-                        if (interestCalculationTypeAdapterId != -1) {
+				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
 
+			    }
 
-                        } else {
+		    }
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parent) {
 
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                System.out.println(retrofitError.getLocalizedMessage());
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-            }
-        });
+		    }
+	    });
     }
 
     private void inflateinterestCalculationDaysInYearType() {
-        App.apiManager.getSavingsAccountTemplate(new Callback<Response>() {
-            @Override
 
-            public void success(final Response result, Response response) {
-                Log.d(TAG, "");
+	    final ArrayList<String> InterestCalculationDaysInYearTypeNames = filterListObject
+			    (savingproductstemplate);
 
-                final List<InterestCalculationDaysInYearType> interestCalculationDaysInYearType = new ArrayList<InterestCalculationDaysInYearType>();
-                // you can use this array to populate your spinner
-                final ArrayList<String> InterestCalculationDaysInYearTypeNames = new ArrayList<String>();
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
+	    final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new ArrayAdapter<String>(getActivity(),
+			    android.R.layout.simple_spinner_item, InterestCalculationDaysInYearTypeNames);
+	    interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    sp_days_in_year.setAdapter(interestCalculationDaysInYearTypeAdapter);
+	    sp_days_in_year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+	    {
 
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("interestCalculationDaysInYearTypeOptions")) {
-                        JSONArray interestCalculationDaysInYearTypes = obj.getJSONArray("interestCalculationDaysInYearTypeOptions");
-                        for (int i = 0; i < interestCalculationDaysInYearTypes.length(); i++) {
-                            JSONObject interestCalculationDaysInYearTypeObject = interestCalculationDaysInYearTypes.getJSONObject(i);
-                            InterestCalculationDaysInYearType interestCalculationDaysInYearT = new InterestCalculationDaysInYearType();
-                            interestCalculationDaysInYearT.setId(interestCalculationDaysInYearTypeObject.optInt("id"));
-                            interestCalculationDaysInYearT.setValue(interestCalculationDaysInYearTypeObject.optString("value"));
-                            interestCalculationDaysInYearType.add(interestCalculationDaysInYearT);
-                            InterestCalculationDaysInYearTypeNames.add(interestCalculationDaysInYearTypeObject.optString("value"));
-                            interestCalculationDaysInYearHashMap.put(interestCalculationDaysInYearT.getValue(), interestCalculationDaysInYearT.getId());
-                        }
+		    @Override
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+		    {
+			    interestCalculationDaysInYearTypeId = savingproductstemplate
+					    .getInterestCalculationDaysInYearTypeOptions().get(i).getId();
+			    Log.d("interestCalculationD" + InterestCalculationDaysInYearTypeNames.get(i), String.valueOf(interestCalculationDaysInYearTypeId));
+			    if (interestCalculationDaysInYearTypeId != -1)
+			    {
 
 
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(TAG, "", e);
-                }
-                final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, InterestCalculationDaysInYearTypeNames);
-                interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_days_in_year.setAdapter(interestCalculationDaysInYearTypeAdapter);
-                sp_days_in_year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			    }
+			    else
+			    {
 
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        interestCalculationDaysInYearTypeId = interestCalculationDaysInYearHashMap.get(InterestCalculationDaysInYearTypeNames.get(i));
-                        Log.d("interestCalculationD" + InterestCalculationDaysInYearTypeNames.get(i), String.valueOf(interestCalculationDaysInYearTypeId));
-                        if (interestCalculationDaysInYearTypeId != -1) {
+				    Toast.makeText(getActivity(), getString(R.string.interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT).show();
 
+			    }
 
-                        } else {
+		    }
 
-                            Toast.makeText(getActivity(), getString(R.string.interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT).show();
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parent)
+		    {
 
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                System.out.println(retrofitError.getLocalizedMessage());
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-            }
-        });
+		    }
+	    });
 
     }
 
     private void InterestCompoundingPeriodType() {
 
-        App.apiManager.getSavingsAccountTemplate(new Callback<Response>() {
-            @Override
+	    final ArrayList<String> InterestCompoundingPeriodType = filterListObject(savingproductstemplate);
 
-            public void success(final Response result, Response response) {
-                Log.d(TAG, "");
+	    final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
+			    android.R.layout.simple_spinner_item, InterestCompoundingPeriodType);
+	    interestCompoundingPeriodTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    sp_interest_comp.setAdapter(interestCompoundingPeriodTypeAdapter);
+	    sp_interest_comp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                final List<InterestCompoundingPeriod> interestCompoundingPeriodTypeList = new ArrayList<InterestCompoundingPeriod>();
-                // you can use this array to populate your spinner
-                final ArrayList<String> InterestCompoundingPeriodType = new ArrayList<String>();
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("interestCompoundingPeriodTypeOptions")) {
-                        JSONArray interestCompoundingPeriodType = obj.getJSONArray("interestCompoundingPeriodTypeOptions");
-                        for (int i = 0; i < interestCompoundingPeriodType.length(); i++) {
-                            JSONObject interestCompoundingPeriodTypeObject = interestCompoundingPeriodType.getJSONObject(i);
-                            InterestCompoundingPeriod interestCompoundingPeriodTypes = new InterestCompoundingPeriod();
-                            interestCompoundingPeriodTypes.setId(interestCompoundingPeriodTypeObject.optInt("id"));
-                            interestCompoundingPeriodTypes.setValue(interestCompoundingPeriodTypeObject.optString("value"));
-                            interestCompoundingPeriodTypeList.add(interestCompoundingPeriodTypes);
-                            InterestCompoundingPeriodType.add(interestCompoundingPeriodTypeObject.optString("value"));
-                            interestCompoundingPeriodTypeNameIdHashMap.put(interestCompoundingPeriodTypes.getValue(), interestCompoundingPeriodTypes.getId());
-                        }
+		    @Override
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+			    interestCompoundingPeriodTypeId = savingproductstemplate
+					    .getInterestCompoundingPeriodTypeOptions().get(i).getId();
+			    Log.d("clientTypeId " + InterestCompoundingPeriodType.get(i), String.valueOf(interestCompoundingPeriodTypeId));
+			    if (interestCompoundingPeriodTypeId != -1) {
 
 
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(TAG, "", e);
-                }
-                final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, InterestCompoundingPeriodType);
-                interestCompoundingPeriodTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_interest_comp.setAdapter(interestCompoundingPeriodTypeAdapter);
-                sp_interest_comp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			    } else {
 
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        interestCompoundingPeriodTypeId = interestCompoundingPeriodTypeNameIdHashMap.get(InterestCompoundingPeriodType.get(i));
-                        Log.d("clientTypeId " + InterestCompoundingPeriodType.get(i), String.valueOf(interestCompoundingPeriodTypeId));
-                        if (interestCompoundingPeriodTypeId != -1) {
+				    Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
 
+			    }
 
-                        } else {
+		    }
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parent) {
 
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                System.out.println(retrofitError.getLocalizedMessage());
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-            }
-        });
+		    }
+	    });
 
     }
 
@@ -601,8 +399,16 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 				if (response.getStatus() == 200)
 				{
 					savingproductstemplate = savingProductsTemplate;
+					InterestCompoundingPeriodType();
+					inflateinterestCalculationDaysInYearType();
+					inflateInterestCalculationTypeSpinner();
+					inflateInterestPostingPeriodType();
 				}
+
+				safeUIBlockingUtility.safelyUnBlockUI();
 			}
+
+
 
 			@Override
 			public void failure(RetrofitError error)
@@ -615,9 +421,9 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
 	}
 
-	private List filterListObject(SavingProductsTemplate savingProductsTemplate ) {
+	private ArrayList<String> filterListObject(SavingProductsTemplate savingProductsTemplate ) {
 
-		List<String> InterestValueList = new ArrayList<>();
+		ArrayList<String> InterestValueList = new ArrayList<>();
 		for(InterestType interestType : savingProductsTemplate.getInterestCompoundingPeriodTypeOptions()) {
 			InterestValueList.add(interestType.getValue());
 		}
