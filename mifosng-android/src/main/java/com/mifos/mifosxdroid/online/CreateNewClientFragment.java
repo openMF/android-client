@@ -532,23 +532,10 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 
     public boolean isValidMiddleName() {
         try {
-            if (TextUtils.isEmpty(et_clientMiddleName.getEditableText().toString())) {
-                throw new RequiredFieldException(getResources().getString(R.string.middle_name), getResources().getString(R.string.error_cannot_be_empty));
-            }
-
-            if (et_clientMiddleName.getEditableText().toString().trim().length() < 4 && et_clientMiddleName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.middle_name), 4);
-            }
             if (!et_clientMiddleName.getEditableText().toString().matches("[a-zA-Z]+")) {
                 throw new InvalidTextInputException(getResources().getString(R.string.middle_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (RequiredFieldException e) {
             e.notifyUserWithToast(getActivity());
             result = false;
         }
