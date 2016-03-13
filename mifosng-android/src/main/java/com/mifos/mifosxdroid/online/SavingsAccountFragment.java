@@ -18,16 +18,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.InterestType;
-import com.mifos.objects.accounts.savings.InterestCalculationType;
 import com.mifos.objects.client.Savings;
-import com.mifos.objects.organisation.InterestCalculationDaysInYearType;
-import com.mifos.objects.organisation.InterestCompoundingPeriod;
-import com.mifos.objects.organisation.InterestPostingPeriodType;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.SavingsPayload;
@@ -35,16 +30,9 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -89,10 +77,6 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     private int interestCalculationDaysInYearTypeId;
     private String submittion_date;
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> interestCalculationTypeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> interestPostingPeriodTypeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> interestCompoundingPeriodTypeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> interestCalculationDaysInYearHashMap = new HashMap<String, Integer>();
 	private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
     public static SavingsAccountFragment newInstance(int clientId) {
@@ -117,10 +101,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         ButterKnife.inject(this, rootView);
         inflatesubmissionDate();
         inflateSavingsSpinner();
-        InterestCompoundingPeriodType();
-        inflateInterestCalculationTypeSpinner();
-        inflateInterestPostingPeriodType();
-        inflateinterestCalculationDaysInYearType();
+        getSavingsAccountTemplateAPI();
 
         submittion_date = tv_submittedon_date.getText().toString();
         submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submittion_date).replace("-", " ");
@@ -207,7 +188,8 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
     private void inflateInterestPostingPeriodType() {
 
-	    final ArrayList<String> InterestPostingPeriodTypeNames = filterListObject(savingproductstemplate);
+	    final ArrayList<String> InterestPostingPeriodTypeNames = filterListObject
+			    (savingproductstemplate.getInterestPostingPeriodTypeOptions());
 
 	    final ArrayAdapter<String> interestPostingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
 			    android.R.layout.simple_spinner_item, InterestPostingPeriodTypeNames);
@@ -246,7 +228,8 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
     private void inflateInterestCalculationTypeSpinner() {
 
-	    final ArrayList<String> interestCalculationTypeNames = filterListObject(savingproductstemplate);
+	    final ArrayList<String> interestCalculationTypeNames = filterListObject
+			    (savingproductstemplate.getInterestCalculationTypeOptions());
 	    final ArrayAdapter<String> interestCalculationTypeAdapter = new ArrayAdapter<String>(getActivity(),
 			    android.R.layout.simple_spinner_item, interestCalculationTypeNames);
 	    interestCalculationTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -278,7 +261,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     private void inflateinterestCalculationDaysInYearType() {
 
 	    final ArrayList<String> InterestCalculationDaysInYearTypeNames = filterListObject
-			    (savingproductstemplate);
+			    (savingproductstemplate.getInterestCalculationDaysInYearTypeOptions());
 
 	    final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new ArrayAdapter<String>(getActivity(),
 			    android.R.layout.simple_spinner_item, InterestCalculationDaysInYearTypeNames);
@@ -318,7 +301,8 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
     private void InterestCompoundingPeriodType() {
 
-	    final ArrayList<String> InterestCompoundingPeriodType = filterListObject(savingproductstemplate);
+	    final ArrayList<String> InterestCompoundingPeriodType = filterListObject
+			    (savingproductstemplate.getInterestCompoundingPeriodTypeOptions());
 
 	    final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
 			    android.R.layout.simple_spinner_item, InterestCompoundingPeriodType);
@@ -391,7 +375,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
 	private void getSavingsAccountTemplateAPI(){
 
-		App.apiManager.getSavingsAccountTemplateTemp(new Callback<SavingProductsTemplate>()
+		App.apiManager.getSavingsAccountTemplate(new Callback<SavingProductsTemplate>()
 		{
 			@Override
 			public void success(SavingProductsTemplate savingProductsTemplate, Response response)
@@ -421,10 +405,10 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
 	}
 
-	private ArrayList<String> filterListObject(SavingProductsTemplate savingProductsTemplate ) {
+	private ArrayList<String> filterListObject(List<InterestType> interestTypes ) {
 
 		ArrayList<String> InterestValueList = new ArrayList<>();
-		for(InterestType interestType : savingProductsTemplate.getInterestCompoundingPeriodTypeOptions()) {
+		for(InterestType interestType : interestTypes) {
 			InterestValueList.add(interestType.getValue());
 		}
 

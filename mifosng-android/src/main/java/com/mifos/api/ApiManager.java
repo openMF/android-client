@@ -349,12 +349,8 @@ public class ApiManager extends BaseApiManager {
         getCreateSavingsAccountService().createSavingsAccount(savingsPayload, callback);
     }
 
-    public void getSavingsAccountTemplate(Callback<Response> clientCallback) {
-        getCreateSavingsAccountService().getSavingsAccountTemplate(clientCallback);
-    }
-
-	public void getSavingsAccountTemplateTemp(Callback<SavingProductsTemplate> savingProductsTemplateCallback) {
-		getCreateSavingsAccountService().getSavingsAccountTemplateTemp(savingProductsTemplateCallback);
+	public void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback) {
+		getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
 	}
 
 }

@@ -28,9 +28,6 @@ public interface CreateSavingsAccountService {
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
     void createSavingsAccount(@Body SavingsPayload savingsPayload, Callback<Savings> callback);
 
-    @GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
-    void getSavingsAccountTemplate(Callback<Response> clientCallback);
-
 	@GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
-	void getSavingsAccountTemplateTemp(Callback<SavingProductsTemplate> savingProductsTemplateCallback);
+	void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback);
 }
