@@ -8,8 +8,7 @@ package com.mifos.objects.db;
 import com.google.gson.Gson;
 import com.orm.SugarRecord;
 
-public class Currency extends SugarRecord<Currency>
-{
+public class Currency extends SugarRecord<Currency> {
     private String code;
     private String name;
     private int decimalPlaces;
@@ -27,79 +26,64 @@ public class Currency extends SugarRecord<Currency>
         this.loan = loan;
     }
 
-    public String getDisplayLabel()
-    {
+    public String getDisplayLabel() {
         return displayLabel;
     }
 
-    public void setDisplayLabel(String displayLabel)
-    {
+    public void setDisplayLabel(String displayLabel) {
         this.displayLabel = displayLabel;
     }
 
-    public String getNameCode()
-    {
+    public String getNameCode() {
         return nameCode;
     }
 
-    public void setNameCode(String nameCode)
-    {
+    public void setNameCode(String nameCode) {
         this.nameCode = nameCode;
     }
 
-    public String getDisplaySymbol()
-    {
+    public String getDisplaySymbol() {
         return displaySymbol;
     }
 
-    public void setDisplaySymbol(String displaySymbol)
-    {
+    public void setDisplaySymbol(String displaySymbol) {
         this.displaySymbol = displaySymbol;
     }
 
-    public int getInMultiplesOf()
-    {
+    public int getInMultiplesOf() {
         return inMultiplesOf;
     }
 
-    public void setInMultiplesOf(int inMultiplesOf)
-    {
+    public void setInMultiplesOf(int inMultiplesOf) {
         this.inMultiplesOf = inMultiplesOf;
     }
 
-    public int getDecimalPlaces()
-    {
+    public int getDecimalPlaces() {
         return decimalPlaces;
     }
 
-    public void setDecimalPlaces(int decimalPlaces)
-    {
+    public void setDecimalPlaces(int decimalPlaces) {
         this.decimalPlaces = decimalPlaces;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getCode()
-    {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(String code)
-    {
+    public void setCode(String code) {
         this.code = code;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new Gson().toJson(this);
     }
 

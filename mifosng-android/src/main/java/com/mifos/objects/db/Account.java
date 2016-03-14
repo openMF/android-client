@@ -7,25 +7,21 @@ package com.mifos.objects.db;
 
 import com.orm.SugarRecord;
 
-public class Account extends SugarRecord<Account>
-{
+public class Account extends SugarRecord<Account> {
     private String accountId;
     private int accountStatusId;
     private int loanId;
 
-    public int getLoanId()
-    {
+    public int getLoanId() {
         return loanId;
     }
 
-    public void setLoanId(int loanId)
-    {
+    public void setLoanId(int loanId) {
         this.loanId = loanId;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Account{" +
                 "accountId='" + accountId + '\'' +
                 ", accountStatusId=" + accountStatusId +
@@ -33,23 +29,19 @@ public class Account extends SugarRecord<Account>
                 '}';
     }
 
-    public int getAccountStatusId()
-    {
+    public int getAccountStatusId() {
         return accountStatusId;
     }
 
-    public void setAccountStatusId(int accountStatusId)
-    {
+    public void setAccountStatusId(int accountStatusId) {
         this.accountStatusId = accountStatusId;
     }
 
-    public String getAccountId()
-    {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId)
-    {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
