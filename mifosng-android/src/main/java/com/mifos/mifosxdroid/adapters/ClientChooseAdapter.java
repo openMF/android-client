@@ -4,16 +4,19 @@
  */
 
 package com.mifos.mifosxdroid.adapters;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.adapters.MifosBaseListAdapter;
 import com.mifos.objects.client.Client;
+
 import java.util.List;
 
 /**
@@ -42,8 +45,12 @@ public class ClientChooseAdapter extends MifosBaseListAdapter<Client> {
         }
         item = getItem(position);
         holder.tv_clientName.setText(item.getDisplayName());
-        TextDrawable drawable = mDrawableBuilder.build(String.valueOf(item.getDisplayName().charAt(0)), mColorGenerator.getColor(item.getDisplayName()));
-        holder.iv_clientImage.setImageDrawable(drawable);
+
+        TextDrawable drawable;
+        if (item.getDisplayName() != null && item.getDisplayName().trim().length() > 0) {
+            drawable = mDrawableBuilder.build(String.valueOf(item.getDisplayName().charAt(0)), mColorGenerator.getColor(item.getDisplayName()));
+            holder.iv_clientImage.setImageDrawable(drawable);
+        }
         return convertView;
     }
 
