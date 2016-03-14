@@ -14,11 +14,6 @@
                 android:layout_width="75dp"
                 android:layout_height="75dp">
 
-                <ProgressBar
-                    android:id="@+id/pb_imageProgressBar"
-                    style="@style/ProgressBar.Base"
-                    android:layout_gravity="center" />
-
                 <com.mifos.mifosxdroid.views.CircularImageView
                     android:id="@+id/iv_clientImage"
                     style="@style/ClientImage"

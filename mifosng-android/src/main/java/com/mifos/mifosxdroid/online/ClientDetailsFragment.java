@@ -38,10 +38,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.App;
 import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.OauthOkHttpClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
@@ -58,6 +60,7 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,9 +113,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     TextView tv_office;
     @InjectView(R.id.iv_clientImage)
     CircularImageView iv_clientImage;
-    @InjectView(R.id.pb_imageProgressBar)
-    ProgressBar pb_imageProgressBar;
-
     @InjectView(R.id.row_account)
     TableRow rowAccount;
     @InjectView(R.id.row_external)
@@ -137,8 +137,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
     private AccountAccordion accountAccordion;
-    private ImageLoadingAsyncTask imageLoadingAsyncTask;
-
+	private Picasso picasso;
 
     /**
      * Use this factory method to create a new instance of
@@ -155,13 +154,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     }
 
     @Override
-    public void onDetach() {
-        if (imageLoadingAsyncTask != null && !imageLoadingAsyncTask.getStatus().equals(AsyncTask.Status.FINISHED))
-            imageLoadingAsyncTask.cancel(true);
-        super.onDetach();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
@@ -175,6 +167,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
         ButterKnife.inject(this, rootView);
         inflateClientInformation();
+	    picasso = new Picasso.Builder(getActivity())
+			    .downloader(new OkHttp3Downloader(new OauthOkHttpClient().getOauthOkHttpClient()))
+			    .build();
         return rootView;
     }
 
@@ -256,7 +251,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      */
     private void uploadImage(File pngFile) {
         final String imagePath = pngFile.getAbsolutePath();
-        pb_imageProgressBar.setVisibility(VISIBLE);
         App.apiManager.uploadClientImage(clientId,
                 new TypedFile("image/png", pngFile),
                 new Callback<Response>() {
@@ -264,14 +258,12 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                     public void success(Response response, Response response2) {
                         Toaster.show(rootView, R.string.client_image_updated);
                         iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
-                        pb_imageProgressBar.setVisibility(GONE);
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         Toaster.show(rootView, "Failed to update image");
-                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                        imageLoadingAsyncTask.execute(clientId);
+	                    picasso_image_loader(clientId);
                     }
                 }
         );
@@ -322,11 +314,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                         rowOffice.setVisibility(GONE);
 
                     if (client.isImagePresent()) {
-                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                        imageLoadingAsyncTask.execute(client.getId());
+	                    picasso_image_loader(client.getId());
                     } else {
                         iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-                        pb_imageProgressBar.setVisibility(GONE);
                     }
 
                     iv_clientImage.setOnClickListener(new OnClickListener() {
@@ -685,47 +675,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         }
     }
 
-    public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
-        Bitmap bmp;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pb_imageProgressBar.setVisibility(VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            String url = PrefManager.getInstanceUrl()
-                    + "/"
-                    + "clients/"
-                    + integers[0]
-                    + "/images?maxHeight=120&maxWidth=120";
-
-            try {
-                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT, "default");
-                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken());
-                httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                bmp = BitmapFactory.decodeStream(inputStream);
-                httpURLConnection.disconnect();
-            } catch (MalformedURLException e) {
-            } catch (IOException ioe) {
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (bmp != null) iv_clientImage.setImageBitmap(bmp);
-            else
-                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            pb_imageProgressBar.setVisibility(GONE);
-        }
+    public void picasso_image_loader(int clientId) {
+        picasso.load(PrefManager.getInstanceUrl()
+                + "/" + "clients/" + clientId + "/images?maxHeight=120&maxWidth=120")
+                .error(R.drawable.ic_launcher)
+                .resize(96, 96)
+                .centerCrop()
+                .into(iv_clientImage);
     }
 
 }

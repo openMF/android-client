@@ -33,6 +33,7 @@
         android:padding="8dp"
         android:maxHeight="96dp"
         android:maxWidth="96dp"
+        android:scaleType="fitXY"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
