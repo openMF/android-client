@@ -83,6 +83,9 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         if (!PrefManager.getPort().equals("80"))
             et_port.setText(PrefManager.getPort());
 
+        if (PrefManager.getToken().equals(""))
+            PrefManager.clearPrefs();
+
         et_domain.setText(PrefManager.getInstanceDomain());
         bt_connectionSettings.setOnClickListener(new OnClickListener() {
             @Override
