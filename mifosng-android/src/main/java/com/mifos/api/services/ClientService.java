@@ -8,6 +8,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.api.model.ClientPayload;
+import com.mifos.objects.templates.clients.ClientsTemplate;
 
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -54,5 +55,5 @@ public interface ClientService {
     void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
 
     @GET(APIEndPoint.CLIENTS + "/template")
-    void getClientTemplate(Callback<Response> callback);
+    void getClientTemplate(Callback<ClientsTemplate> callback);
 }

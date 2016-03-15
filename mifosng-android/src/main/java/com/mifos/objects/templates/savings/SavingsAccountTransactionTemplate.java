@@ -72,4 +72,19 @@ public class SavingsAccountTransactionTemplate {
         this.additionalProperties.put(name, value);
     }
 
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
+    }
+
+    @Override
+    public String toString() {
+        return "SavingsAccountTransactionTemplate{" +
+                "accountId=" + accountId +
+                ", accountNo='" + accountNo + '\'' +
+                ", date=" + date +
+                ", reversed=" + reversed +
+                ", paymentTypeOptions=" + paymentTypeOptions +
+                ", additionalProperties=" + additionalProperties +
+                '}';
+    }
 }
