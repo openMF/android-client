@@ -83,9 +83,6 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         if (!PrefManager.getPort().equals("80"))
             et_port.setText(PrefManager.getPort());
 
-        if (PrefManager.getToken().equals(""))
-            PrefManager.clearPrefs();
-
         et_domain.setText(PrefManager.getInstanceDomain());
         bt_connectionSettings.setOnClickListener(new OnClickListener() {
             @Override
@@ -150,7 +147,6 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         // Saving port
         PrefManager.setPort(et_port.getEditableText().toString());
         // Saving tenant
-        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
         // Saving user's token
         PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
 
@@ -202,6 +198,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
 
     @OnClick(R.id.bt_login)
     public void onLoginClick(Button button) {
+        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
         login(false);
     }
 
