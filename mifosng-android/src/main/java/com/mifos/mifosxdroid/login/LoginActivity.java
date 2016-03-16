@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid;
+package com.mifos.mifosxdroid.login;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.App;
+import com.mifos.mifosxdroid.OfflineCenterInputActivity;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
@@ -49,7 +51,7 @@ import static android.view.View.VISIBLE;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends MifosBaseActivity implements Callback<User> {
+public class LoginActivity extends MifosBaseActivity implements Callback<User>,LoginMvpView {
 
     @InjectView(R.id.et_instanceURL)
     EditText et_domain;
@@ -72,6 +74,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
+    private LoginPresenter mLoginPresenter;
 
 
     @Override
@@ -79,6 +82,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+        mLoginPresenter.attachView(this);
 
         et_port.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (!PrefManager.getPort().equals("80"))
@@ -238,5 +242,30 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         if (item.getItemId() == R.id.offline)
             startActivity(new Intent(this, OfflineCenterInputActivity.class));
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLoginSuccessful(int statuscode) {
+
+        if(statuscode == 200){
+
+        }
+
+    }
+
+    @Override
+    public void onLoginError() {
+
+    }
+
+    @Override
+    public void onGeneralSignInError() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLoginPresenter.detachView();
     }
 }
