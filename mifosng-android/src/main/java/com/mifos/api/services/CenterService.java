@@ -24,6 +24,7 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.http.QueryMap;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -32,11 +33,10 @@ public interface CenterService {
 
 
     @GET(APIEndPoint.CENTERS)
-    void getAllCenters(Callback<List<Center>> callback);
+    Observable<List<Center>> getAllCenters();
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
-    void getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int centerId,
-                                                               Callback<CenterWithAssociations> centerWithAssociationsCallback);
+    Observable<CenterWithAssociations> getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int centerId);
 
     @GET(APIEndPoint.CENTERS)
     void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> additionalParams,

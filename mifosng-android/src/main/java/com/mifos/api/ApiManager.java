@@ -114,12 +114,12 @@ public class ApiManager extends BaseApiManager {
      * Centers API
      */
 
-    public void getCenters(Callback<List<Center>> callback) {
-        getCenterApi().getAllCenters(callback);
+    public void getCenters() {
+        getCenterApi().getAllCenters();
     }
 
-    public void getCentersGroupAndMeeting(int id, Callback<CenterWithAssociations> callback) {
-        getCenterApi().getCenterWithGroupMembersAndCollectionMeetingCalendar(id, callback);
+    public void getCentersGroupAndMeeting(int id) {
+        getCenterApi().getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
     }
 
     public void getCentersInOffice(int id, Map<String, Object> params, Callback<List<Center>> callback) {

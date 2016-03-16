@@ -6,6 +6,11 @@
 package com.mifos.api;
 
 import com.mifos.objects.User;
+import com.mifos.objects.group.Center;
+import com.mifos.objects.group.CenterWithAssociations;
+
+import java.util.List;
+
 import rx.Observable;
 
 /**
@@ -14,14 +19,29 @@ import rx.Observable;
 public class DataManager {
 
 
-    BaseApiManager BaseAp = new BaseApiManager();
+    BaseApiManager mBaseApiManager = new BaseApiManager();
 
     public DataManager(){
 
     }
 
-
+    /**
+     * @param username Username
+     * @param password  Password
+     * @return  Basic OAuth
+     */
     public Observable<User> login(String username, String password) {
-        return BaseAp.getAuthApi().authenticate(username,password);
+        return mBaseApiManager.getAuthApi().authenticate(username,password);
+    }
+
+    /**
+     * @return List of All Centers
+     */
+    public Observable<List<Center>> getCenters(){
+        return mBaseApiManager.getCenterApi().getAllCenters();
+    }
+
+    public Observable<CenterWithAssociations> getCentersGroupAndMeeting(int centerId){
+        return mBaseApiManager.getCenterApi().getCenterWithGroupMembersAndCollectionMeetingCalendar(centerId);
     }
 }
