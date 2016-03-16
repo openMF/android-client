@@ -65,9 +65,9 @@ import retrofit.mime.TypedFile;
  */
 public class ApiManager extends BaseApiManager {
 
-    public void login(String username, String password, Callback<User> callback) {
+    public void login(String username, String password ) {
         Log.i(getClass().getSimpleName(), "Login - " + username + " Password - " + password);
-        getAuthApi().authenticate(username, password, callback);
+        getAuthApi().authenticate(username, password );
     }
 
     /**

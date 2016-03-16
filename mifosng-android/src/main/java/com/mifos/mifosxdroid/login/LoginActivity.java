@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -51,7 +52,7 @@ import static android.view.View.VISIBLE;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends MifosBaseActivity implements Callback<User>,LoginMvpView {
+public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @InjectView(R.id.et_instanceURL)
     EditText et_domain;
@@ -75,6 +76,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User>,L
     private String password;
     private boolean isValidUrl;
     private LoginPresenter mLoginPresenter;
+    private DataManager dataManager;
 
 
     @Override
@@ -82,6 +84,8 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User>,L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+        dataManager = new DataManager();
+        mLoginPresenter = new LoginPresenter(dataManager);
         mLoginPresenter.attachView(this);
 
         et_port.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -139,48 +143,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User>,L
         return true;
     }
 
-    @Override
-    public void success(User user, Response response) {
-        hideProgress();
-        Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " " + user.getUsername());
-        // Saving userID
-        PrefManager.setUserId(user.getUserId());
-        // Saving InstanceURL for next usages
-        PrefManager.setInstanceUrl(instanceURL);
-        // Saving domain name
-        PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
-        // Saving port
-        PrefManager.setPort(et_port.getEditableText().toString());
-        // Saving tenant
-        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
-        // Saving user's token
-        PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
 
-        startActivity(new Intent(LoginActivity.this, DashboardFragmentActivity.class));
-        finish();
-    }
-
-    @Override
-    public void failure(RetrofitError retrofitError) {
-        try {
-            hideProgress();
-            if (retrofitError.getCause() instanceof SSLHandshakeException) {
-                promptUserToByPassTheSSLHandshake();
-            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_login_failed));
-            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                Toaster.show(findViewById(android.R.id.content), "Internal server error");
-            }
-        } catch (NullPointerException e) {
-            if(Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to Internet") )
-            {
-                Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
-            }
-            else {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
-            }
-        }
-    }
 
     /**
      * This method should show a dialog box and ask the user
@@ -217,9 +180,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User>,L
         if (!validateUserInputs())
             return;
 
-        showProgress("Logging In");
-        App.apiManager.setupEndpoint(instanceURL);
-        App.apiManager.login(username, password, this);
+        mLoginPresenter.login(instanceURL, username,password);
     }
 
     @OnEditorAction(R.id.et_password)
@@ -245,21 +206,56 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User>,L
     }
 
     @Override
-    public void onLoginSuccessful(int statuscode) {
+    public void onLoginSuccessful(User user) {
+        Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " " + user.getUsername());
+        // Saving userID
+        PrefManager.setUserId(user.getUserId());
+        // Saving InstanceURL for next usages
+        PrefManager.setInstanceUrl(instanceURL);
+        // Saving domain name
+        PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
+        // Saving port
+        PrefManager.setPort(et_port.getEditableText().toString());
+        // Saving tenant
+        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
+        // Saving user's token
+        PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
 
-        if(statuscode == 200){
+        startActivity(new Intent(LoginActivity.this, DashboardFragmentActivity.class));
+        finish();
 
+    }
+
+    @Override
+    public void onLoginError(Throwable throwable) {
+        try {
+
+            if (throwable.getCause() instanceof SSLHandshakeException) {
+                promptUserToByPassTheSSLHandshake();
+            } /*else if (throwable.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_login_failed));
+            } else if (throwable.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                Toaster.show(findViewById(android.R.id.content), "Internal server error");
+            }*/
+        } catch (NullPointerException e) {
+            if(Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to Internet") )
+            {
+                Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
+            }
+            else {
+                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
+            }
         }
-
     }
 
-    @Override
-    public void onLoginError() {
-
-    }
 
     @Override
-    public void onGeneralSignInError() {
+    public void showProgress(boolean show) {
+        if(show){
+            showProgress("Logging In");
+        }else {
+            hideProgress();
+        }
 
     }
 

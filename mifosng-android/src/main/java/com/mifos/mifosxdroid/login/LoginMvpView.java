@@ -6,15 +6,16 @@
 package com.mifos.mifosxdroid.login;
 
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.User;
 
 /**
  * Created by Rajan Maurya on 16/3/16.
  */
 public interface LoginMvpView extends MvpView {
 
-    void onLoginSuccessful(int statuscode);
+    void onLoginSuccessful(User user);
 
-    void onLoginError();
+    void onLoginError(Throwable throwable);
 
-    void onGeneralSignInError();
+    void showProgress(boolean show);
 }

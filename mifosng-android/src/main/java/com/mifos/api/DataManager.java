@@ -5,8 +5,23 @@
 
 package com.mifos.api;
 
+import com.mifos.objects.User;
+import rx.Observable;
+
 /**
  * Created by Rajan Maurya on 16/3/16.
  */
 public class DataManager {
+
+
+    BaseApiManager BaseAp = new BaseApiManager();
+
+    public DataManager(){
+
+    }
+
+
+    public Observable<User> login(String username, String password) {
+        return BaseAp.getAuthApi().authenticate(username,password);
+    }
 }
