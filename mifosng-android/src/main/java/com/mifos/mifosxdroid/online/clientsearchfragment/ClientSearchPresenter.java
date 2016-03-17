@@ -3,46 +3,47 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online.clientchoosefragment;
+package com.mifos.mifosxdroid.online.clientsearchfragment;
 
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.Presenter;
-import com.mifos.objects.client.Client;
-import com.mifos.objects.client.Page;
+import com.mifos.objects.SearchedEntity;
+import java.util.List;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Rajan Maurya on 17/3/16.
+ * Created by Rajan Maurya on 18/3/16.
  */
-public class ClientChoosePresenter implements Presenter<ClientChooseMvpView> {
+public class ClientSearchPresenter implements Presenter<ClientSearchMvpView> {
 
     private final DataManager mDataManager;
-    public Subscription mSubscription;
-    private ClientChooseMvpView mClientChooseMvpView;
+    private ClientSearchMvpView mClientSearchMvpView;
+    private Subscription mSubscription;
 
-    public ClientChoosePresenter(DataManager dataManager){
+    public ClientSearchPresenter(DataManager dataManager){
         mDataManager = dataManager;
     }
+
     @Override
-    public void attachView(ClientChooseMvpView mvpView) {
-        mClientChooseMvpView = mvpView;
+    public void attachView(ClientSearchMvpView mvpView) {
+        mClientSearchMvpView = mvpView;
     }
 
     @Override
     public void detachView() {
-        mClientChooseMvpView = null;
+        mClientSearchMvpView = null;
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadchoosingclientlist(){
+    public void loadsearchresult(String name){
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientList()
+        mSubscription = mDataManager.searchClientsByName(name)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Client>>() {
+                .subscribe(new Subscriber<List<SearchedEntity>>() {
                     @Override
                     public void onCompleted() {
 
@@ -50,12 +51,12 @@ public class ClientChoosePresenter implements Presenter<ClientChooseMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientChooseMvpView.showErrorFetching();
+                        mClientSearchMvpView.showSearchNotFound();
                     }
 
                     @Override
-                    public void onNext(Page<Client> clientPage) {
-                        mClientChooseMvpView.showclientlist(clientPage);
+                    public void onNext(List<SearchedEntity> searchedEntities) {
+                        mClientSearchMvpView.showsearchresult(searchedEntities);
                     }
                 });
     }

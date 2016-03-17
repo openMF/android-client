@@ -16,6 +16,7 @@ import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.online.clientchoosefragment.ClientChooseFragment;
 import com.mifos.mifosxdroid.online.clientlistfragment.ClientListFragment;
+import com.mifos.mifosxdroid.online.clientsearchfragment.ClientSearchFragment;
 
 /**
  * Created by ishankhanna on 09/02/14.

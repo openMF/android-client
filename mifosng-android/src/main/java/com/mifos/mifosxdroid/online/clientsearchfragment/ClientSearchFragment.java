@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.clientsearchfragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +14,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientSearchAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.ClientActivity;
+import com.mifos.mifosxdroid.online.clientchoosefragment.ClientChooseMvpView;
 import com.mifos.objects.SearchedEntity;
+import com.mifos.objects.client.Client;
+import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
 
 import java.util.ArrayList;
@@ -33,7 +39,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ClientSearchFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener {
+public class ClientSearchFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener , ClientSearchMvpView{
 
     private static final String TAG = ClientSearchFragment.class.getSimpleName();
 
@@ -45,11 +51,16 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
 
     private List<SearchedEntity> clients = new ArrayList<>();
     private ClientSearchAdapter adapter;
+    private DataManager dataManager;
+    private ClientSearchPresenter clientSearchPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_client_search, null);
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        clientSearchPresenter = new ClientSearchPresenter(dataManager);
+        clientSearchPresenter.attachView(this);
         adapter = new ClientSearchAdapter(getContext(), clients, R.layout.list_item_client);
         results.setAdapter(adapter);
         results.setOnItemClickListener(this);
@@ -60,32 +71,11 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
     public void performSearch() {
         String q = et_searchById.getEditableText().toString().trim();
         if (!q.isEmpty())
-            findClients(q);
+            clientSearchPresenter.loadsearchresult(q);
         else
             Toaster.show(et_searchById, "No Search Query Entered!");
     }
 
-    public void findClients(final String name) {
-        showProgress();
-
-        App.apiManager.searchClientsByName(name, new Callback<List<SearchedEntity>>() {
-            @Override
-            public void success(List<SearchedEntity> result, Response response) {
-                clients = result;
-                adapter.setList(result);
-                adapter.notifyDataSetChanged();
-
-                if (result.isEmpty())
-                    showAlertDialog("Message", "No results found for entered query");
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                hideProgress();
-            }
-        });
-    }
 
     @Override
     public void onPause() {
@@ -131,5 +121,26 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
         Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
         clientActivityIntent.putExtra(Constants.CLIENT_ID, clients.get(i).getEntityId());
         startActivity(clientActivityIntent);
+    }
+
+    @Override
+    public void showsearchresult(List<SearchedEntity> searchedEntities) {
+        clients = searchedEntities;
+        adapter.setList(searchedEntities);
+        adapter.notifyDataSetChanged();
+
+        if (searchedEntities.isEmpty())
+            showAlertDialog("Message", "No results found for entered query");
+    }
+
+    @Override
+    public void showSearchNotFound() {
+        Toast.makeText(getActivity(),"No results found for entered query" ,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clientSearchPresenter.detachView();
     }
 }

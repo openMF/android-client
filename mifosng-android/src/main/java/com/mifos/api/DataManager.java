@@ -5,6 +5,7 @@
 
 package com.mifos.api;
 
+import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Charges;
@@ -93,5 +94,9 @@ public class DataManager {
 
     public Observable<Page<Client>> getClientList(int offset, int limit){
         return mBaseApiManager.getClientsApi().listAllClients(offset,limit);
+    }
+
+    public Observable<List<SearchedEntity>> searchClientsByName(String name){
+        return mBaseApiManager.getSearchApi().searchClientsByName(name);
     }
 }

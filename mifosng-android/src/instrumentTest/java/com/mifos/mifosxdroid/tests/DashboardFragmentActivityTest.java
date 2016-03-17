@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CentersActivity;
-import com.mifos.mifosxdroid.online.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.clientsearchfragment.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
