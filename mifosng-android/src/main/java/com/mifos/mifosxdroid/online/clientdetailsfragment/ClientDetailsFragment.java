@@ -718,6 +718,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     public void getProgressBarCount(){
         ++mCounterProgressBarCount;
         if(mCounterProgressBarCount == 3 ){
+            mCounterProgressBarCount = 0;
             showClientDetailsProgressBar(false);
         }
     }
