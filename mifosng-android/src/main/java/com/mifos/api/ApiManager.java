@@ -90,16 +90,16 @@ public class ApiManager extends BaseApiManager {
         getClientsApi().listAllClients(offset, limit, callback);
     }
 
-    public void getClient(int id, Callback<Client> callback) {
-        getClientsApi().getClient(id, callback);
+    public void getClient(int id) {
+        getClientsApi().getClient(id);
     }
 
-    public void uploadClientImage(int id, TypedFile image, Callback<Response> callback) {
-        getClientsApi().uploadClientImage(id, image, callback);
+    public void uploadClientImage(int id, TypedFile image) {
+        getClientsApi().uploadClientImage(id, image);
     }
 
-    public void deleteClientImage(int id, Callback<Response> callback) {
-        getClientsApi().deleteClientImage(id, callback);
+    public void deleteClientImage(int id) {
+        getClientsApi().deleteClientImage(id);
     }
 
     public void createClient(ClientPayload payload, Callback<Client> callback) {
@@ -154,24 +154,24 @@ public class ApiManager extends BaseApiManager {
      * Client Accounts API
      */
 
-    public void getClientAccounts(int id, Callback<ClientAccounts> callback) {
-        getAccountsApi().getAllAccountsOfClient(id, callback);
+    public void getClientAccounts(int id) {
+        getAccountsApi().getAllAccountsOfClient(id);
     }
 
     /**
      * Data tables API
      */
 
-    public void getSavingsDataTable(Callback<List<DataTable>> callback) {
-        getDataTableApi().getTableOf("m_savings_account", callback);
+    public void getSavingsDataTable() {
+        getDataTableApi().getTableOf("m_savings_account");
     }
 
-    public void getClientDataTable(Callback<List<DataTable>> callback) {
-        getDataTableApi().getTableOf("m_client", callback);
+    public void getClientDataTable() {
+        getDataTableApi().getTableOf("m_client");
     }
 
-    public void getLoanDataTable(Callback<List<DataTable>> callback) {
-        getDataTableApi().getTableOf("m_loan", callback);
+    public void getLoanDataTable() {
+        getDataTableApi().getTableOf("m_loan");
     }
 
     public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {

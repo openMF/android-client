@@ -6,13 +6,19 @@
 package com.mifos.api;
 
 import com.mifos.objects.User;
+import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.noncore.DataTable;
 
+import java.io.File;
 import java.util.List;
 
+import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 import rx.Observable;
 
 /**
@@ -56,5 +62,23 @@ public class DataManager {
         return mBaseApiManager.getChargeService().getListOfCharges(clientId);
     }
 
-    public Observable<>
+    public Observable<Response> deleteClientImage(int clientid){
+        return mBaseApiManager.getClientsApi().deleteClientImage(clientid);
+    }
+
+    public Observable<Response> uploadclientimage(int clientid , TypedFile typedFile){
+        return mBaseApiManager.getClientsApi().uploadClientImage(clientid, typedFile);
+    }
+
+    public Observable<Client> getclientdetails(int clientid){
+        return mBaseApiManager.getClientsApi().getClient(clientid);
+    }
+
+    public Observable<ClientAccounts> getclientaccount(int clientid){
+        return mBaseApiManager.getAccountsApi().getAllAccountsOfClient(clientid);
+    }
+
+    public Observable<List<DataTable>> getClientDataTable(String m_client){
+        return mBaseApiManager.getDataTableApi().getTableOf(m_client);
+    }
 }

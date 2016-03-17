@@ -291,7 +291,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
      */
     public void inflateDataTablesList() {
         showProgress();
-        App.apiManager.getLoanDataTable(new Callback<List<DataTable>>() {
+        /*App.apiManager.getLoanDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
                 if (dataTables != null) {
@@ -309,7 +309,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
             public void failure(RetrofitError retrofitError) {
                 hideProgress();
             }
-        });
+        });*/
     }
 
     public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {

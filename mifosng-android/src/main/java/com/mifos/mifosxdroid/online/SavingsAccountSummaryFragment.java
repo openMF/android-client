@@ -297,7 +297,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
     public void inflateDataTablesList() {
         showProgress();
         //TODO change loan service to savings account service
-        App.apiManager.getSavingsDataTable(new Callback<List<DataTable>>() {
+        /*App.apiManager.getSavingsDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
                 if (dataTables != null) {
@@ -315,7 +315,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
             public void failure(RetrofitError retrofitError) {
                 hideProgress();
             }
-        });
+        });*/
     }
 
     public void enableInfiniteScrollOfTransactions() {

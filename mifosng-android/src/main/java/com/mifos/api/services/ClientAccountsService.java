@@ -10,6 +10,7 @@ import com.mifos.api.model.APIEndPoint;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -17,5 +18,5 @@ import retrofit.http.Path;
 public interface ClientAccountsService {
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
-    void getAllAccountsOfClient(@Path("clientId") int clientId, Callback<ClientAccounts> clientAccountsCallback);
+    Observable<ClientAccounts> getAllAccountsOfClient(@Path("clientId") int clientId);
 }
