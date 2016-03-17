@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.online.centerlistfragment.CenterListFragment;
+import com.mifos.mifosxdroid.online.clientlistfragment.ClientListFragment;
 import com.mifos.objects.client.Client;
 
 import java.util.List;

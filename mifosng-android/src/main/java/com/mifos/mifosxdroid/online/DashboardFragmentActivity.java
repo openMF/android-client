@@ -14,6 +14,8 @@ import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.clientchoosefragment.ClientChooseFragment;
+import com.mifos.mifosxdroid.online.clientlistfragment.ClientListFragment;
 
 /**
  * Created by ishankhanna on 09/02/14.

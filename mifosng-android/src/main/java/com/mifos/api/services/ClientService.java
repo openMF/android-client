@@ -31,10 +31,10 @@ public interface ClientService {
 
     //This is a default call and Loads client from 0 to 200
     @GET(APIEndPoint.CLIENTS)
-    void listAllClients(Callback<Page<Client>> callback);
+    Observable<Page<Client>> listAllClients();
 
     @GET(APIEndPoint.CLIENTS)
-    void listAllClients(@Query("offset") int offset, @Query("limit") int limit, Callback<Page<Client>> callback);
+    Observable<Page<Client>> listAllClients(@Query("offset") int offset, @Query("limit") int limit);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     Observable<Client> getClient(@Path("clientId") int clientId);

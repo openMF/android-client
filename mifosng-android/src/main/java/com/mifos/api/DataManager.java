@@ -86,4 +86,12 @@ public class DataManager {
     public Observable<List<Identifier>> getListOfIdentifiers(int clientid){
         return mBaseApiManager.getIdentifierApi().getListOfIdentifiers(clientid);
     }
+
+    public Observable<Page<Client>> getClientList(){
+        return mBaseApiManager.getClientsApi().listAllClients();
+    }
+
+    public Observable<Page<Client>> getClientList(int offset, int limit){
+        return mBaseApiManager.getClientsApi().listAllClients(offset,limit);
+    }
 }

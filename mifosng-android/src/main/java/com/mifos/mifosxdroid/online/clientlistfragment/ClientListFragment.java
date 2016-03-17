@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.clientlistfragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +16,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
@@ -37,12 +39,16 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class ClientListFragment extends MifosBaseFragment {
+public class ClientListFragment extends MifosBaseFragment implements ClientListMvpView{
 
     @InjectView(R.id.lv_clients)
     ListView lv_clients;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    private DataManager mDatamanager;
+    private ClientListPresenter mClientListPresenter;
+    ClientNameListAdapter clientNameListAdapter;
 
     private View rootView;
     private List<Client> clientList = new ArrayList<>();
@@ -73,6 +79,9 @@ public class ClientListFragment extends MifosBaseFragment {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         ButterKnife.inject(this, rootView);
+        mDatamanager = new DataManager();
+        mClientListPresenter = new ClientListPresenter(mDatamanager);
+        mClientListPresenter.attachView(this);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R.color.orange_light, R.color.red_light);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -86,7 +95,7 @@ public class ClientListFragment extends MifosBaseFragment {
     }
 
     public void inflateClientList() {
-        ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(getContext(), clientList);
+        clientNameListAdapter = new ClientNameListAdapter(getContext(), clientList);
         lv_clients.setAdapter(clientNameListAdapter);
         lv_clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -100,7 +109,7 @@ public class ClientListFragment extends MifosBaseFragment {
         // require an infinite scroll as all the clients will be loaded at once
         hideProgress();
         if (isInfiniteScrollEnabled)
-            setInfiniteScrollListener(clientNameListAdapter);
+            setInfiniteScrollListener();
     }
 
     public void fetchClientList() {
@@ -108,23 +117,7 @@ public class ClientListFragment extends MifosBaseFragment {
         if (clientList.size() > 0) {
             inflateClientList();
         } else {
-            swipeRefreshLayout.setRefreshing(true);
-
-            App.apiManager.listClients(new Callback<Page<Client>>() {
-                @Override
-                public void success(Page<Client> page, Response response) {
-                    clientList = page.getPageItems();
-                    inflateClientList();
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void failure(RetrofitError retrofitError) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    Toaster.show(rootView, "There was some error fetching list.");
-                    hideProgress();
-                }
-            });
+            mClientListPresenter.loadclientlist();
         }
     }
 
@@ -132,7 +125,7 @@ public class ClientListFragment extends MifosBaseFragment {
         this.clientList = clientList;
     }
 
-    public void setInfiniteScrollListener(final ClientNameListAdapter clientNameListAdapter) {
+    public void setInfiniteScrollListener() {
         lv_clients.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -144,24 +137,7 @@ public class ClientListFragment extends MifosBaseFragment {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
                     offset += limit + 1;
                     swipeRefreshLayout.setRefreshing(true);
-                    App.apiManager.listClients(offset, limit, new Callback<Page<Client>>() {
-                        @Override
-                        public void success(Page<Client> clientPage, Response response) {
-                            clientList.addAll(clientPage.getPageItems());
-                            clientNameListAdapter.notifyDataSetChanged();
-                            index = lv_clients.getFirstVisiblePosition();
-                            View v = lv_clients.getChildAt(0);
-                            top = (v == null) ? 0 : v.getTop();
-                            lv_clients.setSelectionFromTop(index, top);
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError retrofitError) {
-                            swipeRefreshLayout.setRefreshing(false);
-                            Toaster.show(rootView, "There was some error fetching list.");
-                        }
-                    });
+                    mClientListPresenter.loadmoreclientlist(offset,limit);
                 }
             }
         });
@@ -169,5 +145,35 @@ public class ClientListFragment extends MifosBaseFragment {
 
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
         this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mClientListPresenter.detachView();
+    }
+
+    @Override
+    public void showClientList(Page<Client> page) {
+        clientList = page.getPageItems();
+        inflateClientList();
+    }
+
+    @Override
+    public void showErrorFetchingList() {
+        Toaster.show(rootView, "There was some error fetching list.");
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showMoreClientList(Page<Client> clientPage) {
+        clientList.addAll(clientPage.getPageItems());
+        clientNameListAdapter.notifyDataSetChanged();
+        index = lv_clients.getFirstVisiblePosition();
+        View v = lv_clients.getChildAt(0);
+        top = (v == null) ? 0 : v.getTop();
+        lv_clients.setSelectionFromTop(index, top);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
