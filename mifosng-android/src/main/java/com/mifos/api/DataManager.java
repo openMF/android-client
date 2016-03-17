@@ -13,6 +13,7 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.noncore.Identifier;
 
 import java.io.File;
 import java.util.List;
@@ -80,5 +81,9 @@ public class DataManager {
 
     public Observable<List<DataTable>> getClientDataTable(String m_client){
         return mBaseApiManager.getDataTableApi().getTableOf(m_client);
+    }
+
+    public Observable<List<Identifier>> getListOfIdentifiers(int clientid){
+        return mBaseApiManager.getIdentifierApi().getListOfIdentifiers(clientid);
     }
 }

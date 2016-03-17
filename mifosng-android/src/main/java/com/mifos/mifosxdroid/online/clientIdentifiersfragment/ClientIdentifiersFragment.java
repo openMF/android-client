@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.clientIdentifiersfragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,9 +13,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.utils.Constants;
 
@@ -28,13 +30,15 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class ClientIdentifiersFragment extends MifosBaseFragment {
+public class ClientIdentifiersFragment extends MifosBaseFragment implements ClientIdentifiersMvpView{
 
     @InjectView(R.id.lv_identifiers)
     ListView lv_identifiers;
 
     private View rootView;
     private int clientId;
+    public DataManager mDataManager;
+    public ClientIdentifiersPresenter mClientIdentifiersPresenter;
 
     public static ClientIdentifiersFragment newInstance(int clientId) {
         ClientIdentifiersFragment fragment = new ClientIdentifiersFragment();
@@ -56,29 +60,41 @@ public class ClientIdentifiersFragment extends MifosBaseFragment {
         rootView = inflater.inflate(R.layout.fragment_client_identifiers, container, false);
         ButterKnife.inject(this, rootView);
         setToolbarTitle(getString(R.string.identifiers));
-        loadIdentifiers();
+        mDataManager = new DataManager();
+        mClientIdentifiersPresenter = new ClientIdentifiersPresenter(mDataManager);
+        mClientIdentifiersPresenter.attachView(this);
+        mClientIdentifiersPresenter.loadIdentifiers(clientId);
         return rootView;
     }
 
 
-    public void loadIdentifiers() {
-        showProgress();
-        App.apiManager.getIdentifiers(clientId, new Callback<List<Identifier>>() {
-            @Override
-            public void success(List<Identifier> identifiers, Response response) {
-                if (identifiers != null && identifiers.size() > 0) {
-                    IdentifierListAdapter identifierListAdapter = new IdentifierListAdapter(getActivity(), identifiers, clientId);
-                    lv_identifiers.setAdapter(identifierListAdapter);
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.message_no_identifiers_available), Toast.LENGTH_SHORT).show();
-                }
-                hideProgress();
-            }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mClientIdentifiersPresenter.detachView();
+    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });
+    @Override
+    public void showIdentifiers(List<Identifier> identifiers) {
+        if (identifiers != null && identifiers.size() > 0) {
+            IdentifierListAdapter identifierListAdapter = new IdentifierListAdapter(getActivity(), identifiers, clientId);
+            lv_identifiers.setAdapter(identifierListAdapter);
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.message_no_identifiers_available), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showIdentifierFetchError() {
+        Toaster.show(rootView , "Failed to Fetch Identifier");
+    }
+
+    @Override
+    public void showIdentifierProgressBar(boolean status) {
+        if(status){
+            showProgress();
+        }else {
+            hideProgress();
+        }
     }
 }

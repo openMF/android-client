@@ -14,14 +14,14 @@ import retrofit.Callback;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import rx.Observable;
 
 /**
  * @author fomenkoo
  */
 public interface IdentifierService {
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS)
-    void getListOfIdentifiers(@Path("clientId") int clientId,
-                              Callback<List<Identifier>> identifierListCallback);
+    Observable<List<Identifier>> getListOfIdentifiers(@Path("clientId") int clientId);
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
     void deleteIdentifier(@Path("clientId") int clientId,

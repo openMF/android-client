@@ -40,7 +40,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.mifos.App;
 import com.mifos.api.ApiRequestInterceptor;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
@@ -49,7 +48,7 @@ import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.online.ClientIdentifiersFragment;
+import com.mifos.mifosxdroid.online.clientIdentifiersfragment.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.DocumentListFragment;
 import com.mifos.mifosxdroid.online.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.clientchargefragment.ClientChargeFragment;
@@ -82,10 +81,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
 
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
