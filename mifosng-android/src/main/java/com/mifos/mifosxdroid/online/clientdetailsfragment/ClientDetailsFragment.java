@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.clientdetailsfragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -42,12 +42,16 @@ import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.App;
 import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.ClientIdentifiersFragment;
+import com.mifos.mifosxdroid.online.DocumentListFragment;
+import com.mifos.mifosxdroid.online.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.clientchargefragment.ClientChargeFragment;
 import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -89,7 +93,7 @@ import static android.view.View.OnTouchListener;
 import static android.view.View.VISIBLE;
 
 
-public class ClientDetailsFragment extends MifosBaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class ClientDetailsFragment extends MifosBaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener , ClientDetailsMvpView {
 
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -139,6 +143,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     private AccountAccordion accountAccordion;
     private ImageLoadingAsyncTask imageLoadingAsyncTask;
+    private DataManager mDatamanager;
+    private ClientDetailsPresenter mClientDetailsPresenter;
 
 
     /**
@@ -175,6 +181,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
         ButterKnife.inject(this, rootView);
+        mDatamanager = new DataManager();
+        mClientDetailsPresenter = new ClientDetailsPresenter(mDatamanager);
+        mClientDetailsPresenter.attachView(this);
         inflateClientInformation();
         return rootView;
     }
@@ -552,6 +561,25 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void showClientDetailsProgressBar(boolean status) {
+        if(status){
+            showProgress();
+        }else {
+            hideProgress();
+        }
+    }
+
+    @Override
+    public void showSuccessfullRequest(String done) {
+
+    }
+
+    @Override
+    public void showError(String error) {
+
+    }
+
 
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);
@@ -729,4 +757,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mClientDetailsPresenter.detachView();
+    }
 }

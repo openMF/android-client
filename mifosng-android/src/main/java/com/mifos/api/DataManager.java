@@ -55,4 +55,6 @@ public class DataManager {
     public Observable<Page<Charges>> getClientChargesList(int clientId){
         return mBaseApiManager.getChargeService().getListOfCharges(clientId);
     }
+
+    public Observable<>
 }
