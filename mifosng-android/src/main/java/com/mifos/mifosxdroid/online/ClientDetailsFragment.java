@@ -48,6 +48,7 @@ import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.clientchargefragment.ClientChargeFragment;
 import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;

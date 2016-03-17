@@ -330,8 +330,8 @@ public class ApiManager extends BaseApiManager {
         getChargeService().getAllChargesS(callback);
     }
 
-    public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
-        getChargeService().getListOfCharges(clientId, callback);
+    public void getClientCharges(int clientId) {
+        getChargeService().getListOfCharges(clientId);
     }
 
     public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {

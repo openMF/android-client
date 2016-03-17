@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.clientchargefragment;
 /**
  * Created by nellyk on 1/22/2016.
  */
@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -47,7 +48,7 @@ import retrofit.client.Response;
 
 
 
-public class ClientChargeFragment extends MifosBaseFragment {
+public class ClientChargeFragment extends MifosBaseFragment implements ClientChargeMvpView{
 
     public static final int MENU_ITEM_ADD_NEW_CHARGES = 2000;
     @InjectView(R.id.lv_charges)
@@ -62,6 +63,9 @@ public class ClientChargeFragment extends MifosBaseFragment {
     private int index = 0;
     private int top = 0;
     private boolean isInfiniteScrollEnabled = false;
+    public DataManager mDatamanager;
+    public ClientChargePresenter mClientChargePresenter;
+    public ChargeNameListAdapter chargesNameListAdapter;
 
     public ClientChargeFragment(){
 
@@ -100,14 +104,21 @@ public class ClientChargeFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_charge_list, container, false);
         setHasOptionsMenu(true);
+        mDatamanager = new DataManager();
+        mClientChargePresenter = new ClientChargePresenter(mDatamanager);
+        mClientChargePresenter.attachView(this);
         context = getActivity().getApplicationContext();
         ButterKnife.inject(this, rootView);
         setToolbarTitle(getString(R.string.charges));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Do Nothing For Now
-                swipeRefreshLayout.setRefreshing(false);
+
+                swipeRefreshLayout.setRefreshing(true);
+                mClientChargePresenter.loadclientchargeslist(clientId);
+                hideProgress();
+                if(chargesList != null)
+                    chargesList.clear();
             }
         });
 
@@ -120,11 +131,11 @@ public class ClientChargeFragment extends MifosBaseFragment {
 
     public void inflateChargeList() {
 
-        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList,clientId);
+        chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList,clientId);
         lv_charges.setAdapter(chargesNameListAdapter);
 
         if (isInfiniteScrollEnabled) {
-            setInfiniteScrollListener(chargesNameListAdapter);
+            setInfiniteScrollListener();
         }
 
 
@@ -156,52 +167,17 @@ public class ClientChargeFragment extends MifosBaseFragment {
     }
 
     public void fetchChargesList() {
-
         //Check if ClientListFragment has a clientList
         if (chargesList.size() > 0) {
             inflateChargeList();
         } else {
-
-            swipeRefreshLayout.setRefreshing(true);
-            //Get a Client List
-            App.apiManager.getClientCharges(clientId, new Callback<Page<Charges>>() {
-                @Override
-                   public void success(Page<Charges> page, Response response) {
-                       chargesList = page.getPageItems();
-                    inflateChargeList();
-                       swipeRefreshLayout.setRefreshing(false);
-
-                   }
-                   @Override
-                   public void failure(RetrofitError retrofitError) {
-
-                       swipeRefreshLayout.setRefreshing(false);
-
-                       if (getActivity() != null) {
-                           try {
-                               Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                               if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                   Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                                   logout();
-                               } else {
-                                   Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
-                               }
-                           } catch (NullPointerException npe) {
-                               Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
-
-                           }
-
-
-                       }
-                   }
-               });
-
+            if(!swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(true);
+            mClientChargePresenter.loadclientchargeslist(clientId);
         }
-
-
     }
 
-    public void setInfiniteScrollListener(final ChargeNameListAdapter chargesNameListAdapter) {
+    public void setInfiniteScrollListener() {
 
         lv_charges.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -213,50 +189,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
-
                     swipeRefreshLayout.setRefreshing(true);
-
-                    App.apiManager.getClientCharges(clientId, new Callback<Page<Charges>>() {
-
-                        @Override
-                        public void success(Page<Charges> chargesPage, Response response) {
-
-
-                            chargesList.addAll(chargesPage.getPageItems());
-                            chargesNameListAdapter.notifyDataSetChanged();
-                            index = lv_charges.getFirstVisiblePosition();
-                            View v = lv_charges.getChildAt(0);
-                            top = (v == null) ? 0 : v.getTop();
-                            lv_charges.setSelectionFromTop(index, top);
-                            swipeRefreshLayout.setRefreshing(false);
-
-                        }
-
-                        @Override
-                        public void failure(RetrofitError retrofitError) {
-
-                            swipeRefreshLayout.setRefreshing(false);
-
-                            if (getActivity() != null) {
-                                try {
-                                    Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                                    if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                        Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                                        logout();
-                                    } else {
-                                        Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (NullPointerException npe) {
-                                    Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
-
-                                }
-
-
-                            }
-
-                        }
-
-                    });
+                    mClientChargePresenter.loadmoreclientchargeslist(clientId);
 
                 }
 
@@ -267,19 +201,10 @@ public class ClientChargeFragment extends MifosBaseFragment {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-    public List<Charges> getChargesList() {
-        return chargesList;
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mClientChargePresenter.detachView();
     }
 
     public void setChargesList(List<Charges> chargesList) {
@@ -287,5 +212,40 @@ public class ClientChargeFragment extends MifosBaseFragment {
     }
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
         this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
+    }
+
+    @Override
+    public void showClientChargesProgressBar(boolean status) {
+        if(status){
+            showProgress();
+        }else {
+            hideProgress();
+        }
+    }
+
+    @Override
+    public void showClientChargesList(Page<Charges> chargesPage) {
+
+        chargesList = chargesPage.getPageItems();
+        inflateChargeList();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showClientChargesListFetchError() {
+        swipeRefreshLayout.setRefreshing(false);
+        Toast.makeText(getActivity(), "There was some error fetching list .", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void showMoreClientChargesList(Page<Charges> chargesPage) {
+        chargesList.addAll(chargesPage.getPageItems());
+        chargesNameListAdapter.notifyDataSetChanged();
+        index = lv_charges.getFirstVisiblePosition();
+        View v = lv_charges.getChildAt(0);
+        top = (v == null) ? 0 : v.getTop();
+        lv_charges.setSelectionFromTop(index, top);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

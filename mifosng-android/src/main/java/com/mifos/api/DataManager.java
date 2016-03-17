@@ -6,6 +6,8 @@
 package com.mifos.api;
 
 import com.mifos.objects.User;
+import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 
@@ -43,5 +45,14 @@ public class DataManager {
 
     public Observable<CenterWithAssociations> getCentersGroupAndMeeting(int centerId){
         return mBaseApiManager.getCenterApi().getCenterWithGroupMembersAndCollectionMeetingCalendar(centerId);
+    }
+
+    /**
+     *
+     * @param clientId User Client ID
+     * @return
+     */
+    public Observable<Page<Charges>> getClientChargesList(int clientId){
+        return mBaseApiManager.getChargeService().getListOfCharges(clientId);
     }
 }
