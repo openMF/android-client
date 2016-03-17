@@ -85,7 +85,6 @@ public class ClientDetailsPresenter implements Presenter<ClientDetailsMvpView> {
     }
 
     public void getclientdetails(int clientid){
-        mClientDetailsMvpView.showClientDetailsProgressBar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getclientdetails(clientid)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -93,25 +92,21 @@ public class ClientDetailsPresenter implements Presenter<ClientDetailsMvpView> {
                 .subscribe(new Subscriber<Client>() {
                     @Override
                     public void onCompleted() {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                         mClientDetailsMvpView.showError("Client not found.");
                     }
 
                     @Override
                     public void onNext(Client client) {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                         mClientDetailsMvpView.showclientdetails(client);
                     }
                 });
     }
 
     public void getclientaccount(int clientid){
-        mClientDetailsMvpView.showClientDetailsProgressBar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getclientaccount(clientid)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -119,18 +114,15 @@ public class ClientDetailsPresenter implements Presenter<ClientDetailsMvpView> {
                 .subscribe(new Subscriber<ClientAccounts>() {
                     @Override
                     public void onCompleted() {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                         mClientDetailsMvpView.showError("Accounts not found.");
                     }
 
                     @Override
                     public void onNext(ClientAccounts clientAccounts) {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                         mClientDetailsMvpView.showaccountdetails(clientAccounts);
                     }
                 });
@@ -138,7 +130,6 @@ public class ClientDetailsPresenter implements Presenter<ClientDetailsMvpView> {
     }
 
     public void getClientDataTable(){
-        mClientDetailsMvpView.showClientDetailsProgressBar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getClientDataTable("m_client")
                 .observeOn(AndroidSchedulers.mainThread())
@@ -146,19 +137,16 @@ public class ClientDetailsPresenter implements Presenter<ClientDetailsMvpView> {
                 .subscribe(new Subscriber<List<DataTable>>() {
                     @Override
                     public void onCompleted() {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
                         mClientDetailsMvpView.showError("Error Retrieving Client DataTable");
                     }
 
                     @Override
                     public void onNext(List<DataTable> dataTables) {
-                        mClientDetailsMvpView.showClientDetailsProgressBar(false);
-
+                        mClientDetailsMvpView.showclientdatatable(dataTables);
                     }
                 });
     }

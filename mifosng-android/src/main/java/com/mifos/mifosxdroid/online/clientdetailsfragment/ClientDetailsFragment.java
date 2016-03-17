@@ -145,6 +145,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     private ImageLoadingAsyncTask imageLoadingAsyncTask;
     private DataManager mDatamanager;
     private ClientDetailsPresenter mClientDetailsPresenter;
+    private int mCounterProgressBarCount = 0;
 
 
     /**
@@ -184,6 +185,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         mDatamanager = new DataManager();
         mClientDetailsPresenter = new ClientDetailsPresenter(mDatamanager);
         mClientDetailsPresenter.attachView(this);
+        showClientDetailsProgressBar(true);
         inflateClientInformation();
         return rootView;
     }
@@ -396,6 +398,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     @Override
     public void showError(String error) {
+        getProgressBarCount();
         Toaster.show(rootView, error);
     }
 
@@ -415,6 +418,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     @Override
     public void showclientdetails(Client client) {
+        getProgressBarCount();
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
             tv_fullName.setText(client.getDisplayName());
@@ -487,6 +491,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     @Override
     public void showaccountdetails(ClientAccounts clientAccounts) {
+        getProgressBarCount();
         if (!isAdded()) {
             return;
         }
@@ -529,6 +534,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     @Override
     public void showclientdatatable(List<DataTable> dataTables) {
+        getProgressBarCount();
         if (dataTables != null) {
             Iterator<DataTable> dataTableIterator = dataTables.iterator();
             clientDataTables.clear();
@@ -711,6 +717,13 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
             else
                 iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
             pb_imageProgressBar.setVisibility(GONE);
+        }
+    }
+
+    public void getProgressBarCount(){
+        ++mCounterProgressBarCount;
+        if(mCounterProgressBarCount == 3 ){
+            showClientDetailsProgressBar(false);
         }
     }
 
