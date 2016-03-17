@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.collectionsheetfragment;
 
 
 import android.graphics.Color;
@@ -21,9 +21,11 @@ import android.widget.Toast;
 
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.objects.collectionsheet.Groups;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
 import com.mifos.api.model.BulkRepaymentTransactions;
@@ -50,7 +52,7 @@ import retrofit.client.Response;
  * Use the {@link CollectionSheetFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CollectionSheetFragment extends MifosBaseFragment {
+public class CollectionSheetFragment extends MifosBaseFragment implements CollectionSheetMvpView{
 
 
     public static final String COLLECTION_SHEET_ONLINE = "Collection Sheet Online";
@@ -67,6 +69,8 @@ public class CollectionSheetFragment extends MifosBaseFragment {
     ExpandableListView expandableListView;
 
     static CollectionListAdapter collectionListAdapter;
+    private DataManager mDatamanager;
+    private CollectionSheetPresenter mCollectionSheetPresenter;
 
     public static CollectionSheetFragment newInstance(int centerId, String dateOfCollection, int calendarInstanceId) {
         CollectionSheetFragment fragment = new CollectionSheetFragment();
@@ -101,7 +105,9 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         rootView = inflater.inflate(R.layout.fragment_collection_sheet, container, false);
 
         ButterKnife.inject(this, rootView);
-
+        mDatamanager = new DataManager();
+        mCollectionSheetPresenter = new CollectionSheetPresenter(mDatamanager);
+        mCollectionSheetPresenter.attachView(this);
         fetchCollectionSheet();
 
         return rootView;
@@ -174,28 +180,7 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         payload.setCalendarId(calendarInstanceId);
         payload.setTransactionDate(dateOfCollection);
         payload.setDateFormat("dd-MM-YYYY");
-
-        App.apiManager.getCollectionSheet(centerId, payload, new Callback<CollectionSheet>() {
-            @Override
-            public void success(CollectionSheet collectionSheet, Response response) {
-
-                Log.i(COLLECTION_SHEET_ONLINE, "Received");
-                List<MifosGroup> mifosGroups = collectionSheet.groups;
-                collectionListAdapter = new CollectionListAdapter(getActivity(), mifosGroups);
-                expandableListView.setAdapter(collectionListAdapter);
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                Log.i(COLLECTION_SHEET_ONLINE, retrofitError.getLocalizedMessage());
-
-
-            }
-        });
-
-
+        mCollectionSheetPresenter.loadcollectionsheet(centerId , payload);
     }
 
 
@@ -228,39 +213,39 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         collectionSheetPayload.setTransactionDate(dateOfCollection);
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
 
-        App.apiManager.saveCollectionSheetAsync(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
-            @Override
-            public void success(SaveResponse saveResponse, Response response) {
-                if (saveResponse != null) {
-                    Toast.makeText(getActivity(), "Collection Sheet Saved Successfully", Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-
-                Response response = retrofitError.getResponse();
-                if (response != null) {
-
-                    if (response.getStatus() == 400 || response.getStatus() == 403) {
-
-                        MFErrorParser.parseError(response);
-
-                    }
-
-                    Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
-
-
-                }
-
-
-            }
-        });
+        mCollectionSheetPresenter.savecallectionsheetAsyn(centerId,collectionSheetPayload);
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCollectionSheetPresenter.detachView();
+    }
 
+    @Override
+    public void showcollectionsheet(CollectionSheet collectionSheet) {
+        Log.i(COLLECTION_SHEET_ONLINE, "Received");
+        List<MifosGroup> mifosGroups = collectionSheet.groups;
+        collectionListAdapter = new CollectionListAdapter(getActivity(), mifosGroups);
+        expandableListView.setAdapter(collectionListAdapter);
+    }
+
+    @Override
+    public void showFetchToFailedCollectionsheet() {
+        Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showsaveCollectionsheetResponse(SaveResponse saveResponse) {
+        if (saveResponse != null) {
+            Toast.makeText(getActivity(), "Collection Sheet Saved Successfully", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
+    public void showsavecaollectionsheelfailed() {
+        Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
+    }
 }

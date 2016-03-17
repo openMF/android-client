@@ -130,16 +130,16 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().getAllGroupsForCenter(id, callback);
     }
 
-    public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
-        getCenterApi().getCollectionSheet(id, payload, callback);
+    public void getCollectionSheet(long id, Payload payload) {
+        getCenterApi().getCollectionSheet(id, payload);
     }
 
-    public SaveResponse saveCollectionSheet(int id, CollectionSheetPayload payload) {
-        return getCenterApi().saveCollectionSheet(id, payload);
+    public void saveCollectionSheet(int id, CollectionSheetPayload payload) {
+        getCenterApi().saveCollectionSheet(id, payload);
     }
 
-    public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload, Callback<SaveResponse> callback) {
-        getCenterApi().saveCollectionSheet(id, payload, callback);
+    public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload) {
+        getCenterApi().saveCollectionSheetAsync(id, payload);
     }
 
     public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId, int staffId, Callback<List<OfflineCenter>> callback) {

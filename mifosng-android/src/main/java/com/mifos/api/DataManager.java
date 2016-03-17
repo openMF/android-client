@@ -5,18 +5,21 @@
 
 package com.mifos.api;
 
+import com.mifos.api.model.CollectionSheetPayload;
+import com.mifos.api.model.Payload;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Identifier;
 
-import java.io.File;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -98,5 +101,13 @@ public class DataManager {
 
     public Observable<List<SearchedEntity>> searchClientsByName(String name){
         return mBaseApiManager.getSearchApi().searchClientsByName(name);
+    }
+
+    public Observable<CollectionSheet> getCallectionSheet(long centerid , Payload payload){
+        return mBaseApiManager.getCenterApi().getCollectionSheet(centerid,payload);
+    }
+
+    public Observable<SaveResponse> savecallectionsheetAsync(int centerid , CollectionSheetPayload collectionSheetPayload){
+        return mBaseApiManager.getCenterApi().saveCollectionSheetAsync(centerid , collectionSheetPayload);
     }
 }
