@@ -12,6 +12,7 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -19,5 +20,5 @@ import retrofit.http.Query;
 public interface StaffService {
 
     @GET(APIEndPoint.STAFF + "?status=all")
-    void getStaffForOffice(@Query("officeId") int officeId, Callback<List<Staff>> staffListCallback);
+    Observable<List<Staff>> getStaffForOffice(@Query("officeId") int officeId);
 }

@@ -146,8 +146,8 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId, callback);
     }
 
-    public void createCenter(CenterPayload centerPayload, Callback<Center> callback) {
-        getCenterApi().createCenter(centerPayload, callback);
+    public void createCenter(CenterPayload centerPayload) {
+        getCenterApi().createCenter(centerPayload);
     }
 
     /**
@@ -306,16 +306,16 @@ public class ApiManager extends BaseApiManager {
      * Offices API
      */
 
-    public void getOffices(Callback<List<Office>> callback) {
-        getOfficeApi().getAllOffices(callback);
+    public void getOffices() {
+        getOfficeApi().getAllOffices();
     }
 
     /**
      * Staff API
      */
 
-    public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
-        getStaffApi().getStaffForOffice(officeId, callback);
+    public void getStaffInOffice(int officeId) {
+        getStaffApi().getStaffForOffice(officeId);
     }
 
     /**

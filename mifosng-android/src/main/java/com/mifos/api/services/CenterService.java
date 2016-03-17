@@ -60,7 +60,7 @@ public interface CenterService {
     void uploadNewClientDetails();
 
     @POST(APIEndPoint.CENTERS)
-    void createCenter(@Body CenterPayload centerPayload, Callback<Center> callback);
+    Observable<Center> createCenter(@Body CenterPayload centerPayload);
 
     @GET(APIEndPoint.CENTERS)
     void getCenterList(@Query("dateFormat") String dateFormat, @Query("locale") String locale,

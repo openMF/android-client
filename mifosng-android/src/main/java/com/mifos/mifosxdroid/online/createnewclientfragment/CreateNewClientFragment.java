@@ -4,7 +4,7 @@
  */
 
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.createnewclientfragment;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -33,20 +33,12 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.organisation.ClientClassificationOptions;
-import com.mifos.objects.organisation.ClientTypeOptions;
-import com.mifos.objects.organisation.GenderOptions;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.clients.Options;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

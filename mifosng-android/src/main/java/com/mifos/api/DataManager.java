@@ -19,6 +19,9 @@ import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.Staff;
+import com.mifos.services.data.CenterPayload;
 
 import java.util.List;
 
@@ -104,10 +107,22 @@ public class DataManager {
     }
 
     public Observable<CollectionSheet> getCallectionSheet(long centerid , Payload payload){
-        return mBaseApiManager.getCenterApi().getCollectionSheet(centerid,payload);
+        return mBaseApiManager.getCenterApi().getCollectionSheet(centerid, payload);
     }
 
     public Observable<SaveResponse> savecallectionsheetAsync(int centerid , CollectionSheetPayload collectionSheetPayload){
-        return mBaseApiManager.getCenterApi().saveCollectionSheetAsync(centerid , collectionSheetPayload);
+        return mBaseApiManager.getCenterApi().saveCollectionSheetAsync(centerid, collectionSheetPayload);
+    }
+
+    public Observable<List<Office>> getAllOffices(){
+        return mBaseApiManager.getOfficeApi().getAllOffices();
+    }
+
+    public Observable<List<Staff>> getStaffForOffice(int officeid){
+        return mBaseApiManager.getStaffApi().getStaffForOffice(officeid);
+    }
+
+    public Observable<Center> createCenter(CenterPayload centerPayload){
+        return mBaseApiManager.getCenterApi().createCenter(centerPayload);
     }
 }

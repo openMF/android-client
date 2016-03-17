@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.createnewcenterfragment;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,11 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
@@ -49,7 +51,7 @@ import retrofit.client.Response;
 /**
  * Created by nellyk on 1/22/2016.
  */
-public class CreateNewCenterFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewCenterFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener,CreateNewCenterMvpView {
 
     @InjectView(R.id.et_center_name)
     EditText et_centerName;
@@ -78,6 +80,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
+    private DataManager dataManager;
+    private CreateNewCenterPresenter mCreateNewCenterPresenter;
+    private int mCounterProgressBarCount = 0;
 
     public static CreateNewCenterFragment newInstance() {
         CreateNewCenterFragment createNewCenterFragment = new CreateNewCenterFragment();
@@ -88,6 +93,10 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_center, null);
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mCreateNewCenterPresenter = new CreateNewCenterPresenter(dataManager);
+        mCreateNewCenterPresenter.attachView(this);
+        showProgress();
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
@@ -125,89 +134,11 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        showProgress();
-        App.apiManager.getOffices(new Callback<List<Office>>() {
-
-            @Override
-            public void success(List<Office> offices, Response response) {
-                final List<String> officeList = new ArrayList<String>();
-
-                for (Office office : offices) {
-                    officeList.add(office.getName());
-                    officeNameIdHashMap.put(office.getName(), office.getId());
-                }
-                ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, officeList);
-                officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_offices.setAdapter(officeAdapter);
-                sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        officeId = officeNameIdHashMap.get(officeList.get(i));
-                        Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-                        if (officeId != -1) {
-                            inflateStaffSpinner(officeId);
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });
+        mCreateNewCenterPresenter.loadofficelist();
     }
 
-    public void inflateStaffSpinner(final int officeId) {
-        App.apiManager.getStaffInOffice(officeId, new Callback<List<Staff>>() {
-            @Override
-            public void success(List<Staff> staffs, Response response) {
-
-                final List<String> staffNames = new ArrayList<String>();
-                for (Staff staff : staffs) {
-                    staffNames.add(staff.getDisplayName());
-                    staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
-                }
-                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, staffNames);
-                staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_staff.setAdapter(staffAdapter);
-                sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        staffId = staffNameIdHashMap.get(staffNames.get(position));
-                        Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
-                        if (staffId != -1) {
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-
-                });
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                hideProgress();
-            }
-        });
+    public void inflateStaffSpinner(int officeId) {
+       mCreateNewCenterPresenter.loadStafflist(officeId);
     }
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
@@ -216,20 +147,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
             return;
         }
         else {
-            showProgress();
-            App.apiManager.createCenter(centerPayload, new Callback<Center>() {
-                @Override
-                public void success(Center center, Response response) {
-                    Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
-                    hideProgress();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    hideProgress();
-                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                }
-            });
+            mCreateNewCenterPresenter.createcenter(centerPayload);
         }
     }
 
@@ -283,5 +201,95 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
             result = false;
         }
         return result;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCreateNewCenterPresenter.detachView();
+    }
+
+    @Override
+    public void showofficeList(List<Office> offices) {
+        getProgressBarCount();
+        final List<String> officeList = new ArrayList<String>();
+
+        for (Office office : offices) {
+            officeList.add(office.getName());
+            officeNameIdHashMap.put(office.getName(), office.getId());
+        }
+        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, officeList);
+        officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_offices.setAdapter(officeAdapter);
+        sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                officeId = officeNameIdHashMap.get(officeList.get(i));
+                Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+                if (officeId != -1) {
+                    inflateStaffSpinner(officeId);
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void showfailedtofetch(String s) {
+        getProgressBarCount();
+        Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void showStaffList(List<Staff> staffs) {
+        getProgressBarCount();
+        final List<String> staffNames = new ArrayList<String>();
+        for (Staff staff : staffs) {
+            staffNames.add(staff.getDisplayName());
+            staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
+        }
+        ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, staffNames);
+        staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_staff.setAdapter(staffAdapter);
+        sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                staffId = staffNameIdHashMap.get(staffNames.get(position));
+                Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
+                if (staffId != -1) {
+
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+    }
+
+    @Override
+    public void CreateCenter(Center center) {
+        Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
+    }
+
+    public void getProgressBarCount(){
+        ++mCounterProgressBarCount;
+        if(mCounterProgressBarCount == 2 ){
+            mCounterProgressBarCount = 0;
+            hideProgress();
+        }
     }
 }
