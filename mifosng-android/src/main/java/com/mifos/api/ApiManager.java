@@ -274,8 +274,8 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().getAllGroupsInOffice(office, params, callback);
     }
 
-    public void createGroup(GroupPayload groupPayload, Callback<Group> callback) {
-
+    public void createGroup(GroupPayload groupPayload) {
+        getGroupApi().createGroup(groupPayload);
     }
 
     /**

@@ -18,12 +18,14 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.GroupCreationResponse;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.GroupPayload;
 
 import java.util.List;
 
@@ -134,5 +136,9 @@ public class DataManager {
 
     public Observable<Client> createclient(ClientPayload clientPayload){
         return mBaseApiManager.getClientsApi().createClient(clientPayload);
+    }
+
+    public Observable<GroupCreationResponse> creategroup(GroupPayload groupPayload){
+        return mBaseApiManager.getGroupApi().createGroup(groupPayload);
     }
 }

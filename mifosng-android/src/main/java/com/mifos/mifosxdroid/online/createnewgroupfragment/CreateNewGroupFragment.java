@@ -34,8 +34,10 @@ import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Group;
+import com.mifos.objects.group.GroupCreationResponse;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.services.data.GroupPayload;
@@ -81,13 +83,13 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     View rootView;
     String dateString;
     String dateofsubmissionstring;
-    SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private DataManager dataManager;
     private CreateNewGroupPresenter mCreateNewGroupPresenter;
+    private int mCounterProgressBarCount = 0;
 
 
     public static CreateNewGroupFragment newInstance() {
@@ -119,6 +121,7 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
         dataManager = new DataManager();
         mCreateNewGroupPresenter = new CreateNewGroupPresenter(dataManager);
         mCreateNewGroupPresenter.attachView(this);
+        showProgress();
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
@@ -154,7 +157,7 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
                 groupPayload.setOfficeId(officeId);
                 groupPayload.setStaffId(staffId);
 
-
+                showProgress();
                 initiateGroupCreation(groupPayload);
 
             }
@@ -164,8 +167,6 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     }
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
         mCreateNewGroupPresenter.loadOfficeList();
 
     }
@@ -182,22 +183,7 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
             return;
         }
         else {
-
-            safeUIBlockingUtility.safelyBlockUI();
-            App.apiManager.createGroup(groupPayload, new Callback<Group>() {
-                @Override
-                public void success(Group group, Response response) {
-                    safeUIBlockingUtility.safelyUnBlockUI();
-                    Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
-
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    safeUIBlockingUtility.safelyUnBlockUI();
-                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                }
-            });
+            mCreateNewGroupPresenter.creategroup(groupPayload);
         }
 
     }
@@ -283,6 +269,7 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
 
     @Override
     public void showOfficeList(List<Office> offices) {
+        getProgressBarCount();
         final ArrayList<String> officeList = new ArrayList<String>();
 
         for (Office office : offices) {
@@ -317,17 +304,17 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
 
             }
         });
-
-        safeUIBlockingUtility.safelyUnBlockUI();
     }
 
     @Override
     public void ResponseError(String s) {
-        safeUIBlockingUtility.safelyUnBlockUI();
+        getProgressBarCount();
+        Toaster.show(rootView, s);
     }
 
     @Override
     public void showStaffOfficeList(List<Staff> staffs) {
+        getProgressBarCount();
         final List<String> staffNames = new ArrayList<>();
         for (Staff staff : staffs) {
             staffNames.add(staff.getDisplayName());
@@ -346,7 +333,7 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
                 if (staffId != -1) {
 
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+                    Toaster.show(rootView, getString(R.string.error_select_staff));
                 }
             }
 
@@ -356,6 +343,25 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
             }
 
         });
-        safeUIBlockingUtility.safelyUnBlockUI();
+    }
+
+    @Override
+    public void showGroupCreationResponse(GroupCreationResponse groupCreationResponse) {
+        hideProgress();
+        Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void GroupCreationError(String error) {
+        Toaster.show(rootView,error);
+        hideProgress();
+    }
+
+    public void getProgressBarCount(){
+        ++mCounterProgressBarCount;
+        if(mCounterProgressBarCount == 2 ){
+            mCounterProgressBarCount = 0;
+            hideProgress();
+        }
     }
 }

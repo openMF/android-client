@@ -2,8 +2,11 @@ package com.mifos.mifosxdroid.online.createnewgroupfragment;
 
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.Presenter;
+import com.mifos.objects.group.GroupCreationResponse;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.services.data.GroupPayload;
+
 import java.util.List;
 import rx.Subscriber;
 import rx.Subscription;
@@ -79,5 +82,28 @@ public class CreateNewGroupPresenter implements Presenter<CreateNewGroupMvpView>
                     }
                 });
 
+    }
+
+    public void creategroup(GroupPayload groupPayload){
+        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscription = mDataManager.creategroup(groupPayload)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<GroupCreationResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCreateNewGroupMvpView.GroupCreationError("Try again");
+                    }
+
+                    @Override
+                    public void onNext(GroupCreationResponse groupCreationResponse) {
+                        mCreateNewGroupMvpView.showGroupCreationResponse(groupCreationResponse);
+                    }
+                });
     }
 }
