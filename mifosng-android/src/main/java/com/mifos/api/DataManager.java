@@ -13,6 +13,7 @@ import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.loan.Loan;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
@@ -196,6 +197,10 @@ public class DataManager {
     }
 
     public Observable<LoanRepaymentResponse> submitPayment(int loanid, LoanRepaymentRequest loanRepaymentRequest){
-        return mBaseApiManager.getLoanApi().submitPayment(loanid,loanRepaymentRequest);
+        return mBaseApiManager.getLoanApi().submitPayment(loanid, loanRepaymentRequest);
+    }
+
+    public Observable<LoanWithAssociations> getLoanRepaymentSchedule(int loanid){
+        return mBaseApiManager.getLoanApi().getLoanRepaymentSchedule(loanid);
     }
 }

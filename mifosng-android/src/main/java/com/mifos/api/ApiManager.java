@@ -210,8 +210,8 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().submitPayment(loan, request);
     }
 
-    public void getLoanRepaySchedule(int loan, Callback<LoanWithAssociations> callback) {
-        getLoanApi().getLoanRepaymentSchedule(loan, callback);
+    public void getLoanRepaySchedule(int loan) {
+        getLoanApi().getLoanRepaymentSchedule(loan);
     }
 
     public void getLoanTransactions(int loan, Callback<LoanWithAssociations> callback) {

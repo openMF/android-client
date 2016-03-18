@@ -50,8 +50,7 @@ public interface LoanService {
                        @Body LoanRepaymentRequest loanRepaymentRequest);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
-    void getLoanRepaymentSchedule(@Path("loanId") int loanId,
-                                  Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
+    Observable<LoanWithAssociations> getLoanRepaymentSchedule(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
     void getLoanWithTransactions(@Path("loanId") int loanId,

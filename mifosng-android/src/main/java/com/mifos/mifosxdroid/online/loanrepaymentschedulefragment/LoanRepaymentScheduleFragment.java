@@ -6,18 +6,17 @@
 package com.mifos.mifosxdroid.online.loanrepaymentschedulefragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Period;
 import com.mifos.objects.accounts.loan.RepaymentSchedule;
@@ -27,12 +26,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
-public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
+public class LoanRepaymentScheduleFragment extends MifosBaseFragment implements LoanRepaymentScheduleMvpView{
 
 
     @InjectView(R.id.lv_repayment_schedule)
@@ -45,6 +41,8 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
     TextView tv_totalOverdue;
     private int loanAccountNumber;
     private View rootView;
+    private DataManager dataManager;
+    private LoanRepaymentSchedulePresenter mLoanRepaymentSchedulePresenter;
 
     public static LoanRepaymentScheduleFragment newInstance(int loanAccountNumber) {
         LoanRepaymentScheduleFragment fragment = new LoanRepaymentScheduleFragment();
@@ -67,6 +65,9 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
         rootView = inflater.inflate(R.layout.fragment_loan_repayment_schedule, container, false);
         setToolbarTitle(getResources().getString(R.string.loan_repayment_schedule));
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mLoanRepaymentSchedulePresenter = new LoanRepaymentSchedulePresenter(dataManager);
+        mLoanRepaymentSchedulePresenter.attachView(this);
         inflateRepaymentSchedule();
         return rootView;
     }
@@ -79,36 +80,41 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
 
     public void inflateRepaymentSchedule() {
         showProgress();
-        App.apiManager.getLoanRepaySchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
-            @Override
-            public void success(LoanWithAssociations loanWithAssociations, Response response) {
+        mLoanRepaymentSchedulePresenter.loadLoanRepaytSchedule(loanAccountNumber);
+    }
 
-                List<Period> listOfActualPeriods = loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods();
+    @Override
+    public void showLoanRepaySchedule(LoanWithAssociations loanWithAssociations) {
+        hideProgress();
+        List<Period> listOfActualPeriods = loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods();
 
-                LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter = new LoanRepaymentScheduleAdapter(getActivity(), listOfActualPeriods);
-                lv_repaymentSchedule.setAdapter(loanRepaymentScheduleAdapter);
+        LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter = new LoanRepaymentScheduleAdapter(getActivity(), listOfActualPeriods);
+        lv_repaymentSchedule.setAdapter(loanRepaymentScheduleAdapter);
 
-                String totalRepaymentsCompleted = getResources().getString(R.string.complete) + " : ";
-                String totalRepaymentsOverdue = getResources().getString(R.string.overdue) + " : ";
-                String totalRepaymentsPending = getResources().getString(R.string.pending) + " : ";
-                //Implementing the Footer here
-                tv_totalPaid.setText(totalRepaymentsCompleted + String.valueOf(
-                        RepaymentSchedule.getNumberOfRepaymentsComplete(listOfActualPeriods)
-                ));
-                tv_totalOverdue.setText(totalRepaymentsOverdue + String.valueOf(
-                        RepaymentSchedule.getNumberOfRepaymentsOverDue(listOfActualPeriods)
-                ));
-                tv_totalUpcoming.setText(totalRepaymentsPending + String.valueOf(
-                        RepaymentSchedule.getNumberOfRepaymentsPending(listOfActualPeriods)
-                ));
-                hideProgress();
-            }
+        String totalRepaymentsCompleted = getResources().getString(R.string.complete) + " : ";
+        String totalRepaymentsOverdue = getResources().getString(R.string.overdue) + " : ";
+        String totalRepaymentsPending = getResources().getString(R.string.pending) + " : ";
+        //Implementing the Footer here
+        tv_totalPaid.setText(totalRepaymentsCompleted + String.valueOf(
+                RepaymentSchedule.getNumberOfRepaymentsComplete(listOfActualPeriods)
+        ));
+        tv_totalOverdue.setText(totalRepaymentsOverdue + String.valueOf(
+                RepaymentSchedule.getNumberOfRepaymentsOverDue(listOfActualPeriods)
+        ));
+        tv_totalUpcoming.setText(totalRepaymentsPending + String.valueOf(
+                RepaymentSchedule.getNumberOfRepaymentsPending(listOfActualPeriods)
+        ));
+    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-                hideProgress();
-            }
-        });
+    @Override
+    public void ResponseError(String s) {
+        hideProgress();
+        Toaster.show(rootView,s);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mLoanRepaymentSchedulePresenter.detachView();
     }
 }
