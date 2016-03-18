@@ -5,6 +5,8 @@
 
 package com.mifos.services.data;
 
+import java.util.List;
+
 /**
  * Created by nellyk on 1/22/2016.
  */
@@ -17,6 +19,10 @@ public class GroupPayload {
     private String submittedOnDate;
     private String externalId;
     private int staffId;
+    private String name;
+    private List<Integer> clientMembers;
+    private String dateFormat = "dd MMMM yyyy";
+    private String locale;
 
     public int getStaffId() {
         return staffId;
