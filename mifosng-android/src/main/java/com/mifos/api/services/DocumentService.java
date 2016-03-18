@@ -17,6 +17,7 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.mime.TypedFile;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -24,9 +25,8 @@ import retrofit.mime.TypedFile;
 public interface DocumentService {
 
     @GET("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
-    void getListOfDocuments(@Path("entityType") String entityType,
-                            @Path("entityId") int entityId,
-                            Callback<List<Document>> documentListCallback);
+    Observable<List<Document>> getListOfDocuments(@Path("entityType") String entityType,
+                            @Path("entityId") int entityId);
 
     /**
      * @param entityType              - Type for which document is being uploaded (Client, Loan or Savings etc)

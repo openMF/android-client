@@ -8,36 +8,33 @@ package com.mifos.mifosxdroid.online.datatabledatafragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.DataTableUIBuilder;
 import com.mifos.utils.FragmentConstants;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
-
-public class DataTableDataFragment extends MifosBaseFragment implements DataTableUIBuilder.DataTableActionListener {
+public class DataTableDataFragment extends MifosBaseFragment implements DataTableUIBuilder.DataTableActionListener,DataTableDataMvpView {
     public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
     private DataTable dataTable;
     private int entityId;
     private View rootView;
     private LinearLayout linearLayout;
+    private DataManager dataManager;
+    private DataTableDataPresenter mDataTableDataPresenter;
 
     public static DataTableDataFragment newInstance(DataTable dataTable, int entityId) {
         DataTableDataFragment fragment = new DataTableDataFragment();
@@ -58,6 +55,9 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
         setToolbarTitle(dataTable.getRegisteredTableName());
+        dataManager = new DataManager();
+        mDataTableDataPresenter = new DataTableDataPresenter(dataManager);
+        mDataTableDataPresenter.attachView(this);
         inflateView();
         return rootView;
     }
@@ -88,23 +88,8 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
 
     public void inflateView() {
         showProgress();
-        App.apiManager.getDataTableInfo(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
-            @Override
-            public void success(JsonArray jsonElements, Response response) {
-                if (jsonElements != null) {
-                    linearLayout.invalidate();
-                    DataTableUIBuilder.DataTableActionListener mListener = (DataTableUIBuilder.DataTableActionListener) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
-                    linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity(), entityId, mListener);
-                }
-                hideProgress();
-            }
+        mDataTableDataPresenter.loaddatatabledata(dataTable.getRegisteredTableName(),entityId);
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-                hideProgress();
-            }
-        });
     }
 
     @Override
@@ -113,7 +98,29 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDataTableDataPresenter.detachView();
+    }
+
+    @Override
     public void onRowDeleted() {
         inflateView();
+    }
+
+    @Override
+    public void showDataTableData(JsonArray jsonElements) {
+        if (jsonElements != null) {
+            linearLayout.invalidate();
+            DataTableUIBuilder.DataTableActionListener mListener = (DataTableUIBuilder.DataTableActionListener) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
+            linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity(), entityId, mListener);
+        }
+        hideProgress();
+    }
+
+    @Override
+    public void ResponseErrorDataTable(String s) {
+        hideProgress();
+        Toaster.show(rootView,s);
     }
 }

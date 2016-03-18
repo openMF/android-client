@@ -3,9 +3,8 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.documentlistfragment;
 
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -19,9 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AsyncFileDownloader;
@@ -36,7 +37,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DocumentListFragment extends MifosBaseFragment {
+public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView{
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
@@ -46,6 +47,8 @@ public class DocumentListFragment extends MifosBaseFragment {
     private View rootView;
     private String entityType;
     private int entityId;
+    private DataManager dataManager;
+    private DocumentListPresenter mDocumentListPresenter;
 
     public static DocumentListFragment newInstance(String entityType, int entiyId) {
         DocumentListFragment fragment = new DocumentListFragment();
@@ -71,6 +74,9 @@ public class DocumentListFragment extends MifosBaseFragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_document_list, container, false);
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mDocumentListPresenter = new DocumentListPresenter(dataManager);
+        mDocumentListPresenter.attachView(this);
         inflateDocumentList();
         return rootView;
     }
@@ -102,32 +108,38 @@ public class DocumentListFragment extends MifosBaseFragment {
 
     public void inflateDocumentList() {
         showProgress();
-        App.apiManager.getDocumentsList(entityType, entityId, new Callback<List<Document>>() {
-            @Override
-            public void success(final List<Document> documents, Response response) {
-                if (documents != null) {
-                    for (Document document : documents) {
-                        Log.w(document.getFileName(), document.getSize() + " bytes");
-                    }
+        mDocumentListPresenter.loadDocumentList(entityType,entityId);
+    }
 
-                    DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity(), documents);
-                    lv_documents.setAdapter(documentListAdapter);
-                    lv_documents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader(getActivity(), documents.get(i).getFileName());
-                            asyncFileDownloader.execute(entityType, String.valueOf(entityId), String.valueOf(documents.get(i).getId()));
-                        }
-                    });
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDocumentListPresenter.detachView();
+    }
+
+    @Override
+    public void showDocumentList(final List<Document> documents) {
+        hideProgress();
+        if (documents != null) {
+            for (Document document : documents) {
+                Log.w(document.getFileName(), document.getSize() + " bytes");
+            }
+
+            DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity(), documents);
+            lv_documents.setAdapter(documentListAdapter);
+            lv_documents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader(getActivity(), documents.get(i).getFileName());
+                    asyncFileDownloader.execute(entityType, String.valueOf(entityId), String.valueOf(documents.get(i).getId()));
                 }
-                hideProgress();
-            }
+            });
+        }
+    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.d("Error", retrofitError.getLocalizedMessage());
-                hideProgress();
-            }
-        });
+    @Override
+    public void ResponseErrorDocumentList(String s) {
+        hideProgress();
+        Toaster.show(rootView,s);
     }
 }

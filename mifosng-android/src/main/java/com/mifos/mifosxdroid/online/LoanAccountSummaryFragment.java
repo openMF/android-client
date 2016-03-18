@@ -27,6 +27,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.datatabledatafragment.DataTableDataFragment;
+import com.mifos.mifosxdroid.online.documentlistfragment.DocumentListFragment;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.noncore.DataTable;

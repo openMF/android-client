@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.documentlistfragment.DocumentListFragment;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
@@ -129,7 +130,7 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
     /**
      * Should be tested alone because sometimes it can cause problems with the Application Context.
      * <p/>
-     * Maybe it should be reviewed the {@link com.mifos.mifosxdroid.online.DocumentListFragment},
+     * Maybe it should be reviewed the {@link DocumentListFragment},
      * because is who is throwing out a NullPointerException after closing the fragment. The method who
      * throws the exception is inflateDocumentList on the API request.
      * <p/>

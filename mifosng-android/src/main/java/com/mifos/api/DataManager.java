@@ -5,6 +5,7 @@
 
 package com.mifos.api;
 
+import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
@@ -20,6 +21,7 @@ import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupCreationResponse;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
@@ -140,5 +142,13 @@ public class DataManager {
 
     public Observable<GroupCreationResponse> creategroup(GroupPayload groupPayload){
         return mBaseApiManager.getGroupApi().createGroup(groupPayload);
+    }
+
+    public Observable<JsonArray> getDataOfDataTable(String datatablename, int entityId){
+        return mBaseApiManager.getDataTableApi().getDataOfDataTable(datatablename, entityId);
+    }
+
+    public Observable<List<Document>> getListOfDocuments(String entityType , int entityId){
+        return mBaseApiManager.getDocumentApi().getListOfDocuments(entityType,entityId);
     }
 }

@@ -49,7 +49,7 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.clientIdentifiersfragment.ClientIdentifiersFragment;
-import com.mifos.mifosxdroid.online.DocumentListFragment;
+import com.mifos.mifosxdroid.online.documentlistfragment.DocumentListFragment;
 import com.mifos.mifosxdroid.online.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.clientchargefragment.ClientChargeFragment;
 import com.mifos.mifosxdroid.views.CircularImageView;

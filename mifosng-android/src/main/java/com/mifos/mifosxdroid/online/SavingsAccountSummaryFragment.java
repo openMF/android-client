@@ -29,6 +29,7 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.datatabledatafragment.DataTableDataFragment;
+import com.mifos.mifosxdroid.online.documentlistfragment.DocumentListFragment;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;

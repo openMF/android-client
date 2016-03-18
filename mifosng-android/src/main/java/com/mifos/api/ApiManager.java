@@ -174,8 +174,8 @@ public class ApiManager extends BaseApiManager {
         getDataTableApi().getTableOf("m_loan");
     }
 
-    public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {
-        getDataTableApi().getDataOfDataTable(table, entityId, callback);
+    public void getDataTableInfo(String table, int entityId) {
+        getDataTableApi().getDataOfDataTable(table, entityId);
     }
 
     public void addDataTableEntry(String table, int entityId, Map<String, Object> payload, Callback<GenericResponse> callback) {
@@ -282,8 +282,8 @@ public class ApiManager extends BaseApiManager {
      * Documents API
      */
 
-    public void getDocumentsList(String type, int id, Callback<List<Document>> callback) {
-        getDocumentApi().getListOfDocuments(type, id, callback);
+    public void getDocumentsList(String type, int id) {
+        getDocumentApi().getListOfDocuments(type, id);
     }
 
     public void createDocument(String type, int id, String name, String desc, TypedFile file, Callback<GenericResponse> callback) {
