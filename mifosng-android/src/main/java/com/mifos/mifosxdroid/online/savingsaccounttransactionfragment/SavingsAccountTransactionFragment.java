@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.savingsaccounttransactionfragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -49,7 +50,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SavingsAccountTransactionFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsAccountTransactionFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener,SavingsAccountTransactionMvpView {
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -71,6 +72,8 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
     private List<PaymentTypeOption> paymentTypeOptionList;
     private HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
     private DialogFragment mfDatePicker;
+    private DataManager dataManager;
+    private SavingsAccountTransactionPresenter mSavingsAccountTransactionPresenter;
 
     /**
      * Use this factory method to create a new instance of
@@ -110,6 +113,9 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
         else
             setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " + getResources().getString(R.string.withdrawal));
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mSavingsAccountTransactionPresenter = new SavingsAccountTransactionPresenter(dataManager);
+        mSavingsAccountTransactionPresenter.attachView(this);
         inflateUI();
         return rootView;
     }
@@ -124,34 +130,7 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
     }
 
     public void inflatePaymentOptions() {
-        App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
-            @Override
-            public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
-                if (savingsAccountTransactionTemplate != null) {
-                    List<String> listOfPaymentTypes = new ArrayList<>();
-                    paymentTypeOptionList = savingsAccountTransactionTemplate.getPaymentTypeOptions();
-                    // Sorting has to be done on the basis of
-                    // PaymentTypeOption.position because it is specified
-                    // by the users on Mifos X Platform.
-                    Collections.sort(paymentTypeOptionList);
-                    Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
-                    while (paymentTypeOptionIterator.hasNext()) {
-                        PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
-                        listOfPaymentTypes.add(paymentTypeOption.getName());
-                        paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
-                    }
-                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
-                    paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_paymentType.setAdapter(paymentTypeAdapter);
-                }
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });
+        mSavingsAccountTransactionPresenter.loadSavingAccountTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType);
     }
 
     @OnClick(R.id.bt_reviewTransaction)
@@ -208,28 +187,8 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
         showProgress();
-        App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
-                    @Override
-                    public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {
-                        if (savingsAccountTransactionResponse != null) {
-                            if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
-                                Toaster.show(rootView, "Deposit Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
-                                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                            } else if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
-                                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
-                                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                            }
-                        }
-                        hideProgress();
-                    }
+        mSavingsAccountTransactionPresenter.ProcessTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, savingsAccountTransactionRequest);
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toaster.show(rootView, "Transaction Failed");
-                        hideProgress();
-                    }
-                }
-        );
     }
 
     @OnClick(R.id.bt_cancelTransaction)
@@ -254,5 +213,53 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
     @Override
     public void onDatePicked(String date) {
         tv_transactionDate.setText(date);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSavingsAccountTransactionPresenter.detachView();
+    }
+
+    @Override
+    public void showSavingAccountTemlate(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
+        if (savingsAccountTransactionTemplate != null) {
+            List<String> listOfPaymentTypes = new ArrayList<>();
+            paymentTypeOptionList = savingsAccountTransactionTemplate.getPaymentTypeOptions();
+            // Sorting has to be done on the basis of
+            // PaymentTypeOption.position because it is specified
+            // by the users on Mifos X Platform.
+            Collections.sort(paymentTypeOptionList);
+            Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
+            while (paymentTypeOptionIterator.hasNext()) {
+                PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
+                listOfPaymentTypes.add(paymentTypeOption.getName());
+                paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
+            }
+            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
+            paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_paymentType.setAdapter(paymentTypeAdapter);
+        }
+        hideProgress();
+    }
+
+    @Override
+    public void ResponseError(String s) {
+        Toaster.show(rootView,s);
+        hideProgress();
+    }
+
+    @Override
+    public void showProcessTransactionResult(SavingsAccountTransactionResponse savingsAccountTransactionResponse) {
+        if (savingsAccountTransactionResponse != null) {
+            if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
+                Toaster.show(rootView, "Deposit Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+            } else if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
+                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
+        }
+        hideProgress();
     }
 }

@@ -15,6 +15,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -23,32 +24,29 @@ public interface SavingsAccountService {
     /**
      * @param savingsAccountId                       - savingsAccountId for which information is requested
      * @param association                            - Mention Type of Association Needed, Like :- all, transactions etc.
-     * @param savingsAccountWithAssociationsCallback - callback to receive the response
+     * savingsAccountWithAssociationsCallback - callback to receive the response
      *                                               <p/>
      *                                               Use this method to retrieve the Savings Account With Associations
      */
     @GET("/{savingsAccountType}/{savingsAccountId}")
-    void getSavingsAccountWithAssociations(@Path("savingsAccountType") String savingsAccountType,
+    Observable<SavingsAccountWithAssociations> getSavingsAccountWithAssociations(@Path("savingsAccountType") String savingsAccountType,
                                            @Path("savingsAccountId") int savingsAccountId,
-                                           @Query("associations") String association,
-                                           Callback<SavingsAccountWithAssociations> savingsAccountWithAssociationsCallback);
+                                           @Query("associations") String association);
 
     /**
      * @param savingsAccountId                          - savingsAccountId for which information is requested
-     * @param savingsAccountTransactionTemplateCallback - Savings Account Transaction Template Callback
+     * savingsAccountTransactionTemplateCallback - Savings Account Transaction Template Callback
      *                                                  <p/>
      *                                                  Use this method to retrieve the Savings Account Transaction Template
      */
     @GET("/{savingsAccountType}/{savingsAccountId}/transactions/template")
-    void getSavingsAccountTransactionTemplate(@Path("savingsAccountType") String savingsAccountType,
+    Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(@Path("savingsAccountType") String savingsAccountType,
                                               @Path("savingsAccountId") int savingsAccountId,
-                                              @Query("command") String transactionType,
-                                              Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
+                                              @Query("command") String transactionType);
 
     @POST("/{savingsAccountType}/{savingsAccountId}/transactions")
-    void processTransaction(@Path("savingsAccountType") String savingsAccountType,
+    Observable<SavingsAccountTransactionResponse> processTransaction(@Path("savingsAccountType") String savingsAccountType,
                             @Path("savingsAccountId") int savingsAccountId,
                             @Query("command") String transactionType,
-                            @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
-                            Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
+                            @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest);
 }

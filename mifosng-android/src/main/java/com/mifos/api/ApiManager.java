@@ -7,45 +7,22 @@ package com.mifos.api;
 
 import android.util.Log;
 
-import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
-import com.mifos.api.model.SaveResponse;
 import com.mifos.api.model.ScorecardPayload;
-import com.mifos.objects.SearchedEntity;
-import com.mifos.objects.User;
-import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
-import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Client;
-import com.mifos.objects.client.Page;
-import com.mifos.objects.client.Savings;
-import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.group.Center;
-import com.mifos.objects.group.CenterWithAssociations;
-import com.mifos.objects.group.Group;
-import com.mifos.objects.group.GroupWithAssociations;
-import com.mifos.objects.noncore.DataTable;
-import com.mifos.objects.noncore.Document;
-import com.mifos.objects.noncore.Identifier;
-import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.ProductSavings;
-import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.objects.templates.clients.ClientsTemplate;
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
@@ -214,24 +191,24 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().getLoanRepaymentSchedule(loan);
     }
 
-    public void getLoanTransactions(int loan, Callback<LoanWithAssociations> callback) {
-        getLoanApi().getLoanWithTransactions(loan, callback);
+    public void getLoanTransactions(int loan) {
+        getLoanApi().getLoanWithTransactions(loan);
     }
 
     /**
      * Savings API
      */
 
-    public void getSavingsAccount(String type, int accountId, String association, Callback<SavingsAccountWithAssociations> callback) {
-        getSavingsApi().getSavingsAccountWithAssociations(type, accountId, association, callback);
+    public void getSavingsAccount(String type, int accountId, String association) {
+        getSavingsApi().getSavingsAccountWithAssociations(type, accountId, association);
     }
 
-    public void getSavingsAccountTemplate(String type, int accountId, String transactionType, Callback<SavingsAccountTransactionTemplate> callback) {
-        getSavingsApi().getSavingsAccountTransactionTemplate(type, accountId, transactionType, callback);
+    public void getSavingsAccountTemplate(String type, int accountId, String transactionType) {
+        getSavingsApi().getSavingsAccountTransactionTemplate(type, accountId, transactionType);
     }
 
-    public void processTransaction(String type, int accountId, String transactionType, SavingsAccountTransactionRequest request, Callback<SavingsAccountTransactionResponse> callback) {
-        getSavingsApi().processTransaction(type, accountId, transactionType, request, callback);
+    public void processTransaction(String type, int accountId, String transactionType, SavingsAccountTransactionRequest request) {
+        getSavingsApi().processTransaction(type, accountId, transactionType, request);
     }
 
     /**
@@ -342,16 +319,16 @@ public class ApiManager extends BaseApiManager {
      * SavingsAccount API
      */
 
-    public void getSavingsAccounts(Callback<List<ProductSavings>> callback) {
-        getCreateSavingsAccountService().getAllSavingsAccounts(callback);
+    public void getSavingsAccounts() {
+        getCreateSavingsAccountService().getAllSavingsAccounts();
     }
 
-    public void createSavingsAccount(SavingsPayload savingsPayload, Callback<Savings> callback) {
-        getCreateSavingsAccountService().createSavingsAccount(savingsPayload, callback);
+    public void createSavingsAccount(SavingsPayload savingsPayload) {
+        getCreateSavingsAccountService().createSavingsAccount(savingsPayload);
     }
 
-	public void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback) {
-		getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
+	public void getSavingsProductsTemplate() {
+		getCreateSavingsAccountService().getSavingsProductsTemplate();
 	}
 
 }

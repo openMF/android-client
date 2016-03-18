@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.savingsaccountsummaryfragment;
 
 import android.app.Activity;
 import android.os.Build;
@@ -22,8 +22,7 @@ import android.widget.ListView;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -37,20 +36,15 @@ import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
-public class SavingsAccountSummaryFragment extends MifosBaseFragment {
+public class SavingsAccountSummaryFragment extends MifosBaseFragment implements SavingsAccountSummaryMvpView{
 
     public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
@@ -98,6 +92,8 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
     private int INITIAL = 0;
     private int FINAL = 5;
     private OnFragmentInteractionListener mListener;
+    private DataManager dataManager;
+    private SavingsAccountSummaryPresenter mSavingsAccountSummaryPresenter;
 
     public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber, DepositType type) {
         SavingsAccountSummaryFragment fragment = new SavingsAccountSummaryFragment();
@@ -122,6 +118,9 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false);
         ButterKnife.inject(this, rootView);
+        dataManager =new DataManager();
+        mSavingsAccountSummaryPresenter = new SavingsAccountSummaryPresenter(dataManager);
+        mSavingsAccountSummaryPresenter.attachView(this);
         inflateSavingsAccountSummary();
         return rootView;
     }
@@ -139,87 +138,8 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
         /**
          * This Method will hit end point ?associations=transactions
          */
-        App.apiManager.getSavingsAccount(savingsAccountType.getEndpoint(), savingsAccountNumber, "transactions", new Callback<SavingsAccountWithAssociations>() {
-                    @Override
-                    public void success(SavingsAccountWithAssociations savingsAccountWithAssociations, Response response) {
+        mSavingsAccountSummaryPresenter.loadSavingAccount(savingsAccountType.getEndpoint(), savingsAccountNumber, "transactions");
 
-                        if (savingsAccountWithAssociations != null) {
-
-                            SavingsAccountSummaryFragment.this.savingsAccountWithAssociations = savingsAccountWithAssociations;
-
-                            tv_clientName.setText(savingsAccountWithAssociations.getClientName());
-                            tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
-                            tv_savingsAccountNumber.setText(savingsAccountWithAssociations.getAccountNo());
-
-                            if (savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null) {
-                                tv_interestEarned.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalInterestEarned()));
-                            } else {
-                                tv_interestEarned.setText("0.0");
-                            }
-
-                            tv_savingsAccountBalance.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getAccountBalance()));
-
-                            if (savingsAccountWithAssociations.getSummary().getTotalDeposits() != null) {
-                                tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalDeposits()));
-                            } else {
-                                tv_totalDeposits.setText("0.0");
-                            }
-
-                            if (savingsAccountWithAssociations.getSummary().getTotalWithdrawals() != null) {
-                                tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalWithdrawals()));
-                            } else {
-                                tv_totalWithdrawals.setText("0.0");
-                            }
-
-                            savingsAccountTransactionsListAdapter
-                                    = new SavingsAccountTransactionsListAdapter(getActivity().getApplicationContext(),
-                                    savingsAccountWithAssociations.getTransactions().size() < FINAL ?
-                                            savingsAccountWithAssociations.getTransactions() :
-                                            savingsAccountWithAssociations.getTransactions().subList(INITIAL, FINAL)
-                            );
-                            lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
-
-                            // Cache transactions here
-                            listOfAllTransactions.addAll(savingsAccountWithAssociations.getTransactions());
-
-                            lv_Transactions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                                    /*
-                                     On Click at a Savings Account Transaction
-                                     1. get the transactionId of that transaction
-                                     2. get the account Balance after that transaction
-                                    */
-                                    int transactionId = listOfAllTransactions.get(i).getId();
-                                    double runningBalance = listOfAllTransactions.get(i).getRunningBalance();
-
-                                    //Display them as a Formatted string in a toast message
-                                    Toast.makeText(getActivity(),
-                                            String.format(getResources().getString(R.string.savings_transaction_detail),
-                                                    transactionId, runningBalance),
-                                            Toast.LENGTH_LONG
-                                    ).show();
-
-                                }
-                            });
-
-                            toggleTransactionCapabilityOfAccount(savingsAccountWithAssociations.getStatus());
-
-                            inflateDataTablesList();
-                            hideProgress();
-                            enableInfiniteScrollOfTransactions();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toaster.show(rootView, "Internal Server Error");
-                        hideProgress();
-                        getFragmentManager().popBackStackImmediate();
-                    }
-                }
-        );
     }
 
     @Override
@@ -299,25 +219,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
     public void inflateDataTablesList() {
         showProgress();
         //TODO change loan service to savings account service
-        /*App.apiManager.getSavingsDataTable(new Callback<List<DataTable>>() {
-            @Override
-            public void success(List<DataTable> dataTables, Response response) {
-                if (dataTables != null) {
-                    Iterator<DataTable> dataTableIterator = dataTables.iterator();
-                    savingsAccountDataTables.clear();
-                    while (dataTableIterator.hasNext()) {
-                        DataTable dataTable = dataTableIterator.next();
-                        savingsAccountDataTables.add(dataTable);
-                    }
-                }
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });*/
+        mSavingsAccountSummaryPresenter.loadSavingsDataTable();
     }
 
     public void enableInfiniteScrollOfTransactions() {
@@ -381,7 +283,110 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
         }
     }
 
+    @Override
+    public void showSavingAccount(SavingsAccountWithAssociations savingsAccountWithAssociations) {
+        if (savingsAccountWithAssociations != null) {
+
+            SavingsAccountSummaryFragment.this.savingsAccountWithAssociations = savingsAccountWithAssociations;
+
+            tv_clientName.setText(savingsAccountWithAssociations.getClientName());
+            tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
+            tv_savingsAccountNumber.setText(savingsAccountWithAssociations.getAccountNo());
+
+            if (savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null) {
+                tv_interestEarned.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalInterestEarned()));
+            } else {
+                tv_interestEarned.setText("0.0");
+            }
+
+            tv_savingsAccountBalance.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getAccountBalance()));
+
+            if (savingsAccountWithAssociations.getSummary().getTotalDeposits() != null) {
+                tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalDeposits()));
+            } else {
+                tv_totalDeposits.setText("0.0");
+            }
+
+            if (savingsAccountWithAssociations.getSummary().getTotalWithdrawals() != null) {
+                tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations.getSummary().getTotalWithdrawals()));
+            } else {
+                tv_totalWithdrawals.setText("0.0");
+            }
+
+            savingsAccountTransactionsListAdapter
+                    = new SavingsAccountTransactionsListAdapter(getActivity().getApplicationContext(),
+                    savingsAccountWithAssociations.getTransactions().size() < FINAL ?
+                            savingsAccountWithAssociations.getTransactions() :
+                            savingsAccountWithAssociations.getTransactions().subList(INITIAL, FINAL)
+            );
+            lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
+
+            // Cache transactions here
+            listOfAllTransactions.addAll(savingsAccountWithAssociations.getTransactions());
+
+            lv_Transactions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                    /*
+                                     On Click at a Savings Account Transaction
+                                     1. get the transactionId of that transaction
+                                     2. get the account Balance after that transaction
+                                    */
+                    int transactionId = listOfAllTransactions.get(i).getId();
+                    double runningBalance = listOfAllTransactions.get(i).getRunningBalance();
+
+                    //Display them as a Formatted string in a toast message
+                    Toast.makeText(getActivity(),
+                            String.format(getResources().getString(R.string.savings_transaction_detail),
+                                    transactionId, runningBalance),
+                            Toast.LENGTH_LONG
+                    ).show();
+
+                }
+            });
+
+            toggleTransactionCapabilityOfAccount(savingsAccountWithAssociations.getStatus());
+
+            inflateDataTablesList();
+            hideProgress();
+            enableInfiniteScrollOfTransactions();
+        }
+    }
+
+    @Override
+    public void ResponseFailedSavingAccount(String s) {
+        Toaster.show(rootView, s);
+        hideProgress();
+        getFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void showSavingDataTable(List<DataTable> dataTables) {
+        if (dataTables != null) {
+            Iterator<DataTable> dataTableIterator = dataTables.iterator();
+            savingsAccountDataTables.clear();
+            while (dataTableIterator.hasNext()) {
+                DataTable dataTable = dataTableIterator.next();
+                savingsAccountDataTables.add(dataTable);
+            }
+        }
+        hideProgress();
+    }
+
+    @Override
+    public void ResponseErrorLoading(String s) {
+        Toaster.show(rootView,s);
+        hideProgress();
+    }
+
     public interface OnFragmentInteractionListener {
         void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType, DepositType accountType);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSavingsAccountSummaryPresenter.detachView();
     }
 }

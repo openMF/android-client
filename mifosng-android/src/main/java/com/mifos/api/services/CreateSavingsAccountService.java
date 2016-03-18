@@ -17,17 +17,18 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import rx.Observable;
 
 /**
  * @author
  */
 public interface CreateSavingsAccountService {
     @GET(APIEndPoint.CREATESAVINGSPRODUCTS)
-    void getAllSavingsAccounts(Callback<List<ProductSavings>> callback);
+    Observable<List<ProductSavings>> getAllSavingsAccounts();
 
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
-    void createSavingsAccount(@Body SavingsPayload savingsPayload, Callback<Savings> callback);
+    Observable<Savings> createSavingsAccount(@Body SavingsPayload savingsPayload);
 
 	@GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
-	void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback);
+	Observable<SavingProductsTemplate> getSavingsProductsTemplate();
 }

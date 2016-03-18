@@ -18,9 +18,13 @@ import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
+import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -31,11 +35,16 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.templates.savings.SavingProductsTemplate;
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
+import com.mifos.services.data.SavingsPayload;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +70,7 @@ public class DataManager {
      * @return  Basic OAuth
      */
     public Observable<User> login(String username, String password) {
-        return mBaseApiManager.getAuthApi().authenticate(username,password);
+        return mBaseApiManager.getAuthApi().authenticate(username, password);
     }
 
     /**
@@ -113,7 +122,7 @@ public class DataManager {
     }
 
     public Observable<Page<Client>> getClientList(int offset, int limit){
-        return mBaseApiManager.getClientsApi().listAllClients(offset,limit);
+        return mBaseApiManager.getClientsApi().listAllClients(offset, limit);
     }
 
     public Observable<List<SearchedEntity>> searchClientsByName(String name){
@@ -202,5 +211,37 @@ public class DataManager {
 
     public Observable<LoanWithAssociations> getLoanRepaymentSchedule(int loanid){
         return mBaseApiManager.getLoanApi().getLoanRepaymentSchedule(loanid);
+    }
+
+    public Observable<LoanWithAssociations> getLoanTransactions(int loanid){
+        return mBaseApiManager.getLoanApi().getLoanWithTransactions(loanid);
+    }
+
+    public Observable<Savings> createSavingsAccount(SavingsPayload savingsPayload){
+        return mBaseApiManager.getCreateSavingsAccountService().createSavingsAccount(savingsPayload);
+    }
+
+    public Observable<SavingProductsTemplate> getSavingsProductsTemplate(){
+        return mBaseApiManager.getCreateSavingsAccountService().getSavingsProductsTemplate();
+    }
+
+    public Observable<List<ProductSavings>> getAllSavingsAccounts(){
+        return mBaseApiManager.getCreateSavingsAccountService().getAllSavingsAccounts();
+    }
+
+    public Observable<SavingsAccountWithAssociations> getSavingAccount(String savingaccounttype, int savingsaccountId, String association){
+        return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(savingaccounttype, savingsaccountId, association);
+    }
+
+    public Observable<List<DataTable>> getSavingsDataTable(){
+        return mBaseApiManager.getDataTableApi().getTableOf("m_savings_account");
+    }
+
+    public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(String accounttype, int accountId, String transactionType){
+        return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(accounttype, accountId, transactionType);
+    }
+
+    public Observable<SavingsAccountTransactionResponse> processTransaction(String type, int accountId, String transactionType, SavingsAccountTransactionRequest request){
+        return mBaseApiManager.getSavingsApi().processTransaction(type,accountId,transactionType,request);
     }
 }

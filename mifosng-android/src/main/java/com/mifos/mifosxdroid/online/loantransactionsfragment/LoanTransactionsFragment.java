@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.loantransactionsfragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.utils.Constants;
 
@@ -27,13 +29,15 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanTransactionsFragment extends MifosBaseFragment {
+public class LoanTransactionsFragment extends MifosBaseFragment implements LoanTransactionsMvpView{
 
     @InjectView(R.id.elv_loan_transactions)
     ExpandableListView elv_loanTransactions;
 
     private int loanAccountNumber;
     private View rootView;
+    private DataManager dataManager;
+    private LoanTransactionsPresenter mLoanTransactionsPresenter;
 
     public static LoanTransactionsFragment newInstance(int loanAccountNumber) {
         LoanTransactionsFragment fragment = new LoanTransactionsFragment();
@@ -55,6 +59,9 @@ public class LoanTransactionsFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_transactions, container, false);
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mLoanTransactionsPresenter = new LoanTransactionsPresenter(dataManager);
+        mLoanTransactionsPresenter.attachView(this);
         inflateLoanTransactions();
         return rootView;
     }
@@ -66,21 +73,30 @@ public class LoanTransactionsFragment extends MifosBaseFragment {
     }
 
     public void inflateLoanTransactions() {
-        App.apiManager.getLoanTransactions(loanAccountNumber, new Callback<LoanWithAssociations>() {
-            @Override
-            public void success(LoanWithAssociations loan, Response response) {
-                if (loan != null) {
-                    Log.i("Transaction List Size", "" + loan.getTransactions().size());
-                    LoanTransactionAdapter adapter = new LoanTransactionAdapter(getActivity(), loan.getTransactions());
-                    elv_loanTransactions.setAdapter(adapter);
-                    elv_loanTransactions.setGroupIndicator(null);
-                }
-            }
+        showProgress();
+        mLoanTransactionsPresenter.loanLoanTransactions(loanAccountNumber);
+    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
+    @Override
+    public void showLoanTransactions(LoanWithAssociations loanWithAssociations) {
+        hideProgress();
+        if (loanWithAssociations != null) {
+            Log.i("Transaction List Size", "" + loanWithAssociations.getTransactions().size());
+            LoanTransactionAdapter adapter = new LoanTransactionAdapter(getActivity(), loanWithAssociations.getTransactions());
+            elv_loanTransactions.setAdapter(adapter);
+            elv_loanTransactions.setGroupIndicator(null);
+        }
+    }
 
-            }
-        });
+    @Override
+    public void ResponseError(String s) {
+        hideProgress();
+        Toaster.show(rootView,s);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mLoanTransactionsPresenter.detachView();
     }
 }
