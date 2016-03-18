@@ -132,8 +132,8 @@ public class CenterListFragment extends MifosBaseFragment implements CenterListM
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mCenterListPresenter.detachView();
     }
 }

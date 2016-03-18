@@ -122,12 +122,12 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
     }
 
-    public void getCentersInOffice(int id, Map<String, Object> params, Callback<List<Center>> callback) {
-        getCenterApi().getAllCentersInOffice(id, params, callback);
+    public void getCentersInOffice(int id, Map<String, Object> params) {
+        getCenterApi().getAllCentersInOffice(id, params);
     }
 
-    public void getGroupsByCenter(int id, Callback<CenterWithAssociations> callback) {
-        getCenterApi().getAllGroupsForCenter(id, callback);
+    public void getGroupsByCenter(int id) {
+        getCenterApi().getAllGroupsForCenter(id);
     }
 
     public void getCollectionSheet(long id, Payload payload) {
@@ -270,8 +270,8 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().getGroupWithAssociations(group, callback);
     }
 
-    public void getGroupsByOffice(int office, Map<String, Object> params, Callback<List<Group>> callback) {
-        getGroupApi().getAllGroupsInOffice(office, params, callback);
+    public void getGroupsByOffice(int office, Map<String, Object> params) {
+        getGroupApi().getAllGroupsInOffice(office, params);
     }
 
     public void createGroup(GroupPayload groupPayload) {

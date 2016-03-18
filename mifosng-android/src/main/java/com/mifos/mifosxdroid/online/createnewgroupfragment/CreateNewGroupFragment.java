@@ -262,8 +262,8 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mCreateNewGroupPresenter.detachView();
     }
 

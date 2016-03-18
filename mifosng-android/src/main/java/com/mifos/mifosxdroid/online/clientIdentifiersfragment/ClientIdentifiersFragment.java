@@ -69,8 +69,8 @@ public class ClientIdentifiersFragment extends MifosBaseFragment implements Clie
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mClientIdentifiersPresenter.detachView();
     }
 

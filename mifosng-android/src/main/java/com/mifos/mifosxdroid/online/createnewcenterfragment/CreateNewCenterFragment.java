@@ -204,8 +204,8 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mCreateNewCenterPresenter.detachView();
     }
 

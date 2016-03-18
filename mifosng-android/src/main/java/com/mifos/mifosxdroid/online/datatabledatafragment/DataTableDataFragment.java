@@ -98,8 +98,8 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mDataTableDataPresenter.detachView();
     }
 

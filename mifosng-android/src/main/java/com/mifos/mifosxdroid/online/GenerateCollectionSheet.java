@@ -7,10 +7,10 @@ package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.generatecollectionsheetfragment.GenerateCollectionSheetFragment;
 
 
 public class GenerateCollectionSheet extends MifosBaseActivity {

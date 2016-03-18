@@ -112,8 +112,8 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mDocumentListPresenter.detachView();
     }
 

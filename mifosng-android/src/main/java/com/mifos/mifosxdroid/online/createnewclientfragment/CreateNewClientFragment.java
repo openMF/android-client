@@ -245,22 +245,21 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 	    spClientType.setAdapter(clientTypeAdapter);
 	    spClientType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-		    @Override
-		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-			    clientTypeId = clientstemplate.getClientTypeOptions().get(i).getId();
-			    Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
-			    if (clientTypeId != -1) {
-			    }
-			    else {
-				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-			    }
-		    }
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                clientTypeId = clientstemplate.getClientTypeOptions().get(i).getId();
+                Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
+                if (clientTypeId != -1) {
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-		    @Override
-		    public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-		    }
-	    });
+            }
+        });
 
     }
 
@@ -455,8 +454,8 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 	}
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mCreateNewClientPresenter.detachView();
     }
 

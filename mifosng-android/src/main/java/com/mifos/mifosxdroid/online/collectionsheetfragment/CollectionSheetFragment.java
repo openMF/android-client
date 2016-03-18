@@ -180,7 +180,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         payload.setCalendarId(calendarInstanceId);
         payload.setTransactionDate(dateOfCollection);
         payload.setDateFormat("dd-MM-YYYY");
-        mCollectionSheetPresenter.loadcollectionsheet(centerId , payload);
+        mCollectionSheetPresenter.loadcollectionsheet(centerId, payload);
     }
 
 
@@ -213,13 +213,13 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         collectionSheetPayload.setTransactionDate(dateOfCollection);
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
 
-        mCollectionSheetPresenter.savecallectionsheetAsyn(centerId,collectionSheetPayload);
+        mCollectionSheetPresenter.savecallectionsheetAsyn(centerId, collectionSheetPayload);
 
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mCollectionSheetPresenter.detachView();
     }
 

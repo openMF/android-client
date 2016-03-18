@@ -148,8 +148,8 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mClientListPresenter.detachView();
     }
 

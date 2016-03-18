@@ -724,8 +724,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mClientDetailsPresenter.detachView();
     }
 }

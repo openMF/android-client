@@ -30,7 +30,7 @@ public interface GroupService {
     void getGroupWithAssociations(@Path("groupId") int groupId, Callback<GroupWithAssociations> groupWithAssociationsCallback);
 
     @GET(APIEndPoint.GROUPS)
-    void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params, Callback<List<Group>> listOfGroupsCallback);
+    Observable<List<Group>> getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params);
 
     @POST(APIEndPoint.GROUPS)
     Observable<GroupCreationResponse> createGroup(@Body GroupPayload groupPayload);

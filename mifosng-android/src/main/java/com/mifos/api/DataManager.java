@@ -19,6 +19,7 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupCreationResponse;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
@@ -30,6 +31,7 @@ import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -149,6 +151,18 @@ public class DataManager {
     }
 
     public Observable<List<Document>> getListOfDocuments(String entityType , int entityId){
-        return mBaseApiManager.getDocumentApi().getListOfDocuments(entityType,entityId);
+        return mBaseApiManager.getDocumentApi().getListOfDocuments(entityType, entityId);
+    }
+
+    public Observable<List<Center>> getCentersInOffice(int officeid , Map<String, Object> params){
+        return mBaseApiManager.getCenterApi().getAllCentersInOffice(officeid, params);
+    }
+
+    public Observable<List<Group>> getAllGroupsInOffice(int officeid,  Map<String, Object> params){
+        return mBaseApiManager.getGroupApi().getAllGroupsInOffice(officeid,params);
+    }
+
+    public Observable<CenterWithAssociations> getAllGroupsForCenter(int centerid){
+        return mBaseApiManager.getCenterApi().getAllGroupsForCenter(centerid);
     }
 }

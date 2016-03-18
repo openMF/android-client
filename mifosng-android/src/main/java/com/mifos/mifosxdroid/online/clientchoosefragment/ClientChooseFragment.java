@@ -78,8 +78,8 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mClientChoosePresenter.detachView();
     }
 }

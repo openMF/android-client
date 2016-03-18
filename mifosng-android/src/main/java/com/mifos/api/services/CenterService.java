@@ -39,12 +39,10 @@ public interface CenterService {
     Observable<CenterWithAssociations> getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int centerId);
 
     @GET(APIEndPoint.CENTERS)
-    void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> additionalParams,
-                               Callback<List<Center>> centersCallback);
+    Observable<List<Center>> getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> additionalParams);
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
-    void getAllGroupsForCenter(@Path("centerId") int centerId,
-                               Callback<CenterWithAssociations> centerWithAssociationsCallback);
+    Observable<CenterWithAssociations> getAllGroupsForCenter(@Path("centerId") int centerId);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
     Observable<CollectionSheet> getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload);

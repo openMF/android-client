@@ -195,8 +195,8 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mClientChargePresenter.detachView();
     }
 

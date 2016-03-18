@@ -139,8 +139,8 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         clientSearchPresenter.detachView();
     }
 }
