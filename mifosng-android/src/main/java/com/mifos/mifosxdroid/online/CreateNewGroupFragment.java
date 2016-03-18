@@ -416,5 +416,5 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     public void onDetach() {
         super.onDetach();
     }
-
 }
+
