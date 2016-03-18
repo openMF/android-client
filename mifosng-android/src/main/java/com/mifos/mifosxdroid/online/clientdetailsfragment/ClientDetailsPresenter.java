@@ -136,7 +136,7 @@ public class ClientDetailsPresenter implements Presenter<ClientDetailsMvpView> {
 
     public void getClientDataTable(){
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientDataTable("m_client")
+        mSubscription = mDataManager.getClientDataTable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {

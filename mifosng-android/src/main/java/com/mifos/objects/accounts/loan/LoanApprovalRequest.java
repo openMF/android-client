@@ -14,7 +14,16 @@ public class LoanApprovalRequest {
     private String dateFormat = "dd MM yyyy";
     private String approvedOnDate;
     private String note;
+    private String expectedDisbursementDate;
 
+
+    public String getExpectedDisbursementDate() {
+        return expectedDisbursementDate;
+    }
+
+    public void setExpectedDisbursementDate(String expectedDisbursementDate) {
+        this.expectedDisbursementDate = expectedDisbursementDate;
+    }
     public String getLocale() {
         return locale;
     }
@@ -45,5 +54,16 @@ public class LoanApprovalRequest {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @Override
+    public String toString() {
+        return "LoanApprovalRequest{" +
+                "locale='" + locale + '\'' +
+                ", dateFormat='" + dateFormat + '\'' +
+                ", approvedOnDate='" + approvedOnDate + '\'' +
+                ", note='" + note + '\'' +
+                ", expectedDisbursementDate='" + expectedDisbursementDate + '\'' +
+                '}';
     }
 }

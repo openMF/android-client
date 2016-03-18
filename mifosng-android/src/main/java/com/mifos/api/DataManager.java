@@ -13,6 +13,8 @@ import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.loan.LoanApprovalRequest;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -21,6 +23,7 @@ import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupCreationResponse;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
@@ -30,6 +33,7 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,8 +98,8 @@ public class DataManager {
         return mBaseApiManager.getAccountsApi().getAllAccountsOfClient(clientid);
     }
 
-    public Observable<List<DataTable>> getClientDataTable(String m_client){
-        return mBaseApiManager.getDataTableApi().getTableOf(m_client);
+    public Observable<List<DataTable>> getClientDataTable(){
+        return mBaseApiManager.getDataTableApi().getTableOf("m_client");
     }
 
     public Observable<List<Identifier>> getListOfIdentifiers(int clientid){
@@ -159,10 +163,30 @@ public class DataManager {
     }
 
     public Observable<List<Group>> getAllGroupsInOffice(int officeid,  Map<String, Object> params){
-        return mBaseApiManager.getGroupApi().getAllGroupsInOffice(officeid,params);
+        return mBaseApiManager.getGroupApi().getAllGroupsInOffice(officeid, params);
     }
 
     public Observable<CenterWithAssociations> getAllGroupsForCenter(int centerid){
         return mBaseApiManager.getCenterApi().getAllGroupsForCenter(centerid);
+    }
+
+    public Observable<LoanWithAssociations> getLoadById(int loannumber){
+        return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loannumber);
+    }
+
+    public Observable<List<DataTable>> getLoanDataTable(){
+        return mBaseApiManager.getDataTableApi().getTableOf("m_loan");
+    }
+
+    public Observable<GroupWithAssociations> getGroups(int groupid){
+        return mBaseApiManager.getGroupApi().getGroupWithAssociations(groupid);
+    }
+
+    public Observable<GenericResponse> approveLoan(int loanid, LoanApprovalRequest loanApprovalRequest){
+        return mBaseApiManager.getLoanApi().approveLoanApplication(loanid, loanApprovalRequest);
+    }
+
+    public Observable<GenericResponse> disputeLoan(int loan, HashMap<String, Object> request){
+        return mBaseApiManager.getLoanApi().disburseLoan(loan,request);
     }
 }

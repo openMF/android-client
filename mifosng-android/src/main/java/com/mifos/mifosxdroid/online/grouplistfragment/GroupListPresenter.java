@@ -3,6 +3,8 @@ package com.mifos.mifosxdroid.online.grouplistfragment;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.Presenter;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.GroupWithAssociations;
+
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -50,6 +52,29 @@ public class GroupListPresenter implements Presenter<GroupListMvpView> {
                     @Override
                     public void onNext(CenterWithAssociations centerWithAssociations) {
                         mGroupListMvpView.showGroupList(centerWithAssociations);
+                    }
+                });
+    }
+
+    public void getGroups(int groupid){
+        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscription = mDataManager.getGroups(groupid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<GroupWithAssociations>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mGroupListMvpView.ResponseError("Failed to Fetch Group");
+                    }
+
+                    @Override
+                    public void onNext(GroupWithAssociations groupWithAssociations) {
+                        mGroupListMvpView.showgroup(groupWithAssociations);
                     }
                 });
     }

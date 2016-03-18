@@ -27,7 +27,7 @@ import rx.Observable;
  */
 public interface GroupService {
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
-    void getGroupWithAssociations(@Path("groupId") int groupId, Callback<GroupWithAssociations> groupWithAssociationsCallback);
+    Observable<GroupWithAssociations> getGroupWithAssociations(@Path("groupId") int groupId);
 
     @GET(APIEndPoint.GROUPS)
     Observable<List<Group>> getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params);

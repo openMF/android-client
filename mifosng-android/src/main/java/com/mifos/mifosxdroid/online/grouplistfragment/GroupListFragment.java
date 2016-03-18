@@ -97,18 +97,7 @@ public class GroupListFragment extends MifosBaseFragment implements GroupListMvp
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     int groupId = centerWithAssociations.getGroupMembers().get(i).getId();
-                    App.apiManager.getGroups(groupId, new Callback<GroupWithAssociations>() {
-                        @Override
-                        public void success(GroupWithAssociations groupWithAssociations, Response response) {
-                            if (groupWithAssociations != null)
-                                mListener.loadClientsOfGroup(groupWithAssociations.getClientMembers());
-                        }
-
-                        @Override
-                        public void failure(RetrofitError retrofitError) {
-
-                        }
-                    });
+                    mGroupListPresenter.getGroups(groupId);
                 }
             });
         }
@@ -119,6 +108,12 @@ public class GroupListFragment extends MifosBaseFragment implements GroupListMvp
     public void ResponseError(String s) {
         hideProgress();
         Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void showgroup(GroupWithAssociations groupWithAssociations) {
+        if (groupWithAssociations != null)
+            mListener.loadClientsOfGroup(groupWithAssociations.getClientMembers());
     }
 
     public interface OnFragmentInteractionListener {

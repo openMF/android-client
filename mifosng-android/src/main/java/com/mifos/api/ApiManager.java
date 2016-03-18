@@ -190,20 +190,20 @@ public class ApiManager extends BaseApiManager {
      * Loans API
      */
 
-    public void getLoanById(int loan, Callback<LoanWithAssociations> callback) {
-        getLoanApi().getLoanByIdWithAllAssociations(loan, callback);
+    public void getLoanById(int loan) {
+        getLoanApi().getLoanByIdWithAllAssociations(loan);
     }
 
     public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
         getLoanApi().getLoanRepaymentTemplate(loan, callback);
     }
 
-    public void approveLoan(int loan, LoanApprovalRequest request, Callback<GenericResponse> callback) {
-        getLoanApi().approveLoanApplication(loan, request, callback);
+    public void approveLoan(int loan, LoanApprovalRequest request) {
+        getLoanApi().approveLoanApplication(loan, request);
     }
 
-    public void disputeLoan(int loan, HashMap<String, Object> request, Callback<GenericResponse> callback) {
-        getLoanApi().disburseLoan(loan, request, callback);
+    public void disputeLoan(int loan, HashMap<String, Object> request) {
+        getLoanApi().disburseLoan(loan, request);
     }
 
     public void submitPayment(int loan, LoanRepaymentRequest request, Callback<LoanRepaymentResponse> callback) {
@@ -266,8 +266,8 @@ public class ApiManager extends BaseApiManager {
      * Groups API
      */
 
-    public void getGroups(int group, Callback<GroupWithAssociations> callback) {
-        getGroupApi().getGroupWithAssociations(group, callback);
+    public void getGroups(int group) {
+        getGroupApi().getGroupWithAssociations(group);
     }
 
     public void getGroupsByOffice(int office, Map<String, Object> params) {
