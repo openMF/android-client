@@ -232,7 +232,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
     }
 
     @Override
-    public void showFetchToFailedCollectionsheet() {
+    public void showFailedToFetchCollectionsheet() {
         Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
     }
 

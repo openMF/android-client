@@ -19,6 +19,7 @@ import com.mifos.mifosxdroid.online.clientlistfragment.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearchfragment.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.createnewcenterfragment.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclientfragment.CreateNewClientFragment;
+import com.mifos.mifosxdroid.online.createnewgroupfragment.CreateNewGroupFragment;
 
 /**
  * Created by ishankhanna on 09/02/14.

@@ -47,7 +47,7 @@ public class CollectionSheetPresenter implements Presenter<CollectionSheetMvpVie
 
                     @Override
                     public void onError(Throwable e) {
-                        mMvpView.showFetchToFailedCollectionsheet();
+                        mMvpView.showFailedToFetchCollectionsheet();
                     }
 
                     @Override

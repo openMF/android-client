@@ -12,7 +12,7 @@ public interface CollectionSheetMvpView extends MvpView {
 
     void showcollectionsheet(CollectionSheet collectionSheet);
 
-    void showFetchToFailedCollectionsheet();
+    void showFailedToFetchCollectionsheet();
 
     void showsaveCollectionsheetResponse(SaveResponse saveResponse);
 

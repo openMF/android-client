@@ -102,12 +102,12 @@ public class ApiManager extends BaseApiManager {
         getClientsApi().deleteClientImage(id);
     }
 
-    public void createClient(ClientPayload payload, Callback<Client> callback) {
-        getClientsApi().createClient(payload, callback);
+    public void createClient(ClientPayload payload) {
+        getClientsApi().createClient(payload);
     }
 
-    public void getClientTemplate(Callback<ClientsTemplate> callback) {
-        getClientsApi().getClientTemplate(callback);
+    public void getClientTemplate() {
+        getClientsApi().getClientTemplate();
     }
 
     /**

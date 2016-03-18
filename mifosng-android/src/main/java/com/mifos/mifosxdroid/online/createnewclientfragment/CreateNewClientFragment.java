@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
@@ -53,7 +54,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CreateNewClientFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewClientFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener,CreateNewClientMvpView {
 
     private static final String TAG = "CreateNewClient";
 
@@ -103,6 +104,10 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
 	private ClientsTemplate clientstemplate = new ClientsTemplate();
+    private DataManager dataManager;
+    private CreateNewClientPresenter mCreateNewClientPresenter;
+    private int mCounterProgressBarCount = 0;
+
 
     public static CreateNewClientFragment newInstance() {
         CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
@@ -125,7 +130,10 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
         ButterKnife.inject(this, rootView);
-
+        dataManager = new DataManager();
+        mCreateNewClientPresenter = new CreateNewClientPresenter(dataManager);
+        mCreateNewClientPresenter.attachView(this);
+        showProgress();
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
@@ -258,64 +266,13 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 
 	private void getClientTemplate(){
 		showProgress();
-		App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
-			@Override
-			public void success(ClientsTemplate clientsTemplate, Response response) {
-
-				if (response.getStatus() == 200) {
-					clientstemplate = clientsTemplate;
-					inflateGenderSpinner();
-					inflateClientTypeOptions();
-					inflateClientClassificationOptions();
-				}
-				hideProgress();
-			}
-
-			@Override
-			public void failure(RetrofitError error) {
-				hideProgress();
-			}
-		});
+		mCreateNewClientPresenter.loadclientTemplate();
 	}
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
         showProgress();
-        App.apiManager.getOffices(new Callback<List<Office>>() {
-                                      @Override
-                                      public void success(List<Office> offices, Response response) {
-                                          final List<String> officeList = new ArrayList<String>();
-
-                                          for (Office office : offices) {
-                                              officeList.add(office.getName());
-                                              officeNameIdHashMap.put(office.getName(), office.getId());
-                                          }
-                                          ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                                                  android.R.layout.simple_spinner_item, officeList);
-                                          officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                          sp_offices.setAdapter(officeAdapter);
-                                          sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                                              @Override
-                                              public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                                  officeId = officeNameIdHashMap.get(officeList.get(i));
-                                                  Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-                                              }
-
-                                              @Override
-                                              public void onNothingSelected(AdapterView<?> adapterView) {
-
-                                              }
-                                          });
-                                          hideProgress();
-                                      }
-
-                                      @Override
-                                      public void failure(RetrofitError error) {
-                                          hideProgress();
-                                      }
-                                  }
-        );
+        mCreateNewClientPresenter.loadofficelist();
     }
 
     private void initiateClientCreation(ClientPayload clientPayload) {
@@ -346,19 +303,8 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 
         } else {
             showProgress();
-            App.apiManager.createClient(clientPayload, new Callback<Client>() {
-                @Override
-                public void success(Client client, Response response) {
-                    hideProgress();
-                    Toaster.show(rootView, "Client created successfully");
-                }
+            mCreateNewClientPresenter.createclient(clientPayload);
 
-                @Override
-                public void failure(RetrofitError error) {
-                    hideProgress();
-                    Toaster.show(rootView, "Error creating client");
-                }
-            });
         }
     }
 
@@ -508,4 +454,66 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 		return optionsNameList;
 	}
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCreateNewClientPresenter.detachView();
+    }
+
+    @Override
+    public void showofficelist(List<Office> offices) {
+        getProgressBarCount();
+        final List<String> officeList = new ArrayList<String>();
+
+        for (Office office : offices) {
+            officeList.add(office.getName());
+            officeNameIdHashMap.put(office.getName(), office.getId());
+        }
+        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, officeList);
+        officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_offices.setAdapter(officeAdapter);
+        sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                officeId = officeNameIdHashMap.get(officeList.get(i));
+                Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    @Override
+    public void ResponseFailed(String s) {
+        Toaster.show(rootView, s);
+        getProgressBarCount();
+    }
+
+    @Override
+    public void showClientTemplate(ClientsTemplate clientsTemplate) {
+        getProgressBarCount();
+        clientstemplate = clientsTemplate;
+        inflateGenderSpinner();
+        inflateClientTypeOptions();
+        inflateClientClassificationOptions();
+    }
+
+    @Override
+    public void showCreatedClient(Client client) {
+        Toaster.show(rootView, "Client created successfully");
+        hideProgress();
+    }
+
+    public void getProgressBarCount(){
+        ++mCounterProgressBarCount;
+        if(mCounterProgressBarCount == 2 ){
+            mCounterProgressBarCount = 0;
+            hideProgress();
+        }
+    }
 }

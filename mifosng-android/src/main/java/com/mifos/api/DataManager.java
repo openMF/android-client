@@ -5,6 +5,7 @@
 
 package com.mifos.api;
 
+import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
@@ -21,6 +22,7 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.services.data.CenterPayload;
 
 import java.util.List;
@@ -124,5 +126,13 @@ public class DataManager {
 
     public Observable<Center> createCenter(CenterPayload centerPayload){
         return mBaseApiManager.getCenterApi().createCenter(centerPayload);
+    }
+
+    public Observable<ClientsTemplate> getClientTemplate(){
+        return mBaseApiManager.getClientsApi().getClientTemplate();
+    }
+
+    public Observable<Client> createclient(ClientPayload clientPayload){
+        return mBaseApiManager.getClientsApi().createClient(clientPayload);
     }
 }

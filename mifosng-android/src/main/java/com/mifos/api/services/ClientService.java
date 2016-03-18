@@ -52,8 +52,8 @@ public interface ClientService {
     void getClientImage(@Path("clientId") int clientId, Callback<TypedString> callback);
 
     @POST(APIEndPoint.CLIENTS)
-    void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
+    Observable<Client> createClient(@Body ClientPayload clientPayload);
 
     @GET(APIEndPoint.CLIENTS + "/template")
-    void getClientTemplate(Callback<ClientsTemplate> callback);
+    Observable<ClientsTemplate> getClientTemplate();
 }
