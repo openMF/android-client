@@ -308,10 +308,10 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
             tv_activationDate.setText(date);
 
         }
-        else tv_activationDate.setText(date);
+        else 
+            tv_activationDate.setText(date);
 
 
 
     }
 }
-
