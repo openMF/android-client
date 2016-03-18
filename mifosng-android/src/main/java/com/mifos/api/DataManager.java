@@ -14,6 +14,8 @@ import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
@@ -30,13 +32,12 @@ import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import rx.Observable;
@@ -187,6 +188,14 @@ public class DataManager {
     }
 
     public Observable<GenericResponse> disputeLoan(int loan, HashMap<String, Object> request){
-        return mBaseApiManager.getLoanApi().disburseLoan(loan,request);
+        return mBaseApiManager.getLoanApi().disburseLoan(loan, request);
+    }
+
+    public Observable<LoanRepaymentTemplate> getloanRepaymentTemplate(int loanid){
+        return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanid);
+    }
+
+    public Observable<LoanRepaymentResponse> submitPayment(int loanid, LoanRepaymentRequest loanRepaymentRequest){
+        return mBaseApiManager.getLoanApi().submitPayment(loanid,loanRepaymentRequest);
     }
 }

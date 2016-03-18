@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.loanrepaymentfragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
@@ -49,7 +50,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener,LoanRepaymentMvpView {
 
     private View rootView;
 
@@ -89,6 +90,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
     Button bt_paynow;
 
     private DialogFragment mfDatePicker;
+    private DataManager dataManager;
+    private LoanRepaymentPresenter mLoanRepaymentPresenter;
 
     public static LoanRepaymentFragment newInstance(LoanWithAssociations loanWithAssociations) {
         LoanRepaymentFragment fragment = new LoanRepaymentFragment();
@@ -124,6 +127,9 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
         rootView = inflater.inflate(R.layout.fragment_loan_repayment, container, false);
         setToolbarTitle("Loan Repayment");
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mLoanRepaymentPresenter = new LoanRepaymentPresenter(dataManager);
+        mLoanRepaymentPresenter.attachView(this);
         inflateUI();
         return rootView;
     }
@@ -225,44 +231,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
 
 
     public void inflatePaymentOptions() {
-        App.apiManager.getLoanRepayTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
-
-            @Override
-            public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
-
-                if (loanRepaymentTemplate != null) {
-                    tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
-                    inflateRepaymentDate();
-                    List<String> listOfPaymentTypes = new ArrayList<String>();
-                    paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
-                    // Sorting has to be done on the basis of
-                    // PaymentTypeOption.position because it is specified
-                    // by the users on Mifos X Platform.
-                    Collections.sort(paymentTypeOptionList);
-
-                    for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
-                        listOfPaymentTypes.add(paymentTypeOption.getName());
-                        paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
-                    }
-
-                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
-                    paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_paymentType.setAdapter(paymentTypeAdapter);
-
-                    et_amount.setText(String.valueOf(loanRepaymentTemplate.getPrincipalPortion() + loanRepaymentTemplate.getInterestPortion()));
-                    et_additionalPayment.setText("0.0");
-                    et_fees.setText(String.valueOf(loanRepaymentTemplate.getFeeChargesPortion()));
-
-                }
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                hideProgress();
-            }
-        });
-
+        showProgress();
+        mLoanRepaymentPresenter.loadLoanRepaymenyTemplate(Integer.parseInt(loanAccountNumber));
     }
 
     public void inflateRepaymentDate() {
@@ -352,21 +322,55 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
         Log.i("TAG", builtRequest);
 
         showProgress();
+        mLoanRepaymentPresenter.submitloanPayment(Integer.parseInt(loanAccountNumber),request);
+    }
 
-        App.apiManager.submitPayment(Integer.parseInt(loanAccountNumber), request, new Callback<LoanRepaymentResponse>() {
-            @Override
-            public void success(LoanRepaymentResponse resp, Response response) {
-                if (resp != null)
-                    Toaster.show(rootView, "Payment Successful, Transaction ID = " + resp.getResourceId());
-                hideProgress();
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mLoanRepaymentPresenter.detachView();
+    }
+
+    @Override
+    public void showloanrepaymenttemplate(LoanRepaymentTemplate loanRepaymentTemplate) {
+        hideProgress();
+        if (loanRepaymentTemplate != null) {
+            tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
+            inflateRepaymentDate();
+            List<String> listOfPaymentTypes = new ArrayList<String>();
+            paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
+            // Sorting has to be done on the basis of
+            // PaymentTypeOption.position because it is specified
+            // by the users on Mifos X Platform.
+            Collections.sort(paymentTypeOptionList);
+
+            for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
+                listOfPaymentTypes.add(paymentTypeOption.getName());
+                paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
             }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Payment Failed");
-                hideProgress();
-            }
-        });
+            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
+            paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_paymentType.setAdapter(paymentTypeAdapter);
+
+            et_amount.setText(String.valueOf(loanRepaymentTemplate.getPrincipalPortion() + loanRepaymentTemplate.getInterestPortion()));
+            et_additionalPayment.setText("0.0");
+            et_fees.setText(String.valueOf(loanRepaymentTemplate.getFeeChargesPortion()));
+
+        }
+    }
+
+    @Override
+    public void ResponseError(String s) {
+        Toaster.show(rootView, s);
+        hideProgress();
+    }
+
+    @Override
+    public void showsubmitPaymentResponse(LoanRepaymentResponse loanRepaymentResponse) {
+        if (loanRepaymentResponse != null)
+            Toaster.show(rootView, "Payment Successful, Transaction ID = " + loanRepaymentResponse.getResourceId());
+        hideProgress();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 }

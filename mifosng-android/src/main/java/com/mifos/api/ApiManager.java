@@ -194,8 +194,8 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().getLoanByIdWithAllAssociations(loan);
     }
 
-    public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
-        getLoanApi().getLoanRepaymentTemplate(loan, callback);
+    public void getLoanRepayTemplate(int loan) {
+        getLoanApi().getLoanRepaymentTemplate(loan);
     }
 
     public void approveLoan(int loan, LoanApprovalRequest request) {
@@ -206,8 +206,8 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().disburseLoan(loan, request);
     }
 
-    public void submitPayment(int loan, LoanRepaymentRequest request, Callback<LoanRepaymentResponse> callback) {
-        getLoanApi().submitPayment(loan, request, callback);
+    public void submitPayment(int loan, LoanRepaymentRequest request) {
+        getLoanApi().submitPayment(loan, request);
     }
 
     public void getLoanRepaySchedule(int loan, Callback<LoanWithAssociations> callback) {
