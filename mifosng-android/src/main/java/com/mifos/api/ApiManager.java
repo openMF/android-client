@@ -119,8 +119,8 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().saveCollectionSheetAsync(id, payload);
     }
 
-    public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId, int staffId, Callback<List<OfflineCenter>> callback) {
-        getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId, callback);
+    public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId, int staffId) {
+        getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId);
     }
 
     public void createCenter(CenterPayload centerPayload) {
@@ -159,8 +159,8 @@ public class ApiManager extends BaseApiManager {
         getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
     }
 
-    public void removeDataTableEntry(String table, int entity, int rowId, Callback<GenericResponse> callback) {
-        getDataTableApi().deleteEntryOfDataTableManyToMany(table, entity, rowId, callback);
+    public void removeDataTableEntry(String table, int entity, int rowId) {
+        getDataTableApi().deleteEntryOfDataTableManyToMany(table, entity, rowId);
     }
 
     /**

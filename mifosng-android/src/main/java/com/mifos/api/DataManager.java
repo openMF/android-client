@@ -26,6 +26,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
+import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
@@ -243,10 +244,22 @@ public class DataManager {
     }
 
     public Observable<SavingsAccountTransactionResponse> processTransaction(String type, int accountId, String transactionType, SavingsAccountTransactionRequest request){
-        return mBaseApiManager.getSavingsApi().processTransaction(type,accountId,transactionType,request);
+        return mBaseApiManager.getSavingsApi().processTransaction(type, accountId, transactionType, request);
     }
 
     public Observable<List<Survey>> getAllSurvey(){
         return mBaseApiManager.getSurveyApi().getAllSurveys();
+    }
+
+    public Observable<SaveResponse> saveCollectionSheet(int id, CollectionSheetPayload payload){
+        return mBaseApiManager.getCenterApi().saveCollectionSheet(id, payload);
+    }
+
+    public Observable<List<OfflineCenter>> getOfflineCenterList(String dateFormat, String locale, String meetingDate, int officeId, int staffId){
+        return mBaseApiManager.getCenterApi().getCenterList(dateFormat,locale,meetingDate,officeId,staffId);
+    }
+
+    public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId){
+        return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(table,entity,rowId);
     }
 }

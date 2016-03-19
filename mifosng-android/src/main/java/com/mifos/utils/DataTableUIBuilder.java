@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mifos.App;
+import com.mifos.api.DataManager;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.api.GenericResponse;
@@ -30,6 +32,11 @@ import java.util.Iterator;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ishankhanna on 17/06/14.
@@ -114,21 +121,29 @@ public class DataTableUIBuilder {
                 @Override
                 public boolean onLongClick(View v) {
                     Toast.makeText(context, "Deleting Row " + tableIndex, Toast.LENGTH_SHORT).show();
-                    App.apiManager.removeDataTableEntry(dataTable.getRegisteredTableName(), entityId,
-                            Integer.parseInt(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(0).getColumnName()).toString()),
-                            new Callback<GenericResponse>() {
+
+                    DataManager dataManager = new DataManager();
+                    Observable<GenericResponse> call = dataManager.removeDataTableEntry(dataTable.getRegisteredTableName(), entityId,
+                            Integer.parseInt(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(0).getColumnName()).toString()));
+                    Subscription subscription = call.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<GenericResponse>() {
                                 @Override
-                                public void success(GenericResponse genericResponse, Response response) {
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onNext(GenericResponse genericResponse) {
                                     Toast.makeText(context, "Deleted Row " + tableIndex, Toast.LENGTH_SHORT).show();
                                     dataTableActionListener.onRowDeleted();
                                 }
-
-                                @Override
-                                public void failure(RetrofitError retrofitError) {
-
-                                }
-                            }
-                    );
+                            });
                     return true;
                 }
             });

@@ -11,6 +11,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.db.CollectionMeetingCalendar;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.EntityType;
@@ -27,6 +29,11 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SaveOfflineDataHelper {
 
@@ -35,6 +42,7 @@ public class SaveOfflineDataHelper {
     private OfflineDataSaveListener offlineDataSaveListener;
     private String tag = getClass().getSimpleName();
     private int centerCount = 0;
+    private DataManager mDataManager;
 
     static {
         syncState = new HashMap<Long, Integer>();
@@ -42,6 +50,7 @@ public class SaveOfflineDataHelper {
 
     public SaveOfflineDataHelper(Context context) {
         this.mContext = context;
+        mDataManager = new DataManager();
     }
 
     public void setOfflineDataSaveListener(OfflineDataSaveListener offlineDataSaveListener) {
@@ -152,22 +161,31 @@ public class SaveOfflineDataHelper {
             MeetingCenter center = meetingCenterList[centerCount];
             final long centerId = center.getId();
             Log.i(tag, "Fetching Group data for Center Id:" + centerId);
-            App.apiManager.getCollectionSheet(centerId, getPayload(context, center), new Callback<CollectionSheet>() {
-                @Override
-                public void success(CollectionSheet collectionSheet, Response arg1) {
-                    if (collectionSheet != null) {
-                        collectionSheet.saveData(centerId);
-                        centerCount++;
-                        if (centerCount < meetingCenterList.length)
-                            getGroupsData(context, meetingCenterList);
-                    }
-                }
+            Observable<CollectionSheet> call = mDataManager.getCallectionSheet(centerId, getPayload(context, center));
+            Subscription subscription = call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<CollectionSheet>() {
+                        @Override
+                        public void onCompleted() {
 
-                @Override
-                public void failure(RetrofitError arg0) {
-                    Toast.makeText(context, "There was some error fetching data.", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(context, "There was some error fetching data.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onNext(CollectionSheet collectionSheet) {
+                            if (collectionSheet != null) {
+                                collectionSheet.saveData(centerId);
+                                centerCount++;
+                                if (centerCount < meetingCenterList.length)
+                                    getGroupsData(context, meetingCenterList);
+                            }
+                        }
+                    });
+
         }
     }
 
