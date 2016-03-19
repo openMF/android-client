@@ -43,7 +43,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.api.ApiRequestInterceptor;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.activity.PinpointClientActivity;
+import com.mifos.mifosxdroid.activity.pinpointclientactivity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;

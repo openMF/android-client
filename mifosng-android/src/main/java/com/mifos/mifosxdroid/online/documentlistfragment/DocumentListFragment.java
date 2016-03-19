@@ -17,13 +17,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mifos.App;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.dialogfragments.DocumentDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.documentdialogfragment.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AsyncFileDownloader;
 import com.mifos.utils.Constants;
@@ -33,9 +32,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView{
 

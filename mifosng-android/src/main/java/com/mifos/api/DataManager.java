@@ -8,8 +8,11 @@ package com.mifos.api;
 import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
+import com.mifos.api.model.GpsCoordinatesRequest;
+import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
+import com.mifos.api.model.ScorecardPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -38,18 +41,23 @@ import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.spec.PBEKeySpec;
+
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import rx.Observable;
@@ -256,10 +264,38 @@ public class DataManager {
     }
 
     public Observable<List<OfflineCenter>> getOfflineCenterList(String dateFormat, String locale, String meetingDate, int officeId, int staffId){
-        return mBaseApiManager.getCenterApi().getCenterList(dateFormat,locale,meetingDate,officeId,staffId);
+        return mBaseApiManager.getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId);
     }
 
     public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId){
-        return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(table,entity,rowId);
+        return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(table, entity, rowId);
+    }
+
+    public Observable<List<Charges>> getAllChargesS(){
+        return mBaseApiManager.getChargeService().getAllChargesS();
+    }
+
+    public Observable<Charges> createcharges(int clientId, ChargesPayload payload){
+        return mBaseApiManager.getChargeService().createCharges(clientId, payload);
+    }
+
+    public Observable<GenericResponse> addDataTableEntry(String table, int entityId, Map<String, Object> payload){
+        return mBaseApiManager.getDataTableApi().createEntryInDataTable(table, entityId, payload);
+    }
+
+    public Observable<GenericResponse> createDocument(String type, int id, String name, String desc, TypedFile file){
+        return mBaseApiManager.getDocumentApi().createDocument(type, id, name, desc, file);
+    }
+
+    public Observable<GpsCoordinatesResponse> updateGpsData(int client, GpsCoordinatesRequest request){
+        return mBaseApiManager.getGpsApi().updateGpsCoordinates(client, request);
+    }
+
+    public Observable<GenericResponse> deleteIdentifier(int clientId, int id){
+        return mBaseApiManager.getIdentifierApi().deleteIdentifier(clientId, id);
+    }
+
+    public Observable<Scorecard> submitScore(int survey, ScorecardPayload scorecardPayload){
+        return mBaseApiManager.getSurveyApi().submitScore(survey,scorecardPayload);
     }
 }

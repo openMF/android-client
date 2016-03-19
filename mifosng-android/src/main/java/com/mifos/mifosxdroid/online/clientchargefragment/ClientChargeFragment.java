@@ -27,7 +27,7 @@ import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.dialogfragments.ChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.chargedialogfragment.ChargeDialogFragment;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;

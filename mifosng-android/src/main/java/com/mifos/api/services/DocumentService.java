@@ -34,14 +34,13 @@ public interface DocumentService {
      * @param nameOfDocument          - Document Name
      * @param description             - Mandatory - Document Description
      * @param typedFile               - Mandatory
-     * @param genericResponseCallback - Response Callback
+     * genericResponseCallback - Response Callback
      */
     @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
     @Multipart
-    void createDocument(@Path("entityType") String entityType,
+    Observable<GenericResponse> createDocument(@Path("entityType") String entityType,
                         @Path("entityId") int entityId,
                         @Part("name") String nameOfDocument,
                         @Part("description") String description,
-                        @Part("file") TypedFile typedFile,
-                        Callback<GenericResponse> genericResponseCallback);
+                        @Part("file") TypedFile typedFile);
 }

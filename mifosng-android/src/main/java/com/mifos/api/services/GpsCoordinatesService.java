@@ -13,6 +13,7 @@ import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -24,8 +25,7 @@ public interface GpsCoordinatesService {
                            Callback<GpsCoordinatesResponse> gpsCoordinatesResponseCallback);
 
     @PUT(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}")
-    void updateGpsCoordinates(@Path("clientId") int clientId,
-                              @Body GpsCoordinatesRequest gpsCoordinatesRequest,
-                              Callback<GpsCoordinatesResponse> gpsCoordinatesResponseCallback);
+    Observable<GpsCoordinatesResponse> updateGpsCoordinates(@Path("clientId") int clientId,
+                              @Body GpsCoordinatesRequest gpsCoordinatesRequest);
 
 }

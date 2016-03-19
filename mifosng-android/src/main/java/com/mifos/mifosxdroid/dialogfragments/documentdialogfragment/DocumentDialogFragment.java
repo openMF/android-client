@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.dialogfragments;
+package com.mifos.mifosxdroid.dialogfragments.documentdialogfragment;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.api.DataManager;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.api.GenericResponse;
@@ -45,7 +46,7 @@ import retrofit.mime.TypedFile;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update Documents
  */
-public class DocumentDialogFragment extends DialogFragment {
+public class DocumentDialogFragment extends DialogFragment implements DocumentDialogMvpView{
 
     public static final String TAG = "DocumentDialogFragment";
     View rootView;
@@ -62,6 +63,8 @@ public class DocumentDialogFragment extends DialogFragment {
     TextView tv_choose_file;
     @InjectView(R.id.bt_upload)
     Button bt_upload;
+    private DataManager dataManager;
+    private DocumentDialogPresenter mDocumentDialogPresenter;
 
     private static final int FILE_SELECT_CODE = 0;
 
@@ -107,6 +110,9 @@ public class DocumentDialogFragment extends DialogFragment {
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
 
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mDocumentDialogPresenter = new DocumentDialogPresenter(dataManager);
+        mDocumentDialogPresenter.attachView(this);
 
         return rootView;
     }
@@ -138,6 +144,8 @@ public class DocumentDialogFragment extends DialogFragment {
         uploadFile();
 
     }
+
+
 
     public interface OnDialogFragmentInteractionListener {
 
@@ -214,36 +222,34 @@ public class DocumentDialogFragment extends DialogFragment {
         TypedFile typedFile = new TypedFile(mimeType, fileChoosen);
 
         safeUIBlockingUtility.safelyBlockUI();
-        App.apiManager.createDocument(entityType, entityId, documentName, documentDescription,
-                typedFile, new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
-
-                        if (genericResponse != null) {
-
-                            Toast.makeText(getActivity(), String.format(getString(R.string.uploaded_successfully), fileChoosen.getName()), Toast.LENGTH_SHORT).show();
-
-                            System.out.println(genericResponse.toString());
-                        }
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        getDialog().dismiss();
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-
-                        Toast.makeText(getActivity(), getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
-                        getDialog().dismiss();
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        getDialog().dismiss();
-
-
-                    }
-                }
-        );
-
+        mDocumentDialogPresenter.createDocument(entityType, entityId, documentName, documentDescription,
+                typedFile);
     }
 
+    @Override
+    public void showDocumentCreationResult(GenericResponse genericResponse) {
+        if (genericResponse != null) {
+
+            Toast.makeText(getActivity(), String.format(getString(R.string.uploaded_successfully), fileChoosen.getName()), Toast.LENGTH_SHORT).show();
+
+            System.out.println(genericResponse.toString());
+        }
+        safeUIBlockingUtility.safelyUnBlockUI();
+        getDialog().dismiss();
+    }
+
+    @Override
+    public void ResponseError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        getDialog().dismiss();
+        safeUIBlockingUtility.safelyUnBlockUI();
+        getDialog().dismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDocumentDialogPresenter.detachView();
+    }
 
 }

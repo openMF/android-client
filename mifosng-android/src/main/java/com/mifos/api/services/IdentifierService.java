@@ -24,8 +24,7 @@ public interface IdentifierService {
     Observable<List<Identifier>> getListOfIdentifiers(@Path("clientId") int clientId);
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
-    void deleteIdentifier(@Path("clientId") int clientId,
-                          @Path("identifierId") int identifierId,
-                          Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> deleteIdentifier(@Path("clientId") int clientId,
+                          @Path("identifierId") int identifierId);
 
 }

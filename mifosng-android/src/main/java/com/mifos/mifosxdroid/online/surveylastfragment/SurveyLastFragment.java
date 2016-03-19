@@ -4,7 +4,7 @@
  */
 
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.surveylastfragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.online.Communicator;
+import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.ScorecardValues;
 import com.mifos.api.model.ScorecardPayload;
@@ -37,7 +40,7 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyLastFragment extends Fragment implements Communicator {
+public class SurveyLastFragment extends Fragment implements Communicator, SurveyLastMvpView {
     public static final String QUESTION = "question";
     public static final String PREFS_NAME = "MY_PREFS";
     SharedPreferences sharedPreferences;
@@ -54,6 +57,9 @@ public class SurveyLastFragment extends Fragment implements Communicator {
     public static int qid;
     public static int rid;
     public static int rvalue;
+
+    private DataManager dataManager;
+    private SurveyLastPresenter mSurveyLastPresenter;
 
 
     public static final SurveyLastFragment newInstance(int id, String question) {
@@ -81,6 +87,9 @@ public class SurveyLastFragment extends Fragment implements Communicator {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_survey_last, container, false);
+        dataManager = new DataManager();
+        mSurveyLastPresenter = new SurveyLastPresenter(dataManager);
+        mSurveyLastPresenter.attachView(this);
         tvQuestion = (TextView) view.findViewById(R.id.survey_question_textView);
         setQuestion(getArguments().getString(QUESTION));
 
@@ -136,17 +145,7 @@ public class SurveyLastFragment extends Fragment implements Communicator {
         scorecardPayload.setCreatedOn(date);
         scorecardPayload.setScorecardValues(scorecardValues);
 
-        App.apiManager.submitScore(surveyId, scorecardPayload, new Callback<Scorecard>() {
-            @Override
-            public void success(Scorecard scorecard, Response response) {
-                Toast.makeText(getActivity(), "Scorecard created successfully", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
+        mSurveyLastPresenter.submitScorecard(surveyId,scorecardPayload);
     }
 
     @Override
@@ -155,6 +154,22 @@ public class SurveyLastFragment extends Fragment implements Communicator {
         myPreference = new MyPreference();
         myPreference.resetScorecard(activity);
         super.onStop();
+    }
+
+    @Override
+    public void submitScoreResultCallBack(Scorecard scorecard) {
+        Toast.makeText(getActivity(), "Scorecard created successfully", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void submittingScoreCardError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSurveyLastPresenter.detachView();
     }
 }
 

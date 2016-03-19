@@ -27,11 +27,11 @@ public interface ChargeService {
     void listAllCharges(Callback<Response> chargesCallback);
 
     @GET(APIEndPoint.CHARGES)
-    void getAllChargesS(Callback<List<Charges>> callback);
+    Observable<List<Charges>> getAllChargesS();
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
     Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
-    void createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload, Callback<Charges> callback);
+    Observable<Charges> createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload);
 }

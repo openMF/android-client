@@ -155,8 +155,8 @@ public class ApiManager extends BaseApiManager {
         getDataTableApi().getDataOfDataTable(table, entityId);
     }
 
-    public void addDataTableEntry(String table, int entityId, Map<String, Object> payload, Callback<GenericResponse> callback) {
-        getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
+    public void addDataTableEntry(String table, int entityId, Map<String, Object> payload) {
+        getDataTableApi().createEntryInDataTable(table, entityId, payload);
     }
 
     public void removeDataTableEntry(String table, int entity, int rowId) {
@@ -223,8 +223,8 @@ public class ApiManager extends BaseApiManager {
         getSurveyApi().getSurvey(survey, callback);
     }
 
-    public void submitScore(int survey, ScorecardPayload scorecardPayload, Callback<Scorecard> callback) {
-        getSurveyApi().submitScore(survey, scorecardPayload, callback);
+    public void submitScore(int survey, ScorecardPayload scorecardPayload) {
+        getSurveyApi().submitScore(survey, scorecardPayload);
     }
 
     /**
@@ -235,8 +235,8 @@ public class ApiManager extends BaseApiManager {
         getGpsApi().setGpsCoordinates(client, request, callback);
     }
 
-    public void updateGpsData(int client, GpsCoordinatesRequest request, Callback<GpsCoordinatesResponse> callback) {
-        getGpsApi().updateGpsCoordinates(client, request, callback);
+    public void updateGpsData(int client, GpsCoordinatesRequest request) {
+        getGpsApi().updateGpsCoordinates(client, request);
     }
 
     /**
@@ -263,8 +263,8 @@ public class ApiManager extends BaseApiManager {
         getDocumentApi().getListOfDocuments(type, id);
     }
 
-    public void createDocument(String type, int id, String name, String desc, TypedFile file, Callback<GenericResponse> callback) {
-        getDocumentApi().createDocument(type, id, name, desc, file, callback);
+    public void createDocument(String type, int id, String name, String desc, TypedFile file) {
+        getDocumentApi().createDocument(type, id, name, desc, file);
     }
 
     /**
@@ -275,8 +275,8 @@ public class ApiManager extends BaseApiManager {
         getIdentifierApi().getListOfIdentifiers(clientId);
     }
 
-    public void deleteIdentifier(int clientId, int id, Callback<GenericResponse> callback) {
-        getIdentifierApi().deleteIdentifier(clientId, id, callback);
+    public void deleteIdentifier(int clientId, int id) {
+        getIdentifierApi().deleteIdentifier(clientId, id);
     }
 
     /**
@@ -303,16 +303,16 @@ public class ApiManager extends BaseApiManager {
 //        getChargeService().getAllCharges(callback);
     }
 
-    public void getAllChargesV2(Callback<List<Charges>> callback) {
-        getChargeService().getAllChargesS(callback);
+    public void getAllChargesV2() {
+        getChargeService().getAllChargesS();
     }
 
     public void getClientCharges(int clientId) {
         getChargeService().getListOfCharges(clientId);
     }
 
-    public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
-        getChargeService().createCharges(clientId, payload, callback);
+    public void createCharges(int clientId, ChargesPayload payload) {
+        getChargeService().createCharges(clientId, payload);
     }
 
     /**

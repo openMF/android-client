@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.dialogfragments;
+package com.mifos.mifosxdroid.dialogfragments.datatablerowdialogfragment;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.mifos.api.DataManager;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.formwidgets.FormEditText;
@@ -45,7 +46,7 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 01/08/14.
  */
-public class DataTableRowDialogFragment extends DialogFragment {
+public class DataTableRowDialogFragment extends DialogFragment implements DataTableRowDialogMvpView{
 
     private DataTable dataTable;
     private int entityId;
@@ -58,6 +59,8 @@ public class DataTableRowDialogFragment extends DialogFragment {
     private SafeUIBlockingUtility safeUIBlockingUtility;
 
     private List<FormWidget> formWidgets = new ArrayList<FormWidget>();
+    private DataManager dataManager;
+    private DataTableRowDialogPresenter mDataTableRowDialogPresenter;
 
 
     //TODO Check for Static vs Bundle Approach
@@ -93,6 +96,9 @@ public class DataTableRowDialogFragment extends DialogFragment {
         rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container, false);
 
         ButterKnife.inject(this, rootView);
+        dataManager = new DataManager();
+        mDataTableRowDialogPresenter = new DataTableRowDialogPresenter(dataManager);
+        mDataTableRowDialogPresenter.attachView(this);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.ll_data_table_entry_form);
 
         getDialog().setTitle(dataTable.getRegisteredTableName());
@@ -205,26 +211,24 @@ public class DataTableRowDialogFragment extends DialogFragment {
         }
 
         safeUIBlockingUtility.safelyBlockUI();
-
-        App.apiManager.addDataTableEntry(dataTable.getRegisteredTableName(), entityId, payload, new Callback<GenericResponse>() {
-            @Override
-            public void success(GenericResponse genericResponse, Response response) {
-
-                safeUIBlockingUtility.safelyUnBlockUI();
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                MFErrorParser.parseError(retrofitError.getResponse());
-                safeUIBlockingUtility.safelyUnBlockUI();
-                getActivity().getSupportFragmentManager().popBackStack();
-
-            }
-        });
-
-
+        mDataTableRowDialogPresenter.addDataTableEntry(dataTable.getRegisteredTableName(), entityId, payload);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDataTableRowDialogPresenter.detachView();
+    }
+
+    @Override
+    public void showDatatableRawCreationEntry(GenericResponse genericResponse) {
+        safeUIBlockingUtility.safelyUnBlockUI();
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void ResponseCreationError(String s) {
+        safeUIBlockingUtility.safelyUnBlockUI();
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
 }

@@ -20,7 +20,7 @@ import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.datatablerowdialogfragment.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.DataTableUIBuilder;
 import com.mifos.utils.FragmentConstants;

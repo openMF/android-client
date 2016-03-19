@@ -94,7 +94,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.PinpointClientActivity"
+            android:name=".activity.pinpointclientactivity.PinpointClientActivity"
             android:label="@string/pinpoint"
             android:screenOrientation="portrait" />
 
