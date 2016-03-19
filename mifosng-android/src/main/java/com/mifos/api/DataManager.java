@@ -37,6 +37,7 @@ import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
@@ -243,5 +244,9 @@ public class DataManager {
 
     public Observable<SavingsAccountTransactionResponse> processTransaction(String type, int accountId, String transactionType, SavingsAccountTransactionRequest request){
         return mBaseApiManager.getSavingsApi().processTransaction(type,accountId,transactionType,request);
+    }
+
+    public Observable<List<Survey>> getAllSurvey(){
+        return mBaseApiManager.getSurveyApi().getAllSurveys();
     }
 }

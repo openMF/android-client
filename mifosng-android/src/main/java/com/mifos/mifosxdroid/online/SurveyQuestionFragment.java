@@ -150,7 +150,7 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
 
             case R.id.bt_next:
 
-                App.apiManager.getSurvey(surveyId, new Callback<Survey>() {
+                /*App.apiManager.getSurvey(surveyId, new Callback<Survey>() {
                     @Override
                     public void success(final Survey survey, Response response) {
 
@@ -194,7 +194,7 @@ public class SurveyQuestionFragment extends Fragment implements View.OnClickList
                         Toast.makeText(getActivity(), "survey not found", Toast.LENGTH_SHORT).show();
 
                     }
-                });
+                });*/
                 break;
         }
     }

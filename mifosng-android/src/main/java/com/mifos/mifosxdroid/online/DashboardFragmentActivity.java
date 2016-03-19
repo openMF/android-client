@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
@@ -20,6 +21,10 @@ import com.mifos.mifosxdroid.online.clientsearchfragment.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.createnewcenterfragment.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclientfragment.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroupfragment.CreateNewGroupFragment;
+import com.mifos.mifosxdroid.online.surveylistfragment.SurveyListFragment;
+import com.mifos.objects.survey.Survey;
+
+import java.util.List;
 
 /**
  * Created by ishankhanna on 09/02/14.
@@ -80,9 +85,9 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
     }
 
     @Override
-    public void loadSurveyQuestion(int surveyId) {
-        Intent myIntent = new Intent(DashboardFragmentActivity.this, SurveyQuestion.class);
-        myIntent.putExtra("SurveyId", surveyId);
+    public void loadSurveyQuestion(Survey surveys) {
+        Intent myIntent = new Intent(DashboardFragmentActivity.this, SurveyQuestionViewPager.class);
+        myIntent.putExtra("SURVEY_DETAILS", (new Gson()).toJson(surveys));
         startActivity(myIntent);
     }
 

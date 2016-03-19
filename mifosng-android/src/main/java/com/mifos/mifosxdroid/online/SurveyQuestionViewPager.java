@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SurveyPagerAdapter;
@@ -37,13 +38,11 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionFragment.OnAnswerSelectedListener {
-    private static final int CONTENT_VIEW_ID = 10101010;
+public class SurveyQuestionViewPager extends MifosBaseActivity implements SurveyQuestionFragment.OnAnswerSelectedListener {
+
     public Communicator fragmentCommunicator;
     private ViewPager pager = null;
-    public static final String PREFS_NAME = "MY_PREFS";
     private Button btnNext;
-    AppCompatActivity activity;
     private PagerAdapter mPagerAdapter = null;
     public static final String ID = "id";
     public static int surveyId;
@@ -52,84 +51,31 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
     public static int pfrid;
     public static int pfrvalue;
     private List<Fragment> fragments = null;
-    SharedPreferences sharedPreferences;
     private String qs;
     ViewPager.OnPageChangeListener mPageChangeListener;
     MyPreference myPreference;
     Context context;
+    private Survey surveys;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_survey_question);
-        context = SurveyQuestion.this;
+        Intent intent = getIntent();
+        surveys = (new Gson()).fromJson(intent.getStringExtra("SURVEY_DETAILS"), Survey.class);
+        context = SurveyQuestionViewPager.this;
         myPreference = new MyPreference();
         myPreference.resetScorecard(this);
         btnNext = (Button) findViewById(R.id.btnNext);
 
         fragments = new Vector<Fragment>();
-
-        Intent mIntent = getIntent();
-        surveyId = mIntent.getIntExtra("SurveyId", 0);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor edt = sharedPreferences.edit();
-        edt.putInt("SURVEY_ID", surveyId);
-        edt.commit();
-
-
-        App.apiManager.getSurvey(surveyId, new Callback<Survey>() {
-            @Override
-            public void success(final Survey survey, Response response) {
-
-                if (survey != null) {
-
-                    String answer[] = new String[10];
-
-                    ArrayList<String> answerList = new ArrayList<String>();
-
-                    if (survey.getQuestionDatas() != null && survey.getQuestionDatas().size() > 0) {
-                        for (int i = 0; i < survey.getQuestionDatas().size(); i++) {
-                            qs = survey.getQuestionDatas().get(i).getText();
-                            qid = survey.getQuestionDatas().get(i).getQuestionId();
-                            if (survey.getQuestionDatas().get(i).getResponseDatas().size() > 0) {
-                                for (int j = 0; j < survey.getQuestionDatas().get(i).getResponseDatas().size(); j++) {
-                                    answer[j] = survey.getQuestionDatas().get(i).getResponseDatas().get(j).getText();
-
-                                    answerList.add(answer[j]);
-                                }
-
-
-                            }
-
-                            String[] answerArr = new String[answerList.size()];
-                            answerArr = answerList.toArray(answerArr);
-                            fragments.add(SurveyQuestionFragment.newInstance(i, qs, surveyId, answerArr));
-                            answerList.clear();
-                        }
-
-                        fragments.add(SurveyLastFragment.newInstance(1, "You have reached the end of Survey"));
-                        mPagerAdapter.notifyDataSetChanged();
-
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toast.makeText(SurveyQuestion.this, "Survey not found.", Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        loadsurvey(surveys);
 
         this.mPagerAdapter = new SurveyPagerAdapter(super.getSupportFragmentManager(), fragments);
-
         pager = (ViewPager) super.findViewById(R.id.surveyPager);
-
         pager.setAdapter(this.mPagerAdapter);
-
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -180,6 +126,40 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
 
     }
 
+    public void loadsurvey(Survey survey){
+        if (survey != null) {
+
+            String answer[] = new String[10];
+
+            ArrayList<String> answerList = new ArrayList<String>();
+
+            if (survey.getQuestionDatas() != null && survey.getQuestionDatas().size() > 0) {
+                for (int i = 0; i < survey.getQuestionDatas().size(); i++) {
+                    qs = survey.getQuestionDatas().get(i).getText();
+                    qid = survey.getQuestionDatas().get(i).getQuestionId();
+                    if (survey.getQuestionDatas().get(i).getResponseDatas().size() > 0) {
+                        for (int j = 0; j < survey.getQuestionDatas().get(i).getResponseDatas().size(); j++) {
+                            answer[j] = survey.getQuestionDatas().get(i).getResponseDatas().get(j).getText();
+
+                            answerList.add(answer[j]);
+                        }
+
+
+                    }
+
+                    String[] answerArr = new String[answerList.size()];
+                    answerArr = answerList.toArray(answerArr);
+                    fragments.add(SurveyQuestionFragment.newInstance(i, qs, surveyId, answerArr));
+                    answerList.clear();
+                }
+
+                fragments.add(SurveyLastFragment.newInstance(1, "You have reached the end of Survey"));
+                mPagerAdapter.notifyDataSetChanged();
+
+            }
+
+        }
+    }
 
 }
 

@@ -16,6 +16,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import rx.Observable;
 
 /**
  * @author
@@ -23,7 +24,7 @@ import retrofit.http.Path;
 public interface SurveyService {
 
     @GET(APIEndPoint.SURVEYS)
-    void getAllSurveys(Callback<List<Survey>> callback);
+    Observable<List<Survey>> getAllSurveys();
 
     @GET(APIEndPoint.SURVEYS + "/{surveyId}")
     void getSurvey(@Path("surveyId") int surveyId, Callback<Survey> surveyCallback);

@@ -215,8 +215,8 @@ public class ApiManager extends BaseApiManager {
      * Surveys API
      */
 
-    public void getAllSurveys(Callback<List<Survey>> callback) {
-        getSurveyApi().getAllSurveys(callback);
+    public void getAllSurveys() {
+        getSurveyApi().getAllSurveys();
     }
 
     public void getSurvey(int survey, Callback<Survey> callback) {

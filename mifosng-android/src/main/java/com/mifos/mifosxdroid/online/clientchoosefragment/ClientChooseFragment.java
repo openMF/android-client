@@ -18,7 +18,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientChooseAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.online.SurveyListFragment;
+import com.mifos.mifosxdroid.online.surveylistfragment.SurveyListFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import java.util.ArrayList;

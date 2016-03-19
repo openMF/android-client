@@ -69,7 +69,7 @@ public class SurveyLastFragment extends Fragment implements Communicator {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = getActivity();
-        ((SurveyQuestion) context).fragmentCommunicator = this;
+        ((SurveyQuestionViewPager) context).fragmentCommunicator = this;
     }
 
     public void onCreate(Bundle savedInstanceState) {
