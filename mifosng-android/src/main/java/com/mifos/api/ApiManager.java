@@ -16,21 +16,13 @@ import com.mifos.api.model.ScorecardPayload;
 import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
-import com.mifos.objects.client.Charges;
-import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.organisation.ProductSavings;
-import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;

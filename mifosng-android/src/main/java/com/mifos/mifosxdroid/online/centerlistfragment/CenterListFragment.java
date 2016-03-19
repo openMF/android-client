@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -24,10 +23,6 @@ import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 11/03/14.
