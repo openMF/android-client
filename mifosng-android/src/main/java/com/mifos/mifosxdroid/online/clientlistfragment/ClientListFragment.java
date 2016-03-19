@@ -41,10 +41,8 @@ import retrofit.client.Response;
  */
 public class ClientListFragment extends MifosBaseFragment implements ClientListMvpView{
 
-    @InjectView(R.id.lv_clients)
-    ListView lv_clients;
-    @InjectView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
+    @InjectView(R.id.lv_clients) ListView lv_clients;
+    @InjectView(R.id.swipe_container) SwipeRefreshLayout swipeRefreshLayout;
 
     private DataManager mDatamanager;
     private ClientListPresenter mClientListPresenter;
@@ -52,11 +50,10 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
 
     private View rootView;
     private List<Client> clientList = new ArrayList<>();
-    private int offset = 0;
+    private boolean loadmore = false;
+    private boolean ClientAvailable = true;
+    private int totalFilteredRecords = 0;
     private int limit = 200;
-    private int index = 0;
-    private int top = 0;
-
     private boolean isInfiniteScrollEnabled = true;
 
     public static ClientListFragment newInstance(List<Client> clientList) {
@@ -87,7 +84,9 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
+                mClientListPresenter.loadclientlist();
+                swipeRefreshLayout.setRefreshing(true);
+                ClientAvailable = true;
             }
         });
         fetchClientList();
@@ -118,6 +117,7 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         if (clientList.size() > 0) {
             inflateClientList();
         } else {
+            totalFilteredRecords = 0;
             mClientListPresenter.loadclientlist();
         }
     }
@@ -126,6 +126,12 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         this.clientList = clientList;
     }
 
+
+    /**
+     * Method setup the OnScrollListener that get the values on every scroll
+     * and when the user reached to last item it call the loadmore item request to API
+     * and update the clientList.
+     */
     public void setInfiniteScrollListener() {
         lv_clients.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -135,10 +141,17 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem + visibleItemCount >= totalItemCount) {
-                    offset += limit + 1;
-                    swipeRefreshLayout.setRefreshing(true);
-                    mClientListPresenter.loadmoreclientlist(offset,limit);
+                if (firstVisibleItem + visibleItemCount >= totalItemCount && totalItemCount!=0) {
+
+
+                    if(!loadmore && ClientAvailable){
+                        loadmore = true;
+                        swipeRefreshLayout.setRefreshing(true);
+                        mClientListPresenter.loadmoreclientlist(clientList.size(),limit);
+                    }else
+                        Toaster.show(rootView,"No more clients Available");
+
+
                 }
             }
         });
@@ -156,8 +169,11 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
 
     @Override
     public void showClientList(Page<Client> page) {
+        totalFilteredRecords = page.getTotalFilteredRecords();
         clientList = page.getPageItems();
         inflateClientList();
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -171,10 +187,12 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
     public void showMoreClientList(Page<Client> clientPage) {
         clientList.addAll(clientPage.getPageItems());
         clientNameListAdapter.notifyDataSetChanged();
-        index = lv_clients.getFirstVisiblePosition();
-        View v = lv_clients.getChildAt(0);
-        top = (v == null) ? 0 : v.getTop();
-        lv_clients.setSelectionFromTop(index, top);
+        loadmore = false;
         swipeRefreshLayout.setRefreshing(false);
+
+        //checking the response size if size is zero then set the ClientAvailable = false
+        //this will reflect into scroll method and it will show
+        if(clientPage.getPageItems().size() == 0 && (totalFilteredRecords== clientList.size()))
+            ClientAvailable = false;
     }
 }
