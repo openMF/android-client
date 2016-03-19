@@ -36,6 +36,11 @@
     <string name="full_name">Name</string>
     <string name="account_number">Account Number</string>
     <string name="external_id">External ID</string>
+    <string name="loanproduct">Loan Product</string>
+    <string name="loantype">Loan Type</string>
+    <string name="principal">Principal</string>
+    <string name="loanterm">Loan Term</string>
+    <string name="loanterm_month">Select Loan Term</string>
     <string name="nominal">Nominal annual intrest </string>
     <string name="submittedon">Submitted On</string>
     <string name="activation_date">Activation Date</string>
@@ -48,6 +53,8 @@
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
     <string name="create_savings_account">Add Savings Account</string>
+    <string name="create_loan_account">Loan Application</string>
+    <string name="create_loan_terms">Loan Terms</string>
     <string name="create_center">Create Center</string>
     <string name="create_group">Create Group</string>
     <string name="staff_id">Staff Id</string>
@@ -61,9 +68,11 @@
     <string name="file_name">File Name</string>
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
+    <string name="approve_savings">Approve Savings</string>
     <string name="more_info">More client info</string>
     <string name="pinpoint">Pinpoint location</string>
     <string name="charges">Charges </string>
+    <string name="add_loan">Add Loan Account</string>
     <string name="savings_account">Add Savings Account</string>
     <string name="collection_sheet">Collection Sheet</string>
     <string name="title_activity_generate_collection_sheet" translatable="false">GenerateCollectionSheet</string>
@@ -83,6 +92,8 @@
 
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
+    <string name="loan_purposes">Loan Purposes</string>
+    <string name="loan_fund">Fund</string>
     <string name="staff">Staff</string>
     <string name="loan_cycle">Loan Cycle</string>
     <string name="loan_status">Status</string>
@@ -127,7 +138,7 @@
     <string name="savings_account_balance">Account Balance</string>
     <string name="savings_total_deposits">Total Deposits</string>
     <string name="savings_total_withdrawals">Total Withdrawals</string>
-    <string name="savings_make_withdrawal">Make Withdrawal</string>
+    <string name="savings_make_withdrawal">Withdrawal</string>
     <string name="savings_make_deposit">Make Deposit</string>
     <string name="savingAccounts">Savings Accounts</string>
     <string name="savingsAccount">Savings Account</string>
@@ -136,6 +147,8 @@
     <string name="withdrawal">Withdrawal</string>
     <string name="savingsAccountSummary">Savings Account Summary</string>
     <string name="recurringAccountSummary">Recurring Account Summary</string>
+    <string name="approval_savings_date">Select Approval Date:</string>
+    <string name="approval_disbursement_date">Expected disbursement on</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <!-- Savings Account Related Terminologies End Here -->
 
@@ -154,7 +167,17 @@
     <string name="dob">Date of Birth</string>
     <string name="office_name">Office</string>
     <string name="interest_p_period">Interest Posting Period</string>
+    <string name="nominal_interest_rate"> Nominal interest rate per Year</string>
+    <string name="amortization">Amortization</string>
+    <string name="interestcalculationperiod">Interest calculation period</string>
+    <string name="repaymentstrategy">Repayment Strategy</string>
+    <string name="calculateinterest">Calculate interest for exact days in partial period</string>
     <string name="staff_names">Staff</string>
+    <string name="approvedamount">Approved Amount</string>
+    <string name="transaction_amount">Transaction amount</string>
+    <string name="approval_note">Note</string>
+    <string name="savings_approval_reason">Reason for Approval</string>
+    <string name="add_group">Add Group</string>
     <string name="client_active">Client Active</string>
     <string name="submit">Submit</string>
     <string name="gender">Gender</string>
@@ -164,11 +187,16 @@
     <string name="field_officer">Field Officer</string>
     <string name="client_classification">Client Classification</string>
     <string name="interest_comp">Intrest Compounding Period</string>
+    <string name="repaidevery">Repaid Every</string>
+
+    <string name="numberofrepayments">Number of repayments</string>
+
     <string name="days_in_year">Days in year</string>
 
     <!-- Create Center Terms -->
     <string name="centername">Name</string>
     <string name="center_submission_date">Submitted On</string>
+    <string name="center_activation_date">Activation Date</string>
     <string name="center_add_group">Add Group</string>
     <string name="center_active">Active</string>
     <string name="groupname">Name</string>
@@ -213,17 +241,26 @@
     <string name="error_unknown">There was some error processing your request.</string>
     <string name="error_save_location_not_available">Location Unavailable, Please try again later!</string>
     <string name="list_all_clients">Client List</string>
+    <string name="group_list">Group List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
+    <string name="error_select_payment">Please Select Payment Type</string>
+    <string name="error_select_fund">Please Select Fund</string>
+    <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
+    <string name="error_select_transactionProcessingStrategy">Please Select Transaction Processing Strategy</string>
+
     <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
+    <string name="loan_purpose">Please Select a the Loan Purpose</string>
     <string name="interestCalculationDaysInYearTypeAdapterId">Please Days in Year</string>
 
     <string name="error_select_intrested_cmp">Please Select the Interest Compound Period </string>
     <string name="error_select_gender">Please Select Gender</string>
     <string name="error_select_client_type">Please Select Client Type</string>
     <string name="error_select_staff">Please Select a Staff</string>
+    <string name="error_select_loan_officer">Please Select a Loan Officer</string>
     <string name="error_select_center">Please Select a Center</string>
     <string name="error_client_inactive">Client Inactive</string>
+    <string name="error_group_inactive">Group Inactive</string>
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
@@ -261,7 +298,9 @@
     <string name="phone_number_not_valid">Phone number not valid</string>
     <string name="error_select_charge">Select Charge</string>
     <string name="error_select_product">Select Savings Product</string>
+    <string name="error_select_loan">Select Loans Product</string>
     <string name="error_select_officer">Select Officer</string>
+    <string name="error_select_client">Select Client</string>
 
 
     <string-array name="office_ids">

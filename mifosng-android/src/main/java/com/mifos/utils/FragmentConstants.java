@@ -16,6 +16,8 @@ public class FragmentConstants {
 
     public static final String FRAG_CLIENT_DETAILS = "Client Details Fragment";
 
+    public static final String FRAG_GROUP_DETAILS = "Group Details Fragment";
+
     public static final String FRAG_LOAN_ACCOUNT_SUMMARY = "Loan Account Summary Fragment";
 
     public static final String FRAG_SAVINGS_ACCOUNT_SUMMARY = "Savings Account Summary Fragment";

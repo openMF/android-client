@@ -5,8 +5,14 @@
 
 package com.mifos.mifosxdroid.online;
 
+/**
+ * Created by nellyk on 1/22/2016.
+ */
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,20 +27,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mifos.App;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
-import com.mifos.objects.organisation.Staff;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,38 +50,27 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by nellyk on 1/22/2016.
- */
-public class CreateNewCenterFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
 
+public class CreateNewCenterFragment extends Fragment implements MFDatePicker.OnDatePickListener {
+
+
+    private static final String TAG = "CreateNewCenter";
     @InjectView(R.id.et_center_name)
     EditText et_centerName;
-    @InjectView(R.id.et_center_external_id)
-    EditText et_centerexternalId;
     @InjectView(R.id.cb_center_active_status)
     CheckBox cb_centerActiveStatus;
-    @InjectView(R.id.tv_submissiondate)
-    TextView tv_submissionDate;
-    @InjectView(R.id.sp_offices)
+    @InjectView(R.id.tv_center_activationDate)
+    TextView tv_activationDate;
+    @InjectView(R.id.sp_center_offices)
     Spinner sp_offices;
-    @InjectView(R.id.sp_staff)
-    Spinner sp_staff;
-    @InjectView(R.id.sp_add_group)
-    Spinner sp_add_group;
     @InjectView(R.id.bt_submit)
     Button bt_submit;
-
     int officeId;
-    int staffId;
     private View rootView;
     Boolean result = true;
-    private String dateString;
-    private String dateofsubmissionstring;
-    private DialogFragment mfDatePicker;
+    private String activationdateString;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
 
     public static CreateNewCenterFragment newInstance() {
         CreateNewCenterFragment createNewCenterFragment = new CreateNewCenterFragment();
@@ -89,43 +82,42 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
         rootView = inflater.inflate(R.layout.fragment_create_new_center, null);
         ButterKnife.inject(this, rootView);
         inflateOfficeSpinner();
-        inflateSubmissionDate();
-        inflateDateofBirth();
+        inflateActivationDate();
         //client active checkbox onCheckedListener
         cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                tv_submissionDate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                if (isChecked)
+                    tv_activationDate.setVisibility(View.VISIBLE);
+                else
+                    tv_activationDate.setVisibility(View.GONE);
             }
         });
 
-        dateString = tv_submissionDate.getText().toString();
-        dateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(dateString).replace("-", " ");
-        dateofsubmissionstring = tv_submissionDate.getText().toString();
-        dateofsubmissionstring = DateHelper.getDateAsStringUsedForDateofBirth(dateofsubmissionstring).replace("-", " ");
-
+        activationdateString = tv_activationDate.getText().toString();
+        activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationdateString).replace("-", " ");
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 CenterPayload centerPayload = new CenterPayload();
 
-                centerPayload.setCenterName(et_centerName.getEditableText().toString());
-                centerPayload.setExternalId(et_centerexternalId.getEditableText().toString());
+                centerPayload.setName(et_centerName.getEditableText().toString());
                 centerPayload.setActive(cb_centerActiveStatus.isChecked());
-                centerPayload.setActivationDate(dateString);
-                centerPayload.setSubmissionDate(dateofsubmissionstring);
+                centerPayload.setActivationDate(activationdateString);
                 centerPayload.setOfficeId(officeId);
-                centerPayload.setStaffId(staffId);
+                centerPayload.setDateFormat("dd MMMM yyyy");
+                centerPayload.setLocale("en");
+
                 initiateCenterCreation(centerPayload);
+
             }
         });
+
         return rootView;
     }
-
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        showProgress();
         App.apiManager.getOffices(new Callback<List<Office>>() {
 
             @Override
@@ -147,7 +139,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
                         officeId = officeNameIdHashMap.get(officeList.get(i));
                         Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
                         if (officeId != -1) {
-                            inflateStaffSpinner(officeId);
+
                         } else {
                             Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
                         }
@@ -158,75 +150,26 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
 
                     }
                 });
-                hideProgress();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
             }
         });
     }
 
-    public void inflateStaffSpinner(final int officeId) {
-        App.apiManager.getStaffInOffice(officeId, new Callback<List<Staff>>() {
-            @Override
-            public void success(List<Staff> staffs, Response response) {
-
-                final List<String> staffNames = new ArrayList<String>();
-                for (Staff staff : staffs) {
-                    staffNames.add(staff.getDisplayName());
-                    staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
-                }
-                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, staffNames);
-                staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_staff.setAdapter(staffAdapter);
-                sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        staffId = staffNameIdHashMap.get(staffNames.get(position));
-                        Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
-                        if (staffId != -1) {
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-
-                });
-                hideProgress();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                hideProgress();
-            }
-        });
-    }
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
 
-        if (!isValidCenterName()) {
-            return;
-        }
-        else {
-            showProgress();
+        if (isValidCenterName()) {
             App.apiManager.createCenter(centerPayload, new Callback<Center>() {
                 @Override
                 public void success(Center center, Response response) {
-                    Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
-                    hideProgress();
+                    Toast.makeText(getActivity(), "Center created successfully", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    hideProgress();
                     Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
                 }
             });
@@ -234,31 +177,25 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     }
 
 
-    public void inflateSubmissionDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
-        tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
-        tv_submissionDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
-            }
-        });
-    }
-
-    public void inflateDateofBirth() {
+    public void inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this);
-        tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
-        tv_submissionDate.setOnClickListener(new View.OnClickListener() {
+
+        tv_activationDate.setText(MFDatePicker.getDatePickedAsString());
+
+        tv_activationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
 
         });
+
+
     }
 
     public void onDatePicked(String date) {
-        tv_submissionDate.setText(date);
+        tv_activationDate.setText(date);
+
     }
 
     public boolean isValidCenterName() {
@@ -266,6 +203,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
             if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_cannot_be_empty));
             }
+
             if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName.getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.center_name), 4);
             }
@@ -284,4 +222,16 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
         }
         return result;
     }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
 }

@@ -5,10 +5,13 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,19 +27,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.dialogfragments.SavingsAccountApproval;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
 import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.noncore.DataTable;
+
 import com.mifos.utils.Constants;
+import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,8 +87,13 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
     Button bt_deposit;
     @InjectView(R.id.bt_withdrawal)
     Button bt_withdrawal;
+    @InjectView(R.id.bt_approve_saving)
+    Button bt_approve_saving;
     private View rootView;
-
+    private SharedPreferences sharedPreferences;
+    private int processSavingTransactionAction = -1;
+    private static final int ACTION_APPROVE_SAVINGS = 4;
+    private static final int ACTION_ACTIVATE_SAVINGS=5;
     private SavingsAccountWithAssociations savingsAccountWithAssociations;
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
@@ -138,6 +151,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
          * This Method will hit end point ?associations=transactions
          */
         App.apiManager.getSavingsAccount(savingsAccountType.getEndpoint(), savingsAccountNumber, "transactions", new Callback<SavingsAccountWithAssociations>() {
+
                     @Override
                     public void success(SavingsAccountWithAssociations savingsAccountWithAssociations, Response response) {
 
@@ -169,8 +183,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
                                 tv_totalWithdrawals.setText("0.0");
                             }
 
-                            savingsAccountTransactionsListAdapter
-                                    = new SavingsAccountTransactionsListAdapter(getActivity().getApplicationContext(),
+                            savingsAccountTransactionsListAdapter = new SavingsAccountTransactionsListAdapter(getActivity(),
                                     savingsAccountWithAssociations.getTransactions().size() < FINAL ?
                                             savingsAccountWithAssociations.getTransactions() :
                                             savingsAccountWithAssociations.getTransactions().subList(INITIAL, FINAL)
@@ -202,7 +215,29 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
                                 }
                             });
 
-                            toggleTransactionCapabilityOfAccount(savingsAccountWithAssociations.getStatus());
+                            if (savingsAccountWithAssociations.getStatus().getSubmittedAndPendingApproval()) {
+                                bt_approve_saving.setEnabled(true);
+                                bt_deposit.setVisibility(View.GONE);
+                                bt_withdrawal.setVisibility(View.GONE);
+                                bt_approve_saving.setText("Approve Savings");
+                                processSavingTransactionAction = ACTION_APPROVE_SAVINGS;
+                            } else if (!(savingsAccountWithAssociations.getStatus().getActive())) {
+                                bt_approve_saving.setEnabled(true);
+                                bt_deposit.setVisibility(View.GONE);
+                                bt_withdrawal.setVisibility(View.GONE);
+                                bt_approve_saving.setText("Activate Savings");
+                                processSavingTransactionAction = ACTION_ACTIVATE_SAVINGS;
+                            }
+                            else if (savingsAccountWithAssociations.getStatus().getClosed()) {
+                                bt_approve_saving.setEnabled(false);
+                                bt_deposit.setVisibility(View.GONE);
+                                bt_withdrawal.setVisibility(View.GONE);
+                                bt_approve_saving.setText("Savings Account Closed");
+                            } else{
+                                inflateSavingsAccountSummary();
+                                bt_approve_saving.setVisibility(View.GONE);
+
+                            }
 
                             inflateDataTablesList();
                             hideProgress();
@@ -289,7 +324,19 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
     public void onWithdrawalButtonClicked() {
         mListener.doTransaction(savingsAccountWithAssociations, Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType);
     }
+    @OnClick(R.id.bt_approve_saving)
+    public void onProcessTransactionClicked() {
 
+
+        if (processSavingTransactionAction == ACTION_APPROVE_SAVINGS) {
+            approveSavings();
+        }else if (processSavingTransactionAction == ACTION_ACTIVATE_SAVINGS) {
+            activateSavings();
+        } else {
+            Log.i(getActivity().getLocalClassName(), "TRANSACTION ACTION NOT SET");
+        }
+
+    }
     /**
      * Use this method to fetch all datatables for a savings account and inflate them as
      * menu options
@@ -371,7 +418,35 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
         fragmentTransaction.replace(R.id.container, documentListFragment);
         fragmentTransaction.commit();
     }
+    public void approveSavings() {
 
+        SavingsAccountApproval savingsAccountApproval = SavingsAccountApproval.newInstance(savingsAccountNumber,savingsAccountType);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.container, savingsAccountApproval);
+        fragmentTransaction.commit();
+
+    }
+
+    public void activateSavings() {
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("dateFormat", "dd MMMM yyyy");
+        hashMap.put("activatedOnDate", DateHelper.getCurrentDateAsNewDateFormat());
+        hashMap.put("locale", "en");
+
+     App.apiManager.activateSavings(savingsAccountNumber,hashMap,new Callback<GenericResponse>() {
+
+                    @Override
+                    public void success(GenericResponse genericResponse, Response response) {
+                        Toast.makeText(getActivity(), "Savings Account Activated", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                    }
+                }
+        );
+    }
     public void toggleTransactionCapabilityOfAccount(Status status) {
         if (!status.getActive()) {
             bt_deposit.setVisibility(View.GONE);

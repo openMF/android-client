@@ -25,6 +25,7 @@ public class Group {
     String name;
     Integer officeId;
     String officeName;
+    String externalId;
     Integer staffId;
     String staffName;
     Status status;
@@ -37,6 +38,14 @@ public class Group {
 
     public void setActivationDate(List<Integer> activationDate) {
         this.activationDate = activationDate;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public Boolean getActive() {

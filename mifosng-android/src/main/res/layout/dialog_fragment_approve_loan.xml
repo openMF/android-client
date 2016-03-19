@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
+    <TextView
+        android:id="@+id/tv_loan_approval_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="16dp"
+        android:text="@string/approval_savings_date"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/tv_loan_approval_dates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionNext"
+        android:paddingBottom="16dp"
+        android:paddingTop="10dp"
+        android:textSize="20sp"
+        android:enabled="false"
+        android:background="@color/light_grey" />
+    <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+        <EditText
+            android:id="@+id/et_approved_amount"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/approvedamount"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:paddingBottom="16dp"
+            android:singleLine="true"/>
+    </android.support.design.widget.TextInputLayout>
+
+
+
+    <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+        <EditText
+            android:id="@+id/et_approval_note"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/approval_note"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:paddingBottom="16dp"
+            android:singleLine="true"/>
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/bt_approve_loan"
+        style="@style/Button.Base"
+        android:layout_marginTop="10dp"
+        android:text="@string/submit"
+        />
+</LinearLayout>

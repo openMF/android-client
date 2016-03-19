@@ -65,10 +65,22 @@
         <item name="android:textSize">24sp</item>
     </style>
     <style name="TextView.CreateSavingsAccount" parent="TextView.Base">
+    <item name="android:layout_marginTop">10dp</item>
+    <item name="android:layout_marginBottom">10dp</item>
+    <item name="android:text">@string/create_savings_account</item>
+    <item name="android:textSize">24sp</item>
+    </style>
+    <style name="TextView.CreateLoanAccount" parent="TextView.Base">
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:text">@string/create_savings_account</item>
+        <item name="android:text">@string/create_loan_account</item>
         <item name="android:textSize">24sp</item>
+    </style>
+    <style name="TextView.CreateLoanTerms" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">@string/create_loan_terms</item>
+        <item name="android:textSize">16sp</item>
     </style>
     <style name="TextView.CreateCenter" parent="TextView.Base">
         <item name="android:layout_marginTop">10dp</item>

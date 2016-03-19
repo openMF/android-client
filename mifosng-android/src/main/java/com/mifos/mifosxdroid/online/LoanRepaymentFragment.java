@@ -369,4 +369,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
             }
         });
     }
+
+    public interface OnFragmentInteractionListener {
+
+    }
 }

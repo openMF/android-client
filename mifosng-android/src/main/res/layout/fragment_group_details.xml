@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ScrollView.Base">
+
+    <LinearLayout style="@style/LinearLayout.Base">
+
+        <LinearLayout style="@style/LinearLayout.Width">
+
+            <TextView
+                android:id="@+id/tv_groupsName"
+                style="@style/TextView.Client" />
+
+        </LinearLayout>
+
+
+        <TableLayout
+            android:id="@+id/tbl_clientDetails"
+            style="@style/Table">
+
+            <TableRow
+                android:id="@+id/row_account"
+                style="@style/TableRow">
+
+                <TextView
+                    android:id="@+id/tv_groupNumber"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_external"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/external_id" />
+
+                <TextView
+                    android:id="@+id/tv_groupexternalId"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_activation"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/activation_date" />
+
+                <TextView
+                    android:id="@+id/tv_groupactivationDate"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_office"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/office" />
+
+                <TextView
+                    android:id="@+id/tv_groupoffice"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_group"
+                style="@style/TableRow"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/group" />
+
+                <TextView
+                    android:id="@+id/tv_group"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_staff"
+                style="@style/TableRow"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/staff" />
+
+                <TextView
+                    android:id="@+id/tv_loanOfficer"
+                    style="@style/TextView.Row"
+                    android:gravity="right"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_loan"
+                android:visibility="gone"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/loan_cycle" />
+
+                <TextView
+                    android:id="@+id/tv_loanCycle"
+                    style="@style/TextView.Row"
+                    android:gravity="right"
+                    android:text="" />
+            </TableRow>
+
+        </TableLayout>
+
+        <include
+            android:layout_marginTop="10dp"
+            android:id="@+id/account_accordion_section_loans"
+            layout="@layout/view_account_accordion_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/account_accordion_section_savings"
+            layout="@layout/view_account_accordion_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/account_accordion_section_recurring"
+            layout="@layout/view_account_accordion_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

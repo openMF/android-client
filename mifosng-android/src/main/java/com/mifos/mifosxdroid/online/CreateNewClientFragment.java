@@ -37,6 +37,7 @@ import com.mifos.objects.organisation.ClientClassificationOptions;
 import com.mifos.objects.organisation.ClientTypeOptions;
 import com.mifos.objects.organisation.GenderOptions;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.clients.Options;
 import com.mifos.utils.DateHelper;
@@ -107,11 +108,15 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     public DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
+<<<<<<< 8bb97c3c987d770baf7892271bfd80b980f5a2a1
     private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
 	private ClientsTemplate clientstemplate = new ClientsTemplate();
     private View mCurrentDateView;    // the view whose click opened the date picker
+=======
+    private ClientsTemplate clientstemplate = new ClientsTemplate();
+>>>>>>> resolving bugs
 
     public static CreateNewClientFragment newInstance() {
         CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
@@ -138,7 +143,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
-	    getClientTemplate();
+        getClientTemplate();
 
         //client active checkbox onCheckedListener
         cb_clientActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -177,162 +182,211 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     }
 
     private void inflateGenderSpinner() {
-	    final ArrayList<String> genderNames = FilterListObject(clientstemplate.getGenderOptions());
-	    ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(getActivity(),
-			    android.R.layout.simple_spinner_item, genderNames);
-	    genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    spGender.setAdapter(genderAdapter);
-	    spGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        final ArrayList<String> genderNames = FilterListObject(clientstemplate.getGenderOptions());
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, genderNames);
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spGender.setAdapter(genderAdapter);
+        spGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-		    @Override
-		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-			    genderId = clientstemplate.getGenderOptions().get(i).getId();
-			    Log.d("genderId " + genderNames.get(i), String.valueOf(genderId));
-			    if (genderId != -1) {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                genderId = clientstemplate.getGenderOptions().get(i).getId();
+                Log.d("genderId " + genderNames.get(i), String.valueOf(genderId));
+                if (genderId != -1) {
 
 
-			    }
-			    else {
-				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-			    }
-		    }
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-		    @Override
-		    public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-		    }
-	    });
+            }
+        });
 
     }
 
     private void inflateClientClassificationOptions() {
-	    final ArrayList<String> ClientClassificationNames = FilterListObject(clientstemplate
-			    .getClientClassificationOptions());
-	    ArrayAdapter<String> ClientClassificationAdapter = new ArrayAdapter<String>(getActivity(),
-			    android.R.layout.simple_spinner_item, ClientClassificationNames);
-	    ClientClassificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    spClientClassification.setAdapter(ClientClassificationAdapter);
-	    spClientClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        final ArrayList<String> ClientClassificationNames = FilterListObject(clientstemplate
+                .getClientClassificationOptions());
+        ArrayAdapter<String> ClientClassificationAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, ClientClassificationNames);
+        ClientClassificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spClientClassification.setAdapter(ClientClassificationAdapter);
+        spClientClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-		    @Override
-		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-			    clientClassificationId = clientstemplate.getClientClassificationOptions()
-					    .get(i).getId();
-			    Log.d("clientClassificationId" + ClientClassificationNames.get(i), String.valueOf(clientClassificationId));
-			    if (clientClassificationId != -1) {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                clientClassificationId = clientstemplate.getClientClassificationOptions()
+                        .get(i).getId();
+                Log.d("clientClassificationId" + ClientClassificationNames.get(i), String.valueOf(clientClassificationId));
+                if (clientClassificationId != -1) {
 
-			    }
-			    else {
+                } else {
 
-				    Toast.makeText(getActivity(), getString(R.string.error_select_client_type), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_client_type), Toast.LENGTH_SHORT).show();
 
-			    }
+                }
 
-		    }
+            }
 
-		    @Override
-		    public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-		    }
-	    });
+            }
+        });
     }
 
     private void inflateClientTypeOptions() {
-	    final ArrayList<String> ClientTypeNames = FilterListObject(clientstemplate
-			    .getClientTypeOptions());
-	    final ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(getActivity(),
-			    android.R.layout.simple_spinner_item, ClientTypeNames);
-	    clientTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    spClientType.setAdapter(clientTypeAdapter);
-	    spClientType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        final ArrayList<String> ClientTypeNames = FilterListObject(clientstemplate
+                .getClientTypeOptions());
+        final ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, ClientTypeNames);
+        clientTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spClientType.setAdapter(clientTypeAdapter);
+        spClientType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-		    @Override
-		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-			    clientTypeId = clientstemplate.getClientTypeOptions().get(i).getId();
-			    Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
-			    if (clientTypeId != -1) {
-			    }
-			    else {
-				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-			    }
-		    }
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                clientTypeId = clientstemplate.getClientTypeOptions().get(i).getId();
+                Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
+                if (clientTypeId != -1) {
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-		    @Override
-		    public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-		    }
-	    });
+            }
+        });
 
     }
 
-	private void getClientTemplate(){
-		showProgress();
-		App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
-			@Override
-			public void success(ClientsTemplate clientsTemplate, Response response) {
+    private void getClientTemplate() {
+        showProgress();
+        App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
+            @Override
+            public void success(ClientsTemplate clientsTemplate, Response response) {
 
-				if (response.getStatus() == 200) {
-					clientstemplate = clientsTemplate;
-					inflateGenderSpinner();
-					inflateClientTypeOptions();
-					inflateClientClassificationOptions();
-				}
-				hideProgress();
-			}
+                if (response.getStatus() == 200) {
+                    clientstemplate = clientsTemplate;
+                    inflateGenderSpinner();
+                    inflateClientTypeOptions();
+                    inflateClientClassificationOptions();
+                }
+                hideProgress();
+            }
 
-			@Override
-			public void failure(RetrofitError error) {
-				hideProgress();
-			}
-		});
-	}
+            @Override
+            public void failure(RetrofitError error) {
+                hideProgress();
+            }
+        });
+    }
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
         showProgress();
         App.apiManager.getOffices(new Callback<List<Office>>() {
-                                      @Override
-                                      public void success(List<Office> offices, Response response) {
-                                          final List<String> officeList = new ArrayList<String>();
+            @Override
+            public void success(List<Office> offices, Response response) {
+                final List<String> officeList = new ArrayList<String>();
 
-                                          for (Office office : offices) {
-                                              officeList.add(office.getName());
-                                              officeNameIdHashMap.put(office.getName(), office.getId());
-                                          }
-                                          ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                                                  android.R.layout.simple_spinner_item, officeList);
-                                          officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                          sp_offices.setAdapter(officeAdapter);
-                                          sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                for (Office office : offices) {
+                    officeList.add(office.getName());
+                    officeNameIdHashMap.put(office.getName(), office.getId());
+                }
+                ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, officeList);
+                officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_offices.setAdapter(officeAdapter);
+                sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                                              @Override
-                                              public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                                  officeId = officeNameIdHashMap.get(officeList.get(i));
-                                                  Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-                                              }
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        officeId = officeNameIdHashMap.get(officeList.get(i));
+                        Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+                        if (officeId != -1) {
 
-                                              @Override
-                                              public void onNothingSelected(AdapterView<?> adapterView) {
+                            inflateStaffSpinner(officeId);
 
-                                              }
-                                          });
-                                          hideProgress();
-                                      }
 
-                                      @Override
-                                      public void failure(RetrofitError error) {
-                                          hideProgress();
-                                      }
-                                  }
-        );
+                        } else {
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+            }
+        });
+
+    }
+
+    public void inflateStaffSpinner(final int officeId) {
+
+        App.apiManager.getStaffInOffice(officeId, new Callback<List<Staff>>() {
+            @Override
+            public void success(List<Staff> staffs, Response response) {
+
+                final List<String> staffNames = new ArrayList<String>();
+                for (Staff staff : staffs) {
+                    staffNames.add(staff.getDisplayName());
+                    staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
+                }
+                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, staffNames);
+                staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_staff.setAdapter(staffAdapter);
+                sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        staffId = staffNameIdHashMap.get(staffNames.get(position));
+                        Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
+                        if (staffId != -1) {
+
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+
+                });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.out.println(error.getLocalizedMessage());
+
+            }
+        });
     }
 
     private void initiateClientCreation(ClientPayload clientPayload) {
-        //Date validation : check for date less than or equal to current date
-        if (!isValidDate()) {
-            Toaster.show(rootView, "Date cannot be in future");
-            return;
-        }
 
         if (!isValidFirstName()) {
             return;
@@ -340,36 +394,25 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         if (!isValidMiddleName()) {
             return;
         }
-        if (!isValidLastName()) {
-            return;
-        }
-        if (!isValidMobileNo()) {
-            return;
-        }
-        //Date validation : check for date less than or equal to current date
-        if (!isValidDate()) {
-            Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
-        }
-        if (!isValidDateofBirth()) {
-            Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
+        if (isValidLastName()) {
 
-        } else {
-            showProgress();
-            App.apiManager.createClient(clientPayload, new Callback<Client>() {
-                @Override
-                public void success(Client client, Response response) {
-                    hideProgress();
-                    Toaster.show(rootView, "Client created successfully");
-                }
+                showProgress();
+                App.apiManager.createClient(clientPayload, new Callback<Client>() {
+                    @Override
+                    public void success(Client client, Response response) {
+                        hideProgress();
+                        Toaster.show(rootView, "Client created successfully");
+                    }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    hideProgress();
-                    Toaster.show(rootView, "Error creating client");
-                }
-            });
-        }
+                    @Override
+                    public void failure(RetrofitError error) {
+                        hideProgress();
+                        Toaster.show(rootView, "Error creating client");
+                    }
+                });
+            }
     }
+
 
 
     public void inflateSubmissionDate() {
@@ -475,33 +518,6 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         return result;
     }
 
-    public boolean isValidDate() {
-
-        List<Integer> date1 = DateHelper.getCurrentDateAsListOfIntegers();
-        List<Integer> date2 = DateHelper.getDateList(tv_submissionDate.getText().toString(), "-");
-
-        Collections.reverse(date2);
-        int i = DateHelper.dateComparator(date1, date2);
-        if (i == -1) {
-            result = false;
-        }
-        return result;
-    }
-
-    public boolean isValidDateofBirth() {
-
-        List<Integer> date1 = new ArrayList<>();
-        List<Integer> date2 = new ArrayList<>();
-        date1 = DateHelper.getCurrentDateAsListOfIntegers();
-        date2 = DateHelper.getDateList(tv_dateofbirth.getText().toString(), "-");
-
-        Collections.reverse(date2);
-        int i = DateHelper.dateComparator(date1, date2);
-        if (i == -1) {
-            result = false;
-        }
-        return result;
-    }
 
     public boolean isValidMobileNo() {
         if (!isValidMsisdn(et_clientMobileNo.getEditableText().toString())) {
@@ -511,13 +527,13 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         return result;
     }
 
-	public ArrayList<String> FilterListObject(List<Options> optionsList){
+    public ArrayList<String> FilterListObject(List<Options> optionsList) {
 
-		ArrayList<String> optionsNameList = new ArrayList<>();
-		for(Options options : optionsList){
-			optionsNameList.add(options.getName());
-		}
-		return optionsNameList;
-	}
+        ArrayList<String> optionsNameList = new ArrayList<>();
+        for (Options options : optionsList) {
+            optionsNameList.add(options.getName());
+        }
+        return optionsNameList;
+    }
 
 }

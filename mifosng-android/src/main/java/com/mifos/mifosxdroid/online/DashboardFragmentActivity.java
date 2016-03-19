@@ -46,6 +46,9 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
             case R.id.mItem_list:
                 loadClientList();
                 break;
+            case R.id.group_list:
+                loadGroupList();
+                break;
             case R.id.item_survey:
                 loadClientListForSurvey();
                 break;
@@ -86,7 +89,9 @@ public class DashboardFragmentActivity extends MifosBaseActivity implements Surv
     public void loadClientList() {
         replaceFragment(ClientListFragment.newInstance(null), true, R.id.container);
     }
-
+    public void loadGroupList() {
+        replaceFragment(GroupsListFragment.newInstance(null), true, R.id.container);
+    }
     public void loadClientListForSurvey() {
         replaceFragment(ClientChooseFragment.newInstance(), true, R.id.container);
     }

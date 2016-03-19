@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/et_s_approval_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/approval_savings_date"
+        android:imeOptions="actionNext"
+        android:paddingBottom="16dp"
+        android:paddingTop="10dp"
+        android:textSize="20sp"
+        android:inputType="date"
+        android:background="@color/light_grey"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="55dp" />
+
+
+    <EditText
+        android:id="@+id/et_savings_approval_reason"
+        style="@style/EditText.BaseWidth"
+        android:gravity="start"
+        android:hint="@string/savings_approval_reason"
+        android:inputType="text"
+        android:paddingBottom="16dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/et_s_approval_date" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:id="@+id/bt_approve_savings"
+        android:background="@color/blue"
+        android:layout_below="@+id/et_savings_approval_reason"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>

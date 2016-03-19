@@ -51,10 +51,15 @@
             android:name=".GroupActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
-        <activity
+          <activity
             android:name=".ClientActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".online.GroupsActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".LoanActivity"
             android:configChanges="orientation|screenSize"
