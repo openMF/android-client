@@ -83,7 +83,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:spinnerMode="dropdown"/>
+        android:spinnerMode="dropdown"
+        android:background="@color/light_grey"/>
 
     <TextView
         android:id="@+id/tv_client_dateofbirth"
@@ -102,7 +103,7 @@
         android:paddingBottom="16dp"
         android:paddingTop="10dp"
         android:textSize="20sp"
-        />
+        android:background="@color/light_grey" />
     <TextView
         android:id="@+id/tv_client_type"
         android:layout_width="match_parent"
@@ -118,7 +119,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:spinnerMode="dropdown"/>
+        android:spinnerMode="dropdown"
+        android:background="@color/light_grey"/>
     <TextView
         android:id="@+id/tv_client_classification"
         android:layout_width="match_parent"
@@ -134,7 +136,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:spinnerMode="dropdown"/>
+        android:spinnerMode="dropdown"
+        android:background="@color/light_grey"/>
     <TextView
         android:id="@+id/tv_office"
         android:layout_width="match_parent"
@@ -150,7 +153,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:spinnerMode="dropdown"/>
+        android:spinnerMode="dropdown"
+        android:background="@color/light_grey"/>
     <TextView
         android:id="@+id/tv_staff"
         android:layout_width="match_parent"
@@ -166,7 +170,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:spinnerMode="dropdown"/>
+        android:spinnerMode="dropdown"
+        android:background="@color/light_grey"/>
     <CheckBox
         android:id="@+id/cb_client_active_status"
         android:layout_width="match_parent"
@@ -184,6 +189,7 @@
         android:paddingTop="10dp"
         android:textSize="20sp"
         android:visibility="gone"
+        android:background="@color/light_grey"
 
         />
 

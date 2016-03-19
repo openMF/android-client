@@ -15,22 +15,35 @@ import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 /**
- * @author
+ * @author nellyk
  */
 public interface ChargeService {
     @GET(APIEndPoint.CHARGES)
     void listAllCharges(Callback<Response> chargesCallback);
 
-    @GET(APIEndPoint.CHARGES)
-    void getAllChargesS(Callback<List<Charges>> callback);
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
+    void getAllChargesS(@Path("clientId") int clientId, Callback<Response> callback);
+
+    @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
+    void getAllChargev3(@Path ("loanId") int loanId,Callback<Response> callback);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
     void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>> chargeListCallback);
 
-    @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
+    @POST(APIEndPoint.CLIENTS + "/{clientId}"+ APIEndPoint.CHARGES)
     void createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload, Callback<Charges> callback);
+
+    @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
+    void getListOfLoanCharges(@Path("loanId") int loanId,Callback<Page<Charges>> loanchargeListCallback);
+
+
+    @POST(APIEndPoint.LOANS +"/{loanId}/charges")
+    void createLoanCharges(@Path("loanId") int loanId,@Body ChargesPayload chargesPayload, Callback<Charges> callback);
+
 }

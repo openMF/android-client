@@ -15,6 +15,7 @@ import com.mifos.api.services.CreateSavingsAccountService;
 import com.mifos.api.services.DataTableService;
 import com.mifos.api.services.DocumentService;
 import com.mifos.api.services.GpsCoordinatesService;
+import com.mifos.api.services.GroupAccountService;
 import com.mifos.api.services.GroupService;
 import com.mifos.api.services.IdentifierService;
 import com.mifos.api.services.LoanService;
@@ -23,6 +24,7 @@ import com.mifos.api.services.SavingsAccountService;
 import com.mifos.api.services.SearchService;
 import com.mifos.api.services.StaffService;
 import com.mifos.api.services.SurveyService;
+import com.mifos.services.API;
 
 import retrofit.Endpoint;
 import retrofit.RestAdapter;
@@ -53,6 +55,7 @@ public class BaseApiManager {
     private OfficeService officeApi;
     private StaffService staffApi;
     private SurveyService surveyApi;
+    private GroupAccountService groupAccountsServiceApi;
 
     public BaseApiManager() {
         createAuthApi();
@@ -73,6 +76,8 @@ public class BaseApiManager {
         surveyApi = createApi(SurveyService.class, API_ENDPOINT);
         chargeService = createApi(ChargeService.class, API_ENDPOINT);
         createSavingsAccountService = createApi(CreateSavingsAccountService.class, API_ENDPOINT);
+        groupAccountsServiceApi=createApi(GroupAccountService.class, API_ENDPOINT);
+
     }
 
     public void setupEndpoint(String instanceUrl) {
@@ -138,7 +143,9 @@ public class BaseApiManager {
     protected GroupService getGroupApi() {
         return groupApi;
     }
-
+    protected GroupAccountService getGroupAccountsServiceApi() {
+        return groupAccountsServiceApi;
+    }
     protected DocumentService getDocumentApi() {
         return documentApi;
     }

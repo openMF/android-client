@@ -1,0 +1,23 @@
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mifos.mifosxdroid.online.GroupsActivity">
+
+    <item
+        android:id="@+id/add_group_loan"
+        android:enabled="true"
+        android:title="@string/add_loan"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/documents"
+        android:enabled="true"
+        android:title="@string/documents"
+        app:showAsAction="never" />
+
+
+</menu>

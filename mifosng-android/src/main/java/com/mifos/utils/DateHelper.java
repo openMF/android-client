@@ -11,9 +11,11 @@ import android.content.SharedPreferences;
 import com.mifos.App;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ishankhanna on 30/05/14.
@@ -93,6 +95,28 @@ public class DateHelper {
         return date;
 
     }
+
+    public static String getCurrentDateAsNewDateFormat() {
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy");
+
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String date = day + " - " + (month + 1) + " - " + year;
+
+
+        date = simpleDateFormat.format(calendar.getTime());
+
+        return date;
+
+    }
+
+
+
 
     /**
      * @param integersOfDate

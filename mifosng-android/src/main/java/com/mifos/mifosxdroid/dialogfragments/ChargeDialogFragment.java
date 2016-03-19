@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
+import com.mifos.objects.Changes;
+import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.utils.Constants;
@@ -29,6 +31,11 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,30 +135,60 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
     private void inflateChargesSpinner() {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        App.apiManager.getAllChargesV2(new Callback<List<Charges>>() {
+        App.apiManager.getAllChargesV2(clientId,new Callback<Response>() {
 
             @Override
-            public void success(List<Charges> charges, Response response) {
-                final List<String> chargesList = new ArrayList<String>();
-                for (Charges chargesname : charges) {
-                    chargesList.add(chargesname.getName());
-                    chargeNameIdHashMap.put(chargesname.getName(), chargesname.getId());
+            public void success(final Response result, Response response) {
+                Log.d(TAG, "");
 
+                final List<Charges> charges = new ArrayList<>();
+                // you can use this array to populate your spinner
+                final ArrayList<String> chargesNames = new ArrayList<String>();
+                //Try to get response body
+                BufferedReader reader = null;
+                StringBuilder sb = new StringBuilder();
+                try {
+                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    JSONObject obj = new JSONObject(sb.toString());
+                    if (obj.has("chargeOptions")) {
+                        JSONArray chargesTypes = obj.getJSONArray("chargeOptions");
+                        for (int i = 0; i < chargesTypes.length(); i++) {
+                            JSONObject chargesObject = chargesTypes.getJSONObject(i);
+                            Charges charge = new Charges();
+                            charge.setId(chargesObject.optInt("id"));
+                            charge.setName(chargesObject.optString("name"));
+                            charges.add(charge);
+                            chargesNames.add(chargesObject.optString("name"));
+                            chargeNameIdHashMap.put(charge.getName(), charge.getId());
+                        }
+
+                    }
+                    String stringResult = sb.toString();
+                } catch (Exception e) {
+                    Log.e(TAG, "", e);
                 }
-                ArrayAdapter<String> chargeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, chargesList);
-                chargeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_charge_name.setAdapter(chargeAdapter);
+                final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, chargesNames);
+                chargesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_charge_name.setAdapter(chargesAdapter);
                 sp_charge_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        Id = chargeNameIdHashMap.get(chargesList.get(i));
-                        Log.d("Id " + chargesList.get(i), String.valueOf(Id));
+                        Id = chargeNameIdHashMap.get(chargesNames.get(i));
+                        Log.d("chargesoptionss" + chargesNames.get(i), String.valueOf(Id));
                         if (Id != -1) {
 
 
                         } else {
+
                             Toast.makeText(getActivity(), getString(R.string.error_select_charge), Toast.LENGTH_SHORT).show();
+
                         }
+
                     }
 
                     @Override
@@ -159,11 +196,16 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
 
                     }
                 });
+
                 safeUIBlockingUtility.safelyUnBlockUI();
+
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
                 safeUIBlockingUtility.safelyUnBlockUI();
             }
         });

@@ -6,7 +6,9 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/LinearLayout.Base">
 
-        <TextView style="@style/TextView.CreateSavingsAccount" />
+        <TextView style="@style/TextView.CreateSavingsAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_product"
             android:layout_width="match_parent"
@@ -20,8 +22,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:spinnerMode="dropdown"/>
-
+            android:spinnerMode="dropdown"
+            android:background="@color/light_grey"/>
         <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
             <EditText
                 android:id="@+id/et_client_external_id"
@@ -79,7 +81,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown"
+            android:background="@color/light_grey"/>
         <TextView
             android:id="@+id/tv_interest_comp"
             android:layout_width="match_parent"
@@ -93,7 +96,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown"
+            android:background="@color/light_grey"/>
         <TextView
             android:id="@+id/tv_interest_p_period"
             android:layout_width="match_parent"
@@ -107,7 +111,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown"
+            android:background="@color/light_grey"/>
         <TextView
             android:id="@+id/tv_days_in_year"
             android:layout_width="match_parent"
@@ -121,7 +126,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown"
+            android:background="@color/light_grey"/>
 
         <Button
             android:id="@+id/bt_submit"

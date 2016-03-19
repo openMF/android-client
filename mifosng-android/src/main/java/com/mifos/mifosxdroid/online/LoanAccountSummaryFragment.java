@@ -22,12 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
-import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.objects.accounts.loan.LoanApprovalRequest;
+import com.mifos.mifosxdroid.dialogfragments.LoanAccountApproval;
+import com.mifos.mifosxdroid.dialogfragments.LoanAccountDisbursement;;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.client.Charges;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
@@ -56,6 +57,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
     public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
     public static final int MENU_ITEM_DOCUMENTS = 1004;
+    public static final int MENU_ITEM_CHARGES = 1005;
     /*
         Set of Actions and Transactions that can be performed depending on the status of the Loan
         Actions are performed to change the status of the loan
@@ -123,6 +125,11 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     private int processLoanTransactionAction = -1;
     private OnFragmentInteractionListener mListener;
     private LoanWithAssociations clientLoanWithAssociations;
+    List<Charges> chargesList = new ArrayList<Charges>();
+
+    public LoanAccountSummaryFragment() {
+        // Required empty public constructor
+    }
 
     public static LoanAccountSummaryFragment newInstance(int loanAccountNumber) {
         LoanAccountSummaryFragment fragment = new LoanAccountSummaryFragment();
@@ -247,6 +254,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
         menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string.documents));
+        menu.add(Menu.NONE, MENU_ITEM_CHARGES, Menu.NONE, getResources().getString(R.string.charges));
 
         int SUBMENU_ITEM_ID = 0;
 
@@ -278,12 +286,19 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
             fragmentTransaction.commit();
         }
 
-        if (item.getItemId() == MENU_ITEM_DOCUMENTS)
+        if (item.getItemId() == MENU_ITEM_DOCUMENTS) {
             loadDocuments();
-        else if (item.getItemId() == MENU_ITEM_SEARCH)
+        }
+        if (item.getItemId() == MENU_ITEM_CHARGES) {
+
+            loadloanCharges();
+
+        } else if (item.getItemId() == MENU_ITEM_SEARCH) {
+
             getActivity().finish();
-        return super.onOptionsItemSelected(item);
-    }
+        }
+            return super.onOptionsItemSelected(item);
+        }
 
     /**
      * Use this method to fetch all datatables for client and inflate them as
@@ -341,45 +356,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
         tv_total_paid.setText(String.valueOf(loanWithAssociations.getSummary().getTotalRepayment()));
     }
 
-    //TODO : Add Support for Changing Dates
-    public void approveLoan() {
-        LoanApprovalRequest request = new LoanApprovalRequest();
-        request.setApprovedOnDate(DateHelper.getCurrentDateAsDateFormat());
-        App.apiManager.approveLoan(loanAccountNumber, request, new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
-                        inflateLoanAccountSummary();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-
-                    }
-                }
-        );
-    }
-
-    //TODO : Add Support for Changing Dates
-    public void disburseLoan() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("dateFormat", "dd MM yyyy");
-        map.put("actualDisbursementDate", DateHelper.getCurrentDateAsDateFormat());
-        map.put("locale", "en");
-
-        App.apiManager.disputeLoan(loanAccountNumber, map, new Callback<GenericResponse>() {
-
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
-                        inflateLoanAccountSummary();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                    }
-                }
-        );
-    }
-
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_LOANS, loanAccountNumber);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -387,7 +363,32 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
         fragmentTransaction.replace(R.id.container, documentListFragment);
         fragmentTransaction.commit();
     }
+    public void loadloanCharges() {
 
+        LoanChargeFragment loanChargeFragment = LoanChargeFragment.newInstance(loanAccountNumber,chargesList);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, loanChargeFragment);
+        fragmentTransaction.commit();
+    }
+    public void approveLoan() {
+
+        LoanAccountApproval loanAccountApproval = LoanAccountApproval.newInstance(loanAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.container, loanAccountApproval);
+        fragmentTransaction.commit();
+    }
+
+    public void disburseLoan() {
+
+        LoanAccountDisbursement loanAccountDisbursement = LoanAccountDisbursement.newInstance(loanAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.container, loanAccountDisbursement);
+        fragmentTransaction.commit();
+
+    }
     public interface OnFragmentInteractionListener {
         void makeRepayment(LoanWithAssociations loan);
 

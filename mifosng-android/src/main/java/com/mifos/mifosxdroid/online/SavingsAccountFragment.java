@@ -267,8 +267,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 if (interestCalculationDaysInYearTypeId != -1) {
 
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(getActivity(), getString(R.string.interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT).show();
 
@@ -283,7 +282,6 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         });
 
     }
-
     private void InterestCompoundingPeriodType() {
 
         final ArrayList<String> InterestCompoundingPeriodType = filterListObject
