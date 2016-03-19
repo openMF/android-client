@@ -92,6 +92,7 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         });
         fetchClientList();
         return rootView;
+        
     }
 
     public void inflateClientList() {
