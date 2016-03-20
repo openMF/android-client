@@ -53,6 +53,7 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
     private boolean loadmore = false;
     private boolean ClientAvailable = true;
     private int totalFilteredRecords = 0;
+    private int CHECK_MORE_CLIENT = 0;
     private int limit = 200;
     private boolean isInfiniteScrollEnabled = true;
 
@@ -146,7 +147,7 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
                         loadmore = true;
                         swipeRefreshLayout.setRefreshing(true);
                         mClientListPresenter.loadmoreclientlist(clientList.size(),limit);
-                    }else
+                    }else if(CHECK_MORE_CLIENT == 1)
                         Toaster.show(rootView,"No more clients Available");
 
 
@@ -190,8 +191,12 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
 
         //checking the response size if size is zero then set the ClientAvailable = false
         //this will reflect into scroll method and it will show
-        if(clientPage.getPageItems().size() == 0 && (totalFilteredRecords== clientList.size()))
+        if(clientPage.getPageItems().size() == 0 && (totalFilteredRecords== clientList.size())){
             ClientAvailable = false;
+            CHECK_MORE_CLIENT = 1;
+        }
+
+
     }
 
     @Override

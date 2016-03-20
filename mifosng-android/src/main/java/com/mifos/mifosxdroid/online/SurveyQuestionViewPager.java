@@ -63,8 +63,6 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements Survey
         btnNext = (Button) findViewById(R.id.btnNext);
 
         fragments = new Vector<Fragment>();
-        loadsurvey(surveys);
-
         this.mPagerAdapter = new SurveyPagerAdapter(super.getSupportFragmentManager(), fragments);
         pager = (ViewPager) super.findViewById(R.id.surveyPager);
         pager.setAdapter(this.mPagerAdapter);
@@ -94,6 +92,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements Survey
             }
 
         });
+        loadsurvey(surveys);
         Button btnNext = (Button) findViewById(R.id.btnNext);
         btnNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
