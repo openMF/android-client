@@ -16,7 +16,8 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.ClientActivity;
-import com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.savingsaccountsummaryfragment.SavingsAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.documentlistfragment.DocumentListFragment;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
@@ -129,14 +130,14 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
     /**
      * Should be tested alone because sometimes it can cause problems with the Application Context.
      * <p/>
-     * Maybe it should be reviewed the {@link com.mifos.mifosxdroid.online.DocumentListFragment},
+     * Maybe it should be reviewed the {@link DocumentListFragment},
      * because is who is throwing out a NullPointerException after closing the fragment. The method who
      * throws the exception is inflateDocumentList on the API request.
      * <p/>
      * Here the logcat output:
      * java.lang.NullPointerException: Attempt to invoke virtual method 'android.content.Context android.support.v4.app.FragmentActivity.getApplicationContext()' on a null object reference
-     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:201)
-     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:169)
+     * at com.mifos.mifosxdroid.online.savingsaccountsummaryfragment.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:201)
+     * at com.mifos.mifosxdroid.online.savingsaccountsummaryfragment.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:169)
      * at retrofit.CallbackRunnable$1.run(CallbackRunnable.java:41)
      * at android.os.Handler.handleCallback(Handler.java:739)
      * at android.os.Handler.dispatchMessage(Handler.java:95)

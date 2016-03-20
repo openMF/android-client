@@ -23,8 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.mifos.api.DataManager;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.mifosxdroid.GroupActivity;
-import com.mifos.mifosxdroid.LoginActivity;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
@@ -55,6 +57,11 @@ import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 public class CenterListFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener,
@@ -72,11 +79,15 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
     @InjectView(R.id.tv_empty_center)
     TextView tv_empty_center;
     private String date;
+    private Subscription subscription;
+    private DataManager dataManager;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_center_list, null);
         ButterKnife.inject(this, view);
+        dataManager = new DataManager();
         setHasOptionsMenu(true);
         if (getAllCenters().size() == 0)
             getData();
@@ -136,27 +147,17 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
             Log.i(TAG, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" + branchId);
             //TODO -- Need to ask ---  Hard coding date format and locale
 
-            App.apiManager.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
-                    new Callback<List<OfflineCenter>>() {
+            Observable<List<OfflineCenter>> centercall = dataManager.getOfflineCenterList(dateFormant, locale, meetingDate, branchId, staffId);
+            subscription = centercall.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<List<OfflineCenter>>() {
                         @Override
-                        public void success(List<OfflineCenter> centers, Response response) {
-                            Log.i(TAG, "-----------Success-----Got the list of centers--------");
-                            for (OfflineCenter center : centers) {
-                                if (center != null) {
-                                    SaveOfflineDataHelper helper = new SaveOfflineDataHelper(getActivity());
-                                    helper.setOfflineDataSaveListener(CenterListFragment.this);
-                                    helper.saveOfflineCenterData(getActivity(), center);
-                                }
-                            }
-                            if (centers.size() > 0)
-                                setAdapter();
-                            else
-                                startCenterInputActivity();
+                        public void onCompleted() {
 
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void onError(Throwable e) {
                             try {
                                 Toast.makeText(getActivity(), getString(R.string.error_login_again), Toast.LENGTH_LONG).show();
                             } catch (Exception ex) {
@@ -166,9 +167,25 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
                                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                                 startActivity(intent);
                             }
+                        }
 
+                        @Override
+                        public void onNext(List<OfflineCenter> offlineCenters) {
+                            Log.i(TAG, "-----------Success-----Got the list of centers--------");
+                            for (OfflineCenter center : offlineCenters) {
+                                if (center != null) {
+                                    SaveOfflineDataHelper helper = new SaveOfflineDataHelper(getActivity());
+                                    helper.setOfflineDataSaveListener(CenterListFragment.this);
+                                    helper.saveOfflineCenterData(getActivity(), center);
+                                }
+                            }
+                            if (offlineCenters.size() > 0)
+                                setAdapter();
+                            else
+                                startCenterInputActivity();
                         }
                     });
+
         }
     }
 
@@ -217,5 +234,14 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
     public void dataSaved() {
         centerList.clear();
         setAdapter();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+        super.onDestroyView();
+
     }
 }

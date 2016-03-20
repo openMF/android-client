@@ -9,6 +9,13 @@ import android.os.Bundle;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.clientdetailsfragment.ClientDetailsFragment;
+import com.mifos.mifosxdroid.online.loanaccountsummaryfragment.LoanAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.loanrepaymentfragment.LoanRepaymentFragment;
+import com.mifos.mifosxdroid.online.loanrepaymentschedulefragment.LoanRepaymentScheduleFragment;
+import com.mifos.mifosxdroid.online.loantransactionsfragment.LoanTransactionsFragment;
+import com.mifos.mifosxdroid.online.savingsaccountsummaryfragment.SavingsAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.savingsaccounttransactionfragment.SavingsAccountTransactionFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;

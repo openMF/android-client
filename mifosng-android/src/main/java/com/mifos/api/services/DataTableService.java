@@ -19,6 +19,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -26,18 +27,17 @@ import retrofit.http.Query;
 public interface DataTableService {
 
     @GET(APIEndPoint.DATATABLES)
-    void getTableOf(@Query("apptable") String table, Callback<List<DataTable>> callback);
+    Observable<List<DataTable>> getTableOf(@Query("apptable") String table);
 
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-    void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId, Callback<JsonArray> jsonArrayCallback);
+    Observable<JsonArray> getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId);
 
     //TODO Improve Body Implementation with Payload
     @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-    void createEntryInDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId, @Body Map<String, Object> requestPayload,
-                                Callback<GenericResponse> callback);
+    Observable<GenericResponse> createEntryInDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId, @Body Map<String, Object> requestPayload);
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
-    void deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId,
-                                          @Path("dataTableRowId") int dataTableRowId, Callback<GenericResponse> callback);
+    Observable<GenericResponse> deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName, @Path("entityId") int entityId,
+                                          @Path("dataTableRowId") int dataTableRowId);
 }

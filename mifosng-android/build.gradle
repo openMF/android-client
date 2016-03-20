@@ -122,15 +122,23 @@ dependencies {
     compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
 
     compile 'com.crashlytics.android:crashlytics:1.+'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
-    compile 'com.squareup.okhttp:okhttp:2.0.0'
+
+    //compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.squareup:otto:1.3.8'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
+
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     // Test libraries provided by https://code.google.com/p/android-test-kit/
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support:support-annotations:23.1.1'
 
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.jakewharton:butterknife:6.1.0'
+
 
 }

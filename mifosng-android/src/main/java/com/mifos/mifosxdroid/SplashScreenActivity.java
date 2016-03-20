@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.utils.PrefManager;
 

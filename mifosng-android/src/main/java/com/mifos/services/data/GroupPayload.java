@@ -5,6 +5,8 @@
 
 package com.mifos.services.data;
 
+import java.util.List;
+
 /**
  * Created by nellyk on 1/22/2016.
  */
@@ -17,6 +19,50 @@ public class GroupPayload {
     private String submittedOnDate;
     private String externalId;
     private int staffId;
+    private String name;
+    private List<Integer> clientMembers;
+    private String dateFormat = "dd MMMM yyyy";
+    private String locale;
+
+    public String getSubmittedOnDate() {
+        return submittedOnDate;
+    }
+
+    public void setSubmittedOnDate(String submittedOnDate) {
+        this.submittedOnDate = submittedOnDate;
+    }
+
+    public List<Integer> getClientMembers() {
+        return clientMembers;
+    }
+
+    public void setClientMembers(List<Integer> clientMembers) {
+        this.clientMembers = clientMembers;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
 
     public int getStaffId() {
         return staffId;

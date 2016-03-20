@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:label="@string/login"
             android:screenOrientation="portrait" />
         <activity
@@ -44,7 +44,7 @@
             android:label="@string/dashboard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".online.SurveyQuestion"
+            android:name=".online.SurveyQuestionViewPager"
             android:label="Survey"
             android:screenOrientation="portrait" />
         <activity
@@ -94,7 +94,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.PinpointClientActivity"
+            android:name=".activity.pinpointclientactivity.PinpointClientActivity"
             android:label="@string/pinpoint"
             android:screenOrientation="portrait" />
 

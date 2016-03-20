@@ -19,6 +19,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -26,37 +27,31 @@ import retrofit.http.Path;
 public interface LoanService {
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=all")
-    void getLoanByIdWithAllAssociations(@Path("loanId") int loanId, Callback<LoanWithAssociations> loanCallback);
+    Observable<LoanWithAssociations> getLoanByIdWithAllAssociations(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
-    void getLoanRepaymentTemplate(@Path("loanId") int loanId,
-                                  Callback<LoanRepaymentTemplate> loanRepaymentTemplateCallback);
+    Observable<LoanRepaymentTemplate> getLoanRepaymentTemplate(@Path("loanId") int loanId);
 
 
     //  Mandatory Fields
     //  1. String approvedOnDate
     @POST(APIEndPoint.LOANS + "/{loanId}?command=approve")
-    void approveLoanApplication(@Path("loanId") int loanId,
-                                @Body LoanApprovalRequest loanApprovalRequest,
-                                Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> approveLoanApplication(@Path("loanId") int loanId,
+                                @Body LoanApprovalRequest loanApprovalRequest);
 
     //  Mandatory Fields
     //  String actualDisbursementDate
     @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
-    void disburseLoan(@Path("loanId") int loanId,
-                      @Body HashMap<String, Object> genericRequest,
-                      Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> disburseLoan(@Path("loanId") int loanId,
+                      @Body HashMap<String, Object> genericRequest);
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
-    void submitPayment(@Path("loanId") int loanId,
-                       @Body LoanRepaymentRequest loanRepaymentRequest,
-                       Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
+    Observable<LoanRepaymentResponse> submitPayment(@Path("loanId") int loanId,
+                       @Body LoanRepaymentRequest loanRepaymentRequest);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
-    void getLoanRepaymentSchedule(@Path("loanId") int loanId,
-                                  Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
+    Observable<LoanWithAssociations> getLoanRepaymentSchedule(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
-    void getLoanWithTransactions(@Path("loanId") int loanId,
-                                 Callback<LoanWithAssociations> loanWithAssociationsCallback);
+    Observable<LoanWithAssociations> getLoanWithTransactions(@Path("loanId") int loanId);
 }

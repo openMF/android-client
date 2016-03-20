@@ -30,6 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RetrofitError;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class RepaymentTransactionSyncService {
 
@@ -37,10 +42,12 @@ public class RepaymentTransactionSyncService {
     private final String tag = getClass().getSimpleName();
     private SyncFinishListener syncFinishListener;
     private long centerId;
+    private DataManager mDataManager;
 
     public RepaymentTransactionSyncService(SyncFinishListener syncFinishListener, long centerId) {
         this.syncFinishListener = syncFinishListener;
         this.centerId = centerId;
+        mDataManager = new DataManager();
     }
 
     public void syncRepayments(Context context) {
@@ -99,17 +106,33 @@ public class RepaymentTransactionSyncService {
 
             if (Network.isOnline(App.getContext())) {
                 try {
-                    SharedPreferences preferences = App.getContext().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-                    SaveResponse response = App.apiManager.saveCollectionSheet((int) centerId, collectionSheetPayloads[0]);
-                    if (response != null) {
-                        Log.i(TAG, "saveCollectionSheet - Response:" + response.toString());
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.clear();
-                        editor.commit();
-                    } else
-                        isResponseNull = true;
-                } catch (RetrofitError error) {
-                    isResponseNull = true;
+                    final SharedPreferences preferences = App.getContext().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+                    Observable<SaveResponse> call = mDataManager.saveCollectionSheet((int) centerId, collectionSheetPayloads[0]);
+                    Subscription subscription = call.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<SaveResponse>() {
+                                @Override
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    isResponseNull = true;
+                                }
+
+                                @Override
+                                public void onNext(SaveResponse saveResponse) {
+                                    if (saveResponse != null) {
+                                        Log.i(TAG, "saveCollectionSheet - Response:" + saveResponse.toString());
+                                        SharedPreferences.Editor editor = preferences.edit();
+                                        editor.clear();
+                                        editor.commit();
+                                    } else
+                                        isResponseNull = true;
+                                }
+                            });
+
                 } catch (Exception ex) {
                     isResponseNull = true;
                 }

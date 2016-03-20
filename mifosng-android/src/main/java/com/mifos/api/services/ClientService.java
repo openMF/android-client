@@ -22,6 +22,7 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -30,30 +31,29 @@ public interface ClientService {
 
     //This is a default call and Loads client from 0 to 200
     @GET(APIEndPoint.CLIENTS)
-    void listAllClients(Callback<Page<Client>> callback);
+    Observable<Page<Client>> listAllClients();
 
     @GET(APIEndPoint.CLIENTS)
-    void listAllClients(@Query("offset") int offset, @Query("limit") int limit, Callback<Page<Client>> callback);
+    Observable<Page<Client>> listAllClients(@Query("offset") int offset, @Query("limit") int limit);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
-    void getClient(@Path("clientId") int clientId, Callback<Client> clientCallback);
+    Observable<Client> getClient(@Path("clientId") int clientId);
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
-    void uploadClientImage(@Path("clientId") int clientId,
-                           @Part("file") TypedFile file,
-                           Callback<Response> responseCallback);
+    Observable<Response> uploadClientImage(@Path("clientId") int clientId,
+                           @Part("file") TypedFile file);
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
-    void deleteClientImage(@Path("clientId") int clientId, Callback<Response> responseCallback);
+    Observable<Response> deleteClientImage(@Path("clientId") int clientId);
 
     //TODO: Implement when API Fixed
     @GET("/clients/{clientId}/images")
     void getClientImage(@Path("clientId") int clientId, Callback<TypedString> callback);
 
     @POST(APIEndPoint.CLIENTS)
-    void createClient(@Body ClientPayload clientPayload, Callback<Client> callback);
+    Observable<Client> createClient(@Body ClientPayload clientPayload);
 
     @GET(APIEndPoint.CLIENTS + "/template")
-    void getClientTemplate(Callback<ClientsTemplate> callback);
+    Observable<ClientsTemplate> getClientTemplate();
 }

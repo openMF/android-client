@@ -17,6 +17,7 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.mime.TypedFile;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -24,9 +25,8 @@ import retrofit.mime.TypedFile;
 public interface DocumentService {
 
     @GET("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
-    void getListOfDocuments(@Path("entityType") String entityType,
-                            @Path("entityId") int entityId,
-                            Callback<List<Document>> documentListCallback);
+    Observable<List<Document>> getListOfDocuments(@Path("entityType") String entityType,
+                            @Path("entityId") int entityId);
 
     /**
      * @param entityType              - Type for which document is being uploaded (Client, Loan or Savings etc)
@@ -34,14 +34,13 @@ public interface DocumentService {
      * @param nameOfDocument          - Document Name
      * @param description             - Mandatory - Document Description
      * @param typedFile               - Mandatory
-     * @param genericResponseCallback - Response Callback
+     * genericResponseCallback - Response Callback
      */
     @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
     @Multipart
-    void createDocument(@Path("entityType") String entityType,
+    Observable<GenericResponse> createDocument(@Path("entityType") String entityType,
                         @Path("entityId") int entityId,
                         @Part("name") String nameOfDocument,
                         @Part("description") String description,
-                        @Part("file") TypedFile typedFile,
-                        Callback<GenericResponse> genericResponseCallback);
+                        @Part("file") TypedFile typedFile);
 }

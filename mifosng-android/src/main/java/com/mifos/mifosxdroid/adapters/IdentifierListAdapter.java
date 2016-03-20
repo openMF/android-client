@@ -14,6 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.mifos.api.DataManager;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.api.GenericResponse;
@@ -27,6 +29,11 @@ import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ishankhanna on 03/07/14.
@@ -37,6 +44,7 @@ public class IdentifierListAdapter extends BaseAdapter {
     LayoutInflater layoutInflater;
     List<Identifier> identifiers = new ArrayList<Identifier>();
     int clientId;
+    private DataManager dataManager;
 
     public IdentifierListAdapter(Context context, List<Identifier> identifierList, int clientId) {
 
@@ -44,6 +52,7 @@ public class IdentifierListAdapter extends BaseAdapter {
         layoutInflater = LayoutInflater.from(context);
         identifiers = identifierList;
         this.clientId = clientId;
+        dataManager = new DataManager();
     }
 
     @Override
@@ -84,21 +93,25 @@ public class IdentifierListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                App.apiManager.deleteIdentifier(clientId, identifier.getId(), new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
+                Observable<GenericResponse> call = dataManager.deleteIdentifier(clientId, identifier.getId());
+                Subscription subscription = call.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<GenericResponse>() {
+                            @Override
+                            public void onCompleted() {
 
-                        System.out.println(genericResponse.toString());
+                            }
 
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.d(getClass().getSimpleName(),e.getMessage());
+                            }
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-
-                        Log.d(getClass().getSimpleName(),retrofitError.getLocalizedMessage());
-
-                    }
-                });
+                            @Override
+                            public void onNext(GenericResponse genericResponse) {
+                                System.out.println(genericResponse.toString());
+                            }
+                        });
 
             }
         });
