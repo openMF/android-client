@@ -264,13 +264,11 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     }
 
 	private void getClientTemplate(){
-		showProgress();
 		mCreateNewClientPresenter.loadclientTemplate();
 	}
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        showProgress();
         mCreateNewClientPresenter.loadofficelist();
     }
 

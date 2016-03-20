@@ -98,35 +98,20 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     public static int clientId;
     List<Charges> chargesList = new ArrayList<Charges>();
     public static List<DataTable> clientDataTables = new ArrayList<>();
-    @InjectView(R.id.tv_fullName)
-    TextView tv_fullName;
-    @InjectView(R.id.tv_accountNumber)
-    TextView tv_accountNumber;
-    @InjectView(R.id.tv_externalId)
-    TextView tv_externalId;
-    @InjectView(R.id.tv_activationDate)
-    TextView tv_activationDate;
-    @InjectView(R.id.tv_office)
-    TextView tv_office;
-    @InjectView(R.id.iv_clientImage)
-    CircularImageView iv_clientImage;
-    @InjectView(R.id.pb_imageProgressBar)
-    ProgressBar pb_imageProgressBar;
-
-    @InjectView(R.id.row_account)
-    TableRow rowAccount;
-    @InjectView(R.id.row_external)
-    TableRow rowExternal;
-    @InjectView(R.id.row_activation)
-    TableRow rowActivation;
-    @InjectView(R.id.row_office)
-    TableRow rowOffice;
-    @InjectView(R.id.row_group)
-    TableRow rowGroup;
-    @InjectView(R.id.row_staff)
-    TableRow rowStaff;
-    @InjectView(R.id.row_loan)
-    TableRow rowLoan;
+    @InjectView(R.id.tv_fullName) TextView tv_fullName;
+    @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
+    @InjectView(R.id.tv_externalId) TextView tv_externalId;
+    @InjectView(R.id.tv_activationDate) TextView tv_activationDate;
+    @InjectView(R.id.tv_office) TextView tv_office;
+    @InjectView(R.id.iv_clientImage) CircularImageView iv_clientImage;
+    @InjectView(R.id.pb_imageProgressBar) ProgressBar pb_imageProgressBar;
+    @InjectView(R.id.row_account) TableRow rowAccount;
+    @InjectView(R.id.row_external) TableRow rowExternal;
+    @InjectView(R.id.row_activation) TableRow rowActivation;
+    @InjectView(R.id.row_office) TableRow rowOffice;
+    @InjectView(R.id.row_group) TableRow rowGroup;
+    @InjectView(R.id.row_staff) TableRow rowStaff;
+    @InjectView(R.id.row_loan) TableRow rowLoan;
 
     private View rootView;
     private OnFragmentInteractionListener mListener;

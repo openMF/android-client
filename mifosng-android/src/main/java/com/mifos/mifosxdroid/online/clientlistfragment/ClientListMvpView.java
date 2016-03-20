@@ -20,4 +20,6 @@ public interface ClientListMvpView extends MvpView {
 
     void showMoreClientList(Page<Client> clientPage);
 
+    void showprogressbar(boolean status);
+
 }

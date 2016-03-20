@@ -39,6 +39,7 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
     }
 
     public void loadclientlist(){
+        mClientListMvpView.showprogressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getClientList()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -51,11 +52,13 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
+                        mClientListMvpView.showprogressbar(false);
                         mClientListMvpView.showErrorFetchingList();
                     }
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
+                        mClientListMvpView.showprogressbar(false);
                         mClientListMvpView.showClientList(clientPage);
                     }
                 });

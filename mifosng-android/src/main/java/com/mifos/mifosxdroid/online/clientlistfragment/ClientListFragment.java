@@ -107,13 +107,11 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         });
         // If the parent fragment is Group Fragment then the list of clients does not
         // require an infinite scroll as all the clients will be loaded at once
-        hideProgress();
         if (isInfiniteScrollEnabled)
             setInfiniteScrollListener();
     }
 
     public void fetchClientList() {
-        showProgress();
         if (clientList.size() > 0) {
             inflateClientList();
         } else {
@@ -194,5 +192,14 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         //this will reflect into scroll method and it will show
         if(clientPage.getPageItems().size() == 0 && (totalFilteredRecords== clientList.size()))
             ClientAvailable = false;
+    }
+
+    @Override
+    public void showprogressbar(boolean status) {
+        if(status){
+            showProgress();
+        }else {
+            hideProgress();
+        }
     }
 }
