@@ -96,7 +96,7 @@ public class CreateNewClientPresenter implements Presenter<CreateNewClientMvpVie
 
                     @Override
                     public void onError(Throwable e) {
-                        mCreateNewClientMvpView.ResponseFailed("Error creating client");
+                        mCreateNewClientMvpView.ErrorToCreateClient("Error creating client");
                     }
 
                     @Override

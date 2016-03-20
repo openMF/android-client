@@ -137,7 +137,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
-	    getClientTemplate();
+
 
         //client active checkbox onCheckedListener
         cb_clientActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -460,6 +460,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     @Override
     public void showofficelist(List<Office> offices) {
         getProgressBarCount();
+        getClientTemplate();
         final List<String> officeList = new ArrayList<String>();
 
         for (Office office : offices) {
@@ -487,8 +488,8 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 
     @Override
     public void ResponseFailed(String s) {
-        Toaster.show(rootView, s);
         getProgressBarCount();
+        Toaster.show(rootView, s);
     }
 
     @Override
@@ -502,8 +503,14 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 
     @Override
     public void showCreatedClient(Client client) {
-        Toaster.show(rootView, "Client created successfully");
         hideProgress();
+        Toaster.show(rootView, "Client created successfully");
+    }
+
+    @Override
+    public void ErrorToCreateClient(String s) {
+        hideProgress();
+        Toaster.show(rootView, s);
     }
 
     public void getProgressBarCount(){

@@ -19,4 +19,6 @@ public interface CreateNewClientMvpView extends MvpView {
     void showClientTemplate(ClientsTemplate clientsTemplate);
 
     void showCreatedClient(Client client);
+
+    void ErrorToCreateClient(String s);
 }
