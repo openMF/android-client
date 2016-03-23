@@ -13,13 +13,17 @@ import android.widget.BaseAdapter;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.mifos.api.OauthOkHttpClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.client.Client;
+import com.mifos.utils.PrefManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by ishankhanna on 27/02/14.
@@ -28,11 +32,17 @@ public class ClientNameListAdapter extends BaseAdapter {
 
     LayoutInflater layoutInflater;
     List<Client> pageItems;
+	Context mContext;
+	Picasso picasso;
 
     public ClientNameListAdapter(Context context, List<Client> pageItems){
 
+	    this.mContext = context;
         layoutInflater = LayoutInflater.from(context);
         this.pageItems = pageItems;
+	    picasso = new Picasso.Builder(mContext)
+			    .downloader(new OkHttp3Downloader(new OauthOkHttpClient().getOauthOkHttpClient()))
+			    .build();
     }
 
     @Override
@@ -69,6 +79,13 @@ public class ClientNameListAdapter extends BaseAdapter {
         reusableViewHolder.tv_clientName.setText(pageItems.get(position).getFirstname()+" " +pageItems.get(position).getLastname());
 
         reusableViewHolder.tv_clientAccountNumber.setText(pageItems.get(position).getAccountNo().toString());
+
+	    picasso.load(PrefManager.getInstanceUrl()
+			    + "/" + "clients/" + pageItems.get(position).getId() + "/images?maxHeight=120&maxWidth=120")
+			    .placeholder(R.drawable.ic_dp_placeholder)
+			    .resize(96, 96)
+			    .centerCrop()
+			    .into(reusableViewHolder.quickContactBadge);
 
         return view;
     }
