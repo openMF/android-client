@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.online;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -95,6 +96,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
 
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+	private static final int GALLERY_IMAGE_ACTIVITY_REQUEST_CODE = 2;
     public static int clientId;
     List<Charges> chargesList = new ArrayList<Charges>();
     public static List<DataTable> clientDataTables = new ArrayList<>();
@@ -192,7 +194,31 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK)
             uploadImage(capturedClientImageFile);
+	    if(requestCode == GALLERY_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK)
+	    {
+		    File galleryImage = new File(getPath(data.getData()));
+		    uploadImage(galleryImage);
+	    }
     }
+
+	/**
+	 * helper to retrieve the path of an image URI
+	 */
+	public String getPath(Uri uri) {
+		if( uri == null ) {
+			return null;
+		}
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
+		if( cursor != null ){
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		}
+		return uri.getPath();
+	}
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -234,18 +260,28 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
-    public void deleteClientImage() {
-        App.apiManager.deleteClientImage(clientId, new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                Toaster.show(rootView, "Image deleted");
-                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            }
+	private void galleryClientImage() {
+		Intent galleryClientIntent = new Intent(Intent.ACTION_PICK);
+		galleryClientIntent.setType("image/*");
+		startActivityForResult(galleryClientIntent, GALLERY_IMAGE_ACTIVITY_REQUEST_CODE);
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Failed to delete image");
-            }
+	}
+
+    public void deleteClientImage() {
+        App.apiManager.deleteClientImage(clientId, new Callback<Response>()
+        {
+	        @Override
+	        public void success(Response response, Response response2)
+	        {
+		        Toaster.show(rootView, "Image deleted");
+		        iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+	        }
+
+	        @Override
+	        public void failure(RetrofitError retrofitError)
+	        {
+		        Toaster.show(rootView, "Failed to delete image");
+	        }
         });
     }
 
@@ -258,22 +294,25 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         final String imagePath = pngFile.getAbsolutePath();
         pb_imageProgressBar.setVisibility(VISIBLE);
         App.apiManager.uploadClientImage(clientId,
-                new TypedFile("image/png", pngFile),
-                new Callback<Response>() {
-                    @Override
-                    public void success(Response response, Response response2) {
-                        Toaster.show(rootView, R.string.client_image_updated);
-                        iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
-                        pb_imageProgressBar.setVisibility(GONE);
-                    }
+		        new TypedFile("image/png", pngFile),
+		        new Callback<Response>()
+		        {
+			        @Override
+			        public void success(Response response, Response response2)
+			        {
+				        Toaster.show(rootView, R.string.client_image_updated);
+				        iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+				        pb_imageProgressBar.setVisibility(GONE);
+			        }
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toaster.show(rootView, "Failed to update image");
-                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                        imageLoadingAsyncTask.execute(clientId);
-                    }
-                }
+			        @Override
+			        public void failure(RetrofitError retrofitError)
+			        {
+				        Toaster.show(rootView, "Failed to update image");
+				        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+				        imageLoadingAsyncTask.execute(clientId);
+			        }
+		        }
         );
     }
 
@@ -283,90 +322,112 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      */
     public void getClientDetails() {
         showProgress("Working...");
-        App.apiManager.getClient(clientId, new Callback<Client>() {
-            @Override
-            public void success(final Client client, Response response) {
+        App.apiManager.getClient(clientId, new Callback<Client>()
+        {
+	        @Override
+	        public void success(final Client client, Response response)
+	        {
 
-                if (client != null) {
-                    setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
-                    tv_fullName.setText(client.getDisplayName());
-                    tv_accountNumber.setText(client.getAccountNo());
-                    tv_externalId.setText(client.getExternalId());
-                    if (TextUtils.isEmpty(client.getAccountNo()))
-                        rowAccount.setVisibility(GONE);
+		        if (client != null)
+		        {
+			        setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
+			        tv_fullName.setText(client.getDisplayName());
+			        tv_accountNumber.setText(client.getAccountNo());
+			        tv_externalId.setText(client.getExternalId());
+			        if (TextUtils.isEmpty(client.getAccountNo()))
+				        rowAccount.setVisibility(GONE);
 
-                    if (TextUtils.isEmpty(client.getExternalId()))
-                        rowExternal.setVisibility(GONE);
+			        if (TextUtils.isEmpty(client.getExternalId()))
+				        rowExternal.setVisibility(GONE);
 
-                    try {
-                        List<Integer> dateObj = client.getActivationDate();
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-                        Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
-                        Locale currentLocale = getResources().getConfiguration().locale;
-                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, currentLocale);
-                        String dateString = df.format(date);
-                        tv_activationDate.setText(dateString);
+			        try
+			        {
+				        List<Integer> dateObj = client.getActivationDate();
+				        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+				        Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
+				        Locale currentLocale = getResources().getConfiguration().locale;
+				        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, currentLocale);
+				        String dateString = df.format(date);
+				        tv_activationDate.setText(dateString);
 
-                        if (TextUtils.isEmpty(dateString))
-                            rowActivation.setVisibility(GONE);
+				        if (TextUtils.isEmpty(dateString))
+					        rowActivation.setVisibility(GONE);
 
-                    } catch (IndexOutOfBoundsException e) {
-                        Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
-                        tv_activationDate.setText("");
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    tv_office.setText(client.getOfficeName());
+			        }
+			        catch (IndexOutOfBoundsException e)
+			        {
+				        Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
+				        tv_activationDate.setText("");
+			        }
+			        catch (ParseException e)
+			        {
+				        e.printStackTrace();
+			        }
+			        tv_office.setText(client.getOfficeName());
 
-                    if (TextUtils.isEmpty(client.getOfficeName()))
-                        rowOffice.setVisibility(GONE);
+			        if (TextUtils.isEmpty(client.getOfficeName()))
+				        rowOffice.setVisibility(GONE);
 
-                    if (client.isImagePresent()) {
-                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                        imageLoadingAsyncTask.execute(client.getId());
-                    } else {
-                        iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-                        pb_imageProgressBar.setVisibility(GONE);
-                    }
+			        if (client.isImagePresent())
+			        {
+				        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+				        imageLoadingAsyncTask.execute(client.getId());
+			        }
+			        else
+			        {
+				        iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+				        pb_imageProgressBar.setVisibility(GONE);
+			        }
 
-                    iv_clientImage.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            PopupMenu menu = new PopupMenu(getActivity(), view);
-                            menu.getMenuInflater().inflate(R.menu.client_image_popup, menu.getMenu());
-                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    switch (menuItem.getItemId()) {
-                                        case R.id.client_image_capture:
-                                            captureClientImage();
-                                            break;
-                                        case R.id.client_image_remove:
-                                            deleteClientImage();
-                                            break;
-                                        default:
-                                            Log.e("ClientDetailsFragment", "Unrecognized client image menu item");
-                                    }
-                                    return true;
-                                }
-                            });
-                            menu.show();
-                        }
-                    });
-                    hideProgress();
-                    inflateClientsAccounts();
-                }
-            }
+			        iv_clientImage.setOnClickListener(new OnClickListener()
+			        {
+				        @Override
+				        public void onClick(View view)
+				        {
+					        PopupMenu menu = new PopupMenu(getActivity(), view);
+					        menu.getMenuInflater().inflate(R.menu.client_image_popup, menu.getMenu());
+					        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+					        {
+						        @Override
+						        public boolean onMenuItemClick(MenuItem menuItem)
+						        {
+							        switch (menuItem.getItemId())
+							        {
+								        case R.id.client_image_capture:
+									        captureClientImage();
+									        break;
+								        case R.id.client_image_gallery:
+									        galleryClientImage();
+									        break;
+								        case R.id.client_image_remove:
+									        deleteClientImage();
+									        break;
+								        default:
+									        Log.e("ClientDetailsFragment", "Unrecognized client image menu item");
+							        }
+							        return true;
+						        }
+					        });
+					        menu.show();
+				        }
+			        });
+			        hideProgress();
+			        inflateClientsAccounts();
+		        }
+	        }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Client not found.");
-                hideProgress();
-            }
+	        @Override
+	        public void failure(RetrofitError retrofitError)
+	        {
+		        Toaster.show(rootView, "Client not found.");
+		        hideProgress();
+	        }
         });
     }
 
-    /**
+
+
+	/**
      * Use this method to fetch and inflate all loan and savings accounts
      * of the client and inflate them in the fragment
      */
