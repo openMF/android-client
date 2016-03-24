@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
     public static final String TAG = "SavingsAccountFragment";
     private View rootView;
+    private Context context;
     private SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_product)
@@ -93,6 +95,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getActivity();
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -150,7 +153,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                     savingsList.add(savingsname.getName());
                     savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
                 }
-                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, savingsList);
+                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, savingsList);
                 savingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_product.setAdapter(savingsAdapter);
                 sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
