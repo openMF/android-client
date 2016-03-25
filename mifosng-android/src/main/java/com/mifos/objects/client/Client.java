@@ -5,12 +5,11 @@
 
 package com.mifos.objects.client;
 
+import com.mifos.objects.Groups;
 import com.mifos.objects.Status;
 import com.mifos.objects.Timeline;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -24,6 +23,7 @@ public class Client {
     private boolean active;
     private List<Integer> activationDate = new ArrayList<Integer>();
     private List<Integer> dobDate = new ArrayList<Integer>();
+    private List<Groups> groups = new ArrayList<>();
     private String firstname;
     private String middlename;
     private String lastname;
@@ -52,6 +52,21 @@ public class Client {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<Groups> getgroups() {
+        return groups;
+    }
+
+    public String getAllGroupName() {                   //Helper function to show all the groups
+        String allGroupNames = "";                      //the account belongs to
+        int size = groups.size();
+        for (int i=0; i<size; i++) {
+            allGroupNames = groups.get(i).getName();
+            if (size>=2 && i<(size-1))
+                allGroupNames+=", ";
+        }
+        return allGroupNames;
     }
 
     public String getAccountNo() {
