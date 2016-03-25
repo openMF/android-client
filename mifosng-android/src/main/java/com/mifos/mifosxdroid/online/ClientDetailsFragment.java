@@ -112,7 +112,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
     CircularImageView iv_clientImage;
     @InjectView(R.id.pb_imageProgressBar)
     ProgressBar pb_imageProgressBar;
-
     @InjectView(R.id.row_account)
     TableRow rowAccount;
     @InjectView(R.id.row_external)
@@ -211,6 +210,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                 break;
             case R.id.add_savings:
                 addsavingsaccount();
+                break;
+            case R.id.add_loan:
+                addloanaccount();
                 break;
             case R.id.identifiers:
                 loadIdentifiers();
@@ -551,7 +553,13 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
         fragmentTransaction.commit();
     }
 
-
+    public void addloanaccount() {
+        LoanAccountFragment loanAccountFragment = LoanAccountFragment.newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.commit();
+    }
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);
 

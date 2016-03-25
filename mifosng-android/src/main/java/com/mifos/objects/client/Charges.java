@@ -21,6 +21,7 @@ import java.util.Map;
 public class Charges {
     private Integer id;
     private Integer clientId;
+    private Integer loanId;
     private Integer chargeId;
     private String name;
     private ChargeTimeType chargeTimeType;
@@ -92,6 +93,14 @@ public class Charges {
 
     public void setChargeCalculationType(ChargeCalculationType chargeCalculationType) {
         this.chargeCalculationType = chargeCalculationType;
+    }
+
+    public Integer getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(Integer loanId) {
+        this.loanId = loanId;
     }
 
     public Currency getCurrency() {

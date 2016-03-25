@@ -20,4 +20,11 @@ public interface StaffService {
 
     @GET(APIEndPoint.STAFF + "?status=all")
     void getStaffForOffice(@Query("officeId") int officeId, Callback<List<Staff>> staffListCallback);
+
+
+        @GET(APIEndPoint.STAFF)
+        void getAllStaff(Callback<List<Staff>> listOfStaffsCallback);
+
+
+
 }

@@ -9,20 +9,36 @@ package com.mifos.services.data;
  */
 public class CenterPayload {
 
-    private String centername;
+    private String name;
     private int officeId;
-    private int staffId;
     private boolean active;
     private String activationDate;
-    private String submittedOnDate;
-    private String externalId;
+    String dateFormat;
+    String locale;
 
-    public String getCenterName() {
-        return centername;
+    public String getDateFormat() {
+        return dateFormat;
     }
 
-    public void setCenterName(String centername) {
-        this.centername = centername;
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getOfficeId() {
@@ -49,27 +65,6 @@ public class CenterPayload {
         this.activationDate = activationDate;
     }
 
-    public String setSubmissionDate() {
-        return submittedOnDate;
-    }
 
-    public void setSubmissionDate(String submittedOnDate) {
-        this.submittedOnDate = submittedOnDate;
-    }
 
-    public int getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
 }

@@ -10,37 +10,48 @@ package com.mifos.services.data;
  */
 public class GroupPayload {
 
-    private String groupname;
     private int officeId;
     private boolean active;
     private String activationDate;
     private String submittedOnDate;
     private String externalId;
-    private int staffId;
+    private String name;
+    private String locale;
+    private String dateFormat;
 
-    public int getStaffId() {
-        return staffId;
+    public String getDateFormat() {
+        return dateFormat;
     }
 
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
-    public String getGroupname() {
-        return groupname;
+    public String getLocale() {
+        return locale;
     }
 
-    public void setGroupname(String groupname) {
-        this.groupname = groupname;
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
-    public String getGroupName() {
-        return groupname;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String centername) {
-        this.groupname = centername;
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public String getSubmittedOnDate() {
+        return submittedOnDate;
+    }
+
+    public void setSubmittedOnDate(String submittedOnDate) {
+        this.submittedOnDate = submittedOnDate;
+    }
+
+
 
     public int getOfficeId() {
         return officeId;

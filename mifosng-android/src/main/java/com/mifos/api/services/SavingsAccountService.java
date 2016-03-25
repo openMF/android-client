@@ -4,10 +4,15 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.GenericResponse;
+import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
+
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -51,4 +56,16 @@ public interface SavingsAccountService {
                             @Query("command") String transactionType,
                             @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
                             Callback<SavingsAccountTransactionResponse> savingsAccountTransactionResponseCallback);
+
+
+    @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}/?command=activate")
+     void activateSavings(@Path("savingsAccountId") int savingsAccountId,
+                                @Body HashMap<String, Object> genericRequest,
+                                Callback<GenericResponse> genericResponseCallback);
+
+    @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}?command=approve")
+    void approveSavingsApplication(@Path("savingsAccountId") int savingsAccountId,
+                                          @Body SavingsApproval savingsApproval,
+                                          Callback<GenericResponse> genericResponseCallback);
+
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
+    <TextView
+        android:id="@+id/tv_loand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="16dp"
+        android:text="@string/approval_disbursement_date"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/tv_loan_disbursement_dates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionNext"
+        android:paddingBottom="16dp"
+        android:paddingTop="10dp"
+        android:textSize="20sp"
+        android:enabled="false"
+        android:background="@color/light_grey" />
+    <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+        <EditText
+            android:id="@+id/et_disbursed_amount"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/loan_amount_disbursed"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:paddingBottom="16dp"
+            android:singleLine="true"/>
+    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:id="@+id/tv_payment_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:text="@string/payment_type"
+        android:textSize="16sp"/>
+    <Spinner
+        android:id="@+id/sp_loan_payment_type"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:spinnerMode="dropdown"
+        android:background="@color/light_grey"/>
+
+
+    <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+        <EditText
+            android:id="@+id/et_disbursement_note"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/approval_note"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:paddingBottom="16dp"
+            android:singleLine="true"/>
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/bt_disburse_loan"
+        style="@style/Button.Base"
+        android:layout_marginTop="10dp"
+        android:text="@string/submit"
+        />
+</LinearLayout>
