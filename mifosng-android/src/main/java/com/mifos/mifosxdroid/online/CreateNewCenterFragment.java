@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.App;
-import com.mifos.exceptions.InvalidTextInputException;
-import com.mifos.exceptions.RequiredFieldException;
-import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -50,28 +46,32 @@ import retrofit.client.Response;
  * Created by nellyk on 1/22/2016.
  */
 public class CreateNewCenterFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
-
     @InjectView(R.id.et_center_name)
     EditText et_centerName;
     @InjectView(R.id.et_center_external_id)
     EditText et_centerexternalId;
     @InjectView(R.id.cb_center_active_status)
     CheckBox cb_centerActiveStatus;
-    @InjectView(R.id.tv_submissiondate)
+    @InjectView(R.id.tv_center_activation_date)
+    TextView tv_activationDate;
+    @InjectView(R.id.tv_center_submission_date)
     TextView tv_submissionDate;
+    @InjectView(R.id.tv_center_activationdate)
+    TextView tv_actDate;
     @InjectView(R.id.sp_offices)
     Spinner sp_offices;
     @InjectView(R.id.sp_staff)
     Spinner sp_staff;
-    @InjectView(R.id.sp_add_group)
-    Spinner sp_add_group;
     @InjectView(R.id.bt_submit)
     Button bt_submit;
 
     int officeId;
     int staffId;
-    private View rootView;
     Boolean result = true;
+    Boolean onTick;
+    Boolean onSubmit;
+    Boolean onActivate;
+    private View rootView;
     private String dateString;
     private String dateofsubmissionstring;
     private DialogFragment mfDatePicker;
@@ -91,11 +91,33 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateDateofBirth();
+        onSubmit = false;
+        onTick = false;
+        onActivate = false;
+        tv_activationDate.setVisibility(View.GONE);
+        tv_actDate.setVisibility(View.GONE);
+
+
+        //client active checkbox onCheckedListener
         //client active checkbox onCheckedListener
         cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                tv_submissionDate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                if (isChecked)
+                {
+                    tv_actDate.setVisibility(View.VISIBLE);
+                    tv_activationDate.setVisibility(View.VISIBLE);
+                    onTick = true;
+                    inflateActivationDate();
+                }
+                else
+                {
+                    tv_activationDate.setVisibility(View.GONE);
+                    tv_actDate.setVisibility(View.GONE);
+                    onTick = false;
+
+
+                }
             }
         });
 
@@ -211,38 +233,51 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
     }
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
+        showProgress();
+        App.apiManager.createCenter(centerPayload, new Callback<Center>() {
+            @Override
+            public void success(Center center, Response response) {
+                Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
+                hideProgress();
+            }
 
-        if (!isValidCenterName()) {
-            return;
-        }
-        else {
-            showProgress();
-            App.apiManager.createCenter(centerPayload, new Callback<Center>() {
-                @Override
-                public void success(Center center, Response response) {
-                    Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
-                    hideProgress();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    hideProgress();
-                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+            @Override
+            public void failure(RetrofitError error) {
+                hideProgress();
+                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
     public void inflateSubmissionDate() {
+        onSubmit=true;
         mfDatePicker = MFDatePicker.newInsance(this);
+
         tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
+
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
+
+    }
+
+    public void inflateActivationDate() {
+        onActivate=true;
+        mfDatePicker = MFDatePicker.newInsance(this);
+
+        tv_activationDate.setText(MFDatePicker.getDatePickedAsString());
+        class ActDate{}
+        tv_activationDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+            }
+        });
+
     }
 
     public void inflateDateofBirth() {
@@ -256,32 +291,27 @@ public class CreateNewCenterFragment extends MifosBaseFragment implements MFDate
 
         });
     }
-
     public void onDatePicked(String date) {
-        tv_submissionDate.setText(date);
-    }
 
-    public boolean isValidCenterName() {
-        try {
-            if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
-                throw new RequiredFieldException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_cannot_be_empty));
-            }
-            if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.center_name), 4);
-            }
-            if (!et_centerName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
-            }
-        } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (RequiredFieldException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
+        if(onTick!=true) {
+
+            tv_submissionDate.setText(date);
+
         }
-        return result;
+        else if(onTick==true && onSubmit==true) {
+
+            tv_submissionDate.setText(date);
+
+        }
+        else if(onTick==true && onActivate==true) {
+
+            tv_activationDate.setText(date);
+
+        }
+        else 
+            tv_activationDate.setText(date);
+
+
+
     }
 }
