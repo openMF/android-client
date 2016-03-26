@@ -103,14 +103,15 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     View rootView;
     String dateString;
     String dateofbirthstring;
-    private DialogFragment mfDatePicker;
-    private DialogFragment newDatePicker;
+    public DialogFragment mfDatePicker;
+    public DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
 	private ClientsTemplate clientstemplate = new ClientsTemplate();
+    private View mCurrentDateView;    // the view whose click opened the date picker
 
     public static CreateNewClientFragment newInstance() {
         CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
@@ -378,6 +379,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
             @Override
             public void onClick(View view) {
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mCurrentDateView = tv_submissionDate;
             }
         });
 
@@ -392,6 +394,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
             @Override
             public void onClick(View view) {
                 newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mCurrentDateView = tv_dateofbirth;
             }
 
         });
@@ -400,9 +403,10 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     }
 
     public void onDatePicked(String date) {
-        tv_submissionDate.setText(date);
-        tv_dateofbirth.setText(date);
-
+        if (mCurrentDateView != null && mCurrentDateView == tv_submissionDate)
+            tv_submissionDate.setText(date);
+        else if (mCurrentDateView != null && mCurrentDateView == tv_dateofbirth)
+            tv_dateofbirth.setText(date);
     }
 
     public boolean isValidFirstName() {
