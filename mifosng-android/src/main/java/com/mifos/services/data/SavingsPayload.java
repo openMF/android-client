@@ -17,6 +17,8 @@ public class SavingsPayload {
     private Integer interestCalculationType;
     private Integer interestCalculationDaysInYearType;
     private Integer interestPostingPeriodType;
+    private Boolean allowOverdraft;
+    private Boolean withdrawalFeeForTransfers;
 
     public Integer getInterestCompoundingPeriodType() {
         return interestCompoundingPeriodType;
@@ -114,4 +116,21 @@ public class SavingsPayload {
     public void setInterestPostingPeriodType(Integer interestPostingPeriodType) {
         this.interestPostingPeriodType = interestPostingPeriodType;
     }
+
+    public Boolean getAllowOverdraft() {
+        return allowOverdraft;
+    }
+
+    public Boolean getWithdrawalFeeForTransfers() {
+        return withdrawalFeeForTransfers;
+    }
+
+    public void setAllowOverdraft(Boolean allowOverdraft) {
+        this.allowOverdraft = allowOverdraft;
+    }
+
+    public void setWithdrawalFeeForTransfers(Boolean withdrawalFeeForTransfers) {
+        this.withdrawalFeeForTransfers = withdrawalFeeForTransfers;
+    }
+
 }

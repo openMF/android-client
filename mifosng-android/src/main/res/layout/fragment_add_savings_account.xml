@@ -123,6 +123,18 @@
             android:paddingTop="10dp"
             android:spinnerMode="dropdown"/>
 
+
+        <CheckBox android:id="@+id/is_overdraft_allowed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/is_overdraft_allowed"/>
+
+        <CheckBox android:id="@+id/apply_withdrawal_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/apply_withdrawal_fee" />
+
+
         <Button
             android:id="@+id/bt_submit"
             style="@style/Button.Base"

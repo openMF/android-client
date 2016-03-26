@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -71,6 +72,13 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     Spinner sp_days_in_year;
     @InjectView(R.id.bt_submit)
     Button bt_submit;
+    @InjectView(R.id.is_overdraft_allowed)
+    CheckBox is_overdraft_allowed;
+    @InjectView(R.id.apply_withdrawal_fee)
+    CheckBox apply_withdrawal_fee;
+
+//    @InjectView(R.id.btnfoobar)
+//    Button btnfoobar;
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
@@ -79,6 +87,8 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     private int interestPostingPeriodTypeId;
     private int interestCalculationDaysInYearTypeId;
     private String submittion_date;
+    private Boolean allowOverdraft = false;
+    private Boolean withdrawalFeeForTransfer = false;
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
     private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
@@ -95,7 +105,10 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
+
     }
+
+
 
 
     @Override
@@ -106,8 +119,26 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         inflateSavingsSpinner();
         getSavingsAccountTemplateAPI();
 
+        //sis_overdraft_allowed.setOnCheckedChangeListener(new myCheckBoxChnageClicker());
+
         submittion_date = tv_submittedon_date.getText().toString();
         submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submittion_date).replace("-", " ");
+
+        is_overdraft_allowed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isChecked = is_overdraft_allowed.isChecked();
+                allowOverdraft = isChecked;
+            }
+        });
+
+        apply_withdrawal_fee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isChecked = apply_withdrawal_fee.isChecked();
+                withdrawalFeeForTransfer = isChecked;
+            }
+        });
 
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,12 +156,16 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 savingsPayload.setInterestPostingPeriodType(interestPostingPeriodTypeId);
                 savingsPayload.setInterestCalculationType(interestCalculationTypeAdapterId);
                 savingsPayload.getInterestCalculationDaysInYearType();
+                savingsPayload.setAllowOverdraft(allowOverdraft);
+                savingsPayload.setWithdrawalFeeForTransfers(withdrawalFeeForTransfer);
 
                 initiateSavingCreation(savingsPayload);
             }
         });
+
         return rootView;
     }
+
 
     @Override
     public void onDatePicked(String date) {
@@ -159,8 +194,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                         productId = savingsNameIdHashMap.get(savingsList.get(i));
                         Log.d("productId " + savingsList.get(i), String.valueOf(productId));
                         if (productId != -1) {
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getActivity(), getString(R.string.error_select_product), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -198,8 +232,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 if (interestPostingPeriodTypeId != -1) {
 
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(getActivity(), getString(R.string.interestPostingPeriodTypeId), Toast.LENGTH_SHORT).show();
 
@@ -267,8 +300,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 if (interestCalculationDaysInYearTypeId != -1) {
 
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(getActivity(), getString(R.string.interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT).show();
 
@@ -303,8 +335,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                 if (interestCompoundingPeriodTypeId != -1) {
 
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
 
@@ -389,5 +420,10 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
         }
 
         return InterestValueList;
+
     }
+
+
+
 }
+
