@@ -15,7 +15,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mifos.App;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
@@ -31,9 +30,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -51,9 +47,9 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
     private View rootView;
     private List<Client> clientList = new ArrayList<>();
     private boolean loadmore = false;
-    private boolean ClientAvailable = true;
+    private boolean areMoreClientsAvailable = true;
     private int totalFilteredRecords = 0;
-    private int CHECK_MORE_CLIENT = 0;
+    private boolean shouldCheckForMoreClients = false;
     private int limit = 200;
     private boolean isInfiniteScrollEnabled = true;
 
@@ -85,9 +81,9 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mClientListPresenter.loadclientlist();
+
                 swipeRefreshLayout.setRefreshing(true);
-                ClientAvailable = true;
+                fetchClientList();
             }
         });
         fetchClientList();
@@ -113,12 +109,12 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
     }
 
     public void fetchClientList() {
-        if (clientList.size() > 0) {
-            inflateClientList();
-        } else {
-            totalFilteredRecords = 0;
-            mClientListPresenter.loadclientlist();
-        }
+
+        shouldCheckForMoreClients = false;
+        areMoreClientsAvailable = true;
+        totalFilteredRecords = 0;
+        mClientListPresenter.loadclientlist();
+
     }
 
     public void setClientList(List<Client> clientList) {
@@ -143,11 +139,11 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
                 if (firstVisibleItem + visibleItemCount >= totalItemCount && totalItemCount!=0) {
 
 
-                    if(!loadmore && ClientAvailable){
+                    if(!loadmore && areMoreClientsAvailable){
                         loadmore = true;
                         swipeRefreshLayout.setRefreshing(true);
                         mClientListPresenter.loadmoreclientlist(clientList.size(),limit);
-                    }else if(CHECK_MORE_CLIENT == 1)
+                    }else if(shouldCheckForMoreClients)
                         Toaster.show(rootView,"No more clients Available");
 
 
@@ -189,11 +185,11 @@ public class ClientListFragment extends MifosBaseFragment implements ClientListM
         loadmore = false;
         swipeRefreshLayout.setRefreshing(false);
 
-        //checking the response size if size is zero then set the ClientAvailable = false
+        //checking the response size if size is zero then set the areMoreClientsAvailable = false
         //this will reflect into scroll method and it will show
         if(clientPage.getPageItems().size() == 0 && (totalFilteredRecords== clientList.size())){
-            ClientAvailable = false;
-            CHECK_MORE_CLIENT = 1;
+            areMoreClientsAvailable = false;
+            shouldCheckForMoreClients = true;
         }
 
 
