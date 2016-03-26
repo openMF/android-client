@@ -128,8 +128,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
             @Override
             public void onClick(View view) {
                 boolean isChecked = is_overdraft_allowed.isChecked();
-                is_overdraft_allowed.setChecked(!isChecked);
-                allowOverdraft = !isChecked;
+                allowOverdraft = isChecked;
             }
         });
 
@@ -137,8 +136,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
             @Override
             public void onClick(View view) {
                 boolean isChecked = apply_withdrawal_fee.isChecked();
-                apply_withdrawal_fee.setChecked(!isChecked);
-                withdrawalFeeForTransfer = !isChecked;
+                withdrawalFeeForTransfer = isChecked;
             }
         });
 

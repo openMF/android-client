@@ -48,6 +48,8 @@
     <string name="center_id">Center Id</string>
     <string name="create_client">Create Client</string>
     <string name="create_savings_account">Add Savings Account</string>
+    <string name="is_overdraft_allowed">Is overdraft allowed</string>
+    <string name="apply_withdrawal_fee">Apply withdrawal fee for transfers</string>
     <string name="create_center">Create Center</string>
     <string name="create_group">Create Group</string>
     <string name="staff_id">Staff Id</string>

@@ -127,14 +127,12 @@
         <CheckBox android:id="@+id/is_overdraft_allowed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Is overdraft allowed"
-            android:onClick="onOverdraftCheckboxClicked"/>
+            android:text="@string/is_overdraft_allowed"/>
 
         <CheckBox android:id="@+id/apply_withdrawal_fee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Apply withdrawal fee for transfers"
-            android:onClick="onWithdrawalCheckboxClicked"/>
+            android:text="@string/apply_withdrawal_fee" />
 
 
         <Button
