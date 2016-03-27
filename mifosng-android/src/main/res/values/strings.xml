@@ -274,6 +274,7 @@
         <item>office 6</item>
         <item>office 7</item>
     </string-array>
+    <string name="surveyEmpty">This Survey is Empty</string>
 
 
 </resources>

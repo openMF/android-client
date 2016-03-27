@@ -5,6 +5,7 @@
 
 package com.mifos.api;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mifos.api.services.AuthService;
 import com.mifos.api.services.CenterService;
@@ -23,6 +24,9 @@ import com.mifos.api.services.SavingsAccountService;
 import com.mifos.api.services.SearchService;
 import com.mifos.api.services.StaffService;
 import com.mifos.api.services.SurveyService;
+import com.mifos.utils.JsonDateSerializer;
+
+import java.util.Date;
 
 import retrofit.Endpoint;
 import retrofit.RestAdapter;
@@ -80,11 +84,15 @@ public class BaseApiManager {
     }
 
     private <T> T createApi(Class<T> clazz, Endpoint endpoint) {
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new JsonDateSerializer()).create();
+
         return new RestAdapter.Builder()
                 .setEndpoint(endpoint)
                 .setRequestInterceptor(new ApiRequestInterceptor())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setConverter(new GsonConverter(new GsonBuilder().create()))
+                .setConverter(new GsonConverter(gson))
                 .build()
                 .create(clazz);
     }
