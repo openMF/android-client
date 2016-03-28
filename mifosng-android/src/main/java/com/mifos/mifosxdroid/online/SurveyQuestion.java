@@ -87,6 +87,11 @@ public class SurveyQuestion extends MifosBaseActivity implements SurveyQuestionF
                     String answer[] = new String[10];
 
                     ArrayList<String> answerList = new ArrayList<String>();
+                    if(survey.getQuestionDatas() != null && survey.getQuestionDatas().size() == 0)
+                    {
+                        Toast.makeText(SurveyQuestion.this,"No questions available for this survey.Please Try another Survey",Toast.LENGTH_LONG).show();
+                        finish();
+                    }
 
                     if (survey.getQuestionDatas() != null && survey.getQuestionDatas().size() > 0) {
                         for (int i = 0; i < survey.getQuestionDatas().size(); i++) {
