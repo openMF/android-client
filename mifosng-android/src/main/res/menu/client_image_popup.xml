@@ -10,6 +10,9 @@
         android:id="@+id/client_image_capture"
         android:title="@string/menu_take_photo" />
     <item
+        android:id="@+id/client_image_upload"
+        android:title="@string/menu_upload_photo" />
+    <item
         android:id="@+id/client_image_remove"
         android:title="@string/menu_remove_photo" />
 </menu>
