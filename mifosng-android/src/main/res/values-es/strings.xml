@@ -153,4 +153,5 @@
     <string name="large_text">Texto Grande</string>
     <string name="product_name">Nombre del Producto</string>
     <string name="valid">Válido</string>
+    <string name="surveyEmpty">Esta encuesta está vacía</string>
 </resources>

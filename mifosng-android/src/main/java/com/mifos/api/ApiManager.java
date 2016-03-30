@@ -246,7 +246,7 @@ public class ApiManager extends BaseApiManager {
         getSurveyApi().getSurvey(survey, callback);
     }
 
-    public void submitScore(int survey, ScorecardPayload scorecardPayload, Callback<Scorecard> callback) {
+    public void submitScore(int survey, Scorecard scorecardPayload, Callback<Scorecard> callback) {
         getSurveyApi().submitScore(survey, scorecardPayload, callback);
     }
 

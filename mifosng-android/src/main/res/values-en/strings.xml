@@ -186,6 +186,7 @@
     <string name="large_text">Large Text</string>
     <string name="product_name">Product Name</string>
     <string name="valid">Valid</string>
+    <string name="surveyEmpty">This Survey is Empty</string>
 
 
 </resources>

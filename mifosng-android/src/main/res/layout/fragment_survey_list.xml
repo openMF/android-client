@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Please select one of the Survey"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:paddingLeft="20dip"
         android:paddingRight="10dip"
         android:paddingTop="20dip"
@@ -30,5 +30,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/lv_surveys_list"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_survey_name"/>
 </RelativeLayout>

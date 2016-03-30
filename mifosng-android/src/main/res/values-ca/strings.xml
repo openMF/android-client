@@ -153,4 +153,5 @@
     <string name="large_text">Gran Text</string>
     <string name="product_name">Nom del Producte</string>
     <string name="valid">Vàlid</string>
+    <string name="surveyEmpty"> Aquesta enquesta està buida</string>
 </resources>

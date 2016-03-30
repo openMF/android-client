@@ -6,10 +6,12 @@
 
 package com.mifos.mifosxdroid.online;
 
+import com.mifos.objects.survey.Scorecard;
+
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
 public interface Communicator {
-    public void passDataToFragment(int someValue,int someValue1,int someValue2);
+    void createScoreCard(Scorecard scorecard, int surveyid);
 }
 
