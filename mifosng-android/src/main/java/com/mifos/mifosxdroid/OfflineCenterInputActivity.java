@@ -83,14 +83,37 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
         if (etStaffId.getText().toString().length() > 0
                 && tvSelectDate.getText().toString().length() > 0
                 && etBranchId.getText().toString().length() > 0) {
-            staffId = Integer.parseInt(etStaffId.getEditableText().toString());
             date = tvSelectDate.getText().toString();
-            branchId = Integer.parseInt(etBranchId.getEditableText().toString());
+            // Check valid Integers
+            isAllDetailsFilled = hasValidStaffAndBranchId();
         } else {
             isAllDetailsFilled = false;
             Toaster.show(findViewById(android.R.id.content), "Please fill all the details");
         }
         return isAllDetailsFilled;
+    }
+
+    // Prevent crash in case user doesn't enter a valid Integer - NumberFormatException
+    private boolean hasValidStaffAndBranchId() {
+        boolean isValidInteger = true;
+        try {
+            staffId = Integer.parseInt(etStaffId.getEditableText().toString());
+        } catch (NumberFormatException e) {
+            //Here request user for a valid value
+            Toaster.show(findViewById(android.R.id.content), "Staff ID is not valid Integer");
+            etStaffId.requestFocus();
+            isValidInteger = false;
+        }
+
+        try {
+            branchId = Integer.parseInt(etBranchId.getEditableText().toString());
+        } catch (NumberFormatException e) {
+            //Here request user for a valid value
+            Toaster.show(findViewById(android.R.id.content), "Branch ID is not valid Integer");
+            etBranchId.requestFocus();
+            isValidInteger = false;
+        }
+        return isValidInteger;
     }
 
     private void createDatePicker(Context context, DatePickerDialog.OnDateSetListener dateSetListener) {

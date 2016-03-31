@@ -10,21 +10,22 @@ package com.mifos.objects.survey;
  * Created by Nasim Banu on 28,January,2016.
  */
 public class ScorecardValues {
-    private Integer questionId;
-    private Integer responseId;
+
+    private Integer questionId ;
+    private Integer responseId ;
     private Integer value;
 
     public ScorecardValues() {
         super();
     }
 
-    public ScorecardValues(final Integer questionId, final Integer responseId,
-                           final Integer value) {
+    public ScorecardValues(final Integer questionId, final Integer responseId, final Integer value) {
         super();
         this.questionId = questionId;
         this.responseId = responseId;
         this.value = value;
     }
+
     public Integer getQuestionId() {
         return questionId;
     }
@@ -46,5 +47,14 @@ public class ScorecardValues {
 
     public void setValue(Integer value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "ScorecardValues{" +
+                "questionId=" + questionId +
+                ", responseId=" + responseId +
+                ", value=" + value +
+                '}';
     }
 }

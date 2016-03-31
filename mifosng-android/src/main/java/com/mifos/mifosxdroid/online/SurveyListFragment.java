@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +24,8 @@ import com.mifos.objects.survey.Survey;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -32,15 +35,27 @@ import retrofit.client.Response;
  */
 public class SurveyListFragment extends MifosBaseFragment {
 
-    private View rootView;
-    private ListView lv_surveys_list;
+    private static final String CLIENTID = "ClientID";
+    @InjectView(R.id.lv_surveys_list) ListView lv_surveys_list;
     private SurveyListAdapter surveyListAdapter;
     private OnFragmentInteractionListener mListener;
+    private View rootView;
+    private int clientId;
+
+    public static SurveyListFragment newInstance(int clientid) {
+        SurveyListFragment fragment = new SurveyListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(CLIENTID, clientid);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_survey_list, container, false);
-        lv_surveys_list = (ListView) rootView.findViewById(R.id.lv_surveys_list);
+        ButterKnife.inject(this, rootView);
+
+        clientId = getArguments().getInt(CLIENTID);
 
         showProgress();
         App.apiManager.getAllSurveys(new Callback<List<Survey>>() {
@@ -51,7 +66,7 @@ public class SurveyListFragment extends MifosBaseFragment {
                 lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        mListener.loadSurveyQuestion(surveys.get(i).getId());
+                        mListener.loadSurveyQuestion(surveys.get(i),clientId);
                     }
                 });
                 hideProgress();
@@ -68,7 +83,7 @@ public class SurveyListFragment extends MifosBaseFragment {
 
     public interface OnFragmentInteractionListener {
 
-        void loadSurveyQuestion(int surveyId);
+        void loadSurveyQuestion(Survey survey , int Clientid);
     }
 
     @Override
@@ -78,13 +93,16 @@ public class SurveyListFragment extends MifosBaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity activity = context instanceof Activity ? (Activity) context : null;
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
         }
     }
+
 }

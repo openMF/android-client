@@ -12,16 +12,22 @@ import java.util.List;
  * Created by Nasim Banu on 27,January,2016.
  */
 public class Survey {
+
     private int id;
     private String key;
     private String name;
     private String description;
     private String countryCode;
-
     private List<QuestionDatas> questionDatas = new ArrayList<QuestionDatas>();
+    private List<ComponentDatas> componentDatas;
 
+    public List<ComponentDatas> getComponentDatas() {
+        return componentDatas;
+    }
 
-
+    public void setComponentDatas(List<ComponentDatas> componentDatas) {
+        this.componentDatas = componentDatas;
+    }
 
     public List<QuestionDatas> getQuestionDatas() {
         return questionDatas;
@@ -70,4 +76,16 @@ public class Survey {
         this.countryCode = countryCode;
     }
 
+    @Override
+    public String toString() {
+        return "Survey{" +
+                "id=" + id +
+                ", key='" + key + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", questionDatas=" + questionDatas +
+                ", componentDatas=" + componentDatas +
+                '}';
+    }
 }

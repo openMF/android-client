@@ -3,38 +3,25 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-
 package com.mifos.objects.survey;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Nasim Banu on 27,January,2016.
+ * Created by Rajan Maurya on 28/3/16.
  */
-public class QuestionDatas {
+public class ComponentDatas {
 
-    private String componentKey;
-    private Integer id;
+    private int id;
     private String key;
     private String text;
     private String description;
-    private Integer sequenceNo;
-    private List<ResponseDatas> responseDatas = new ArrayList<ResponseDatas>();
+    private int sequenceNo;
 
-    public String getComponentKey() {
-        return componentKey;
+    public int getId() {
+        return id;
     }
 
-    public void setComponentKey(String componentKey) {
-        this.componentKey = componentKey;
-    }
-
-    public List<ResponseDatas> getResponseDatas() {
-        return responseDatas;
-    }
-
-    public void setResponseDatas(List<ResponseDatas> responseDatas) {
-        this.responseDatas = responseDatas;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getKey() {
@@ -69,24 +56,14 @@ public class QuestionDatas {
         this.sequenceNo = sequenceNo;
     }
 
-    public int getQuestionId() {
-        return id;
-    }
-
-    public void setQuestionId(int id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
-        return "QuestionDatas{" +
-                "componentKey='" + componentKey + '\'' +
-                ", id=" + id +
+        return "ComponentDatas{" +
+                "id=" + id +
                 ", key='" + key + '\'' +
                 ", text='" + text + '\'' +
                 ", description='" + description + '\'' +
                 ", sequenceNo=" + sequenceNo +
-                ", responseDatas=" + responseDatas +
                 '}';
     }
 }

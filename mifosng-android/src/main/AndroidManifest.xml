@@ -44,7 +44,7 @@
             android:label="@string/dashboard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".online.SurveyQuestion"
+            android:name=".online.SurveyQuestionViewPager"
             android:label="Survey"
             android:screenOrientation="portrait" />
         <activity
