@@ -25,14 +25,8 @@ import com.mifos.api.services.SavingsAccountService;
 import com.mifos.api.services.SearchService;
 import com.mifos.api.services.StaffService;
 import com.mifos.api.services.SurveyService;
-<<<<<<< 8bb97c3c987d770baf7892271bfd80b980f5a2a1
 import com.mifos.utils.JsonDateSerializer;
-
 import java.util.Date;
-=======
-import com.mifos.services.API;
->>>>>>> resolving bugs
-
 import retrofit.Endpoint;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;

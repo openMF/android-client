@@ -108,15 +108,11 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     public DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
-<<<<<<< 8bb97c3c987d770baf7892271bfd80b980f5a2a1
     private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
 	private ClientsTemplate clientstemplate = new ClientsTemplate();
     private View mCurrentDateView;    // the view whose click opened the date picker
-=======
-    private ClientsTemplate clientstemplate = new ClientsTemplate();
->>>>>>> resolving bugs
 
     public static CreateNewClientFragment newInstance() {
         CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
