@@ -262,6 +262,8 @@
     <string name="error_select_charge">Select Charge</string>
     <string name="error_select_product">Select Savings Product</string>
     <string name="error_select_officer">Select Officer</string>
+    <string name="empty_survey">No questions available for this survey.Please Try another Survey</string>
+
 
 
     <string-array name="office_ids">
