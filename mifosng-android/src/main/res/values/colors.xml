@@ -32,6 +32,8 @@
     <color name="blue_light">#ff33b5e5</color>
     <!-- A light Holo shade of gray -->
     <color name="gray_light">#33999999</color>
+    <!-- A dark Holo shade of gray -->
+    <color name="gray_dark">#BB666666</color>
     <!-- A light Holo shade of green -->
     <color name="green_light">#ff99cc00</color>
     <!-- A light Holo shade of red -->
@@ -52,6 +54,7 @@
     <color name="blue_bright">#ff00ddff</color>
     <!-- A really bright Holo shade of gray -->
     <color name="gray_bright">#33CCCCCC</color>
+
 
     <!-- Material design colors -->
 
