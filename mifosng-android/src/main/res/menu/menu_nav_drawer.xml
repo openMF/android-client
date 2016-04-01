@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+     
+    <!-- dummy ids are given to ech group to make dividers between each group -->
+    <group android:checkableBehavior="single"
+        android:id="@+id/group1" >
+
+        <item
+            android:id="@+id/item_dashboard"
+            android:checked="true"
+            android:icon="@drawable/ic_dashboard"
+            android:title="@string/dashboard"
+            />
+
+        <item
+            android:id="@+id/item_clients"
+            android:checked="false"
+            android:icon="@drawable/ic_clients"
+            android:title="@string/clients"
+            />
+
+        <item
+            android:id="@+id/item_groups"
+            android:checked="false"
+            android:icon="@drawable/ic_groups"
+            android:title="@string/groups"
+            />
+
+        <item
+            android:id="@+id/item_centers"
+            android:checked="false"
+            android:icon="@drawable/ic_centers"
+            android:title="@string/centers"
+            />
+                
+    </group>
+     
+       
+    <group android:checkableBehavior="single"
+        android:id="@+id/group2">
+         
+        <item
+            android:id="@+id/item_survey"
+            android:checked="false"
+            android:icon="@drawable/ic_survey"
+            android:title="@string/survey"
+            />
+
+        <item
+            android:id="@+id/item_path_tracker"
+            android:checked="false"
+            android:icon="@drawable/ic_path_tracker"
+            android:title="@string/path_tracker"
+            />
+         
+    </group>
+     
+       
+    <group android:checkableBehavior="single"
+        android:id="@+id/group3">
+         
+        <item
+            android:id="@+id/item_offline"
+            android:checked="false"
+            android:icon="@drawable/ic_offline"
+            android:title="@string/offline"
+            />
+         
+    </group>
+     
+</menu>

@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 
+import com.mifos.mifosxdroid.ClientListActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
@@ -19,28 +20,27 @@ import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
  * Created by Gabriel Esteban on 12/12/14.
  */
 @Suppress // TODO: Fix NPE
-public class ClientListFragmentTest extends ActivityInstrumentationTestCase2<DashboardFragmentActivity> {
+public class ClientListFragmentTest extends ActivityInstrumentationTestCase2<ClientListActivity> {
 
-    DashboardFragmentActivity dashboardActivity;
+    ClientListActivity clientListActivity;
 
     ListView lv_clients;
     SwipeRefreshLayout swipeRefreshLayout;
 
     public ClientListFragmentTest() {
-        super(DashboardFragmentActivity.class);
+        super(ClientListActivity.class);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        dashboardActivity = getActivity();
-        //starting client list fragment
-        dashboardActivity.loadClientList();
+        clientListActivity = getActivity();
+
         //API wait for charging all clients
         Thread.sleep(8000);
         //instantiating view objects
-        lv_clients = (ListView) dashboardActivity.findViewById(R.id.lv_clients);
-        swipeRefreshLayout = (SwipeRefreshLayout) dashboardActivity.findViewById(R.id.swipe_container);
+        lv_clients = (ListView) clientListActivity.findViewById(R.id.lv_clients);
+        swipeRefreshLayout = (SwipeRefreshLayout) clientListActivity.findViewById(R.id.swipe_container);
     }
 
     @SmallTest
@@ -51,7 +51,7 @@ public class ClientListFragmentTest extends ActivityInstrumentationTestCase2<Das
 
     @SmallTest
     public void testViewsAreOnTheScreen() {
-        final View decorView = dashboardActivity.getWindow().getDecorView();
+        final View decorView = clientListActivity.getWindow().getDecorView();
 
         ViewAsserts.assertOnScreen(decorView, lv_clients);
         ViewAsserts.assertOnScreen(decorView, swipeRefreshLayout);

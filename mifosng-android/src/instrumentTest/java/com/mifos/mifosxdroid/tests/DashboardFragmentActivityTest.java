@@ -2,6 +2,11 @@ package com.mifos.mifosxdroid.tests;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.support.design.widget.NavigationView;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.test.ViewAsserts;
@@ -9,19 +14,32 @@ import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.test.suitebuilder.annotation.Suppress;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mifos.mifosxdroid.ClientListActivity;
+import com.mifos.mifosxdroid.GroupListActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.SurveyActivity;
+import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
+
+import java.util.regex.Matcher;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by Gabriel Esteban on 06/12/14.
@@ -51,10 +69,8 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
         tv_title_search = (TextView) dashboardActivity.findViewById(R.id.tv_title_search_results);
     }
 
-    @SmallTest
-    public void testFragmentIsNotNull() {
-        assertNotNull(searchFragment);
-    }
+
+
 
     @SmallTest
     public void testViewsAreNotNull() {
@@ -75,7 +91,7 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
     }
 
     @SmallTest
-    public void testNullInput(){
+    public void testNullInput() {
         //checking if the text field is empty
         String expected = "";
         String actual = et_searchById.getText().toString();
@@ -85,24 +101,15 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
         TouchUtils.clickView(this, bt_searchClient);
     }
 
-    @SmallTest
-    public void testClientListFragmentShowed(){
-        //clicking the button
-        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-        getInstrumentation().invokeMenuActionSync(dashboardActivity, R.id.mItem_list, 0);
-
-        //if something is wrong, invokeMenuActionSync will take an exception
-
-        this.sendKeys(KeyEvent.KEYCODE_BACK);
-    }
-
     @MediumTest
-    public void testCenterListActivityStarted(){
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(CentersActivity.class.getName(), null, false);
+    public void testClientListActivityStarted() throws InterruptedException {
 
-        //clicking the button
-        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-        getInstrumentation().invokeMenuActionSync(getActivity(), R.id.item_centers, 0);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(ClientListActivity.class.getName(), null, false);
+
+        // select item from navigation drawer
+        onView(withId(R.id.drawer)).perform(actionOpenDrawer());
+        Thread.sleep(500);
+        onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_clients));
 
         Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
         assertNotNull(startedActivity);
@@ -112,12 +119,85 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
     }
 
     @MediumTest
-    public void testOfflineActivityStarted(){
+    public void testGroupListActivityStarted() throws InterruptedException {
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(GroupListActivity.class.getName(), null, false);
+
+        // select item from navigation drawer
+        onView(withId(R.id.drawer)).perform(actionOpenDrawer());
+        Thread.sleep(500);
+        onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_groups));
+
+
+        Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
+        assertNotNull(startedActivity);
+        assertEquals(true, getInstrumentation().checkMonitorHit(monitor, 1));
+
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+    }
+
+    @MediumTest
+    public void testCenterListActivityStarted() throws InterruptedException {
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(CentersActivity.class.getName(), null, false);
+
+        // select item from navigation drawer
+        onView(withId(R.id.drawer)).perform(actionOpenDrawer());
+        Thread.sleep(500);
+        onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_centers));
+
+
+
+        Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
+        assertNotNull(startedActivity);
+        assertEquals(true, getInstrumentation().checkMonitorHit(monitor, 1));
+
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+    }
+
+    @MediumTest
+    public void testSurveryActivityStarted() throws InterruptedException {
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SurveyActivity.class.getName(), null, false);
+
+        // select item from navigation drawer
+        onView(withId(R.id.drawer)).perform(actionOpenDrawer());
+        Thread.sleep(500);
+        onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_survey));
+
+
+
+        Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
+        assertNotNull(startedActivity);
+        assertEquals(true, getInstrumentation().checkMonitorHit(monitor, 1));
+
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+    }
+
+    @MediumTest
+    public void testPathTrackingActivityStarted() throws InterruptedException {
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(PathTrackingActivity.class.getName(), null, false);
+
+        // select item from navigation drawer
+        onView(withId(R.id.drawer)).perform(actionOpenDrawer());
+        Thread.sleep(500);
+        onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_path_tracker));
+
+
+
+        Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
+        assertNotNull(startedActivity);
+        assertEquals(true, getInstrumentation().checkMonitorHit(monitor, 1));
+
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+    }
+
+
+    @MediumTest
+    public void testOfflineActivityStarted() throws InterruptedException {
         Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(OfflineCenterInputActivity.class.getName(), null, false);
 
-        //clicking the button
-        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-        getInstrumentation().invokeMenuActionSync(getActivity(), R.id.item_offline_centers, 0);
+        // select item from navigation drawer
+        onView(withId(R.id.drawer)).perform(actionOpenDrawer());
+        Thread.sleep(500);
+        onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_offline));
 
         Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 2000);
         assertNotNull(startedActivity);
@@ -130,9 +210,61 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
      * Should be tested once the user is logged in.
      */
     @MediumTest
-    public void testLogoutActivityStarted(){
+    public void testLogOut() throws InterruptedException {
+        // select log out from options menu
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
         getInstrumentation().invokeMenuActionSync(getActivity(), R.id.logout, 0);
+
         assertEquals("", PrefManager.getToken());
     }
+
+    /**
+     * a work around to test opening a nav drawer
+     */
+    private  ViewAction actionOpenDrawer() {
+        return new ViewAction() {
+
+            @Override
+            public org.hamcrest.Matcher<View> getConstraints() {
+                return isAssignableFrom(DrawerLayout.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "open drawer";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                ((DrawerLayout) view).openDrawer(GravityCompat.START);
+            }
+        };
+    }
+
+    /**
+     * a work around to test selecting an item from a navigation view
+     */
+    private  ViewAction actionSelectNavItem(final int id) {
+        return new ViewAction() {
+
+            @Override
+            public org.hamcrest.Matcher<View> getConstraints() {
+                return isAssignableFrom(NavigationView.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "select item";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+
+                MenuItem item = ((NavigationView) view).getMenu().findItem(id).setCheckable(true);
+                NavigationView.OnNavigationItemSelectedListener listener = (NavigationView.OnNavigationItemSelectedListener) getActivity();
+                listener.onNavigationItemSelected(item);
+            }
+        };
+    }
+
 }

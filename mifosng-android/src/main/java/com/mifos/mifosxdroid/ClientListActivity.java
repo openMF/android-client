@@ -6,15 +6,20 @@
 package com.mifos.mifosxdroid;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.fragments.CenterListFragment;
+import com.mifos.mifosxdroid.online.ClientListFragment;
+import com.mifos.mifosxdroid.online.CreateNewClientFragment;
 
-public class CenterListActivity extends MifosBaseActivity {
+public class ClientListActivity extends MifosBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         showBackButton();
-        replaceFragment(new CenterListFragment(), false, R.id.container);
+        replaceFragment(new ClientListFragment(), false, R.id.container);
     }
+
 }
