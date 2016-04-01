@@ -6,10 +6,13 @@
 
 package com.mifos.objects.survey;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class ScorecardValues {
+public class ScorecardValues implements Parcelable {
 
     private Integer questionId ;
     private Integer responseId ;
@@ -57,4 +60,34 @@ public class ScorecardValues {
                 ", value=" + value +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.questionId);
+        dest.writeValue(this.responseId);
+        dest.writeValue(this.value);
+    }
+
+    protected ScorecardValues(Parcel in) {
+        this.questionId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.responseId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.value = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<ScorecardValues> CREATOR = new Parcelable.Creator<ScorecardValues>() {
+        @Override
+        public ScorecardValues createFromParcel(Parcel source) {
+            return new ScorecardValues(source);
+        }
+
+        @Override
+        public ScorecardValues[] newArray(int size) {
+            return new ScorecardValues[size];
+        }
+    };
 }

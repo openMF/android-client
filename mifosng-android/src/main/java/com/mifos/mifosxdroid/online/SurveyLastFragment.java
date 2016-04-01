@@ -6,12 +6,14 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mifos.App;
@@ -19,6 +21,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.objects.survey.Scorecard;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -28,9 +31,16 @@ import retrofit.client.Response;
  */
 public class SurveyLastFragment extends Fragment implements Communicator {
 
+    public interface DisableSwipe {
+        void disableSwipe();
+    }
 
-    @InjectView(R.id.survey_question_textView) TextView tv_question;
+    @InjectView(R.id.btn_submit) Button btn_submit;
+    @InjectView(R.id.survey_submit_textView) TextView tv_submit;
+    private DisableSwipe mDetachFragment;
     public Context context;
+    private Scorecard mScorecard;
+    private int mSurveyId;
 
 
     public static SurveyLastFragment newInstance() {
@@ -45,6 +55,13 @@ public class SurveyLastFragment extends Fragment implements Communicator {
         super.onAttach(context);
         this.context = context;
         ((SurveyQuestionViewPager) context).fragmentCommunicator = this;
+        Activity activity = (Activity) context;
+        try {
+            mDetachFragment = (DisableSwipe) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnAnswerSelectedListener");
+        }
     }
 
 
@@ -53,26 +70,45 @@ public class SurveyLastFragment extends Fragment implements Communicator {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_survey_last, container, false);
         ButterKnife.inject(this, view);
-        tv_question.setText("You have reached the end of Survey");
         return view;
     }
 
 
     @Override
-    public void createScoreCard(Scorecard scorecard, int surveyId) {
-
-        App.apiManager.submitScore(surveyId, scorecard, new Callback<Scorecard>() {
-            @Override
-            public void success(Scorecard scorecard, Response response) {
-                Toast.makeText(context, "Scorecard created successfully", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(context, "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
+    public void passScoreCardData(Scorecard scorecard, int surveyId) {
+        mScorecard = scorecard;
+        mSurveyId = surveyId;
+        tv_submit.setText("Attempt Questions : " + mScorecard.getScorecardValues().size());
+        btn_submit.setText("Submit Survey");
     }
+
+
+    @OnClick(R.id.btn_submit)
+    public void submitScore(View v){
+        if(mScorecard.getScorecardValues().size()>=1) {
+            mDetachFragment.disableSwipe();
+            btn_submit.setText("Submitting Survey");
+            btn_submit.setEnabled(false);
+            App.apiManager.submitScore(mSurveyId, mScorecard, new Callback<Scorecard>() {
+                @Override
+                public void success(Scorecard scorecard, Response response) {
+                    Toast.makeText(context, "Scorecard created successfully", Toast.LENGTH_LONG).show();
+                    tv_submit.setText("Survey Successfully Submitted ! \n Thanks for taking Survey ");
+                    btn_submit.setVisibility(View.GONE);
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Toast.makeText(context, "Try again", Toast.LENGTH_LONG).show();
+                    tv_submit.setText("Error While Submitting Survey. \n Please Try Again");
+                    btn_submit.setVisibility(View.GONE);
+                }
+            });
+        }else
+            Toast.makeText(context, "Please Attempt AtLeast One Question ", Toast.LENGTH_SHORT).show();
+    }
+
 
 }
 

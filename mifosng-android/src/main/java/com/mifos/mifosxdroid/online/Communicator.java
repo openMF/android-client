@@ -12,6 +12,6 @@ import com.mifos.objects.survey.Scorecard;
  * Created by Nasim Banu on 28,January,2016.
  */
 public interface Communicator {
-    void createScoreCard(Scorecard scorecard, int surveyid);
+    void passScoreCardData(Scorecard scorecard, int surveyid);
 }
 

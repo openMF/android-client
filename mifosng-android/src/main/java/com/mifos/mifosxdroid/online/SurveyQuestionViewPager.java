@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,7 +28,9 @@ import com.mifos.utils.PrefManager;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -35,22 +39,25 @@ import butterknife.InjectView;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyQuestionViewPager extends MifosBaseActivity implements SurveyQuestionFragment.OnAnswerSelectedListener {
+public class SurveyQuestionViewPager extends MifosBaseActivity implements
+        SurveyQuestionFragment.OnAnswerSelectedListener,SurveyLastFragment.DisableSwipe {
 
 
     public Communicator fragmentCommunicator;
 
-    @InjectView(R.id.surveyPager) ViewPager pager;
+    @InjectView(R.id.surveyPager) ViewPager mViewPager;
     @InjectView(R.id.btnNext) Button btnNext;
     @InjectView(R.id.tv_surveyEmpty) TextView tv_surveyEmpty;
+    @InjectView(R.id.toolbar) Toolbar mToolbar;
     private PagerAdapter mPagerAdapter = null;
-    private List<Fragment> fragments = null;;
+    private List<Fragment> fragments = null;
     private Survey survey;
     private Scorecard mScorecard;
     private List<ScorecardValues> listScorecardValues;
-    private ScorecardValues mScorecardValue;
+    private ScorecardValues mScorecardValue = null;
     private int clientId;
-    ViewPager.OnPageChangeListener mPageChangeListener;
+    private int mCurrentQuestionPosition = 1;
+    private HashMap<Integer, ScorecardValues> mMapScores = new HashMap<>();
     Context context;
 
 
@@ -63,61 +70,42 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements Survey
         context = SurveyQuestionViewPager.this;
         mScorecard = new Scorecard();
         listScorecardValues = new ArrayList<>();
-        this.mScorecardValue = new ScorecardValues();
         fragments = new Vector<Fragment>();
 
         //Getting Survey Gson Object
         Intent mIntent = getIntent();
         survey = (new Gson()).fromJson(mIntent.getStringExtra("Survey"), Survey.class);
         clientId = mIntent.getIntExtra("ClientId",1);
+        setSubtitleToolbar();
 
 
         this.mPagerAdapter = new SurveyPagerAdapter(super.getSupportFragmentManager(), fragments);
-        pager.setAdapter(this.mPagerAdapter);
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.setAdapter(this.mPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-
-                if (pager.getCurrentItem() == mPagerAdapter.getCount() - 1) {
-                    btnNext.setVisibility(View.GONE);
-                }
+                updateAnswerList();
+                mCurrentQuestionPosition = position + 1;
+                setSubtitleToolbar();
             }
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                if (pager.getCurrentItem() == mPagerAdapter.getCount() - 1) {
-                    btnNext.setVisibility(View.GONE);
-                }
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                // Called when the scroll state changes:
-                // SCROLL_STATE_IDLE, SCROLL_STATE_DRAGGING, SCROLL_STATE_SETTLING
+
             }
 
         });
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (fragmentCommunicator != null){
-                    setUpScoreCard();
-                    fragmentCommunicator.createScoreCard(mScorecard, survey.getId());
-                }
-
-                int current = pager.getCurrentItem();
-
-                if (current < fragments.size()){
-                    pager.setCurrentItem(current + 1, true);
-                    if(mScorecardValue != null){
-                        listScorecardValues.add(mScorecardValue);
-                        mScorecardValue = null;
-                    }
-                }
-
-
+                updateAnswerList();
+                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                setSubtitleToolbar();
             }
         });
 
@@ -142,7 +130,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements Survey
                 mPagerAdapter.notifyDataSetChanged();
 
             }else {
-                pager.setVisibility(View.GONE);
+                mViewPager.setVisibility(View.GONE);
                 btnNext.setVisibility(View.GONE);
                 tv_surveyEmpty.setVisibility(View.VISIBLE);
             }
@@ -151,11 +139,66 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements Survey
     }
 
     public void setUpScoreCard(){
+        listScorecardValues.clear();
+        for(Map.Entry<Integer,ScorecardValues> map : mMapScores.entrySet()){
+            listScorecardValues.add(map.getValue());
+        }
         mScorecard.setClientId(clientId);
         mScorecard.setUserId(PrefManager.getUserId());
         mScorecard.setCreatedOn(new Date());
         mScorecard.setScorecardValues(listScorecardValues);
     }
 
+    public void updateAnswerList(){
+
+        if(mScorecardValue != null) {
+            Log.d("SurveyViewPager" ,"" + mScorecardValue.getQuestionId() + mScorecardValue.getResponseId()+mScorecardValue.getValue());
+            mMapScores.put(mScorecardValue.getQuestionId(),mScorecardValue);
+            mScorecardValue = null;
+        }
+        nextButtonState();
+
+        if (fragmentCommunicator != null){
+            setUpScoreCard();
+            fragmentCommunicator.passScoreCardData(mScorecard, survey.getId());
+        }
+    }
+
+    public void nextButtonState(){
+        if (mViewPager.getCurrentItem() == mPagerAdapter.getCount() - 1) {
+            btnNext.setVisibility(View.GONE);
+        }else
+            btnNext.setVisibility(View.VISIBLE);
+    }
+
+    public void setSubtitleToolbar(){
+        if(survey.getQuestionDatas().size()==0){
+            mToolbar.setSubtitle(("0/0"));
+        }else if(mCurrentQuestionPosition <= survey.getQuestionDatas().size()){
+            mToolbar.setSubtitle((mCurrentQuestionPosition) +"/" + survey.getQuestionDatas().size());
+        }else
+            mToolbar.setSubtitle("Submit Survey");
+
+    }
+
+    @Override
+    public void disableSwipe() {
+        mViewPager.beginFakeDrag();
+        mToolbar.setSubtitle(null);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable("answers", mMapScores);
+
+    }
+
+    @SuppressWarnings (value="unchecked")
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mMapScores = (HashMap<Integer, ScorecardValues>) savedInstanceState.getSerializable("answers");
+    }
 }
 
