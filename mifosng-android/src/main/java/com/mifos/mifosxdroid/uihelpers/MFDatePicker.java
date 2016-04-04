@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by ishankhanna on 30/06/14.
@@ -54,10 +55,13 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        return new DatePickerDialog(getActivity(),
+        DatePickerDialog dialog=new DatePickerDialog(getActivity(),
                 this, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
+        
+        dialog.getDatePicker().setMaxDate(new Date().getTime());
+        return dialog;
     }
 
     @Override
