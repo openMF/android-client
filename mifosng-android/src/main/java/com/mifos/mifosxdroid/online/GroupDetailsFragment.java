@@ -139,9 +139,11 @@ public class GroupDetailsFragment extends MifosBaseFragment {
                 loadDocuments();
                 break;
             case R.id.add_group_loan:
-                addgrouploanaccount();
+                addGroupLoanAccount();
                 break;
-
+            case R.id.add_group_savings:
+                addGroupSavingsAccount();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -289,11 +291,19 @@ public class GroupDetailsFragment extends MifosBaseFragment {
         fragmentTransaction.commit();
     }
 
-    public void addgrouploanaccount() {
+    public void addGroupLoanAccount() {
         GroupLoanAccountFragment grouploanAccountFragment = GroupLoanAccountFragment.newInstance(groupId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
         fragmentTransaction.replace(R.id.container, grouploanAccountFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void addGroupSavingsAccount() {
+        GroupSavingsAccountFragment groupSavingsAccountFragment = GroupSavingsAccountFragment.newInstance(groupId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
+        fragmentTransaction.replace(R.id.container, groupSavingsAccountFragment);
         fragmentTransaction.commit();
     }
     public interface OnFragmentInteractionListener {

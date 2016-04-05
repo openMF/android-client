@@ -10,11 +10,19 @@ import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+<<<<<<< HEAD
+=======
+import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.Page;
+import com.mifos.objects.client.Savings;
+>>>>>>> 50ad9ce... Add the ability to create group savings account
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
+import com.mifos.services.data.GroupSavingsPayload;
 
 import java.util.HashMap;
 
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -68,4 +76,18 @@ public interface SavingsAccountService {
                                           @Body SavingsApproval savingsApproval,
                                           Callback<GenericResponse> genericResponseCallback);
 
+<<<<<<< HEAD
+=======
+    @GET("/"+APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}" + APIEndPoint.CHARGES)
+    void getListOfSavingsCharges(@Path("savingsAccountId") int savingsAccountId,Callback<Page<Charges>> savingsChargeListCallback);
+
+    @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
+    void getListOfCharges(@Path("clientId") int clientId,Callback<Page<Charges>> chargeListCallback);
+
+    @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
+    void createGroupSavingsAccount(@Body GroupSavingsPayload savingsPayload, Callback<Savings> callback);
+
+    @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template?templateType=group")
+    void getGroupSavingsAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> groupSavingsCallback);
+>>>>>>> 50ad9ce... Add the ability to create group savings account
 }
