@@ -29,7 +29,7 @@ import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Client;
@@ -62,7 +62,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CreateNewClientFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewClientFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
 
     private static final String TAG = "CreateNewClient";
 
@@ -264,7 +264,7 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
     }
 
     private void getClientTemplate() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
             @Override
             public void success(ClientsTemplate clientsTemplate, Response response) {
@@ -275,19 +275,19 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
                     inflateClientTypeOptions();
                     inflateClientClassificationOptions();
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getOffices(new Callback<List<Office>>() {
             @Override
             public void success(List<Office> offices, Response response) {
@@ -392,17 +392,17 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         }
         if (isValidLastName()) {
 
-                showProgress();
+                showProgress(true);
                 App.apiManager.createClient(clientPayload, new Callback<Client>() {
                     @Override
                     public void success(Client client, Response response) {
-                        hideProgress();
+                        showProgress(false);
                         Toaster.show(rootView, "Client created successfully");
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        hideProgress();
+                        showProgress(false);
                         Toaster.show(rootView, "Error creating client");
                     }
                 });

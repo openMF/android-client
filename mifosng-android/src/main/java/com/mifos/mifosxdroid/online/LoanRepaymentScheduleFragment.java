@@ -18,6 +18,7 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Period;
 import com.mifos.objects.accounts.loan.RepaymentSchedule;
@@ -32,7 +33,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
+public class LoanRepaymentScheduleFragment extends ProgressableFragment {
 
 
     @InjectView(R.id.lv_repayment_schedule)
@@ -78,7 +79,7 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
     }
 
     public void inflateRepaymentSchedule() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getLoanRepaySchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
@@ -101,13 +102,13 @@ public class LoanRepaymentScheduleFragment extends MifosBaseFragment {
                 tv_totalUpcoming.setText(totalRepaymentsPending + String.valueOf(
                         RepaymentSchedule.getNumberOfRepaymentsPending(listOfActualPeriods)
                 ));
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-                hideProgress();
+                showProgress(false);
             }
         });
     }

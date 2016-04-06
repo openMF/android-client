@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.utils.Constants;
 
@@ -28,7 +28,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class ClientIdentifiersFragment extends MifosBaseFragment {
+public class ClientIdentifiersFragment extends ProgressableFragment {
 
     @InjectView(R.id.lv_identifiers)
     ListView lv_identifiers;
@@ -60,9 +60,8 @@ public class ClientIdentifiersFragment extends MifosBaseFragment {
         return rootView;
     }
 
-
     public void loadIdentifiers() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getIdentifiers(clientId, new Callback<List<Identifier>>() {
             @Override
             public void success(List<Identifier> identifiers, Response response) {
@@ -72,12 +71,12 @@ public class ClientIdentifiersFragment extends MifosBaseFragment {
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.message_no_identifiers_available), Toast.LENGTH_SHORT).show();
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }

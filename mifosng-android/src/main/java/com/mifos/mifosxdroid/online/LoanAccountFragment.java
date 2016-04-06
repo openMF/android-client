@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.AmortizationType;
 import com.mifos.objects.accounts.loan.InterestCalculationPeriodType;
@@ -57,12 +58,11 @@ import retrofit.client.Response;
  * <p>
  * Use this  Fragment to Create and/or Update loan
  */
-public class LoanAccountFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class LoanAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "LoanAccountFragment";
     View rootView;
 
-    SafeUIBlockingUtility safeUIBlockingUtility;
     @InjectView(R.id.sp_lproduct)
     Spinner sp_lproduct;
     @InjectView(R.id.sp_loan_purpose)
@@ -192,8 +192,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
     }
 
     private void inflateLoansProductSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getAllLoans(new Callback<List<ProductLoans>>() {
 
             @Override
@@ -233,7 +232,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -242,7 +241,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
 
@@ -250,6 +249,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
 
 
     private void inflateAmortizationSpinner() {
+        showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
             @Override
 
@@ -312,7 +312,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -321,12 +321,13 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void inflateLoanPurposeSpinner() {
+        showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
             @Override
 
@@ -389,7 +390,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -398,12 +399,13 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void inflateInterestCalculationPeriodSpinner() {
+        showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
             @Override
 
@@ -466,7 +468,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -475,12 +477,13 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void inflatetransactionProcessingStrategySpinner() {
+        showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
             @Override
 
@@ -543,7 +546,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -552,12 +555,13 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void inflateFrequencyPeriodSpinner() {
+        showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
             @Override
 
@@ -620,7 +624,7 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -629,22 +633,23 @@ public class LoanAccountFragment extends DialogFragment implements MFDatePicker.
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void initiateLoanCreation(LoansPayload loansPayload) {
+        showProgress(true);
         App.apiManager.createLoansAccount(loansPayload, new Callback<Loans>() {
             @Override
             public void success(Loans loans, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
             }
         });

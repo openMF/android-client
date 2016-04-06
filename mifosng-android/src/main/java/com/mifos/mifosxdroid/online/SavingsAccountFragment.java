@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.InterestType;
 import com.mifos.objects.client.Savings;
@@ -48,7 +49,7 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class SavingsAccountFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "SavingsAccountFragment";
     private View rootView;
@@ -141,8 +142,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     }
 
     private void inflateSavingsSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getSavingsAccounts(new Callback<List<ProductSavings>>() {
 
             @Override
@@ -173,12 +173,12 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
                     }
                 });
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
@@ -322,7 +322,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     }
 
     private void initiateSavingCreation(SavingsPayload savingsPayload) {
-
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
 
         App.apiManager.createSavingsAccount(savingsPayload, new Callback<Savings>() {
@@ -356,7 +356,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     }
 
     private void getSavingsAccountTemplateAPI() {
-
+        showProgress(true);
         App.apiManager.getSavingsAccountTemplate(new Callback<SavingProductsTemplate>() {
             @Override
             public void success(SavingProductsTemplate savingProductsTemplate, Response response) {
@@ -368,7 +368,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                     inflateInterestPostingPeriodType();
                 }
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                    showProgress(false);
             }
 
 
@@ -376,7 +376,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
             public void failure(RetrofitError error) {
                 System.out.println(error.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
 

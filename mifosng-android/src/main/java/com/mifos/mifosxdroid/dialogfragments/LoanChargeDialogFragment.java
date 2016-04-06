@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Charges;
 import com.mifos.services.data.ChargesPayload;
@@ -49,7 +50,7 @@ import retrofit.client.Response;
  *
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class LoanChargeDialogFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class LoanChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "LoanChargeFragment";
     View rootView;
@@ -144,8 +145,7 @@ public class LoanChargeDialogFragment extends DialogFragment implements MFDatePi
     }
 
     private void inflateChargesSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getAllChargesV3(loanAccountNumber,new Callback<Response>() {
 
             @Override
@@ -208,7 +208,7 @@ public class LoanChargeDialogFragment extends DialogFragment implements MFDatePi
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -217,13 +217,13 @@ public class LoanChargeDialogFragment extends DialogFragment implements MFDatePi
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void initiateChargesCreation(ChargesPayload chargesPayload) {
-
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
 
         App.apiManager.createLoanCharges(loanAccountNumber, chargesPayload, new Callback<Charges>() {

@@ -32,14 +32,13 @@ import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CreateNewGroupFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewGroupFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
 
 
     private static final String TAG = "CreateNewGroup";
@@ -75,7 +74,6 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
     Boolean result = true;
     View rootView;
     String dateofsubmissionstring;
-    SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
@@ -145,8 +143,7 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getOffices(new Callback<List<Office>>() {
 
             @Override
@@ -184,7 +181,7 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -207,14 +204,14 @@ public class CreateNewGroupFragment extends MifosBaseFragment implements MFDateP
         App.apiManager.createGroup(groupPayload, new Callback<Group>() {
             @Override
             public void success(Group group, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG).show();
 
             }
 
             @Override
             public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
             }
         });

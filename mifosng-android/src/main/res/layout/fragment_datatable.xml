@@ -2,29 +2,29 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".online.DatatableFragment"
-    android:orientation="vertical">
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
 
+    <!-- Comment this out when editing the actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <!-- Actual content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/linear_layout_datatables"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/linear_layout_datatables"
-            android:orientation="vertical">
-
-
-
-        </LinearLayout>
-
+            android:orientation="vertical" />
     </ScrollView>
-
-
-</LinearLayout>
+</ViewFlipper>

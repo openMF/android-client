@@ -1,228 +1,267 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/LinearLayout.Base">
+    <!-- Comment this out when editing the actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
-        <TextView style="@style/TextView.CreateLoanAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_lproduct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:text="@string/loanproduct"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_lproduct"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
+    <!-- Actual content -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <TextView
-            android:id="@+id/tv_loan_purpose"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:text="Purpose"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_loan_purpose"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/LinearLayout.Base">
 
-        <TextView
-            android:id="@+id/tv_submittedon_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Submission Date:"
-            android:imeOptions="actionNext"
-            android:paddingBottom="16dp"
-            android:paddingTop="10dp"
-            android:textSize="20sp"
-            />
-        <TextView
-            android:id="@+id/disbursementon_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint=" Disbursement on:"
-            android:imeOptions="actionNext"
-            android:paddingBottom="16dp"
-            android:paddingTop="10dp"
-            android:textSize="20sp"
-            />
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_client_external_id"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/external_id"
+            <TextView
+                style="@style/TextView.CreateLoanAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_lproduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/loanproduct"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_lproduct"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_loan_purpose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="Purpose"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_loan_purpose"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_submittedon_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Submission Date:"
                 android:imeOptions="actionNext"
-                android:inputType="text"
                 android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_nominal_annual"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/nominal"
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/disbursementon_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint=" Disbursement on:"
                 android:imeOptions="actionNext"
-                android:inputType="number"
                 android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-        <TextView style="@style/TextView.CreateLoanTerms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_principal"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/principal"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_loanterm"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/loanterm"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-        <Spinner
-            android:id="@+id/sp_loan_term"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_numberofrepayments"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/numberofrepayments"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_repaidevery"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/repaidevery"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-        <Spinner
-            android:id="@+id/sp_payment_periods"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <Spinner
-            android:id="@+id/sp_payment_periods_seconds"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"
-            android:visibility="gone"/>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_nominal_interest_rate"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/nominal_interest_rate"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-        <TextView
-            android:id="@+id/tv_amortization"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/amortization"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_amortization"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <TextView
-            android:id="@+id/tv_interestcalculationperiod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/interestcalculationperiod"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_interestcalculationperiod"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <TextView
-            android:id="@+id/tv_repaymentstrategy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/repaymentstrategy"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_repaymentstrategy"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-     <android.support.v7.widget.AppCompatCheckBox
-         android:id="@+id/ck_calculateinterest"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:paddingTop="10dp"
-         android:text="@string/calculateinterest"
-         android:textSize="16sp"/>
-        <Button
-            android:id="@+id/bt_loan_submit"
-            style="@style/Button.Base"
-            android:layout_marginTop="10dp"
-            android:text="@string/submit"
-            />
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_client_external_id"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/external_id"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_nominal_annual"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/nominal"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                style="@style/TextView.CreateLoanTerms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_principal"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/principal"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_loanterm"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/loanterm"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/sp_loan_term"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_numberofrepayments"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/numberofrepayments"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_repaidevery"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/repaidevery"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/sp_payment_periods"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <Spinner
+                android:id="@+id/sp_payment_periods_seconds"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown"
+                android:visibility="gone" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_nominal_interest_rate"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/nominal_interest_rate"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_amortization"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/amortization"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_amortization"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_interestcalculationperiod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/interestcalculationperiod"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_interestcalculationperiod"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_repaymentstrategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/repaymentstrategy"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_repaymentstrategy"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/ck_calculateinterest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/calculateinterest"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/bt_loan_submit"
+                style="@style/Button.Base"
+                android:layout_marginTop="10dp"
+                android:text="@string/submit" />
 
 
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
+</ViewFlipper>

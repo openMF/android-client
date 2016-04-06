@@ -47,6 +47,7 @@ import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -88,7 +89,7 @@ import static android.view.View.OnTouchListener;
 import static android.view.View.VISIBLE;
 
 
-public class ClientDetailsFragment extends MifosBaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class ClientDetailsFragment extends ProgressableFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -284,7 +285,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      * in the fragment
      */
     public void getClientDetails() {
-        showProgress("Working...");
+        showProgress(true);
         App.apiManager.getClient(clientId, new Callback<Client>() {
             @Override
             public void success(final Client client, Response response) {
@@ -355,7 +356,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                             menu.show();
                         }
                     });
-                    hideProgress();
+                    showProgress(false);
                     inflateClientsAccounts();
                 }
             }
@@ -363,7 +364,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Client not found.");
-                hideProgress();
+                showProgress(false);
             }
         });
     }
@@ -373,7 +374,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      * of the client and inflate them in the fragment
      */
     public void inflateClientsAccounts() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getClientAccounts(clientId, new Callback<ClientAccounts>() {
             @Override
             public void success(final ClientAccounts clientAccounts, Response response) {
@@ -414,14 +415,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                         }
                     });
                 }
-                hideProgress();
+                showProgress(false);
                 inflateDataTablesList();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Accounts not found.");
-                hideProgress();
+                showProgress(false);
             }
         });
     }
@@ -431,7 +432,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getClientDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
@@ -441,12 +442,12 @@ public class ClientDetailsFragment extends MifosBaseFragment implements GoogleAp
                     while (dataTableIterator.hasNext())
                         clientDataTables.add(dataTableIterator.next());
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }

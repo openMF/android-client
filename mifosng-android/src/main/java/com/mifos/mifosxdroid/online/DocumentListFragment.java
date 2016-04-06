@@ -21,7 +21,7 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.dialogfragments.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AsyncFileDownloader;
@@ -36,7 +36,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DocumentListFragment extends MifosBaseFragment {
+public class DocumentListFragment extends ProgressableFragment {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
@@ -101,7 +101,7 @@ public class DocumentListFragment extends MifosBaseFragment {
     }
 
     public void inflateDocumentList() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getDocumentsList(entityType, entityId, new Callback<List<Document>>() {
             @Override
             public void success(final List<Document> documents, Response response) {
@@ -120,13 +120,13 @@ public class DocumentListFragment extends MifosBaseFragment {
                         }
                     });
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.d("Error", retrofitError.getLocalizedMessage());
-                hideProgress();
+                showProgress(false);
             }
         });
     }

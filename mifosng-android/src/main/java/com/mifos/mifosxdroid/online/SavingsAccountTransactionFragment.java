@@ -23,7 +23,7 @@ import com.jakewharton.fliptables.FlipTable;
 import com.mifos.App;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
@@ -49,7 +49,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SavingsAccountTransactionFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsAccountTransactionFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -115,7 +115,7 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
     }
 
     public void inflateUI() {
-        showProgress();
+        showProgress(true);
         tv_clientName.setText(clientName);
         tv_accountNumber.setText(savingsAccountNumber);
         //TODO Implement QuickContactBadge here
@@ -144,12 +144,12 @@ public class SavingsAccountTransactionFragment extends MifosBaseFragment impleme
                     paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_paymentType.setAdapter(paymentTypeAdapter);
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }

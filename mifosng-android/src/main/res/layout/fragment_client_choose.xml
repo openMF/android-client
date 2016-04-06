@@ -1,22 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LinearLayout.Base">
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
 
-
-    <TextView
-        android:id="@+id/tv_title"
-        style="@style/TextView.Search.Results"
-        android:textSize="20sp"
-        android:text="Select a Client from the list" />
-
-    <ListView
-        android:id="@+id/lv_clients"
-        android:layout_width="match_parent"
+    <!-- Comment out to edit actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true" />
-</LinearLayout>
+        android:layout_gravity="center" />
+
+    <!-- Content -->
+    <LinearLayout style="@style/LinearLayout.Base">
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/TextView.Search.Results"
+            android:text="Select a Client from the list"
+            android:textSize="20sp" />
+
+        <ListView
+            android:id="@+id/lv_clients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true" />
+    </LinearLayout>
+</ViewFlipper>

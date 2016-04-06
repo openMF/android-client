@@ -31,6 +31,7 @@ import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.SavingsAccountApproval;
 import com.mifos.objects.accounts.savings.DepositType;
@@ -56,7 +57,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SavingsAccountSummaryFragment extends MifosBaseFragment {
+public class SavingsAccountSummaryFragment extends ProgressableFragment {
 
     public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
@@ -138,7 +139,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
     }
 
     public void inflateSavingsAccountSummary() {
-        hideProgress();
+        showProgress(true);
         switch (savingsAccountType.getServerType()) {
             case RECURRING:
                 setToolbarTitle(getResources().getString(R.string.recurringAccountSummary));
@@ -240,7 +241,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
                             }
 
                             inflateDataTablesList();
-                            hideProgress();
+                            showProgress(false);
                             enableInfiniteScrollOfTransactions();
                         }
                     }
@@ -248,7 +249,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         Toaster.show(rootView, "Internal Server Error");
-                        hideProgress();
+                        showProgress(false);
                         getFragmentManager().popBackStackImmediate();
                     }
                 }
@@ -342,7 +343,7 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress();
+        showProgress(true);
         //TODO change loan service to savings account service
         App.apiManager.getSavingsDataTable(new Callback<List<DataTable>>() {
             @Override
@@ -355,12 +356,12 @@ public class SavingsAccountSummaryFragment extends MifosBaseFragment {
                         savingsAccountDataTables.add(dataTable);
                     }
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }

@@ -26,7 +26,7 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
@@ -57,7 +57,7 @@ import static android.view.View.VISIBLE;
 /**
  * Created by nellyk on 2/27/2016.
  */
-public class GroupDetailsFragment extends MifosBaseFragment {
+public class GroupDetailsFragment extends ProgressableFragment {
 
     private final String TAG = GroupDetailsFragment.class.getSimpleName();
     public static int groupId;
@@ -151,7 +151,7 @@ public class GroupDetailsFragment extends MifosBaseFragment {
     }
 
     public void getGroupDetails() {
-        showProgress("Working...");
+        showProgress(true);
         App.apiManager.getGroup(groupId, new Callback<Group>() {
             @Override
             public void success(final Group group, Response response) {
@@ -184,7 +184,7 @@ public class GroupDetailsFragment extends MifosBaseFragment {
                     if (TextUtils.isEmpty(group.getOfficeName()))
                         rowOffice.setVisibility(GONE);
 
-                    hideProgress();
+                    showProgress(false);
                     inflateClientsAccounts();
                 }
             }
@@ -192,14 +192,14 @@ public class GroupDetailsFragment extends MifosBaseFragment {
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Client not found.");
-                hideProgress();
+                showProgress(false);
             }
         });
     }
 
     public void inflateClientsAccounts() {
 
-        showProgress("Working...");
+        showProgress(true);
 
         App.apiManager.getAllGroupsOfClient(groupId, new Callback<GroupAccounts>() {
             @Override
@@ -241,14 +241,14 @@ public class GroupDetailsFragment extends MifosBaseFragment {
                         }
                     });
                 }
-                hideProgress();
+                showProgress(false);
                 inflateDataTablesList();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Accounts not found.");
-                hideProgress();
+                showProgress(false);
             }
         });
     }
@@ -258,7 +258,7 @@ public class GroupDetailsFragment extends MifosBaseFragment {
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress("Working...");
+        showProgress(true);
         App.apiManager.getClientDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
@@ -268,12 +268,12 @@ public class GroupDetailsFragment extends MifosBaseFragment {
                     while (dataTableIterator.hasNext())
                         clientDataTables.add(dataTableIterator.next());
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }
