@@ -52,7 +52,6 @@ import retrofit.client.Response;
 public class LoanAccountSummaryFragment extends MifosBaseFragment {
 
 
-    public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
     public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
@@ -247,9 +246,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
         menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
@@ -290,12 +286,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
             loadDocuments();
         }
         if (item.getItemId() == MENU_ITEM_CHARGES) {
-
             loadloanCharges();
-
-        } else if (item.getItemId() == MENU_ITEM_SEARCH) {
-
-            getActivity().finish();
         }
             return super.onOptionsItemSelected(item);
         }
