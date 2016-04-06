@@ -84,6 +84,8 @@
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
     <string name="staff">Staff</string>
+    <string name="interestmethod">Interest Method</string>
+    <string name="fund">Fund</string>
     <string name="loan_cycle">Loan Cycle</string>
     <string name="loan_status">Status</string>
     <string name="loan_in_arrears">In Arrears</string>
@@ -155,6 +157,7 @@
     <string name="office_name">Office</string>
     <string name="interest_p_period">Interest Posting Period</string>
     <string name="staff_names">Staff</string>
+ 
     <string name="client_active">Client Active</string>
     <string name="submit">Submit</string>
     <string name="gender">Gender</string>

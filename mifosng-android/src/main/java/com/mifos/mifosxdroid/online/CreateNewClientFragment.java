@@ -33,20 +33,12 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.organisation.ClientClassificationOptions;
-import com.mifos.objects.organisation.ClientTypeOptions;
-import com.mifos.objects.organisation.GenderOptions;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.clients.Options;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -184,24 +176,23 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 	    spGender.setAdapter(genderAdapter);
 	    spGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-		    @Override
-		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-			    genderId = clientstemplate.getGenderOptions().get(i).getId();
-			    Log.d("genderId " + genderNames.get(i), String.valueOf(genderId));
-			    if (genderId != -1) {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                genderId = clientstemplate.getGenderOptions().get(i).getId();
+                Log.d("genderId " + genderNames.get(i), String.valueOf(genderId));
+                if (genderId != -1) {
 
 
-			    }
-			    else {
-				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-			    }
-		    }
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-		    @Override
-		    public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-		    }
-	    });
+            }
+        });
 
     }
 
@@ -246,45 +237,44 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
 	    spClientType.setAdapter(clientTypeAdapter);
 	    spClientType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-		    @Override
-		    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-			    clientTypeId = clientstemplate.getClientTypeOptions().get(i).getId();
-			    Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
-			    if (clientTypeId != -1) {
-			    }
-			    else {
-				    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
-			    }
-		    }
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                clientTypeId = clientstemplate.getClientTypeOptions().get(i).getId();
+                Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
+                if (clientTypeId != -1) {
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-		    @Override
-		    public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-		    }
-	    });
+            }
+        });
 
     }
 
 	private void getClientTemplate(){
 		showProgress();
 		App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
-			@Override
-			public void success(ClientsTemplate clientsTemplate, Response response) {
+            @Override
+            public void success(ClientsTemplate clientsTemplate, Response response) {
 
-				if (response.getStatus() == 200) {
-					clientstemplate = clientsTemplate;
-					inflateGenderSpinner();
-					inflateClientTypeOptions();
-					inflateClientClassificationOptions();
-				}
-				hideProgress();
-			}
+                if (response.getStatus() == 200) {
+                    clientstemplate = clientsTemplate;
+                    inflateGenderSpinner();
+                    inflateClientTypeOptions();
+                    inflateClientClassificationOptions();
+                }
+                hideProgress();
+            }
 
-			@Override
-			public void failure(RetrofitError error) {
-				hideProgress();
-			}
-		});
+            @Override
+            public void failure(RetrofitError error) {
+                hideProgress();
+            }
+        });
 	}
 
     //inflating office list spinner
@@ -346,14 +336,14 @@ public class CreateNewClientFragment extends MifosBaseFragment implements MFDate
         if (!isValidMobileNo()) {
             return;
         }
-        //Date validation : check for date less than or equal to current date
+       // Date validation : check for date less than or equal to current date
         if (!isValidDate()) {
             Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
         }
         if (!isValidDateofBirth()) {
             Toast.makeText(getActivity(), "Date cannot be in future", Toast.LENGTH_LONG).show();
-
-        } else {
+       }
+         else {
             showProgress();
             App.apiManager.createClient(clientPayload, new Callback<Client>() {
                 @Override

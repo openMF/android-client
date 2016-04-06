@@ -87,6 +87,10 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     TextView tv_in_arrears;
     @InjectView(R.id.tv_loan_officer)
     TextView tv_loan_officer;
+    @InjectView(R.id.tv_interest_method)
+    TextView tv_interest_method;
+    @InjectView(R.id.tv_fund)
+    TextView tv_fund;
     @InjectView(R.id.tv_principal)
     TextView tv_principal;
     @InjectView(R.id.tv_loan_principal_due)
@@ -164,6 +168,9 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
                 tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());
                 tv_loanAccountNumber.setText("#" + loanWithAssociations.getAccountNo());
                 tv_loan_officer.setText(loanWithAssociations.getLoanOfficerName());
+                tv_interest_method.setText(loanWithAssociations.getInterestType().getValue());
+                tv_fund.setText(loanWithAssociations.getFundName());
+
                 //TODO Implement QuickContactBadge
                 //quickContactBadge.setImageToDefault();
 

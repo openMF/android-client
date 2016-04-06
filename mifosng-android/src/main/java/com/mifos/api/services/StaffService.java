@@ -19,5 +19,5 @@ import retrofit.http.Query;
 public interface StaffService {
 
     @GET(APIEndPoint.STAFF + "?status=all")
-    void getStaffForOffice(@Query("officeId") int officeId, Callback<List<Staff>> staffListCallback);
+    void getStaffForOffice(Callback<List<Staff>> staffListCallback);
 }

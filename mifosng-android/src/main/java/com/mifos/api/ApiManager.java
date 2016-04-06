@@ -304,6 +304,7 @@ public class ApiManager extends BaseApiManager {
 
     /**
      * Offices API
+     * @param callback
      */
 
     public void getOffices(Callback<List<Office>> callback) {
@@ -314,8 +315,8 @@ public class ApiManager extends BaseApiManager {
      * Staff API
      */
 
-    public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
-        getStaffApi().getStaffForOffice(officeId, callback);
+    public void getStaffInOffice(Callback<List<Staff>> callback) {
+        getStaffApi().getStaffForOffice(callback);
     }
 
     /**

@@ -130,7 +130,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment {
     }
 
     public void inflateStaffSpinner(final int officeId) {
-        App.apiManager.getStaffInOffice(officeId, new Callback<List<Staff>>() {
+        App.apiManager.getStaffInOffice(new Callback<List<Staff>>() {
             @Override
             public void success(List<Staff> staffs, Response response) {
                 final List<String> staffNames = new ArrayList<String>();

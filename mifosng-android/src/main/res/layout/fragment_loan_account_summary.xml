@@ -181,6 +181,51 @@
             android:gravity="right"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
+        <TextView
+            android:id="@+id/interest_method"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tv_loan_officer"
+            android:layout_marginTop="8dp"
+            android:text="@string/interestmethod"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/tv_interest_method"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_loan_officer"
+            android:layout_marginTop="8dp"
+            android:gravity="right"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+        <TextView
+            android:id="@+id/fund"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tv_interest_method"
+            android:layout_marginTop="8dp"
+            android:text="@string/fund"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/tv_fund"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_interest_method"
+            android:layout_marginTop="8dp"
+            android:gravity="right"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TableLayout
             android:id="@+id/tbl_loanSummary"
@@ -188,7 +233,7 @@
             android:layout_height="fill_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/loan_officer"
+            android:layout_below="@+id/tv_fund"
             android:layout_marginTop="8dp">
 
 
