@@ -39,6 +39,7 @@ public class SurveyListFragment extends MifosBaseFragment {
     @InjectView(R.id.lv_surveys_list) ListView lv_surveys_list;
     private SurveyListAdapter surveyListAdapter;
     private OnFragmentInteractionListener mListener;
+
     private View rootView;
     private int clientId;
 
@@ -53,6 +54,8 @@ public class SurveyListFragment extends MifosBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_survey_list, container, false);
+
+        //lv_surveys_list = (ListView) rootView.findViewById(R.id.lv_surveys_list);
         ButterKnife.inject(this, rootView);
 
         clientId = getArguments().getInt(CLIENTID);
@@ -66,6 +69,7 @@ public class SurveyListFragment extends MifosBaseFragment {
                 lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                         mListener.loadSurveyQuestion(surveys.get(i),clientId);
                     }
                 });
@@ -78,11 +82,11 @@ public class SurveyListFragment extends MifosBaseFragment {
                 hideProgress();
             }
         });
+        setHasOptionsMenu(true);
         return rootView;
     }
 
     public interface OnFragmentInteractionListener {
-
         void loadSurveyQuestion(Survey survey , int Clientid);
     }
 
@@ -92,7 +96,6 @@ public class SurveyListFragment extends MifosBaseFragment {
             getActivity().finish();
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onAttach(Context context) {

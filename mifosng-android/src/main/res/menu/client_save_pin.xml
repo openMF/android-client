@@ -11,7 +11,7 @@
     <item
         android:id="@+id/save_pin"
         android:enabled="true"
-        android:title="Save pin"
+        android:title=""
         app:showAsAction="always" />
 
 </menu>

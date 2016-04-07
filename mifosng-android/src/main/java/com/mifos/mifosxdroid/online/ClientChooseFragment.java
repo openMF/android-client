@@ -18,7 +18,6 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientChooseAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.client.Client;
@@ -142,5 +141,6 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
                 }
             }
         });
+
     }
 }

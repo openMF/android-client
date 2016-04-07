@@ -302,6 +302,9 @@
     <string name="error_select_officer">Select Officer</string>
     <string name="error_select_client">Select Client</string>
 
+    <!-- Client Address List Related Strings -->
+    <string name="latlng_not_available">Not Available</string>
+
 
     <string-array name="office_ids">
         <item>Head Office</item>
