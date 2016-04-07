@@ -11,11 +11,13 @@ import com.mifos.api.services.AuthService;
 import com.mifos.api.services.CenterService;
 import com.mifos.api.services.ChargeService;
 import com.mifos.api.services.ClientAccountsService;
+import com.mifos.api.services.ClientAddressListService;
 import com.mifos.api.services.ClientService;
 import com.mifos.api.services.CreateSavingsAccountService;
 import com.mifos.api.services.DataTableService;
 import com.mifos.api.services.DocumentService;
 import com.mifos.api.services.GpsCoordinatesService;
+import com.mifos.api.services.GpsSurveyService;
 import com.mifos.api.services.GroupAccountService;
 import com.mifos.api.services.GroupService;
 import com.mifos.api.services.IdentifierService;
@@ -56,6 +58,8 @@ public class BaseApiManager {
     private OfficeService officeApi;
     private StaffService staffApi;
     private SurveyService surveyApi;
+    private GpsSurveyService gpsSurveyLocationApi;
+    private ClientAddressListService clientAddressListApi;
     private GroupAccountService groupAccountsServiceApi;
 
     public BaseApiManager() {
@@ -77,8 +81,9 @@ public class BaseApiManager {
         surveyApi = createApi(SurveyService.class, API_ENDPOINT);
         chargeService = createApi(ChargeService.class, API_ENDPOINT);
         createSavingsAccountService = createApi(CreateSavingsAccountService.class, API_ENDPOINT);
+        gpsSurveyLocationApi = createApi(GpsSurveyService.class, API_ENDPOINT);
+        clientAddressListApi = createApi(ClientAddressListService.class, API_ENDPOINT);
         groupAccountsServiceApi=createApi(GroupAccountService.class, API_ENDPOINT);
-
     }
 
     public void setupEndpoint(String instanceUrl) {
@@ -145,6 +150,10 @@ public class BaseApiManager {
         return gpsApi;
     }
 
+    protected GpsSurveyService getGpsSurveyLocationApi() {
+        return gpsSurveyLocationApi;
+    }
+
     protected GroupService getGroupApi() {
         return groupApi;
     }
@@ -177,5 +186,9 @@ public class BaseApiManager {
 
     public CreateSavingsAccountService getCreateSavingsAccountService() {
         return createSavingsAccountService;
+    }
+
+    protected ClientAddressListService getClientAddressListApi() {
+        return clientAddressListApi;
     }
 }

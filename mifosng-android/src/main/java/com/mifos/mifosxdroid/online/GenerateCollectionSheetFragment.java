@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -36,7 +37,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class GenerateCollectionSheetFragment extends MifosBaseFragment {
+public class GenerateCollectionSheetFragment extends ProgressableFragment {
 
     public static final String LIMIT = "limit";
     public static final String ORDER_BY = "orderBy";
@@ -86,10 +87,13 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment {
     }
 
     public void inflateOfficeSpinner() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getOffices(new Callback<List<Office>>() {
             @Override
             public void success(List<Office> offices, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final List<String> officeNames = new ArrayList<String>();
                 officeNames.add(getString(R.string.spinner_office));
                 officeNameIdHashMap.put(getString(R.string.spinner_office), -1);
@@ -118,13 +122,13 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment {
 
                     }
                 });
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Error loading offices");
-                hideProgress();
+                showProgress(false);
             }
         });
     }

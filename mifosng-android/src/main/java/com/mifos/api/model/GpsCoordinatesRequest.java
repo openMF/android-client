@@ -15,7 +15,7 @@ public class GpsCoordinatesRequest
     private double latitude;
     private double longitude;
     // Defaults
-    private String dateFormat="dd MMMM YYYY";
+    private String dateFormat="dd MMMM yyyy";
     private String locale="en";
 
     public GpsCoordinatesRequest(double latitude, double longitude) {

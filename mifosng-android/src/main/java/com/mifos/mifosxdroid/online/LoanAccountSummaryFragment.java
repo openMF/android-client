@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountDisbursement;;
@@ -49,10 +49,9 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 09/05/14.
  */
-public class LoanAccountSummaryFragment extends MifosBaseFragment {
+public class LoanAccountSummaryFragment extends ProgressableFragment {
 
 
-    public static final int MENU_ITEM_SEARCH = 2000;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_REPAYMENT_SCHEDULE = 1002;
     public static final int MENU_ITEM_LOAN_TRANSACTIONS = 1003;
@@ -157,7 +156,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     }
 
     private void inflateLoanAccountSummary() {
-        showProgress();
+        showProgress(true);
         setToolbarTitle(getResources().getString(R.string.loanAccountSummary));
         //TODO Implement cases to enable/disable repayment button
         bt_processLoanTransaction.setEnabled(false);
@@ -166,6 +165,9 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
 
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 clientLoanWithAssociations = loanWithAssociations;
                 tv_clientName.setText(loanWithAssociations.getClientName());
                 tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());
@@ -208,14 +210,14 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Loan Closed");
                 }
-                hideProgress();
+                showProgress(false);
                 inflateDataTablesList();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Loan Account not found.");
-                hideProgress();
+                showProgress(false);
             }
         });
 
@@ -247,9 +249,6 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        MenuItem mItemSearchClient = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            mItemSearchClient.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
         menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
@@ -290,12 +289,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
             loadDocuments();
         }
         if (item.getItemId() == MENU_ITEM_CHARGES) {
-
             loadloanCharges();
-
-        } else if (item.getItemId() == MENU_ITEM_SEARCH) {
-
-            getActivity().finish();
         }
             return super.onOptionsItemSelected(item);
         }
@@ -305,7 +299,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getLoanDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
@@ -317,12 +311,12 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
                         loanDataTables.add(dataTable);
                     }
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }

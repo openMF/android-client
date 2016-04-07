@@ -73,6 +73,7 @@ public class ClientListFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
+        setToolbarTitle(getResources().getString(R.string.clients));
         ButterKnife.inject(this, rootView);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R.color.orange_light, R.color.red_light);

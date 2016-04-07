@@ -147,8 +147,6 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
         // Saving port
         PrefManager.setPort(et_port.getEditableText().toString());
-        // Saving tenant
-        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
         // Saving user's token
         PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
 
@@ -206,6 +204,8 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
 
     @OnClick(R.id.bt_login)
     public void onLoginClick(Button button) {
+        // Saving tenant
+        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
         login(false);
     }
 

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.InterestType;
 import com.mifos.objects.client.Savings;
@@ -48,11 +49,10 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class SavingsAccountFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "SavingsAccountFragment";
     private View rootView;
-    private Context context;
     private SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_product)
@@ -95,7 +95,6 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity();
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -141,19 +140,21 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     }
 
     private void inflateSavingsSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getSavingsAccounts(new Callback<List<ProductSavings>>() {
 
             @Override
             public void success(List<ProductSavings> savings, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final List<String> savingsList = new ArrayList<String>();
 
                 for (ProductSavings savingsname : savings) {
                     savingsList.add(savingsname.getName());
                     savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
                 }
-                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, savingsList);
+                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, savingsList);
                 savingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_product.setAdapter(savingsAdapter);
                 sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -173,12 +174,12 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
 
                     }
                 });
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
@@ -322,7 +323,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     }
 
     private void initiateSavingCreation(SavingsPayload savingsPayload) {
-
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
 
         App.apiManager.createSavingsAccount(savingsPayload, new Callback<Savings>() {
@@ -356,10 +357,13 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
     }
 
     private void getSavingsAccountTemplateAPI() {
-
+        showProgress(true);
         App.apiManager.getSavingsAccountTemplate(new Callback<SavingProductsTemplate>() {
             @Override
             public void success(SavingProductsTemplate savingProductsTemplate, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 if (response.getStatus() == 200) {
                     savingproductstemplate = savingProductsTemplate;
                     InterestCompoundingPeriodType();
@@ -368,7 +372,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
                     inflateInterestPostingPeriodType();
                 }
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                    showProgress(false);
             }
 
 
@@ -376,7 +380,7 @@ public class SavingsAccountFragment extends DialogFragment implements MFDatePick
             public void failure(RetrofitError error) {
                 System.out.println(error.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
 

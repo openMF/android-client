@@ -81,6 +81,13 @@
     <string name="generate_collection_sheet">Generate Collection Sheet</string>
     <string name="clear_data">Clear Data</string>
     <string name="branch_id">Branch Id</string>
+    <string name="message">Message</string>
+    <string name="clients">Clients</string>
+    <string name="groups">Groups</string>
+    <string name="centers">Centers</string>
+    <string name="path_tracker">Path Tracker</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
     <!-- General Terms End Here -->
 
 
@@ -248,6 +255,7 @@
     <string name="error_select_fund">Please Select Fund</string>
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
     <string name="error_select_transactionProcessingStrategy">Please Select Transaction Processing Strategy</string>
+    <string name="message_success">Updated Successfully!</string>
 
     <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
     <string name="loan_purpose">Please Select a the Loan Purpose</string>
@@ -302,6 +310,24 @@
     <string name="error_select_officer">Select Officer</string>
     <string name="error_select_client">Select Client</string>
 
+    <!-- Client Address List Related Strings -->
+    <string name="latlng_not_available">Not Available</string>
+
+    <!--Client Address and GIS related strings -->
+    <string name="message_no_address_found_add_new">No address available!\nWould you like to add new address for this client?</string>
+    <string name="tv_select_address">Select the address to be updated.</string>
+    <string name="message_update_address">Updating the address...</string>
+    <string name="message_no_address_found">No address available.</string>
+    <string name="progress_fetching_addresses">Fetching the addresses...</string>
+    <string name="progress_adding_address">Adding address...</string>
+    <string name="message_input_validation">Please give a valid name for city and state. Special Characters are not allowed.</string>
+        <!--Client Address and GIS XML related strings -->
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="hint_city">Enter City</string>
+    <string name="hint_state">Enter State</string>
+
+    <string name="message_title_input_validation">Invalid Input</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>
