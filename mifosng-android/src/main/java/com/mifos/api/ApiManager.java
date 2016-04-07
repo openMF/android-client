@@ -8,10 +8,14 @@ package com.mifos.api;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.mifos.api.model.ClientAddress;
+import com.mifos.api.model.ClientAddressResponse;
+import com.mifos.api.model.ClientAddressUpdateRequest;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
+import com.mifos.api.model.GpsLocationSurvey;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.api.model.ScorecardPayload;
@@ -317,6 +321,26 @@ public class ApiManager extends BaseApiManager {
 
     public void updateGpsData(int client, GpsCoordinatesRequest request, Callback<GpsCoordinatesResponse> callback) {
         getGpsApi().updateGpsCoordinates(client, request, callback);
+    }
+
+    /**
+     * GPS Survey API
+     */
+
+    public void sendLocationSurvey(int client, GpsLocationSurvey request, Callback<GpsLocationSurvey> callback) {
+        getGpsSurveyLocationApi().setSurveyLocation(client, request, callback);
+    }
+
+    /**
+     * Client Address List API
+     */
+
+    public void getClientAddress(int client, Callback<List<ClientAddress>> callback) {
+        getClientAddressListApi().receiveClientAddressList(client, callback);
+    }
+
+    public void updateClientAddressRow(int client, int row, ClientAddressUpdateRequest request, Callback<ClientAddressResponse> callback) {
+        getClientAddressListApi().updateAddressEntry(client, row, request, callback);
     }
 
     /**
