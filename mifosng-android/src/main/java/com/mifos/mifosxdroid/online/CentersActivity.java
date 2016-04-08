@@ -26,7 +26,7 @@ public class CentersActivity extends MifosBaseActivity implements CenterListFrag
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.centers, menu);
+
         return true;
     }
 
