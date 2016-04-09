@@ -10,6 +10,9 @@ import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.Page;
+import com.mifos.objects.client.Savings;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 
 import java.util.HashMap;
@@ -68,4 +71,16 @@ public interface SavingsAccountService {
                                           @Body SavingsApproval savingsApproval,
                                           Callback<GenericResponse> genericResponseCallback);
 
+
+    @GET("/"+APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}" + APIEndPoint.CHARGES)
+    void getListOfSavingsCharges(@Path("savingsAccountId") int savingsAccountId,Callback<Page<Charges>> savingsChargeListCallback);
+
+    @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
+    void getListOfCharges(@Path("clientId") int clientId,Callback<Page<Charges>> chargeListCallback);
+
+    @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
+    void createGroupSavingsAccount(@Body GroupSavingsPayload savingsPayload, Callback<Savings> callback);
+
+    @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template?templateType=group")
+    void getGroupSavingsAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> groupSavingsCallback);
 }
