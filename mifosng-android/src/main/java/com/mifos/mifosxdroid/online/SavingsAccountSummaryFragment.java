@@ -155,6 +155,8 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
 
                     @Override
                     public void success(SavingsAccountWithAssociations savingsAccountWithAssociations, Response response) {
+                        /* Activity is null - Fragment has been detached; no need to do anything. */
+                        if (getActivity() == null) return;
 
                         if (savingsAccountWithAssociations != null) {
 

@@ -92,6 +92,9 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
         App.apiManager.getDataTableInfo(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
             @Override
             public void success(JsonArray jsonElements, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 if (jsonElements != null) {
                     linearLayout.invalidate();
                     DataTableUIBuilder.DataTableActionListener mListener = (DataTableUIBuilder.DataTableActionListener) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);

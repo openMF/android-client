@@ -105,6 +105,9 @@ public class DocumentListFragment extends ProgressableFragment {
         App.apiManager.getDocumentsList(entityType, entityId, new Callback<List<Document>>() {
             @Override
             public void success(final List<Document> documents, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 if (documents != null) {
                     for (Document document : documents) {
                         Log.w(document.getFileName(), document.getSize() + " bytes");

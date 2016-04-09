@@ -83,6 +83,8 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment {
         App.apiManager.getLoanRepaySchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
 
                 List<Period> listOfActualPeriods = loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods();
 

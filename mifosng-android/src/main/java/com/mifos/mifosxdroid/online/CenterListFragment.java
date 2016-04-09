@@ -55,6 +55,9 @@ public class CenterListFragment extends ProgressableFragment {
         App.apiManager.getCenters(new Callback<List<Center>>() {
             @Override
             public void success(final List<Center> centers, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 centersListAdapter = new CentersListAdapter(getActivity(), centers);
                 lv_centers_list.setAdapter(centersListAdapter);
                 lv_centers_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

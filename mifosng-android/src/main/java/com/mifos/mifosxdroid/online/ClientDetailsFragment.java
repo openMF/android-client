@@ -289,6 +289,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         App.apiManager.getClient(clientId, new Callback<Client>() {
             @Override
             public void success(final Client client, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
 
                 if (client != null) {
                     setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());

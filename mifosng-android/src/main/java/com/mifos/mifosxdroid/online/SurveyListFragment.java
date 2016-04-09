@@ -61,6 +61,9 @@ public class SurveyListFragment extends ProgressableFragment {
         App.apiManager.getAllSurveys(new Callback<List<Survey>>() {
             @Override
             public void success(final List<Survey> surveys, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
                 lv_surveys_list.setAdapter(surveyListAdapter);
                 lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -166,6 +166,9 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
 
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 clientLoanWithAssociations = loanWithAssociations;
                 tv_clientName.setText(loanWithAssociations.getClientName());
                 tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());

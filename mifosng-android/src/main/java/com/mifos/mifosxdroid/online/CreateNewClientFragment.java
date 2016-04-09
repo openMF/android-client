@@ -268,6 +268,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
             @Override
             public void success(ClientsTemplate clientsTemplate, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
 
                 if (response.getStatus() == 200) {
                     clientstemplate = clientsTemplate;
@@ -291,6 +293,9 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         App.apiManager.getOffices(new Callback<List<Office>>() {
             @Override
             public void success(List<Office> offices, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final List<String> officeList = new ArrayList<String>();
 
                 for (Office office : offices) {

@@ -150,6 +150,9 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
             @Override
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<Charges> charges = new ArrayList<>();

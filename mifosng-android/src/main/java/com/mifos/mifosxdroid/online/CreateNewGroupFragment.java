@@ -148,6 +148,9 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
 
             @Override
             public void success(List<Office> offices, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final ArrayList<String> officeList = new ArrayList<String>();
 
                 for (Office office : offices) {

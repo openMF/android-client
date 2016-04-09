@@ -65,6 +65,9 @@ public class ClientIdentifiersFragment extends ProgressableFragment {
         App.apiManager.getIdentifiers(clientId, new Callback<List<Identifier>>() {
             @Override
             public void success(List<Identifier> identifiers, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 if (identifiers != null && identifiers.size() > 0) {
                     IdentifierListAdapter identifierListAdapter = new IdentifierListAdapter(getActivity(), identifiers, clientId);
                     lv_identifiers.setAdapter(identifierListAdapter);

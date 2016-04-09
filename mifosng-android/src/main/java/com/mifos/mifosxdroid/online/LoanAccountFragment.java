@@ -197,6 +197,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
 
             @Override
             public void success(List<ProductLoans> loans, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final List<String> loansList = new ArrayList<String>();
                 for (ProductLoans loansname : loans) {
                     loansList.add(loansname.getName());
@@ -254,6 +257,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
 
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<AmortizationType> amortizationType = new ArrayList<>();
@@ -332,6 +338,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
 
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<LoanPurposeOptions> loanPurposeOptionsType = new ArrayList<>();
@@ -410,6 +419,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
 
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<InterestCalculationPeriodType> interestCalculationPeriodType = new ArrayList<>();
@@ -488,6 +500,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
 
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<TransactionProcessingStrategy> transactionProcessingStrategyType = new ArrayList<>();
@@ -566,6 +581,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
 
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<TermFrequencyTypeOptions> termFrequencyType = new ArrayList<>();

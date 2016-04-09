@@ -53,7 +53,6 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     public static final String TAG = "SavingsAccountFragment";
     private View rootView;
-    private Context context;
     private SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_product)
@@ -96,7 +95,6 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity();
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -147,13 +145,16 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
             @Override
             public void success(List<ProductSavings> savings, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final List<String> savingsList = new ArrayList<String>();
 
                 for (ProductSavings savingsname : savings) {
                     savingsList.add(savingsname.getName());
                     savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
                 }
-                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, savingsList);
+                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, savingsList);
                 savingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_product.setAdapter(savingsAdapter);
                 sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -360,6 +361,9 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         App.apiManager.getSavingsAccountTemplate(new Callback<SavingProductsTemplate>() {
             @Override
             public void success(SavingProductsTemplate savingProductsTemplate, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 if (response.getStatus() == 200) {
                     savingproductstemplate = savingProductsTemplate;
                     InterestCompoundingPeriodType();

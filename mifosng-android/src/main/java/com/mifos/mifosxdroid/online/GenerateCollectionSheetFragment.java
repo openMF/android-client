@@ -91,6 +91,9 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
         App.apiManager.getOffices(new Callback<List<Office>>() {
             @Override
             public void success(List<Office> offices, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final List<String> officeNames = new ArrayList<String>();
                 officeNames.add(getString(R.string.spinner_office));
                 officeNameIdHashMap.put(getString(R.string.spinner_office), -1);

@@ -155,6 +155,8 @@ public class GroupDetailsFragment extends ProgressableFragment {
         App.apiManager.getGroup(groupId, new Callback<Group>() {
             @Override
             public void success(final Group group, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
 
                 if (group != null) {
                     setToolbarTitle(getString(R.string.group) + " - " + group.getName());

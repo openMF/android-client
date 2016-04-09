@@ -230,6 +230,8 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
 
             @Override
             public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
 
                 if (loanRepaymentTemplate != null) {
                     tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));

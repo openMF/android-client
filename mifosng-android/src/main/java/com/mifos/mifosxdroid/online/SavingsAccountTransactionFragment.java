@@ -127,6 +127,9 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
             @Override
             public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 if (savingsAccountTransactionTemplate != null) {
                     List<String> listOfPaymentTypes = new ArrayList<>();
                     paymentTypeOptionList = savingsAccountTransactionTemplate.getPaymentTypeOptions();
@@ -211,6 +214,9 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
                     @Override
                     public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {
+                        /* Activity is null - Fragment has been detached; no need to do anything. */
+                        if (getActivity() == null) return;
+
                         if (savingsAccountTransactionResponse != null) {
                             if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
                                 Toaster.show(rootView, "Deposit Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
