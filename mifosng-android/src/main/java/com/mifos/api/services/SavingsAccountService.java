@@ -10,12 +10,9 @@ import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
-<<<<<<< HEAD
-=======
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
->>>>>>> 50ad9ce... Add the ability to create group savings account
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.GroupSavingsPayload;
 
@@ -76,8 +73,7 @@ public interface SavingsAccountService {
                                           @Body SavingsApproval savingsApproval,
                                           Callback<GenericResponse> genericResponseCallback);
 
-<<<<<<< HEAD
-=======
+
     @GET("/"+APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}" + APIEndPoint.CHARGES)
     void getListOfSavingsCharges(@Path("savingsAccountId") int savingsAccountId,Callback<Page<Charges>> savingsChargeListCallback);
 
@@ -89,5 +85,4 @@ public interface SavingsAccountService {
 
     @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template?templateType=group")
     void getGroupSavingsAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> groupSavingsCallback);
->>>>>>> 50ad9ce... Add the ability to create group savings account
 }
