@@ -1,141 +1,160 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/LinearLayout.Base">
+    <!-- Comment this out when editing the actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
-        <TextView style="@style/TextView.CreateSavingsAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_product"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:text="@string/product"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_product"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_client_external_id"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/external_id"
+    <!-- Actual content -->
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/LinearLayout.Base">
+
+            <TextView
+                style="@style/TextView.CreateSavingsAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/product"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_product"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_client_external_id"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/external_id"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_submittedon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="16dp"
+                android:text="@string/submittedon"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_submittedon_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Submission Date :"
                 android:imeOptions="actionNext"
-                android:inputType="text"
                 android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tv_submittedon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingTop="16dp"
-            android:text="@string/submittedon"
-            android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/tv_submittedon_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Submission Date :"
-            android:imeOptions="actionNext"
-            android:paddingBottom="16dp"
-            android:paddingTop="10dp"
-            android:textSize="20sp"
-            />
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-            <EditText
-                android:id="@+id/et_nominal_annual"
-                style="@style/EditText.BaseWidth"
-                android:gravity="start"
-                android:hint="@string/nominal"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:paddingBottom="16dp"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/et_nominal_annual"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/nominal"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/tv_interest_calc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:text="@string/interest_calc"
-            android:textSize="16sp"
-            />
+            <TextView
+                android:id="@+id/tv_interest_calc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/interest_calc"
+                android:textSize="16sp" />
 
-        <Spinner
-            android:id="@+id/sp_interest_calc"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <TextView
-            android:id="@+id/tv_interest_comp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/interest_comp"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_interest_comp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <TextView
-            android:id="@+id/tv_interest_p_period"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/interest_p_period"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_interest_p_period"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <TextView
-            android:id="@+id/tv_days_in_year"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/days_in_year"
-            android:textSize="16sp"
-            />
-        <Spinner
-            android:id="@+id/sp_days_in_year"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
+            <Spinner
+                android:id="@+id/sp_interest_calc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
 
-        <Button
-            android:id="@+id/bt_submit"
-            style="@style/Button.Base"
-            android:layout_marginTop="10dp"
-            android:text="@string/submit"
-            />
+            <TextView
+                android:id="@+id/tv_interest_comp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/interest_comp"
+                android:textSize="16sp" />
 
+            <Spinner
+                android:id="@+id/sp_interest_comp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
 
-    </LinearLayout>
-</ScrollView>
+            <TextView
+                android:id="@+id/tv_interest_p_period"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/interest_p_period"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_interest_p_period"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_days_in_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/days_in_year"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_days_in_year"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <Button
+                android:id="@+id/bt_submit"
+                style="@style/Button.Base"
+                android:layout_marginTop="10dp"
+                android:text="@string/submit" />
+        </LinearLayout>
+    </ScrollView>
+</ViewFlipper>

@@ -21,6 +21,7 @@ import com.google.gson.JsonElement;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.DataTableUIBuilder;
@@ -31,7 +32,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class DataTableDataFragment extends MifosBaseFragment implements DataTableUIBuilder.DataTableActionListener {
+public class DataTableDataFragment extends ProgressableFragment implements DataTableUIBuilder.DataTableActionListener {
     public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
     private DataTable dataTable;
@@ -87,22 +88,25 @@ public class DataTableDataFragment extends MifosBaseFragment implements DataTabl
     }
 
     public void inflateView() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getDataTableInfo(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
             @Override
             public void success(JsonArray jsonElements, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 if (jsonElements != null) {
                     linearLayout.invalidate();
                     DataTableUIBuilder.DataTableActionListener mListener = (DataTableUIBuilder.DataTableActionListener) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
                     linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity(), entityId, mListener);
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-                hideProgress();
+                showProgress(false);
             }
         });
     }

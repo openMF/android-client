@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountDisbursement;;
@@ -49,7 +49,7 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 09/05/14.
  */
-public class LoanAccountSummaryFragment extends MifosBaseFragment {
+public class LoanAccountSummaryFragment extends ProgressableFragment {
 
 
     public static final int MENU_ITEM_SEARCH = 2000;
@@ -157,7 +157,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
     }
 
     private void inflateLoanAccountSummary() {
-        showProgress();
+        showProgress(true);
         setToolbarTitle(getResources().getString(R.string.loanAccountSummary));
         //TODO Implement cases to enable/disable repayment button
         bt_processLoanTransaction.setEnabled(false);
@@ -166,6 +166,9 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
 
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 clientLoanWithAssociations = loanWithAssociations;
                 tv_clientName.setText(loanWithAssociations.getClientName());
                 tv_loan_product_short_name.setText(loanWithAssociations.getLoanProductName());
@@ -208,14 +211,14 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Loan Closed");
                 }
-                hideProgress();
+                showProgress(false);
                 inflateDataTablesList();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Loan Account not found.");
-                hideProgress();
+                showProgress(false);
             }
         });
 
@@ -305,7 +308,7 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getLoanDataTable(new Callback<List<DataTable>>() {
             @Override
             public void success(List<DataTable> dataTables, Response response) {
@@ -317,12 +320,12 @@ public class LoanAccountSummaryFragment extends MifosBaseFragment {
                         loanDataTables.add(dataTable);
                     }
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }
