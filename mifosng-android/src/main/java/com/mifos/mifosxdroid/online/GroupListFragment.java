@@ -60,7 +60,7 @@ public class GroupListFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_list, container, false);
         ButterKnife.inject(this, rootView);
-        setToolbarTitle(getResources().getString(R.string.group));
+        setToolbarTitle(getResources().getString(R.string.title_center_list));
         inflateGroupList();
         return rootView;
     }

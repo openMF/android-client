@@ -49,6 +49,7 @@ public class CenterListFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_centers_list, container, false);
         lv_centers_list = (ListView) rootView.findViewById(R.id.lv_center_list);
+        setToolbarTitle(getResources().getString(R.string.title_activity_centers));
 
         showProgress();
         App.apiManager.getCenters(new Callback<List<Center>>() {

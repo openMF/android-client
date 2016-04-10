@@ -20,6 +20,7 @@
     <string name="total">Total</string>
     <string name="client_name">Client Name</string>
     <string name="client">Client</string>
+    <string name="clients">Clients</string>
     <string name="save">Save</string>
     <string name="due_date">Due Date</string>
     <string name="locale">Locale</string>
