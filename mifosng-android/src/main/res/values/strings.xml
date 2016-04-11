@@ -82,6 +82,12 @@
     <string name="generate_collection_sheet">Generate Collection Sheet</string>
     <string name="clear_data">Clear Data</string>
     <string name="branch_id">Branch Id</string>
+    <string name="clients">Clients</string>
+    <string name="groups">Groups</string>
+    <string name="centers">Centers</string>
+    <string name="path_tracker">Path Tracker</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
     <!-- General Terms End Here -->
 
 

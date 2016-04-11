@@ -6,16 +6,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/mItem_list"
-        android:enabled="true"
-        android:title="@string/list_all_clients"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/group_list"
-        android:enabled="true"
-        android:title="@string/group_list"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/mItem_create_new_client"
@@ -32,30 +22,6 @@
         android:enabled="true"
         android:title="@string/create_group"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/item_survey"
-        android:enabled="true"
-        android:title="@string/survey"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/item_centers"
-        android:enabled="true"
-        android:title="@string/center_list"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/track"
-        android:enabled="true"
-        android:title="@string/track_path"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/item_offline_centers"
-        android:enabled="true"
-        android:title="@string/offline"
-        app:showAsAction="never" />
-
     <item
         android:id="@+id/logout"
         android:enabled="true"

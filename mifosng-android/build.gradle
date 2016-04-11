@@ -136,5 +136,6 @@ dependencies {
 
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
 }

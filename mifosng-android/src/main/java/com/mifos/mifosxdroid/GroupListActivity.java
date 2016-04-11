@@ -8,13 +8,15 @@ package com.mifos.mifosxdroid;
 import android.os.Bundle;
 
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.fragments.CenterListFragment;
+import com.mifos.mifosxdroid.online.ClientListFragment;
+import com.mifos.mifosxdroid.online.GroupsListFragment;
 
-public class CenterListActivity extends MifosBaseActivity {
+public class GroupListActivity extends MifosBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         showBackButton();
-        replaceFragment(new CenterListFragment(), false, R.id.container);
+        replaceFragment(new GroupsListFragment(), false, R.id.container);
     }
+
 }
