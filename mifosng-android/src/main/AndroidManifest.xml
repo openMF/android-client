@@ -42,6 +42,7 @@
         <activity
             android:name=".online.DashboardFragmentActivity"
             android:label="@string/dashboard"
+            android:theme="@style/TraslucentActionBarTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.SurveyQuestionViewPager"
@@ -96,8 +97,20 @@
         </activity>
         <activity
             android:name=".CenterListActivity"
+            android:label="@string/centers"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".ClientListActivity"
+            android:label="@string/clients"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GroupListActivity"
+            android:label="@string/groups"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SurveyActivity"
+            android:label="@string/survey"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PinpointClientActivity"
             android:label="@string/pinpoint"

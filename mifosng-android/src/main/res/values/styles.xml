@@ -22,6 +22,8 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
+    <style name="TraslucentActionBarTheme" parent="MaterialAppTheme">
+    </style>
 
     <style name="popupMenuStyle" parent="Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@android:color/white</item>

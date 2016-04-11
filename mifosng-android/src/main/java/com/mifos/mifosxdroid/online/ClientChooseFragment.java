@@ -18,8 +18,7 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientChooseAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -37,7 +36,7 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
-public class ClientChooseFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener {
+public class ClientChooseFragment extends ProgressableFragment implements AdapterView.OnItemClickListener {
 
     @InjectView(R.id.lv_clients)
     ListView results;
@@ -70,7 +69,7 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
     }
 
     public void loadClients() {
-        showProgress();
+        showProgress(true);
         shouldCheckForMoreClients = false;
         areMoreClientsAvailable = true;
         totalFilteredRecords = 0;
@@ -80,7 +79,7 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
                 clients = page.getPageItems();
                 adapter.setList(clients);
                 adapter.notifyDataSetChanged();
-                hideProgress();
+                showProgress(false);
                 totalFilteredRecords = page.getTotalFilteredRecords();
                 if (isInfiniteScrollEnabled)
                     setInfiniteScrollListener(adapter);
@@ -89,7 +88,7 @@ public class ClientChooseFragment extends MifosBaseFragment implements AdapterVi
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(root, "Cannot get clients, There might be some problem!");
-                hideProgress();
+                showProgress(false);
             }
         });
     }

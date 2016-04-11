@@ -4,32 +4,49 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
 
-    <TextView
+    <!-- Comment this out when editing the actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please select one of the Survey"
-        android:textSize="18sp"
-        android:paddingLeft="20dip"
-        android:paddingRight="10dip"
-        android:paddingTop="20dip"
-        android:id="@+id/tv_survey_name"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_gravity="center" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10dp"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
-        android:paddingTop="1dip"
-        android:layout_height="wrap_content"
-        android:id="@+id/lv_surveys_list"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/tv_survey_name"/>
-</RelativeLayout>
+    <!-- Actual content -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_survey_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:paddingLeft="20dip"
+            android:paddingRight="10dip"
+            android:paddingTop="20dip"
+            android:text="Please select one of the Survey"
+            android:textSize="18sp" />
+
+        <ListView
+            android:id="@+id/lv_surveys_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_survey_name"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:paddingTop="1dip" />
+    </RelativeLayout>
+</ViewFlipper>

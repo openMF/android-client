@@ -26,6 +26,7 @@ import com.jakewharton.fliptables.FlipTable;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.PaymentTypeOption;
@@ -49,7 +50,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePicker.OnDatePickListener {
+public class LoanRepaymentFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
 
     private View rootView;
 
@@ -130,7 +131,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
 
 
     public void inflateUI() {
-        hideProgress();
+        showProgress(false);
         tv_clientName.setText(clientName);
         tv_loanProductShortName.setText(loanProductName);
         tv_loanAccountNumber.setText(loanAccountNumber);
@@ -229,6 +230,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
 
             @Override
             public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
 
                 if (loanRepaymentTemplate != null) {
                     tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
@@ -254,12 +257,12 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
                     et_fees.setText(String.valueOf(loanRepaymentTemplate.getFeeChargesPortion()));
 
                 }
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
 
@@ -351,21 +354,21 @@ public class LoanRepaymentFragment extends MifosBaseFragment implements MFDatePi
         String builtRequest = new Gson().toJson(request);
         Log.i("TAG", builtRequest);
 
-        showProgress();
+        showProgress(true);
 
         App.apiManager.submitPayment(Integer.parseInt(loanAccountNumber), request, new Callback<LoanRepaymentResponse>() {
             @Override
             public void success(LoanRepaymentResponse resp, Response response) {
                 if (resp != null)
                     Toaster.show(rootView, "Payment Successful, Transaction ID = " + resp.getResourceId());
-                hideProgress();
+                showProgress(false);
                 getActivity().getSupportFragmentManager().popBackStackImmediate();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Payment Failed");
-                hideProgress();
+                showProgress(false);
             }
         });
     }

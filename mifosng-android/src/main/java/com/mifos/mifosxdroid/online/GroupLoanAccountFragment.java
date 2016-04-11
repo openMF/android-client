@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.AmortizationType;
 import com.mifos.objects.accounts.loan.InterestCalculationPeriodType;
@@ -35,7 +36,6 @@ import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,12 +57,11 @@ import retrofit.client.Response;
  *
  * Use this  Fragment to Create and/or Update loan
  */
-public class GroupLoanAccountFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class GroupLoanAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "LoanAccountFragment";
     View rootView;
 
-    SafeUIBlockingUtility safeUIBlockingUtility;
     @InjectView(R.id.sp_lproduct)
     Spinner sp_lproduct;
     @InjectView(R.id.sp_loan_purpose)
@@ -190,12 +189,14 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
     }
     private void inflateLoansProductSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getAllLoans(new Callback<List<ProductLoans>>() {
 
             @Override
             public void success(List<ProductLoans> loans, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 final List<String> loansList = new ArrayList<String>();
                 for (ProductLoans loansname : loans) {
                     loansList.add(loansname.getName());
@@ -232,7 +233,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -241,7 +242,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
 
@@ -249,10 +250,14 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
 
     private void inflateAmortizationSpinner() {
+        showProgress(true);
         App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
             @Override
 
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<AmortizationType> amortizationType = new ArrayList<>();
@@ -311,7 +316,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -320,14 +325,18 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
     private void inflateLoanPurposeSpinner() {
-     App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
+        showProgress(true);
+        App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<LoanPurposeOptions> loanPurposeOptionsType = new ArrayList<>();
@@ -386,7 +395,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -395,14 +404,18 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
     private void inflateInterestCalculationPeriodSpinner() {
+        showProgress(true);
         App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<InterestCalculationPeriodType> interestCalculationPeriodType = new ArrayList<>();
@@ -461,7 +474,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -470,14 +483,18 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
     private void inflatetransactionProcessingStrategySpinner() {
+        showProgress(true);
         App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<TransactionProcessingStrategy> transactionProcessingStrategyType = new ArrayList<>();
@@ -536,7 +553,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -545,15 +562,19 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void inflateFrequencyPeriodSpinner() {
+        showProgress(true);
         App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<TermFrequencyTypeOptions> termFrequencyType = new ArrayList<>();
@@ -612,7 +633,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -621,7 +642,7 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
@@ -630,13 +651,13 @@ public class GroupLoanAccountFragment extends DialogFragment implements MFDatePi
        App.apiManager.createGroupLoansAccount(loansPayload, new Callback<Loans>() {
             @Override
             public void success(Loans loans, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
             }
         });

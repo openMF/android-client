@@ -18,7 +18,7 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.survey.Survey;
 
@@ -33,7 +33,7 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
-public class SurveyListFragment extends MifosBaseFragment {
+public class SurveyListFragment extends ProgressableFragment {
 
     private static final String CLIENTID = "ClientID";
     @InjectView(R.id.lv_surveys_list) ListView lv_surveys_list;
@@ -57,10 +57,13 @@ public class SurveyListFragment extends MifosBaseFragment {
 
         clientId = getArguments().getInt(CLIENTID);
 
-        showProgress();
+        showProgress(true);
         App.apiManager.getAllSurveys(new Callback<List<Survey>>() {
             @Override
             public void success(final List<Survey> surveys, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
                 lv_surveys_list.setAdapter(surveyListAdapter);
                 lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,13 +72,13 @@ public class SurveyListFragment extends MifosBaseFragment {
                         mListener.loadSurveyQuestion(surveys.get(i),clientId);
                     }
                 });
-                hideProgress();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Toaster.show(rootView, "Couldn't Fetch List of Surveys");
-                hideProgress();
+                showProgress(false);
             }
         });
         return rootView;

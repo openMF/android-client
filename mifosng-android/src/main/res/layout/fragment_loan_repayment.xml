@@ -1,307 +1,321 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
 
-    <RelativeLayout
+    <!-- Comment this out when editing the actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <!-- Actual content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/linear_layout_1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:orientation="horizontal"
-            android:padding="4dp"
-            android:paddingBottom="8dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:id="@+id/tv_clientName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.8"
-                android:text="@string/client_name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <QuickContactBadge
-                android:id="@+id/quickContactBadge_client"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|end"
-                android:layout_marginLeft="100dp" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/divider_1"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/linear_layout_1"
-            android:background="@color/black" />
-
-        <LinearLayout
-            android:id="@+id/linear_layout_2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/linear_layout_1"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:padding="4dp">
-
-
-            <TextView
-                android:id="@+id/tv_loan_product_short_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="@string/product_name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/tv_loanAccountNumber"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:gravity="right"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/in_arrears"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/linear_layout_2"
-            android:layout_marginTop="8dp"
-            android:padding="4dp"
-            android:text="@string/loan_in_arrears"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/tv_in_arrears"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/linear_layout_2"
-            android:layout_marginTop="8dp"
-            android:gravity="right"
-            android:padding="4dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/amount_due"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/in_arrears"
-            android:layout_marginTop="8dp"
-            android:padding="4dp"
-            android:text="@string/loan_amount_due"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/tv_amount_due"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/tv_in_arrears"
-            android:layout_marginTop="8dp"
-            android:gravity="right"
-            android:padding="4dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
-        <View
-            android:id="@+id/divider_2"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/amount_due"
-            android:background="@color/black" />
-
-        <TableLayout
-            android:id="@+id/tb_repaymentForm"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@+id/divider_2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp">
-
-
-            <TableRow
-                android:id="@+id/tableRow1"
+            <LinearLayout
+                android:id="@+id/linear_layout_1"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="4dp">
-
-
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/loan_repayment_date"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:paddingBottom="8dp">
 
                 <TextView
-                    android:id="@+id/tv_repayment_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="4dp">
-
-                <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tv_clientName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/payment_type"
+                    android:layout_weight="0.8"
+                    android:text="@string/client_name"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <Spinner
-                    android:id="@+id/sp_payment_type"
-                    android:layout_width="0dp"
+                <QuickContactBadge
+                    android:id="@+id/quickContactBadge_client"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </TableRow>
+                    android:layout_gravity="right|end"
+                    android:layout_marginLeft="100dp" />
 
-            <TableRow
-                android:id="@+id/tableRow3"
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider_1"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/linear_layout_1"
+                android:background="@color/black" />
+
+            <LinearLayout
+                android:id="@+id/linear_layout_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/linear_layout_1"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
                 android:padding="4dp">
 
+
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/tv_loan_product_short_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/amount"
+                    android:layout_weight="0.6"
+                    android:text="@string/product_name"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/et_amount"
+                <TextView
+                    android:id="@+id/tv_loanAccountNumber"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="numberDecimal" />
-            </TableRow>
+                    android:layout_weight="0.4"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TableRow
-                android:id="@+id/tableRow4"
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/in_arrears"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/linear_layout_2"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                android:text="@string/loan_in_arrears"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/tv_in_arrears"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/linear_layout_2"
+                android:layout_marginTop="8dp"
+                android:gravity="right"
+                android:padding="4dp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/amount_due"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/in_arrears"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                android:text="@string/loan_amount_due"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/tv_amount_due"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_in_arrears"
+                android:layout_marginTop="8dp"
+                android:gravity="right"
+                android:padding="4dp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+            <View
+                android:id="@+id/divider_2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/amount_due"
+                android:background="@color/black" />
+
+            <TableLayout
+                android:id="@+id/tb_repaymentForm"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:padding="4dp">
+                android:layout_below="@+id/divider_2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp">
 
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/additional_payment"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/et_additional_payment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="numberDecimal" />
-            </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="4dp">
 
-            <TableRow
-                android:id="@+id/tableRow5"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="4dp">
 
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/loan_fees"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/loan_repayment_date"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/et_fees"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="numberDecimal" />
+                    <TextView
+                        android:id="@+id/tv_repayment_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10" />
+                </TableRow>
 
-            </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="4dp">
 
-            <TableRow
-                android:id="@+id/tableRow6"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="4dp">
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/payment_type"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/total"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <Spinner
+                        android:id="@+id/sp_payment_type"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_total"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TableRow
+                    android:id="@+id/tableRow3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="4dp">
 
-            </TableRow>
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/amount"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        </TableLayout>
+                    <EditText
+                        android:id="@+id/et_amount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="numberDecimal" />
+                </TableRow>
 
-        <Button
-            android:id="@+id/bt_cancelPayment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tb_repaymentForm"
-            android:layout_margin="8dp"
-            android:text="@string/cancel" />
+                <TableRow
+                    android:id="@+id/tableRow4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="4dp">
 
-        <Button
-            android:id="@+id/bt_paynow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/tb_repaymentForm"
-            android:layout_margin="8dp"
-            android:text="@string/review_payment" />
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/additional_payment"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    </RelativeLayout>
-</ScrollView>
+                    <EditText
+                        android:id="@+id/et_additional_payment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="numberDecimal" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow5"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/loan_fees"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <EditText
+                        android:id="@+id/et_fees"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="numberDecimal" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow6"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/total"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/tv_total"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/bt_cancelPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tb_repaymentForm"
+                android:layout_margin="8dp"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/bt_paynow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/tb_repaymentForm"
+                android:layout_margin="8dp"
+                android:text="@string/review_payment" />
+
+        </RelativeLayout>
+    </ScrollView>
+</ViewFlipper>

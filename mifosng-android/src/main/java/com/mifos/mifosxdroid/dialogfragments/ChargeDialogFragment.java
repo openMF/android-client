@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.Changes;
 import com.mifos.objects.accounts.savings.Charge;
@@ -51,7 +52,7 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class ChargeDialogFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "ChargeDialogFragment";
     private View rootView;
@@ -133,12 +134,14 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
     }
 
     private void inflateChargesSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getAllChargesV2(clientId,new Callback<Response>() {
 
             @Override
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
                 Log.d(TAG, "");
 
                 final List<Charges> charges = new ArrayList<>();
@@ -197,7 +200,7 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -206,12 +209,13 @@ public class ChargeDialogFragment extends DialogFragment implements MFDatePicker
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void initiateChargesCreation(ChargesPayload chargesPayload) {
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
         App.apiManager.createCharges(clientId, chargesPayload, new Callback<Charges>() {
             @Override

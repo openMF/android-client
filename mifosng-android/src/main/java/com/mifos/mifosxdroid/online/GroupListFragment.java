@@ -17,6 +17,7 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
@@ -31,7 +32,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class GroupListFragment extends MifosBaseFragment {
+public class GroupListFragment extends ProgressableFragment {
 
     @InjectView(R.id.lv_group_list)
     ListView lv_groupList;
@@ -60,7 +61,7 @@ public class GroupListFragment extends MifosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_list, container, false);
         ButterKnife.inject(this, rootView);
-        setToolbarTitle(getResources().getString(R.string.group));
+        setToolbarTitle(getResources().getString(R.string.title_center_list));
         inflateGroupList();
         return rootView;
     }
@@ -87,7 +88,7 @@ public class GroupListFragment extends MifosBaseFragment {
     }
 
     public void inflateGroupList() {
-        showProgress();
+        showProgress(true);
         App.apiManager.getGroupsByCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
             public void success(final CenterWithAssociations centerWithAssociations, Response response) {
@@ -113,13 +114,13 @@ public class GroupListFragment extends MifosBaseFragment {
                             });
                         }
                     });
-                    hideProgress();
+                    showProgress(false);
                 }
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                hideProgress();
+                showProgress(false);
             }
         });
     }

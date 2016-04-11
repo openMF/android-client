@@ -14,6 +14,7 @@ public class CenterListActivity extends MifosBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
+        showBackButton();
         replaceFragment(new CenterListFragment(), false, R.id.container);
     }
 }
