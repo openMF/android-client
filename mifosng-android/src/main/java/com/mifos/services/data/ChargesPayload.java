@@ -14,6 +14,7 @@ public class ChargesPayload {
     private Integer chargeId;
     private Integer clientId;
     private Integer loanId;
+    private Integer accountId;
     private String amount;
     private String locale;
     private String dueDate;
@@ -25,6 +26,14 @@ public class ChargesPayload {
 
     public void setLoanId(Integer loanId) {
         this.loanId = loanId;
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.loanId = accountId;
     }
 
     public String getDateFormat() {
