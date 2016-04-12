@@ -6,15 +6,23 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.mifos.api.ApiRequestInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.client.Client;
+import com.mifos.utils.PrefManager;
 
 import java.util.List;
 
@@ -28,11 +36,13 @@ public class ClientNameListAdapter extends BaseAdapter {
 
     LayoutInflater layoutInflater;
     List<Client> pageItems;
+    private Context mContext;
 
     public ClientNameListAdapter(Context context, List<Client> pageItems){
 
         layoutInflater = LayoutInflater.from(context);
         this.pageItems = pageItems;
+        this.mContext = context;
     }
 
     @Override
@@ -53,7 +63,7 @@ public class ClientNameListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
 
-        ReusableViewHolder reusableViewHolder;
+        final ReusableViewHolder reusableViewHolder;
 
         if(view==null)
         {
@@ -66,9 +76,46 @@ public class ClientNameListAdapter extends BaseAdapter {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_clientName.setText(pageItems.get(position).getFirstname()+" " +pageItems.get(position).getLastname());
+        Client client = getItem(position);
+        reusableViewHolder.tv_clientName.setText(client.getFirstname()+" " +client.getLastname());
+        reusableViewHolder.tv_clientAccountNumber.setText(client.getAccountNo().toString());
 
-        reusableViewHolder.tv_clientAccountNumber.setText(pageItems.get(position).getAccountNo().toString());
+        // lazy the  load profile picture
+        if (client.isImagePresent()) {
+
+            // make the image url
+            String url = PrefManager.getInstanceUrl()
+                    + "/"
+                    + "clients/"
+                    + client.getId()
+                    + "/images?maxHeight=120&maxWidth=120";
+            GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
+                    .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager.getTenant())
+                    .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken())
+                    .addHeader("Accept", "application/octet-stream")
+                    .build());
+
+            // download the image from the url
+            Glide.with(mContext)
+                    .load(glideUrl)
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_dp_placeholder)
+                    .error(R.drawable.ic_dp_placeholder)
+                    .into(new BitmapImageViewTarget(reusableViewHolder.iv_userPicture) {
+                        @Override
+                        protected void setResource(Bitmap result) {
+                            // check a valid bitmap is downloaded
+                            if (result == null || result.getWidth() == 0)
+                                return;
+
+                            // set to image view
+                            reusableViewHolder.iv_userPicture.setImageBitmap(result);
+                        }
+                    });
+        } else
+        {
+            reusableViewHolder.iv_userPicture.setImageResource(R.drawable.ic_dp_placeholder);
+        }
 
         return view;
     }
@@ -77,7 +124,7 @@ public class ClientNameListAdapter extends BaseAdapter {
 
          @InjectView(R.id.tv_clientName) TextView tv_clientName;
          @InjectView(R.id.tv_clientAccountNumber) TextView tv_clientAccountNumber;
-         @InjectView(R.id.quickContactBadge) QuickContactBadge quickContactBadge;
+         @InjectView(R.id.iv_user_picture) ImageView iv_userPicture;
 
          public ReusableViewHolder(View view) {
              ButterKnife.inject(this, view);
