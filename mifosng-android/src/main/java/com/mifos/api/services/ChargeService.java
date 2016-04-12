@@ -46,12 +46,4 @@ public interface ChargeService {
     @POST(APIEndPoint.LOANS +"/{loanId}/charges")
     void createLoanCharges(@Path("loanId") int loanId,@Body ChargesPayload chargesPayload, Callback<Charges> callback);
 
-    @POST("/"+APIEndPoint.SAVINGSACCOUNTS + "/{accountId}"+ APIEndPoint.CHARGES)
-    void createSavingsCharges(@Path("accountId") int accountId, @Body ChargesPayload chargesPayload, Callback<Charges> callback);
-
-    @GET("/"+APIEndPoint.SAVINGSACCOUNTS + "/{accountId}" + APIEndPoint.CHARGES)
-    void getSavingsCharges(@Path("accountId") int clientId, Callback<Page<Charges>> callback);
-
-    @GET("/"+APIEndPoint.SAVINGSACCOUNTS + "/{accountId}/charges/template")
-    void getAllSavingsCharges(@Path("accountId") int accountId, Callback<Response> callback);
 }
