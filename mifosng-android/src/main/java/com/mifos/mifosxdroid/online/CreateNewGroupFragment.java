@@ -74,6 +74,7 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
     Boolean result = true;
     View rootView;
     String dateofsubmissionstring;
+    String whichdatechoosen;
     private DialogFragment mfDatePicker;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
@@ -229,6 +230,7 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                whichdatechoosen = "tvsubmissiondate";
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
@@ -243,6 +245,7 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
         tv_activationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                whichdatechoosen = "tvactivationdate";
                 newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
 
@@ -252,7 +255,8 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
     }
 
     public void onDatePicked(String date) {
-        tv_submissionDate.setText(date);
+        if (whichdatechoosen == "tvsubmissiondate") {
+        tv_submissionDate.setText(date);} else
         tv_activationDate.setText(date);
 
     }
