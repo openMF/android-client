@@ -316,9 +316,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
         if (item.getItemId() == MENU_ITEM_CHARGES)
             loadSavingsCharges();
 
-        else if (id == MENU_ITEM_SEARCH)
-            getActivity().finish();
-
         return super.onOptionsItemSelected(item);
     }
 
