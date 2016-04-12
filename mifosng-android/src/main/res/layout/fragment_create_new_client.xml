@@ -30,7 +30,8 @@
                     android:gravity="start"
                     android:hint="@string/fname"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:inputType="textPersonName"
+                    android:digits="qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                     android:paddingBottom="16dp"
                     android:singleLine="true" />
 
@@ -46,7 +47,8 @@
                     android:gravity="start"
                     android:hint="@string/mname"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:inputType="textPersonName"
+                    android:digits="qwertzuiopasdfghjklyxcvbnmqwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                     android:paddingBottom="16dp"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -59,7 +61,8 @@
                     android:gravity="start"
                     android:hint="@string/lname"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:inputType="textPersonName"
+                    android:digits="qwertzuiopasdfghjklyxcvbnmqwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                     android:paddingBottom="16dp"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
