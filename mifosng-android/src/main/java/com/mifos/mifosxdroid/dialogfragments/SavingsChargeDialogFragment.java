@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.Changes;
 import com.mifos.objects.accounts.savings.Charge;
@@ -51,11 +52,11 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class SavingsChargeDialogFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
-    public static final String TAG = "SavingsChargeDialogFrag";
-    private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
+    public static final String TAG = "SavingsChargeFragment";
+    View rootView;
+    SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
@@ -69,31 +70,31 @@ public class SavingsChargeDialogFragment extends DialogFragment implements MFDat
     Button bt_save_charge;
     private DialogFragment mfDatePicker;
     private int Id;
-    private int accountId;
+    private int savingsAccountNumber;
     String duedateString;
     private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<String, Integer>();
     private String chargeName;
 
-    public static SavingsChargeDialogFragment newInstance(int accountId) {
-        SavingsChargeDialogFragment chargeDialogFragment = new SavingsChargeDialogFragment();
+    public static SavingsChargeDialogFragment newInstance(int savingsAccountNumber) {
+        SavingsChargeDialogFragment savingsChargeDialogFragment = new SavingsChargeDialogFragment();
         Bundle args = new Bundle();
-        args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, accountId);
-        chargeDialogFragment.setArguments(args);
-        return chargeDialogFragment;
+        args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber);
+        savingsChargeDialogFragment.setArguments(args);
+        return savingsChargeDialogFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
-            accountId = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
+            savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         if (getArguments() != null)
-            accountId = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
+            savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
         return super.onCreateDialog(savedInstanceState);
     }
 
@@ -133,12 +134,13 @@ public class SavingsChargeDialogFragment extends DialogFragment implements MFDat
     }
 
     private void inflateChargesSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
-        App.apiManager.getAllSavingsCharges(accountId,new Callback<Response>() {
+        showProgress(true);
+        App.apiManager.getAllSavingsCharges(savingsAccountNumber,new Callback<Response>() {
 
             @Override
             public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
                 Log.d(TAG, "");
 
                 final List<Charges> charges = new ArrayList<>();
@@ -197,7 +199,7 @@ public class SavingsChargeDialogFragment extends DialogFragment implements MFDat
                     }
                 });
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
 
             }
 
@@ -206,14 +208,16 @@ public class SavingsChargeDialogFragment extends DialogFragment implements MFDat
 
                 System.out.println(retrofitError.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
     }
 
     private void initiateChargesCreation(ChargesPayload chargesPayload) {
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
-        App.apiManager.createSavingsCharges(accountId, chargesPayload, new Callback<Charges>() {
+
+        App.apiManager.createSavingsCharges(savingsAccountNumber, chargesPayload, new Callback<Charges>() {
             @Override
             public void success(Charges charges, Response response) {
                 safeUIBlockingUtility.safelyUnBlockUI();

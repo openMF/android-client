@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.InterestType;
 import com.mifos.objects.client.Savings;
@@ -49,12 +50,11 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class GroupSavingsAccountFragment extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class GroupSavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "GroupSavingsAccFragment";
-    private View rootView;
+    View rootView;
     private Context context;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_product)
     Spinner sp_product;
@@ -86,11 +86,11 @@ public class GroupSavingsAccountFragment extends DialogFragment implements MFDat
     private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
     public static GroupSavingsAccountFragment newInstance(int groupId) {
-        GroupSavingsAccountFragment savingsAccountFragment = new GroupSavingsAccountFragment();
+        GroupSavingsAccountFragment groupSavingsAccountFragment = new GroupSavingsAccountFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.GROUP_ID, groupId);
-        savingsAccountFragment.setArguments(args);
-        return savingsAccountFragment;
+        groupSavingsAccountFragment.setArguments(args);
+        return groupSavingsAccountFragment;
     }
 
     @Override
@@ -142,8 +142,7 @@ public class GroupSavingsAccountFragment extends DialogFragment implements MFDat
     }
 
     private void inflateSavingsSpinner() {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
         App.apiManager.getSavingsAccounts(new Callback<List<ProductSavings>>() {
 
             @Override
@@ -174,12 +173,14 @@ public class GroupSavingsAccountFragment extends DialogFragment implements MFDat
 
                     }
                 });
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                System.out.println(retrofitError.getLocalizedMessage());
+
+                showProgress(false);
             }
         });
     }
@@ -324,18 +325,16 @@ public class GroupSavingsAccountFragment extends DialogFragment implements MFDat
 
     private void initiateGroupSavingsCreation(GroupSavingsPayload savingsPayload) {
 
-        safeUIBlockingUtility.safelyBlockUI();
-
         App.apiManager.createGroupSavingsAccount(savingsPayload, new Callback<Savings>() {
             @Override
             public void success(Savings savings, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "The Savings Account has been submitted for Approval", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
             }
         });
@@ -369,7 +368,7 @@ public class GroupSavingsAccountFragment extends DialogFragment implements MFDat
                     inflateInterestPostingPeriodType();
                 }
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
 
 
@@ -377,7 +376,7 @@ public class GroupSavingsAccountFragment extends DialogFragment implements MFDat
             public void failure(RetrofitError error) {
                 System.out.println(error.getLocalizedMessage());
 
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
             }
         });
 
