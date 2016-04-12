@@ -71,6 +71,13 @@ public interface SavingsAccountService {
         @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
         void createGroupSavingsAccount(@Body GroupSavingsPayload savingsPayload, Callback<Savings> callback);
 
+
+        @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template?templateType=group")
+        void getGroupSavingsAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> groupSavingsCallback);
+
+        @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
+        void createGroupSavingsAccount(@Body GroupSavingsPayload savingsPayload, Callback<Savings> callback);
+
         @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template?templateType=group")
         void getGroupSavingsAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> groupSavingsCallback);
 
