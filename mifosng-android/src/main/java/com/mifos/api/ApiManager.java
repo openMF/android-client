@@ -427,6 +427,12 @@ public class ApiManager extends BaseApiManager {
     public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
         getChargeService().getListOfCharges(clientId, callback);
     }
+    public void getSavingsCharges(int accountId,Callback<Page<Charges>> callback) {
+        getChargeService().getSavingsCharges(accountId,callback);
+    }
+    public void getAllSavingsCharges(int accountId,Callback<Response> callback) {
+        getChargeService().getAllSavingsCharges(accountId, callback);
+    }
 
     public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
         getChargeService().createCharges(clientId, payload, callback);
@@ -434,6 +440,10 @@ public class ApiManager extends BaseApiManager {
 
     public void createLoanCharges(int loanId,ChargesPayload chargesPayload, Callback<Charges> callback){
         getChargeService().createLoanCharges(loanId,chargesPayload,callback);
+    }
+
+    public void createSavingsCharges(int accountId, ChargesPayload payload, Callback<Charges> callback) {
+        getChargeService().createSavingsCharges(accountId, payload, callback);
     }
 
 
