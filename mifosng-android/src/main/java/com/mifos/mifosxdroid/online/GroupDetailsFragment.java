@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -140,6 +141,9 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 break;
             case R.id.add_group_loan:
                 addgrouploanaccount();
+                break;
+            case R.id.list_client_grp:
+                listclientgrp();
                 break;
 
         }
@@ -281,7 +285,14 @@ public class GroupDetailsFragment extends ProgressableFragment {
     }
 
 
+public void listclientgrp(){
 
+    GroupClientListFragment groupClientListFragment = GroupClientListFragment.newInstance(groupId);
+    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
+    fragmentTransaction.replace(R.id.container, groupClientListFragment);
+    fragmentTransaction.commit();
+}
 
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, groupId);

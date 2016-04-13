@@ -5,6 +5,8 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.client.Client;
+import com.mifos.objects.client.GroupClient;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
@@ -27,6 +29,9 @@ import retrofit.http.QueryMap;
 public interface GroupService {
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
     void getGroupWithAssociations(@Path("groupId") int groupId, Callback<GroupWithAssociations> groupWithAssociationsCallback);
+
+    @GET(APIEndPoint.GROUPS + "/{groupId}?associations=clientMembers")
+    void getClientsWithGroup(@Path("groupId") int groupId, Callback<GroupClient<Client>> callback);
 
     @GET(APIEndPoint.GROUPS)
     void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params, Callback<List<Group>> listOfGroupsCallback);
