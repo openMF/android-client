@@ -6,7 +6,6 @@ package com.mifos.services.data;
 public class SavingsPayload {
 
     private Integer productId;
-    private Integer clientId;
     private Integer fieldOfficerId;
     private String locale;
     private String dateFormat;
@@ -38,13 +37,7 @@ public class SavingsPayload {
         this.productId = productId;
     }
 
-    public Integer getClientId() {
-        return clientId;
-    }
 
-    public void setClientId(Integer clientId) {
-        this.clientId = clientId;
-    }
 
     public Integer getFieldOfficerId() {
         return fieldOfficerId;

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.client.Client;
+import com.mifos.utils.Constants;
 
 import java.util.List;
 
@@ -49,5 +50,11 @@ public class CentersActivity extends MifosBaseActivity implements CenterListFrag
     @Override
     public void loadClientsOfGroup(List<Client> clientList) {
         replaceFragment(ClientListFragment.newInstance(clientList, true), true, R.id.container);
+    }
+
+    @Override
+    public void addSavingsAccount(int centerId) {
+        replaceFragment(SavingsAccountFragment.newInstance(centerId, Constants.ClientType.CENTER), true, R.id.container);
+
     }
 }

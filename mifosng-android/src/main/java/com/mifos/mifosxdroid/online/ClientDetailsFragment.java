@@ -549,7 +549,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     }
 
     public void addsavingsaccount() {
-        SavingsAccountFragment savingsAccountFragment = SavingsAccountFragment.newInstance(clientId);
+        SavingsAccountFragment savingsAccountFragment = SavingsAccountFragment.newInstance(clientId, Constants.ClientType.CLIENT);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, savingsAccountFragment);

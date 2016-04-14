@@ -5,7 +5,6 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -29,6 +28,7 @@ import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.SavingsPayload;
+import com.mifos.services.data.SavingsPayloadFactory;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
@@ -76,6 +76,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
+    private Constants.ClientType clientType;
     private int interestCalculationTypeAdapterId;
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
@@ -84,10 +85,11 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
     private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
-    public static SavingsAccountFragment newInstance(int clientId) {
+    public static SavingsAccountFragment newInstance(int clientId, Constants.ClientType clientType) {
         SavingsAccountFragment savingsAccountFragment = new SavingsAccountFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.CLIENT_ID, clientId);
+        args.putInt(Constants.CLIENT_TYPE, clientType.ordinal());
         savingsAccountFragment.setArguments(args);
         return savingsAccountFragment;
     }
@@ -95,10 +97,12 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             clientId = getArguments().getInt(Constants.CLIENT_ID);
+            int clientTypeInt = getArguments().getInt(Constants.CLIENT_TYPE);
+            clientType = Constants.ClientType.values()[clientTypeInt];
+        }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,12 +119,12 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
             @Override
             public void onClick(View view) {
 
-                SavingsPayload savingsPayload = new SavingsPayload();
+                SavingsPayload savingsPayload =  SavingsPayloadFactory.createSavingsPayload(clientId, clientType);
+
                 savingsPayload.setExternalId(et_client_external_id.getEditableText().toString());
                 savingsPayload.setLocale("en");
                 savingsPayload.setSubmittedOnDate(submittion_date);
                 savingsPayload.setDateFormat("dd MMMM yyyy");
-                savingsPayload.setClientId(clientId);
                 savingsPayload.setProductId(productId);
                 savingsPayload.setNominalAnnualInterestRate(et_nominal_annual.getEditableText().toString());
                 savingsPayload.setInterestCompoundingPeriodType(interestCompoundingPeriodTypeId);

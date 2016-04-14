@@ -1,5 +1,7 @@
 package com.mifos.mifosxdroid.tests;
 
+import android.support.v4.app.Fragment;
+import android.support.v7.view.menu.ActionMenuItem;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ViewAsserts;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -11,9 +13,12 @@ import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CentersActivity;
+import com.mifos.mifosxdroid.online.GroupListFragment;
+import com.mifos.mifosxdroid.online.SavingsAccountFragment;
 
 
 import static android.support.test.espresso.Espresso.onData;
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -119,6 +124,53 @@ public class CenterListFragmentTest extends ActivityInstrumentationTestCase2<Cen
 
         assertEquals(getActivity().getTitle().toString(), "Centers");
 
+    }
 
+    /**
+     * - open center list
+     * - open the first center
+     * - choose "Add Savings account"
+     */
+    @MediumTest
+    public void testOpenAddSavingsAccount() throws InterruptedException {
+
+        // open a center
+        Thread.sleep(2000);
+        onData(org.hamcrest.core.IsAnything.anything())
+                .inAdapterView(withId(R.id.lv_center_list))
+                .atPosition(0)
+                .perform(click());
+
+        // choose option menu
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+        GroupListFragment groupListFragment =
+                (GroupListFragment) getActivity()
+                        .getSupportFragmentManager()
+                        .findFragmentById(R.id.container);
+        chooseOptionItem(groupListFragment, R.id.itemAddSavingsAccount);
+        Thread.sleep(2000);
+
+        // check the savings account fragment is there
+        SavingsAccountFragment savingsAccountFragment =
+                (SavingsAccountFragment) getActivity()
+                        .getSupportFragmentManager()
+                        .findFragmentById(R.id.container);
+        assertNotNull(savingsAccountFragment);
+
+
+    }
+
+    /**
+     * a work around to choose from an options menu made from the fragment not the activity
+     * so getInstrumentation().invokeMenuActionSync(getActivity(), R.id.charges, 0) wont work
+     */
+    public void chooseOptionItem(final Fragment fragment, final int id) {
+        centersActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final ActionMenuItem item = new ActionMenuItem(centersActivity, 0, id, 0, 0, "");
+                fragment.onOptionsItemSelected(item);
+            }
+        });
     }
 }
