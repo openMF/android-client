@@ -18,7 +18,7 @@ import retrofit.http.Path;
  * @author fomenkoo
  */
 public interface GpsCoordinatesService {
-    @POST(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}")
+    @POST(APIEndPoint.DATATABLES + "/GPSTable/{clientId}")
     void setGpsCoordinates(@Path("clientId") int clientId,
                            @Body GpsCoordinatesRequest gpsCoordinatesRequest,
                            Callback<GpsCoordinatesResponse> gpsCoordinatesResponseCallback);

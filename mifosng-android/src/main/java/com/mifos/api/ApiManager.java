@@ -8,19 +8,22 @@ package com.mifos.api;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.mifos.api.model.ClientAddress;
+import com.mifos.api.model.ClientAddressAddRequest;
+import com.mifos.api.model.ClientAddressResponse;
+import com.mifos.api.model.ClientAddressUpdateRequest;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
+import com.mifos.api.model.GpsLocationSurvey;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.api.model.ScorecardPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
-import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
@@ -232,14 +235,14 @@ public class ApiManager extends BaseApiManager {
     }
 
     public void getLoansAccountTemplate( int clientId, int productId,Callback<Response> loanCallback){
-        getLoanApi().getLoansAccountTemplate(clientId,productId,loanCallback);
+        getLoanApi().getLoansAccountTemplate(clientId, productId, loanCallback);
     }
 
     public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback){
         getLoanApi().createLoansAccount(loansPayload, callback);  }
 
     public void getLoanTemplate(int loanId,Callback<Response> loanTemplateCallback){
-        getLoanApi().getLoanTemplate(loanId,loanTemplateCallback);
+        getLoanApi().getLoanTemplate(loanId, loanTemplateCallback);
 
     }
 
@@ -248,14 +251,14 @@ public class ApiManager extends BaseApiManager {
     }
 
     public void getGroupLoansAccountTemplate( int groupId,int productId, Callback<Response> grouploanCallback){
-        getLoanApi().getGroupLoansAccountTemplate(groupId,productId,grouploanCallback);
+        getLoanApi().getGroupLoansAccountTemplate(groupId, productId, grouploanCallback);
     }
 
    public void getListOfLoanCharges( int loanId,Callback<Page<Charges>> loanchargeListCallback) {
        getLoanApi().getListOfLoanCharges(loanId, loanchargeListCallback);
    }
        public void getListOfCharges ( int clientId, Callback<Page<Charges>> chargeListCallback){
-        getLoanApi().getListOfCharges(clientId,chargeListCallback);
+        getLoanApi().getListOfCharges(clientId, chargeListCallback);
     }
 
 
@@ -286,7 +289,7 @@ public class ApiManager extends BaseApiManager {
 
     }
     public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval, Callback<GenericResponse> callback) {
-        getSavingsApi().approveSavingsApplication(savingsAccountId,savingsApproval, callback);
+        getSavingsApi().approveSavingsApplication(savingsAccountId, savingsApproval, callback);
 
     }
 
@@ -319,6 +322,29 @@ public class ApiManager extends BaseApiManager {
         getGpsApi().updateGpsCoordinates(client, request, callback);
     }
 
+    /**
+     * GPS Survey API
+     */
+
+    public void sendLocationSurvey(int client, GpsLocationSurvey request, Callback<GpsLocationSurvey> callback) {
+        getGpsSurveyLocationApi().setSurveyLocation(client, request, callback);
+    }
+
+    /**
+     * Client Address List API
+     */
+
+    public void getClientAddress(int client, Callback<List<ClientAddress>> callback) {
+        getClientAddressListApi().receiveClientAddressList(client, callback);
+    }
+
+    public void updateClientAddressRow(int client, int row, ClientAddressUpdateRequest request, Callback<ClientAddressResponse> callback) {
+        getClientAddressListApi().updateAddressEntry(client, row, request, callback);
+    }
+
+    public void addClientAddress(int client, ClientAddressAddRequest request, Callback<ClientAddressResponse> callback) {
+        getClientAddressListApi().addAddressEntry(client, request, callback);
+    }
     /**
      * Groups API
      */
