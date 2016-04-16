@@ -84,6 +84,7 @@ public class GroupsListFragment extends MifosBaseFragment {
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_groups, container, false);
+        setToolbarTitle(getResources().getString(R.string.groups));
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
         ButterKnife.inject(this, rootView);

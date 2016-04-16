@@ -6,18 +6,21 @@
 package com.mifos.mifosxdroid.online;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.utils.EspressoIdlingResource;
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class DashboardFragmentActivity extends MifosBaseActivity {
+public class DashboardActivity extends MifosBaseActivity {
 
-    public final static String TAG = DashboardFragmentActivity.class.getSimpleName();
+    public final static String TAG = DashboardActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +72,10 @@ public class DashboardFragmentActivity extends MifosBaseActivity {
         replaceFragment(CreateNewGroupFragment.newInstance(), true, R.id.container);
     }
 
-
+    @VisibleForTesting
+    public IdlingResource getCountingIdlingResource() {
+        return EspressoIdlingResource.getIdlingResource();
+    }
 }
 
 

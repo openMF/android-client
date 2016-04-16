@@ -38,6 +38,9 @@ import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.online.CentersActivity;
+import com.mifos.mifosxdroid.online.ClientListFragment;
+import com.mifos.mifosxdroid.online.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.GroupsListFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.PrefManager;
 
@@ -152,47 +155,45 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         // ignore the current selected item
-        if (item.isChecked())
+        if (item.isChecked()) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
             return false;
+        }
 
         // select which activity to open
         final Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.item_dashboard:
-                return true;
+                replaceFragment(new ClientSearchFragment(), false, R.id.container);
+                break;
             case R.id.item_clients:
-                intent.setClass(getApplicationContext(), ClientListActivity.class);
+                replaceFragment(new ClientListFragment(), false, R.id.container);
                 break;
             case R.id.item_groups:
-                intent.setClass(getApplicationContext(), GroupListActivity.class);
+                replaceFragment(new GroupsListFragment(), false, R.id.container);
                 break;
             case R.id.item_centers:
                 intent.setClass(getApplicationContext(), CentersActivity.class);
+                startNavigationClickActivity(intent);
                 break;
             case R.id.item_survey:
                 intent.setClass(getApplicationContext(), SurveyActivity.class);
+                startNavigationClickActivity(intent);
                 break;
             case R.id.item_path_tracker:
                 intent.setClass(getApplicationContext(), PathTrackingActivity.class);
+                startNavigationClickActivity(intent);
                 break;
             case R.id.item_offline:
                 intent.setClass(getApplicationContext(), OfflineCenterInputActivity.class);
+                startNavigationClickActivity(intent);
                 break;
 
         }
 
         // close the drawer
         mDrawerLayout.closeDrawer(Gravity.LEFT);
-
-        // launch the activity after some milliseconds to show the drawer close animation
-        android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(intent);
-                mNavigationView.setCheckedItem(R.id.item_dashboard);
-            }
-        }, 500);
+        mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
     }
 
@@ -287,5 +288,15 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         );
     }
 
+    public void startNavigationClickActivity(final Intent intent){
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(intent);
+
+            }
+        }, 500);
+    }
 
 }
