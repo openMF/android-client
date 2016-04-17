@@ -94,7 +94,6 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
                 fetchClientList();
             }
         });
@@ -106,7 +105,6 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
         ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(getContext(), clientList);
         rv_clients.setAdapter(clientNameListAdapter);
 
-        hideProgress();
         // initialize OnScroll Listener
         if (isInfiniteScrollEnabled)
             setInfiniteScrollListener(clientNameListAdapter);
@@ -114,7 +112,12 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
 
     public void fetchClientList() {
         EspressoIdlingResource.increment(); // App is busy until further notice.
-        showProgress();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
             totalFilteredRecords = 0;
             App.apiManager.listClients(new Callback<Page<Client>>() {
                 @Override
@@ -132,7 +135,8 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
                     if (swipeRefreshLayout.isRefreshing())
                         swipeRefreshLayout.setRefreshing(false);
                     Toaster.show(rootView, "There was some error fetching list.");
-                    hideProgress();
+                    if (swipeRefreshLayout.isRefreshing())
+                        swipeRefreshLayout.setRefreshing(false);
                     EspressoIdlingResource.decrement(); // App is idle.
                 }
             });
@@ -148,7 +152,12 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
             @Override
             public void onLoadMore(int current_page) {
                 Toaster.show(rootView, "Loading More Clients");
-                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(true);
+                    }
+                });
                 App.apiManager.listClients(clientList.size(), limit, new Callback<Page<Client>>() {
                     @Override
                     public void success(Page<Client> clientPage, Response response) {

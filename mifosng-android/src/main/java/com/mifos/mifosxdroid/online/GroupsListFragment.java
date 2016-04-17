@@ -130,7 +130,12 @@ public class GroupsListFragment extends MifosBaseFragment {
             inflateGroupList();
         } else {
 
-            swipeRefreshLayout.setRefreshing(true);
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            });
             App.apiManager.listAllGroup(new Callback<Page<Group>>() {
                 @Override
                 public void success(Page<Group> page, Response response) {
@@ -193,7 +198,12 @@ public class GroupsListFragment extends MifosBaseFragment {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
 
                     offset += limit + 1;
-                    swipeRefreshLayout.setRefreshing(true);
+                    swipeRefreshLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            swipeRefreshLayout.setRefreshing(true);
+                        }
+                    });
 
                     App.apiManager.listAllGroups(offset, limit, new Callback<Page<Group>>() {
                         @Override
