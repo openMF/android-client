@@ -81,6 +81,13 @@ android {
         exclude 'LICENSE.txt'
     }
     useLibrary 'org.apache.http.legacy'
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
@@ -116,6 +123,7 @@ dependencies {
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.google.maps.android:android-maps-utils:0.4.2'
 
     compile 'com.android.support:design:23.1.1'
@@ -129,13 +137,39 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    // Test libraries provided by https://code.google.com/p/android-test-kit/
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+    compile "com.android.support.test.espresso:espresso-idling-resource:2.2.1"
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile "com.android.support.test:rules:0.5"
+
+    // Espresso UI Testing dependencies.
+    androidTestCompile "com.android.support.test.espresso:espresso-core:2.2.2"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:2.2.1"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:2.2.1"
 
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
 }
+    /*
+    Resolves dependency versions across test and production APKs, specifically, transitive
+    dependencies. This is required since Espresso internally has a dependency on support-annotations.
+    */
+    configurations.all {
+        resolutionStrategy.force "com.android.support:support-annotations:23.1.1"
+    }
+
+    /*
+    All direct/transitive dependencies shared between your test and production APKs need to be
+    excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+    excluding these dependencies from your test configuration will result in an dex pre-verifier error
+    at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+    */
+    configurations.compile.dependencies.each { compileDependency ->
+        println "Excluding compile dependency: ${compileDependency.getName()}"
+        configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+            configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+        }
+    }

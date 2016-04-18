@@ -40,7 +40,7 @@
             android:label="@string/login"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".online.DashboardFragmentActivity"
+            android:name=".online.DashboardActivity"
             android:label="@string/dashboard"
             android:theme="@style/TraslucentActionBarTheme"
             android:screenOrientation="portrait" />
@@ -74,26 +74,26 @@
         <activity
             android:name=".OfflineCenterInputActivity"
             android:label="Offline Center Input"
-            android:parentActivityName=".online.DashboardFragmentActivity"
+            android:parentActivityName=".online.DashboardActivity"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".online.CentersActivity"
             android:label="@string/title_activity_centers"
-            android:parentActivityName=".online.DashboardFragmentActivity">
+            android:parentActivityName=".online.DashboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
+                android:value=".online.DashboardActivity" />
         </activity>
 
 
         <activity
             android:name=".online.GenerateCollectionSheet"
             android:label="@string/title_activity_generate_collection_sheet"
-            android:parentActivityName=".online.DashboardFragmentActivity">
+            android:parentActivityName=".online.DashboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mifos.mifosxdroid.online.DashboardFragmentActivity" />
+                android:value=".online.DashboardActivity" />
         </activity>
         <activity
             android:name=".CenterListActivity"

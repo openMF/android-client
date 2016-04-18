@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CreateNewClientFragment;
-import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -24,10 +24,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 /**
  * Created by ahmed fathy on 26/03/16.
  */
-public class CreateNewClientFragmentTest extends ActivityInstrumentationTestCase2<DashboardFragmentActivity> {
+public class CreateNewClientFragmentTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
 
     /* fields */
-    private DashboardFragmentActivity dashboardActivity;
+    private DashboardActivity dashboardActivity;
     private CreateNewClientFragment createNewClientFragment;
 
     /* views */
@@ -36,7 +36,7 @@ public class CreateNewClientFragmentTest extends ActivityInstrumentationTestCase
     private CheckBox checkBoxActive;
 
     public CreateNewClientFragmentTest() {
-        super(DashboardFragmentActivity.class);
+        super(DashboardActivity.class);
     }
 
     @Override
