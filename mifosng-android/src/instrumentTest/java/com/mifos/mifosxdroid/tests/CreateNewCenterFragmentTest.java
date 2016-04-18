@@ -14,7 +14,7 @@ import android.widget.Spinner;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CreateNewCenterFragment;
-import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -37,12 +37,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 /**
  * Created by ahmed fathy on 17/04/16.
  */
-public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase2<DashboardFragmentActivity> {
+public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
 
-    private DashboardFragmentActivity mActivity;
+    private DashboardActivity mActivity;
 
     public CreateNewCenterFragmentTest() {
-        super(DashboardFragmentActivity.class);
+        super(DashboardActivity.class);
     }
 
     @Override
