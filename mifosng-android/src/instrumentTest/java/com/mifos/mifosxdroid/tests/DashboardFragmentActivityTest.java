@@ -29,15 +29,12 @@ import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientSearchFragment;
-import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 
-import java.util.regex.Matcher;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -45,9 +42,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  * Created by Gabriel Esteban on 06/12/14.
  */
 @Suppress // TODO: Fix NPE
-public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCase2<DashboardFragmentActivity> {
+public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
 
-    DashboardFragmentActivity dashboardActivity;
+    DashboardActivity dashboardActivity;
     EditText et_searchById;
     Button bt_searchClient;
     ListView lv_searchResults;
@@ -55,7 +52,7 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
     ClientSearchFragment searchFragment;
 
     public DashboardFragmentActivityTest() {
-        super(DashboardFragmentActivity.class);
+        super(DashboardActivity.class);
     }
 
     @Override

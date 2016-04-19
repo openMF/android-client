@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.online.DashboardFragmentActivity;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.objects.User;
 import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
@@ -151,7 +151,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         // Saving user's token
         PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
 
-        startActivity(new Intent(LoginActivity.this, DashboardFragmentActivity.class));
+        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
         finish();
     }
 

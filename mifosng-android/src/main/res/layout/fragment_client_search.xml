@@ -6,7 +6,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LinearLayout.Base">
 
-    <TextView style="@style/TextView.Search" />
+    <TextView
+        android:id="@+id/tv_search"
+        style="@style/TextView.Search" />
 
     <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
