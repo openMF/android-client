@@ -17,6 +17,7 @@ public class SavingsPayload {
     private Integer interestCalculationType;
     private Integer interestCalculationDaysInYearType;
     private Integer interestPostingPeriodType;
+    private int lockInPeriodFrequencyType;
 
     public Integer getInterestCompoundingPeriodType() {
         return interestCompoundingPeriodType;
@@ -113,5 +114,12 @@ public class SavingsPayload {
 
     public void setInterestPostingPeriodType(Integer interestPostingPeriodType) {
         this.interestPostingPeriodType = interestPostingPeriodType;
+    }
+    public Integer getLockInPeriodFrequencyType() {
+        return lockInPeriodFrequencyType;
+    }
+
+    public void setLockInPeriodFrequencyType(Integer lockInPeriodFrequencyType) {
+        this.lockInPeriodFrequencyType = lockInPeriodFrequencyType;
     }
 }

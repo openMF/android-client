@@ -150,6 +150,89 @@
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
+            <TextView
+                android:id="@+id/tv_field_officer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/field_officer"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_field_officer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_currency_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/currency"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_currency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/currency"
+                android:paddingBottom="16dp"
+                android:paddingTop="10dp"
+                android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/ck_overdraft_allowed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/savings_overdraft_allowed"
+                android:textSize="16sp" />
+
+            <CheckBox
+                android:id="@+id/ck_transfer_withdrawal_fee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/savings_withdrawal_fee"
+                android:textSize="16sp" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_maximum_overdraft"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/maximum_overdraft_amount"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_lock_in_period_duration"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/lock_in_period"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/sp_lock_in_period_frequency"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
             <Button
                 android:id="@+id/bt_submit"
                 style="@style/Button.Base"

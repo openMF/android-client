@@ -25,6 +25,7 @@ public interface StaffService {
         @GET(APIEndPoint.STAFF)
         void getAllStaff(Callback<List<Staff>> listOfStaffsCallback);
 
-
+    @GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
+    void getFieldStaffForOffice(Callback<List<Staff>> staffListCallback);
 
 }

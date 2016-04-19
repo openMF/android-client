@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,8 +26,11 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.InterestType;
+import com.mifos.objects.accounts.savings.FieldOfficerOptions;
+import com.mifos.objects.accounts.savings.LockinPeriodFrequencyType;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.ProductSavings;
+import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
@@ -34,6 +38,11 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.SafeUIBlockingUtility;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,17 +80,34 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     Spinner sp_interest_p_period;
     @InjectView(R.id.sp_days_in_year)
     Spinner sp_days_in_year;
+    @InjectView(R.id.sp_field_officer)
+    Spinner sp_field_officer;
+    @InjectView(R.id.tv_currency)
+    TextView tv_currency;
+    @InjectView(R.id.ck_overdraft_allowed)
+    CheckBox ck_overdraft_allowed;
+    @InjectView(R.id.ck_transfer_withdrawal_fee)
+    CheckBox ck_transfer_withdrawal_fee;
+    @InjectView(R.id.et_maximum_overdraft)
+    EditText et_maximum_overdraft;
+    @InjectView(R.id.sp_lock_in_period_frequency)
+    Spinner sp_lock_in_period_frequency;
+    @InjectView(R.id.et_lock_in_period_duration)
+    EditText et_lock_in_period_duration;
     @InjectView(R.id.bt_submit)
     Button bt_submit;
     private DialogFragment mfDatePicker;
     private int productId;
+    private int fieldOfficerId;
     private int clientId;
     private int interestCalculationTypeAdapterId;
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
     private int interestCalculationDaysInYearTypeId;
+    private int lockInPeriodFrequencyTypeId;
     private String submittion_date;
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
     public static SavingsAccountFragment newInstance(int clientId) {
@@ -107,6 +133,9 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         inflatesubmissionDate();
         inflateSavingsSpinner();
         getSavingsAccountTemplateAPI();
+        inflateLockInPeriodFrequencyType();
+        //inflateStaffSpinner();
+        inflateLoanOfficerSpinner();
 
         submittion_date = tv_submittedon_date.getText().toString();
         submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submittion_date).replace("-", " ");
@@ -122,11 +151,13 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 savingsPayload.setDateFormat("dd MMMM yyyy");
                 savingsPayload.setClientId(clientId);
                 savingsPayload.setProductId(productId);
+                savingsPayload.setFieldOfficerId(fieldOfficerId);
                 savingsPayload.setNominalAnnualInterestRate(et_nominal_annual.getEditableText().toString());
                 savingsPayload.setInterestCompoundingPeriodType(interestCompoundingPeriodTypeId);
                 savingsPayload.setInterestPostingPeriodType(interestPostingPeriodTypeId);
                 savingsPayload.setInterestCalculationType(interestCalculationTypeAdapterId);
                 savingsPayload.getInterestCalculationDaysInYearType();
+                savingsPayload.setLockInPeriodFrequencyType(lockInPeriodFrequencyTypeId);
 
                 initiateSavingCreation(savingsPayload);
             }
@@ -322,6 +353,166 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     }
 
+    private void inflateLoanOfficerSpinner() {
+        showProgress(true);
+        App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
+            @Override
+
+            public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+
+                Log.d(TAG, "");
+
+                final List<FieldOfficerOptions> termFrequencyType = new ArrayList<>();
+                // you can use this array to populate your spinner
+                final ArrayList<String> termFrequencyTypeNames = new ArrayList<String>();
+                //Try to get response body
+                BufferedReader reader = null;
+                StringBuilder sb = new StringBuilder();
+                try {
+                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    JSONObject obj = new JSONObject(sb.toString());
+                    if (obj.has("loanOfficerOptions")) {
+                        JSONArray termFrequencyTypes = obj.getJSONArray("loanOfficerOptions");
+                        for (int i = 0; i < termFrequencyTypes.length(); i++) {
+                            JSONObject termFrequencyTypeObject = termFrequencyTypes.getJSONObject(i);
+                            FieldOfficerOptions loanOfficerOptions = new FieldOfficerOptions();
+                            loanOfficerOptions.setId(termFrequencyTypeObject.optInt("id"));
+                            loanOfficerOptions.setDisplayName(termFrequencyTypeObject.optString("displayName"));
+                            termFrequencyType.add(loanOfficerOptions);
+                            termFrequencyTypeNames.add(termFrequencyTypeObject.optString("value"));
+                            staffNameIdHashMap.put(loanOfficerOptions.getDisplayName(), loanOfficerOptions.getId());
+                        }
+
+                    }
+                    String stringResult = sb.toString();
+                } catch (Exception e) {
+                    Log.e(TAG, "", e);
+                }
+                final ArrayAdapter<String> termFrequencyTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, termFrequencyTypeNames);
+                termFrequencyTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_field_officer.setAdapter(termFrequencyTypeAdapter);
+                sp_field_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        fieldOfficerId = staffNameIdHashMap.get(termFrequencyTypeNames.get(i));
+                        Log.d("loanOfficerOptions" + termFrequencyTypeNames.get(i), String.valueOf(fieldOfficerId));
+                        if (fieldOfficerId != -1) {
+
+
+                        } else {
+
+                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                showProgress(false);
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+                showProgress(false);
+            }
+        });
+    }
+    public void inflateStaffSpinner() {
+
+        App.apiManager.getFieldOfficers(new Callback<List<Staff>>() {
+            @Override
+            public void success(List<Staff> staffs, Response response) {
+
+                final List<String> staffNames = new ArrayList<String>();
+                for (Staff staff : staffs) {
+                    staffNames.add(staff.getDisplayName());
+                    staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
+                }
+                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, staffNames);
+                staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_field_officer.setAdapter(staffAdapter);
+                sp_field_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        fieldOfficerId = staffNameIdHashMap.get(staffNames.get(position));
+                        Log.d("staffId " + staffNames.get(position), String.valueOf(fieldOfficerId));
+                        if (fieldOfficerId != -1) {
+
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.error_select_officer), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+
+                });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.out.println(error.getLocalizedMessage());
+
+            }
+        });
+    }
+
+    private void inflateLockInPeriodFrequencyType() {
+
+        final ArrayList<String> LockinPeriodFrequencyType = filterListObject
+                (savingproductstemplate.getLockinPeriodFrequencyTypeOptions());
+
+        final ArrayAdapter<String> lockInPeriodFrequencyTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, LockinPeriodFrequencyType);
+        lockInPeriodFrequencyTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_lock_in_period_frequency.setAdapter(lockInPeriodFrequencyTypeAdapter);
+        sp_lock_in_period_frequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                lockInPeriodFrequencyTypeId = savingproductstemplate
+                        .getLockinPeriodFrequencyTypeOptions().get(i).getId();
+                Log.d("lockInPeriodFrequency" + LockinPeriodFrequencyType.get(i), String.valueOf(lockInPeriodFrequencyTypeId));
+                if (lockInPeriodFrequencyTypeId != -1) {
+
+
+                }
+                else {
+
+                    Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
     private void initiateSavingCreation(SavingsPayload savingsPayload) {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
@@ -392,7 +583,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         for (InterestType interestType : interestTypes) {
             InterestValueList.add(interestType.getValue());
         }
-
+        
         return InterestValueList;
     }
 }
