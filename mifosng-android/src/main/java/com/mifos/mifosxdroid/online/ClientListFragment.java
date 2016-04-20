@@ -101,6 +101,12 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
         return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        lv_clients.setVisibility(View.GONE);
+        super.onDestroyView();
+    }
+
     public void inflateClientList() {
         ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(getContext(), clientList);
         rv_clients.setAdapter(clientNameListAdapter);
