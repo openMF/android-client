@@ -259,6 +259,7 @@
     <string name="loan_purpose">Please Select a the Loan Purpose</string>
     <string name="interestCalculationDaysInYearTypeAdapterId">Please Days in Year</string>
 
+    <string name="error_select_interest_type">Please Select Interest Type Method</string>
     <string name="error_select_intrested_cmp">Please Select the Interest Compound Period </string>
     <string name="error_select_gender">Please Select Gender</string>
     <string name="error_select_client_type">Please Select Client Type</string>
