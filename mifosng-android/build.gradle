@@ -36,6 +36,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 22
+        versionCode 20
+        versionName "2.0.0"
         // A test runner provided by https://code.google.com/p/android-test-kit/
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -88,6 +90,12 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+}
+
+play {
+    track = 'production'
+    serviceAccountEmail = 'maintainer@api-9063376351678769485-408805.iam.gserviceaccount.com'
+    pk12File = file("../Mifos-playstore-52cb027b0539.p12")
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
