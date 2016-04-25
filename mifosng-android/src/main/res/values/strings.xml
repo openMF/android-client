@@ -156,6 +156,12 @@
     <string name="approval_savings_date">Select Approval Date:</string>
     <string name="approval_disbursement_date">Expected disbursement on</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
+    <string name="lock_in_period_duration">Lock in Period Duration</string>
+    <string name="currency">Currency</string>
+    <string name="minimum_overdraft_required">Minimum Overdraft Required For Interest Calculation</string>
+    <string name="maximum_overdraft_amount">Maximum Overdraft Amount Limit</string>
+    <string name="savings_overdraft_allowed">Is overdraft allowed?</string>
+    <string name="savings_withdrawal_fee">Apply withdrawal fees for transfers</string>
     <!-- Savings Account Related Terminologies End Here -->
 
 

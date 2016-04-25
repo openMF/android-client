@@ -17,7 +17,9 @@ public class SavingsPayload {
     private Integer interestCalculationType;
     private Integer interestCalculationDaysInYearType;
     private Integer interestPostingPeriodType;
-    private int lockInPeriodFrequencyType;
+    private Integer lockInPeriodFrequencyType;
+    private boolean allowOverdraft;
+    private boolean applyWithdrawalFee;
 
     public Integer getInterestCompoundingPeriodType() {
         return interestCompoundingPeriodType;
@@ -115,6 +117,25 @@ public class SavingsPayload {
     public void setInterestPostingPeriodType(Integer interestPostingPeriodType) {
         this.interestPostingPeriodType = interestPostingPeriodType;
     }
+
+    public boolean getOverdraftAllowed() {
+        return allowOverdraft;
+    }
+
+    public boolean setOverdraftAllowed(boolean allowOverdraft) {
+        this.allowOverdraft = allowOverdraft;
+        return allowOverdraft;
+    }
+
+    public boolean getWithdrawalFee() {
+        return applyWithdrawalFee;
+    }
+
+    public boolean setWithdrawalFee(boolean applyWithdrawalFee) {
+        this.applyWithdrawalFee = applyWithdrawalFee;
+        return applyWithdrawalFee;
+    }
+
     public Integer getLockInPeriodFrequencyType() {
         return lockInPeriodFrequencyType;
     }

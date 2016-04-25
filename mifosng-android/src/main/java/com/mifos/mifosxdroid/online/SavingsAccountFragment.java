@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
+import com.mifos.objects.Currency;
 import com.mifos.objects.InterestType;
 import com.mifos.objects.accounts.savings.FieldOfficerOptions;
 import com.mifos.objects.accounts.savings.LockinPeriodFrequencyType;
@@ -84,10 +86,14 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     Spinner sp_field_officer;
     @InjectView(R.id.tv_currency)
     TextView tv_currency;
-    @InjectView(R.id.ck_overdraft_allowed)
-    CheckBox ck_overdraft_allowed;
+    @InjectView(R.id.ck_allow_overdraft)
+    CheckBox ck_allow_overdraft;
     @InjectView(R.id.ck_transfer_withdrawal_fee)
     CheckBox ck_transfer_withdrawal_fee;
+    @InjectView(R.id.sp_transfer_withdrawal_fee)
+    Spinner sp_transfer_withdrawal_fee;
+    @InjectView(R.id.et_minimum_overdraft)
+    EditText et_minimum_overdraft;
     @InjectView(R.id.et_maximum_overdraft)
     EditText et_maximum_overdraft;
     @InjectView(R.id.sp_lock_in_period_frequency)
@@ -104,7 +110,10 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
     private int interestCalculationDaysInYearTypeId;
+    private int withdrawalFeeTypeId;
     private int lockInPeriodFrequencyTypeId;
+    private boolean allowOverdraft;
+    private boolean withdrawalFeeForTransfers;
     private String submittion_date;
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
@@ -133,9 +142,6 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         inflatesubmissionDate();
         inflateSavingsSpinner();
         getSavingsAccountTemplateAPI();
-        inflateLockInPeriodFrequencyType();
-        //inflateStaffSpinner();
-        inflateLoanOfficerSpinner();
 
         submittion_date = tv_submittedon_date.getText().toString();
         submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submittion_date).replace("-", " ");
@@ -353,86 +359,40 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     }
 
-    private void inflateLoanOfficerSpinner() {
-        showProgress(true);
-        App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
+    public void inflateFieldOfficerSpinner(){
+
+        final ArrayList<String> FieldOfficerNames = filterFieldOfficerObject
+                (savingproductstemplate.getFieldOfficerOptions());
+
+        final ArrayAdapter<String> FieldOfficerOptionsAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, FieldOfficerNames);
+        FieldOfficerOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_field_officer.setAdapter(FieldOfficerOptionsAdapter);
+        sp_field_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                fieldOfficerId = savingproductstemplate.getFieldOfficerOptions().get(i).getId();
+                Log.d("fieldOfficerID " + FieldOfficerNames.get(i), String.valueOf(fieldOfficerId));
+                if (fieldOfficerId != -1) {
 
-            public void success(final Response result, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
 
-                Log.d(TAG, "");
-
-                final List<FieldOfficerOptions> termFrequencyType = new ArrayList<>();
-                // you can use this array to populate your spinner
-                final ArrayList<String> termFrequencyTypeNames = new ArrayList<String>();
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("loanOfficerOptions")) {
-                        JSONArray termFrequencyTypes = obj.getJSONArray("loanOfficerOptions");
-                        for (int i = 0; i < termFrequencyTypes.length(); i++) {
-                            JSONObject termFrequencyTypeObject = termFrequencyTypes.getJSONObject(i);
-                            FieldOfficerOptions loanOfficerOptions = new FieldOfficerOptions();
-                            loanOfficerOptions.setId(termFrequencyTypeObject.optInt("id"));
-                            loanOfficerOptions.setDisplayName(termFrequencyTypeObject.optString("displayName"));
-                            termFrequencyType.add(loanOfficerOptions);
-                            termFrequencyTypeNames.add(termFrequencyTypeObject.optString("value"));
-                            staffNameIdHashMap.put(loanOfficerOptions.getDisplayName(), loanOfficerOptions.getId());
-                        }
-
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> termFrequencyTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, termFrequencyTypeNames);
-                termFrequencyTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_field_officer.setAdapter(termFrequencyTypeAdapter);
-                sp_field_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        fieldOfficerId = staffNameIdHashMap.get(termFrequencyTypeNames.get(i));
-                        Log.d("loanOfficerOptions" + termFrequencyTypeNames.get(i), String.valueOf(fieldOfficerId));
-                        if (fieldOfficerId != -1) {
+                else {
 
+                    Toast.makeText(getActivity(), getString(R.string.field_officer), Toast.LENGTH_SHORT).show();
 
-                        } else {
-
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                showProgress(false);
+                }
 
             }
 
             @Override
-            public void failure(RetrofitError retrofitError) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
-
-                showProgress(false);
             }
         });
     }
+
     public void inflateStaffSpinner() {
 
         App.apiManager.getFieldOfficers(new Callback<List<Staff>>() {
@@ -513,6 +473,79 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     }
 
+    private void inflateAllowOverdraftCheckbox(){
+        et_minimum_overdraft.setVisibility(View.GONE);
+        et_maximum_overdraft.setVisibility(View.GONE);
+        ck_allow_overdraft.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    et_minimum_overdraft.setVisibility(View.GONE);
+                    et_maximum_overdraft.setVisibility(View.GONE);
+                    allowOverdraft = false;
+                }
+                else{
+                    et_minimum_overdraft.setVisibility(View.VISIBLE);
+                    et_maximum_overdraft.setVisibility(View.VISIBLE);
+                    allowOverdraft = true;
+                }
+            }
+
+            });
+    }
+
+    private void inflateTransferWithdrawalFeeSpinner(){
+        sp_transfer_withdrawal_fee.setVisibility(View.INVISIBLE);
+        ck_transfer_withdrawal_fee.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (!isChecked){
+                    sp_transfer_withdrawal_fee.setVisibility(View.GONE);
+                    withdrawalFeeForTransfers = false;
+                }
+                else{
+                    sp_transfer_withdrawal_fee.setVisibility(View.VISIBLE);
+                    withdrawalFeeForTransfers = true;
+                }
+
+                final ArrayList<String> withdrawalFeeTypeNames = filterListObject
+                        (savingproductstemplate.getWithdrawalFeeTypeOptions());
+
+                final ArrayAdapter<String> withdrawalFeeTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, withdrawalFeeTypeNames);
+                withdrawalFeeTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_transfer_withdrawal_fee.setAdapter(withdrawalFeeTypeAdapter);
+                sp_transfer_withdrawal_fee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+                     {
+
+                         @Override
+                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                             withdrawalFeeTypeId = savingproductstemplate.getWithdrawalFeeTypeOptions().get(i).getId();
+                             Log.d("withdrawalFeeType " + withdrawalFeeTypeNames.get(i), String.valueOf(withdrawalFeeTypeId));
+                             if (withdrawalFeeTypeId != -1) {
+
+
+                             } else {
+
+                                 Toast.makeText(getActivity(), getString(R.string.error_select_interest_type), Toast.LENGTH_SHORT).show();
+
+                             }
+
+                         }
+
+                         @Override
+                         public void onNothingSelected(AdapterView<?> parent) {
+
+                         }
+                     }
+
+                );
+            }
+        });
+    }
+
     private void initiateSavingCreation(SavingsPayload savingsPayload) {
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
@@ -561,6 +594,10 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                     inflateinterestCalculationDaysInYearType();
                     inflateInterestCalculationTypeSpinner();
                     inflateInterestPostingPeriodType();
+                    inflateLockInPeriodFrequencyType();
+                    inflateFieldOfficerSpinner();
+                    inflateAllowOverdraftCheckbox();
+                    inflateTransferWithdrawalFeeSpinner();
                 }
 
                     showProgress(false);
@@ -585,5 +622,35 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         }
         
         return InterestValueList;
+    }
+
+    private ArrayList<String> filterFieldOfficerObject(List<FieldOfficerOptions> fieldOfficerTypes) {
+
+        ArrayList<String> FieldOfficerList = new ArrayList<>();
+        try {
+            for (FieldOfficerOptions fieldOfficer : fieldOfficerTypes) {
+                FieldOfficerList.add(fieldOfficer.getDisplayName());
+            }
+        } catch (NullPointerException npe){
+         //   Toast.makeText(getActivity(), npe.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Log.e("null issue",npe.getLocalizedMessage());
+        }
+
+        return FieldOfficerList;
+    }
+
+    private ArrayList<String> filterCurrencyObject(List<Currency> currencyTypes) {
+
+        ArrayList<String> CurrencyList = new ArrayList<>();
+        try {
+            for (Currency currency : currencyTypes) {
+                CurrencyList.add(currency.getDisplayLabel());
+            }
+        } catch (NullPointerException npe){
+            Toast.makeText(getActivity(), npe.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Log.e("null issue",npe.getLocalizedMessage());
+        }
+
+        return CurrencyList;
     }
 }
