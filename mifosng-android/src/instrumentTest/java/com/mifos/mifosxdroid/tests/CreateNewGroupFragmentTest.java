@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Spinner;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.online.CreateNewCenterFragment;
+import com.mifos.mifosxdroid.online.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.DashboardActivity;
 
 import org.hamcrest.Description;
@@ -35,13 +35,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
- * Created by ahmed fathy on 17/04/16.
+ * Created by ahmed fathy on 20/04/16.
  */
-public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
+public class CreateNewGroupFragmentTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
 
     private DashboardActivity mActivity;
 
-    public CreateNewCenterFragmentTest() {
+    public CreateNewGroupFragmentTest() {
         super(DashboardActivity.class);
     }
 
@@ -49,38 +49,43 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
     public void setUp() throws Exception {
         super.setUp();
         mActivity = getActivity();
-        openCreateCenter();
+        openCreateGroup();
     }
 
     /**
-     * - chooses "Create Center" from options menu
-     * - checks the CrateNewCenterFragment is added
+     * - chooses "Create Group" from options menu
+     * - checks the CrateNewGroupFragment is added
      */
     @SmallTest
-    public void testOpenCreateCenter() throws InterruptedException {
+    public void testOpenCreateGroup() throws InterruptedException {
 
-        openCreateCenter();
-
-        CreateNewCenterFragment createNewCenterFragment
-                = (CreateNewCenterFragment) mActivity.getSupportFragmentManager()
+        CreateNewGroupFragment createNewGroupFragment
+                = (CreateNewGroupFragment) mActivity.getSupportFragmentManager()
                 .findFragmentById(R.id.container);
 
-        assertNotNull(createNewCenterFragment);
-        assertTrue(createNewCenterFragment.isAdded());
+        assertNotNull(createNewGroupFragment);
+        assertTrue(createNewGroupFragment.isAdded());
     }
 
 
     @SmallTest
     public void testViewsVisible() throws InterruptedException {
 
-        // initially, the center name edit test, office spinner and active checkbox are visible
-        onView(withId(R.id.et_center_name))
+        // initially, the group name, office spinner. submission date,
+        // external id, active checkbox and submit button are visible
+        onView(withId(R.id.et_group_name))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()));
-        onView(withId(R.id.sp_center_offices))
+        onView(withId(R.id.sp_group_offices))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()));
-        onView(withId(R.id.cb_center_active_status))
+        onView(withId(R.id.tv_group_submission_date))
+                .perform(scrollTo())
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.et_group_external_id))
+                .perform(scrollTo())
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.cb_group_active_status))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()));
         onView(withId(R.id.bt_submit))
@@ -88,21 +93,21 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
                 .check(matches(isDisplayed()));
 
         // initially, the activation date is invisible but shows after checking the active checkbox
-        onView(withId(R.id.cb_center_active_status))
+        onView(withId(R.id.cb_group_active_status))
                 .perform(scrollTo(), click())
                 .check(matches(isChecked()));
-        onView(withId(R.id.tv_center_activationDate))
+        onView(withId(R.id.tv_group_activationDate))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()));
     }
 
     /**
-     * checks that the center offcies spinner is loaded with data from the template
+     * checks that the office spinner is loaded with data from the template
      */
     @SmallTest
     public void testSpinnerPopulated() throws InterruptedException {
         Thread.sleep(3000);
-        onView(withId(R.id.sp_center_offices))
+        onView(withId(R.id.sp_group_offices))
                 .check(matches(hasChildren()));
     }
 
@@ -111,30 +116,42 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
      * fills the template and presses submit
      */
     @MediumTest
-    public void testCreateCenter() throws InterruptedException {
+    public void testCreateGroup() throws InterruptedException {
         Thread.sleep(3000);
 
-        // center name
-        onView(withId(R.id.et_center_name))
+        // group name
+        onView(withId(R.id.et_group_name))
                 .perform(scrollTo())
-                .perform(typeText("myTestCenter"), closeSoftKeyboard());
+                .perform(typeText("myTestGroup"), closeSoftKeyboard());
 
         // office
-        Spinner spinnerOffice = (Spinner) mActivity.findViewById(R.id.sp_center_offices);
-        String selectedOffice = (String) spinnerOffice.getAdapter().getItem(2);
-        onView(withId(R.id.sp_center_offices))
-                .perform(scrollTo(), click());
-        onView(withText(selectedOffice))
-                .check(matches(isDisplayed()))
-                .perform(click())
-                .check(matches(isDisplayed()));
+        Spinner spinnerOffice = (Spinner) mActivity.findViewById(R.id.sp_group_offices);
+        if (spinnerOffice.getAdapter().getCount() > 2) {
+            String selectedOffice = (String) spinnerOffice.getAdapter().getItem(2);
+            onView(withId(R.id.sp_group_offices))
+                    .perform(scrollTo(), click());
+            onView(withText(selectedOffice))
+                    .check(matches(isDisplayed()))
+                    .perform(click())
+                    .check(matches(isDisplayed()));
+        }
 
-        // activation date
-        onView(withId(R.id.cb_center_active_status))
-                .perform(scrollTo(), click());
+        // submission date
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String currentDate = formatter.format(new Date());
-        onView(withId(R.id.tv_center_activationDate))
+        onView(withId(R.id.tv_group_submission_date))
+                .perform(scrollTo())
+                .check(matches(withText(currentDate)));
+
+        // external id
+        onView(withId(R.id.et_group_external_id))
+                .perform(scrollTo())
+                .perform(typeText("123"), closeSoftKeyboard());
+
+        // activation date
+        onView(withId(R.id.cb_group_active_status))
+                .perform(scrollTo(), click());
+        onView(withId(R.id.tv_group_activationDate))
                 .check(matches(withText(currentDate)));
 
         // submit
@@ -144,12 +161,12 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
 
 
     /**
-     * chooses "Create Center" from the options menu
+     * chooses "Create Group" from the options menu
      */
-    private void openCreateCenter() throws InterruptedException {
+    private void openCreateGroup() throws InterruptedException {
 
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-        onView(withText("Create Center"))
+        onView(withText("Create Group"))
                 .perform(click());
     }
 
