@@ -61,7 +61,6 @@ import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.GroupPayload;
-import com.mifos.services.data.GroupSavingsPayload;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
@@ -415,17 +414,8 @@ public class API {
         public void getGroupLoansAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> grouploanCallback);
 
     }
-    public interface CreateGroupSavingsAccountService {
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
-        void createGroupSavingsAccount(@Body GroupSavingsPayload savingsPayload, Callback<Savings> callback);
 
-        @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
-        @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template?templateType=group")
-        public void getGroupSavingsAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> groupSavingsCallback);
-
-    }
-    public interface ClientService {
+        public interface ClientService {
 
         @GET(APIEndPoint.CLIENTS)
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})

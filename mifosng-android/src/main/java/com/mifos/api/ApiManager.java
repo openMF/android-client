@@ -427,7 +427,17 @@ public class ApiManager extends BaseApiManager {
         getChargeService().createLoanCharges(loanId,chargesPayload,callback);
     }
 
+    public void getSavingsCharges(int accountId,Callback<Page<Charges>> callback) {
+        getChargeService().getSavingsCharges(accountId,callback);
+    }
 
+    public void getAllSavingsCharges(int accountId,Callback<Response> callback) {
+        getChargeService().getAllSavingsCharges(accountId, callback);
+    }
+
+    public void createSavingsCharges(int accountId,ChargesPayload chargesPayload, Callback<Charges> callback){
+        getChargeService().createSavingsCharges(accountId, chargesPayload, callback);
+    }
     /**
      * SavingsAccount API
      */
