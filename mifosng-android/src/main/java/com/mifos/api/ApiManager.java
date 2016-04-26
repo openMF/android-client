@@ -437,9 +437,6 @@ public class ApiManager extends BaseApiManager {
         getChargeService().createSavingsCharges(accountId, payload, callback);
     }
 
-    public void createSavingsCharges(int accountId,ChargesPayload chargesPayload, Callback<Charges> callback){
-        getChargeService().createSavingsCharges(accountId, chargesPayload, callback);
-    }
     /**
      * SavingsAccount API
      */
