@@ -41,6 +41,15 @@
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
+            <TextView
+                android:id="@+id/tv_currency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/currency"
+                android:paddingBottom="16dp"
+                android:paddingTop="10dp"
+                android:textSize="18sp" />
+
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
@@ -165,23 +174,6 @@
                 android:background="@color/light_grey"
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
-
-            <TextView
-                android:id="@+id/tv_currency_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/currency"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tv_currency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="@string/currency"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
-                android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/ck_allow_overdraft"

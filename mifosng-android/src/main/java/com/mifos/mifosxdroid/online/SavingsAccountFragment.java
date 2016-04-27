@@ -26,13 +26,11 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.Currency;
 import com.mifos.objects.InterestType;
 import com.mifos.objects.accounts.savings.FieldOfficerOptions;
 import com.mifos.objects.accounts.savings.LockinPeriodFrequencyType;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.ProductSavings;
-import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
@@ -114,9 +112,10 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     private int lockInPeriodFrequencyTypeId;
     private boolean allowOverdraft;
     private boolean withdrawalFeeForTransfers;
+    private String currencyLabel;
     private String submittion_date;
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> fieldOfficerIdHashMap = new HashMap<String, Integer>();
     private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
     public static SavingsAccountFragment newInstance(int clientId) {
@@ -198,6 +197,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         productId = savingsNameIdHashMap.get(savingsList.get(i));
+                        inflateCurrencyTextView(productId);
                         Log.d("productId " + savingsList.get(i), String.valueOf(productId));
                         if (productId != -1) {
                         }
@@ -359,79 +359,127 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     }
 
-    public void inflateFieldOfficerSpinner(){
-
-        final ArrayList<String> FieldOfficerNames = filterFieldOfficerObject
-                (savingproductstemplate.getFieldOfficerOptions());
-
-        final ArrayAdapter<String> FieldOfficerOptionsAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, FieldOfficerNames);
-        FieldOfficerOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp_field_officer.setAdapter(FieldOfficerOptionsAdapter);
-        sp_field_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    public void inflateFieldOfficerSpinner() {
+        showProgress(true);
+        App.apiManager.getSavingsAccountTemplate(clientId, productId,new Callback<Response>() {
 
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                fieldOfficerId = savingproductstemplate.getFieldOfficerOptions().get(i).getId();
-                Log.d("fieldOfficerID " + FieldOfficerNames.get(i), String.valueOf(fieldOfficerId));
-                if (fieldOfficerId != -1) {
+            public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+                Log.d(TAG, "");
 
+                final List<FieldOfficerOptions> fieldOfficerOptionsList = new ArrayList<>();
+                // you can use this array to populate your spinner
+                final ArrayList<String> fieldOfficerNames = new ArrayList<String>();
+                //Try to get response body
+                BufferedReader reader = null;
+                StringBuilder sb = new StringBuilder();
+                try {
+                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    JSONObject obj = new JSONObject(sb.toString());
+                    if (obj.has("fieldOfficerOptions")) {
+                        JSONArray fieldOfficerTypes = obj.getJSONArray("fieldOfficerOptions");
 
+                        for (int i = 0; i < fieldOfficerTypes.length(); i++) {
+                            JSONObject fieldOfficerObject = fieldOfficerTypes.getJSONObject(i);
+                            FieldOfficerOptions officer = new FieldOfficerOptions();
+                            officer.setId(fieldOfficerObject.optInt("id"));
+                            officer.setDisplayName(fieldOfficerObject.optString("displayName"));
+                            fieldOfficerOptionsList.add(officer);
+                            fieldOfficerNames.add(fieldOfficerObject.optString("displayName"));
+                            fieldOfficerIdHashMap.put(officer.getDisplayName(), officer.getId());
+
+                        }
+
+                    }
+                    String stringResult = sb.toString();
+                } catch (Exception e) {
+                    Log.e(TAG, "", e);
                 }
-                else {
+                final ArrayAdapter<String> FieldOfficerOptionsAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, fieldOfficerNames);
+                FieldOfficerOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_field_officer.setAdapter(FieldOfficerOptionsAdapter);
+                sp_field_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                    Toast.makeText(getActivity(), getString(R.string.field_officer), Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        fieldOfficerId = fieldOfficerIdHashMap.get(fieldOfficerNames.get(i));
+                        Log.d("fieldOfficerID " + fieldOfficerNames.get(i), String.valueOf(fieldOfficerId));
+                        if (fieldOfficerId != -1) {
 
-                }
+                        }
+                        else {
+                            Toast.makeText(getActivity(), getString(R.string.error_select_field_officer), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                showProgress(false);
 
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+                showProgress(false);
 
             }
         });
     }
 
-    public void inflateStaffSpinner() {
+    public void inflateCurrencyTextView(int savingsProductId) {
+        showProgress(true);
+        App.apiManager.getSavingsAccountTemplate(clientId, savingsProductId,new Callback<Response>() {
 
-        App.apiManager.getFieldOfficers(new Callback<List<Staff>>() {
             @Override
-            public void success(List<Staff> staffs, Response response) {
+            public void success(final Response result, Response response) {
+                /* Activity is null - Fragment has been detached; no need to do anything. */
+                if (getActivity() == null) return;
+                Log.d(TAG, "");
 
-                final List<String> staffNames = new ArrayList<String>();
-                for (Staff staff : staffs) {
-                    staffNames.add(staff.getDisplayName());
-                    staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
+                //Try to get response body
+                BufferedReader reader = null;
+                StringBuilder sb = new StringBuilder();
+                try {
+                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    JSONObject obj = new JSONObject(sb.toString());
+                    currencyLabel = "Currency: " + obj.getJSONObject("currency").getString("displayLabel");
+                    Log.d(TAG, "The currency text view label is \'".concat(currencyLabel).concat("\'"));
+
+                    String stringResult = sb.toString();
+
+                } catch (Exception e) {
+                    Log.e(TAG, "", e);
                 }
-                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, staffNames);
-                staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_field_officer.setAdapter(staffAdapter);
-                sp_field_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                tv_currency.setText(currencyLabel);
+                showProgress(false);
 
-                        fieldOfficerId = staffNameIdHashMap.get(staffNames.get(position));
-                        Log.d("staffId " + staffNames.get(position), String.valueOf(fieldOfficerId));
-                        if (fieldOfficerId != -1) {
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_officer), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-
-                });
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                System.out.println(error.getLocalizedMessage());
+            public void failure(RetrofitError retrofitError) {
+
+                System.out.println(retrofitError.getLocalizedMessage());
+
+                showProgress(false);
 
             }
         });
@@ -459,7 +507,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 }
                 else {
 
-                    Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_lockInPeriodFrequencyType), Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -529,7 +577,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
                              } else {
 
-                                 Toast.makeText(getActivity(), getString(R.string.error_select_interest_type), Toast.LENGTH_SHORT).show();
+                                 Toast.makeText(getActivity(), getString(R.string.error_select_withdrawal_type), Toast.LENGTH_SHORT).show();
 
                              }
 
@@ -620,37 +668,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         for (InterestType interestType : interestTypes) {
             InterestValueList.add(interestType.getValue());
         }
-        
+
         return InterestValueList;
     }
 
-    private ArrayList<String> filterFieldOfficerObject(List<FieldOfficerOptions> fieldOfficerTypes) {
-
-        ArrayList<String> FieldOfficerList = new ArrayList<>();
-        try {
-            for (FieldOfficerOptions fieldOfficer : fieldOfficerTypes) {
-                FieldOfficerList.add(fieldOfficer.getDisplayName());
-            }
-        } catch (NullPointerException npe){
-         //   Toast.makeText(getActivity(), npe.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            Log.e("null issue",npe.getLocalizedMessage());
-        }
-
-        return FieldOfficerList;
-    }
-
-    private ArrayList<String> filterCurrencyObject(List<Currency> currencyTypes) {
-
-        ArrayList<String> CurrencyList = new ArrayList<>();
-        try {
-            for (Currency currency : currencyTypes) {
-                CurrencyList.add(currency.getDisplayLabel());
-            }
-        } catch (NullPointerException npe){
-            Toast.makeText(getActivity(), npe.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            Log.e("null issue",npe.getLocalizedMessage());
-        }
-
-        return CurrencyList;
-    }
 }

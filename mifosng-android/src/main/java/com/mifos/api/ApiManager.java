@@ -290,6 +290,9 @@ public class ApiManager extends BaseApiManager {
 
     }
 
+    public void getSavingsAccountTemplate(int clientId, int productId, Callback<Response> savingsCallback){
+        getSavingsApi().getSavingsAccountTemplate(clientId, productId, savingsCallback);
+    }
 
     /**
      * Surveys API

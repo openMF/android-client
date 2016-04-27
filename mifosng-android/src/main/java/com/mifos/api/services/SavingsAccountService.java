@@ -10,11 +10,14 @@ import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.Page;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 
 import java.util.HashMap;
 
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -67,5 +70,14 @@ public interface SavingsAccountService {
     void approveSavingsApplication(@Path("savingsAccountId") int savingsAccountId,
                                           @Body SavingsApproval savingsApproval,
                                           Callback<GenericResponse> genericResponseCallback);
+
+    @GET("/"+APIEndPoint.SAVINGSACCOUNTS + "/{savingsAccountId}" + APIEndPoint.CHARGES)
+    void getListOfSavingsCharges(@Path("savingsAccountId") int savingsAccountId,Callback<Page<Charges>> savingsChargeListCallback);
+
+    @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
+    void getListOfCharges(@Path("clientId") int clientId,Callback<Page<Charges>> chargeListCallback);
+
+    @GET("/"+APIEndPoint.SAVINGSACCOUNTS + "/template?")
+    void getSavingsAccountTemplate(@Query("clientId") int clientId, @Query("productId") int productId,Callback<Response> savingsFIeldOfficerCallback);
 
 }
