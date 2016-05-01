@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,9 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.objects.survey.Scorecard;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -37,11 +41,12 @@ public class SurveyLastFragment extends Fragment implements Communicator {
 
     @InjectView(R.id.btn_submit) Button btn_submit;
     @InjectView(R.id.survey_submit_textView) TextView tv_submit;
+    @InjectView(R.id.button_survey_location) TextView buttonSendLocation;
     private DisableSwipe mDetachFragment;
     public Context context;
     private Scorecard mScorecard;
     private int mSurveyId;
-
+    private int clientId;
 
     public static SurveyLastFragment newInstance() {
         SurveyLastFragment fragment = new SurveyLastFragment();
@@ -70,18 +75,18 @@ public class SurveyLastFragment extends Fragment implements Communicator {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_survey_last, container, false);
         ButterKnife.inject(this, view);
+
         return view;
     }
-
 
     @Override
     public void passScoreCardData(Scorecard scorecard, int surveyId) {
         mScorecard = scorecard;
         mSurveyId = surveyId;
+        clientId = scorecard.getClientId();
         tv_submit.setText("Attempt Questions : " + mScorecard.getScorecardValues().size());
         btn_submit.setText("Submit Survey");
     }
-
 
     @OnClick(R.id.btn_submit)
     public void submitScore(View v){
@@ -95,6 +100,17 @@ public class SurveyLastFragment extends Fragment implements Communicator {
                     Toast.makeText(context, "Scorecard created successfully", Toast.LENGTH_LONG).show();
                     tv_submit.setText("Survey Successfully Submitted ! \n Thanks for taking Survey ");
                     btn_submit.setVisibility(View.GONE);
+                    buttonSendLocation.setVisibility(View.VISIBLE);
+                    buttonSendLocation.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity().getApplicationContext(), PinpointClientActivity.class);
+                            intent.putExtra("extra_client_id", clientId);
+                            intent.putExtra("extra_survey_id", mSurveyId);
+                            buttonSendLocation.setVisibility(View.GONE);
+                            startActivity(intent);
+                        }
+                    });
 
                 }
 
@@ -107,8 +123,8 @@ public class SurveyLastFragment extends Fragment implements Communicator {
             });
         }else
             Toast.makeText(context, "Please Attempt AtLeast One Question ", Toast.LENGTH_SHORT).show();
-    }
 
+    }
 
 }
 

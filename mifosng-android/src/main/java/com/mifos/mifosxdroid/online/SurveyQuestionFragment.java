@@ -12,15 +12,19 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.survey.QuestionDatas;
 import com.mifos.objects.survey.ScorecardValues;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -34,6 +38,14 @@ public class SurveyQuestionFragment extends Fragment {
         void answer(ScorecardValues scorecardValues);
     }
 
+    // static Strings to retrieve the  question and its answers and show them.
+    public static final String QUESTION = "question";
+    public static final String PREFS_NAME = "MY_PREFS";
+    public static final String SCOREVALUES = "Score_Values";
+    public static final String ANSWERS = "answers";
+    public static final String ID = "id";
+    public static final String SID = "sid";
+    public static final String CLIENT_ID = "client_id";
     private static final String QUESTION_DATA = "Question Data";
     @InjectView(R.id.survey_question_textView) TextView tv_question;
     @InjectView(R.id.radio1) RadioGroup radioGroup1;
@@ -45,7 +57,7 @@ public class SurveyQuestionFragment extends Fragment {
     RadioButton button1;
     RadioButton btn;
     Context thiscontext;
-
+    
     public static SurveyQuestionFragment newInstance(String QuestionDatas) {
         SurveyQuestionFragment fragment = new SurveyQuestionFragment();
         Bundle bundle = new Bundle();
@@ -99,9 +111,15 @@ public class SurveyQuestionFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Activity activity = context instanceof Activity ? (Activity) context : null;
+
         try {
             mCallback = (OnAnswerSelectedListener) activity;
         } catch (ClassCastException e) {
