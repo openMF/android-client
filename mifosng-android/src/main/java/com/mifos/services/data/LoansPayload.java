@@ -41,6 +41,8 @@ public class LoansPayload {
     String submittedOnDate;
     int  transactionProcessingStrategyId;
     int loanPurposeId;
+    int loanOfficerId;
+    int fundId;
 
     public int getClientId() {
         return clientId;
@@ -91,6 +93,14 @@ public class LoansPayload {
         this.expectedDisbursementDate = expectedDisbursementDate;
     }
 
+    public int getFundId() {
+        return fundId;
+    }
+
+    public void setFundId(int fundId) {
+        this.fundId = fundId;
+    }
+
     public int getInterestCalculationPeriodType() {
         return interestCalculationPeriodType;
     }
@@ -113,6 +123,14 @@ public class LoansPayload {
 
     public void setInterestType(int interestType) {
         this.interestType = interestType;
+    }
+
+    public int getLoanOfficerId() {
+        return loanOfficerId;
+    }
+
+    public void setLoanOfficerId(int loanOfficerId) {
+        this.loanOfficerId = loanOfficerId;
     }
 
     public int getLoanPurposeId() {

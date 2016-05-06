@@ -26,7 +26,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountApproval;
-import com.mifos.mifosxdroid.dialogfragments.LoanAccountDisbursement;;
+import com.mifos.mifosxdroid.dialogfragments.LoanAccountDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.noncore.DataTable;

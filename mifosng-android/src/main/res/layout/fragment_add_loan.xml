@@ -135,13 +135,6 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
-            <Spinner
-                android:id="@+id/sp_loan_term_frequency"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
 
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
@@ -288,15 +281,15 @@
                 android:spinnerMode="dropdown" />
 
             <TextView
-                android:id="@+id/tv_interest_method"
+                android:id="@+id/tv_interest_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="16dp"
-                android:text="@string/interest_calc"
+                android:text="@string/loan_interest_type"
                 android:textSize="16sp" />
 
             <Spinner
-                android:id="@+id/sp_interest_method"
+                android:id="@+id/sp_interest_type"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/light_grey"

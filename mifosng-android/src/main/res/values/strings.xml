@@ -113,6 +113,7 @@
     <string name="loan_principal_paid">Principal Paid</string>
     <string name="loan_interest_due">Interest Due</string>
     <string name="loan_interest_paid">Interest Paid</string>
+    <string name="loan_interest_type">Interest Type Method</string>
     <string name="loan_charges_due">Charges Due</string>
     <string name="loan_total_due">Total Due</string>
     <string name="summary">Summary</string>
@@ -261,6 +262,7 @@
 
     <string name="error_select_interest_type">Please Select Interest Type Method</string>
     <string name="error_select_intrested_cmp">Please Select the Interest Compound Period </string>
+    <string name="error_select_frequency">Please Select Period or Term Frequency</string>
     <string name="error_select_gender">Please Select Gender</string>
     <string name="error_select_client_type">Please Select Client Type</string>
     <string name="error_select_staff">Please Select a Staff</string>

@@ -80,8 +80,6 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
     EditText et_principal;
     @InjectView(R.id.et_loanterm)
     EditText et_loanterm;
-    @InjectView(R.id.sp_loan_term_frequency)
-    Spinner sp_loan_term_frequency;
     @InjectView(R.id.et_numberofrepayments)
     EditText et_numberofrepayments;
     @InjectView(R.id.et_repaidevery)
@@ -96,8 +94,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
     Spinner sp_interestcalculationperiod;
     @InjectView(R.id.sp_repaymentstrategy)
     Spinner sp_repaymentstrategy;
-    @InjectView(R.id.sp_interest_method)
-    Spinner sp_interest_method;
+    @InjectView(R.id.sp_interest_type)
+    Spinner sp_interest_type;
     @InjectView(R.id.sp_loan_officer)
     Spinner sp_loan_officer;
     @InjectView(R.id.sp_fund)
@@ -115,19 +113,18 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
     private int clientId;
     private int loanPurposeId;
     private int loanTermFrequency;
-    private int termPeriodFrequency;
-    private int loanOfficerId;
-    private int loanFundId;
-    private int interestTypeMethodId;
     private int transactionProcessingStrategyId;
     private int amortizationTypeId;
     private int interestCalculationPeriodTypeId;
+    private int fundId;
+    private int loanOfficerId;
+    private int interestTypeId;
     private HashMap<String, Integer> loansNameIdHashMap = new HashMap<>();
-    private HashMap<String, Integer> loanOfficerNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> termFrequencyTypeIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> interestTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> loanPurposeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> loanFundNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> loanOfficerNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> interestTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> termPeriodFrequencyTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> interestCalculationPeriodTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> amortizationTypeIdHashMap = new HashMap<String, Integer>();
@@ -187,17 +184,16 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 loansPayload.setPrincipal(et_principal.getEditableText().toString());
                 loansPayload.setProductId(productId);
                 loansPayload.setRepaymentEvery(et_repaidevery.getEditableText().toString());
-                loansPayload.setRepaymentFrequencyType(termPeriodFrequency);
                 loansPayload.setSubmittedOnDate(submittion_date);
                 loansPayload.setLoanPurposeId(loanPurposeId);
                 loansPayload.setLoanTermFrequency(loanTermFrequency);
                 loansPayload.setTransactionProcessingStrategyId(transactionProcessingStrategyId);
-                //loansPayload.setFund(sp_fund.getSelectedItem().toString().trim());
-                //loansPayload.setLoanOfficer(sp_loan_officer.getSelectedItem().toString().trim());
-                //loansPayload.setInterestMethod(sp_interest_method.getSelectedItem().toString().trim());
+                loansPayload.setFundId(fundId);
+                loansPayload.setInterestType(interestTypeId);
+                loansPayload.setLoanOfficerId(loanOfficerId);
 
-                initiateLoanCreation(loansPayload);
 
+    initiateLoanCreation(loansPayload);
             }
         });
 
@@ -609,7 +605,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
 
                 Log.d(TAG, "");
 
-                final List<TermFrequencyTypeOptions> termPeriodFrequencyType = new ArrayList<>();
+                final List<TermFrequencyTypeOptions> termFrequencyType = new ArrayList<>();
                 // you can use this array to populate your spinner
                 final ArrayList<String> termFrequencyTypeNames = new ArrayList<String>();
                 //Try to get response body
@@ -629,10 +625,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                             TermFrequencyTypeOptions termFrequency = new TermFrequencyTypeOptions();
                             termFrequency.setId(termFrequencyTypeObject.optInt("id"));
                             termFrequency.setValue(termFrequencyTypeObject.optString("value"));
-                            termPeriodFrequencyType.add(termFrequency);
+                            termFrequencyType.add(termFrequency);
                             termFrequencyTypeNames.add(termFrequencyTypeObject.optString("value"));
                             termFrequencyTypeIdHashMap.put(termFrequency.getValue(), termFrequency.getId());
-                            termPeriodFrequencyTypeIdHashMap.put(termFrequency.getValue(), termFrequency.getId());
                         }
 
                     }
@@ -640,47 +635,21 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> paymentFrequencyTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, termFrequencyTypeNames);
-                paymentFrequencyTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_payment_periods.setAdapter(paymentFrequencyTypeAdapter);
-                sp_payment_periods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        termPeriodFrequency = termPeriodFrequencyTypeIdHashMap.get(termFrequencyTypeNames.get(i));
-                        Log.d("loanTermFrequency" + termFrequencyTypeNames.get(i), String.valueOf(termPeriodFrequency));
-                        if (termPeriodFrequency != -1) {
-
-
-                        } else {
-
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
                 final ArrayAdapter<String> termFrequencyTypeAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, termFrequencyTypeNames);
                 termFrequencyTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_loan_term_frequency.setAdapter(termFrequencyTypeAdapter);
-                sp_loan_term_frequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                sp_payment_periods.setAdapter(termFrequencyTypeAdapter);
+                sp_payment_periods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        termPeriodFrequency = termPeriodFrequencyTypeIdHashMap.get(termFrequencyTypeNames.get(i));
-                        Log.d("loanTermFrequency" + termFrequencyTypeNames.get(i), String.valueOf(termPeriodFrequency));
-                        if (termPeriodFrequency != -1) {
+                        loanTermFrequency = termFrequencyTypeIdHashMap.get(termFrequencyTypeNames.get(i));
+                        Log.d("loanTermFrequency" + termFrequencyTypeNames.get(i), String.valueOf(loanTermFrequency));
+                        if (loanTermFrequency != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_frequency), Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -706,7 +675,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
         });
     }
 
-    private void inflateInterestTypeMethodSpinner() {
+
+    private void inflateLoanFundSpinner() {
         showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
             @Override
@@ -717,9 +687,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
 
                 Log.d(TAG, "");
 
-                final List<InterestType> interestType = new ArrayList<>();
+                final List<LoanFund> loanFund = new ArrayList<>();
                 // you can use this array to populate your spinner
-                final ArrayList<String> interestTypeNames = new ArrayList<String>();
+                final ArrayList<String> loanFundNames = new ArrayList<String>();
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -730,16 +700,16 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                         sb.append(line);
                     }
                     JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("interestTypeOptions")) {
-                        JSONArray interestTypes = obj.getJSONArray("interestTypeOptions");
-                        for (int i = 0; i < interestTypes.length(); i++) {
-                            JSONObject interestTypeObject = interestTypes.getJSONObject(i);
-                            InterestType interest = new InterestType();
-                            interest.setId(interestTypeObject.optInt("id"));
-                            interest.setValue(interestTypeObject.optString("value"));
-                            interestType.add(interest);
-                            interestTypeNames.add(interestTypeObject.optString("value"));
-                            interestTypeIdHashMap.put(interest.getValue(), interest.getId());
+                    if (obj.has("fundOptions")) {
+                        JSONArray loanFunds = obj.getJSONArray("fundOptions");
+                        for (int i = 0; i < loanFunds.length(); i++) {
+                            JSONObject loanFundObject = loanFunds.getJSONObject(i);
+                            LoanFund fund = new LoanFund();
+                            fund.setId(loanFundObject.optInt("id"));
+                            fund.setValue(loanFundObject.optString("name"));
+                            loanFund.add(fund);
+                            loanFundNames.add(loanFundObject.optString("name"));
+                            loanFundNameIdHashMap.put(fund.getValue(), fund.getId());
                         }
 
                     }
@@ -747,21 +717,21 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> interestTypeMethodAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, interestTypeNames);
-                interestTypeMethodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_interest_method.setAdapter(interestTypeMethodAdapter);
-                sp_interest_method.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                final ArrayAdapter<String> loanFundNameAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, loanFundNames);
+                loanFundNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_fund.setAdapter(loanFundNameAdapter);
+                sp_fund.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        interestTypeMethodId = interestTypeIdHashMap.get(interestTypeNames.get(i));
-                        Log.d("interestType " + interestTypeNames.get(i), String.valueOf(interestTypeMethodId));
-                        if (interestTypeMethodId != -1) {
+                        fundId = loanFundNameIdHashMap.get(loanFundNames.get(i));
+                        Log.d("fundId " + loanFundNames.get(i), String.valueOf(fundId));
+                        if (fundId != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_interest_type), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -786,6 +756,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             }
         });
     }
+
     private void inflateLoanOfficerSpinner() {
         showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
@@ -867,7 +838,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
         });
     }
 
-    private void inflateLoanFundSpinner() {
+    private void inflateInterestTypeMethodSpinner() {
         showProgress(true);
         App.apiManager.getLoansAccountTemplate(clientId, productId, new Callback<Response>() {
             @Override
@@ -878,9 +849,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
 
                 Log.d(TAG, "");
 
-                final List<LoanFund> loanFund = new ArrayList<>();
+                final List<InterestType> interestType = new ArrayList<>();
                 // you can use this array to populate your spinner
-                final ArrayList<String> loanFundNames = new ArrayList<String>();
+                final ArrayList<String> interestTypeNames = new ArrayList<String>();
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -891,16 +862,16 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                         sb.append(line);
                     }
                     JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("fundOptions")) {
-                        JSONArray loanFunds = obj.getJSONArray("fundOptions");
-                        for (int i = 0; i < loanFunds.length(); i++) {
-                            JSONObject loanFundObject = loanFunds.getJSONObject(i);
-                            LoanFund fund = new LoanFund();
-                            fund.setId(loanFundObject.optInt("id"));
-                            fund.setValue(loanFundObject.optString("name"));
-                            loanFund.add(fund);
-                            loanFundNames.add(loanFundObject.optString("name"));
-                            loanFundNameIdHashMap.put(fund.getValue(), fund.getId());
+                    if (obj.has("interestTypeOptions")) {
+                        JSONArray interestTypes = obj.getJSONArray("interestTypeOptions");
+                        for (int i = 0; i < interestTypes.length(); i++) {
+                            JSONObject interestTypeObject = interestTypes.getJSONObject(i);
+                            InterestType interest = new InterestType();
+                            interest.setId(interestTypeObject.optInt("id"));
+                            interest.setValue(interestTypeObject.optString("value"));
+                            interestType.add(interest);
+                            interestTypeNames.add(interestTypeObject.optString("value"));
+                            interestTypeIdHashMap.put(interest.getValue(), interest.getId());
                         }
 
                     }
@@ -908,21 +879,21 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> loanFundNameAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, loanFundNames);
-                loanFundNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_fund.setAdapter(loanFundNameAdapter);
-                sp_fund.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                final ArrayAdapter<String> interestTypeMethodAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, interestTypeNames);
+                interestTypeMethodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_interest_type.setAdapter(interestTypeMethodAdapter);
+                sp_interest_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        loanFundId = loanFundNameIdHashMap.get(loanFundNames.get(i));
-                        Log.d("loanFund " + loanFundNames.get(i), String.valueOf(loanFundId));
-                        if (loanFundId != -1) {
+                        interestTypeId = interestTypeIdHashMap.get(interestTypeNames.get(i));
+                        Log.d("interestType " + interestTypeNames.get(i), String.valueOf(interestTypeId));
+                        if (interestTypeId != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_interest_type), Toast.LENGTH_SHORT).show();
 
                         }
 
