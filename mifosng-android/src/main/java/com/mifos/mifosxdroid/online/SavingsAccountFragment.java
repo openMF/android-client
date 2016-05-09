@@ -62,7 +62,6 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     public static final String TAG = "SavingsAccountFragment";
     private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
 
     @InjectView(R.id.sp_product)
     Spinner sp_product;
@@ -86,14 +85,10 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     TextView tv_currency;
     @InjectView(R.id.ck_allow_overdraft)
     CheckBox ck_allow_overdraft;
-    @InjectView(R.id.ck_transfer_withdrawal_fee)
-    CheckBox ck_transfer_withdrawal_fee;
-    @InjectView(R.id.sp_transfer_withdrawal_fee)
-    Spinner sp_transfer_withdrawal_fee;
-    @InjectView(R.id.et_minimum_overdraft)
-    EditText et_minimum_overdraft;
-    @InjectView(R.id.et_maximum_overdraft)
-    EditText et_maximum_overdraft;
+    @InjectView(R.id.ck_withdrawal_fee)
+    CheckBox ck_withdrawal_fee;
+    @InjectView(R.id.et_overdraft_limit)
+    EditText et_overdraft_limit;
     @InjectView(R.id.sp_lock_in_period_frequency)
     Spinner sp_lock_in_period_frequency;
     @InjectView(R.id.et_lock_in_period_duration)
@@ -108,7 +103,6 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
     private int interestCalculationDaysInYearTypeId;
-    private int withdrawalFeeTypeId;
     private int lockInPeriodFrequencyTypeId;
     private boolean allowOverdraft;
     private boolean withdrawalFeeForTransfers;
@@ -162,7 +156,16 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 savingsPayload.setInterestPostingPeriodType(interestPostingPeriodTypeId);
                 savingsPayload.setInterestCalculationType(interestCalculationTypeAdapterId);
                 savingsPayload.getInterestCalculationDaysInYearType();
-                savingsPayload.setLockInPeriodFrequencyType(lockInPeriodFrequencyTypeId);
+                savingsPayload.setLockinPeriodFrequency(et_lock_in_period_duration.getEditableText().toString());
+                savingsPayload.setLockinPeriodFrequencyType(lockInPeriodFrequencyTypeId);
+
+                if(allowOverdraft){
+                    savingsPayload.setAllowOverdraft(true);
+                    savingsPayload.setOverdraftLimit(et_overdraft_limit.getEditableText().toString());
+                }
+                if(withdrawalFeeForTransfers){
+                    savingsPayload.setWithdrawalFeeForTransfers(true);
+                }
 
                 initiateSavingCreation(savingsPayload);
             }
@@ -198,6 +201,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         productId = savingsNameIdHashMap.get(savingsList.get(i));
                         inflateCurrencyTextView(productId);
+                        inflateFieldOfficerSpinner();
                         Log.d("productId " + savingsList.get(i), String.valueOf(productId));
                         if (productId != -1) {
                         }
@@ -276,7 +280,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 }
                 else {
 
-                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_interestCalculationType), Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -345,7 +349,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 }
                 else {
 
-                    Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_interest_cmp), Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -393,9 +397,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                             fieldOfficerOptionsList.add(officer);
                             fieldOfficerNames.add(fieldOfficerObject.optString("displayName"));
                             fieldOfficerIdHashMap.put(officer.getDisplayName(), officer.getId());
-
                         }
-
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
@@ -522,19 +524,16 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     }
 
     private void inflateAllowOverdraftCheckbox(){
-        et_minimum_overdraft.setVisibility(View.GONE);
-        et_maximum_overdraft.setVisibility(View.GONE);
+        et_overdraft_limit.setVisibility(View.GONE);
         ck_allow_overdraft.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked){
-                    et_minimum_overdraft.setVisibility(View.GONE);
-                    et_maximum_overdraft.setVisibility(View.GONE);
+                    et_overdraft_limit.setVisibility(View.GONE);
                     allowOverdraft = false;
                 }
                 else{
-                    et_minimum_overdraft.setVisibility(View.VISIBLE);
-                    et_maximum_overdraft.setVisibility(View.VISIBLE);
+                    et_overdraft_limit.setVisibility(View.VISIBLE);
                     allowOverdraft = true;
                 }
             }
@@ -542,77 +541,31 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
             });
     }
 
-    private void inflateTransferWithdrawalFeeSpinner(){
-        sp_transfer_withdrawal_fee.setVisibility(View.INVISIBLE);
-        ck_transfer_withdrawal_fee.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    private void inflateTransferWithdrawalFeeCheckbox(){
+        ck_withdrawal_fee.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (!isChecked){
-                    sp_transfer_withdrawal_fee.setVisibility(View.GONE);
-                    withdrawalFeeForTransfers = false;
-                }
-                else{
-                    sp_transfer_withdrawal_fee.setVisibility(View.VISIBLE);
-                    withdrawalFeeForTransfers = true;
-                }
-
-                final ArrayList<String> withdrawalFeeTypeNames = filterListObject
-                        (savingproductstemplate.getWithdrawalFeeTypeOptions());
-
-                final ArrayAdapter<String> withdrawalFeeTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, withdrawalFeeTypeNames);
-                withdrawalFeeTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_transfer_withdrawal_fee.setAdapter(withdrawalFeeTypeAdapter);
-                sp_transfer_withdrawal_fee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-
-                     {
-
-                         @Override
-                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                             withdrawalFeeTypeId = savingproductstemplate.getWithdrawalFeeTypeOptions().get(i).getId();
-                             Log.d("withdrawalFeeType " + withdrawalFeeTypeNames.get(i), String.valueOf(withdrawalFeeTypeId));
-                             if (withdrawalFeeTypeId != -1) {
-
-
-                             } else {
-
-                                 Toast.makeText(getActivity(), getString(R.string.error_select_withdrawal_type), Toast.LENGTH_SHORT).show();
-
-                             }
-
-                         }
-
-                         @Override
-                         public void onNothingSelected(AdapterView<?> parent) {
-
-                         }
-                     }
-
-                );
+                withdrawalFeeForTransfers = isChecked;
             }
         });
     }
 
     private void initiateSavingCreation(SavingsPayload savingsPayload) {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
+        showProgress(true);
 
         App.apiManager.createSavingsAccount(savingsPayload, new Callback<Savings>() {
             @Override
             public void success(Savings savings, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "The Savings Account has been submitted for Approval", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
+                showProgress(false);
                 Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
             }
         });
-
-
     }
 
     public void inflatesubmissionDate() {
@@ -645,7 +598,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                     inflateLockInPeriodFrequencyType();
                     inflateFieldOfficerSpinner();
                     inflateAllowOverdraftCheckbox();
-                    inflateTransferWithdrawalFeeSpinner();
+                    inflateTransferWithdrawalFeeCheckbox();
                 }
 
                     showProgress(false);

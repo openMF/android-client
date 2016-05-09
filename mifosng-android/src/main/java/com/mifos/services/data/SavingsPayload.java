@@ -13,13 +13,15 @@ public class SavingsPayload {
     private String submittedOnDate;
     private String externalId;
     private String nominalAnnualInterestRate;
+    private String lockinPeriodFrequency;
+    private String overdraftLimit;
     private Integer interestCompoundingPeriodType;
     private Integer interestCalculationType;
     private Integer interestCalculationDaysInYearType;
     private Integer interestPostingPeriodType;
-    private Integer lockInPeriodFrequencyType;
+    private Integer lockinPeriodFrequencyType;
     private boolean allowOverdraft;
-    private boolean applyWithdrawalFee;
+    private boolean withdrawalFeeForTransfers;
 
     public Integer getInterestCompoundingPeriodType() {
         return interestCompoundingPeriodType;
@@ -118,29 +120,45 @@ public class SavingsPayload {
         this.interestPostingPeriodType = interestPostingPeriodType;
     }
 
-    public boolean getOverdraftAllowed() {
+    public boolean getAllowOverdraft() {
         return allowOverdraft;
     }
 
-    public boolean setOverdraftAllowed(boolean allowOverdraft) {
+    public boolean setAllowOverdraft(boolean allowOverdraft) {
         this.allowOverdraft = allowOverdraft;
         return allowOverdraft;
     }
 
-    public boolean getWithdrawalFee() {
-        return applyWithdrawalFee;
+    public String getOverdraftLimit() {
+        return overdraftLimit;
     }
 
-    public boolean setWithdrawalFee(boolean applyWithdrawalFee) {
-        this.applyWithdrawalFee = applyWithdrawalFee;
-        return applyWithdrawalFee;
+    public void setOverdraftLimit(String overdraftLimit) {
+        this.overdraftLimit = overdraftLimit;
     }
 
-    public Integer getLockInPeriodFrequencyType() {
-        return lockInPeriodFrequencyType;
+    public boolean getWithdrawalFeeForTransfers(){
+        return withdrawalFeeForTransfers;
     }
 
-    public void setLockInPeriodFrequencyType(Integer lockInPeriodFrequencyType) {
-        this.lockInPeriodFrequencyType = lockInPeriodFrequencyType;
+    public boolean setWithdrawalFeeForTransfers(Boolean withdrawalFeeForTransfers){
+        this.withdrawalFeeForTransfers = withdrawalFeeForTransfers;
+        return withdrawalFeeForTransfers;
+    }
+
+    public Integer getLockinPeriodFrequencyType() {
+        return lockinPeriodFrequencyType;
+    }
+
+    public void setLockinPeriodFrequencyType(Integer lockinPeriodFrequencyType) {
+        this.lockinPeriodFrequencyType = lockinPeriodFrequencyType;
+    }
+
+    public String getLockinPeriodFrequency() {
+        return lockinPeriodFrequency;
+    }
+
+    public void setLockinPeriodFrequency(String lockinPeriodFrequency) {
+        this.lockinPeriodFrequency = lockinPeriodFrequency;
     }
 }
