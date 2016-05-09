@@ -14,6 +14,11 @@
         android:title="@string/add_loan"
         app:showAsAction="never" />
     <item
+        android:id="@+id/add_group_savings"
+        android:enabled="true"
+        android:title="@string/savings_account"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/documents"
         android:enabled="true"
         android:title="@string/documents"
