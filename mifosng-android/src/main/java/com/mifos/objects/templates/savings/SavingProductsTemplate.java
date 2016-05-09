@@ -1,8 +1,11 @@
 package com.mifos.objects.templates.savings;
 
+import android.support.v4.app.INotificationSideChannel;
+
 import com.mifos.objects.Currency;
 import com.mifos.objects.InterestType;
 import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.accounts.savings.FieldOfficerOptions;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class SavingProductsTemplate {
     private InterestType interestCalculationDaysInYearType;
     private InterestType accountingRule;
     private List<Currency> currencyOptions;
+    private List<FieldOfficerOptions> fieldOfficerOptions;
     private List<InterestType> interestCompoundingPeriodTypeOptions;
     private List<InterestType> interestPostingPeriodTypeOptions;
     private List<InterestType> interestCalculationTypeOptions;
@@ -81,6 +85,14 @@ public class SavingProductsTemplate {
 
     public void setAccountingRule(InterestType accountingRule) {
         this.accountingRule = accountingRule;
+    }
+
+    public List<FieldOfficerOptions> getFieldOfficerOptions() {
+        return fieldOfficerOptions;
+    }
+
+    public void setFieldOfficerOptions(List<FieldOfficerOptions> fieldOfficerOptions) {
+        this.fieldOfficerOptions = fieldOfficerOptions;
     }
 
     public List<Currency> getCurrencyOptions() {
@@ -191,6 +203,7 @@ public class SavingProductsTemplate {
     public String toString() {
         return "SavingProductsTemplate{" +
                 "currency=" + currency +
+                ", fieldOfficerOptions=" + fieldOfficerOptions +
                 ", interestCompoundingPeriodType=" + interestCompoundingPeriodType +
                 ", interestPostingPeriodType=" + interestPostingPeriodType +
                 ", interestCalculationType=" + interestCalculationType +

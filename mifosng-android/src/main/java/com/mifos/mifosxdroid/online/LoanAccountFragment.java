@@ -27,10 +27,12 @@ import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.AmortizationType;
 import com.mifos.objects.accounts.loan.InterestCalculationPeriodType;
+import com.mifos.objects.accounts.loan.InterestType;
 import com.mifos.objects.accounts.loan.LoanPurposeOptions;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.TermFrequencyTypeOptions;
 import com.mifos.objects.accounts.loan.TransactionProcessingStrategy;
+import com.mifos.objects.accounts.savings.FieldOfficerOptions;
 import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.utils.Constants;
@@ -104,11 +106,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
     private int clientId;
     private int loanPurposeId;
     private int loanTermFrequency;
+    private int loanInterestType;
     private int transactionProcessingStrategyId;
     private int amortizationTypeId;
     private int interestCalculationPeriodTypeId;
     private HashMap<String, Integer> loansNameIdHashMap = new HashMap<>();
     private HashMap<String, Integer> termFrequencyTypeIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> interestTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> loanPurposeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> loanFundIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> termPeriodFrequencyTypeIdHashMap = new HashMap<String, Integer>();
@@ -146,7 +150,6 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
         inflatesubmissionDate();
         inflatedisbusmentDate();
         inflateLoansProductSpinner();
-
 
         disbursementon_date = tv_disbursementon_date.getText().toString();
         submittion_date = tv_submittedon_date.getText().toString();

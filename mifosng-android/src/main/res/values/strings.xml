@@ -41,7 +41,7 @@
     <string name="principal">Principal</string>
     <string name="loanterm">Loan Term</string>
     <string name="loanterm_month">Select Loan Term</string>
-    <string name="nominal">Nominal annual intrest </string>
+    <string name="nominal">Nominal annual interest </string>
     <string name="submittedon">Submitted On</string>
     <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
@@ -156,6 +156,11 @@
     <string name="approval_savings_date">Select Approval Date:</string>
     <string name="approval_disbursement_date">Expected disbursement on</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
+    <string name="lock_in_period_duration">Lock in Period Duration</string>
+    <string name="currency">Currency</string>
+    <string name="savings_overdraft_amount_limit">Maximum Overdraft Amount Limit</string>
+    <string name="savings_allow_overdraft">Is overdraft allowed?</string>
+    <string name="savings_withdrawal_fee">Apply withdrawal fees for transfers</string>
     <!-- Savings Account Related Terminologies End Here -->
 
 
@@ -192,7 +197,7 @@
     <string name="product">Savings Products</string>
     <string name="field_officer">Field Officer</string>
     <string name="client_classification">Client Classification</string>
-    <string name="interest_comp">Intrest Compounding Period</string>
+    <string name="interest_comp">Interest Compounding Period</string>
     <string name="repaidevery">Repaid Every</string>
 
     <string name="numberofrepayments">Number of repayments</string>
@@ -253,17 +258,22 @@
     <string name="error_select_payment">Please Select Payment Type</string>
     <string name="error_select_fund">Please Select Fund</string>
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
+    <string name="error_select_interestCalculationType">Please Select Interest Calculation Type</string>
     <string name="error_select_transactionProcessingStrategy">Please Select Transaction Processing Strategy</string>
 
     <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
     <string name="loan_purpose">Please Select a the Loan Purpose</string>
     <string name="interestCalculationDaysInYearTypeAdapterId">Please Days in Year</string>
 
-    <string name="error_select_intrested_cmp">Please Select the Interest Compound Period </string>
+    <string name="error_select_interest_type">Please Select Interest Type Method</string>
+    <string name="error_select_withdrawal_type">Please Select Withdrawal Fee Type</string>
+    <string name="error_select_lockInPeriodFrequencyType">Please Select lock In Period Frequency Type</string>
+    <string name="error_select_interest_cmp">Please Select the Interest Compound Period </string>
     <string name="error_select_gender">Please Select Gender</string>
     <string name="error_select_client_type">Please Select Client Type</string>
     <string name="error_select_staff">Please Select a Staff</string>
     <string name="error_select_loan_officer">Please Select a Loan Officer</string>
+    <string name="error_select_field_officer">Please Select a Loan Officer</string>
     <string name="error_select_center">Please Select a Center</string>
     <string name="error_client_inactive">Client Inactive</string>
     <string name="error_group_inactive">Group Inactive</string>
