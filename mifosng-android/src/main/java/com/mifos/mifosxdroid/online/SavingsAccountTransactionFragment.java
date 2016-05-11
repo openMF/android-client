@@ -124,7 +124,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
     public void inflatePaymentOptions() {
-        App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
+        App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
             @Override
             public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
@@ -211,7 +211,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
         showProgress();
-        App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber), transactionType, savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
+        App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType, savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
                     @Override
                     public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {
                         /* Activity is null - Fragment has been detached; no need to do anything. */
