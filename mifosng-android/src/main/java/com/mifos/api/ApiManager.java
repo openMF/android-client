@@ -32,6 +32,7 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.GroupClient;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
@@ -92,6 +93,10 @@ public class ApiManager extends BaseApiManager {
 
     public void listClients(Callback<Page<Client>> callback) {
         getClientsApi().listAllClients(callback);
+    }
+
+    public void listClientsGroup(int groupId, Callback<GroupClient<Client>> callback) {
+        getGroupApi().getClientsWithGroup(groupId,callback);
     }
 
     public void listClients(int offset, int limit, Callback<Page<Client>> callback) {

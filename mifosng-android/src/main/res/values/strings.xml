@@ -311,6 +311,7 @@
     <string name="error_select_officer">Select Officer</string>
     <string name="error_select_client">Select Client</string>
 
+    <string name="empty_client">No clients associated with this group</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

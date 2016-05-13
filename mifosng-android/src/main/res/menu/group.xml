@@ -9,6 +9,12 @@
     tools:context="com.mifos.mifosxdroid.online.GroupsActivity">
 
     <item
+        android:id="@+id/list_client_grp"
+        android:enabled="true"
+        android:title="@string/list_all_clients"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/add_group_loan"
         android:enabled="true"
         android:title="@string/add_loan"
