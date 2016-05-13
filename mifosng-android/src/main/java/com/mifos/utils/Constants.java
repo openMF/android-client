@@ -74,7 +74,8 @@ public class Constants {
 
     public static final String LOCALE = "locale";
 
-
+    public static final String CLIENT_TYPE = "clientType";
+    public static enum ClientType{CLIENT, GROUP, CENTER};
     /**
      * Constants to identify which Data Tables have to be shown
      */

@@ -6,8 +6,12 @@
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +19,7 @@ import android.widget.ListView;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
@@ -53,6 +58,7 @@ public class GroupListFragment extends ProgressableFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null)
             centerId = getArguments().getInt(Constants.CENTER_ID);
     }
@@ -64,6 +70,21 @@ public class GroupListFragment extends ProgressableFragment {
         setToolbarTitle(getResources().getString(R.string.title_center_list));
         inflateGroupList();
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_center, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.itemAddSavingsAccount:
+                mListener.addSavingsAccount(centerId);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -85,6 +106,8 @@ public class GroupListFragment extends ProgressableFragment {
     public interface OnFragmentInteractionListener {
 
         void loadClientsOfGroup(List<Client> clientList);
+
+        void addSavingsAccount(int centerId);
     }
 
     public void inflateGroupList() {
