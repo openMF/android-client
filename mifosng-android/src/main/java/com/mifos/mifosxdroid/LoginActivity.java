@@ -72,6 +72,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
+    private final int MENU_CLEAR_LOGIN_DETAILS = 1001;
 
 
     @Override
@@ -202,6 +203,26 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
                 .create().show();
     }
 
+    private void promptUserToClearLoginDetails() {
+        new AlertDialog.Builder(this)
+                .setTitle("Clear Login Details")
+                .setMessage("This will clear any available login details stored on your device. \nDo you want to continue?")
+                .setIcon(android.R.drawable.stat_sys_warning)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PrefManager.clearPrefs();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create().show();
+    }
+
     @OnClick(R.id.bt_login)
     public void onLoginClick(Button button) {
         // Saving tenant
@@ -229,12 +250,15 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, MENU_CLEAR_LOGIN_DETAILS, Menu.NONE, "Clear Login Details");
         getMenuInflater().inflate(R.menu.offline_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == MENU_CLEAR_LOGIN_DETAILS)
+            promptUserToClearLoginDetails();
         if (item.getItemId() == R.id.offline)
             startActivity(new Intent(this, OfflineCenterInputActivity.class));
         return super.onOptionsItemSelected(item);

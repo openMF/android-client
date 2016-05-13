@@ -38,6 +38,7 @@ import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
 import com.mifos.objects.accounts.savings.Transaction;
+import com.mifos.objects.client.Charges;
 import com.mifos.objects.noncore.DataTable;
 
 import com.mifos.utils.Constants;
@@ -61,7 +62,9 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
 
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_DOCUMENTS = 1004;
+    public static final int MENU_ITEM_CHARGES = 1005;
     public static int savingsAccountNumber;
+    List<Charges> chargesList = new ArrayList<Charges>();
     public static DepositType savingsAccountType;
 
     public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
@@ -279,6 +282,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
         menu.clear();
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string.documents));
+        menu.add(Menu.NONE, MENU_ITEM_CHARGES, Menu.NONE, getResources().getString(R.string.charges));
 
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
@@ -308,6 +312,11 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
 
         if (item.getItemId() == MENU_ITEM_DOCUMENTS)
             loadDocuments();
+
+
+        if (item.getItemId() == MENU_ITEM_CHARGES)
+            loadSavingsCharges();
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -412,6 +421,15 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.container, documentListFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void loadSavingsCharges() {
+
+        SavingsChargeFragment savingsChargeFragment = SavingsChargeFragment.newInstance(savingsAccountNumber,chargesList);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.container, savingsChargeFragment);
         fragmentTransaction.commit();
     }
     public void approveSavings() {

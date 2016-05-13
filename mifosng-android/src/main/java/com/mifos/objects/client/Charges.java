@@ -22,6 +22,7 @@ public class Charges {
     private Integer id;
     private Integer clientId;
     private Integer loanId;
+    private Integer accountId;
     private Integer chargeId;
     private String name;
     private ChargeTimeType chargeTimeType;
@@ -61,6 +62,14 @@ public class Charges {
 
     public void setChargeId(Integer chargeId) {
         this.chargeId = chargeId;
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 
     public String getName() {
