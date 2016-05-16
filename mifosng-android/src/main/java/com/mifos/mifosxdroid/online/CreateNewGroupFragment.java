@@ -266,7 +266,7 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
             if (et_groupName.getEditableText().toString().trim().length() < 4 && et_groupName.getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.group_name), 4);
             }
-            if (!et_groupName.getEditableText().toString().matches("[a-zA-Z]+")) {
+            if (!et_groupName.getEditableText().toString().matches("[a-zA-Z\\s\\S]+")) {
                 throw new InvalidTextInputException(getResources().getString(R.string.group_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
