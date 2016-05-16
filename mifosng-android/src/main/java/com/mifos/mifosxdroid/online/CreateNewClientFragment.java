@@ -123,7 +123,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         if (msisdn == null || msisdn.trim().isEmpty()) {
             return false;
         }
-        String expression = "^[+]?\\d{10,13}$";
+        String expression = "^[+]?\\d\\s{10,13}$";
         Pattern pattern;
         Matcher matcher;
         pattern = Pattern.compile(expression);
