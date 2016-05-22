@@ -85,11 +85,13 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer.valueOf(et_port.getEditableText().toString());
+            Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer
+                    .valueOf(et_port.getEditableText().toString());
             instanceURL = ValidationUtil.getInstanceUrl(et_domain.getText().toString(), port);
             isValidUrl = ValidationUtil.isValidUrl(instanceURL);
             tv_full_url.setText(instanceURL);
-            tv_full_url.setTextColor(isValidUrl ? getResources().getColor(R.color.green_light) : getResources().getColor(R.color.red_light));
+            tv_full_url.setTextColor(isValidUrl ? getResources().getColor(R.color.green_light) :
+                    getResources().getColor(R.color.red_light));
         }
     };
 
@@ -107,7 +109,8 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         bt_connectionSettings.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                ll_connectionSettings.setVisibility(ll_connectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
+                ll_connectionSettings.setVisibility(ll_connectionSettings.getVisibility() ==
+                        VISIBLE ? GONE : VISIBLE);
             }
         });
         et_domain.addTextChangedListener(urlWatcher);
@@ -136,7 +139,8 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
     @Override
     public void success(User user, Response response) {
         hideProgress();
-        Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " " + user.getUsername());
+        Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " "
+                + user.getUsername());
         // Saving userID
         PrefManager.setUserId(user.getUserId());
         // Saving InstanceURL for next usages
@@ -159,12 +163,15 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
             if (retrofitError.getCause() instanceof SSLHandshakeException) {
                 promptUserToByPassTheSSLHandshake();
             } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_login_failed));
-            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                Toaster.show(findViewById(android.R.id.content), getString(R.string
+                        .error_login_failed));
+            } else if (retrofitError.getResponse().getStatus() == HttpStatus
+                    .SC_INTERNAL_SERVER_ERROR) {
                 Toaster.show(findViewById(android.R.id.content), "Internal server error");
             }
         } catch (NullPointerException e) {
-            if (Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to Internet")) {
+            if (Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to " +
+                    "Internet")) {
                 Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
             } else {
                 Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
@@ -181,7 +188,8 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
     private void promptUserToByPassTheSSLHandshake() {
         new AlertDialog.Builder(this)
                 .setTitle("SSL Certificate Problem")
-                .setMessage("There is a problem with your SSLCertificate, would you like to continue? This connection would be unsafe.")
+                .setMessage("There is a problem with your SSLCertificate, would you like to " +
+                        "continue? This connection would be unsafe.")
                 .setIcon(android.R.drawable.stat_sys_warning)
                 .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                     @Override

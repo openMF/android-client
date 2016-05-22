@@ -48,7 +48,8 @@ import retrofit.client.Response;
 /**
  * Created by nellyk on 1/22/2016.
  */
-public class LoanAccountDisbursement extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class LoanAccountDisbursement extends DialogFragment implements MFDatePicker
+        .OnDatePickListener {
 
     public static final String TAG = "LoanAccountDisbursement";
     public static int loanAccountNumber;
@@ -97,7 +98,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
@@ -107,7 +109,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
         inflateDisbursementDate();
         inflatePaymentTypeSpinner();
         disbursement_dates = loan_disbursement_dates.getText().toString();
-        disbursement_dates = DateHelper.getDateAsStringUsedForCollectionSheetPayload(disbursement_dates).replace("-", " ");
+        disbursement_dates = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (disbursement_dates).replace("-", " ");
 
         bt_disburse_loan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +119,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                 LoanDisbursement loanDisbursement = new LoanDisbursement();
                 loanDisbursement.setNote(et_disbursement_note.getEditableText().toString());
                 loanDisbursement.setActualDisbursementDate(disbursement_dates);
-                loanDisbursement.setTransactionAmount(et_disbursed_amount.getEditableText().toString());
+                loanDisbursement.setTransactionAmount(et_disbursed_amount.getEditableText()
+                        .toString());
                 loanDisbursement.setPaymentId(paymentTypeId);
                 initiateLoanDisbursement(loanDisbursement);
 
@@ -136,7 +140,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
         App.apiManager.getLoanTemplate(loanAccountNumber, new Callback<Response>() {
             @Override
             public void success(Response result, Response response) {
-                final ArrayList<PaymentTypeOptions> paymentOption = new ArrayList<PaymentTypeOptions>();
+                final ArrayList<PaymentTypeOptions> paymentOption = new
+                        ArrayList<PaymentTypeOptions>();
                 final ArrayList<String> paymentNames = new ArrayList<String>();
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -165,11 +170,13 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                 }
                 ArrayAdapter<String> paymentAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, paymentNames);
-                paymentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                paymentAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_payment_type.setAdapter(paymentAdapter);
                 sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         paymentTypeId = paymentNameIdHashMap.get(paymentNames.get(i));
                         Log.d("paymentId " + paymentNames.get(i), String.valueOf(paymentTypeId));
                         if (paymentTypeId != -1) {
@@ -177,7 +184,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_payment), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string
+                                    .error_select_payment), Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -207,7 +215,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                 new Callback<GenericResponse>() {
                     @Override
                     public void success(GenericResponse genericResponse, Response response) {
-                        Toast.makeText(getActivity(), "The Loan has been Disbursed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "The Loan has been Disbursed", Toast
+                                .LENGTH_LONG).show();
 
                     }
 
@@ -227,7 +236,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
         loan_disbursement_dates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
 

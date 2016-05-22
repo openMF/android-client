@@ -36,7 +36,8 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
-public class ClientChooseFragment extends ProgressableFragment implements AdapterView.OnItemClickListener {
+public class ClientChooseFragment extends ProgressableFragment implements AdapterView
+        .OnItemClickListener {
 
     @InjectView(R.id.lv_clients)
     ListView results;
@@ -58,7 +59,8 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_client_choose, null);
         ButterKnife.inject(this, root);
         adapter = new ClientChooseAdapter(getContext(), clients, R.layout.list_item_client);
@@ -97,7 +99,8 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, SurveyListFragment.newInstance(clients.get(i).getId()), "SurveyListFragment");
+        fragmentTransaction.replace(R.id.container, SurveyListFragment.newInstance(clients.get(i)
+                .getId()), "SurveyListFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -110,32 +113,37 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int
+                    visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
 
                     if (!loadmore && areMoreClientsAvailable) {
                         loadmore = true;
                         Toaster.show(root, "Loading More Clients");
-                        App.apiManager.listClients(clients.size(), limit, new Callback<Page<Client>>() {
-                            @Override
-                            public void success(Page<Client> clientPage, Response response) {
-                                clients.addAll(clientPage.getPageItems());
-                                clientChooseAdapter.notifyDataSetChanged();
-                                loadmore = false;
+                        App.apiManager.listClients(clients.size(), limit, new
+                                Callback<Page<Client>>() {
+                                    @Override
+                                    public void success(Page<Client> clientPage, Response
+                                            response) {
+                                        clients.addAll(clientPage.getPageItems());
+                                        clientChooseAdapter.notifyDataSetChanged();
+                                        loadmore = false;
 
-                                //checking the response size if size is zero then set the areMoreClientsAvailable = false
-                                //this will reflect into scroll method and it will show
-                                if (clientPage.getPageItems().size() == 0 && (totalFilteredRecords == clients.size())) {
-                                    areMoreClientsAvailable = false;
-                                    shouldCheckForMoreClients = true;
-                                }
-                            }
+                                        //checking the response size if size is zero then set the
+                                        // areMoreClientsAvailable = false
+                                        //this will reflect into scroll method and it will show
+                                        if (clientPage.getPageItems().size() == 0 &&
+                                                (totalFilteredRecords == clients.size())) {
+                                            areMoreClientsAvailable = false;
+                                            shouldCheckForMoreClients = true;
+                                        }
+                                    }
 
-                            @Override
-                            public void failure(RetrofitError retrofitError) {
-                                Toaster.show(root, "There was some error fetching list.");
-                            }
-                        });
+                                    @Override
+                                    public void failure(RetrofitError retrofitError) {
+                                        Toaster.show(root, "There was some error fetching list.");
+                                    }
+                                });
                     } else if (shouldCheckForMoreClients)
                         Toaster.show(root, "No more clients Available");
                 }

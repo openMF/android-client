@@ -79,7 +79,8 @@ public class LoanAccountApproval extends DialogFragment implements MFDatePicker.
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
@@ -88,7 +89,8 @@ public class LoanAccountApproval extends DialogFragment implements MFDatePicker.
         ButterKnife.inject(this, rootView);
         inflateApprovalDate();
         approvaldate = tv_loan_approval_dates.getText().toString();
-        approvaldate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvaldate).replace("-", " ");
+        approvaldate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvaldate)
+                .replace("-", " ");
         bt_approve_loan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,7 +143,8 @@ public class LoanAccountApproval extends DialogFragment implements MFDatePicker.
         tv_loan_approval_dates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
 

@@ -35,7 +35,8 @@ import retrofit.http.Query;
 public interface LoanService {
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=all")
-    void getLoanByIdWithAllAssociations(@Path("loanId") int loanId, Callback<LoanWithAssociations> loanCallback);
+    void getLoanByIdWithAllAssociations(@Path("loanId") int loanId,
+                                        Callback<LoanWithAssociations> loanCallback);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
     void getLoanRepaymentTemplate(@Path("loanId") int loanId,
@@ -78,7 +79,8 @@ public interface LoanService {
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=individual")
-    void getLoansAccountTemplate(@Query("clientId") int clientId, @Query("productId") int productId, Callback<Response> loanCallback);
+    void getLoansAccountTemplate(@Query("clientId") int clientId, @Query("productId") int
+            productId, Callback<Response> loanCallback);
 
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
@@ -89,14 +91,17 @@ public interface LoanService {
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=group")
-    void getGroupLoansAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> grouploanCallback);
+    void getGroupLoansAccountTemplate(@Query("groupId") int groupId, @Query("productId") int
+            productId, Callback<Response> grouploanCallback);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
-    void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>> loanchargeListCallback);
+    void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>>
+            loanchargeListCallback);
 
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>> chargeListCallback);
+    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>>
+            chargeListCallback);
 
 
 }

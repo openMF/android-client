@@ -52,7 +52,8 @@ public class ClientIdentifiersFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_identifiers, container, false);
         ButterKnife.inject(this, rootView);
         setToolbarTitle(getString(R.string.identifiers));
@@ -69,10 +70,12 @@ public class ClientIdentifiersFragment extends ProgressableFragment {
                 if (getActivity() == null) return;
 
                 if (identifiers != null && identifiers.size() > 0) {
-                    IdentifierListAdapter identifierListAdapter = new IdentifierListAdapter(getActivity(), identifiers, clientId);
+                    IdentifierListAdapter identifierListAdapter = new IdentifierListAdapter
+                            (getActivity(), identifiers, clientId);
                     lv_identifiers.setAdapter(identifierListAdapter);
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.message_no_identifiers_available), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string
+                            .message_no_identifiers_available), Toast.LENGTH_SHORT).show();
                 }
                 showProgress(false);
             }

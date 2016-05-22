@@ -37,12 +37,31 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 /**
  * Created by ahmed fathy on 17/04/16.
  */
-public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
+public class CreateNewCenterFragmentTest extends
+        ActivityInstrumentationTestCase2<DashboardActivity> {
 
     private DashboardActivity mActivity;
 
     public CreateNewCenterFragmentTest() {
         super(DashboardActivity.class);
+    }
+
+    /**
+     * checks that the spinner is loaded with 1 or more items
+     */
+    public static Matcher<View> hasChildren() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return ((Spinner) view).getAdapter().getCount() > 0;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("The spinner has no children");
+            }
+        };
     }
 
     @Override
@@ -68,7 +87,6 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
         assertNotNull(createNewCenterFragment);
         assertTrue(createNewCenterFragment.isAdded());
     }
-
 
     @SmallTest
     public void testViewsVisible() throws InterruptedException {
@@ -106,7 +124,6 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
                 .check(matches(hasChildren()));
     }
 
-
     /**
      * fills the template and presses submit
      */
@@ -142,7 +159,6 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
                 .perform(scrollTo(), click());
     }
 
-
     /**
      * chooses "Create Center" from the options menu
      */
@@ -151,25 +167,6 @@ public class CreateNewCenterFragmentTest extends ActivityInstrumentationTestCase
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
         onView(withText("Create Center"))
                 .perform(click());
-    }
-
-
-    /**
-     * checks that the spinner is loaded with 1 or more items
-     */
-    public static Matcher<View> hasChildren() {
-        return new TypeSafeMatcher<View>() {
-
-            @Override
-            public boolean matchesSafely(View view) {
-                return ((Spinner) view).getAdapter().getCount() > 0;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("The spinner has no children");
-            }
-        };
     }
 
 }

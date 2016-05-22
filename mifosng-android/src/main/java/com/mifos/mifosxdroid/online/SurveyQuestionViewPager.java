@@ -93,7 +93,8 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
             }
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int
+                    positionOffsetPixels) {
 
             }
 
@@ -127,7 +128,8 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
 
             if (survey.getQuestionDatas() != null && survey.getQuestionDatas().size() > 0) {
                 for (int i = 0; i < survey.getQuestionDatas().size(); i++) {
-                    fragments.add(SurveyQuestionFragment.newInstance((new Gson()).toJson(survey.getQuestionDatas().get(i))));
+                    fragments.add(SurveyQuestionFragment.newInstance((new Gson()).toJson(survey
+                            .getQuestionDatas().get(i))));
                 }
                 fragments.add(SurveyLastFragment.newInstance());
                 mPagerAdapter.notifyDataSetChanged();
@@ -155,7 +157,8 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
     public void updateAnswerList() {
 
         if (mScorecardValue != null) {
-            Log.d("SurveyViewPager", "" + mScorecardValue.getQuestionId() + mScorecardValue.getResponseId() + mScorecardValue.getValue());
+            Log.d("SurveyViewPager", "" + mScorecardValue.getQuestionId() + mScorecardValue
+                    .getResponseId() + mScorecardValue.getValue());
             mMapScores.put(mScorecardValue.getQuestionId(), mScorecardValue);
             mScorecardValue = null;
         }
@@ -178,7 +181,8 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
         if (survey.getQuestionDatas().size() == 0) {
             mToolbar.setSubtitle(("0/0"));
         } else if (mCurrentQuestionPosition <= survey.getQuestionDatas().size()) {
-            mToolbar.setSubtitle((mCurrentQuestionPosition) + "/" + survey.getQuestionDatas().size());
+            mToolbar.setSubtitle((mCurrentQuestionPosition) + "/" + survey.getQuestionDatas()
+                    .size());
         } else
             mToolbar.setSubtitle("Submit Survey");
 
@@ -201,7 +205,8 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mMapScores = (HashMap<Integer, ScorecardValues>) savedInstanceState.getSerializable("answers");
+        mMapScores = (HashMap<Integer, ScorecardValues>) savedInstanceState.getSerializable
+                ("answers");
     }
 }
 

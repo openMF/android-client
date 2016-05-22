@@ -31,24 +31,27 @@ public class MifosBaseFragment extends Fragment {
         try {
             callback = (BaseActivityCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement BaseActivityCallback");
+            throw new ClassCastException(activity.toString() + " must implement " +
+                    "BaseActivityCallback");
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager = (InputMethodManager) getActivity().getSystemService(Context
+                .INPUT_METHOD_SERVICE);
     }
 
     public void showAlertDialog(String title, String message) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
-        dialog.setMessage(message).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        }).create().show();
+        dialog.setMessage(message).setCancelable(false).setPositiveButton("OK", new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
     }
 
     public Toolbar getToolbar() {
@@ -78,7 +81,8 @@ public class MifosBaseFragment extends Fragment {
     }
 
     public void hideKeyboard(View view) {
-        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager
+                .HIDE_IMPLICIT_ONLY);
     }
 
 }

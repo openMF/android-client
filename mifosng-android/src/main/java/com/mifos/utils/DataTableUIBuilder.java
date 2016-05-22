@@ -73,7 +73,8 @@ public class DataTableUIBuilder {
             int rowIndex = 0;
             while (rowIndex < dataTable.getColumnHeaderData().size()) {
                 TableRow tableRow = new TableRow(context);
-                tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams
+                        .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 tableRow.setPadding(10, 10, 10, 10);
                 if (rowIndex % 2 == 0) {
                     tableRow.setBackgroundColor(Color.LTGRAY);
@@ -86,15 +87,21 @@ public class DataTableUIBuilder {
                 key.setGravity(Gravity.LEFT);
                 TextView value = new TextView(context);
                 value.setGravity(Gravity.RIGHT);
-                if (jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString().contains("\"")) {
-                    value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString().replace("\"", ""));
+                if (jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get
+                        (rowIndex).getColumnName()).toString().contains("\"")) {
+                    value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData
+                            ().get(rowIndex).getColumnName()).toString().replace("\"", ""));
                 } else {
-                    value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(rowIndex).getColumnName()).toString());
+                    value.setText(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData
+                            ().get(rowIndex).getColumnName()).toString());
                 }
 
-                tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-                tableRow.addView(value, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                tableRow.addView(key, new TableRow.LayoutParams(ViewGroup.LayoutParams
+                        .WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                tableRow.addView(value, new TableRow.LayoutParams(ViewGroup.LayoutParams
+                        .WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(ViewGroup
+                        .LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layoutParams.setMargins(12, 16, 12, 16);
                 tableLayout.addView(tableRow, layoutParams);
 
@@ -113,13 +120,18 @@ public class DataTableUIBuilder {
             tableLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(context, "Deleting Row " + tableIndex, Toast.LENGTH_SHORT).show();
-                    App.apiManager.removeDataTableEntry(dataTable.getRegisteredTableName(), entityId,
-                            Integer.parseInt(jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData().get(0).getColumnName()).toString()),
+                    Toast.makeText(context, "Deleting Row " + tableIndex, Toast.LENGTH_SHORT)
+                            .show();
+                    App.apiManager.removeDataTableEntry(dataTable.getRegisteredTableName(),
+                            entityId,
+                            Integer.parseInt(jsonElement.getAsJsonObject().get(dataTable
+                                    .getColumnHeaderData().get(0).getColumnName()).toString()),
                             new Callback<GenericResponse>() {
                                 @Override
-                                public void success(GenericResponse genericResponse, Response response) {
-                                    Toast.makeText(context, "Deleted Row " + tableIndex, Toast.LENGTH_SHORT).show();
+                                public void success(GenericResponse genericResponse, Response
+                                        response) {
+                                    Toast.makeText(context, "Deleted Row " + tableIndex, Toast
+                                            .LENGTH_SHORT).show();
                                     dataTableActionListener.onRowDeleted();
                                 }
 
@@ -136,7 +148,8 @@ public class DataTableUIBuilder {
             View v = new View(context);
             v.setBackgroundColor(context.getResources().getColor(R.color.black));
             parentLayout.addView(tableLayout);
-            parentLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 5));
+            parentLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
+                    .MATCH_PARENT, 5));
             Log.i("TABLE INDEX", "" + tableIndex);
             tableIndex++;
         }

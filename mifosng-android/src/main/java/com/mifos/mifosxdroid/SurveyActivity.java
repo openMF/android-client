@@ -15,7 +15,8 @@ import com.mifos.mifosxdroid.online.SurveyListFragment;
 import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
 import com.mifos.objects.survey.Survey;
 
-public class SurveyActivity extends MifosBaseActivity implements SurveyListFragment.OnFragmentInteractionListener {
+public class SurveyActivity extends MifosBaseActivity implements SurveyListFragment
+        .OnFragmentInteractionListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);

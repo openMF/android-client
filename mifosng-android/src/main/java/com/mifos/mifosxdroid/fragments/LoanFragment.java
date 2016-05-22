@@ -35,7 +35,8 @@ public class LoanFragment extends MifosBaseFragment {
     private int clientId;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loan, null);
         ButterKnife.inject(this, view);
         getClientId();
@@ -57,7 +58,8 @@ public class LoanFragment extends MifosBaseFragment {
 
     private List<Loan> getLoans() {
         loansClientHave.clear();
-        List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)).list();
+        List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)
+        ).list();
         Log.i(tag, "Looking for loan with client ID:" + clientId);
         Log.i(tag, "Loans in ClientFragment from DB:" + loanList.toString());
         loansClientHave.addAll(loanList);

@@ -34,7 +34,6 @@ import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -42,7 +41,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  * Created by Gabriel Esteban on 06/12/14.
  */
 @Suppress // TODO: Fix NPE
-public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
+public class DashboardFragmentActivityTest extends
+        ActivityInstrumentationTestCase2<DashboardActivity> {
 
     DashboardActivity dashboardActivity;
     EditText et_searchById;
@@ -59,14 +59,13 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
     protected void setUp() throws Exception {
         super.setUp();
         dashboardActivity = getActivity();
-        searchFragment = (ClientSearchFragment) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_CLIENT_SEARCH);
+        searchFragment = (ClientSearchFragment) getActivity().getSupportFragmentManager()
+                .findFragmentByTag(FragmentConstants.FRAG_CLIENT_SEARCH);
         et_searchById = (EditText) dashboardActivity.findViewById(R.id.et_search_by_id);
         bt_searchClient = (Button) dashboardActivity.findViewById(R.id.bt_searchClient);
         lv_searchResults = (ListView) dashboardActivity.findViewById(R.id.lv_searchResults);
         tv_title_search = (TextView) dashboardActivity.findViewById(R.id.tv_title_search_results);
     }
-
-
 
 
     @SmallTest
@@ -101,7 +100,8 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
     @MediumTest
     public void testClientListActivityStarted() throws InterruptedException {
 
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(ClientListActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor
+                (ClientListActivity.class.getName(), null, false);
 
         // select item from navigation drawer
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());
@@ -117,7 +117,8 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
 
     @MediumTest
     public void testGroupListActivityStarted() throws InterruptedException {
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(GroupListActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor
+                (GroupListActivity.class.getName(), null, false);
 
         // select item from navigation drawer
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());
@@ -134,13 +135,13 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
 
     @MediumTest
     public void testCenterListActivityStarted() throws InterruptedException {
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(CentersActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(CentersActivity
+                .class.getName(), null, false);
 
         // select item from navigation drawer
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());
         Thread.sleep(500);
         onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_centers));
-
 
 
         Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
@@ -152,13 +153,13 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
 
     @MediumTest
     public void testSurveryActivityStarted() throws InterruptedException {
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SurveyActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SurveyActivity
+                .class.getName(), null, false);
 
         // select item from navigation drawer
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());
         Thread.sleep(500);
         onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_survey));
-
 
 
         Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
@@ -170,13 +171,13 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
 
     @MediumTest
     public void testPathTrackingActivityStarted() throws InterruptedException {
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(PathTrackingActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor
+                (PathTrackingActivity.class.getName(), null, false);
 
         // select item from navigation drawer
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());
         Thread.sleep(500);
         onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_path_tracker));
-
 
 
         Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
@@ -189,7 +190,8 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
 
     @MediumTest
     public void testOfflineActivityStarted() throws InterruptedException {
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(OfflineCenterInputActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor
+                (OfflineCenterInputActivity.class.getName(), null, false);
 
         // select item from navigation drawer
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());
@@ -218,7 +220,7 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
     /**
      * a work around to test opening a nav drawer
      */
-    private  ViewAction actionOpenDrawer() {
+    private ViewAction actionOpenDrawer() {
         return new ViewAction() {
 
             @Override
@@ -241,7 +243,7 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
     /**
      * a work around to test selecting an item from a navigation view
      */
-    private  ViewAction actionSelectNavItem(final int id) {
+    private ViewAction actionSelectNavItem(final int id) {
         return new ViewAction() {
 
             @Override
@@ -258,7 +260,8 @@ public class DashboardFragmentActivityTest extends ActivityInstrumentationTestCa
             public void perform(UiController uiController, View view) {
 
                 MenuItem item = ((NavigationView) view).getMenu().findItem(id).setCheckable(true);
-                NavigationView.OnNavigationItemSelectedListener listener = (NavigationView.OnNavigationItemSelectedListener) getActivity();
+                NavigationView.OnNavigationItemSelectedListener listener = (NavigationView
+                        .OnNavigationItemSelectedListener) getActivity();
                 listener.onNavigationItemSelected(item);
             }
         };

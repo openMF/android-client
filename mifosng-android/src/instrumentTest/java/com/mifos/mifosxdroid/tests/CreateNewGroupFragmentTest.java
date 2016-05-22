@@ -37,12 +37,31 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 /**
  * Created by ahmed fathy on 20/04/16.
  */
-public class CreateNewGroupFragmentTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
+public class CreateNewGroupFragmentTest extends
+        ActivityInstrumentationTestCase2<DashboardActivity> {
 
     private DashboardActivity mActivity;
 
     public CreateNewGroupFragmentTest() {
         super(DashboardActivity.class);
+    }
+
+    /**
+     * checks that the spinner is loaded with 1 or more items
+     */
+    public static Matcher<View> hasChildren() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return ((Spinner) view).getAdapter().getCount() > 0;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("The spinner has no children");
+            }
+        };
     }
 
     @Override
@@ -66,7 +85,6 @@ public class CreateNewGroupFragmentTest extends ActivityInstrumentationTestCase2
         assertNotNull(createNewGroupFragment);
         assertTrue(createNewGroupFragment.isAdded());
     }
-
 
     @SmallTest
     public void testViewsVisible() throws InterruptedException {
@@ -110,7 +128,6 @@ public class CreateNewGroupFragmentTest extends ActivityInstrumentationTestCase2
         onView(withId(R.id.sp_group_offices))
                 .check(matches(hasChildren()));
     }
-
 
     /**
      * fills the template and presses submit
@@ -159,7 +176,6 @@ public class CreateNewGroupFragmentTest extends ActivityInstrumentationTestCase2
                 .perform(scrollTo(), click());
     }
 
-
     /**
      * chooses "Create Group" from the options menu
      */
@@ -168,25 +184,6 @@ public class CreateNewGroupFragmentTest extends ActivityInstrumentationTestCase2
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
         onView(withText("Create Group"))
                 .perform(click());
-    }
-
-
-    /**
-     * checks that the spinner is loaded with 1 or more items
-     */
-    public static Matcher<View> hasChildren() {
-        return new TypeSafeMatcher<View>() {
-
-            @Override
-            public boolean matchesSafely(View view) {
-                return ((Spinner) view).getAdapter().getCount() > 0;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("The spinner has no children");
-            }
-        };
     }
 
 }

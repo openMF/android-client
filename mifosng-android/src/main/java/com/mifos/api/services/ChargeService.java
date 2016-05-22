@@ -30,16 +30,20 @@ public interface ChargeService {
     void getAllChargev3(@Path("loanId") int loanId, Callback<Response> callback);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>> chargeListCallback);
+    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>>
+            chargeListCallback);
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-    void createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload, Callback<Charges> callback);
+    void createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload,
+                       Callback<Charges> callback);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
-    void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>> loanchargeListCallback);
+    void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>>
+            loanchargeListCallback);
 
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
-    void createLoanCharges(@Path("loanId") int loanId, @Body ChargesPayload chargesPayload, Callback<Charges> callback);
+    void createLoanCharges(@Path("loanId") int loanId, @Body ChargesPayload chargesPayload,
+                           Callback<Charges> callback);
 
 }

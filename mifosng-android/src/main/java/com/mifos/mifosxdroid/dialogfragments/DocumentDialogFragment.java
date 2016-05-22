@@ -95,7 +95,8 @@ public class DocumentDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         getDialog().setTitle(R.string.upload_document);
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
@@ -123,7 +124,8 @@ public class DocumentDialogFragment extends DialogFragment {
         documentName = et_document_name.getEditableText().toString();
 
         if (documentName == null || documentName.equals(""))
-            throw new RequiredFieldException(getResources().getString(R.string.name), getString(R.string.message_field_required));
+            throw new RequiredFieldException(getResources().getString(R.string.name), getString(R
+                    .string.message_field_required));
 
         documentDescription = et_document_description.getEditableText().toString();
 
@@ -154,7 +156,9 @@ public class DocumentDialogFragment extends DialogFragment {
                             Log.d(TAG, "File Path: " + filePath);
                         } else if (scheme.equals("content")) {
 
-                            Toast.makeText(getActivity(), "The application currently does not support file picking from apps other than File Managers.",
+                            Toast.makeText(getActivity(), "The application currently does not " +
+                                            "support file picking from apps other than File " +
+                                            "Managers.",
                                     Toast.LENGTH_SHORT).show();
                             resultCode = Activity.RESULT_CANCELED;
                         }
@@ -210,7 +214,9 @@ public class DocumentDialogFragment extends DialogFragment {
 
                         if (genericResponse != null) {
 
-                            Toast.makeText(getActivity(), String.format(getString(R.string.uploaded_successfully), fileChoosen.getName()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), String.format(getString(R.string
+                                    .uploaded_successfully), fileChoosen.getName()), Toast
+                                    .LENGTH_SHORT).show();
 
                             System.out.println(genericResponse.toString());
                         }
@@ -222,7 +228,8 @@ public class DocumentDialogFragment extends DialogFragment {
                     @Override
                     public void failure(RetrofitError retrofitError) {
 
-                        Toast.makeText(getActivity(), getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.upload_failed), Toast
+                                .LENGTH_SHORT).show();
                         getDialog().dismiss();
                         safeUIBlockingUtility.safelyUnBlockUI();
                         getDialog().dismiss();

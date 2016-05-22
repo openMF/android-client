@@ -48,7 +48,8 @@ public class ClientSearchAdapter extends MifosBaseListAdapter<SearchedEntity> {
         holder.name.setText(item.getDescription());
         TextDrawable drawable;
         if (item.getEntityName() != null && item.getEntityName().trim().length() > 0) {
-            drawable = mDrawableBuilder.build(String.valueOf(item.getEntityName().charAt(0)), mColorGenerator.getColor(item.getEntityName()));
+            drawable = mDrawableBuilder.build(String.valueOf(item.getEntityName().charAt(0)),
+                    mColorGenerator.getColor(item.getEntityName()));
             holder.icon.setImageDrawable(drawable);
         }
 

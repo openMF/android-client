@@ -12,7 +12,6 @@ import android.widget.ListView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CentersActivity;
 
-
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -66,7 +65,8 @@ public class CenterListFragmentTest extends ActivityInstrumentationTestCase2<Cen
             throwable.printStackTrace();
         }
 
-        //if something went wrong instantiating the group fragment, performItemClick will throw and exception
+        //if something went wrong instantiating the group fragment, performItemClick will throw
+        // and exception
 
         //waiting for the API
         Thread.sleep(2000);

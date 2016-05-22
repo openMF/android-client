@@ -145,7 +145,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false);
         ButterKnife.inject(this, rootView);
         inflateLoanAccountSummary();
@@ -178,7 +179,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
                     inflateLoanSummary(loanWithAssociations);
                     // if Loan is already active
                     // the Transaction Would be Make Repayment
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.light_green));
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
+                            .light_green));
                     bt_processLoanTransaction.setText("Make Repayment");
                     processLoanTransactionAction = TRANSACTION_REPAYMENT;
 
@@ -191,19 +193,22 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
                 } else if (loanWithAssociations.getStatus().getWaitingForDisbursal()) {
                     // if Loan is Waiting for Disbursal
                     // the Action would be Disburse Loan
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.light_yellow));
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
+                            .light_yellow));
                     bt_processLoanTransaction.setText("Disburse Loan");
                     processLoanTransactionAction = ACTION_DISBURSE_LOAN;
                 } else if (loanWithAssociations.getStatus().getClosedObligationsMet()) {
                     inflateLoanSummary(loanWithAssociations);
                     // if Loan is Closed after the obligations are met
                     // the make payment will be disabled so that no more payment can be collected
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.black));
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
+                            .black));
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Make Repayment");
                 } else {
                     inflateLoanSummary(loanWithAssociations);
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.black));
+                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
+                            .black));
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Loan Closed");
                 }
@@ -239,18 +244,24 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement " +
+                    "OnFragmentInteractionListener");
         }
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_LOAN_NAME);
-        menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R.string.transactions));
-        menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R.string.loan_repayment_schedule));
-        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string.documents));
-        menu.add(Menu.NONE, MENU_ITEM_CHARGES, Menu.NONE, getResources().getString(R.string.charges));
+        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+                .DATA_TABLE_LOAN_NAME);
+        menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R
+                .string.transactions));
+        menu.add(Menu.NONE, MENU_ITEM_REPAYMENT_SCHEDULE, Menu.NONE, getResources().getString(R
+                .string.loan_repayment_schedule));
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string
+                .documents));
+        menu.add(Menu.NONE, MENU_ITEM_CHARGES, Menu.NONE, getResources().getString(R.string
+                .charges));
 
         int SUBMENU_ITEM_ID = 0;
 
@@ -259,7 +270,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
         if (dataTableSubMenu != null && loanDataTables != null && loanDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = loanDataTables.iterator();
             while (dataTableIterator.hasNext()) {
-                dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator.next().getRegisteredTableName());
+                dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator
+                        .next().getRegisteredTableName());
                 SUBMENU_ITEM_ID++;
             }
         }
@@ -275,8 +287,10 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
             mListener.loadLoanTransactions(loanAccountNumber);
 
         if (item.getItemId() >= 0 && item.getItemId() < loanDataTables.size()) {
-            DataTableDataFragment dataTableDataFragment = DataTableDataFragment.newInstance(loanDataTables.get(item.getItemId()), loanAccountNumber);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            DataTableDataFragment dataTableDataFragment = DataTableDataFragment.newInstance
+                    (loanDataTables.get(item.getItemId()), loanAccountNumber);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
             fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
             fragmentTransaction.commit();
@@ -319,37 +333,55 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
     }
 
     public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {
-        tv_amount_disbursed.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalDisbursed()));
+        tv_amount_disbursed.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getPrincipalDisbursed()));
         try {
-            tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations.getTimeline().getActualDisbursementDate()));
+            tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations
+                    .getTimeline().getActualDisbursementDate()));
         } catch (IndexOutOfBoundsException exception) {
-            Toast.makeText(getActivity(), getResources().getString(R.string.loan_rejected_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string
+                    .loan_rejected_message), Toast.LENGTH_SHORT).show();
         }
         tv_in_arrears.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOverdue()));
-        tv_principal.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalDisbursed()));
-        tv_loan_principal_due.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalOutstanding()));
-        tv_loan_principal_paid.setText(String.valueOf(loanWithAssociations.getSummary().getPrincipalPaid()));
+        tv_principal.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getPrincipalDisbursed()));
+        tv_loan_principal_due.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getPrincipalOutstanding()));
+        tv_loan_principal_paid.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getPrincipalPaid()));
 
         tv_interest.setText(String.valueOf(loanWithAssociations.getSummary().getInterestCharged()));
-        tv_loan_interest_due.setText(String.valueOf(loanWithAssociations.getSummary().getInterestOutstanding()));
-        tv_loan_interest_paid.setText(String.valueOf(loanWithAssociations.getSummary().getInterestPaid()));
+        tv_loan_interest_due.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getInterestOutstanding()));
+        tv_loan_interest_paid.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getInterestPaid()));
 
         tv_fees.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesCharged()));
-        tv_loan_fees_due.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesOutstanding()));
-        tv_loan_fees_paid.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesPaid()));
+        tv_loan_fees_due.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getFeeChargesOutstanding()));
+        tv_loan_fees_paid.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getFeeChargesPaid()));
 
-        tv_penalty.setText(String.valueOf(loanWithAssociations.getSummary().getPenaltyChargesCharged()));
-        tv_loan_penalty_due.setText(String.valueOf(loanWithAssociations.getSummary().getPenaltyChargesOutstanding()));
-        tv_loan_penalty_paid.setText(String.valueOf(loanWithAssociations.getSummary().getPenaltyChargesPaid()));
+        tv_penalty.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getPenaltyChargesCharged()));
+        tv_loan_penalty_due.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getPenaltyChargesOutstanding()));
+        tv_loan_penalty_paid.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getPenaltyChargesPaid()));
 
-        tv_total.setText(String.valueOf(loanWithAssociations.getSummary().getTotalExpectedRepayment()));
-        tv_total_due.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOutstanding()));
-        tv_total_paid.setText(String.valueOf(loanWithAssociations.getSummary().getTotalRepayment()));
+        tv_total.setText(String.valueOf(loanWithAssociations.getSummary()
+                .getTotalExpectedRepayment()));
+        tv_total_due.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOutstanding
+                ()));
+        tv_total_paid.setText(String.valueOf(loanWithAssociations.getSummary().getTotalRepayment
+                ()));
     }
 
     public void loadDocuments() {
-        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_LOANS, loanAccountNumber);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
+                .ENTITY_TYPE_LOANS, loanAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.container, documentListFragment);
         fragmentTransaction.commit();
@@ -357,8 +389,10 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
 
     public void loadloanCharges() {
 
-        LoanChargeFragment loanChargeFragment = LoanChargeFragment.newInstance(loanAccountNumber, chargesList);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        LoanChargeFragment loanChargeFragment = LoanChargeFragment.newInstance(loanAccountNumber,
+                chargesList);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, loanChargeFragment);
         fragmentTransaction.commit();
@@ -366,8 +400,10 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
 
     public void approveLoan() {
 
-        LoanAccountApproval loanAccountApproval = LoanAccountApproval.newInstance(loanAccountNumber);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        LoanAccountApproval loanAccountApproval = LoanAccountApproval.newInstance
+                (loanAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.container, loanAccountApproval);
         fragmentTransaction.commit();
@@ -375,8 +411,10 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
 
     public void disburseLoan() {
 
-        LoanAccountDisbursement loanAccountDisbursement = LoanAccountDisbursement.newInstance(loanAccountNumber);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        LoanAccountDisbursement loanAccountDisbursement = LoanAccountDisbursement.newInstance
+                (loanAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.container, loanAccountDisbursement);
         fragmentTransaction.commit();

@@ -26,7 +26,8 @@ public enum Font {
         this.fontName = fontName;
         typeface = App.typefaceManager.get(fontName.hashCode());
         if (typeface == null) {
-            typeface = Typeface.createFromAsset(App.getSugarContext().getApplicationContext().getAssets(), pathToFont + File.separator + fontName);
+            typeface = Typeface.createFromAsset(App.getSugarContext().getApplicationContext()
+                    .getAssets(), pathToFont + File.separator + fontName);
             App.typefaceManager.put(fontName.hashCode(), typeface);
         }
     }

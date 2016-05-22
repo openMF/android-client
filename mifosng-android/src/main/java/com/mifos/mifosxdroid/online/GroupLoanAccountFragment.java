@@ -57,7 +57,8 @@ import retrofit.client.Response;
  * <p/>
  * Use this  Fragment to Create and/or Update loan
  */
-public class GroupLoanAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
+public class GroupLoanAccountFragment extends ProgressableDialogFragment implements MFDatePicker
+        .OnDatePickListener {
 
     public static final String TAG = "LoanAccountFragment";
     View rootView;
@@ -110,9 +111,11 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
     private HashMap<String, Integer> loansNameIdHashMap = new HashMap<>();
     private HashMap<String, Integer> termFrequencyTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> loanPurposeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> interestCalculationPeriodTypeIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> interestCalculationPeriodTypeIdHashMap = new HashMap<String,
+            Integer>();
     private HashMap<String, Integer> amortizationTypeIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> transactionProcessingStrategyTypeIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> transactionProcessingStrategyTypeIdHashMap = new
+            HashMap<String, Integer>();
 
 
     public static GroupLoanAccountFragment newInstance(int groupId) {
@@ -132,7 +135,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
@@ -146,8 +150,10 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
 
         disbursementon_date = tv_disbursementon_date.getText().toString();
         submittion_date = tv_submittedon_date.getText().toString();
-        submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submittion_date).replace("-", " ");
-        disbursementon_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(disbursementon_date).replace("-", " ");
+        submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (submittion_date).replace("-", " ");
+        disbursementon_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (disbursementon_date).replace("-", " ");
 
 
         bt_loan_submit.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +161,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
             public void onClick(View view) {
 
                 GroupLoanPayload loansPayload = new GroupLoanPayload();
-                loansPayload.setAllowPartialPeriodInterestCalcualtion(ck_calculateinterest.isChecked());
+                loansPayload.setAllowPartialPeriodInterestCalcualtion(ck_calculateinterest
+                        .isChecked());
                 loansPayload.setAmortizationType(amortizationTypeId);
                 loansPayload.setGroupId(groupId);
                 loansPayload.setDateFormat("dd MMMM yyyy");
@@ -163,7 +170,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 loansPayload.setInterestCalculationPeriodType(interestCalculationPeriodTypeId);
                 loansPayload.setLoanType("group");
                 loansPayload.setLocale("en");
-                loansPayload.setNumberOfRepayments(et_numberofrepayments.getEditableText().toString());
+                loansPayload.setNumberOfRepayments(et_numberofrepayments.getEditableText()
+                        .toString());
                 loansPayload.setPrincipal(et_principal.getEditableText().toString());
                 loansPayload.setProductId(productId);
                 loansPayload.setRepaymentEvery(et_repaidevery.getEditableText().toString());
@@ -207,7 +215,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 sp_lproduct.setAdapter(loansAdapter);
                 sp_lproduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         productId = loansNameIdHashMap.get(loansList.get(i));
                         Log.d("productId " + loansList.get(i), String.valueOf(productId));
                         if (productId != -1) {
@@ -220,7 +229,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                             inflatetransactionProcessingStrategySpinner();
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_loan), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_loan),
+                                    Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -281,7 +291,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                             amortization.setValue(amortizationTypeObject.optString("value"));
                             amortizationType.add(amortization);
                             amortizationTypeNames.add(amortizationTypeObject.optString("value"));
-                            amortizationTypeIdHashMap.put(amortization.getValue(), amortization.getId());
+                            amortizationTypeIdHashMap.put(amortization.getValue(), amortization
+                                    .getId());
                         }
 
                     }
@@ -289,21 +300,27 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> amortizationTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, amortizationTypeNames);
-                amortizationTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                final ArrayAdapter<String> amortizationTypeAdapter = new ArrayAdapter<String>
+                        (getActivity(),
+                                android.R.layout.simple_spinner_item, amortizationTypeNames);
+                amortizationTypeAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_amortization.setAdapter(amortizationTypeAdapter);
                 sp_amortization.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        amortizationTypeId = amortizationTypeIdHashMap.get(amortizationTypeNames.get(i));
-                        Log.d("ammortization" + amortizationTypeNames.get(i), String.valueOf(amortizationTypeId));
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
+                        amortizationTypeId = amortizationTypeIdHashMap.get(amortizationTypeNames
+                                .get(i));
+                        Log.d("ammortization" + amortizationTypeNames.get(i), String.valueOf
+                                (amortizationTypeId));
                         if (amortizationTypeId != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_fund),
+                                    Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -355,13 +372,16 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                     if (obj.has("loanPurposeOptions")) {
                         JSONArray loanPurposeOptionsTypes = obj.getJSONArray("loanPurposeOptions");
                         for (int i = 0; i < loanPurposeOptionsTypes.length(); i++) {
-                            JSONObject loanPurposeOptionsTypesObject = loanPurposeOptionsTypes.getJSONObject(i);
+                            JSONObject loanPurposeOptionsTypesObject = loanPurposeOptionsTypes
+                                    .getJSONObject(i);
                             LoanPurposeOptions loanpurpose = new LoanPurposeOptions();
                             loanpurpose.setId(loanPurposeOptionsTypesObject.optInt("id"));
                             loanpurpose.setName(loanPurposeOptionsTypesObject.optString("name"));
                             loanPurposeOptionsType.add(loanpurpose);
-                            loanPurposeOptionsTypeNames.add(loanPurposeOptionsTypesObject.optString("name"));
-                            loanPurposeNameIdHashMap.put(loanpurpose.getName(), loanpurpose.getId());
+                            loanPurposeOptionsTypeNames.add(loanPurposeOptionsTypesObject
+                                    .optString("name"));
+                            loanPurposeNameIdHashMap.put(loanpurpose.getName(), loanpurpose.getId
+                                    ());
                         }
 
                     }
@@ -369,21 +389,27 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> loanPTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, loanPurposeOptionsTypeNames);
-                loanPTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                final ArrayAdapter<String> loanPTypeAdapter = new ArrayAdapter<String>
+                        (getActivity(),
+                                android.R.layout.simple_spinner_item, loanPurposeOptionsTypeNames);
+                loanPTypeAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_loan_purpose.setAdapter(loanPTypeAdapter);
                 sp_loan_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        loanPurposeId = loanPurposeNameIdHashMap.get(loanPurposeOptionsTypeNames.get(i));
-                        Log.d("loanpurpose" + loanPurposeOptionsTypeNames.get(i), String.valueOf(loanPurposeId));
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
+                        loanPurposeId = loanPurposeNameIdHashMap.get(loanPurposeOptionsTypeNames
+                                .get(i));
+                        Log.d("loanpurpose" + loanPurposeOptionsTypeNames.get(i), String.valueOf
+                                (loanPurposeId));
                         if (loanPurposeId != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_fund),
+                                    Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -419,9 +445,11 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
 
                 Log.d(TAG, "");
 
-                final List<InterestCalculationPeriodType> interestCalculationPeriodType = new ArrayList<>();
+                final List<InterestCalculationPeriodType> interestCalculationPeriodType = new
+                        ArrayList<>();
                 // you can use this array to populate your spinner
-                final ArrayList<String> interestCalculationPeriodTypeNames = new ArrayList<String>();
+                final ArrayList<String> interestCalculationPeriodTypeNames = new
+                        ArrayList<String>();
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -433,15 +461,22 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                     }
                     JSONObject obj = new JSONObject(sb.toString());
                     if (obj.has("interestCalculationPeriodTypeOptions")) {
-                        JSONArray interestCalculationPeriodTypes = obj.getJSONArray("interestCalculationPeriodTypeOptions");
+                        JSONArray interestCalculationPeriodTypes = obj.getJSONArray
+                                ("interestCalculationPeriodTypeOptions");
                         for (int i = 0; i < interestCalculationPeriodTypes.length(); i++) {
-                            JSONObject interestCalculationPeriodTypeObject = interestCalculationPeriodTypes.getJSONObject(i);
-                            InterestCalculationPeriodType interestCalculationPeriod = new InterestCalculationPeriodType();
-                            interestCalculationPeriod.setId(interestCalculationPeriodTypeObject.optInt("id"));
-                            interestCalculationPeriod.setValue(interestCalculationPeriodTypeObject.optString("value"));
+                            JSONObject interestCalculationPeriodTypeObject =
+                                    interestCalculationPeriodTypes.getJSONObject(i);
+                            InterestCalculationPeriodType interestCalculationPeriod = new
+                                    InterestCalculationPeriodType();
+                            interestCalculationPeriod.setId(interestCalculationPeriodTypeObject
+                                    .optInt("id"));
+                            interestCalculationPeriod.setValue
+                                    (interestCalculationPeriodTypeObject.optString("value"));
                             interestCalculationPeriodType.add(interestCalculationPeriod);
-                            interestCalculationPeriodTypeNames.add(interestCalculationPeriodTypeObject.optString("value"));
-                            interestCalculationPeriodTypeIdHashMap.put(interestCalculationPeriod.getValue(), interestCalculationPeriod.getId());
+                            interestCalculationPeriodTypeNames.add
+                                    (interestCalculationPeriodTypeObject.optString("value"));
+                            interestCalculationPeriodTypeIdHashMap.put(interestCalculationPeriod
+                                    .getValue(), interestCalculationPeriod.getId());
                         }
 
                     }
@@ -449,21 +484,29 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> interestCalculationPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
+                final ArrayAdapter<String> interestCalculationPeriodTypeAdapter = new
+                        ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, interestCalculationPeriodTypeNames);
-                interestCalculationPeriodTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                interestCalculationPeriodTypeAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_interestcalculationperiod.setAdapter(interestCalculationPeriodTypeAdapter);
-                sp_interestcalculationperiod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                sp_interestcalculationperiod.setOnItemSelectedListener(new AdapterView
+                        .OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        interestCalculationPeriodTypeId = interestCalculationPeriodTypeIdHashMap.get(interestCalculationPeriodTypeNames.get(i));
-                        Log.d("interestCalculation " + interestCalculationPeriodTypeNames.get(i), String.valueOf(interestCalculationPeriodTypeId));
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
+                        interestCalculationPeriodTypeId = interestCalculationPeriodTypeIdHashMap
+                                .get(interestCalculationPeriodTypeNames.get(i));
+                        Log.d("interestCalculation " + interestCalculationPeriodTypeNames.get(i),
+                                String.valueOf(interestCalculationPeriodTypeId));
                         if (interestCalculationPeriodTypeId != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_interestCalculationPeriod), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string
+                                    .error_select_interestCalculationPeriod), Toast.LENGTH_SHORT)
+                                    .show();
 
                         }
 
@@ -499,9 +542,11 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
 
                 Log.d(TAG, "");
 
-                final List<TransactionProcessingStrategy> transactionProcessingStrategyType = new ArrayList<>();
+                final List<TransactionProcessingStrategy> transactionProcessingStrategyType = new
+                        ArrayList<>();
                 // you can use this array to populate your spinner
-                final ArrayList<String> transactionProcessingStrategyTypeNames = new ArrayList<String>();
+                final ArrayList<String> transactionProcessingStrategyTypeNames = new
+                        ArrayList<String>();
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -513,15 +558,23 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                     }
                     JSONObject obj = new JSONObject(sb.toString());
                     if (obj.has("transactionProcessingStrategyOptions")) {
-                        JSONArray transactionProcessingStrategyTypes = obj.getJSONArray("transactionProcessingStrategyOptions");
+                        JSONArray transactionProcessingStrategyTypes = obj.getJSONArray
+                                ("transactionProcessingStrategyOptions");
                         for (int i = 0; i < transactionProcessingStrategyTypes.length(); i++) {
-                            JSONObject transactionProcessingStrategyTypeObject = transactionProcessingStrategyTypes.getJSONObject(i);
-                            TransactionProcessingStrategy transactionProcessingStrategy = new TransactionProcessingStrategy();
-                            transactionProcessingStrategy.setId(transactionProcessingStrategyTypeObject.optInt("id"));
-                            transactionProcessingStrategy.setName(transactionProcessingStrategyTypeObject.optString("name"));
+                            JSONObject transactionProcessingStrategyTypeObject =
+                                    transactionProcessingStrategyTypes.getJSONObject(i);
+                            TransactionProcessingStrategy transactionProcessingStrategy = new
+                                    TransactionProcessingStrategy();
+                            transactionProcessingStrategy.setId
+                                    (transactionProcessingStrategyTypeObject.optInt("id"));
+                            transactionProcessingStrategy.setName
+                                    (transactionProcessingStrategyTypeObject.optString("name"));
                             transactionProcessingStrategyType.add(transactionProcessingStrategy);
-                            transactionProcessingStrategyTypeNames.add(transactionProcessingStrategyTypeObject.optString("name"));
-                            transactionProcessingStrategyTypeIdHashMap.put(transactionProcessingStrategy.getName(), transactionProcessingStrategy.getId());
+                            transactionProcessingStrategyTypeNames.add
+                                    (transactionProcessingStrategyTypeObject.optString("name"));
+                            transactionProcessingStrategyTypeIdHashMap.put
+                                    (transactionProcessingStrategy.getName(),
+                                            transactionProcessingStrategy.getId());
                         }
 
                     }
@@ -529,21 +582,31 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> transactionProcessingStrategyAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, transactionProcessingStrategyTypeNames);
-                transactionProcessingStrategyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                final ArrayAdapter<String> transactionProcessingStrategyAdapter = new
+                        ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item,
+                        transactionProcessingStrategyTypeNames);
+                transactionProcessingStrategyAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_repaymentstrategy.setAdapter(transactionProcessingStrategyAdapter);
-                sp_repaymentstrategy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                sp_repaymentstrategy.setOnItemSelectedListener(new AdapterView
+                        .OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        transactionProcessingStrategyId = transactionProcessingStrategyTypeIdHashMap.get(transactionProcessingStrategyTypeNames.get(i));
-                        Log.d("transactionProcessing " + transactionProcessingStrategyTypeNames.get(i), String.valueOf(transactionProcessingStrategyId));
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
+                        transactionProcessingStrategyId =
+                                transactionProcessingStrategyTypeIdHashMap.get
+                                        (transactionProcessingStrategyTypeNames.get(i));
+                        Log.d("transactionProcessing " + transactionProcessingStrategyTypeNames
+                                .get(i), String.valueOf(transactionProcessingStrategyId));
                         if (transactionProcessingStrategyId != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_transactionProcessingStrategy), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string
+                                    .error_select_transactionProcessingStrategy), Toast
+                                    .LENGTH_SHORT).show();
 
                         }
 
@@ -595,13 +658,15 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                     if (obj.has("termFrequencyTypeOptions")) {
                         JSONArray termFrequencyTypes = obj.getJSONArray("termFrequencyTypeOptions");
                         for (int i = 0; i < termFrequencyTypes.length(); i++) {
-                            JSONObject termFrequencyTypeObject = termFrequencyTypes.getJSONObject(i);
+                            JSONObject termFrequencyTypeObject = termFrequencyTypes.getJSONObject
+                                    (i);
                             TermFrequencyTypeOptions termFrequency = new TermFrequencyTypeOptions();
                             termFrequency.setId(termFrequencyTypeObject.optInt("id"));
                             termFrequency.setValue(termFrequencyTypeObject.optString("value"));
                             termFrequencyType.add(termFrequency);
                             termFrequencyTypeNames.add(termFrequencyTypeObject.optString("value"));
-                            termFrequencyTypeIdHashMap.put(termFrequency.getValue(), termFrequency.getId());
+                            termFrequencyTypeIdHashMap.put(termFrequency.getValue(),
+                                    termFrequency.getId());
                         }
 
                     }
@@ -609,21 +674,28 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> termFrequencyTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, termFrequencyTypeNames);
-                termFrequencyTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                final ArrayAdapter<String> termFrequencyTypeAdapter = new ArrayAdapter<String>
+                        (getActivity(),
+                                android.R.layout.simple_spinner_item, termFrequencyTypeNames);
+                termFrequencyTypeAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_payment_periods.setAdapter(termFrequencyTypeAdapter);
-                sp_payment_periods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                sp_payment_periods.setOnItemSelectedListener(new AdapterView
+                        .OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        loanTermFrequency = termFrequencyTypeIdHashMap.get(termFrequencyTypeNames.get(i));
-                        Log.d("termFrequencyTypeId" + termFrequencyTypeNames.get(i), String.valueOf(loanTermFrequency));
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
+                        loanTermFrequency = termFrequencyTypeIdHashMap.get(termFrequencyTypeNames
+                                .get(i));
+                        Log.d("termFrequencyTypeId" + termFrequencyTypeNames.get(i), String
+                                .valueOf(loanTermFrequency));
                         if (loanTermFrequency != -1) {
 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_fund),
+                                    Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -654,7 +726,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
             @Override
             public void success(Loans loans, Response response) {
                 showProgress(false);
-                Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast
+                        .LENGTH_LONG).show();
             }
 
             @Override
@@ -675,7 +748,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
         tv_submittedon_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
 
@@ -689,7 +763,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
         tv_disbursementon_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
 

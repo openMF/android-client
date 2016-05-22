@@ -29,7 +29,8 @@ public interface DocumentService {
                             Callback<List<Document>> documentListCallback);
 
     /**
-     * @param entityType              - Type for which document is being uploaded (Client, Loan or Savings etc)
+     * @param entityType              - Type for which document is being uploaded (Client, Loan
+     *                                or Savings etc)
      * @param entityId                - Id of Entity
      * @param nameOfDocument          - Document Name
      * @param description             - Mandatory - Document Description

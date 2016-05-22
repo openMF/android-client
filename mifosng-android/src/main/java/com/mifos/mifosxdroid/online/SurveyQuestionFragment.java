@@ -60,7 +60,8 @@ public class SurveyQuestionFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_survey_question, container, false);
         ButterKnife.inject(this, view);
         thiscontext = container.getContext();
-        mQuestionDatas = (new Gson()).fromJson(getArguments().getString(QUESTION_DATA), QuestionDatas.class);
+        mQuestionDatas = (new Gson()).fromJson(getArguments().getString(QUESTION_DATA),
+                QuestionDatas.class);
         mScorecardValues = new ScorecardValues();
 
         tv_question.setText(mQuestionDatas.getText());
@@ -82,10 +83,13 @@ public class SurveyQuestionFragment extends Fragment {
                         if (btn.getId() == checkedId2) {
                             answer = btn.getText().toString();
                             mScorecardValues.setQuestionId(mQuestionDatas.getQuestionId());
-                            mScorecardValues.setResponseId(mQuestionDatas.getResponseDatas().get(i).getResponseId());
-                            mScorecardValues.setValue(mQuestionDatas.getResponseDatas().get(i).getValue());
+                            mScorecardValues.setResponseId(mQuestionDatas.getResponseDatas().get
+                                    (i).getResponseId());
+                            mScorecardValues.setValue(mQuestionDatas.getResponseDatas().get(i)
+                                    .getValue());
                             mCallback.answer(mScorecardValues);
-                            Log.d(LOG_TAG, "Q R V" + mQuestionDatas.getQuestionId() + " " + mQuestionDatas.getResponseDatas().get(i).getResponseId()
+                            Log.d(LOG_TAG, "Q R V" + mQuestionDatas.getQuestionId() + " " +
+                                    mQuestionDatas.getResponseDatas().get(i).getResponseId()
                                     + " " + mQuestionDatas.getResponseDatas().get(i).getValue());
                             return;
                         }

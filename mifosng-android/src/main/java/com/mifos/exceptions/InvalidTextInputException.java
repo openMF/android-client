@@ -14,7 +14,8 @@ public class InvalidTextInputException extends Exception {
     private String localisedErrorMessage;
     private String inputType;
 
-    public InvalidTextInputException(String fieldInput, String localisedErrorMessage, String inputType) {
+    public InvalidTextInputException(String fieldInput, String localisedErrorMessage, String
+            inputType) {
         this.fieldInput = fieldInput;
         this.localisedErrorMessage = localisedErrorMessage;
         this.inputType = inputType;

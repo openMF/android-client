@@ -25,7 +25,8 @@ public class MFErrorParser {
 
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody()
+                    .in()));
             StringBuilder out = new StringBuilder();
             String newLine = System.getProperty("line.separator");
             String line;
@@ -34,12 +35,14 @@ public class MFErrorParser {
                 out.append(newLine);
             }
             Log.d("MFErrorParser", out.toString());
-            MFErrorResponse mfErrorResponse = new Gson().fromJson(out.toString(), MFErrorResponse.class);
+            MFErrorResponse mfErrorResponse = new Gson().fromJson(out.toString(), MFErrorResponse
+                    .class);
             System.out.println(mfErrorResponse.toString());
             List<MFError> mfErrorList = mfErrorResponse.getErrors();
 
             for (MFError mfError : mfErrorList) {
-                Toast.makeText(App.getContext(), mfError.getDefaultUserMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getContext(), mfError.getDefaultUserMessage(), Toast
+                        .LENGTH_LONG).show();
             }
         } catch (IOException e) {
             e.printStackTrace();

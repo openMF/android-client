@@ -53,7 +53,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CreateNewClientFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewClientFragment extends ProgressableFragment implements MFDatePicker
+        .OnDatePickListener {
 
     private static final String TAG = "CreateNewClient";
     public DialogFragment mfDatePicker;
@@ -99,7 +100,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String,
+            Integer>();
     private ClientsTemplate clientstemplate = new ClientsTemplate();
     private View mCurrentDateView;    // the view whose click opened the date picker
 
@@ -121,7 +123,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
         ButterKnife.inject(this, rootView);
 
@@ -131,7 +134,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         getClientTemplate();
 
         //client active checkbox onCheckedListener
-        cb_clientActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        cb_clientActiveStatus.setOnCheckedChangeListener(new CompoundButton
+                .OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 tv_submissionDate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
@@ -139,9 +143,11 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         });
 
         dateString = tv_submissionDate.getText().toString();
-        dateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(dateString).replace("-", " ");
+        dateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(dateString).replace
+                ("-", " ");
         dateofbirthstring = tv_dateofbirth.getText().toString();
-        dateofbirthstring = DateHelper.getDateAsStringUsedForDateofBirth(dateofbirthstring).replace("-", " ");
+        dateofbirthstring = DateHelper.getDateAsStringUsedForDateofBirth(dateofbirthstring)
+                .replace("-", " ");
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,7 +188,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
 
 
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast
+                            .LENGTH_SHORT).show();
                 }
             }
 
@@ -199,7 +206,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
                 .getClientClassificationOptions());
         ArrayAdapter<String> ClientClassificationAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, ClientClassificationNames);
-        ClientClassificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ClientClassificationAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
         spClientClassification.setAdapter(ClientClassificationAdapter);
         spClientClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -207,12 +215,14 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 clientClassificationId = clientstemplate.getClientClassificationOptions()
                         .get(i).getId();
-                Log.d("clientClassificationId" + ClientClassificationNames.get(i), String.valueOf(clientClassificationId));
+                Log.d("clientClassificationId" + ClientClassificationNames.get(i), String.valueOf
+                        (clientClassificationId));
                 if (clientClassificationId != -1) {
 
                 } else {
 
-                    Toast.makeText(getActivity(), getString(R.string.error_select_client_type), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_client_type),
+                            Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -240,7 +250,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
                 Log.d("clientTypeId " + ClientTypeNames.get(i), String.valueOf(clientTypeId));
                 if (clientTypeId != -1) {
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast
+                            .LENGTH_SHORT).show();
                 }
             }
 
@@ -293,12 +304,14 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
                 }
                 ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, officeList);
-                officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                officeAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_offices.setAdapter(officeAdapter);
                 sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         officeId = officeNameIdHashMap.get(officeList.get(i));
                         Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
                         if (officeId != -1) {
@@ -308,7 +321,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_office)
+                                    , Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -349,14 +363,16 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
                 sp_staff.setAdapter(staffAdapter);
                 sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                               long id) {
 
                         staffId = staffNameIdHashMap.get(staffNames.get(position));
                         Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
                         if (staffId != -1) {
 
                         } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_staff), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_staff),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -410,7 +426,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
                 mCurrentDateView = tv_submissionDate;
             }
         });
@@ -425,7 +442,8 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         tv_dateofbirth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
                 mCurrentDateView = tv_dateofbirth;
             }
 
@@ -444,13 +462,17 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     public boolean isValidFirstName() {
         try {
             if (TextUtils.isEmpty(et_clientFirstName.getEditableText().toString())) {
-                throw new RequiredFieldException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_cannot_be_empty));
+                throw new RequiredFieldException(getResources().getString(R.string.first_name),
+                        getResources().getString(R.string.error_cannot_be_empty));
             }
-            if (et_clientFirstName.getEditableText().toString().trim().length() < 4 && et_clientFirstName.getEditableText().toString().trim().length() > 0) {
+            if (et_clientFirstName.getEditableText().toString().trim().length() < 4 &&
+                    et_clientFirstName.getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
             }
             if (!et_clientFirstName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.first_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+                throw new InvalidTextInputException(getResources().getString(R.string.first_name)
+                        , getResources().getString(R.string.error_should_contain_only),
+                        InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
             e.notifyUserWithToast(getActivity());
@@ -468,7 +490,9 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     public boolean isValidMiddleName() {
         try {
             if (!et_clientMiddleName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.middle_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+                throw new InvalidTextInputException(getResources().getString(R.string
+                        .middle_name), getResources().getString(R.string
+                        .error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
             e.notifyUserWithToast(getActivity());
@@ -482,15 +506,19 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         result = true;
         try {
             if (TextUtils.isEmpty(et_clientLastName.getEditableText().toString())) {
-                throw new RequiredFieldException(getResources().getString(R.string.last_name), getResources().getString(R.string.error_cannot_be_empty));
+                throw new RequiredFieldException(getResources().getString(R.string.last_name),
+                        getResources().getString(R.string.error_cannot_be_empty));
             }
 
-            if (et_clientLastName.getEditableText().toString().trim().length() < 4 && et_clientFirstName.getEditableText().toString().trim().length() > 0) {
+            if (et_clientLastName.getEditableText().toString().trim().length() < 4 &&
+                    et_clientFirstName.getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.last_name), 4);
             }
 
             if (!et_clientLastName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.last_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+                throw new InvalidTextInputException(getResources().getString(R.string.last_name),
+                        getResources().getString(R.string.error_should_contain_only),
+                        InvalidTextInputException.TYPE_ALPHABETS);
             }
 
         } catch (InvalidTextInputException e) {

@@ -31,7 +31,8 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
         public void onClick(View v) {
             ListView listView = (ListView) v.getParent();
             int position = listView.getPositionForView(v);
-            listView.performItemClick(listView.getChildAt(position), position, listView.getItemIdAtPosition(position));
+            listView.performItemClick(listView.getChildAt(position), position, listView
+                    .getItemIdAtPosition(position));
         }
     };
     private List<T> list;

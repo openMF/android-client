@@ -11,7 +11,8 @@ import android.widget.ViewFlipper;
 import com.mifos.mifosxdroid.R;
 
 /**
- * A {@link android.support.v4.app.DialogFragment} that provides progress viewing functionality with a ViewFlipper.
+ * A {@link android.support.v4.app.DialogFragment} that provides progress viewing functionality
+ * with a ViewFlipper.
  */
 public class ProgressableDialogFragment extends DialogFragment {
     public static final int VIEW_FLIPPER_PROGRESS = 0;
@@ -26,7 +27,8 @@ public class ProgressableDialogFragment extends DialogFragment {
         viewFlipper = (ViewFlipper) view.findViewById(R.id.view_flipper);
 
         if (viewFlipper == null) {
-            throw new NullPointerException("Are you sure your Fragment has a ViewFlipper with id \"view_flipper\"?");
+            throw new NullPointerException("Are you sure your Fragment has a ViewFlipper with id " +
+                    "\"view_flipper\"?");
         }
     }
 
@@ -42,7 +44,8 @@ public class ProgressableDialogFragment extends DialogFragment {
                 viewFlipper.setDisplayedChild(childToFlipTo);
             }
         } catch (NullPointerException e) {
-            Log.w(getClass().getSimpleName(), "Couldn't show/hide progress bar. Are you sure your Fragment contains a ViewFlipper with ID \"view_flipper\"?");
+            Log.w(getClass().getSimpleName(), "Couldn't show/hide progress bar. Are you sure your" +
+                    " Fragment contains a ViewFlipper with ID \"view_flipper\"?");
         }
     }
 }

@@ -33,7 +33,8 @@ public interface ClientService {
     void listAllClients(Callback<Page<Client>> callback);
 
     @GET(APIEndPoint.CLIENTS)
-    void listAllClients(@Query("offset") int offset, @Query("limit") int limit, Callback<Page<Client>> callback);
+    void listAllClients(@Query("offset") int offset, @Query("limit") int limit,
+                        Callback<Page<Client>> callback);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     void getClient(@Path("clientId") int clientId, Callback<Client> clientCallback);

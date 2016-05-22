@@ -14,7 +14,8 @@ import android.os.Parcelable;
  */
 public class ScorecardValues implements Parcelable {
 
-    public static final Parcelable.Creator<ScorecardValues> CREATOR = new Parcelable.Creator<ScorecardValues>() {
+    public static final Parcelable.Creator<ScorecardValues> CREATOR = new Parcelable
+            .Creator<ScorecardValues>() {
         @Override
         public ScorecardValues createFromParcel(Parcel source) {
             return new ScorecardValues(source);
@@ -33,7 +34,8 @@ public class ScorecardValues implements Parcelable {
         super();
     }
 
-    public ScorecardValues(final Integer questionId, final Integer responseId, final Integer value) {
+    public ScorecardValues(final Integer questionId, final Integer responseId, final Integer
+            value) {
         super();
         this.questionId = questionId;
         this.responseId = responseId;

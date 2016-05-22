@@ -120,7 +120,8 @@ public class ClientListAdapter extends BaseAdapter {
                         notifyDataSetChanged();
                     }
                 } catch (NumberFormatException e) {
-                    Toast.makeText(context, context.getString(R.string.error_invalid_amount), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.error_invalid_amount),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }

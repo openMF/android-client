@@ -49,7 +49,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SavingsAccountTransactionFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsAccountTransactionFragment extends ProgressableFragment implements
+        MFDatePicker.OnDatePickListener {
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -65,7 +66,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     private View rootView;
     private String savingsAccountNumber;
     private DepositType savingsAccountType;
-    private String transactionType;     //Defines if the Transaction is a Deposit to an Account or a Withdrawal from an Account
+    private String transactionType;     //Defines if the Transaction is a Deposit to an Account
+    // or a Withdrawal from an Account
     private String clientName;
     // Values to be fetched from Savings Account Template
     private List<PaymentTypeOption> paymentTypeOptionList;
@@ -76,14 +78,17 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param savingsAccountWithAssociations Savings Account of the Client with some additional association details
+     * @param savingsAccountWithAssociations Savings Account of the Client with some additional
+     *                                       association details
      * @param transactionType                Type of Transaction (Deposit or Withdrawal)
      * @return A new instance of fragment SavingsAccountTransactionDialogFragment.
      */
-    public static SavingsAccountTransactionFragment newInstance(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType, DepositType accountType) {
+    public static SavingsAccountTransactionFragment newInstance(SavingsAccountWithAssociations
+                                                                        savingsAccountWithAssociations, String transactionType, DepositType accountType) {
         SavingsAccountTransactionFragment fragment = new SavingsAccountTransactionFragment();
         Bundle args = new Bundle();
-        args.putString(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations.getAccountNo());
+        args.putString(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations
+                .getAccountNo());
         args.putString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE, transactionType);
         args.putString(Constants.CLIENT_NAME, savingsAccountWithAssociations.getClientName());
         args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, accountType);
@@ -103,12 +108,16 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container,
+                false);
         if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT))
-            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " + getResources().getString(R.string.deposit));
+            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " +
+                    getResources().getString(R.string.deposit));
         else
-            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " + getResources().getString(R.string.withdrawal));
+            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " +
+                    getResources().getString(R.string.withdrawal));
         ButterKnife.inject(this, rootView);
         inflateUI();
         return rootView;
@@ -124,37 +133,50 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
     public void inflatePaymentOptions() {
-        App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType, new Callback<SavingsAccountTransactionTemplate>() {
-            @Override
-            public void success(SavingsAccountTransactionTemplate savingsAccountTransactionTemplate, Response response) {
+        App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer
+                .parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType, new
+                Callback<SavingsAccountTransactionTemplate>() {
+                    @Override
+                    public void success(SavingsAccountTransactionTemplate
+                                                savingsAccountTransactionTemplate, Response
+                                                response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
+                        if (getActivity() == null) return;
 
-                if (savingsAccountTransactionTemplate != null) {
-                    List<String> listOfPaymentTypes = new ArrayList<>();
-                    paymentTypeOptionList = savingsAccountTransactionTemplate.getPaymentTypeOptions();
-                    // Sorting has to be done on the basis of
-                    // PaymentTypeOption.position because it is specified
-                    // by the users on Mifos X Platform.
-                    Collections.sort(paymentTypeOptionList);
-                    Iterator<PaymentTypeOption> paymentTypeOptionIterator = paymentTypeOptionList.iterator();
-                    while (paymentTypeOptionIterator.hasNext()) {
-                        PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator.next();
-                        listOfPaymentTypes.add(paymentTypeOption.getName());
-                        paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
+                        if (savingsAccountTransactionTemplate != null) {
+                            List<String> listOfPaymentTypes = new ArrayList<>();
+                            paymentTypeOptionList = savingsAccountTransactionTemplate
+                                    .getPaymentTypeOptions();
+                            // Sorting has to be done on the basis of
+                            // PaymentTypeOption.position because it is specified
+                            // by the users on Mifos X Platform.
+                            Collections.sort(paymentTypeOptionList);
+                            Iterator<PaymentTypeOption> paymentTypeOptionIterator =
+                                    paymentTypeOptionList
+                                    .iterator();
+                            while (paymentTypeOptionIterator.hasNext()) {
+                                PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator
+                                        .next();
+                                listOfPaymentTypes.add(paymentTypeOption.getName());
+                                paymentTypeHashMap.put(paymentTypeOption.getName(),
+                                        paymentTypeOption
+                                        .getId());
+                            }
+                            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>
+                                    (getActivity(),
+                                    android.R.layout.simple_spinner_item, listOfPaymentTypes);
+                            paymentTypeAdapter.setDropDownViewResource(android.R.layout
+                                    .simple_spinner_dropdown_item);
+                            sp_paymentType.setAdapter(paymentTypeAdapter);
+                        }
+                        showProgress(false);
                     }
-                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
-                    paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_paymentType.setAdapter(paymentTypeAdapter);
-                }
-                showProgress(false);
-            }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                showProgress(false);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        showProgress(false);
+                    }
+                });
     }
 
     @OnClick(R.id.bt_reviewTransaction)
@@ -162,7 +184,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         // Notify user if Amount field is blank and Review
         // Transaction button is pressed.
         if (et_transactionAmount.getEditableText().toString().isEmpty()) {
-            new RequiredFieldException(getString(R.string.amount), getString(R.string.message_field_required)).notifyUserWithToast(getActivity());
+            new RequiredFieldException(getString(R.string.amount), getString(R.string
+                    .message_field_required)).notifyUserWithToast(getActivity());
             return;
         }
         String[] headers = {"Field", "Value"};
@@ -201,28 +224,40 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
     public void processTransaction() {
         String dateString = tv_transactionDate.getText().toString().replace("-", " ");
-        final SavingsAccountTransactionRequest savingsAccountTransactionRequest = new SavingsAccountTransactionRequest();
+        final SavingsAccountTransactionRequest savingsAccountTransactionRequest = new
+                SavingsAccountTransactionRequest();
         savingsAccountTransactionRequest.setLocale("en");
         savingsAccountTransactionRequest.setDateFormat("dd MM yyyy");
         savingsAccountTransactionRequest.setTransactionDate(dateString);
-        savingsAccountTransactionRequest.setTransactionAmount(et_transactionAmount.getEditableText().toString());
-        savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));
+        savingsAccountTransactionRequest.setTransactionAmount(et_transactionAmount
+                .getEditableText().toString());
+        savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get
+                (sp_paymentType.getSelectedItem().toString())));
 
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
         showProgress();
-        App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType, savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>() {
+        App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt
+                        (savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType,
+                savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>
+                        () {
                     @Override
-                    public void success(SavingsAccountTransactionResponse savingsAccountTransactionResponse, Response response) {
+                    public void success(SavingsAccountTransactionResponse
+                                                savingsAccountTransactionResponse, Response
+                                                response) {
                         /* Activity is null - Fragment has been detached; no need to do anything. */
                         if (getActivity() == null) return;
 
                         if (savingsAccountTransactionResponse != null) {
-                            if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
-                                Toaster.show(rootView, "Deposit Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
+                            if (transactionType.equals(Constants
+                                    .SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
+                                Toaster.show(rootView, "Deposit Successful, Transaction ID = " +
+                                        savingsAccountTransactionResponse.getResourceId());
                                 getActivity().getSupportFragmentManager().popBackStackImmediate();
-                            } else if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
-                                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = " + savingsAccountTransactionResponse.getResourceId());
+                            } else if (transactionType.equals(Constants
+                                    .SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
+                                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = "
+                                        + savingsAccountTransactionResponse.getResourceId());
                                 getActivity().getSupportFragmentManager().popBackStackImmediate();
                             }
                         }
@@ -252,7 +287,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         tv_transactionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
     }

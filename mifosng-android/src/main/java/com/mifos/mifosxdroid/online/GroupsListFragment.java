@@ -69,7 +69,8 @@ public class GroupsListFragment extends MifosBaseFragment {
         return groupListFragment;
     }
 
-    public static GroupsListFragment newInstance(List<Group> groupList, boolean isParentFragmentAGroupFragment) {
+    public static GroupsListFragment newInstance(List<Group> groupList, boolean
+            isParentFragmentAGroupFragment) {
         GroupsListFragment groupListFragment = new GroupsListFragment();
         groupListFragment.setGroupList(groupList);
         if (isParentFragmentAGroupFragment) {
@@ -80,7 +81,8 @@ public class GroupsListFragment extends MifosBaseFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_groups, container, false);
@@ -151,16 +153,20 @@ public class GroupsListFragment extends MifosBaseFragment {
                     if (getActivity() != null) {
                         try {
                             Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                            if (retrofitError.getResponse().getStatus() == HttpStatus
+                                    .SC_UNAUTHORIZED) {
+                                Toast.makeText(getActivity(), "Authorization Expired - Please " +
+                                        "Login Again", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getActivity(), LoginActivity.class));
                                 getActivity().finish();
 
                             } else {
-                                Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "There was some error fetching list" +
+                                        ".", Toast.LENGTH_SHORT).show();
                             }
                         } catch (NullPointerException npe) {
-                            Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "There is some problem with your " +
+                                    "internet connection.", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -191,7 +197,8 @@ public class GroupsListFragment extends MifosBaseFragment {
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int
+                    visibleItemCount, int totalItemCount) {
 
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
 
@@ -225,16 +232,21 @@ public class GroupsListFragment extends MifosBaseFragment {
                             if (getActivity() != null) {
                                 try {
                                     Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                                    if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                        Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                                    if (retrofitError.getResponse().getStatus() == HttpStatus
+                                            .SC_UNAUTHORIZED) {
+                                        Toast.makeText(getActivity(), "Authorization Expired - " +
+                                                "Please Login Again", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(getActivity(), LoginActivity
+                                                .class));
                                         getActivity().finish();
 
                                     } else {
-                                        Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "There was some error " +
+                                                "fetching list.", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (NullPointerException npe) {
-                                    Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "There is some problem with " +
+                                            "your internet connection.", Toast.LENGTH_SHORT).show();
 
                                 }
 

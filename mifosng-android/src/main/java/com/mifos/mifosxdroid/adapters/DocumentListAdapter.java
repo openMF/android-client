@@ -74,7 +74,8 @@ public class DocumentListAdapter extends BaseAdapter {
         Document document = documents.get(i);
 
         reusableDocumentViewHolder.tv_doc_name.setText(document.getName());
-        reusableDocumentViewHolder.tv_doc_description.setText(document.getDescription() == null ? "-" : document.getDescription());
+        reusableDocumentViewHolder.tv_doc_description.setText(document.getDescription() == null ?
+                "-" : document.getDescription());
 
         MaterialIcons cloudIcon = MaterialIcons.md_cloud_download;
 //        Iconify.IconValue cloudIcon = Iconify.IconValue.fa_download;

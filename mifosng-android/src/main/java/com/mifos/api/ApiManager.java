@@ -128,7 +128,8 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().getCenterWithGroupMembersAndCollectionMeetingCalendar(id, callback);
     }
 
-    public void getCentersInOffice(int id, Map<String, Object> params, Callback<List<Center>> callback) {
+    public void getCentersInOffice(int id, Map<String, Object> params, Callback<List<Center>>
+            callback) {
         getCenterApi().getAllCentersInOffice(id, params, callback);
     }
 
@@ -144,11 +145,13 @@ public class ApiManager extends BaseApiManager {
         return getCenterApi().saveCollectionSheet(id, payload);
     }
 
-    public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload, Callback<SaveResponse> callback) {
+    public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload,
+                                         Callback<SaveResponse> callback) {
         getCenterApi().saveCollectionSheet(id, payload, callback);
     }
 
-    public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId, int staffId, Callback<List<OfflineCenter>> callback) {
+    public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId,
+                              int staffId, Callback<List<OfflineCenter>> callback) {
         getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId, callback);
     }
 
@@ -184,11 +187,13 @@ public class ApiManager extends BaseApiManager {
         getDataTableApi().getDataOfDataTable(table, entityId, callback);
     }
 
-    public void addDataTableEntry(String table, int entityId, Map<String, Object> payload, Callback<GenericResponse> callback) {
+    public void addDataTableEntry(String table, int entityId, Map<String, Object> payload,
+                                  Callback<GenericResponse> callback) {
         getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
     }
 
-    public void removeDataTableEntry(String table, int entity, int rowId, Callback<GenericResponse> callback) {
+    public void removeDataTableEntry(String table, int entity, int rowId,
+                                     Callback<GenericResponse> callback) {
         getDataTableApi().deleteEntryOfDataTableManyToMany(table, entity, rowId, callback);
     }
 
@@ -204,15 +209,18 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().getLoanRepaymentTemplate(loan, callback);
     }
 
-    public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse> callback) {
+    public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse>
+            callback) {
         getLoanApi().approveLoanApplication(loanId, loanApproval, callback);
     }
 
-    public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement, Callback<GenericResponse> genericResponseCallback) {
+    public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement,
+                             Callback<GenericResponse> genericResponseCallback) {
         getLoanApi().disburseLoan(loanId, loanDisbursement, genericResponseCallback);
     }
 
-    public void submitPayment(int loan, LoanRepaymentRequest request, Callback<LoanRepaymentResponse> callback) {
+    public void submitPayment(int loan, LoanRepaymentRequest request,
+                              Callback<LoanRepaymentResponse> callback) {
         getLoanApi().submitPayment(loan, request, callback);
     }
 
@@ -229,7 +237,8 @@ public class ApiManager extends BaseApiManager {
 
     }
 
-    public void getLoansAccountTemplate(int clientId, int productId, Callback<Response> loanCallback) {
+    public void getLoansAccountTemplate(int clientId, int productId, Callback<Response>
+            loanCallback) {
         getLoanApi().getLoansAccountTemplate(clientId, productId, loanCallback);
     }
 
@@ -246,7 +255,8 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().createGroupLoansAccount(loansPayload, callback);
     }
 
-    public void getGroupLoansAccountTemplate(int groupId, int productId, Callback<Response> grouploanCallback) {
+    public void getGroupLoansAccountTemplate(int groupId, int productId, Callback<Response>
+            grouploanCallback) {
         getLoanApi().getGroupLoansAccountTemplate(groupId, productId, grouploanCallback);
     }
 
@@ -263,24 +273,31 @@ public class ApiManager extends BaseApiManager {
      * Savings API
      */
 
-    public void getSavingsAccount(String type, int accountId, String association, Callback<SavingsAccountWithAssociations> callback) {
+    public void getSavingsAccount(String type, int accountId, String association,
+                                  Callback<SavingsAccountWithAssociations> callback) {
         getSavingsApi().getSavingsAccountWithAssociations(type, accountId, association, callback);
     }
 
-    public void getSavingsAccountTemplate(String type, int accountId, String transactionType, Callback<SavingsAccountTransactionTemplate> callback) {
-        getSavingsApi().getSavingsAccountTransactionTemplate(type, accountId, transactionType, callback);
+    public void getSavingsAccountTemplate(String type, int accountId, String transactionType,
+                                          Callback<SavingsAccountTransactionTemplate> callback) {
+        getSavingsApi().getSavingsAccountTransactionTemplate(type, accountId, transactionType,
+                callback);
     }
 
-    public void processTransaction(String type, int accountId, String transactionType, SavingsAccountTransactionRequest request, Callback<SavingsAccountTransactionResponse> callback) {
+    public void processTransaction(String type, int accountId, String transactionType,
+                                   SavingsAccountTransactionRequest request,
+                                   Callback<SavingsAccountTransactionResponse> callback) {
         getSavingsApi().processTransaction(type, accountId, transactionType, request, callback);
     }
 
-    public void activateSavings(int savingsAccountId, HashMap<String, Object> request, Callback<GenericResponse> callback) {
+    public void activateSavings(int savingsAccountId, HashMap<String, Object> request,
+                                Callback<GenericResponse> callback) {
         getSavingsApi().activateSavings(savingsAccountId, request, callback);
 
     }
 
-    public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval, Callback<GenericResponse> callback) {
+    public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval,
+                                          Callback<GenericResponse> callback) {
         getSavingsApi().approveSavingsApplication(savingsAccountId, savingsApproval, callback);
 
     }
@@ -306,11 +323,13 @@ public class ApiManager extends BaseApiManager {
      * GPS API
      */
 
-    public void sendGpsData(int client, GpsCoordinatesRequest request, Callback<GpsCoordinatesResponse> callback) {
+    public void sendGpsData(int client, GpsCoordinatesRequest request,
+                            Callback<GpsCoordinatesResponse> callback) {
         getGpsApi().setGpsCoordinates(client, request, callback);
     }
 
-    public void updateGpsData(int client, GpsCoordinatesRequest request, Callback<GpsCoordinatesResponse> callback) {
+    public void updateGpsData(int client, GpsCoordinatesRequest request,
+                              Callback<GpsCoordinatesResponse> callback) {
         getGpsApi().updateGpsCoordinates(client, request, callback);
     }
 
@@ -322,7 +341,8 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().getGroupWithAssociations(group, callback);
     }
 
-    public void getGroupsByOffice(int office, Map<String, Object> params, Callback<List<Group>> callback) {
+    public void getGroupsByOffice(int office, Map<String, Object> params, Callback<List<Group>>
+            callback) {
         getGroupApi().getAllGroupsInOffice(office, params, callback);
     }
 
@@ -360,7 +380,8 @@ public class ApiManager extends BaseApiManager {
         getDocumentApi().getListOfDocuments(type, id, callback);
     }
 
-    public void createDocument(String type, int id, String name, String desc, TypedFile file, Callback<GenericResponse> callback) {
+    public void createDocument(String type, int id, String name, String desc, TypedFile file,
+                               Callback<GenericResponse> callback) {
         getDocumentApi().createDocument(type, id, name, desc, file, callback);
     }
 
@@ -421,7 +442,8 @@ public class ApiManager extends BaseApiManager {
         getChargeService().createCharges(clientId, payload, callback);
     }
 
-    public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges> callback) {
+    public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges>
+            callback) {
         getChargeService().createLoanCharges(loanId, chargesPayload, callback);
     }
 
@@ -439,7 +461,8 @@ public class ApiManager extends BaseApiManager {
     }
 
 
-    public void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback) {
+    public void getSavingsAccountTemplate(Callback<SavingProductsTemplate>
+                                                  savingProductsTemplateCallback) {
         getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
     }
 

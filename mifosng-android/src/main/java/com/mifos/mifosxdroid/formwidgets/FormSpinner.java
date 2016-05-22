@@ -23,14 +23,16 @@ public class FormSpinner extends FormWidget {
     private Spinner spinner;
     private Map<String, Integer> spinnerValueIdMap;
 
-    public FormSpinner(Context context, String name, List<String> columnValues, List<Integer> columnValueIds) {
+    public FormSpinner(Context context, String name, List<String> columnValues, List<Integer>
+            columnValueIds) {
         super(context, name);
 
         label = new TextView(context);
         label.setText(getDisplayText());
 
         spinner = new Spinner(context);
-        spinner.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, columnValues));
+        spinner.setAdapter(new ArrayAdapter<String>(context, android.R.layout
+                .simple_spinner_item, columnValues));
 
         layout.addView(label);
         layout.addView(spinner);
@@ -44,7 +46,8 @@ public class FormSpinner extends FormWidget {
 
     @Override
     public String getValue() {
-        return spinner.getSelectedItem().toString() == null ? "" : spinner.getSelectedItem().toString();
+        return spinner.getSelectedItem().toString() == null ? "" : spinner.getSelectedItem()
+                .toString();
     }
 
     public Integer getIdOfSelectedItem(String key) {

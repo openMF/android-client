@@ -74,7 +74,8 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
         // choose the first survey
         Thread.sleep(2000);
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SurveyQuestionViewPager.class.getName(), null, false);
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor
+                (SurveyQuestionViewPager.class.getName(), null, false);
         onData(org.hamcrest.core.IsAnything.anything())
                 .inAdapterView(withId(R.id.lv_surveys_list))
                 .atPosition(0)

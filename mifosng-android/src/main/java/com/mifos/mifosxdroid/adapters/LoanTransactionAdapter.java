@@ -47,9 +47,12 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         children = new ArrayList<Child>();
         for (Transaction transaction : transactionList) {
 
-            Parent parent = new Parent(transaction.getDate(), transaction.getType(), transaction.getAmount());
-            Child child = new Child(transaction.getId(), transaction.getOfficeName(), transaction.getPrincipalPortion(),
-                    transaction.getInterestPortion(), transaction.getFeeChargesPortion(), transaction.getPenaltyChargesPortion());
+            Parent parent = new Parent(transaction.getDate(), transaction.getType(), transaction
+                    .getAmount());
+            Child child = new Child(transaction.getId(), transaction.getOfficeName(), transaction
+                    .getPrincipalPortion(),
+                    transaction.getInterestPortion(), transaction.getFeeChargesPortion(),
+                    transaction.getPenaltyChargesPortion());
 
             parents.add(parent);
             children.add(child);
@@ -112,7 +115,8 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         }
 
         Iconify.addIcons(reusableParentViewHolder.tv_arrow);
-        reusableParentViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(parents.get(i).getDate()));
+        reusableParentViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(parents
+                .get(i).getDate()));
 
 //        Iconify.addIcons(reusableParentViewHolder.tv_arrow);
         reusableParentViewHolder.tv_transactionDate.setText(
@@ -250,7 +254,8 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         Double penaltyChargesPortion;
 
         public Child(Integer id, String officeName, Double principalPortion,
-                     Double interestPortion, Double feeChargesPortion, Double penaltyChargesPortion) {
+                     Double interestPortion, Double feeChargesPortion, Double
+                             penaltyChargesPortion) {
             this.id = id;
             this.officeName = officeName;
             this.principalPortion = principalPortion;

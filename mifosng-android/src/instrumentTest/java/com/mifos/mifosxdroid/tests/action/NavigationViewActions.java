@@ -48,8 +48,8 @@ public final class NavigationViewActions {
     /**
      * Returns a {@link ViewAction} that navigates to a menu item in {@link NavigationView} using a
      * menu item resource id.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * View constraints:
      * <ul>
      * <li>View must be a child of a {@link DrawerLayout}

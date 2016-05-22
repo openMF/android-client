@@ -17,5 +17,6 @@ import retrofit.http.Path;
 public interface ClientAccountsService {
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
-    void getAllAccountsOfClient(@Path("clientId") int clientId, Callback<ClientAccounts> clientAccountsCallback);
+    void getAllAccountsOfClient(@Path("clientId") int clientId, Callback<ClientAccounts>
+            clientAccountsCallback);
 }

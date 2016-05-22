@@ -31,7 +31,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class DataTableDataFragment extends ProgressableFragment implements DataTableUIBuilder.DataTableActionListener {
+public class DataTableDataFragment extends ProgressableFragment implements DataTableUIBuilder
+        .DataTableActionListener {
     public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
     private DataTable dataTable;
@@ -53,7 +54,8 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
@@ -65,8 +67,10 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        MenuItem menuItemAddNewEntryToDataTable = menu.add(Menu.NONE, MEUN_ITEM_ADD_NEW_ENTRY, Menu.NONE, getString(R.string.add_new));
-        menuItemAddNewEntryToDataTable.setIcon(getResources().getDrawable(R.drawable.ic_action_content_new));
+        MenuItem menuItemAddNewEntryToDataTable = menu.add(Menu.NONE, MEUN_ITEM_ADD_NEW_ENTRY,
+                Menu.NONE, getString(R.string.add_new));
+        menuItemAddNewEntryToDataTable.setIcon(getResources().getDrawable(R.drawable
+                .ic_action_content_new));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             menuItemAddNewEntryToDataTable.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -77,8 +81,10 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == MEUN_ITEM_ADD_NEW_ENTRY) {
-            DataTableRowDialogFragment dataTableRowDialogFragment = DataTableRowDialogFragment.newInstance(dataTable, entityId);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            DataTableRowDialogFragment dataTableRowDialogFragment = DataTableRowDialogFragment
+                    .newInstance(dataTable, entityId);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.DFRAG_DATATABLE_ENTRY_FORM);
             dataTableRowDialogFragment.show(fragmentTransaction, "Document Dialog Fragment");
         }
@@ -88,26 +94,33 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
 
     public void inflateView() {
         showProgress(true);
-        App.apiManager.getDataTableInfo(dataTable.getRegisteredTableName(), entityId, new Callback<JsonArray>() {
-            @Override
-            public void success(JsonArray jsonElements, Response response) {
+        App.apiManager.getDataTableInfo(dataTable.getRegisteredTableName(), entityId, new
+                Callback<JsonArray>() {
+                    @Override
+                    public void success(JsonArray jsonElements, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
+                        if (getActivity() == null) return;
 
-                if (jsonElements != null) {
-                    linearLayout.invalidate();
-                    DataTableUIBuilder.DataTableActionListener mListener = (DataTableUIBuilder.DataTableActionListener) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
-                    linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable, jsonElements, linearLayout, getActivity(), entityId, mListener);
-                }
-                showProgress(false);
-            }
+                        if (jsonElements != null) {
+                            linearLayout.invalidate();
+                            DataTableUIBuilder.DataTableActionListener mListener =
+                                    (DataTableUIBuilder
+                                    .DataTableActionListener) getActivity()
+                                            .getSupportFragmentManager()
+                                    .findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
+                            linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable,
+                                    jsonElements, linearLayout, getActivity(), entityId, mListener);
+                        }
+                        showProgress(false);
+                    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.i(getActivity().getLocalClassName(), retrofitError.getLocalizedMessage());
-                showProgress(false);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Log.i(getActivity().getLocalClassName(), retrofitError
+                                .getLocalizedMessage());
+                        showProgress(false);
+                    }
+                });
     }
 
     @Override

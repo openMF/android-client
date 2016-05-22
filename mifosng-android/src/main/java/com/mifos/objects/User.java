@@ -23,7 +23,8 @@ public class User {
     private List<Role> roles = new ArrayList<Role>();
     private List<String> permissions = new ArrayList<String>();
 
-    //{"username":"User1","userId":1,"base64EncodedAuthenticationKey":"VXNlcjE6dGVjaDRtZg\u003d\u003d",
+    //{"username":"User1","userId":1,"base64EncodedAuthenticationKey":"VXNlcjE6dGVjaDRtZg\u003d
+    // \u003d",
 // "authenticated":true,"officeId":1,"officeName":"Office1",
 // "roles":[{"id":1,"name":"Admin","description":"Admin"}],
 // "permissions":["ALL_FUNCTIONS"],"shouldRenewPassword":false}

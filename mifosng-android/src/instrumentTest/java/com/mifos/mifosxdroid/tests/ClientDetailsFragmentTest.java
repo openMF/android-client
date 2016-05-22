@@ -47,18 +47,21 @@ public class ClientDetailsFragmentTest extends ActivityInstrumentationTestCase2<
         //waiting for the API
         Thread.sleep(2000);
 
-        detailsFragment = (ClientDetailsFragment) getActivity().getSupportFragmentManager().findFragmentByTag(FragmentConstants.FRAG_CLIENT_DETAILS);
+        detailsFragment = (ClientDetailsFragment) getActivity().getSupportFragmentManager()
+                .findFragmentByTag(FragmentConstants.FRAG_CLIENT_DETAILS);
 
         iv_client_image = (ImageView) clientActivity.findViewById(R.id.iv_clientImage);
         tv_full_name = (TextView) clientActivity.findViewById(R.id.tv_fullName);
         tbl_client_details = (TableLayout) clientActivity.findViewById(R.id.tbl_clientDetails);
         loans = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_loans);
-        savings = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_savings);
-        recurring = (RelativeLayout) clientActivity.findViewById(R.id.account_accordion_section_recurring);
+        savings = (RelativeLayout) clientActivity.findViewById(R.id
+                .account_accordion_section_savings);
+        recurring = (RelativeLayout) clientActivity.findViewById(R.id
+                .account_accordion_section_recurring);
     }
 
     @SmallTest
-    public void testFragmentIsNotNull(){
+    public void testFragmentIsNotNull() {
         assertNotNull(detailsFragment);
     }
 
@@ -88,7 +91,8 @@ public class ClientDetailsFragmentTest extends ActivityInstrumentationTestCase2<
     public void testClientDocumentsFragmentShowed() throws InterruptedException {
         //clicking the button
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-//        getInstrumentation().invokeMenuActionSync(clientActivity, ClientDetailsFragment.MENU_ITEM_DOCUMENTS, 0);
+//        getInstrumentation().invokeMenuActionSync(clientActivity, ClientDetailsFragment
+// .MENU_ITEM_DOCUMENTS, 0);
 
         //if something is wrong, invokeMenuActionSync will take an exception
 
@@ -102,7 +106,8 @@ public class ClientDetailsFragmentTest extends ActivityInstrumentationTestCase2<
     public void testClientIdentifiersFragmentShowed() throws InterruptedException {
         //clicking the button
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-//        getInstrumentation().invokeMenuActionSync(clientActivity, ClientDetailsFragment.MENU_ITEM_IDENTIFIERS, 0);
+//        getInstrumentation().invokeMenuActionSync(clientActivity, ClientDetailsFragment
+// .MENU_ITEM_IDENTIFIERS, 0);
 
         //if something is wrong, invokeMenuActionSync will take an exception
 

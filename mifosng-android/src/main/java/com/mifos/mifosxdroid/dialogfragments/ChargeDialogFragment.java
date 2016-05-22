@@ -50,7 +50,8 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
+public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker
+        .OnDatePickListener {
 
     public static final String TAG = "ChargeDialogFragment";
     @InjectView(R.id.sp_charge_name)
@@ -96,7 +97,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
@@ -107,7 +109,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
         inflateChargesSpinner();
 
         duedateString = charge_due_date.getText().toString();
-        duedateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(duedateString).replace("-", " ");
+        duedateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(duedateString)
+                .replace("-", " ");
 
         bt_save_charge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,11 +176,13 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
                 }
                 final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, chargesNames);
-                chargesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                chargesAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_charge_name.setAdapter(chargesAdapter);
                 sp_charge_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         Id = chargeNameIdHashMap.get(chargesNames.get(i));
                         Log.d("chargesoptionss" + chargesNames.get(i), String.valueOf(Id));
                         if (Id != -1) {
@@ -185,7 +190,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_charge), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_charge)
+                                    , Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -218,7 +224,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
             @Override
             public void success(Charges charges, Response response) {
                 safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG)
+                        .show();
             }
 
             @Override
@@ -235,7 +242,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
         charge_due_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
     }

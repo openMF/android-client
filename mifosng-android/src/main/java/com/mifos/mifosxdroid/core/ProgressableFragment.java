@@ -25,7 +25,8 @@ public class ProgressableFragment extends MifosBaseFragment {
         viewFlipper = (ViewFlipper) view.findViewById(R.id.view_flipper);
 
         if (viewFlipper == null) {
-            throw new NullPointerException("Are you sure your Fragment has a ViewFlipper with id \"view_flipper\"?");
+            throw new NullPointerException("Are you sure your Fragment has a ViewFlipper with id " +
+                    "\"view_flipper\"?");
         }
     }
 
@@ -41,7 +42,8 @@ public class ProgressableFragment extends MifosBaseFragment {
                 viewFlipper.setDisplayedChild(childToFlipTo);
             }
         } catch (NullPointerException e) {
-            Log.w(getClass().getSimpleName(), "Couldn't show/hide progress bar. Are you sure your Fragment contains a ViewFlipper with ID \"view_flipper\"?");
+            Log.w(getClass().getSimpleName(), "Couldn't show/hide progress bar. Are you sure your" +
+                    " Fragment contains a ViewFlipper with ID \"view_flipper\"?");
         }
     }
 }

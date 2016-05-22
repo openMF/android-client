@@ -70,7 +70,8 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         // Required empty public constructor
     }
 
-    public static CollectionSheetFragment newInstance(int centerId, String dateOfCollection, int calendarInstanceId) {
+    public static CollectionSheetFragment newInstance(int centerId, String dateOfCollection, int
+            calendarInstanceId) {
         CollectionSheetFragment fragment = new CollectionSheetFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.CENTER_ID, centerId);
@@ -118,7 +119,8 @@ public class CollectionSheetFragment extends MifosBaseFragment {
 
         menu.clear();
 
-        MenuItem mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search));
+        MenuItem mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R
+                .string.search));
 //        mItemSearch.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
 //                .colorRes(Color.WHITE)
 //                .actionBarSize());
@@ -127,7 +129,8 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         }
 
 
-        MenuItem mItemRefresh = menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R.string.refresh));
+        MenuItem mItemRefresh = menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R
+                .string.refresh));
         mItemRefresh.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_refresh)
                 .colorRes(Color.WHITE)
                 .actionBarSize());
@@ -135,7 +138,8 @@ public class CollectionSheetFragment extends MifosBaseFragment {
             mItemRefresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
 
-        MenuItem mItemSave = menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string.save));
+        MenuItem mItemSave = menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string
+                .save));
         mItemSave.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_save)
                 .colorRes(Color.WHITE)
                 .actionBarSize());
@@ -207,54 +211,61 @@ public class CollectionSheetFragment extends MifosBaseFragment {
 
         CollectionSheetPayload collectionSheetPayload = new CollectionSheetPayload();
 
-        List<BulkRepaymentTransactions> bulkRepaymentTransactions = new ArrayList<BulkRepaymentTransactions>();
+        List<BulkRepaymentTransactions> bulkRepaymentTransactions = new
+                ArrayList<BulkRepaymentTransactions>();
 
         Iterator iterator = CollectionListAdapter.sRepaymentTransactions.entrySet().iterator();
 
         while (iterator.hasNext()) {
             HashMap.Entry repaymentTransaction = (HashMap.Entry) iterator.next();
-            bulkRepaymentTransactions.add(new BulkRepaymentTransactions((Integer) repaymentTransaction.getKey(), (Double) repaymentTransaction.getValue()));
+            bulkRepaymentTransactions.add(new BulkRepaymentTransactions((Integer)
+                    repaymentTransaction.getKey(), (Double) repaymentTransaction.getValue()));
             iterator.remove();
         }
 
-        collectionSheetPayload.bulkRepaymentTransactions = new BulkRepaymentTransactions[bulkRepaymentTransactions.size()];
+        collectionSheetPayload.bulkRepaymentTransactions = new
+                BulkRepaymentTransactions[bulkRepaymentTransactions.size()];
         bulkRepaymentTransactions.toArray(collectionSheetPayload.bulkRepaymentTransactions);
 
         collectionSheetPayload.setCalendarId(calendarInstanceId);
         collectionSheetPayload.setTransactionDate(dateOfCollection);
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
 
-        App.apiManager.saveCollectionSheetAsync(centerId, collectionSheetPayload, new Callback<SaveResponse>() {
-            @Override
-            public void success(SaveResponse saveResponse, Response response) {
-                if (saveResponse != null) {
-                    Toast.makeText(getActivity(), "Collection Sheet Saved Successfully", Toast.LENGTH_SHORT).show();
+        App.apiManager.saveCollectionSheetAsync(centerId, collectionSheetPayload, new
+                Callback<SaveResponse>() {
+                    @Override
+                    public void success(SaveResponse saveResponse, Response response) {
+                        if (saveResponse != null) {
+                            Toast.makeText(getActivity(), "Collection Sheet Saved Successfully",
+                                    Toast
+                                    .LENGTH_SHORT).show();
 
-                }
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-
-                Response response = retrofitError.getResponse();
-                if (response != null) {
-
-                    if (response.getStatus() == 400 || response.getStatus() == 403) {
-
-                        MFErrorParser.parseError(response);
+                        }
 
                     }
 
-                    Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
 
 
-                }
+                        Response response = retrofitError.getResponse();
+                        if (response != null) {
+
+                            if (response.getStatus() == 400 || response.getStatus() == 403) {
+
+                                MFErrorParser.parseError(response);
+
+                            }
+
+                            Toast.makeText(getActivity(), "Collection Sheet could not be saved.", Toast
+                                    .LENGTH_SHORT).show();
 
 
-            }
-        });
+                        }
+
+
+                    }
+                });
 
     }
 

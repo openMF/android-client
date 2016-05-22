@@ -21,7 +21,8 @@ public class PrefManager {
     private static final String PORT = "preferences_port";
 
     public static SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(App.getInstance().getApplicationContext());
+        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()
+                .getApplicationContext());
     }
 
     public static void clearPrefs() {

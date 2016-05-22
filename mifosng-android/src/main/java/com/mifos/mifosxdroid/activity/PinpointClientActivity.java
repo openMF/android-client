@@ -42,7 +42,8 @@ public class PinpointClientActivity extends MifosMapActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.client_save_pin, menu);
-        menu.findItem(R.id.save_pin).setIcon(new IconDrawable(this, MaterialIcons.md_pin_drop).colorRes(R.color.white).actionBarSize());
+        menu.findItem(R.id.save_pin).setIcon(new IconDrawable(this, MaterialIcons.md_pin_drop)
+                .colorRes(R.color.white).actionBarSize());
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -65,20 +66,24 @@ public class PinpointClientActivity extends MifosMapActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_pin) {
             if (client.getPosition() == null) {
-                Toaster.show(findViewById(android.R.id.content), "You should drop client pin first!");
+                Toaster.show(findViewById(android.R.id.content), "You should drop client pin " +
+                        "first!");
                 return false;
             }
 
-            App.apiManager.updateGpsData(clientId, new GpsCoordinatesRequest(client.getPosition()), new Callback<GpsCoordinatesResponse>() {
+            App.apiManager.updateGpsData(clientId, new GpsCoordinatesRequest(client.getPosition()
+            ), new Callback<GpsCoordinatesResponse>() {
                 @Override
-                public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response response) {
+                public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response
+                        response) {
                     hideProgress();
                     finish();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Toaster.show(findViewById(android.R.id.content), "Error saving client location!");
+                    Toaster.show(findViewById(android.R.id.content), "Error saving client " +
+                            "location!");
                     hideProgress();
                 }
             });

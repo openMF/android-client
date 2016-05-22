@@ -62,12 +62,15 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
                 + strings[2] + "/" //{documentId}
                 + "attachment";
 
-        File documentFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + fileName);
+        File documentFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                fileName);
         try {
-            HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
+            HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
+                    .openConnection();
             httpURLConnection.setRequestMethod("GET");
             httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT, "default");
-            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken());
+            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager
+                    .getToken());
             httpURLConnection.setDoInput(true);
             httpURLConnection.connect();
             Log.i("Connected", "True");

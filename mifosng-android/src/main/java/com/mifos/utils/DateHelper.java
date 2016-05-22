@@ -27,7 +27,8 @@ public class DateHelper {
     public static final String DATE_FORMAT_VALUE = "dd MMM yyyy";
 
     /**
-     * @return current date formatted as day - month - year where month is a number from 1 to 12 (ex: 13 - 4 - 2014)
+     * @return current date formatted as day - month - year where month is a number from 1 to 12
+     * (ex: 13 - 4 - 2014)
      */
     public static String getCurrentDateAsString() {
 
@@ -42,7 +43,8 @@ public class DateHelper {
     }
 
     /**
-     * @return current date as [year-month-day] where month is a number from 1 to 12 (ex: [2014, 4, 14])
+     * @return current date as [year-month-day] where month is a number from 1 to 12 (ex: [2014,
+     * 4, 14])
      */
     public static List<Integer> getCurrentDateAsListOfIntegers() {
 
@@ -76,7 +78,8 @@ public class DateHelper {
     }
 
     /**
-     * @param date formatted as day-month-year where month is an integer from 1 to 12 (ex: 14-4-2016)
+     * @param date formatted as day-month-year where month is an integer from 1 to 12 (ex:
+     *             14-4-2016)
      * @return replaces month with a string like Jan or Feb...etc (ex: 14-Apr-2016)
      */
     public static String getDateAsStringUsedForDateofBirth(String date) {
@@ -254,7 +257,8 @@ public class DateHelper {
      * returns empty string if no value is saved in preferences
      */
     public static String getPayloadDate(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(OfflineCenterInputActivity
+                .PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
         final StringBuilder builder = new StringBuilder();
         if (date != null) {
@@ -276,7 +280,8 @@ public class DateHelper {
      * returns empty string if no value is saved in preferences
      */
     public static String getPayloadDate() {
-        SharedPreferences preferences = App.getContext().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = App.getContext().getSharedPreferences
+                (OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
         final StringBuilder builder = new StringBuilder();
         if (date != null) {

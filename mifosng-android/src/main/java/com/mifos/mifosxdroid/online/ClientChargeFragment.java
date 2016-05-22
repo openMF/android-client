@@ -77,7 +77,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
         return fragment;
     }
 
-    public static ClientChargeFragment newInstance(int clientId, List<Charges> chargesList, boolean isParentFragmentAGroupFragment) {
+    public static ClientChargeFragment newInstance(int clientId, List<Charges> chargesList,
+                                                   boolean isParentFragmentAGroupFragment) {
         ClientChargeFragment fragment = new ClientChargeFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.CLIENT_ID, clientId);
@@ -97,7 +98,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_charge_list, container, false);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
@@ -120,7 +122,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
 
     public void inflateChargeList() {
 
-        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList, clientId);
+        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context,
+                chargesList, clientId);
         lv_charges.setAdapter(chargesNameListAdapter);
 
         if (isInfiniteScrollEnabled) {
@@ -134,8 +137,10 @@ public class ClientChargeFragment extends MifosBaseFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        MenuItem menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_CHARGES, Menu.NONE, getString(R.string.add_new));
-        menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable.ic_action_content_new));
+        MenuItem menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_CHARGES, Menu
+                .NONE, getString(R.string.add_new));
+        menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable
+                .ic_action_content_new));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -147,7 +152,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
         int id = item.getItemId();
         if (id == MENU_ITEM_ADD_NEW_CHARGES) {
             ChargeDialogFragment chargeDialogFragment = ChargeDialogFragment.newInstance(clientId);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST);
             chargeDialogFragment.show(fragmentTransaction, "Charge Dialog Fragment");
         }
@@ -181,14 +187,18 @@ public class ClientChargeFragment extends MifosBaseFragment {
                     if (getActivity() != null) {
                         try {
                             Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                            if (retrofitError.getResponse().getStatus() == HttpStatus
+                                    .SC_UNAUTHORIZED) {
+                                Toast.makeText(getActivity(), "Authorization Expired - Please " +
+                                        "Login Again", Toast.LENGTH_SHORT).show();
                                 logout();
                             } else {
-                                Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "There was some error fetching list" +
+                                        ".", Toast.LENGTH_SHORT).show();
                             }
                         } catch (NullPointerException npe) {
-                            Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "There is some problem with your " +
+                                    "internet connection.", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -211,7 +221,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int
+                    visibleItemCount, int totalItemCount) {
 
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
 
@@ -241,14 +252,18 @@ public class ClientChargeFragment extends MifosBaseFragment {
                             if (getActivity() != null) {
                                 try {
                                     Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                                    if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                        Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                                    if (retrofitError.getResponse().getStatus() == HttpStatus
+                                            .SC_UNAUTHORIZED) {
+                                        Toast.makeText(getActivity(), "Authorization Expired - " +
+                                                "Please Login Again", Toast.LENGTH_SHORT).show();
                                         logout();
                                     } else {
-                                        Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "There was some error " +
+                                                "fetching list.", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (NullPointerException npe) {
-                                    Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "There is some problem with " +
+                                            "your internet connection.", Toast.LENGTH_SHORT).show();
 
                                 }
 

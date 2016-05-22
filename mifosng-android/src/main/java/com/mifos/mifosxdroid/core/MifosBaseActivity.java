@@ -47,7 +47,8 @@ import retrofit.client.Response;
 /**
  * @author fomenkoo
  */
-public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback, NavigationView.OnNavigationItemSelectedListener {
+public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback,
+        NavigationView.OnNavigationItemSelectedListener {
 
     protected Toolbar toolbar;
     private ProgressDialog progress;
@@ -126,9 +127,11 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {
         invalidateOptionsMenu();
         String backStateName = fragment.getClass().getName();
-        boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName, 0);
+        boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName,
+                0);
 
-        if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) == null) {
+        if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) ==
+                null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(containerId, fragment, backStateName);
             if (addToBackStack) {
@@ -204,7 +207,8 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
         // setup drawer layout and sync to toolbar
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -248,12 +252,15 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                                     + userId
                                     + "/images?maxHeight=120&maxWidth=120";
                             GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                                    .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager.getTenant())
-                                    .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken())
+                                    .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager
+                                            .getTenant())
+                                    .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager
+                                            .getToken())
                                     .addHeader("Accept", "application/octet-stream")
                                     .build());
 
-                            ImageView imageViewUserPicture = (ImageView) findViewById(R.id.iv_user_picture);
+                            ImageView imageViewUserPicture = (ImageView) findViewById(R.id
+                                    .iv_user_picture);
                             Glide.with(getApplicationContext())
                                     .load(glideUrl)
                                     .asBitmap()
@@ -267,7 +274,8 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                                                 return;
 
                                             // set to image view
-                                            ImageView imageViewUserPicture = (ImageView) findViewById(R.id.iv_user_picture);
+                                            ImageView imageViewUserPicture = (ImageView)
+                                                    findViewById(R.id.iv_user_picture);
                                             imageViewUserPicture.setImageBitmap(result);
                                         }
                                     });

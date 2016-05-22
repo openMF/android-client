@@ -17,6 +17,7 @@ import retrofit.http.Query;
 public interface AuthService {
 
     @POST(APIEndPoint.AUTHENTICATION)
-    void authenticate(@Query("username") String username, @Query("password") String password, Callback<User> userCallback);
+    void authenticate(@Query("username") String username, @Query("password") String password,
+                      Callback<User> userCallback);
 
 }

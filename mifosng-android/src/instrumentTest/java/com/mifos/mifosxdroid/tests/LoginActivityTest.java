@@ -56,7 +56,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         loginActivity = getActivity();
         et_mifos_domain = (EditText) loginActivity.findViewById(R.id.et_instanceURL);
         et_username = (EditText) loginActivity.findViewById(R.id.et_username);
-        tv_constructed_instance_url = (TextView) loginActivity.findViewById(R.id.tv_constructed_instance_url);
+        tv_constructed_instance_url = (TextView) loginActivity.findViewById(R.id
+                .tv_constructed_instance_url);
     }
 
     @SmallTest
@@ -78,7 +79,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         // Set URL and check the color of the message, it turns green
         // only if the URL matches the pattern specified
         enterMifosInstanceDomain(TEST_URL_1);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @SmallTest
@@ -86,7 +88,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
         enterMifosInstanceDomain(TEST_URL_2);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
 
@@ -96,7 +99,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         assertNotNull(tv_constructed_instance_url);
 
         enterMifosInstanceDomain(TEST_URL_3);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @SmallTest
@@ -104,7 +108,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
         enterMifosInstanceDomain(TEST_URL_4);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @SmallTest
@@ -112,7 +117,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
         enterMifosInstanceDomain(TEST_URL_5);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @MediumTest
@@ -136,7 +142,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
             }
         });
         getInstrumentation().waitForIdleSync();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences
+                (getInstrumentation().getTargetContext());
         assertEquals(TEST_URL_1, sharedPreferences.getString(Constants.INSTANCE_URL_KEY, ""));
     }
 

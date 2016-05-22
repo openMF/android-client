@@ -24,7 +24,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class OfflineCenterInputActivity extends MifosBaseActivity implements DatePickerDialog.OnDateSetListener {
+public class OfflineCenterInputActivity extends MifosBaseActivity implements DatePickerDialog
+        .OnDateSetListener {
     public static String PREF_CENTER_DETAILS = "pref_center_details";
     public static String STAFF_ID_KEY = "pref_staff_id";
     public static String BRANCH_ID_KEY = "pref_branch_id";
@@ -50,7 +51,8 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
     }
 
     private boolean isCenterIdAvailable() {
-        SharedPreferences preferences = getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(OfflineCenterInputActivity
+                .PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         int centerId = preferences.getInt(OfflineCenterInputActivity.STAFF_ID_KEY, -1);
         if (centerId != -1)
             return true;
@@ -116,12 +118,14 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
         return isValidInteger;
     }
 
-    private void createDatePicker(Context context, DatePickerDialog.OnDateSetListener dateSetListener) {
+    private void createDatePicker(Context context, DatePickerDialog.OnDateSetListener
+            dateSetListener) {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context, dateSetListener, year, month, day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, dateSetListener, year,
+                month, day);
         datePickerDialog.show();
     }
 
@@ -138,7 +142,8 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
     }
 
     private void saveCenterIdToPref() {
-        SharedPreferences preferences = getSharedPreferences(PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(PREF_CENTER_DETAILS, Context
+                .MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(STAFF_ID_KEY, staffId);
         editor.putInt(BRANCH_ID_KEY, branchId);

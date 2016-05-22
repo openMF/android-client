@@ -63,7 +63,8 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_repayment_schedule, container, false);
         setToolbarTitle(getResources().getString(R.string.loan_repayment_schedule));
         ButterKnife.inject(this, rootView);
@@ -79,18 +80,22 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment {
 
     public void inflateRepaymentSchedule() {
         showProgress(true);
-        App.apiManager.getLoanRepaySchedule(loanAccountNumber, new Callback<LoanWithAssociations>() {
+        App.apiManager.getLoanRepaySchedule(loanAccountNumber, new Callback<LoanWithAssociations>
+                () {
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                List<Period> listOfActualPeriods = loanWithAssociations.getRepaymentSchedule().getlistOfActualPeriods();
+                List<Period> listOfActualPeriods = loanWithAssociations.getRepaymentSchedule()
+                        .getlistOfActualPeriods();
 
-                LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter = new LoanRepaymentScheduleAdapter(getActivity(), listOfActualPeriods);
+                LoanRepaymentScheduleAdapter loanRepaymentScheduleAdapter = new
+                        LoanRepaymentScheduleAdapter(getActivity(), listOfActualPeriods);
                 lv_repaymentSchedule.setAdapter(loanRepaymentScheduleAdapter);
 
-                String totalRepaymentsCompleted = getResources().getString(R.string.complete) + " : ";
+                String totalRepaymentsCompleted = getResources().getString(R.string.complete) + "" +
+                        " : ";
                 String totalRepaymentsOverdue = getResources().getString(R.string.overdue) + " : ";
                 String totalRepaymentsPending = getResources().getString(R.string.pending) + " : ";
                 //Implementing the Footer here

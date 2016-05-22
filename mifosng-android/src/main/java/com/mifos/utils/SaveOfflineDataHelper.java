@@ -85,7 +85,8 @@ public class SaveOfflineDataHelper {
             status.save();
             ;
 
-            CollectionMeetingCalendar collectionMeetingCalendar = meetingCenter.getCollectionMeetingCalendar();
+            CollectionMeetingCalendar collectionMeetingCalendar = meetingCenter
+                    .getCollectionMeetingCalendar();
 
             EntityType entityType = new EntityType();
             entityType.setCode(collectionMeetingCalendar.getEntityType().getCode());
@@ -101,7 +102,8 @@ public class SaveOfflineDataHelper {
 
             CollectionMeetingCalendar collectionMeetingCalendar1 = new CollectionMeetingCalendar();
             collectionMeetingCalendar1.setMeetingCalendarDate(calendarMeetingDate);
-            collectionMeetingCalendar1.setCalendarInstanceId(collectionMeetingCalendar.getCalendarInstanceId());
+            collectionMeetingCalendar1.setCalendarInstanceId(collectionMeetingCalendar
+                    .getCalendarInstanceId());
             collectionMeetingCalendar1.setDescription(collectionMeetingCalendar.getDescription());
             collectionMeetingCalendar1.setEntityId(collectionMeetingCalendar.getEntityId());
             collectionMeetingCalendar1.setLocation(collectionMeetingCalendar.getLocation());
@@ -153,22 +155,24 @@ public class SaveOfflineDataHelper {
             MeetingCenter center = meetingCenterList[centerCount];
             final long centerId = center.getId();
             Log.i(tag, "Fetching Group data for Center Id:" + centerId);
-            App.apiManager.getCollectionSheet(centerId, getPayload(context, center), new Callback<CollectionSheet>() {
-                @Override
-                public void success(CollectionSheet collectionSheet, Response arg1) {
-                    if (collectionSheet != null) {
-                        collectionSheet.saveData(centerId);
-                        centerCount++;
-                        if (centerCount < meetingCenterList.length)
-                            getGroupsData(context, meetingCenterList);
-                    }
-                }
+            App.apiManager.getCollectionSheet(centerId, getPayload(context, center), new
+                    Callback<CollectionSheet>() {
+                        @Override
+                        public void success(CollectionSheet collectionSheet, Response arg1) {
+                            if (collectionSheet != null) {
+                                collectionSheet.saveData(centerId);
+                                centerCount++;
+                                if (centerCount < meetingCenterList.length)
+                                    getGroupsData(context, meetingCenterList);
+                            }
+                        }
 
-                @Override
-                public void failure(RetrofitError arg0) {
-                    Toast.makeText(context, "There was some error fetching data.", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        @Override
+                        public void failure(RetrofitError arg0) {
+                            Toast.makeText(context, "There was some error fetching data.", Toast
+                                    .LENGTH_SHORT).show();
+                        }
+                    });
         }
     }
 

@@ -66,17 +66,24 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_repaymentDueDate.setText(DateHelper.getDateAsString(periodList.get(i).getDueDate()));
-        reusableViewHolder.tv_repaymentAmountDue.setText(String.valueOf(periodList.get(i).getTotalDueForPeriod()));
-        reusableViewHolder.tv_repaymentAmountPaid.setText(String.valueOf(periodList.get(i).getTotalPaidForPeriod()));
+        reusableViewHolder.tv_repaymentDueDate.setText(DateHelper.getDateAsString(periodList.get
+                (i).getDueDate()));
+        reusableViewHolder.tv_repaymentAmountDue.setText(String.valueOf(periodList.get(i)
+                .getTotalDueForPeriod()));
+        reusableViewHolder.tv_repaymentAmountPaid.setText(String.valueOf(periodList.get(i)
+                .getTotalPaidForPeriod()));
 
         if (periodList.get(i).getComplete()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.light_green));
         } else if (!periodList.get(i).getComplete()
-                && (periodList.get(i).getTotalOverdue() != null && periodList.get(i).getTotalOverdue() > 0)) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_red));
+                && (periodList.get(i).getTotalOverdue() != null && periodList.get(i)
+                .getTotalOverdue() > 0)) {
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.light_red));
         } else {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_blue));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.light_blue));
         }
 
 

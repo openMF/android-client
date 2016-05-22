@@ -14,6 +14,7 @@ import retrofit.http.Path;
 public interface GroupAccountService {
 
     @GET(APIEndPoint.GROUPS + "/{groupId}/accounts")
-    void getAllGroupsOfClient(@Path("groupId") int groupId, Callback<GroupAccounts> groupAccountsCallback);
+    void getAllGroupsOfClient(@Path("groupId") int groupId, Callback<GroupAccounts>
+            groupAccountsCallback);
 
 }

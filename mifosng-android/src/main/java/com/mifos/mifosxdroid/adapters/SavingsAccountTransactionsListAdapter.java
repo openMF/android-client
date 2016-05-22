@@ -30,7 +30,8 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
     private List<Transaction> listOfTransactions;
     private LayoutInflater layoutInflater;
 
-    public SavingsAccountTransactionsListAdapter(Context context, List<Transaction> listOfTransactions) {
+    public SavingsAccountTransactionsListAdapter(Context context, List<Transaction>
+            listOfTransactions) {
 
         layoutInflater = LayoutInflater.from(context);
         this.listOfTransactions = listOfTransactions;
@@ -66,9 +67,12 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        reusableViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(listOfTransactions.get(i).getDate()));
-        reusableViewHolder.tv_transactionType.setText(listOfTransactions.get(i).getTransactionType().getValue());
-        reusableViewHolder.tv_transactionAmount.setText(listOfTransactions.get(i).getCurrency().getDisplaySymbol()
+        reusableViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString
+                (listOfTransactions.get(i).getDate()));
+        reusableViewHolder.tv_transactionType.setText(listOfTransactions.get(i)
+                .getTransactionType().getValue());
+        reusableViewHolder.tv_transactionAmount.setText(listOfTransactions.get(i).getCurrency()
+                .getDisplaySymbol()
                 + " " + String.valueOf(listOfTransactions.get(i).getAmount()));
         if (listOfTransactions.get(i).getTransactionType().getDeposit()) {
             reusableViewHolder.tv_transactionAmount.setTextColor(Color.parseColor("#08860C"));

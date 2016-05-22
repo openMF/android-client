@@ -278,7 +278,8 @@ public class Loan {
         return interestCalculationPeriodType;
     }
 
-    public void setInterestCalculationPeriodType(InterestCalculationPeriodType interestCalculationPeriodType) {
+    public void setInterestCalculationPeriodType(InterestCalculationPeriodType
+                                                         interestCalculationPeriodType) {
         this.interestCalculationPeriodType = interestCalculationPeriodType;
     }
 

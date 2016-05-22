@@ -37,7 +37,8 @@ public class Client extends SugarRecord<Client> {
     }
 
     public boolean isNew() {
-        long count = Select.from(Client.class).where(Condition.prop("client_id").eq(clientId)).count();
+        long count = Select.from(Client.class).where(Condition.prop("client_id").eq(clientId))
+                .count();
         return count == 0;
     }
 

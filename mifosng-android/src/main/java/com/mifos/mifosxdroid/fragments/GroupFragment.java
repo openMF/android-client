@@ -41,7 +41,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class GroupFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
+public class GroupFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener,
+        RepaymentTransactionSyncService.SyncFinishListener {
 
     public static final String TAG = "Group Fragment";
     private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
@@ -58,7 +59,8 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     private long centerId;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_group, null);
         init();
         setHasOptionsMenu(true);
@@ -85,7 +87,8 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
             syncItem = menu.findItem(R.id.action_sync);
             if (centerId != -1) {
                 List<MeetingCenter> center = new ArrayList<MeetingCenter>();
-                center.addAll(Select.from(MeetingCenter.class).where(Condition.prop("center_id").eq(centerId)).list());
+                center.addAll(Select.from(MeetingCenter.class).where(Condition.prop("center_id")
+                        .eq(centerId)).list());
                 if (center.size() > 0 && center.get(0).getIsSynced() == 1)
                     syncItem.setEnabled(false);
             }
@@ -100,11 +103,13 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.action_sync) {
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context
+                    .LAYOUT_INFLATER_SERVICE);
             View syncProgress = inflater.inflate(R.layout.sync_progress, null);
             MenuItemCompat.setActionView(item, syncProgress);
             if (centerId != -1) {
-                RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService(this, centerId);
+                RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService
+                        (this, centerId);
                 syncService.syncRepayments(getActivity());
             }
         }
@@ -125,7 +130,8 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
             if (syncItem != null)
                 MenuItemCompat.setActionView(syncItem, null);
 
-            SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            SharedPreferences preferences = getActivity().getSharedPreferences
+                    (OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
             date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
             tv_empty_group.setVisibility(View.VISIBLE);
             tv_empty_group.setText("There is no data for center " + centerId + " on " + date);
@@ -158,7 +164,8 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
 
     private void setCenterAsSynced() {
         if (centerId != -1) {
-            List<MeetingCenter> center = Select.from(MeetingCenter.class).where(com.orm.query.Condition.prop("center_id").eq(centerId)).list();
+            List<MeetingCenter> center = Select.from(MeetingCenter.class).where(com.orm.query
+                    .Condition.prop("center_id").eq(centerId)).list();
             center.get(0).setIsSynced(1);
             center.get(0).save();
             getActivity().finish();

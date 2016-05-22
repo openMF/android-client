@@ -91,7 +91,8 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup
+            parent) {
 
         MifosGroupReusableViewHolder mifosGroupReusableViewHolder;
 
@@ -112,14 +113,16 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
 
         }
 
-        mifosGroupReusableViewHolder.tv_groupName.setText(sMifosGroups.get(groupPosition).getGroupName());
+        mifosGroupReusableViewHolder.tv_groupName.setText(sMifosGroups.get(groupPosition)
+                .getGroupName());
         mifosGroupReusableViewHolder.tv_groupTotal.setText(String.valueOf(groupTotalDue));
 
         return convertView;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View
+            convertView, ViewGroup parent) {
 
         ClientReusableViewHolder clientReusableViewHolder;
 
@@ -144,7 +147,8 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
         clientReusableViewHolder.tv_clientTotal.setText(String.valueOf(totalDue));
 
         CollectionSheetLoanAccountListAdapter collectionSheetLoanAccountListAdapter
-                = new CollectionSheetLoanAccountListAdapter(context, loans, groupPosition, childPosition);
+                = new CollectionSheetLoanAccountListAdapter(context, loans, groupPosition,
+                childPosition);
         clientReusableViewHolder.lv_loans.setAdapter(collectionSheetLoanAccountListAdapter);
 
         return convertView;

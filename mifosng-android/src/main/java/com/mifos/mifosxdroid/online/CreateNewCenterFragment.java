@@ -78,13 +78,15 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_center, null);
         ButterKnife.inject(this, rootView);
         inflateOfficeSpinner();
         inflateActivationDate();
         //client active checkbox onCheckedListener
-        cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton
+                .OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked)
@@ -95,7 +97,8 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
         });
 
         activationdateString = tv_activationDate.getText().toString();
-        activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationdateString).replace("-", " ");
+        activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (activationdateString).replace("-", " ");
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,18 +134,21 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                 }
                 ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, officeList);
-                officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                officeAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_offices.setAdapter(officeAdapter);
                 sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         officeId = officeNameIdHashMap.get(officeList.get(i));
                         Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
                         if (officeId != -1) {
 
                         } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_office)
+                                    , Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -166,7 +172,8 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
             App.apiManager.createCenter(centerPayload, new Callback<Center>() {
                 @Override
                 public void success(Center center, Response response) {
-                    Toast.makeText(getActivity(), "Center created successfully", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Center created successfully", Toast
+                            .LENGTH_LONG).show();
                 }
 
                 @Override
@@ -186,7 +193,8 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
         tv_activationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
 
         });
@@ -202,14 +210,18 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
     public boolean isValidCenterName() {
         try {
             if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
-                throw new RequiredFieldException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_cannot_be_empty));
+                throw new RequiredFieldException(getResources().getString(R.string.center_name),
+                        getResources().getString(R.string.error_cannot_be_empty));
             }
 
-            if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName.getEditableText().toString().trim().length() > 0) {
+            if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName
+                    .getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.center_name), 4);
             }
             if (!et_centerName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string.center_name), getResources().getString(R.string.error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+                throw new InvalidTextInputException(getResources().getString(R.string
+                        .center_name), getResources().getString(R.string
+                        .error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
             e.notifyUserWithToast(getActivity());

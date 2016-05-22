@@ -67,7 +67,8 @@ public class ChargeNameListAdapter extends BaseAdapter {
         reusableChargeViewHolder.tv_charger_id.setText(pageItems.get(i).getChargeId().toString());
         reusableChargeViewHolder.tv_charge_Name.setText(pageItems.get(i).getName());
         reusableChargeViewHolder.tv_charge_amount.setText(pageItems.get(i).getAmount().toString());
-        reusableChargeViewHolder.tv_charge_duedate.setText(pageItems.get(i).getDueDate().toString());
+        reusableChargeViewHolder.tv_charge_duedate.setText(pageItems.get(i).getDueDate().toString
+                ());
 
         return view;
 

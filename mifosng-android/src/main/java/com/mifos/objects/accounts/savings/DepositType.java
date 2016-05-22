@@ -11,7 +11,8 @@ import com.mifos.api.model.APIEndPoint;
  */
 public class DepositType implements Parcelable {
 
-    public static final Parcelable.Creator<DepositType> CREATOR = new Parcelable.Creator<DepositType>() {
+    public static final Parcelable.Creator<DepositType> CREATOR = new Parcelable
+            .Creator<DepositType>() {
         public DepositType createFromParcel(Parcel source) {
             return new DepositType(source);
         }

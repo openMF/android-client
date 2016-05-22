@@ -66,7 +66,8 @@ public class DocumentListFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_document_list, container, false);
         ButterKnife.inject(this, rootView);
@@ -78,8 +79,10 @@ public class DocumentListFragment extends ProgressableFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        MenuItem menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu.NONE, getString(R.string.add_new));
-        menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable.ic_action_content_new));
+        MenuItem menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu
+                .NONE, getString(R.string.add_new));
+        menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable
+                .ic_action_content_new));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -90,8 +93,10 @@ public class DocumentListFragment extends ProgressableFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == MENU_ITEM_ADD_NEW_DOCUMENT) {
-            DocumentDialogFragment documentDialogFragment = DocumentDialogFragment.newInstance(entityType, entityId);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            DocumentDialogFragment documentDialogFragment = DocumentDialogFragment.newInstance
+                    (entityType, entityId);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST);
             documentDialogFragment.show(fragmentTransaction, "Document Dialog Fragment");
         }
@@ -112,13 +117,17 @@ public class DocumentListFragment extends ProgressableFragment {
                         Log.w(document.getFileName(), document.getSize() + " bytes");
                     }
 
-                    DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity(), documents);
+                    DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity
+                            (), documents);
                     lv_documents.setAdapter(documentListAdapter);
                     lv_documents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader(getActivity(), documents.get(i).getFileName());
-                            asyncFileDownloader.execute(entityType, String.valueOf(entityId), String.valueOf(documents.get(i).getId()));
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
+                            AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader
+                                    (getActivity(), documents.get(i).getFileName());
+                            asyncFileDownloader.execute(entityType, String.valueOf(entityId),
+                                    String.valueOf(documents.get(i).getId()));
                         }
                     });
                 }

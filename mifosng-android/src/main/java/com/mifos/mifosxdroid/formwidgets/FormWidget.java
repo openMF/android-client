@@ -17,7 +17,8 @@ import org.json.JSONObject;
  */
 public abstract class FormWidget {
 
-    public static final LayoutParams defaultLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    public static final LayoutParams defaultLayoutParams = new LinearLayout.LayoutParams
+            (LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     public static String SCHEMA_KEY_TYPE = "type";
     public static String SCHEMA_KEY_BOOL = "BOOLEAN";
     public static String SCHEMA_KEY_INT = "INTEGER";

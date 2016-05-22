@@ -52,7 +52,8 @@ public class ClientFragment extends MifosBaseFragment implements AdapterView.OnI
     private List<Client> clientsInTheGroup = new ArrayList<Client>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_offline_client, null);
         ButterKnife.inject(this, view);
         setHasOptionsMenu(true);
@@ -84,7 +85,8 @@ public class ClientFragment extends MifosBaseFragment implements AdapterView.OnI
         Set<Loan> loans = mapDue.keySet();
         for (Loan loan : loans) {
             double updatedDue = mapDue.get(loan);
-            RepaymentTransaction repaymentTransaction = Select.from(RepaymentTransaction.class).where(Condition.prop("loan").eq(loan.getId())).first();
+            RepaymentTransaction repaymentTransaction = Select.from(RepaymentTransaction.class)
+                    .where(Condition.prop("loan").eq(loan.getId())).first();
             if (repaymentTransaction == null) {
                 repaymentTransaction = new RepaymentTransaction(loan, updatedDue);
             } else {
@@ -109,12 +111,14 @@ public class ClientFragment extends MifosBaseFragment implements AdapterView.OnI
     }
 
     private void setAdapter() {
-        clientsInTheGroup = Select.from(Client.class).where(Condition.prop("mifos_group").eq(groupId)).list();
+        clientsInTheGroup = Select.from(Client.class).where(Condition.prop("mifos_group").eq
+                (groupId)).list();
 
         List<Loan> loans = new ArrayList<Loan>();
 
         for (Client client : clientsInTheGroup) {
-            loans.addAll(Select.from(Loan.class).where(Condition.prop("client").eq(client.getId())).list());
+            loans.addAll(Select.from(Loan.class).where(Condition.prop("client").eq(client.getId()
+            )).list());
         }
         if (adapter == null)
             adapter = new ClientListAdapter(getActivity(), loans);

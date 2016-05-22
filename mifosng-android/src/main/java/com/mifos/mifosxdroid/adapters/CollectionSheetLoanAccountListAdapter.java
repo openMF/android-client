@@ -37,7 +37,8 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
 
     int positionBeingEdited = -1;
 
-    public CollectionSheetLoanAccountListAdapter(Context context, List<Loan> loans, int groupPosition, int childPosition) {
+    public CollectionSheetLoanAccountListAdapter(Context context, List<Loan> loans, int
+            groupPosition, int childPosition) {
 
         layoutInflater = LayoutInflater.from(context);
         this.loans = loans;
@@ -75,7 +76,8 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
         }
 
 
-        Double transactionAmount = CollectionListAdapter.sRepaymentTransactions.get(loans.get(position).getLoanId());
+        Double transactionAmount = CollectionListAdapter.sRepaymentTransactions.get(loans.get
+                (position).getLoanId());
 
         reusableViewHolder.tv_amountDue.setText(String.valueOf(loans.get(position).getTotalDue()));
         reusableViewHolder.tv_loanShortName.setText(loans.get(position).getProductShortName());
@@ -96,9 +98,12 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
             public void afterTextChanged(Editable s) {
 
                 try {
-                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), s.toString().equals("") ? 0.00 : Double.parseDouble(s.toString()));
+                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position)
+                            .getLoanId(), s.toString().equals("") ? 0.00 : Double.parseDouble(s
+                            .toString()));
                 } catch (NumberFormatException e) {
-                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), 0.00);
+                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position)
+                            .getLoanId(), 0.00);
                 }
                 /* TODO Fix Live update of Amounts
                 CollectionSheetFragment.refreshFragment();

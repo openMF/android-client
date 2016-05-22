@@ -90,7 +90,8 @@ public class FormEditText extends FormWidget {
 
 
         } else {
-            throw new RuntimeException("This EditText must be a Date Field! Please check if you've set isDateField = true or not");
+            throw new RuntimeException("This EditText must be a Date Field! Please check if " +
+                    "you've set isDateField = true or not");
         }
 
     }

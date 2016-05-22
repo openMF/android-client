@@ -57,7 +57,8 @@ public class GroupListFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_list, container, false);
         ButterKnife.inject(this, rootView);
         setToolbarTitle(getResources().getString(R.string.title_center_list));
@@ -71,7 +72,8 @@ public class GroupListFragment extends ProgressableFragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement " +
+                    "OnFragmentInteractionListener");
         }
     }
 
@@ -85,20 +87,26 @@ public class GroupListFragment extends ProgressableFragment {
         showProgress(true);
         App.apiManager.getGroupsByCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
-            public void success(final CenterWithAssociations centerWithAssociations, Response response) {
+            public void success(final CenterWithAssociations centerWithAssociations, Response
+                    response) {
                 if (centerWithAssociations != null) {
 
-                    GroupListAdapter groupListAdapter = new GroupListAdapter(getActivity(), centerWithAssociations.getGroupMembers());
+                    GroupListAdapter groupListAdapter = new GroupListAdapter(getActivity(),
+                            centerWithAssociations.getGroupMembers());
                     lv_groupList.setAdapter(groupListAdapter);
                     lv_groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
                             int groupId = centerWithAssociations.getGroupMembers().get(i).getId();
-                            App.apiManager.getGroups(groupId, new Callback<GroupWithAssociations>() {
+                            App.apiManager.getGroups(groupId, new Callback<GroupWithAssociations>
+                                    () {
                                 @Override
-                                public void success(GroupWithAssociations groupWithAssociations, Response response) {
+                                public void success(GroupWithAssociations groupWithAssociations,
+                                                    Response response) {
                                     if (groupWithAssociations != null)
-                                        mListener.loadClientsOfGroup(groupWithAssociations.getClientMembers());
+                                        mListener.loadClientsOfGroup(groupWithAssociations
+                                                .getClientMembers());
                                 }
 
                                 @Override

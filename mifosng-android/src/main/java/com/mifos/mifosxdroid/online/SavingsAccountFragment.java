@@ -48,7 +48,8 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class SavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker
+        .OnDatePickListener {
 
     public static final String TAG = "SavingsAccountFragment";
     @InjectView(R.id.sp_product)
@@ -99,7 +100,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_add_savings_account, null);
         ButterKnife.inject(this, rootView);
         inflatesubmissionDate();
@@ -107,7 +109,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         getSavingsAccountTemplateAPI();
 
         submittion_date = tv_submittedon_date.getText().toString();
-        submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submittion_date).replace("-", " ");
+        submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (submittion_date).replace("-", " ");
 
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +123,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 savingsPayload.setDateFormat("dd MMMM yyyy");
                 savingsPayload.setClientId(clientId);
                 savingsPayload.setProductId(productId);
-                savingsPayload.setNominalAnnualInterestRate(et_nominal_annual.getEditableText().toString());
+                savingsPayload.setNominalAnnualInterestRate(et_nominal_annual.getEditableText()
+                        .toString());
                 savingsPayload.setInterestCompoundingPeriodType(interestCompoundingPeriodTypeId);
                 savingsPayload.setInterestPostingPeriodType(interestPostingPeriodTypeId);
                 savingsPayload.setInterestCalculationType(interestCalculationTypeAdapterId);
@@ -152,17 +156,21 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                     savingsList.add(savingsname.getName());
                     savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
                 }
-                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, savingsList);
-                savingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, savingsList);
+                savingsAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_product.setAdapter(savingsAdapter);
                 sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         productId = savingsNameIdHashMap.get(savingsList.get(i));
                         Log.d("productId " + savingsList.get(i), String.valueOf(productId));
                         if (productId != -1) {
                         } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_product), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string
+                                    .error_select_product), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -186,22 +194,27 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         final ArrayList<String> InterestPostingPeriodTypeNames = filterListObject
                 (savingproductstemplate.getInterestPostingPeriodTypeOptions());
 
-        final ArrayAdapter<String> interestPostingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, InterestPostingPeriodTypeNames);
-        interestPostingPeriodTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final ArrayAdapter<String> interestPostingPeriodTypeAdapter = new ArrayAdapter<String>
+                (getActivity(),
+                        android.R.layout.simple_spinner_item, InterestPostingPeriodTypeNames);
+        interestPostingPeriodTypeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
         sp_interest_p_period.setAdapter(interestPostingPeriodTypeAdapter);
         sp_interest_p_period.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                interestPostingPeriodTypeId = savingproductstemplate.getInterestPostingPeriodTypeOptions().get(i).getId();
-                Log.d("interestPosting " + InterestPostingPeriodTypeNames.get(i), String.valueOf(interestPostingPeriodTypeId));
+                interestPostingPeriodTypeId = savingproductstemplate
+                        .getInterestPostingPeriodTypeOptions().get(i).getId();
+                Log.d("interestPosting " + InterestPostingPeriodTypeNames.get(i), String.valueOf
+                        (interestPostingPeriodTypeId));
                 if (interestPostingPeriodTypeId != -1) {
 
 
                 } else {
 
-                    Toast.makeText(getActivity(), getString(R.string.interestPostingPeriodTypeId), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.interestPostingPeriodTypeId)
+                            , Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -219,22 +232,27 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
         final ArrayList<String> interestCalculationTypeNames = filterListObject
                 (savingproductstemplate.getInterestCalculationTypeOptions());
-        final ArrayAdapter<String> interestCalculationTypeAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, interestCalculationTypeNames);
-        interestCalculationTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final ArrayAdapter<String> interestCalculationTypeAdapter = new ArrayAdapter<String>
+                (getActivity(),
+                        android.R.layout.simple_spinner_item, interestCalculationTypeNames);
+        interestCalculationTypeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
         sp_interest_calc.setAdapter(interestCalculationTypeAdapter);
         sp_interest_calc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                interestCalculationTypeAdapterId = savingproductstemplate.getInterestCalculationTypeOptions().get(i).getId();
-                Log.d("interestCalculation " + interestCalculationTypeNames.get(i), String.valueOf(interestCalculationTypeAdapterId));
+                interestCalculationTypeAdapterId = savingproductstemplate
+                        .getInterestCalculationTypeOptions().get(i).getId();
+                Log.d("interestCalculation " + interestCalculationTypeNames.get(i), String
+                        .valueOf(interestCalculationTypeAdapterId));
                 if (interestCalculationTypeAdapterId != -1) {
 
 
                 } else {
 
-                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast
+                            .LENGTH_SHORT).show();
 
                 }
 
@@ -252,9 +270,11 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         final ArrayList<String> InterestCalculationDaysInYearTypeNames = filterListObject
                 (savingproductstemplate.getInterestCalculationDaysInYearTypeOptions());
 
-        final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new ArrayAdapter<String>(getActivity(),
+        final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new
+                ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, InterestCalculationDaysInYearTypeNames);
-        interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
         sp_days_in_year.setAdapter(interestCalculationDaysInYearTypeAdapter);
         sp_days_in_year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -262,13 +282,16 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 interestCalculationDaysInYearTypeId = savingproductstemplate
                         .getInterestCalculationDaysInYearTypeOptions().get(i).getId();
-                Log.d("interestCalculationD" + InterestCalculationDaysInYearTypeNames.get(i), String.valueOf(interestCalculationDaysInYearTypeId));
+                Log.d("interestCalculationD" + InterestCalculationDaysInYearTypeNames.get(i),
+                        String.valueOf(interestCalculationDaysInYearTypeId));
                 if (interestCalculationDaysInYearTypeId != -1) {
 
 
                 } else {
 
-                    Toast.makeText(getActivity(), getString(R.string.interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string
+                            .interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT)
+                            .show();
 
                 }
 
@@ -287,9 +310,11 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         final ArrayList<String> InterestCompoundingPeriodType = filterListObject
                 (savingproductstemplate.getInterestCompoundingPeriodTypeOptions());
 
-        final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter = new ArrayAdapter<String>(getActivity(),
+        final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter = new
+                ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, InterestCompoundingPeriodType);
-        interestCompoundingPeriodTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        interestCompoundingPeriodTypeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
         sp_interest_comp.setAdapter(interestCompoundingPeriodTypeAdapter);
         sp_interest_comp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -297,13 +322,15 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 interestCompoundingPeriodTypeId = savingproductstemplate
                         .getInterestCompoundingPeriodTypeOptions().get(i).getId();
-                Log.d("clientTypeId " + InterestCompoundingPeriodType.get(i), String.valueOf(interestCompoundingPeriodTypeId));
+                Log.d("clientTypeId " + InterestCompoundingPeriodType.get(i), String.valueOf
+                        (interestCompoundingPeriodTypeId));
                 if (interestCompoundingPeriodTypeId != -1) {
 
 
                 } else {
 
-                    Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp),
+                            Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -325,7 +352,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
             @Override
             public void success(Savings savings, Response response) {
                 safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "The Savings Account has been submitted for Approval", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "The Savings Account has been submitted for " +
+                        "Approval", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -345,7 +373,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         tv_submittedon_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
 

@@ -88,8 +88,10 @@ public class SurveyLastFragment extends Fragment implements Communicator {
             App.apiManager.submitScore(mSurveyId, mScorecard, new Callback<Scorecard>() {
                 @Override
                 public void success(Scorecard scorecard, Response response) {
-                    Toast.makeText(context, "Scorecard created successfully", Toast.LENGTH_LONG).show();
-                    tv_submit.setText("Survey Successfully Submitted ! \n Thanks for taking Survey ");
+                    Toast.makeText(context, "Scorecard created successfully", Toast.LENGTH_LONG)
+                            .show();
+                    tv_submit.setText("Survey Successfully Submitted ! \n Thanks for taking " +
+                            "Survey ");
                     btn_submit.setVisibility(View.GONE);
 
                 }
@@ -102,7 +104,8 @@ public class SurveyLastFragment extends Fragment implements Communicator {
                 }
             });
         } else
-            Toast.makeText(context, "Please Attempt AtLeast One Question ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Please Attempt AtLeast One Question ", Toast.LENGTH_SHORT)
+                    .show();
     }
 
 

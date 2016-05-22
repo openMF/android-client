@@ -59,11 +59,15 @@ public class LoanListAdapter extends BaseAdapter {
         Loan loan = listLoans.get(i);
         viewHolder.tv_loan_id = (TextView) view.findViewById(R.id.tv_loan_id);
         viewHolder.tv_loan_account_id = (TextView) view.findViewById(R.id.tv_loan_account_id);
-        viewHolder.tv_loan_account_status_id = (TextView) view.findViewById(R.id.tv_loan_account_status_id);
-        viewHolder.tv_loan_product_short_name = (TextView) view.findViewById(R.id.tv_loan_product_short_name);
-        viewHolder.tv_loan_disbursement_amount = (TextView) view.findViewById(R.id.tv_loan_disbursement_amount);
+        viewHolder.tv_loan_account_status_id = (TextView) view.findViewById(R.id
+                .tv_loan_account_status_id);
+        viewHolder.tv_loan_product_short_name = (TextView) view.findViewById(R.id
+                .tv_loan_product_short_name);
+        viewHolder.tv_loan_disbursement_amount = (TextView) view.findViewById(R.id
+                .tv_loan_disbursement_amount);
         viewHolder.tv_loan_principal_due = (TextView) view.findViewById(R.id.tv_loan_principal_due);
-        viewHolder.tv_loan_principal_paid = (TextView) view.findViewById(R.id.tv_loan_principal_paid);
+        viewHolder.tv_loan_principal_paid = (TextView) view.findViewById(R.id
+                .tv_loan_principal_paid);
         viewHolder.tv_loan_interest_due = (TextView) view.findViewById(R.id.tv_loan_interest_due);
         viewHolder.tv_loan_interest_paid = (TextView) view.findViewById(R.id.tv_loan_interest_paid);
         viewHolder.tv_loan_charges_due = (TextView) view.findViewById(R.id.tv_loan_charges_due);

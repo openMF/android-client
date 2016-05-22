@@ -62,7 +62,8 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (holder instanceof ViewHolder) {
 
             Client client = getItem(position);
-            ((ViewHolder) holder).tv_clientName.setText(client.getFirstname() + " " + client.getLastname());
+            ((ViewHolder) holder).tv_clientName.setText(client.getFirstname() + " " + client
+                    .getLastname());
             ((ViewHolder) holder).tv_clientAccountNumber.setText(client.getAccountNo().toString());
 
             // lazy the  load profile picture

@@ -28,5 +28,6 @@ public interface SurveyService {
     void getSurvey(@Path("surveyId") int surveyId, Callback<Survey> surveyCallback);
 
     @POST(APIEndPoint.SURVEYS + "/{surveyId}/scorecards")
-    void submitScore(@Path("surveyId") int surveyId, @Body Scorecard scorecardPayload, Callback<Scorecard> callback);
+    void submitScore(@Path("surveyId") int surveyId, @Body Scorecard scorecardPayload,
+                     Callback<Scorecard> callback);
 }

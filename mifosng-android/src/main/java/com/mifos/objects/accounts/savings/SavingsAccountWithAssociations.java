@@ -135,7 +135,8 @@ public class SavingsAccountWithAssociations {
         return interestCompoundingPeriodType;
     }
 
-    public void setInterestCompoundingPeriodType(InterestCompoundingPeriodType interestCompoundingPeriodType) {
+    public void setInterestCompoundingPeriodType(InterestCompoundingPeriodType
+                                                         interestCompoundingPeriodType) {
         this.interestCompoundingPeriodType = interestCompoundingPeriodType;
     }
 
@@ -159,7 +160,8 @@ public class SavingsAccountWithAssociations {
         return interestCalculationDaysInYearType;
     }
 
-    public void setInterestCalculationDaysInYearType(InterestCalculationDaysInYearType interestCalculationDaysInYearType) {
+    public void setInterestCalculationDaysInYearType(InterestCalculationDaysInYearType
+                                                             interestCalculationDaysInYearType) {
         this.interestCalculationDaysInYearType = interestCalculationDaysInYearType;
     }
 

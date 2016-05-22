@@ -36,7 +36,8 @@ import retrofit.client.Response;
 /**
  * @author nellyk
  */
-public class SavingsAccountApproval extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class SavingsAccountApproval extends DialogFragment implements MFDatePicker
+        .OnDatePickListener {
 
     public static final String TAG = "SavingsAccountApproval";
     public static int savingsAccountNumber;
@@ -81,7 +82,8 @@ public class SavingsAccountApproval extends DialogFragment implements MFDatePick
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
@@ -91,7 +93,8 @@ public class SavingsAccountApproval extends DialogFragment implements MFDatePick
         inflateApprovalDate();
 
         approvaldate = et_s_approval_date.getText().toString();
-        approvaldate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvaldate).replace("-", " ");
+        approvaldate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvaldate)
+                .replace("-", " ");
 
         bt_approve_savings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +147,8 @@ public class SavingsAccountApproval extends DialogFragment implements MFDatePick
         et_s_approval_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
 

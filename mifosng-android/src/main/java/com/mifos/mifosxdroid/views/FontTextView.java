@@ -34,7 +34,8 @@ public class FontTextView extends TextView {
     private void parseAttributes(Context context, AttributeSet attrs) {
         if (!isInEditMode()) {
             TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.CustomFont);
-            int typeface = values.getInt(R.styleable.CustomFont_typeface, Font.ROBOTO_MEDIUM.ordinal());
+            int typeface = values.getInt(R.styleable.CustomFont_typeface, Font.ROBOTO_MEDIUM
+                    .ordinal());
             Font font = Font.getFont(typeface);
             setTypeface(font.getTypeface());
         }

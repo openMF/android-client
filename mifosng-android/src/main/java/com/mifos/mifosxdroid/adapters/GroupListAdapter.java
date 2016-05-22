@@ -77,11 +77,15 @@ public class GroupListAdapter extends BaseAdapter {
          * if Status is Active or not
          */
         if (Status.isActive(group.getStatus().getValue())) {
-            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources().getColor(R.color.deposit_green));
-            reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R.string.active));
+            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources
+                    ().getColor(R.color.deposit_green));
+            reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R
+                    .string.active));
         } else {
-            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources().getColor(R.color.light_red));
-            reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R.string.inactive));
+            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources
+                    ().getColor(R.color.light_red));
+            reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R
+                    .string.inactive));
         }
 
         return view;

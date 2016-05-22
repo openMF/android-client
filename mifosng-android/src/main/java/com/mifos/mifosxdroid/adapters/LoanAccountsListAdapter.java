@@ -67,23 +67,29 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
         if (loanAccountList.get(i).getStatus().getActive()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_disbursed));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.loan_status_disbursed));
 
         } else if (loanAccountList.get(i).getStatus().getWaitingForDisbursal()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_approved));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.status_approved));
 
         } else if (loanAccountList.get(i).getStatus().getPendingApproval()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_submitted_and_pending_approval));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.status_submitted_and_pending_approval));
 
-        } else if (loanAccountList.get(i).getStatus().getActive() && loanAccountList.get(i).getInArrears()) {
+        } else if (loanAccountList.get(i).getStatus().getActive() && loanAccountList.get(i)
+                .getInArrears()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.red));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.red));
 
         } else {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.status_closed));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
+                    .getColor(R.color.status_closed));
 
         }
 

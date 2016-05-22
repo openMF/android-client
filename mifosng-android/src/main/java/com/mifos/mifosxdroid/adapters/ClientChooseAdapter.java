@@ -48,7 +48,8 @@ public class ClientChooseAdapter extends MifosBaseListAdapter<Client> {
 
         TextDrawable drawable;
         if (item.getDisplayName() != null && item.getDisplayName().trim().length() > 0) {
-            drawable = mDrawableBuilder.build(String.valueOf(item.getDisplayName().charAt(0)), mColorGenerator.getColor(item.getDisplayName()));
+            drawable = mDrawableBuilder.build(String.valueOf(item.getDisplayName().charAt(0)),
+                    mColorGenerator.getColor(item.getDisplayName()));
             holder.iv_clientImage.setImageDrawable(drawable);
         }
         return convertView;

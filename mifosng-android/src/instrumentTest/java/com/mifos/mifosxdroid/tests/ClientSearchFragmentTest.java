@@ -41,18 +41,18 @@ public class ClientSearchFragmentTest {
     }
 
     @Test
-    public void testViewsAreOnTheScreen(){
+    public void testViewsAreOnTheScreen() {
         onView(withId(R.id.tv_search)).check(matches(withText(R.string.client_search)));
         onView(withId(R.id.et_search_by_id)).check(matches(isDisplayed()));
         onView(withId(R.id.bt_searchClient)).check(matches(withText(R.string.search)));
     }
 
     @Test
-    public void testSearchClient() throws Exception{
+    public void testSearchClient() throws Exception {
 
         // Add Client Name In EditText
         String clientname = "client";
-        onView(withId(R.id.et_search_by_id)).perform(typeText(clientname),closeSoftKeyboard());
+        onView(withId(R.id.et_search_by_id)).perform(typeText(clientname), closeSoftKeyboard());
 
         //Search from Rest API
         onView(withId(R.id.bt_searchClient)).perform(click());
