@@ -59,13 +59,13 @@ public interface SavingsAccountService {
 
 
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}/?command=activate")
-     void activateSavings(@Path("savingsAccountId") int savingsAccountId,
-                                @Body HashMap<String, Object> genericRequest,
-                                Callback<GenericResponse> genericResponseCallback);
+    void activateSavings(@Path("savingsAccountId") int savingsAccountId,
+                         @Body HashMap<String, Object> genericRequest,
+                         Callback<GenericResponse> genericResponseCallback);
 
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}?command=approve")
     void approveSavingsApplication(@Path("savingsAccountId") int savingsAccountId,
-                                          @Body SavingsApproval savingsApproval,
-                                          Callback<GenericResponse> genericResponseCallback);
+                                   @Body SavingsApproval savingsApproval,
+                                   Callback<GenericResponse> genericResponseCallback);
 
 }

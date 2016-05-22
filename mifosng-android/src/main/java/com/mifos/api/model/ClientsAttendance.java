@@ -8,13 +8,12 @@ package com.mifos.api.model;
 
 import com.google.gson.Gson;
 
-public class ClientsAttendance
-{
+public class ClientsAttendance {
     public int attendanceType;
     public int clientId;
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new Gson().toJson(this);
     }
 }

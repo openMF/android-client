@@ -14,8 +14,19 @@ import android.os.Parcelable;
  */
 public class ScorecardValues implements Parcelable {
 
-    private Integer questionId ;
-    private Integer responseId ;
+    public static final Parcelable.Creator<ScorecardValues> CREATOR = new Parcelable.Creator<ScorecardValues>() {
+        @Override
+        public ScorecardValues createFromParcel(Parcel source) {
+            return new ScorecardValues(source);
+        }
+
+        @Override
+        public ScorecardValues[] newArray(int size) {
+            return new ScorecardValues[size];
+        }
+    };
+    private Integer questionId;
+    private Integer responseId;
     private Integer value;
 
     public ScorecardValues() {
@@ -27,6 +38,12 @@ public class ScorecardValues implements Parcelable {
         this.questionId = questionId;
         this.responseId = responseId;
         this.value = value;
+    }
+
+    protected ScorecardValues(Parcel in) {
+        this.questionId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.responseId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.value = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 
     public Integer getQuestionId() {
@@ -44,6 +61,7 @@ public class ScorecardValues implements Parcelable {
     public void setResponseId(Integer responseId) {
         this.responseId = responseId;
     }
+
     public Integer getValue() {
         return value;
     }
@@ -72,22 +90,4 @@ public class ScorecardValues implements Parcelable {
         dest.writeValue(this.responseId);
         dest.writeValue(this.value);
     }
-
-    protected ScorecardValues(Parcel in) {
-        this.questionId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.responseId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.value = (Integer) in.readValue(Integer.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<ScorecardValues> CREATOR = new Parcelable.Creator<ScorecardValues>() {
-        @Override
-        public ScorecardValues createFromParcel(Parcel source) {
-            return new ScorecardValues(source);
-        }
-
-        @Override
-        public ScorecardValues[] newArray(int size) {
-            return new ScorecardValues[size];
-        }
-    };
 }

@@ -27,7 +27,7 @@ public class CentersListAdapter extends BaseAdapter {
     private List<Center> centers;
     private Resources resources;
 
-    public CentersListAdapter(Context context, List<Center> centers){
+    public CentersListAdapter(Context context, List<Center> centers) {
 
         layoutInflater = LayoutInflater.from(context);
         this.centers = centers;
@@ -55,11 +55,11 @@ public class CentersListAdapter extends BaseAdapter {
 
         ViewHolder viewHolder;
 
-        if(view==null){
-            view = layoutInflater.inflate(R.layout.row_center_list_item,viewGroup,false);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_center_list_item, viewGroup, false);
             viewHolder = new ViewHolder();
             view.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
@@ -70,19 +70,19 @@ public class CentersListAdapter extends BaseAdapter {
         viewHolder.tv_office_id = (TextView) view.findViewById(R.id.tv_office_id);
         viewHolder.tv_office_name = (TextView) view.findViewById(R.id.tv_office_name);
 
-        viewHolder.tv_center_id.setText(resources.getString(R.string.center_id)+centers.get(i).getId());
+        viewHolder.tv_center_id.setText(resources.getString(R.string.center_id) + centers.get(i).getId());
         viewHolder.tv_center_name.setText(centers.get(i).getName());
 
-        viewHolder.tv_staff_id.setText(resources.getString(R.string.staff_id)+centers.get(i).getStaffId());
+        viewHolder.tv_staff_id.setText(resources.getString(R.string.staff_id) + centers.get(i).getStaffId());
         viewHolder.tv_staff_name.setText(centers.get(i).getStaffName());
 
-        viewHolder.tv_office_id.setText(resources.getString(R.string.office_id)+centers.get(i).getOfficeId());
+        viewHolder.tv_office_id.setText(resources.getString(R.string.office_id) + centers.get(i).getOfficeId());
         viewHolder.tv_office_name.setText(centers.get(i).getOfficeName());
 
         return view;
     }
 
-    public static class ViewHolder{
+    public static class ViewHolder {
 
         TextView tv_center_name;
         TextView tv_center_id;

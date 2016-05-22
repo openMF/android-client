@@ -12,7 +12,7 @@ public class RepaymentTransaction extends SugarRecord<RepaymentTransaction> {
     private Loan loan;
     private double transactionAmount;
 
-    public RepaymentTransaction(){
+    public RepaymentTransaction() {
 
     }
 

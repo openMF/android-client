@@ -26,8 +26,8 @@ import retrofit.client.Response;
  */
 public class PinpointClientActivity extends MifosMapActivity {
 
-    private MarkerOptions client = new MarkerOptions();
     public static final String EXTRA_CLIENT_ID = "extra_client_id";
+    private MarkerOptions client = new MarkerOptions();
     private int clientId;
 
     @Override

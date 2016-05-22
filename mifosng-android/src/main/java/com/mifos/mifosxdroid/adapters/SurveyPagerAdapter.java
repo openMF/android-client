@@ -4,17 +4,19 @@
  */
 
 package com.mifos.mifosxdroid.adapters;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import java.util.List;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import java.util.List;
 
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveyPagerAdapter extends FragmentStatePagerAdapter{
+public class SurveyPagerAdapter extends FragmentStatePagerAdapter {
     private final List<Fragment> fragments;
-    private int currentPage= 0;
+    private int currentPage = 0;
 
     public SurveyPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
@@ -30,9 +32,13 @@ public class SurveyPagerAdapter extends FragmentStatePagerAdapter{
         return this.fragments.size();
     }
 
-    public int getCurrentPage() {return currentPage;}
+    public int getCurrentPage() {
+        return currentPage;
+    }
 
 
-    public void setCurrentPage(int position) {currentPage = position;}
+    public void setCurrentPage(int position) {
+        currentPage = position;
+    }
 }
 

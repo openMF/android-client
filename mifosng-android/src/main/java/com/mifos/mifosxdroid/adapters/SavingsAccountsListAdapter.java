@@ -26,9 +26,9 @@ import butterknife.InjectView;
  */
 public class SavingsAccountsListAdapter extends BaseAdapter {
 
+    Context context;
     private List<SavingsAccount> savingsAccountList;
     private LayoutInflater layoutInflater;
-    Context context;
 
     public SavingsAccountsListAdapter(Context context, List<SavingsAccount> savingsAccountList) {
 
@@ -56,17 +56,17 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         ReusableViewHolder reusableViewHolder;
-        if(view==null) {
+        if (view == null) {
 
-            view = layoutInflater.inflate(R.layout.row_account_item,null);
+            view = layoutInflater.inflate(R.layout.row_account_item, null);
             reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
 
-        }else {
+        } else {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        if(savingsAccountList.get(i).getStatus().getActive()) {
+        if (savingsAccountList.get(i).getStatus().getActive()) {
 
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.savings_account_status_active));
 
@@ -86,18 +86,21 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         decimalFormat.setMaximumFractionDigits(2);
         decimalFormat.setMaximumIntegerDigits(10);
-        reusableViewHolder.tv_amount.setText(String.valueOf(accountBalance==null?"0.00": decimalFormat.format(accountBalance)));
+        reusableViewHolder.tv_amount.setText(String.valueOf(accountBalance == null ? "0.00" : decimalFormat.format(accountBalance)));
         reusableViewHolder.tv_accountNumber.setText(savingsAccountList.get(i).getAccountNo());
 
         return view;
     }
 
 
-    public static class ReusableViewHolder{
+    public static class ReusableViewHolder {
 
-        @InjectView(R.id.tv_amount) TextView tv_amount;
-        @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
-        @InjectView(R.id.view_status_indicator) View view_status_indicator;
+        @InjectView(R.id.tv_amount)
+        TextView tv_amount;
+        @InjectView(R.id.tv_accountNumber)
+        TextView tv_accountNumber;
+        @InjectView(R.id.view_status_indicator)
+        View view_status_indicator;
 
         public ReusableViewHolder(View view) {
             ButterKnife.inject(this, view);

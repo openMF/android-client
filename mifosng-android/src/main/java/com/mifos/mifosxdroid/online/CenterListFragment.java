@@ -17,7 +17,6 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -106,12 +105,6 @@ public class CenterListFragment extends ProgressableFragment {
         return rootView;
     }
 
-    public interface OnFragmentInteractionListener {
-        void loadGroupsOfCenter(int centerId);
-
-        void loadCollectionSheetForCenter(int centerId, String collectionDate, int calenderInstanceId);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.mItem_search)
@@ -127,5 +120,11 @@ public class CenterListFragment extends ProgressableFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void loadGroupsOfCenter(int centerId);
+
+        void loadCollectionSheetForCenter(int centerId, String collectionDate, int calenderInstanceId);
     }
 }

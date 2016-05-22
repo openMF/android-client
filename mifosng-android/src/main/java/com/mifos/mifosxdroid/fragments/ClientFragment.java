@@ -113,7 +113,7 @@ public class ClientFragment extends MifosBaseFragment implements AdapterView.OnI
 
         List<Loan> loans = new ArrayList<Loan>();
 
-        for(Client client: clientsInTheGroup){
+        for (Client client : clientsInTheGroup) {
             loans.addAll(Select.from(Loan.class).where(Condition.prop("client").eq(client.getId())).list());
         }
         if (adapter == null)

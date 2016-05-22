@@ -25,7 +25,7 @@ public class RequiredFieldException extends Exception {
 
     @Override
     public String toString() {
-        return fieldName + " " + localisedErrorMessage ;
+        return fieldName + " " + localisedErrorMessage;
     }
 
     public void notifyUserWithToast(Context context) {

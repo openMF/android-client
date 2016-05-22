@@ -72,7 +72,26 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
+    private TextWatcher urlWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer.valueOf(et_port.getEditableText().toString());
+            instanceURL = ValidationUtil.getInstanceUrl(et_domain.getText().toString(), port);
+            isValidUrl = ValidationUtil.isValidUrl(instanceURL);
+            tv_full_url.setText(instanceURL);
+            tv_full_url.setTextColor(isValidUrl ? getResources().getColor(R.color.green_light) : getResources().getColor(R.color.red_light));
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,27 +114,6 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         et_port.addTextChangedListener(urlWatcher);
         urlWatcher.afterTextChanged(null);
     }
-
-    private TextWatcher urlWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer.valueOf(et_port.getEditableText().toString());
-            instanceURL = ValidationUtil.getInstanceUrl(et_domain.getText().toString(), port);
-            isValidUrl = ValidationUtil.isValidUrl(instanceURL);
-            tv_full_url.setText(instanceURL);
-            tv_full_url.setTextColor(isValidUrl ? getResources().getColor(R.color.green_light) : getResources().getColor(R.color.red_light));
-        }
-    };
 
     public boolean validateUserInputs() {
         if (!isValidUrl) {
@@ -166,11 +164,9 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
                 Toaster.show(findViewById(android.R.id.content), "Internal server error");
             }
         } catch (NullPointerException e) {
-            if(Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to Internet") )
-            {
+            if (Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to Internet")) {
                 Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
-            }
-            else {
+            } else {
                 Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
             }
         }

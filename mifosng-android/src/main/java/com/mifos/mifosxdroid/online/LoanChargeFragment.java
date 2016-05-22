@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 /**
  * Created by nellyk on 1/22/2016.
  */
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,24 +48,23 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-
 public class LoanChargeFragment extends MifosBaseFragment {
 
     public static final int MENU_ITEM_ADD_NEW_LOAN_CHARGES = 3000;
     @InjectView(R.id.lv_charges)
     ListView lv_charges;
     List<Charges> chargesList = new ArrayList<Charges>();
-    private View rootView;
-    private Context context;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+    private View rootView;
+    private Context context;
     private SharedPreferences sharedPreferences;
     private int loanAccountNumber;
     private int index = 0;
     private int top = 0;
     private boolean isInfiniteScrollEnabled = false;
 
-    public LoanChargeFragment(){
+    public LoanChargeFragment() {
 
     }
 
@@ -78,7 +78,8 @@ public class LoanChargeFragment extends MifosBaseFragment {
             fragment.setChargesList(chargesList);
         return fragment;
     }
-    public static LoanChargeFragment newInstance(int loanAccountNumber,List<Charges> chargesList, boolean isParentFragmentAGroupFragment) {
+
+    public static LoanChargeFragment newInstance(int loanAccountNumber, List<Charges> chargesList, boolean isParentFragmentAGroupFragment) {
         LoanChargeFragment fragment = new LoanChargeFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber);
@@ -121,7 +122,7 @@ public class LoanChargeFragment extends MifosBaseFragment {
 
     public void inflateChargeList() {
 
-        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList,loanAccountNumber);
+        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList, loanAccountNumber);
         lv_charges.setAdapter(chargesNameListAdapter);
 
         if (isInfiniteScrollEnabled) {
@@ -173,6 +174,7 @@ public class LoanChargeFragment extends MifosBaseFragment {
                     swipeRefreshLayout.setRefreshing(false);
 
                 }
+
                 @Override
                 public void failure(RetrofitError retrofitError) {
 
@@ -272,17 +274,6 @@ public class LoanChargeFragment extends MifosBaseFragment {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     public List<Charges> getChargesList() {
         return chargesList;
     }
@@ -290,6 +281,7 @@ public class LoanChargeFragment extends MifosBaseFragment {
     public void setChargesList(List<Charges> chargesList) {
         this.chargesList = chargesList;
     }
+
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
         this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
     }

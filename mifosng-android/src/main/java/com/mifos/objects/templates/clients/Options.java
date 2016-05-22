@@ -10,60 +10,60 @@ package com.mifos.objects.templates.clients;
  */
 public class Options {
 
-	private int id;
-	private String name;
-	private int position;
-	private String description;
-	private boolean isActive;
+    private int id;
+    private String name;
+    private int position;
+    private String description;
+    private boolean isActive;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getPosition() {
-		return position;
-	}
+    public int getPosition() {
+        return position;
+    }
 
-	public void setPosition(int position) {
-		this.position = position;
-	}
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public boolean isActive() {
-		return isActive;
-	}
+    public boolean isActive() {
+        return isActive;
+    }
 
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
-	}
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 
-	@Override
-	public String toString() {
-		return "Options{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", position=" + position +
-				", description='" + description + '\'' +
-				", isActive=" + isActive +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Options{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", position=" + position +
+                ", description='" + description + '\'' +
+                ", isActive=" + isActive +
+                '}';
+    }
 }

@@ -4,8 +4,8 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.objects.organisation.Staff;
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.organisation.Staff;
 
 import java.util.List;
 
@@ -22,8 +22,8 @@ public interface StaffService {
     void getStaffForOffice(@Query("officeId") int officeId, Callback<List<Staff>> staffListCallback);
 
 
-        @GET(APIEndPoint.STAFF)
-        void getAllStaff(Callback<List<Staff>> listOfStaffsCallback);
+    @GET(APIEndPoint.STAFF)
+    void getAllStaff(Callback<List<Staff>> listOfStaffsCallback);
 
     @GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
     void getFieldStaffForOffice(Callback<List<Staff>> staffListCallback);

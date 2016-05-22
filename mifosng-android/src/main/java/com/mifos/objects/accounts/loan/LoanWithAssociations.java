@@ -1,4 +1,3 @@
-
 /*
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
@@ -17,7 +16,7 @@ import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class LoanWithAssociations {
-//TODO Fix OBJECT Typed Lists
+    //TODO Fix OBJECT Typed Lists
     private Integer id;
     private String accountNo;
     private Status status;

@@ -31,24 +31,21 @@ import butterknife.InjectView;
  */
 public class CollectionListAdapter extends BaseExpandableListAdapter {
 
-    Context context;
-    LayoutInflater layoutInflater;
     public static List<MifosGroup> sMifosGroups = new ArrayList<MifosGroup>();
     //Map for RepaymentTransaction<Loan Id, Transaction Amount>
     //TODO Check about SparseArray in Android and try to convert Map into SparseArray Implementation
     public static Map<Integer, Double> sRepaymentTransactions = new HashMap<Integer, Double>();
+    Context context;
+    LayoutInflater layoutInflater;
 
     public CollectionListAdapter(Context context, List<MifosGroup> mifosGroups) {
         this.context = context;
         layoutInflater = LayoutInflater.from(this.context);
         sMifosGroups = mifosGroups;
 
-        for (MifosGroup mifosGroup : sMifosGroups)
-        {
-            for (Client client : mifosGroup.getClients())
-            {
-                for (Loan loan : client.getLoans())
-                {
+        for (MifosGroup mifosGroup : sMifosGroups) {
+            for (Client client : mifosGroup.getClients()) {
+                for (Loan loan : client.getLoans()) {
                     sRepaymentTransactions.put(loan.getLoanId(), loan.getTotalDue());
                 }
 
@@ -108,10 +105,8 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
 
         double groupTotalDue = 0;
 
-        for (Client client : sMifosGroups.get(groupPosition).getClients())
-        {
-            for (Loan loan : client.getLoans())
-            {
+        for (Client client : sMifosGroups.get(groupPosition).getClients()) {
+            for (Loan loan : client.getLoans()) {
                 groupTotalDue += sRepaymentTransactions.get(loan.getLoanId());
             }
 
@@ -182,6 +177,7 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
         TextView tv_clientTotal;
         @InjectView(R.id.lv_loans)
         ListView lv_loans;
+
         public ClientReusableViewHolder(View view) {
             ButterKnife.inject(this, view);
         }

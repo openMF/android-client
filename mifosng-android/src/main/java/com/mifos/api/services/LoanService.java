@@ -4,8 +4,9 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.GenericResponse;
+import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.accounts.loan.LoanApproval;
-import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
@@ -15,12 +16,9 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-import com.mifos.api.GenericResponse;
-import com.mifos.api.model.APIEndPoint;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
 
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
@@ -83,8 +81,8 @@ public interface LoanService {
     void getLoansAccountTemplate(@Query("clientId") int clientId, @Query("productId") int productId, Callback<Response> loanCallback);
 
 
-    @GET(APIEndPoint.LOANS +"/{loanId}/transactions/template?command=disburse")
-     void getLoanTemplate(@Path("loanId") int loanId,Callback<Response> loanTemplateCallback);
+    @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
+    void getLoanTemplate(@Path("loanId") int loanId, Callback<Response> loanTemplateCallback);
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
     void createGroupLoansAccount(@Body GroupLoanPayload loansPayload, Callback<Loans> callback);
@@ -94,12 +92,11 @@ public interface LoanService {
     void getGroupLoansAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> grouploanCallback);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
-  void getListOfLoanCharges(@Path("loanId") int loanId,Callback<Page<Charges>> loanchargeListCallback);
+    void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>> loanchargeListCallback);
 
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-  void getListOfCharges(@Path("clientId") int clientId,Callback<Page<Charges>> chargeListCallback);
-
+    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>> chargeListCallback);
 
 
 }

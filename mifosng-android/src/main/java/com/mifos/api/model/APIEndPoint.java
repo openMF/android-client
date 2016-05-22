@@ -14,7 +14,7 @@ public class APIEndPoint {
 
     public static final String AUTHENTICATION = "/authentication";
     public static final String CLIENTS = "/clients";
-    public static final String CHARGES ="/charges";
+    public static final String CHARGES = "/charges";
     public static final String LOANS = "/loans";
     public static final String CENTERS = "/centers";
     public static final String SURVEYS = "/surveys";

@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -35,7 +34,6 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -68,8 +66,6 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
     private static final int TRANSACTION_REPAYMENT = 2;
     public static int loanAccountNumber;
     public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
-    private View rootView;
-
     @InjectView(R.id.view_status_indicator)
     View view_status_indicator;
     @InjectView(R.id.tv_clientName)
@@ -120,11 +116,12 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
     TextView tv_total_paid;
     @InjectView(R.id.bt_processLoanTransaction)
     Button bt_processLoanTransaction;
+    List<Charges> chargesList = new ArrayList<Charges>();
+    private View rootView;
     // Action Identifier in the onProcessTransactionClicked Method
     private int processLoanTransactionAction = -1;
     private OnFragmentInteractionListener mListener;
     private LoanWithAssociations clientLoanWithAssociations;
-    List<Charges> chargesList = new ArrayList<Charges>();
 
     public LoanAccountSummaryFragment() {
         // Required empty public constructor
@@ -291,8 +288,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
         if (item.getItemId() == MENU_ITEM_CHARGES) {
             loadloanCharges();
         }
-            return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * Use this method to fetch all datatables for client and inflate them as
@@ -357,14 +354,16 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
         fragmentTransaction.replace(R.id.container, documentListFragment);
         fragmentTransaction.commit();
     }
+
     public void loadloanCharges() {
 
-        LoanChargeFragment loanChargeFragment = LoanChargeFragment.newInstance(loanAccountNumber,chargesList);
+        LoanChargeFragment loanChargeFragment = LoanChargeFragment.newInstance(loanAccountNumber, chargesList);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, loanChargeFragment);
         fragmentTransaction.commit();
     }
+
     public void approveLoan() {
 
         LoanAccountApproval loanAccountApproval = LoanAccountApproval.newInstance(loanAccountNumber);
@@ -383,6 +382,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
         fragmentTransaction.commit();
 
     }
+
     public interface OnFragmentInteractionListener {
         void makeRepayment(LoanWithAssociations loan);
 

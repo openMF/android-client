@@ -5,7 +5,6 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -52,9 +51,6 @@ import retrofit.client.Response;
 public class SavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "SavingsAccountFragment";
-    private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
-
     @InjectView(R.id.sp_product)
     Spinner sp_product;
     @InjectView(R.id.et_client_external_id)
@@ -73,6 +69,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     Spinner sp_days_in_year;
     @InjectView(R.id.bt_submit)
     Button bt_submit;
+    private View rootView;
+    private SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
@@ -163,8 +161,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                         productId = savingsNameIdHashMap.get(savingsList.get(i));
                         Log.d("productId " + savingsList.get(i), String.valueOf(productId));
                         if (productId != -1) {
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getActivity(), getString(R.string.error_select_product), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -202,8 +199,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 if (interestPostingPeriodTypeId != -1) {
 
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(getActivity(), getString(R.string.interestPostingPeriodTypeId), Toast.LENGTH_SHORT).show();
 
@@ -236,8 +232,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 if (interestCalculationTypeAdapterId != -1) {
 
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast.LENGTH_SHORT).show();
 
@@ -286,6 +281,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         });
 
     }
+
     private void InterestCompoundingPeriodType() {
 
         final ArrayList<String> InterestCompoundingPeriodType = filterListObject
@@ -305,8 +301,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 if (interestCompoundingPeriodTypeId != -1) {
 
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp), Toast.LENGTH_SHORT).show();
 
@@ -372,7 +367,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                     inflateInterestPostingPeriodType();
                 }
 
-                    showProgress(false);
+                showProgress(false);
             }
 
 

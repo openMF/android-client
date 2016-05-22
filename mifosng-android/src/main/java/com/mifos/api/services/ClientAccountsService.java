@@ -4,8 +4,8 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.accounts.ClientAccounts;
 
 import retrofit.Callback;
 import retrofit.http.GET;

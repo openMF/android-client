@@ -26,10 +26,11 @@ import butterknife.InjectView;
  */
 public class LoanAccountsListAdapter extends BaseAdapter {
 
+    Context context;
     private List<LoanAccount> loanAccountList;
     private LayoutInflater layoutInflater;
-    Context context;
-    public LoanAccountsListAdapter(Context context, List<LoanAccount> loanAccountList){
+
+    public LoanAccountsListAdapter(Context context, List<LoanAccount> loanAccountList) {
 
         this.layoutInflater = LayoutInflater.from(context);
         this.loanAccountList = loanAccountList;
@@ -56,15 +57,15 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
         ReusableViewHolder reusableViewHolder;
 
-        if(view==null) {
-            view = layoutInflater.inflate(R.layout.row_account_item,null);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_account_item, null);
             reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
-        }else {
+        } else {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
-        if(loanAccountList.get(i).getStatus().getActive()) {
+        if (loanAccountList.get(i).getStatus().getActive()) {
 
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.loan_status_disbursed));
 
@@ -95,11 +96,14 @@ public class LoanAccountsListAdapter extends BaseAdapter {
     }
 
 
-    public static class ReusableViewHolder{
+    public static class ReusableViewHolder {
 
-        @InjectView(R.id.tv_amount) TextView tv_amount;
-        @InjectView(R.id.tv_accountNumber) TextView tv_accountNumber;
-        @InjectView(R.id.view_status_indicator) View view_status_indicator;
+        @InjectView(R.id.tv_amount)
+        TextView tv_amount;
+        @InjectView(R.id.tv_accountNumber)
+        TextView tv_accountNumber;
+        @InjectView(R.id.view_status_indicator)
+        View view_status_indicator;
 
         public ReusableViewHolder(View view) {
             ButterKnife.inject(this, view);

@@ -33,9 +33,6 @@ import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.organisation.ClientClassificationOptions;
-import com.mifos.objects.organisation.ClientTypeOptions;
-import com.mifos.objects.organisation.GenderOptions;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -43,13 +40,7 @@ import com.mifos.objects.templates.clients.Options;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -65,7 +56,8 @@ import retrofit.client.Response;
 public class CreateNewClientFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
 
     private static final String TAG = "CreateNewClient";
-
+    public DialogFragment mfDatePicker;
+    public DialogFragment newDatePicker;
     @InjectView(R.id.et_client_first_name)
     EditText et_clientFirstName;
     @InjectView(R.id.et_client_last_name)
@@ -94,7 +86,6 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     Spinner spClientClassification;
     @InjectView(R.id.bt_submit)
     Button bt_submit;
-
     int officeId;
     int clientTypeId;
     int staffId;
@@ -104,14 +95,12 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     View rootView;
     String dateString;
     String dateofbirthstring;
-    public DialogFragment mfDatePicker;
-    public DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String, Integer>();
-	private ClientsTemplate clientstemplate = new ClientsTemplate();
+    private ClientsTemplate clientstemplate = new ClientsTemplate();
     private View mCurrentDateView;    // the view whose click opened the date picker
 
     public static CreateNewClientFragment newInstance() {
@@ -397,23 +386,22 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         }
         if (isValidLastName()) {
 
-                showProgress(true);
-                App.apiManager.createClient(clientPayload, new Callback<Client>() {
-                    @Override
-                    public void success(Client client, Response response) {
-                        showProgress(false);
-                        Toaster.show(rootView, "Client created successfully");
-                    }
+            showProgress(true);
+            App.apiManager.createClient(clientPayload, new Callback<Client>() {
+                @Override
+                public void success(Client client, Response response) {
+                    showProgress(false);
+                    Toaster.show(rootView, "Client created successfully");
+                }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        showProgress(false);
-                        Toaster.show(rootView, "Error creating client");
-                    }
-                });
-            }
+                @Override
+                public void failure(RetrofitError error) {
+                    showProgress(false);
+                    Toaster.show(rootView, "Error creating client");
+                }
+            });
+        }
     }
-
 
 
     public void inflateSubmissionDate() {

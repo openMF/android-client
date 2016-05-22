@@ -3,6 +3,7 @@ package com.mifos.api.model;
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+
 /**
  * Created by ADMIN on 16-Jun-15.
  */
@@ -52,8 +53,8 @@ public class ClientPayload extends DefaultPayload {
         return firstname;
     }
 
-    public void setMiddlename(String mobilenumber) {
-        this.middlename = middlename;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     public int getStaffId() {
@@ -68,16 +69,16 @@ public class ClientPayload extends DefaultPayload {
         return middlename;
     }
 
+    public void setMiddlename(String mobilenumber) {
+        this.middlename = middlename;
+    }
+
     public String getExternalId() {
         return externalId;
     }
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
     }
 
     public String getLastname() {

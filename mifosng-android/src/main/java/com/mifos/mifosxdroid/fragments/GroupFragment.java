@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.api.RepaymentTransactionSyncService;
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
@@ -30,7 +31,6 @@ import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.MeetingCenter;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.api.RepaymentTransactionSyncService;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
@@ -56,6 +56,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     private MenuItem syncItem;
     private String date;
     private long centerId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_group, null);
@@ -69,6 +70,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     private void init() {
         centerId = getActivity().getIntent().getLongExtra(CenterListFragment.CENTER_ID, -1);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -87,7 +89,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
                 if (center.size() > 0 && center.get(0).getIsSynced() == 1)
                     syncItem.setEnabled(false);
             }
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             syncItem.setEnabled(false);
         }

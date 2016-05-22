@@ -3,6 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.api.model;
+
 import com.mifos.objects.survey.ScorecardValues;
 
 import java.util.Date;
@@ -46,7 +47,7 @@ public class ScorecardPayload {
         return scorecardValues;
     }
 
-    public void setScorecardValues(List<ScorecardValues> scorecardValues ) {
+    public void setScorecardValues(List<ScorecardValues> scorecardValues) {
         this.scorecardValues = scorecardValues;
     }
 }

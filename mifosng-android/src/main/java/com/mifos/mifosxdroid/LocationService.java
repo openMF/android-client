@@ -144,12 +144,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Log.i(TAG, "Connection to location services failed" + connectionResult.getErrorCode());
     }
 
-    public class LocalBinder extends Binder {
-        public LocationService getService() {
-            return LocationService.this;
-        }
-    }
-
     @Override
     public void onDestroy() {
         if (apiClient != null)
@@ -170,5 +164,11 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         PAUSED,
         STOPPED,
         FAILURE
+    }
+
+    public class LocalBinder extends Binder {
+        public LocationService getService() {
+            return LocationService.this;
+        }
     }
 }

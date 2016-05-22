@@ -23,7 +23,17 @@ import java.util.List;
  */
 public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
     private final Object mLock = new Object();
-
+    /**
+     * Handler for button elements in listview
+     */
+    View.OnClickListener buttonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ListView listView = (ListView) v.getParent();
+            int position = listView.getPositionForView(v);
+            listView.performItemClick(listView.getChildAt(position), position, listView.getItemIdAtPosition(position));
+        }
+    };
     private List<T> list;
     private Context context;
     private int layoutId;
@@ -169,15 +179,15 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
         return getContext().getResources();
     }
 
+    public List<T> getList() {
+        return list;
+    }
+
     public void setList(List<T> list) {
         synchronized (mLock) {
             this.list = list;
         }
         notifyDataSetChanged();
-    }
-
-    public List<T> getList() {
-        return list;
     }
 
     public View getLayout() {
@@ -190,17 +200,5 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
         }
         return inflater;
     }
-
-    /**
-     * Handler for button elements in listview
-     */
-    View.OnClickListener buttonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            ListView listView = (ListView) v.getParent();
-            int position = listView.getPositionForView(v);
-            listView.performItemClick(listView.getChildAt(position), position, listView.getItemIdAtPosition(position));
-        }
-    };
 
 }

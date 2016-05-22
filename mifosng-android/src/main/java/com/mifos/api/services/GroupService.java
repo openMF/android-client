@@ -37,13 +37,12 @@ public interface GroupService {
     @GET(APIEndPoint.GROUPS + "/{groupId}")
     void getGroup(@Path("groupId") int groupId, Callback<Group> groupCallback);
 
-    @GET(APIEndPoint.GROUPS+"?paged=true")
+    @GET(APIEndPoint.GROUPS + "?paged=true")
     void listAllGroups(@Query("offset") int offset, @Query("limit") int limit, Callback<Page<Group>> callback);
 
 
-    @GET(APIEndPoint.GROUPS+"?paged=true")
-    void listAllGroup( Callback<Page<Group>> callback);
-
+    @GET(APIEndPoint.GROUPS + "?paged=true")
+    void listAllGroup(Callback<Page<Group>> callback);
 
 
 }

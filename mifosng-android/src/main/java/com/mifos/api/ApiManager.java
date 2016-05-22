@@ -14,13 +14,11 @@ import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.api.model.ScorecardPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
-import com.mifos.objects.accounts.loan.LoanApprovalRequest;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
@@ -226,43 +224,39 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().getLoanWithTransactions(loan, callback);
     }
 
-    public void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback){
+    public void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback) {
         getLoanApi().getAllLoans(listOfLoansCallback);
 
     }
 
-    public void getLoansAccountTemplate( int clientId, int productId,Callback<Response> loanCallback){
-        getLoanApi().getLoansAccountTemplate(clientId,productId,loanCallback);
+    public void getLoansAccountTemplate(int clientId, int productId, Callback<Response> loanCallback) {
+        getLoanApi().getLoansAccountTemplate(clientId, productId, loanCallback);
     }
 
-    public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback){
-        getLoanApi().createLoansAccount(loansPayload, callback);  }
+    public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback) {
+        getLoanApi().createLoansAccount(loansPayload, callback);
+    }
 
-    public void getLoanTemplate(int loanId,Callback<Response> loanTemplateCallback){
-        getLoanApi().getLoanTemplate(loanId,loanTemplateCallback);
+    public void getLoanTemplate(int loanId, Callback<Response> loanTemplateCallback) {
+        getLoanApi().getLoanTemplate(loanId, loanTemplateCallback);
 
     }
 
-    public void createGroupLoansAccount(GroupLoanPayload loansPayload, Callback<Loans> callback){
+    public void createGroupLoansAccount(GroupLoanPayload loansPayload, Callback<Loans> callback) {
         getLoanApi().createGroupLoansAccount(loansPayload, callback);
     }
 
-    public void getGroupLoansAccountTemplate( int groupId,int productId, Callback<Response> grouploanCallback){
-        getLoanApi().getGroupLoansAccountTemplate(groupId,productId,grouploanCallback);
+    public void getGroupLoansAccountTemplate(int groupId, int productId, Callback<Response> grouploanCallback) {
+        getLoanApi().getGroupLoansAccountTemplate(groupId, productId, grouploanCallback);
     }
 
-   public void getListOfLoanCharges( int loanId,Callback<Page<Charges>> loanchargeListCallback) {
-       getLoanApi().getListOfLoanCharges(loanId, loanchargeListCallback);
-   }
-       public void getListOfCharges ( int clientId, Callback<Page<Charges>> chargeListCallback){
-        getLoanApi().getListOfCharges(clientId,chargeListCallback);
+    public void getListOfLoanCharges(int loanId, Callback<Page<Charges>> loanchargeListCallback) {
+        getLoanApi().getListOfLoanCharges(loanId, loanchargeListCallback);
     }
 
-
-
-
-
-
+    public void getListOfCharges(int clientId, Callback<Page<Charges>> chargeListCallback) {
+        getLoanApi().getListOfCharges(clientId, chargeListCallback);
+    }
 
 
     /**
@@ -285,8 +279,9 @@ public class ApiManager extends BaseApiManager {
         getSavingsApi().activateSavings(savingsAccountId, request, callback);
 
     }
+
     public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval, Callback<GenericResponse> callback) {
-        getSavingsApi().approveSavingsApplication(savingsAccountId,savingsApproval, callback);
+        getSavingsApi().approveSavingsApplication(savingsAccountId, savingsApproval, callback);
 
     }
 
@@ -332,7 +327,7 @@ public class ApiManager extends BaseApiManager {
     }
 
     public void createGroup(GroupPayload groupPayload, Callback<Group> callback) {
-        getGroupApi().createGroup(groupPayload,callback);
+        getGroupApi().createGroup(groupPayload, callback);
 
     }
 
@@ -340,19 +335,21 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().getGroup(group, groupCallback);
     }
 
-    public void listAllGroups(int offset, int limit,Callback<Page<Group>> callback){
+    public void listAllGroups(int offset, int limit, Callback<Page<Group>> callback) {
         getGroupApi().listAllGroups(offset, limit, callback);
     }
-    public void listAllGroup(Callback<Page<Group>> callback){
+
+    public void listAllGroup(Callback<Page<Group>> callback) {
         getGroupApi().listAllGroup(callback);
     }
+
     /**
      * GroupAccountsService
      */
 
 
-    public void getAllGroupsOfClient(int groupId,Callback<GroupAccounts> groupAccountsCallback) {
-        getGroupAccountsServiceApi().getAllGroupsOfClient(groupId,groupAccountsCallback);
+    public void getAllGroupsOfClient(int groupId, Callback<GroupAccounts> groupAccountsCallback) {
+        getGroupAccountsServiceApi().getAllGroupsOfClient(groupId, groupAccountsCallback);
     }
 
     /**
@@ -407,14 +404,15 @@ public class ApiManager extends BaseApiManager {
 //        getChargeService().getAllCharges(callback);
     }
 
-    public void getAllChargesV2(int clientId,Callback<Response> callback) {
-        getChargeService().getAllChargesS(clientId,callback);
+    public void getAllChargesV2(int clientId, Callback<Response> callback) {
+        getChargeService().getAllChargesS(clientId, callback);
     }
 
 
-    public void getAllChargesV3(int loanId,Callback<Response> callback) {
-        getChargeService().getAllChargev3(loanId,callback);
+    public void getAllChargesV3(int loanId, Callback<Response> callback) {
+        getChargeService().getAllChargev3(loanId, callback);
     }
+
     public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
         getChargeService().getListOfCharges(clientId, callback);
     }
@@ -423,8 +421,8 @@ public class ApiManager extends BaseApiManager {
         getChargeService().createCharges(clientId, payload, callback);
     }
 
-    public void createLoanCharges(int loanId,ChargesPayload chargesPayload, Callback<Charges> callback){
-        getChargeService().createLoanCharges(loanId,chargesPayload,callback);
+    public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges> callback) {
+        getChargeService().createLoanCharges(loanId, chargesPayload, callback);
     }
 
 
@@ -441,9 +439,9 @@ public class ApiManager extends BaseApiManager {
     }
 
 
-	public void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback) {
-		getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
-	}
+    public void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback) {
+        getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
+    }
 
 
 }

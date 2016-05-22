@@ -16,6 +16,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.formwidgets.FormEditText;
@@ -25,10 +27,8 @@ import com.mifos.mifosxdroid.formwidgets.FormWidget;
 import com.mifos.objects.noncore.ColumnHeader;
 import com.mifos.objects.noncore.ColumnValue;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.api.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorParser;
-import com.mifos.App;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;

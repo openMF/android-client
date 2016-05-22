@@ -17,40 +17,36 @@ import org.json.JSONObject;
  */
 public abstract class FormWidget {
 
-    public static String SCHEMA_KEY_TYPE		= "type";
-    public static String SCHEMA_KEY_BOOL 		= "BOOLEAN";
-    public static String SCHEMA_KEY_INT  		= "INTEGER";
-    public static String SCHEMA_KEY_DECIMAL     = "DECIMAL";
-    public static String SCHEMA_KEY_STRING 		= "STRING";
-    public static String SCHEMA_KEY_TEXT        = "TEXT";
-    public static String SCHEMA_KEY_CODELOOKUP  = "CODELOOKUP";
-    public static String SCHEMA_KEY_CODEVALUE   = "CODEVALUE";
-    public static String SCHEMA_KEY_DATE        = "DATE";
-    public static String SCHEMA_KEY_PRIORITY	= "priority";
-    public static String SCHEMA_KEY_DEFAULT		= "default";
-    public static String SCHEMA_KEY_OPTIONS		= "options";
-    public static String SCHEMA_KEY_META		= "meta";
-    public static String SCHEMA_KEY_HINT		= "hint";
+    public static final LayoutParams defaultLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    public static String SCHEMA_KEY_TYPE = "type";
+    public static String SCHEMA_KEY_BOOL = "BOOLEAN";
+    public static String SCHEMA_KEY_INT = "INTEGER";
+    public static String SCHEMA_KEY_DECIMAL = "DECIMAL";
+    public static String SCHEMA_KEY_STRING = "STRING";
+    public static String SCHEMA_KEY_TEXT = "TEXT";
+    public static String SCHEMA_KEY_CODELOOKUP = "CODELOOKUP";
+    public static String SCHEMA_KEY_CODEVALUE = "CODEVALUE";
+    public static String SCHEMA_KEY_DATE = "DATE";
+    public static String SCHEMA_KEY_PRIORITY = "priority";
+    public static String SCHEMA_KEY_DEFAULT = "default";
+    public static String SCHEMA_KEY_OPTIONS = "options";
+    public static String SCHEMA_KEY_META = "meta";
+    public static String SCHEMA_KEY_HINT = "hint";
+    protected View view;
+    protected String property;
+    protected String displayText;
+    protected int priority;
+    protected LinearLayout layout;
+    protected String returnType;
 
-
-    public static final LayoutParams defaultLayoutParams = new LinearLayout.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-
-    protected View 			view;
-    protected String 		property;
-    protected String 		displayText;
-    protected int 	 		priority;
-    protected LinearLayout 	layout;
-    protected String        returnType;
-
-    public FormWidget( Context context, String name )
-    {
-        layout = new LinearLayout( context );
-        layout.setLayoutParams( defaultLayoutParams );
-        layout.setOrientation( LinearLayout.VERTICAL );
-        layout.setPadding(4,4,4,4);
-        property 		= name;
-        displayText 	= name.replace("", " ");
-        displayText 	= toTitleCase( displayText );
+    public FormWidget(Context context, String name) {
+        layout = new LinearLayout(context);
+        layout.setLayoutParams(defaultLayoutParams);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(4, 4, 4, 4);
+        property = name;
+        displayText = name.replace("", " ");
+        displayText = toTitleCase(displayText);
         returnType = SCHEMA_KEY_TEXT;
 
     }
@@ -60,6 +56,7 @@ public abstract class FormWidget {
     // view
     //
     // -----------------------------------------------
+
     /**
      * return LinearLayout containing this widget's view elements
      */
@@ -69,10 +66,11 @@ public abstract class FormWidget {
 
     /**
      * toggles the visibility of this widget
+     *
      * @param value
      */
-    public void setVisibility( int value ){
-        layout.setVisibility( value );
+    public void setVisibility(int value) {
+        layout.setVisibility(value);
     }
 
     // -----------------------------------------------
@@ -90,9 +88,10 @@ public abstract class FormWidget {
 
     /**
      * sets value of this widget, method should be overridden in sub-class
+     *
      * @param value
      */
-    public void setValue( String value ) {
+    public void setValue(String value) {
         // -- override
     }
 
@@ -105,15 +104,16 @@ public abstract class FormWidget {
     /**
      * sets the hint for the widget, method should be overriden in sub-class
      */
-    public void setHint( String value ){
+    public void setHint(String value) {
         // -- override
     }
 
     /**
      * sets an object that contains keys for special properties on an object
+     *
      * @param modifiers
      */
-    public void setModifiers( JSONObject modifiers ) {
+    public void setModifiers(JSONObject modifiers) {
         // -- override
     }
 
@@ -124,19 +124,20 @@ public abstract class FormWidget {
     // -----------------------------------------------
 
     /**
-     * sets the visual priority of this widget
-     * essentially this means it's physical location in the form
-     */
-    public void setPriority( int value ) {
-        priority = value;
-    }
-
-    /**
      * returns visual priority
+     *
      * @return
      */
     public int getPriority() {
         return priority;
+    }
+
+    /**
+     * sets the visual priority of this widget
+     * essentially this means it's physical location in the form
+     */
+    public void setPriority(int value) {
+        priority = value;
     }
 
     // -----------------------------------------------
@@ -148,29 +149,30 @@ public abstract class FormWidget {
     /**
      * returns the un-modified name of the property this widget represents
      */
-    public String getPropertyName(){
+    public String getPropertyName() {
         return property;
     }
 
     /**
      * returns a title case version of this property
+     *
      * @return
      */
-    public String getDisplayText(){
+    public String getDisplayText() {
         return displayText;
     }
 
     /**
      * takes a property name and modifies
+     *
      * @param s
      * @return
      */
-    public String toTitleCase( String s )
-    {
+    public String toTitleCase(String s) {
         char[] chars = s.trim().toLowerCase().toCharArray();
         boolean found = false;
 
-        for (int i=0; i<chars.length; i++) {
+        for (int i = 0; i < chars.length; i++) {
             if (!found && Character.isLetter(chars[i])) {
                 chars[i] = Character.toUpperCase(chars[i]);
                 found = true;

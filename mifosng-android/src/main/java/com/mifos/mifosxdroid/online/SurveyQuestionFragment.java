@@ -17,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.survey.QuestionDatas;
 import com.mifos.objects.survey.ScorecardValues;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -30,21 +32,19 @@ import butterknife.InjectView;
 public class SurveyQuestionFragment extends Fragment {
 
 
-    public interface OnAnswerSelectedListener {
-        void answer(ScorecardValues scorecardValues);
-    }
-
     private static final String QUESTION_DATA = "Question Data";
-    @InjectView(R.id.survey_question_textView) TextView tv_question;
-    @InjectView(R.id.radio1) RadioGroup radioGroup1;
+    @InjectView(R.id.survey_question_textView)
+    TextView tv_question;
+    @InjectView(R.id.radio1)
+    RadioGroup radioGroup1;
+    RadioButton button1;
+    RadioButton btn;
+    Context thiscontext;
     private String LOG_TAG = getClass().getSimpleName();
     private OnAnswerSelectedListener mCallback;
     private QuestionDatas mQuestionDatas;
     private String answer;
     private ScorecardValues mScorecardValues;
-    RadioButton button1;
-    RadioButton btn;
-    Context thiscontext;
 
     public static SurveyQuestionFragment newInstance(String QuestionDatas) {
         SurveyQuestionFragment fragment = new SurveyQuestionFragment();
@@ -86,7 +86,7 @@ public class SurveyQuestionFragment extends Fragment {
                             mScorecardValues.setValue(mQuestionDatas.getResponseDatas().get(i).getValue());
                             mCallback.answer(mScorecardValues);
                             Log.d(LOG_TAG, "Q R V" + mQuestionDatas.getQuestionId() + " " + mQuestionDatas.getResponseDatas().get(i).getResponseId()
-                            + " " + mQuestionDatas.getResponseDatas().get(i).getValue());
+                                    + " " + mQuestionDatas.getResponseDatas().get(i).getValue());
                             return;
                         }
                     }
@@ -108,6 +108,10 @@ public class SurveyQuestionFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnAnswerSelectedListener");
         }
+    }
+
+    public interface OnAnswerSelectedListener {
+        void answer(ScorecardValues scorecardValues);
     }
 
 }

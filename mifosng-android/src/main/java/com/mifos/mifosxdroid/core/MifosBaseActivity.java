@@ -16,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,11 +26,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.Target;
 import com.mifos.App;
 import com.mifos.api.ApiRequestInterceptor;
-import com.mifos.mifosxdroid.ClientListActivity;
-import com.mifos.mifosxdroid.GroupListActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
@@ -53,8 +49,8 @@ import retrofit.client.Response;
  */
 public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback, NavigationView.OnNavigationItemSelectedListener {
 
-    private ProgressDialog progress;
     protected Toolbar toolbar;
+    private ProgressDialog progress;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
 
@@ -288,7 +284,7 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         );
     }
 
-    public void startNavigationClickActivity(final Intent intent){
+    public void startNavigationClickActivity(final Intent intent) {
         android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(new Runnable() {
             @Override

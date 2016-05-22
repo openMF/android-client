@@ -10,13 +10,12 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Represents the GPS coordinates request to set the client location.
  */
-public class GpsCoordinatesRequest
-{
+public class GpsCoordinatesRequest {
     private double latitude;
     private double longitude;
     // Defaults
-    private String dateFormat="dd MMMM YYYY";
-    private String locale="en";
+    private String dateFormat = "dd MMMM YYYY";
+    private String locale = "en";
 
     public GpsCoordinatesRequest(double latitude, double longitude) {
         this.latitude = latitude;

@@ -9,8 +9,6 @@ import android.widget.ViewFlipper;
 
 import com.mifos.mifosxdroid.R;
 
-import butterknife.InjectView;
-
 /**
  * A {@link MifosBaseFragment} that provides progress viewing functionality with a ViewFlipper.
  */

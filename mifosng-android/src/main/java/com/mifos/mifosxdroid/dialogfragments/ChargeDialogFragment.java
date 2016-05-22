@@ -23,8 +23,6 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.Changes;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.utils.Constants;
@@ -55,9 +53,6 @@ import retrofit.client.Response;
 public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "ChargeDialogFragment";
-    private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
-
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
     @InjectView(R.id.amount_due_charge)
@@ -68,10 +63,12 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
     EditText charge_locale;
     @InjectView(R.id.bt_save_charge)
     Button bt_save_charge;
+    String duedateString;
+    private View rootView;
+    private SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
     private int Id;
     private int clientId;
-    String duedateString;
     private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<String, Integer>();
     private String chargeName;
 
@@ -135,7 +132,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
 
     private void inflateChargesSpinner() {
         showProgress(true);
-        App.apiManager.getAllChargesV2(clientId,new Callback<Response>() {
+        App.apiManager.getAllChargesV2(clientId, new Callback<Response>() {
 
             @Override
             public void success(final Response result, Response response) {

@@ -14,8 +14,7 @@ import com.orm.query.Select;
 import java.util.List;
 
 
-public class Client extends SugarRecord<Client>
-{
+public class Client extends SugarRecord<Client> {
     private int clientId;
     private String clientName;
     private AttendanceType attendanceType;
@@ -33,8 +32,7 @@ public class Client extends SugarRecord<Client>
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new Gson().toJson(this);
     }
 
@@ -47,33 +45,27 @@ public class Client extends SugarRecord<Client>
         return loans;
     }
 
-    public AttendanceType getAttendanceType()
-    {
+    public AttendanceType getAttendanceType() {
         return attendanceType;
     }
 
-    public void setAttendanceType(AttendanceType attendanceType)
-    {
+    public void setAttendanceType(AttendanceType attendanceType) {
         this.attendanceType = attendanceType;
     }
 
-    public String getClientName()
-    {
+    public String getClientName() {
         return clientName;
     }
 
-    public void setClientName(String clientName)
-    {
+    public void setClientName(String clientName) {
         this.clientName = clientName;
     }
 
-    public int getClientId()
-    {
+    public int getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId)
-    {
+    public void setClientId(int clientId) {
         this.clientId = clientId;
     }
 

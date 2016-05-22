@@ -13,7 +13,6 @@ import com.mifos.services.data.SavingsPayload;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -28,6 +27,6 @@ public interface CreateSavingsAccountService {
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
     void createSavingsAccount(@Body SavingsPayload savingsPayload, Callback<Savings> callback);
 
-	@GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
-	void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback);
+    @GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
+    void getSavingsAccountTemplate(Callback<SavingProductsTemplate> savingProductsTemplateCallback);
 }

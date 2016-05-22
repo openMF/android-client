@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by ishankhanna on 30/05/14.
@@ -57,7 +56,6 @@ public class DateHelper {
     }
 
     /**
-     *
      * @param date formatted as day-month-year where month is an integer from 1 to 12
      * @return replaces month with a string like Jan or Feb..etc
      */
@@ -78,7 +76,6 @@ public class DateHelper {
     }
 
     /**
-     *
      * @param date formatted as day-month-year where month is an integer from 1 to 12 (ex: 14-4-2016)
      * @return replaces month with a string like Jan or Feb...etc (ex: 14-Apr-2016)
      */
@@ -117,7 +114,6 @@ public class DateHelper {
     }
 
     /**
-     *
      * @return current date formatted as dd MMMM yyyy (ex: 14 April 2016)
      */
     public static String getCurrentDateAsNewDateFormat() {
@@ -140,10 +136,9 @@ public class DateHelper {
     }
 
 
-
-
     /**
      * the result string uses the list given in a reverse order ([x, y, z] results in "z y x")
+     *
      * @param integersOfDate [year-month-day] (ex [2016, 4, 14])
      * @return date in the format day month year (ex 14 Apr 2016)
      */
@@ -255,7 +250,6 @@ public class DateHelper {
     }
 
     /**
-     *
      * @return the payload date from preferences forrmatted as day-month-year
      * returns empty string if no value is saved in preferences
      */
@@ -277,6 +271,7 @@ public class DateHelper {
 
     /**
      * same as getPayloadDate(Context context)
+     *
      * @return the payload date from preferences forrmatted as day-month-year
      * returns empty string if no value is saved in preferences
      */
@@ -298,7 +293,8 @@ public class DateHelper {
 
     /**
      * ex: date = 11,4,2016 separator = ,  result = [11, 4, 2016]
-     * @param date string with tokken seperated by a seperator
+     *
+     * @param date      string with tokken seperated by a seperator
      * @param separator the strings that separates the tokkens to be parsed
      */
     public static List<Integer> getDateList(String date, String separator) {

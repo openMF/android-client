@@ -10,90 +10,90 @@ package com.mifos.objects.templates.clients;
  */
 public class StaffOptions {
 
-	private int id;
-	private String firstname;
-	private String lastname;
-	private String displayName;
-	private int officeId;
-	private String officeName;
-	private boolean isLoanOfficer;
-	private boolean isActive;
+    private int id;
+    private String firstname;
+    private String lastname;
+    private String displayName;
+    private int officeId;
+    private String officeName;
+    private boolean isLoanOfficer;
+    private boolean isActive;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getLastname() {
-		return lastname;
-	}
+    public String getLastname() {
+        return lastname;
+    }
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
-	public String getFirstname() {
-		return firstname;
-	}
+    public String getFirstname() {
+        return firstname;
+    }
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	public int getOfficeId() {
-		return officeId;
-	}
+    public int getOfficeId() {
+        return officeId;
+    }
 
-	public void setOfficeId(int officeId) {
-		this.officeId = officeId;
-	}
+    public void setOfficeId(int officeId) {
+        this.officeId = officeId;
+    }
 
-	public String getOfficeName() {
-		return officeName;
-	}
+    public String getOfficeName() {
+        return officeName;
+    }
 
-	public void setOfficeName(String officeName) {
-		this.officeName = officeName;
-	}
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 
-	public boolean isLoanOfficer() {
-		return isLoanOfficer;
-	}
+    public boolean isLoanOfficer() {
+        return isLoanOfficer;
+    }
 
-	public void setIsLoanOfficer(boolean isLoanOfficer) {
-		this.isLoanOfficer = isLoanOfficer;
-	}
+    public void setIsLoanOfficer(boolean isLoanOfficer) {
+        this.isLoanOfficer = isLoanOfficer;
+    }
 
-	public boolean isActive() {
-		return isActive;
-	}
+    public boolean isActive() {
+        return isActive;
+    }
 
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
-	}
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 
-	@Override
-	public String toString() {
-		return "StaffOptions{" +
-				"id=" + id +
-				", firstname='" + firstname + '\'' +
-				", lastname='" + lastname + '\'' +
-				", displayName='" + displayName + '\'' +
-				", officeId=" + officeId +
-				", officeName='" + officeName + '\'' +
-				", isLoanOfficer=" + isLoanOfficer +
-				", isActive=" + isActive +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "StaffOptions{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", officeId=" + officeId +
+                ", officeName='" + officeName + '\'' +
+                ", isLoanOfficer=" + isLoanOfficer +
+                ", isActive=" + isActive +
+                '}';
+    }
 }

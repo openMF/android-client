@@ -135,6 +135,10 @@ public class CenterWithAssociations {
         return this.additionalProperties;
     }
 
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
+    }
+
     public List<Group> getGroupMembers() {
         return groupMembers;
     }
@@ -145,9 +149,5 @@ public class CenterWithAssociations {
 
     public CollectionMeetingCalendar getCollectionMeetingCalendar() {
         return collectionMeetingCalendar;
-    }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
     }
 }

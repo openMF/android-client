@@ -16,7 +16,6 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -82,11 +81,6 @@ public class GroupListFragment extends ProgressableFragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-
-        void loadClientsOfGroup(List<Client> clientList);
-    }
-
     public void inflateGroupList() {
         showProgress(true);
         App.apiManager.getGroupsByCenter(centerId, new Callback<CenterWithAssociations>() {
@@ -123,6 +117,11 @@ public class GroupListFragment extends ProgressableFragment {
                 showProgress(false);
             }
         });
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        void loadClientsOfGroup(List<Client> clientList);
     }
 }
 

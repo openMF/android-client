@@ -31,6 +31,52 @@ public class RepaymentSchedule {
     Double totalWaived;
     Double totalWrittenOff;
 
+    //Helper Method to get total completed repayments
+    public static int getNumberOfRepaymentsComplete(List<Period> periodList) {
+
+        int count = 0;
+
+        for (Period period : periodList) {
+            if (period.getComplete())
+                count++;
+        }
+
+        return count;
+    }
+
+    //Helper Method to get total pending/upcoming repayments
+    public static int getNumberOfRepaymentsPending(List<Period> periodList) {
+
+        int count = 0;
+
+        for (Period period : periodList) {
+            if (!period.getComplete())
+                count++;
+
+        }
+
+        return count;
+
+    }
+
+    //Helper Method to get total repayments overdue
+    public static int getNumberOfRepaymentsOverDue(List<Period> periodList) {
+
+        int count = 0;
+
+        for (Period period : periodList) {
+            if (period.getTotalOverdue() != null && period.getTotalOverdue() > 0) {
+                if (!period.getComplete())
+                    count++;
+            }
+
+        }
+
+        return count;
+
+
+    }
+
     public Currency getCurrency() {
         return currency;
     }
@@ -160,7 +206,7 @@ public class RepaymentSchedule {
     }
 
     public List<Period> getlistOfActualPeriods() {
-        return this.periods.subList(1,periods.size());
+        return this.periods.subList(1, periods.size());
     }
 
     @Override
@@ -183,51 +229,6 @@ public class RepaymentSchedule {
                 ", totalWaived=" + totalWaived +
                 ", totalWrittenOff=" + totalWrittenOff +
                 '}';
-    }
-
-    //Helper Method to get total completed repayments
-    public static int getNumberOfRepaymentsComplete(List<Period> periodList) {
-
-        int count = 0;
-
-        for(Period period : periodList) {
-            if (period.getComplete())
-                count++;
-        }
-
-        return count;
-    }
-    //Helper Method to get total pending/upcoming repayments
-    public static int getNumberOfRepaymentsPending(List<Period> periodList) {
-
-        int count = 0;
-
-        for (Period period : periodList) {
-            if (!period.getComplete())
-                count++;
-
-        }
-
-        return count;
-
-    }
-
-    //Helper Method to get total repayments overdue
-    public static int getNumberOfRepaymentsOverDue(List<Period> periodList) {
-
-        int count = 0;
-
-        for (Period period : periodList) {
-            if (period.getTotalOverdue()!=null && period.getTotalOverdue()>0) {
-                if (!period.getComplete())
-                    count++;
-            }
-
-        }
-
-        return count;
-
-
     }
 
 }

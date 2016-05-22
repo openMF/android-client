@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.mifos.App;
 import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
@@ -42,7 +43,6 @@ import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.db.RepaymentTransaction;
 import com.mifos.objects.db.Status;
 import com.mifos.utils.DateHelper;
-import com.mifos.App;
 import com.mifos.utils.Network;
 import com.mifos.utils.SaveOfflineDataHelper;
 import com.orm.query.Select;

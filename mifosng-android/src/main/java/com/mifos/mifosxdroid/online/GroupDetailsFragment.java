@@ -59,9 +59,9 @@ import static android.view.View.VISIBLE;
  */
 public class GroupDetailsFragment extends ProgressableFragment {
 
-    private final String TAG = GroupDetailsFragment.class.getSimpleName();
     public static int groupId;
     public static List<DataTable> clientDataTables = new ArrayList<>();
+    private final String TAG = GroupDetailsFragment.class.getSimpleName();
     @InjectView(R.id.tv_groupsName)
     TextView tv_fullName;
     @InjectView(R.id.tv_groupexternalId)
@@ -281,8 +281,6 @@ public class GroupDetailsFragment extends ProgressableFragment {
     }
 
 
-
-
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, groupId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -298,6 +296,7 @@ public class GroupDetailsFragment extends ProgressableFragment {
         fragmentTransaction.replace(R.id.container, grouploanAccountFragment);
         fragmentTransaction.commit();
     }
+
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);
 
@@ -306,6 +305,27 @@ public class GroupDetailsFragment extends ProgressableFragment {
 
 
     private static class AccountAccordion {
+        private final Activity context;
+        private Section currentSection;
+        private AccountAccordion(Activity context) {
+            this.context = context;
+            Section.configure(context, this);
+        }
+
+        public void setCurrentSection(Section currentSection) {
+            // close previous section
+            if (this.currentSection != null) {
+                this.currentSection.close(context);
+            }
+
+            this.currentSection = currentSection;
+
+            // open new section
+            if (this.currentSection != null) {
+                this.currentSection.open(context);
+            }
+        }
+
         private enum Section {
             LOANS(R.id.account_accordion_section_loans, R.string.loanAccounts),
             SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts),
@@ -320,6 +340,12 @@ public class GroupDetailsFragment extends ProgressableFragment {
             Section(int sectionId, int textViewStringId) {
                 this.sectionId = sectionId;
                 this.textViewStringId = textViewStringId;
+            }
+
+            public static void configure(Activity context, final AccountAccordion accordion) {
+                for (Section section : Section.values()) {
+                    section.configureSection(context, accordion);
+                }
             }
 
             public TextView getTextView(Activity context) {
@@ -399,34 +425,6 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 }
                 // initialize section in closed state
                 close(context);
-            }
-
-            public static void configure(Activity context, final AccountAccordion accordion) {
-                for (Section section : Section.values()) {
-                    section.configureSection(context, accordion);
-                }
-            }
-        }
-
-        private final Activity context;
-        private Section currentSection;
-
-        private AccountAccordion(Activity context) {
-            this.context = context;
-            Section.configure(context, this);
-        }
-
-        public void setCurrentSection(Section currentSection) {
-            // close previous section
-            if (this.currentSection != null) {
-                this.currentSection.close(context);
-            }
-
-            this.currentSection = currentSection;
-
-            // open new section
-            if (this.currentSection != null) {
-                this.currentSection.open(context);
             }
         }
     }

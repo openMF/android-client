@@ -31,15 +31,15 @@ public enum Font {
         }
     }
 
+    public static Font getFont(int typeface) {
+        return values()[typeface];
+    }
+
     public Typeface getTypeface() {
         return typeface;
     }
 
     public String getFontName() {
         return fontName;
-    }
-
-    public static Font getFont(int typeface) {
-        return values()[typeface];
     }
 }

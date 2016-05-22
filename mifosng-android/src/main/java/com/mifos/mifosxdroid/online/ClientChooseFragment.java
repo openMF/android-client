@@ -102,7 +102,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
         fragmentTransaction.commit();
     }
 
-    public void setInfiniteScrollListener(final  ClientChooseAdapter clientChooseAdapter) {
+    public void setInfiniteScrollListener(final ClientChooseAdapter clientChooseAdapter) {
         results.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -113,7 +113,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
 
-                    if(!loadmore && areMoreClientsAvailable) {
+                    if (!loadmore && areMoreClientsAvailable) {
                         loadmore = true;
                         Toaster.show(root, "Loading More Clients");
                         App.apiManager.listClients(clients.size(), limit, new Callback<Page<Client>>() {
@@ -125,7 +125,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
 
                                 //checking the response size if size is zero then set the areMoreClientsAvailable = false
                                 //this will reflect into scroll method and it will show
-                                if(clientPage.getPageItems().size() == 0 && (totalFilteredRecords== clients.size())){
+                                if (clientPage.getPageItems().size() == 0 && (totalFilteredRecords == clients.size())) {
                                     areMoreClientsAvailable = false;
                                     shouldCheckForMoreClients = true;
                                 }
@@ -136,8 +136,8 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
                                 Toaster.show(root, "There was some error fetching list.");
                             }
                         });
-                    }else if(shouldCheckForMoreClients)
-                        Toaster.show(root,"No more clients Available");
+                    } else if (shouldCheckForMoreClients)
+                        Toaster.show(root, "No more clients Available");
                 }
             }
         });

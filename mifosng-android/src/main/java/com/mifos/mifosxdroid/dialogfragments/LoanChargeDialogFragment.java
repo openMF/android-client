@@ -47,7 +47,7 @@ import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
- *
+ * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
 public class LoanChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
@@ -56,9 +56,6 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
-
-    private OnDialogFragmentInteractionListener mListener;
-
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
     @InjectView(R.id.amount_due_charge)
@@ -69,10 +66,11 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     EditText charge_locale;
     @InjectView(R.id.bt_save_charge)
     Button bt_save_charge;
+    String duedateString;
+    private OnDialogFragmentInteractionListener mListener;
     private DialogFragment mfDatePicker;
     private int Id;
     private int loanAccountNumber;
-    String duedateString;
     private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<String, Integer>();
     private String chargeName;
 
@@ -138,15 +136,9 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
     }
 
-
-    public interface OnDialogFragmentInteractionListener {
-
-
-    }
-
     private void inflateChargesSpinner() {
         showProgress(true);
-        App.apiManager.getAllChargesV3(loanAccountNumber,new Callback<Response>() {
+        App.apiManager.getAllChargesV3(loanAccountNumber, new Callback<Response>() {
 
             @Override
             public void success(final Response result, Response response) {
@@ -247,7 +239,6 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
     }
 
-
     public void inflatedueDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
 
@@ -259,6 +250,12 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
+
+    }
+
+
+    public interface OnDialogFragmentInteractionListener {
+
 
     }
 }

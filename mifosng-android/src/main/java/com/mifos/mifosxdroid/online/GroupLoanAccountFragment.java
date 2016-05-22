@@ -54,7 +54,7 @@ import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
- *
+ * <p/>
  * Use this  Fragment to Create and/or Update loan
  */
 public class GroupLoanAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
@@ -105,16 +105,14 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
     private int loanPurposeId;
     private int loanTermFrequency;
     private int transactionProcessingStrategyId;
-    private int  amortizationTypeId;
-    private int  interestCalculationPeriodTypeId;
+    private int amortizationTypeId;
+    private int interestCalculationPeriodTypeId;
     private HashMap<String, Integer> loansNameIdHashMap = new HashMap<>();
     private HashMap<String, Integer> termFrequencyTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> loanPurposeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> interestCalculationPeriodTypeIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> amortizationTypeIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String,Integer> transactionProcessingStrategyTypeIdHashMap = new HashMap<String, Integer>();
-
-
+    private HashMap<String, Integer> transactionProcessingStrategyTypeIdHashMap = new HashMap<String, Integer>();
 
 
     public static GroupLoanAccountFragment newInstance(int groupId) {
@@ -146,10 +144,10 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
         inflateLoansProductSpinner();
 
 
-        disbursementon_date=tv_disbursementon_date.getText().toString();
+        disbursementon_date = tv_disbursementon_date.getText().toString();
         submittion_date = tv_submittedon_date.getText().toString();
         submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submittion_date).replace("-", " ");
-        disbursementon_date= DateHelper.getDateAsStringUsedForCollectionSheetPayload(disbursementon_date).replace("-", " ");
+        disbursementon_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(disbursementon_date).replace("-", " ");
 
 
         bt_loan_submit.setOnClickListener(new View.OnClickListener() {
@@ -188,6 +186,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
         tv_disbursementon_date.setText(date);
 
     }
+
     private void inflateLoansProductSpinner() {
         showProgress(true);
         App.apiManager.getAllLoans(new Callback<List<ProductLoans>>() {
@@ -251,7 +250,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
 
     private void inflateAmortizationSpinner() {
         showProgress(true);
-        App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
+        App.apiManager.getGroupLoansAccountTemplate(groupId, productId, new Callback<Response>() {
             @Override
 
             public void success(final Response result, Response response) {
@@ -329,9 +328,10 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
             }
         });
     }
+
     private void inflateLoanPurposeSpinner() {
         showProgress(true);
-        App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
+        App.apiManager.getGroupLoansAccountTemplate(groupId, productId, new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
@@ -408,9 +408,10 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
             }
         });
     }
+
     private void inflateInterestCalculationPeriodSpinner() {
         showProgress(true);
-        App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
+        App.apiManager.getGroupLoansAccountTemplate(groupId, productId, new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
@@ -487,9 +488,10 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
             }
         });
     }
+
     private void inflatetransactionProcessingStrategySpinner() {
         showProgress(true);
-        App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
+        App.apiManager.getGroupLoansAccountTemplate(groupId, productId, new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
@@ -513,7 +515,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                     if (obj.has("transactionProcessingStrategyOptions")) {
                         JSONArray transactionProcessingStrategyTypes = obj.getJSONArray("transactionProcessingStrategyOptions");
                         for (int i = 0; i < transactionProcessingStrategyTypes.length(); i++) {
-                            JSONObject transactionProcessingStrategyTypeObject =transactionProcessingStrategyTypes.getJSONObject(i);
+                            JSONObject transactionProcessingStrategyTypeObject = transactionProcessingStrategyTypes.getJSONObject(i);
                             TransactionProcessingStrategy transactionProcessingStrategy = new TransactionProcessingStrategy();
                             transactionProcessingStrategy.setId(transactionProcessingStrategyTypeObject.optInt("id"));
                             transactionProcessingStrategy.setName(transactionProcessingStrategyTypeObject.optString("name"));
@@ -569,7 +571,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
 
     private void inflateFrequencyPeriodSpinner() {
         showProgress(true);
-        App.apiManager.getGroupLoansAccountTemplate(groupId,productId,new Callback<Response>() {
+        App.apiManager.getGroupLoansAccountTemplate(groupId, productId, new Callback<Response>() {
             @Override
             public void success(final Response result, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
@@ -647,8 +649,8 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
         });
     }
 
-    private void initiateLoanCreation( GroupLoanPayload loansPayload) {
-       App.apiManager.createGroupLoansAccount(loansPayload, new Callback<Loans>() {
+    private void initiateLoanCreation(GroupLoanPayload loansPayload) {
+        App.apiManager.createGroupLoansAccount(loansPayload, new Callback<Loans>() {
             @Override
             public void success(Loans loans, Response response) {
                 showProgress(false);
@@ -678,6 +680,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
         });
 
     }
+
     public void inflatedisbusmentDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
 

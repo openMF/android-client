@@ -4,18 +4,6 @@
  */
 package com.mifos.services.data;
 
-import com.mifos.objects.accounts.loan.DaysInMonthType;
-import com.mifos.objects.accounts.loan.DaysInYearType;
-import com.mifos.objects.accounts.loan.InterestCalculationPeriodType;
-import com.mifos.objects.accounts.loan.InterestType;
-import com.mifos.objects.accounts.loan.LoanType;
-import com.mifos.objects.accounts.loan.RepaymentFrequencyDayOfWeekType;
-import com.mifos.objects.accounts.loan.RepaymentFrequencyNthDayType;
-import com.mifos.objects.accounts.loan.RepaymentFrequencyType;
-import com.mifos.objects.accounts.loan.Status;
-import com.mifos.objects.accounts.loan.TermPeriodFrequencyType;
-import com.mifos.objects.db.Currency;
-
 /**
  * Created by nellyk on 2/20/2016.
  */
@@ -34,13 +22,13 @@ public class GroupLoanPayload {
     int loanTermFrequencyType;
     String loanType;
     String locale;
-    String  numberOfRepayments;
+    String numberOfRepayments;
     String principal;
     int productId;
     String repaymentEvery;
     int repaymentFrequencyType;
     String submittedOnDate;
-    int  transactionProcessingStrategyId;
+    int transactionProcessingStrategyId;
     int loanPurposeId;
 
     public int getGroupId() {

@@ -32,9 +32,8 @@ public class PathTrackingActivity extends MifosBaseActivity implements ServiceCo
 
     @InjectView(R.id.stop)
     Button stop;
-
-    private LocationService service;
     boolean bound = false;
+    private LocationService service;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

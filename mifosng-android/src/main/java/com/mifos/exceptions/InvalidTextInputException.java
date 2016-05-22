@@ -9,19 +9,19 @@ import android.content.Context;
 import android.widget.Toast;
 
 public class InvalidTextInputException extends Exception {
+    public static final String TYPE_ALPHABETS = "ALPHABETS";
     private String fieldInput;
     private String localisedErrorMessage;
     private String inputType;
-    public static final String TYPE_ALPHABETS= "ALPHABETS";
 
-    public InvalidTextInputException(String fieldInput,String localisedErrorMessage,String inputType){
-        this.fieldInput=fieldInput;
-        this.localisedErrorMessage=localisedErrorMessage;
-        this.inputType=inputType;
+    public InvalidTextInputException(String fieldInput, String localisedErrorMessage, String inputType) {
+        this.fieldInput = fieldInput;
+        this.localisedErrorMessage = localisedErrorMessage;
+        this.inputType = inputType;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return fieldInput + "" + localisedErrorMessage + inputType;
     }
 

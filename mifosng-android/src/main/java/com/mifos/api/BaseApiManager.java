@@ -26,7 +26,9 @@ import com.mifos.api.services.SearchService;
 import com.mifos.api.services.StaffService;
 import com.mifos.api.services.SurveyService;
 import com.mifos.utils.JsonDateSerializer;
+
 import java.util.Date;
+
 import retrofit.Endpoint;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -77,7 +79,7 @@ public class BaseApiManager {
         surveyApi = createApi(SurveyService.class, API_ENDPOINT);
         chargeService = createApi(ChargeService.class, API_ENDPOINT);
         createSavingsAccountService = createApi(CreateSavingsAccountService.class, API_ENDPOINT);
-        groupAccountsServiceApi=createApi(GroupAccountService.class, API_ENDPOINT);
+        groupAccountsServiceApi = createApi(GroupAccountService.class, API_ENDPOINT);
 
     }
 
@@ -148,9 +150,11 @@ public class BaseApiManager {
     protected GroupService getGroupApi() {
         return groupApi;
     }
+
     protected GroupAccountService getGroupAccountsServiceApi() {
         return groupAccountsServiceApi;
     }
+
     protected DocumentService getDocumentApi() {
         return documentApi;
     }

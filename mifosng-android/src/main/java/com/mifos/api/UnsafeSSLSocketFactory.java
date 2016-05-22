@@ -33,10 +33,10 @@ public class UnsafeSSLSocketFactory extends SSLSocketFactory {
     public UnsafeSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
 
         // Create a trust manager that does not validate certificate chains
-        final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
 
             @Override
-            public void checkServerTrusted( final X509Certificate[] chain, final String authType ) {
+            public void checkServerTrusted(final X509Certificate[] chain, final String authType) {
             }
 
             @Override
@@ -47,7 +47,7 @@ public class UnsafeSSLSocketFactory extends SSLSocketFactory {
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
-        } };
+        }};
 
         sslContext.init(null, trustAllCerts, null);
     }

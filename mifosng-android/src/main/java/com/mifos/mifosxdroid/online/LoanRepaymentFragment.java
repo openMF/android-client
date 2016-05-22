@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -52,18 +51,6 @@ import retrofit.client.Response;
 
 public class LoanRepaymentFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
 
-    private View rootView;
-
-    // Arguments Passed From the Loan Account Summary Fragment
-    private String clientName;
-    private String loanAccountNumber;
-    private String loanProductName;
-    private Double amountInArrears;
-
-    // Values fetched from Loan Repayment Template
-    private List<PaymentTypeOption> paymentTypeOptionList;
-    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<>();
-
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
     @InjectView(R.id.tv_loan_product_short_name)
@@ -88,7 +75,15 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
     Spinner sp_paymentType;
     @InjectView(R.id.bt_paynow)
     Button bt_paynow;
-
+    private View rootView;
+    // Arguments Passed From the Loan Account Summary Fragment
+    private String clientName;
+    private String loanAccountNumber;
+    private String loanProductName;
+    private Double amountInArrears;
+    // Values fetched from Loan Repayment Template
+    private List<PaymentTypeOption> paymentTypeOptionList;
+    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<>();
     private DialogFragment mfDatePicker;
 
     public static LoanRepaymentFragment newInstance(LoanWithAssociations loanWithAssociations) {

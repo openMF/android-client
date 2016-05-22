@@ -27,12 +27,12 @@ import butterknife.InjectView;
 
 
 public class LoanFragment extends MifosBaseFragment {
+    final List<Loan> loansClientHave = new ArrayList<Loan>();
+    final private String tag = getClass().getSimpleName();
     @InjectView(R.id.lv_loan)
     ListView lv_loans;
     LoanListAdapter adapter = null;
     private int clientId;
-    final private String tag = getClass().getSimpleName();
-    final List<Loan> loansClientHave = new ArrayList<Loan>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

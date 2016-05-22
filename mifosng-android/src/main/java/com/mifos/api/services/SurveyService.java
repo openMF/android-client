@@ -4,10 +4,9 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.api.model.APIEndPoint;
-import com.mifos.api.model.ScorecardPayload;
 
 import java.util.List;
 

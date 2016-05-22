@@ -12,12 +12,13 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 
 /**
  * Created by ishankhanna on 01/08/14.
  */
-public class FormEditText extends FormWidget{
+public class FormEditText extends FormWidget {
 
     protected TextView label;
     protected EditText input;
@@ -27,36 +28,38 @@ public class FormEditText extends FormWidget{
     public FormEditText(Context context, String name) {
 
         super(context, name);
-        label = new TextView( context );
-        label.setText( getDisplayText() );
-        label.setLayoutParams( FormWidget.defaultLayoutParams );
+        label = new TextView(context);
+        label.setText(getDisplayText());
+        label.setLayoutParams(FormWidget.defaultLayoutParams);
 
-        input = new EditText( context );
-        input.setLayoutParams( FormWidget.defaultLayoutParams );
-        input.setImeOptions( EditorInfo.IME_ACTION_DONE );
+        input = new EditText(context);
+        input.setLayoutParams(FormWidget.defaultLayoutParams);
+        input.setImeOptions(EditorInfo.IME_ACTION_DONE);
         isDateField = false;
-        layout.addView( label );
-        layout.addView( input );
+        layout.addView(label);
+        layout.addView(input);
 
 
     }
 
     @Override
-    public String getValue(){
+    public String getValue() {
         return input.getText().toString();
     }
 
     @Override
-    public void setValue( String value ) {
-        input.setText( value );
+    public void setValue(String value) {
+        input.setText(value);
     }
 
     @Override
-    public void setHint( String value ){
-        input.setHint( value );
+    public void setHint(String value) {
+        input.setHint(value);
     }
 
-    public Boolean isDateField() { return isDateField; }
+    public Boolean isDateField() {
+        return isDateField;
+    }
 
     public void setIsDateField(Boolean isDateField, final FragmentManager fragmentManager) {
 
@@ -64,7 +67,7 @@ public class FormEditText extends FormWidget{
 
         if (isDateField()) {
 
-            input.setOnTouchListener( new View.OnTouchListener() {
+            input.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
 
@@ -91,8 +94,6 @@ public class FormEditText extends FormWidget{
         }
 
     }
-
-
 
 
 }

@@ -4,10 +4,10 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.objects.client.Client;
-import com.mifos.objects.client.Page;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.api.model.ClientPayload;
+import com.mifos.objects.client.Client;
+import com.mifos.objects.client.Page;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 
 import retrofit.Callback;

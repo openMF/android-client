@@ -116,8 +116,6 @@ public class GroupsListFragment extends MifosBaseFragment {
         });
 
 
-
-
         if (isInfiniteScrollEnabled) {
             setInfiniteScrollListener(groupListAdapter);
         }

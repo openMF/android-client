@@ -46,7 +46,6 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.CircularImageView;
@@ -91,14 +90,13 @@ import static android.view.View.VISIBLE;
 
 public class ClientDetailsFragment extends ProgressableFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private final String TAG = ClientDetailsFragment.class.getSimpleName();
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
-    List<Charges> chargesList = new ArrayList<Charges>();
     public static List<DataTable> clientDataTables = new ArrayList<>();
+    private final String TAG = ClientDetailsFragment.class.getSimpleName();
+    List<Charges> chargesList = new ArrayList<Charges>();
     @InjectView(R.id.tv_fullName)
     TextView tv_fullName;
     @InjectView(R.id.tv_accountNumber)
@@ -563,6 +561,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         fragmentTransaction.replace(R.id.container, loanAccountFragment);
         fragmentTransaction.commit();
     }
+
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);
 
@@ -571,6 +570,27 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
 
     private static class AccountAccordion {
+        private final Activity context;
+        private Section currentSection;
+        private AccountAccordion(Activity context) {
+            this.context = context;
+            Section.configure(context, this);
+        }
+
+        public void setCurrentSection(Section currentSection) {
+            // close previous section
+            if (this.currentSection != null) {
+                this.currentSection.close(context);
+            }
+
+            this.currentSection = currentSection;
+
+            // open new section
+            if (this.currentSection != null) {
+                this.currentSection.open(context);
+            }
+        }
+
         private enum Section {
             LOANS(R.id.account_accordion_section_loans, R.string.loanAccounts),
             SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts),
@@ -585,6 +605,12 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             Section(int sectionId, int textViewStringId) {
                 this.sectionId = sectionId;
                 this.textViewStringId = textViewStringId;
+            }
+
+            public static void configure(Activity context, final AccountAccordion accordion) {
+                for (Section section : Section.values()) {
+                    section.configureSection(context, accordion);
+                }
             }
 
             public TextView getTextView(Activity context) {
@@ -664,34 +690,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 }
                 // initialize section in closed state
                 close(context);
-            }
-
-            public static void configure(Activity context, final AccountAccordion accordion) {
-                for (Section section : Section.values()) {
-                    section.configureSection(context, accordion);
-                }
-            }
-        }
-
-        private final Activity context;
-        private Section currentSection;
-
-        private AccountAccordion(Activity context) {
-            this.context = context;
-            Section.configure(context, this);
-        }
-
-        public void setCurrentSection(Section currentSection) {
-            // close previous section
-            if (this.currentSection != null) {
-                this.currentSection.close(context);
-            }
-
-            this.currentSection = currentSection;
-
-            // open new section
-            if (this.currentSection != null) {
-                this.currentSection.open(context);
             }
         }
     }

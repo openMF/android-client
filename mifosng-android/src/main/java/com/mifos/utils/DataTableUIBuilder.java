@@ -21,9 +21,9 @@ import android.widget.Toast;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.api.GenericResponse;
 
 import java.util.Iterator;
 

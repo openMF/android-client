@@ -10,11 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.client.Client;
 import com.mifos.objects.group.Group;
 
 import java.util.List;
@@ -27,7 +25,7 @@ public class GroupNameListAdapter extends BaseAdapter {
     LayoutInflater layoutInflater;
     List<Group> pageItems;
 
-    public GroupNameListAdapter(Context context, List<Group> pageItems){
+    public GroupNameListAdapter(Context context, List<Group> pageItems) {
 
         layoutInflater = LayoutInflater.from(context);
         this.pageItems = pageItems;
@@ -53,14 +51,12 @@ public class GroupNameListAdapter extends BaseAdapter {
 
         ReusableViewHolder reusableViewHolder;
 
-        if(view==null)
-        {
-            view = layoutInflater.inflate(R.layout.row_group_name,null);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_group_name, null);
             reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
 
-        }else
-        {
+        } else {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
         }
 
@@ -72,10 +68,12 @@ public class GroupNameListAdapter extends BaseAdapter {
         return view;
     }
 
-    static class ReusableViewHolder{
+    static class ReusableViewHolder {
 
-        @InjectView(R.id.tv_grouplistName) TextView tv_groupsName;
-        @InjectView(R.id.tv_groupsId) TextView tv_groupsId;
+        @InjectView(R.id.tv_grouplistName)
+        TextView tv_groupsName;
+        @InjectView(R.id.tv_groupsId)
+        TextView tv_groupsId;
 
         public ReusableViewHolder(View view) {
             ButterKnife.inject(this, view);

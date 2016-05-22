@@ -1,4 +1,3 @@
-
 /*
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
@@ -46,15 +45,15 @@ public class GroupAccounts {
         return this;
     }
 
-    public List<SavingsAccount>getRecurringSavingsAccounts() {
+    public List<SavingsAccount> getRecurringSavingsAccounts() {
         return getSavingsAccounts(true);
     }
 
-    public List<SavingsAccount>getNonRecurringSavingsAccounts() {
+    public List<SavingsAccount> getNonRecurringSavingsAccounts() {
         return getSavingsAccounts(false);
     }
 
-    private List<SavingsAccount>getSavingsAccounts(boolean wantRecurring) {
+    private List<SavingsAccount> getSavingsAccounts(boolean wantRecurring) {
         List<SavingsAccount> result = new ArrayList<SavingsAccount>();
         if (this.savingsAccounts != null) {
             for (SavingsAccount account : savingsAccounts) {

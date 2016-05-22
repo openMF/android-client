@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,10 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.client.Charges;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.RetrofitError;
 
 /**
  * Created by ishankhanna on 03/07/14.
@@ -32,7 +29,7 @@ public class ChargeNameListAdapter extends BaseAdapter {
     List<Charges> pageItems;
     int clientId;
 
-    public ChargeNameListAdapter(Context context, List<Charges> pageItems, int clientId){
+    public ChargeNameListAdapter(Context context, List<Charges> pageItems, int clientId) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
         this.pageItems = pageItems;
@@ -88,7 +85,9 @@ public class ChargeNameListAdapter extends BaseAdapter {
         @InjectView(R.id.tv_charge_duedate)
         TextView tv_charge_duedate;
 
-        public ReusableChargeViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableChargeViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
 
 
     }

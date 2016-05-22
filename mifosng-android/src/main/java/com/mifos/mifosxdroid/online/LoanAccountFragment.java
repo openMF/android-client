@@ -39,7 +39,6 @@ import com.mifos.services.data.LoansPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,7 +57,7 @@ import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
- * <p>
+ * <p/>
  * Use this  Fragment to Create and/or Update loan
  */
 public class LoanAccountFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
@@ -193,7 +192,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 loansPayload.setLoanOfficerId(loanOfficerId);
 
 
-    initiateLoanCreation(loansPayload);
+                initiateLoanCreation(loansPayload);
             }
         });
 

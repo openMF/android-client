@@ -75,7 +75,6 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
         }
 
 
-
         Double transactionAmount = CollectionListAdapter.sRepaymentTransactions.get(loans.get(position).getLoanId());
 
         reusableViewHolder.tv_amountDue.setText(String.valueOf(loans.get(position).getTotalDue()));
@@ -97,8 +96,8 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
             public void afterTextChanged(Editable s) {
 
                 try {
-                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), s.toString().equals("")?0.00:Double.parseDouble(s.toString()));
-                }catch (NumberFormatException e) {
+                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), s.toString().equals("") ? 0.00 : Double.parseDouble(s.toString()));
+                } catch (NumberFormatException e) {
                     CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), 0.00);
                 }
                 /* TODO Fix Live update of Amounts

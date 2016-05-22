@@ -106,13 +106,17 @@ public class PrefManager {
         putInt(USER_ID, id);
     }
 
+    public static String getTenant() {
+        return getString(TENANT, "default");
+    }
+
     public static void setTenant(String tenant) {
         if (!TextUtils.isEmpty(tenant))
             putString(TENANT, tenant);
     }
 
-    public static String getTenant() {
-        return getString(TENANT, "default");
+    public static String getInstanceUrl() {
+        return getString(INSTANCE_URL, "");
     }
 
     /**
@@ -122,25 +126,21 @@ public class PrefManager {
         putString(INSTANCE_URL, instanceUrl);
     }
 
-    public static String getInstanceUrl() {
-        return getString(INSTANCE_URL, "");
+    public static String getInstanceDomain() {
+        return getString(INSTANCE_DOMAIN, "demo.openmf.org");
     }
 
     public static void setInstanceDomain(String instanceDomain) {
         putString(INSTANCE_DOMAIN, instanceDomain);
     }
 
-    public static String getInstanceDomain() {
-        return getString(INSTANCE_DOMAIN, "demo.openmf.org");
+    public static String getPort() {
+        return getString(PORT, "80");
     }
 
     public static void setPort(String port) {
         if (!TextUtils.isEmpty(port))
             putString(PORT, port);
-    }
-
-    public static String getPort() {
-        return getString(PORT, "80");
     }
 }
 

@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.App;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
@@ -38,7 +39,6 @@ import com.mifos.objects.organisation.Office;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,8 +66,8 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
     @InjectView(R.id.bt_submit)
     Button bt_submit;
     int officeId;
-    private View rootView;
     Boolean result = true;
+    private View rootView;
     private String activationdateString;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
@@ -116,6 +116,7 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
         return rootView;
     }
+
     //inflating office list spinner
     private void inflateOfficeSpinner() {
         App.apiManager.getOffices(new Callback<List<Office>>() {

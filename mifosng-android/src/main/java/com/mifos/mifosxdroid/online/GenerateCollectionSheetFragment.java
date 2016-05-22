@@ -17,7 +17,6 @@ import android.widget.Spinner;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.group.Center;
@@ -200,7 +199,7 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
                     centerNames.add(center.getName());
                     centerNameIdHashMap.put(center.getName(), center.getId());
                 }
-                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, centerNames);
+                ArrayAdapter<String> centerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, centerNames);
                 centerAdapter.notifyDataSetChanged();
                 centerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_centers.setAdapter(centerAdapter);

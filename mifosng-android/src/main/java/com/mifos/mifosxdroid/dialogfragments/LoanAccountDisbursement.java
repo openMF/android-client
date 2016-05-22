@@ -38,7 +38,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -52,11 +51,9 @@ import retrofit.client.Response;
 public class LoanAccountDisbursement extends DialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "LoanAccountDisbursement";
+    public static int loanAccountNumber;
     View rootView;
-
     SafeUIBlockingUtility safeUIBlockingUtility;
-
-    private OnDialogFragmentInteractionListener mListener;
     @InjectView(R.id.tv_loan_disbursement_dates)
     TextView loan_disbursement_dates;
     @InjectView(R.id.bt_disburse_loan)
@@ -67,11 +64,11 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
     EditText et_disbursed_amount;
     @InjectView(R.id.et_disbursement_note)
     EditText et_disbursement_note;
-    private DialogFragment mfDatePicker;
     int paymentTypeId;
-    public static int loanAccountNumber;
-    private HashMap<String, Integer> paymentNameIdHashMap = new HashMap<String, Integer>();
     String disbursement_dates;
+    private OnDialogFragmentInteractionListener mListener;
+    private DialogFragment mfDatePicker;
+    private HashMap<String, Integer> paymentNameIdHashMap = new HashMap<String, Integer>();
 
     public static LoanAccountDisbursement newInstance(int loanAccountNumber) {
         LoanAccountDisbursement loanAccountDisbursement = new LoanAccountDisbursement();
@@ -135,13 +132,8 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
 
     }
 
-
-    public interface OnDialogFragmentInteractionListener {
-
-
-    }
     private void inflatePaymentTypeSpinner() {
-        App.apiManager.getLoanTemplate(loanAccountNumber,new Callback<Response>() {
+        App.apiManager.getLoanTemplate(loanAccountNumber, new Callback<Response>() {
             @Override
             public void success(Response result, Response response) {
                 final ArrayList<PaymentTypeOptions> paymentOption = new ArrayList<PaymentTypeOptions>();
@@ -155,9 +147,9 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                         sb.append(line);
                     }
                     JSONObject obj = new JSONObject(sb.toString());
-                    if(obj.has("paymentTypeOptions")){
-                        JSONArray paymentOptions=obj.getJSONArray("paymentTypeOptions");
-                        for(int i=0;i<paymentOptions.length();i++){
+                    if (obj.has("paymentTypeOptions")) {
+                        JSONArray paymentOptions = obj.getJSONArray("paymentTypeOptions");
+                        for (int i = 0; i < paymentOptions.length(); i++) {
                             JSONObject paymentObject = paymentOptions.getJSONObject(i);
                             PaymentTypeOptions payment = new PaymentTypeOptions();
                             payment.setId(paymentObject.optInt("id"));
@@ -169,7 +161,7 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG,"",e);
+                    Log.e(TAG, "", e);
                 }
                 ArrayAdapter<String> paymentAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, paymentNames);
@@ -181,7 +173,6 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                         paymentTypeId = paymentNameIdHashMap.get(paymentNames.get(i));
                         Log.d("paymentId " + paymentNames.get(i), String.valueOf(paymentTypeId));
                         if (paymentTypeId != -1) {
-
 
 
                         } else {
@@ -208,6 +199,7 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
         });
 
     }
+
     private void initiateLoanDisbursement(final LoanDisbursement loanDisbursement) {
 
         App.apiManager.dispurseLoan(loanAccountNumber,
@@ -218,6 +210,7 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                         Toast.makeText(getActivity(), "The Loan has been Disbursed", Toast.LENGTH_LONG).show();
 
                     }
+
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
@@ -225,7 +218,6 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                 }
         );
     }
-
 
     public void inflateDisbursementDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
@@ -238,6 +230,12 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
             }
         });
+
+    }
+
+
+    public interface OnDialogFragmentInteractionListener {
+
 
     }
 

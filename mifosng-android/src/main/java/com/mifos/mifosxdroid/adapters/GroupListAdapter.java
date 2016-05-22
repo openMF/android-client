@@ -25,7 +25,7 @@ import butterknife.InjectView;
 /**
  * Created by ishankhanna on 28/06/14.
  */
-public class GroupListAdapter extends BaseAdapter{
+public class GroupListAdapter extends BaseAdapter {
 
     LayoutInflater layoutInflater;
     Context context;
@@ -58,7 +58,7 @@ public class GroupListAdapter extends BaseAdapter{
 
         ReusableGroupViewHolder reusableGroupViewHolder;
 
-        if(view == null) {
+        if (view == null) {
             view = layoutInflater.inflate(R.layout.row_group_list, null);
             reusableGroupViewHolder = new ReusableGroupViewHolder(view);
             view.setTag(reusableGroupViewHolder);
@@ -76,7 +76,7 @@ public class GroupListAdapter extends BaseAdapter{
          * Status Class that compares String Value to a Static String and returns
          * if Status is Active or not
          */
-        if(Status.isActive(group.getStatus().getValue())) {
+        if (Status.isActive(group.getStatus().getValue())) {
             reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources().getColor(R.color.deposit_green));
             reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R.string.active));
         } else {
@@ -89,12 +89,18 @@ public class GroupListAdapter extends BaseAdapter{
 
     public static class ReusableGroupViewHolder {
 
-        @InjectView(R.id.tv_group_name) TextView tv_groupName;
-        @InjectView(R.id.tv_office_name) TextView tv_officeName;
-        @InjectView(R.id.view_status_indicator) View view_statusIndicator;
-        @InjectView(R.id.tv_status_text) TextView tv_statusText;
+        @InjectView(R.id.tv_group_name)
+        TextView tv_groupName;
+        @InjectView(R.id.tv_office_name)
+        TextView tv_officeName;
+        @InjectView(R.id.view_status_indicator)
+        View view_statusIndicator;
+        @InjectView(R.id.tv_status_text)
+        TextView tv_statusText;
 
-        public ReusableGroupViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableGroupViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
 
 
     }

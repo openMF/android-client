@@ -21,12 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.api.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
-import com.mifos.App;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.io.File;
@@ -48,12 +48,9 @@ import retrofit.mime.TypedFile;
 public class DocumentDialogFragment extends DialogFragment {
 
     public static final String TAG = "DocumentDialogFragment";
+    private static final int FILE_SELECT_CODE = 0;
     View rootView;
-
     SafeUIBlockingUtility safeUIBlockingUtility;
-
-    private OnDialogFragmentInteractionListener mListener;
-
     @InjectView(R.id.et_document_name)
     EditText et_document_name;
     @InjectView(R.id.et_document_description)
@@ -62,9 +59,7 @@ public class DocumentDialogFragment extends DialogFragment {
     TextView tv_choose_file;
     @InjectView(R.id.bt_upload)
     Button bt_upload;
-
-    private static final int FILE_SELECT_CODE = 0;
-
+    private OnDialogFragmentInteractionListener mListener;
     private String entityType;
 
     private int entityId;
@@ -136,12 +131,6 @@ public class DocumentDialogFragment extends DialogFragment {
             documentDescription = "";
 
         uploadFile();
-
-    }
-
-    public interface OnDialogFragmentInteractionListener {
-
-        public void initiateFileUpload(String name, String description);
 
     }
 
@@ -242,6 +231,12 @@ public class DocumentDialogFragment extends DialogFragment {
                     }
                 }
         );
+
+    }
+
+    public interface OnDialogFragmentInteractionListener {
+
+        public void initiateFileUpload(String name, String description);
 
     }
 

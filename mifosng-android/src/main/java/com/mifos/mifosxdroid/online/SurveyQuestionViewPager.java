@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -40,15 +41,20 @@ import butterknife.InjectView;
  * Created by Nasim Banu on 28,January,2016.
  */
 public class SurveyQuestionViewPager extends MifosBaseActivity implements
-        SurveyQuestionFragment.OnAnswerSelectedListener,SurveyLastFragment.DisableSwipe {
+        SurveyQuestionFragment.OnAnswerSelectedListener, SurveyLastFragment.DisableSwipe {
 
 
     public Communicator fragmentCommunicator;
 
-    @InjectView(R.id.surveyPager) ViewPager mViewPager;
-    @InjectView(R.id.btnNext) Button btnNext;
-    @InjectView(R.id.tv_surveyEmpty) TextView tv_surveyEmpty;
-    @InjectView(R.id.toolbar) Toolbar mToolbar;
+    @InjectView(R.id.surveyPager)
+    ViewPager mViewPager;
+    @InjectView(R.id.btnNext)
+    Button btnNext;
+    @InjectView(R.id.tv_surveyEmpty)
+    TextView tv_surveyEmpty;
+    @InjectView(R.id.toolbar)
+    Toolbar mToolbar;
+    Context context;
     private PagerAdapter mPagerAdapter = null;
     private List<Fragment> fragments = null;
     private Survey survey;
@@ -58,9 +64,6 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
     private int clientId;
     private int mCurrentQuestionPosition = 1;
     private HashMap<Integer, ScorecardValues> mMapScores = new HashMap<>();
-    Context context;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +78,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
         //Getting Survey Gson Object
         Intent mIntent = getIntent();
         survey = (new Gson()).fromJson(mIntent.getStringExtra("Survey"), Survey.class);
-        clientId = mIntent.getIntExtra("ClientId",1);
+        clientId = mIntent.getIntExtra("ClientId", 1);
         setSubtitleToolbar();
 
 
@@ -118,7 +121,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
         this.mScorecardValue = scorecardValues;
     }
 
-    public void loadSurvey(Survey survey){
+    public void loadSurvey(Survey survey) {
 
         if (survey != null) {
 
@@ -129,7 +132,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
                 fragments.add(SurveyLastFragment.newInstance());
                 mPagerAdapter.notifyDataSetChanged();
 
-            }else {
+            } else {
                 mViewPager.setVisibility(View.GONE);
                 btnNext.setVisibility(View.GONE);
                 tv_surveyEmpty.setVisibility(View.VISIBLE);
@@ -138,9 +141,9 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
         }
     }
 
-    public void setUpScoreCard(){
+    public void setUpScoreCard() {
         listScorecardValues.clear();
-        for(Map.Entry<Integer,ScorecardValues> map : mMapScores.entrySet()){
+        for (Map.Entry<Integer, ScorecardValues> map : mMapScores.entrySet()) {
             listScorecardValues.add(map.getValue());
         }
         mScorecard.setClientId(clientId);
@@ -149,34 +152,34 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
         mScorecard.setScorecardValues(listScorecardValues);
     }
 
-    public void updateAnswerList(){
+    public void updateAnswerList() {
 
-        if(mScorecardValue != null) {
-            Log.d("SurveyViewPager" ,"" + mScorecardValue.getQuestionId() + mScorecardValue.getResponseId()+mScorecardValue.getValue());
-            mMapScores.put(mScorecardValue.getQuestionId(),mScorecardValue);
+        if (mScorecardValue != null) {
+            Log.d("SurveyViewPager", "" + mScorecardValue.getQuestionId() + mScorecardValue.getResponseId() + mScorecardValue.getValue());
+            mMapScores.put(mScorecardValue.getQuestionId(), mScorecardValue);
             mScorecardValue = null;
         }
         nextButtonState();
 
-        if (fragmentCommunicator != null){
+        if (fragmentCommunicator != null) {
             setUpScoreCard();
             fragmentCommunicator.passScoreCardData(mScorecard, survey.getId());
         }
     }
 
-    public void nextButtonState(){
+    public void nextButtonState() {
         if (mViewPager.getCurrentItem() == mPagerAdapter.getCount() - 1) {
             btnNext.setVisibility(View.GONE);
-        }else
+        } else
             btnNext.setVisibility(View.VISIBLE);
     }
 
-    public void setSubtitleToolbar(){
-        if(survey.getQuestionDatas().size()==0){
+    public void setSubtitleToolbar() {
+        if (survey.getQuestionDatas().size() == 0) {
             mToolbar.setSubtitle(("0/0"));
-        }else if(mCurrentQuestionPosition <= survey.getQuestionDatas().size()){
-            mToolbar.setSubtitle((mCurrentQuestionPosition) +"/" + survey.getQuestionDatas().size());
-        }else
+        } else if (mCurrentQuestionPosition <= survey.getQuestionDatas().size()) {
+            mToolbar.setSubtitle((mCurrentQuestionPosition) + "/" + survey.getQuestionDatas().size());
+        } else
             mToolbar.setSubtitle("Submit Survey");
 
     }
@@ -194,7 +197,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements
 
     }
 
-    @SuppressWarnings (value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);

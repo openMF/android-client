@@ -23,7 +23,7 @@ public class LoanListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<Loan> listLoans;
 
-    public LoanListAdapter(Context context, List<Loan> listLoans){
+    public LoanListAdapter(Context context, List<Loan> listLoans) {
 
         layoutInflater = LayoutInflater.from(context);
         this.listLoans = listLoans;
@@ -49,11 +49,11 @@ public class LoanListAdapter extends BaseAdapter {
 
         ViewHolder viewHolder;
 
-        if(view==null){
-            view = layoutInflater.inflate(R.layout.row_loan_list_item,viewGroup,false);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_loan_list_item, viewGroup, false);
             viewHolder = new ViewHolder();
             view.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) view.getTag();
         }
         Loan loan = listLoans.get(i);
@@ -74,7 +74,7 @@ public class LoanListAdapter extends BaseAdapter {
         return view;
     }
 
-    public static class ViewHolder{
+    public static class ViewHolder {
 
         TextView tv_loan_id;
         TextView tv_loan_account_id;

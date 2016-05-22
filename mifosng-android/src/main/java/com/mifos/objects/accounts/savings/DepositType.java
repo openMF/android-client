@@ -11,47 +11,27 @@ import com.mifos.api.model.APIEndPoint;
  */
 public class DepositType implements Parcelable {
 
-    public static enum ServerTypes {
-        // TODO: Are these all the types?
-        SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGSACCOUNTS),
-        FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGSACCOUNTS),
-        RECURRING(300, "depositAccountType.recurringDeposit", APIEndPoint.RECURRING_ACCOUNTS);
-
-        private Integer id;
-        private String code;
-        private String endpoint;
-
-        ServerTypes(Integer id, String code, String endpoint) {
-            this.id = id;
-            this.code = code;
-            this.endpoint = endpoint;
+    public static final Parcelable.Creator<DepositType> CREATOR = new Parcelable.Creator<DepositType>() {
+        public DepositType createFromParcel(Parcel source) {
+            return new DepositType(source);
         }
 
-        public Integer getId() {
-            return id;
+        public DepositType[] newArray(int size) {
+            return new DepositType[size];
         }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getEndpoint() {
-            return endpoint;
-        }
-
-        public static ServerTypes fromId(int id) {
-            for (ServerTypes type : ServerTypes.values()) {
-                if (type.getId().equals(id)) {
-                    return type;
-                }
-            }
-            return SAVINGS;
-        }
-    }
-
+    };
     private Integer id;
     private String code;
     private String value;
+
+    public DepositType() {
+    }
+
+    private DepositType(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+    }
 
     public Integer getId() {
         return id;
@@ -98,22 +78,41 @@ public class DepositType implements Parcelable {
         dest.writeString(this.value);
     }
 
-    public DepositType() {
-    }
+    public static enum ServerTypes {
+        // TODO: Are these all the types?
+        SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGSACCOUNTS),
+        FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGSACCOUNTS),
+        RECURRING(300, "depositAccountType.recurringDeposit", APIEndPoint.RECURRING_ACCOUNTS);
 
-    private DepositType(Parcel in) {
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.code = in.readString();
-        this.value = in.readString();
-    }
+        private Integer id;
+        private String code;
+        private String endpoint;
 
-    public static final Parcelable.Creator<DepositType> CREATOR = new Parcelable.Creator<DepositType>() {
-        public DepositType createFromParcel(Parcel source) {
-            return new DepositType(source);
+        ServerTypes(Integer id, String code, String endpoint) {
+            this.id = id;
+            this.code = code;
+            this.endpoint = endpoint;
         }
 
-        public DepositType[] newArray(int size) {
-            return new DepositType[size];
+        public static ServerTypes fromId(int id) {
+            for (ServerTypes type : ServerTypes.values()) {
+                if (type.getId().equals(id)) {
+                    return type;
+                }
+            }
+            return SAVINGS;
         }
-    };
+
+        public Integer getId() {
+            return id;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+    }
 }

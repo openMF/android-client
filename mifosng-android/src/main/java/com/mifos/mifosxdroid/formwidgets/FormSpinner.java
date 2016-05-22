@@ -36,7 +36,7 @@ public class FormSpinner extends FormWidget {
         layout.addView(spinner);
 
         spinnerValueIdMap = new HashMap<String, Integer>();
-        for (int i=0; i<columnValues.size(); i++){
+        for (int i = 0; i < columnValues.size(); i++) {
             spinnerValueIdMap.put(columnValues.get(i), columnValueIds.get(i));
         }
 
@@ -44,7 +44,7 @@ public class FormSpinner extends FormWidget {
 
     @Override
     public String getValue() {
-        return spinner.getSelectedItem().toString()==null?"":spinner.getSelectedItem().toString();
+        return spinner.getSelectedItem().toString() == null ? "" : spinner.getSelectedItem().toString();
     }
 
     public Integer getIdOfSelectedItem(String key) {

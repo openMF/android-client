@@ -16,9 +16,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.survey.Scorecard;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -31,17 +33,14 @@ import retrofit.client.Response;
  */
 public class SurveyLastFragment extends Fragment implements Communicator {
 
-    public interface DisableSwipe {
-        void disableSwipe();
-    }
-
-    @InjectView(R.id.btn_submit) Button btn_submit;
-    @InjectView(R.id.survey_submit_textView) TextView tv_submit;
-    private DisableSwipe mDetachFragment;
     public Context context;
+    @InjectView(R.id.btn_submit)
+    Button btn_submit;
+    @InjectView(R.id.survey_submit_textView)
+    TextView tv_submit;
+    private DisableSwipe mDetachFragment;
     private Scorecard mScorecard;
     private int mSurveyId;
-
 
     public static SurveyLastFragment newInstance() {
         SurveyLastFragment fragment = new SurveyLastFragment();
@@ -64,7 +63,6 @@ public class SurveyLastFragment extends Fragment implements Communicator {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,7 +70,6 @@ public class SurveyLastFragment extends Fragment implements Communicator {
         ButterKnife.inject(this, view);
         return view;
     }
-
 
     @Override
     public void passScoreCardData(Scorecard scorecard, int surveyId) {
@@ -82,10 +79,9 @@ public class SurveyLastFragment extends Fragment implements Communicator {
         btn_submit.setText("Submit Survey");
     }
 
-
     @OnClick(R.id.btn_submit)
-    public void submitScore(View v){
-        if(mScorecard.getScorecardValues().size()>=1) {
+    public void submitScore(View v) {
+        if (mScorecard.getScorecardValues().size() >= 1) {
             mDetachFragment.disableSwipe();
             btn_submit.setText("Submitting Survey");
             btn_submit.setEnabled(false);
@@ -105,8 +101,13 @@ public class SurveyLastFragment extends Fragment implements Communicator {
                     btn_submit.setVisibility(View.GONE);
                 }
             });
-        }else
+        } else
             Toast.makeText(context, "Please Attempt AtLeast One Question ", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public interface DisableSwipe {
+        void disableSwipe();
     }
 
 

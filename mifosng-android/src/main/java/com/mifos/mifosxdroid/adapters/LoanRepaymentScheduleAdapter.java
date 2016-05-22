@@ -24,7 +24,7 @@ import butterknife.InjectView;
 /**
  * Created by ishankhanna on 19/06/14.
  */
-public class LoanRepaymentScheduleAdapter extends BaseAdapter{
+public class LoanRepaymentScheduleAdapter extends BaseAdapter {
 
     List<Period> periodList;
     LayoutInflater layoutInflater;
@@ -58,8 +58,8 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
 
         ReusableViewHolder reusableViewHolder;
 
-        if(view == null) {
-            view = layoutInflater.inflate(R.layout.row_loan_repayment_schedule,null);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_loan_repayment_schedule, null);
             reusableViewHolder = new ReusableViewHolder(view);
             view.setTag(reusableViewHolder);
         } else {
@@ -70,19 +70,14 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
         reusableViewHolder.tv_repaymentAmountDue.setText(String.valueOf(periodList.get(i).getTotalDueForPeriod()));
         reusableViewHolder.tv_repaymentAmountPaid.setText(String.valueOf(periodList.get(i).getTotalPaidForPeriod()));
 
-        if(periodList.get(i).getComplete()) {
+        if (periodList.get(i).getComplete()) {
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_green));
         } else if (!periodList.get(i).getComplete()
-                && (periodList.get(i).getTotalOverdue()!=null && periodList.get(i).getTotalOverdue()>0)) {
+                && (periodList.get(i).getTotalOverdue() != null && periodList.get(i).getTotalOverdue() > 0)) {
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_red));
         } else {
             reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources().getColor(R.color.light_blue));
         }
-
-
-
-
-
 
 
         return view;
@@ -91,12 +86,18 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter{
     public static class ReusableViewHolder {
 
 
-        @InjectView(R.id.view_status_indicator) View view_status_indicator;
-        @InjectView(R.id.tv_repayment_due_date) TextView tv_repaymentDueDate;
-        @InjectView(R.id.tv_repayment_amount_due) TextView tv_repaymentAmountDue;
-        @InjectView(R.id.tv_repayment_amount_paid) TextView tv_repaymentAmountPaid;
+        @InjectView(R.id.view_status_indicator)
+        View view_status_indicator;
+        @InjectView(R.id.tv_repayment_due_date)
+        TextView tv_repaymentDueDate;
+        @InjectView(R.id.tv_repayment_amount_due)
+        TextView tv_repaymentAmountDue;
+        @InjectView(R.id.tv_repayment_amount_paid)
+        TextView tv_repaymentAmountPaid;
 
-        public ReusableViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
 
     }
 

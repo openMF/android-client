@@ -14,13 +14,15 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.db.Loan;
 
 import java.util.List;
 import java.util.Map;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class ClientListAdapter extends BaseAdapter {
@@ -108,7 +110,7 @@ public class ClientListAdapter extends BaseAdapter {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             if (!hasFocus) {
-                Loan loan =(Loan) (v.getTag());
+                Loan loan = (Loan) (v.getTag());
                 try {
                     double changedValue = Double.parseDouble(((EditText) v).getText().toString());
                     listPaidAmounts.put(loan, changedValue);

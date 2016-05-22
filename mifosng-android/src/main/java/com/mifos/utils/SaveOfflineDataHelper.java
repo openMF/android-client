@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mifos.App;
+import com.mifos.api.model.Payload;
 import com.mifos.objects.db.CollectionMeetingCalendar;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.EntityType;
@@ -18,7 +19,6 @@ import com.mifos.objects.db.MeetingCenter;
 import com.mifos.objects.db.MeetingDate;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.db.Status;
-import com.mifos.api.model.Payload;
 import com.orm.query.Select;
 
 import java.util.HashMap;
@@ -31,14 +31,15 @@ import retrofit.client.Response;
 public class SaveOfflineDataHelper {
 
     private static final HashMap<Long, Integer> syncState;
-    private Context mContext;
-    private OfflineDataSaveListener offlineDataSaveListener;
-    private String tag = getClass().getSimpleName();
-    private int centerCount = 0;
 
     static {
         syncState = new HashMap<Long, Integer>();
     }
+
+    private Context mContext;
+    private OfflineDataSaveListener offlineDataSaveListener;
+    private String tag = getClass().getSimpleName();
+    private int centerCount = 0;
 
     public SaveOfflineDataHelper(Context context) {
         this.mContext = context;
@@ -142,7 +143,7 @@ public class SaveOfflineDataHelper {
     private Payload getPayload(Context context, MeetingCenter center) {
         final Payload payload = new Payload();
         payload.setTransactionDate(DateHelper.getPayloadDate(context));
-            payload.setCalendarId(center.getCollectionMeetingCalendar().getCalendarInstanceId());
+        payload.setCalendarId(center.getCollectionMeetingCalendar().getCalendarInstanceId());
         return payload;
     }
 

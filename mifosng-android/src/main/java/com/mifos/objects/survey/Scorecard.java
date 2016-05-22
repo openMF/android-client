@@ -4,6 +4,7 @@
  */
 
 package com.mifos.objects.survey;
+
 import java.util.Date;
 import java.util.List;
 
@@ -21,13 +22,13 @@ public class Scorecard {
         super();
     }
 
-    public Scorecard( final int userId, final int clientId, final Date createdOn, final List<ScorecardValues> scorecardValues) {
+    public Scorecard(final int userId, final int clientId, final Date createdOn, final List<ScorecardValues> scorecardValues) {
 
         super();
         this.userId = userId;
         this.clientId = clientId;
         this.createdOn = createdOn;
-        this.scorecardValues= scorecardValues;
+        this.scorecardValues = scorecardValues;
 
     }
 
@@ -60,7 +61,7 @@ public class Scorecard {
         return scorecardValues;
     }
 
-    public void setScorecardValues(List<ScorecardValues> scorecardValues ) {
+    public void setScorecardValues(List<ScorecardValues> scorecardValues) {
         this.scorecardValues = scorecardValues;
     }
 

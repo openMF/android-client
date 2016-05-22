@@ -11,12 +11,11 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.online.ClientChooseFragment;
-import com.mifos.mifosxdroid.online.GroupListFragment;
 import com.mifos.mifosxdroid.online.SurveyListFragment;
 import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
 import com.mifos.objects.survey.Survey;
 
-public class SurveyActivity extends MifosBaseActivity  implements SurveyListFragment.OnFragmentInteractionListener{
+public class SurveyActivity extends MifosBaseActivity implements SurveyListFragment.OnFragmentInteractionListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);

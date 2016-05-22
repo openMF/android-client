@@ -21,18 +21,18 @@ import android.widget.Toast;
 
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
+import com.mifos.App;
+import com.mifos.api.model.BulkRepaymentTransactions;
+import com.mifos.api.model.CollectionSheetPayload;
+import com.mifos.api.model.Payload;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.api.model.BulkRepaymentTransactions;
-import com.mifos.api.model.CollectionSheetPayload;
-import com.mifos.api.model.Payload;
-import com.mifos.api.model.SaveResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorParser;
-import com.mifos.App;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,19 +54,21 @@ public class CollectionSheetFragment extends MifosBaseFragment {
 
 
     public static final String COLLECTION_SHEET_ONLINE = "Collection Sheet Online";
+    public static final String TAG = "Collection Sheet Fragment";
     private static final int MENU_ITEM_SEARCH = 2000;
     private static final int MENU_ITEM_REFRESH = 2001;
     private static final int MENU_ITEM_SAVE = 2002;
-    public static final String TAG = "Collection Sheet Fragment";
+    static CollectionListAdapter collectionListAdapter;
+    @InjectView(R.id.exlv_collection_sheet)
+    ExpandableListView expandableListView;
     private int centerId; // Center for which collection sheet is being generated
     private String dateOfCollection; // Date of Meeting on which collection has to be done.
     private int calendarInstanceId;
     private View rootView;
 
-    @InjectView(R.id.exlv_collection_sheet)
-    ExpandableListView expandableListView;
-
-    static CollectionListAdapter collectionListAdapter;
+    public CollectionSheetFragment() {
+        // Required empty public constructor
+    }
 
     public static CollectionSheetFragment newInstance(int centerId, String dateOfCollection, int calendarInstanceId) {
         CollectionSheetFragment fragment = new CollectionSheetFragment();
@@ -78,8 +80,12 @@ public class CollectionSheetFragment extends MifosBaseFragment {
         return fragment;
     }
 
-    public CollectionSheetFragment() {
-        // Required empty public constructor
+    //Called from within the Adapters to show changes when payment amounts are updated
+    public static void refreshFragment() {
+
+        collectionListAdapter.notifyDataSetChanged();
+
+
     }
 
     @Override
@@ -106,7 +112,6 @@ public class CollectionSheetFragment extends MifosBaseFragment {
 
         return rootView;
     }
-
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -194,15 +199,6 @@ public class CollectionSheetFragment extends MifosBaseFragment {
 
             }
         });
-
-
-    }
-
-
-    //Called from within the Adapters to show changes when payment amounts are updated
-    public static void refreshFragment() {
-
-        collectionListAdapter.notifyDataSetChanged();
 
 
     }

@@ -46,24 +46,23 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-
 public class ClientChargeFragment extends MifosBaseFragment {
 
     public static final int MENU_ITEM_ADD_NEW_CHARGES = 2000;
     @InjectView(R.id.lv_charges)
     ListView lv_charges;
     List<Charges> chargesList = new ArrayList<Charges>();
-    private View rootView;
-    private Context context;
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+    private View rootView;
+    private Context context;
     private SharedPreferences sharedPreferences;
     private int clientId;
     private int index = 0;
     private int top = 0;
     private boolean isInfiniteScrollEnabled = false;
 
-    public ClientChargeFragment(){
+    public ClientChargeFragment() {
 
     }
 
@@ -77,7 +76,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
             fragment.setChargesList(chargesList);
         return fragment;
     }
-    public static ClientChargeFragment newInstance(int clientId,List<Charges> chargesList, boolean isParentFragmentAGroupFragment) {
+
+    public static ClientChargeFragment newInstance(int clientId, List<Charges> chargesList, boolean isParentFragmentAGroupFragment) {
         ClientChargeFragment fragment = new ClientChargeFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.CLIENT_ID, clientId);
@@ -120,7 +120,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
 
     public void inflateChargeList() {
 
-        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList,clientId);
+        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList, clientId);
         lv_charges.setAdapter(chargesNameListAdapter);
 
         if (isInfiniteScrollEnabled) {
@@ -166,35 +166,36 @@ public class ClientChargeFragment extends MifosBaseFragment {
             //Get a Client List
             App.apiManager.getClientCharges(clientId, new Callback<Page<Charges>>() {
                 @Override
-                   public void success(Page<Charges> page, Response response) {
-                       chargesList = page.getPageItems();
+                public void success(Page<Charges> page, Response response) {
+                    chargesList = page.getPageItems();
                     inflateChargeList();
-                       swipeRefreshLayout.setRefreshing(false);
+                    swipeRefreshLayout.setRefreshing(false);
 
-                   }
-                   @Override
-                   public void failure(RetrofitError retrofitError) {
+                }
 
-                       swipeRefreshLayout.setRefreshing(false);
+                @Override
+                public void failure(RetrofitError retrofitError) {
 
-                       if (getActivity() != null) {
-                           try {
-                               Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                               if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                                   Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
-                                   logout();
-                               } else {
-                                   Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
-                               }
-                           } catch (NullPointerException npe) {
-                               Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
 
-                           }
+                    if (getActivity() != null) {
+                        try {
+                            Log.i("Error", "" + retrofitError.getResponse().getStatus());
+                            if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                                Toast.makeText(getActivity(), "Authorization Expired - Please Login Again", Toast.LENGTH_SHORT).show();
+                                logout();
+                            } else {
+                                Toast.makeText(getActivity(), "There was some error fetching list.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (NullPointerException npe) {
+                            Toast.makeText(getActivity(), "There is some problem with your internet connection.", Toast.LENGTH_SHORT).show();
+
+                        }
 
 
-                       }
-                   }
-               });
+                    }
+                }
+            });
 
         }
 
@@ -267,17 +268,6 @@ public class ClientChargeFragment extends MifosBaseFragment {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     public List<Charges> getChargesList() {
         return chargesList;
     }
@@ -285,6 +275,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
     public void setChargesList(List<Charges> chargesList) {
         this.chargesList = chargesList;
     }
+
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
         this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
     }

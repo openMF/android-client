@@ -4,8 +4,8 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.objects.User;
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.User;
 
 import retrofit.Callback;
 import retrofit.http.POST;
