@@ -83,8 +83,9 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
      * @param transactionType                Type of Transaction (Deposit or Withdrawal)
      * @return A new instance of fragment SavingsAccountTransactionDialogFragment.
      */
-    public static SavingsAccountTransactionFragment newInstance(SavingsAccountWithAssociations
-                                                                        savingsAccountWithAssociations, String transactionType, DepositType accountType) {
+    public static SavingsAccountTransactionFragment newInstance(
+            SavingsAccountWithAssociations savingsAccountWithAssociations,
+            String transactionType, DepositType accountType) {
         SavingsAccountTransactionFragment fragment = new SavingsAccountTransactionFragment();
         Bundle args = new Bundle();
         args.putString(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations

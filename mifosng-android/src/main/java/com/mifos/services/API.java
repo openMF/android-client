@@ -281,9 +281,9 @@ public class API {
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers," +
                 "collectionMeetingCalendar")
-        public void getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int
-                                                                                  centerId,
-                                                                          Callback<CenterWithAssociations> centerWithAssociationsCallback);
+        public void getCenterWithGroupMembersAndCollectionMeetingCalendar(
+                @Path("centerId") int centerId,
+                Callback<CenterWithAssociations> centerWithAssociationsCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.CENTERS)
@@ -581,13 +581,11 @@ public class API {
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/{savingsAccountType}/{savingsAccountId}")
-        public void getSavingsAccountWithAssociations(@Path("savingsAccountType") String
-                                                              savingsAccountType,
-                                                      @Path("savingsAccountId") int
-                                                              savingsAccountId,
-                                                      @Query("associations") String association,
-                                                      Callback<SavingsAccountWithAssociations>
-                                                              savingsAccountWithAssociationsCallback);
+        public void getSavingsAccountWithAssociations(
+                @Path("savingsAccountType") String savingsAccountType,
+                @Path("savingsAccountId") int savingsAccountId,
+                @Query("associations") String association,
+                Callback<SavingsAccountWithAssociations> savingsAccountWithAssociationsCallback);
 
         /**
          * @param savingsAccountId                          - savingsAccountId for which
@@ -600,12 +598,12 @@ public class API {
          */
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET("/{savingsAccountType}/{savingsAccountId}/transactions/template")
-        public void getSavingsAccountTransactionTemplate(@Path("savingsAccountType") String
-                                                                 savingsAccountType,
-                                                         @Path("savingsAccountId") int
-                                                                 savingsAccountId,
-                                                         @Query("command") String transactionType,
-                                                         Callback<SavingsAccountTransactionTemplate> savingsAccountTransactionTemplateCallback);
+        public void getSavingsAccountTransactionTemplate(
+                @Path("savingsAccountType") String savingsAccountType,
+                @Path("savingsAccountId") int savingsAccountId,
+                @Query("command") String transactionType,
+                Callback<SavingsAccountTransactionTemplate>
+                        savingsAccountTransactionTemplateCallback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST("/{savingsAccountType}/{savingsAccountId}/transactions")
@@ -651,14 +649,16 @@ public class API {
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-        public void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path
-                ("entityId") int entityId, Callback<JsonArray> jsonArrayCallback);
+        public void getDataOfDataTable(@Path("dataTableName") String dataTableName,
+                                       @Path("entityId") int entityId,
+                                       Callback<JsonArray> jsonArrayCallback);
 
         //TODO Improve Body Implementation with Payload
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
         @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-        public void createEntryInDataTable(@Path("dataTableName") String dataTableName, @Path
-                ("entityId") int entityId, @Body Map<String, Object> requestPayload,
+        public void createEntryInDataTable(@Path("dataTableName") String dataTableName,
+                                           @Path("entityId") int entityId,
+                                           @Body Map<String, Object> requestPayload,
                                            Callback<GenericResponse> callback);
 
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})

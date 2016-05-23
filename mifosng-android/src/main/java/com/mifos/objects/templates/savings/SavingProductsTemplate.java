@@ -97,8 +97,8 @@ public class SavingProductsTemplate {
         return interestCompoundingPeriodTypeOptions;
     }
 
-    public void setInterestCompoundingPeriodTypeOptions(List<InterestType>
-                                                                interestCompoundingPeriodTypeOptions) {
+    public void setInterestCompoundingPeriodTypeOptions(
+            List<InterestType> interestCompoundingPeriodTypeOptions) {
         this.interestCompoundingPeriodTypeOptions = interestCompoundingPeriodTypeOptions;
     }
 
@@ -124,8 +124,8 @@ public class SavingProductsTemplate {
         return interestCalculationDaysInYearTypeOptions;
     }
 
-    public void setInterestCalculationDaysInYearTypeOptions(List<InterestType>
-                                                                    interestCalculationDaysInYearTypeOptions) {
+    public void setInterestCalculationDaysInYearTypeOptions(
+            List<InterestType> interestCalculationDaysInYearTypeOptions) {
         this.interestCalculationDaysInYearTypeOptions = interestCalculationDaysInYearTypeOptions;
     }
 

@@ -28,7 +28,7 @@ import butterknife.InjectView;
 
 public class LoanFragment extends MifosBaseFragment {
     final List<Loan> loansClientHave = new ArrayList<Loan>();
-    final private String tag = getClass().getSimpleName();
+    private final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.lv_loan)
     ListView lv_loans;
     LoanListAdapter adapter = null;
@@ -60,8 +60,8 @@ public class LoanFragment extends MifosBaseFragment {
         loansClientHave.clear();
         List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)
         ).list();
-        Log.i(tag, "Looking for loan with client ID:" + clientId);
-        Log.i(tag, "Loans in ClientFragment from DB:" + loanList.toString());
+        Log.i(LOG_TAG, "Looking for loan with client ID:" + clientId);
+        Log.i(LOG_TAG, "Loans in ClientFragment from DB:" + loanList.toString());
         loansClientHave.addAll(loanList);
         return loansClientHave;
     }

@@ -91,7 +91,7 @@ import static android.view.View.VISIBLE;
 public class ClientDetailsFragment extends ProgressableFragment implements GoogleApiClient
         .ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
@@ -345,8 +345,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                             PopupMenu menu = new PopupMenu(getActivity(), view);
                             menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
                                     .getMenu());
-                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener
-                                    () {
+                            menu.setOnMenuItemClickListener
+                                    (new PopupMenu.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     switch (menuItem.getItemId()) {

@@ -44,7 +44,8 @@ public class LoansPayload {
         return allowPartialPeriodInterestCalcualtion;
     }
 
-    public void setAllowPartialPeriodInterestCalcualtion(boolean allowPartialPeriodInterestCalcualtion) {
+    public void setAllowPartialPeriodInterestCalcualtion(
+            boolean allowPartialPeriodInterestCalcualtion) {
         this.allowPartialPeriodInterestCalcualtion = allowPartialPeriodInterestCalcualtion;
     }
 
