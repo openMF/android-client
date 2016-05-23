@@ -261,14 +261,14 @@ public class LoanChargeFragment extends MifosBaseFragment {
                                                     .getStatus());
                                             if (retrofitError.getResponse().getStatus() ==
                                                     HttpStatus
-                                                    .SC_UNAUTHORIZED) {
+                                                            .SC_UNAUTHORIZED) {
                                                 Toast.makeText(getActivity(), "Authorization " +
                                                         "Expired - " +
                                                         "Please Login Again", Toast.LENGTH_SHORT)
                                                         .show();
                                                 startActivity(new Intent(getActivity(),
                                                         LoginActivity
-                                                        .class));
+                                                                .class));
                                                 getActivity().finish();
 
                                             } else {

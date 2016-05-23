@@ -238,7 +238,7 @@ public class CollectionSheetFragment extends MifosBaseFragment {
                         if (saveResponse != null) {
                             Toast.makeText(getActivity(), "Collection Sheet Saved Successfully",
                                     Toast
-                                    .LENGTH_SHORT).show();
+                                            .LENGTH_SHORT).show();
 
                         }
 

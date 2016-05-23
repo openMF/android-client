@@ -87,9 +87,9 @@ public class CenterListFragment extends ProgressableFragment {
                                             @Override
                                             public void onDatePicked(String date) {
                                                 mListener.loadCollectionSheetForCenter(centers.get
-                                                        (position).getId(), date,
+                                                                (position).getId(), date,
                                                         centerWithAssociations
-                                                        .getCollectionMeetingCalendar().getId());
+                                                                .getCollectionMeetingCalendar().getId());
                                             }
                                         });
                                         mfDatePicker.show(getActivity().getSupportFragmentManager(),

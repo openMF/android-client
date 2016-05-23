@@ -153,18 +153,18 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                             Collections.sort(paymentTypeOptionList);
                             Iterator<PaymentTypeOption> paymentTypeOptionIterator =
                                     paymentTypeOptionList
-                                    .iterator();
+                                            .iterator();
                             while (paymentTypeOptionIterator.hasNext()) {
                                 PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator
                                         .next();
                                 listOfPaymentTypes.add(paymentTypeOption.getName());
                                 paymentTypeHashMap.put(paymentTypeOption.getName(),
                                         paymentTypeOption
-                                        .getId());
+                                                .getId());
                             }
                             ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>
                                     (getActivity(),
-                                    android.R.layout.simple_spinner_item, listOfPaymentTypes);
+                                            android.R.layout.simple_spinner_item, listOfPaymentTypes);
                             paymentTypeAdapter.setDropDownViewResource(android.R.layout
                                     .simple_spinner_dropdown_item);
                             sp_paymentType.setAdapter(paymentTypeAdapter);

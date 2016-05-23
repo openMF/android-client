@@ -105,9 +105,9 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
                             linearLayout.invalidate();
                             DataTableUIBuilder.DataTableActionListener mListener =
                                     (DataTableUIBuilder
-                                    .DataTableActionListener) getActivity()
+                                            .DataTableActionListener) getActivity()
                                             .getSupportFragmentManager()
-                                    .findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
+                                            .findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
                             linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable,
                                     jsonElements, linearLayout, getActivity(), entityId, mListener);
                         }

@@ -249,7 +249,7 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
                                 listOfPaymentTypes.add(paymentTypeOption.getName());
                                 paymentTypeHashMap.put(paymentTypeOption.getName(),
                                         paymentTypeOption
-                                        .getId());
+                                                .getId());
                             }
 
                             ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>
