@@ -108,8 +108,8 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
             View syncProgress = inflater.inflate(R.layout.sync_progress, null);
             MenuItemCompat.setActionView(item, syncProgress);
             if (centerId != -1) {
-                RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService
-                        (this, centerId);
+                RepaymentTransactionSyncService syncService =
+                        new RepaymentTransactionSyncService(this, centerId);
                 syncService.syncRepayments(getActivity());
             }
         }

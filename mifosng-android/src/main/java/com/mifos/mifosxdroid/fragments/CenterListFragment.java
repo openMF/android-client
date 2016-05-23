@@ -148,8 +148,8 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
                             Log.i(TAG, "-----------Success-----Got the list of centers--------");
                             for (OfflineCenter center : centers) {
                                 if (center != null) {
-                                    SaveOfflineDataHelper helper = new SaveOfflineDataHelper
-                                            (getActivity());
+                                    SaveOfflineDataHelper helper =
+                                            new SaveOfflineDataHelper(getActivity());
                                     helper.setOfflineDataSaveListener(CenterListFragment.this);
                                     helper.saveOfflineCenterData(getActivity(), center);
                                 }
