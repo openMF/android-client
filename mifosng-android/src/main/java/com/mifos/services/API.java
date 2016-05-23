@@ -414,7 +414,8 @@ public class API {
         public void getGroupLoansAccountTemplate(@Query("groupId") int groupId, @Query("productId") int productId, Callback<Response> grouploanCallback);
 
     }
-    public interface ClientService {
+
+        public interface ClientService {
 
         @GET(APIEndPoint.CLIENTS)
         @Headers({ACCEPT_JSON, CONTENT_TYPE_JSON})
