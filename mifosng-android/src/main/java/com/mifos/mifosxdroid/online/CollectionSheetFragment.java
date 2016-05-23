@@ -259,7 +259,7 @@ public class CollectionSheetFragment extends MifosBaseFragment {
 
                             Toast.makeText(getActivity(), "Collection Sheet could not be saved.",
                                     Toast
-                                    .LENGTH_SHORT).show();
+                                            .LENGTH_SHORT).show();
 
 
                         }
