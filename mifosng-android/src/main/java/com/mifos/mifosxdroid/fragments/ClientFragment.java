@@ -42,7 +42,7 @@ import butterknife.InjectView;
 
 public class ClientFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener {
 
-    final private String tag = getClass().getSimpleName();
+    private final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.lv_clients)
     ListView lv_clients;
     @InjectView(R.id.tv_total_amt_paid)
@@ -147,7 +147,7 @@ public class ClientFragment extends MifosBaseFragment implements AdapterView.OnI
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         final int clientId = clientsInTheGroup.get(i).getClientId();
-        Log.i(tag, "onItemClick:-clientId:" + clientId);
+        Log.i(LOG_TAG, "onItemClick:-clientId:" + clientId);
 
         Intent intent = new Intent(getActivity(), LoanActivity.class);
         intent.putExtra("clientId", clientId);
