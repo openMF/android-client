@@ -30,18 +30,20 @@ public interface DataTableService {
 
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-    void getDataOfDataTable(@Path("dataTableName") String dataTableName, @Path("entityId") int
-            entityId, Callback<JsonArray> jsonArrayCallback);
+    void getDataOfDataTable(@Path("dataTableName") String dataTableName,
+                            @Path("entityId") int entityId,
+                            Callback<JsonArray> jsonArrayCallback);
 
     //TODO Improve Body Implementation with Payload
     @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-    void createEntryInDataTable(@Path("dataTableName") String dataTableName, @Path("entityId")
-    int entityId, @Body Map<String, Object> requestPayload,
+    void createEntryInDataTable(@Path("dataTableName") String dataTableName,
+                                @Path("entityId") int entityId,
+                                @Body Map<String, Object> requestPayload,
                                 Callback<GenericResponse> callback);
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
-    void deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName, @Path
-            ("entityId") int entityId,
+    void deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName,
+                                          @Path("entityId") int entityId,
                                           @Path("dataTableRowId") int dataTableRowId,
                                           Callback<GenericResponse> callback);
 }

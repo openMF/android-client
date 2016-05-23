@@ -43,7 +43,8 @@ public class GroupLoanPayload {
         return allowPartialPeriodInterestCalcualtion;
     }
 
-    public void setAllowPartialPeriodInterestCalcualtion(boolean allowPartialPeriodInterestCalcualtion) {
+    public void setAllowPartialPeriodInterestCalcualtion(
+            boolean allowPartialPeriodInterestCalcualtion) {
         this.allowPartialPeriodInterestCalcualtion = allowPartialPeriodInterestCalcualtion;
     }
 
