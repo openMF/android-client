@@ -89,7 +89,8 @@ public class CenterListFragment extends ProgressableFragment {
                                                 mListener.loadCollectionSheetForCenter(centers.get
                                                                 (position).getId(), date,
                                                         centerWithAssociations
-                                                                .getCollectionMeetingCalendar().getId());
+                                                                .getCollectionMeetingCalendar()
+                                                                .getId());
                                             }
                                         });
                                         mfDatePicker.show(getActivity().getSupportFragmentManager(),

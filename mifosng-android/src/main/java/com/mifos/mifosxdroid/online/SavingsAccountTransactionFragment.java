@@ -164,7 +164,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                             }
                             ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>
                                     (getActivity(),
-                                            android.R.layout.simple_spinner_item, listOfPaymentTypes);
+                                            android.R.layout.simple_spinner_item,
+                                            listOfPaymentTypes);
                             paymentTypeAdapter.setDropDownViewResource(android.R.layout
                                     .simple_spinner_dropdown_item);
                             sp_paymentType.setAdapter(paymentTypeAdapter);
