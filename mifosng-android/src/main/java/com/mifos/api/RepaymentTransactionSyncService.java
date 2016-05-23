@@ -55,8 +55,8 @@ public class RepaymentTransactionSyncService {
 
             for (RepaymentTransaction transaction : transactions) {
                 Loan loan = transaction.getLoan();
-                if (loan.getAccountStatusId() == 300) //ToDO need to ask about hard coding
-                {
+                //ToDO need to ask about hard coding
+                if (loan.getAccountStatusId() == 300) {
                     repaymentTransactions.add(new BulkRepaymentTransactions(loan.getLoanId(),
                             transaction.getTransactionAmount()));
                 }

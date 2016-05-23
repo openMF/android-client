@@ -49,7 +49,8 @@ public class UnsafeSSLSocketFactory extends SSLSocketFactory {
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
-        }};
+        }
+        };
 
         sslContext.init(null, trustAllCerts, null);
     }
