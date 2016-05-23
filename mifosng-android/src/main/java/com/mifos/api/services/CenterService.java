@@ -35,9 +35,9 @@ public interface CenterService {
     void getAllCenters(Callback<List<Center>> callback);
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
-    void getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int centerId,
-                                                               Callback<CenterWithAssociations>
-                                                                       centerWithAssociationsCallback);
+    void getCenterWithGroupMembersAndCollectionMeetingCalendar
+            (@Path("centerId") int centerId,
+             Callback<CenterWithAssociations> centerWithAssociationsCallback);
 
     @GET(APIEndPoint.CENTERS)
     void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object>
