@@ -154,10 +154,11 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
                                     helper.saveOfflineCenterData(getActivity(), center);
                                 }
                             }
-                            if (centers.size() > 0)
+                            if (centers.size() > 0) {
                                 setAdapter();
-                            else
+                            } else {
                                 startCenterInputActivity();
+                            }
 
                         }
 
