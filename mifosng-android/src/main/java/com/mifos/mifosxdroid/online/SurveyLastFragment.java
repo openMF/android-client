@@ -103,9 +103,11 @@ public class SurveyLastFragment extends Fragment implements Communicator {
                     btn_submit.setVisibility(View.GONE);
                 }
             });
-        } else
+        } else {
             Toast.makeText(context, "Please Attempt AtLeast One Question ", Toast.LENGTH_SHORT)
                     .show();
+        }
+
     }
 
 
