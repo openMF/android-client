@@ -43,7 +43,7 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment {
     TextView tv_totalUpcoming;
     @InjectView(R.id.tv_total_overdue)
     TextView tv_totalOverdue;
-    private String LOG_TAG = getClass().getSimpleName();
+    private final String LOG_TAG = getClass().getSimpleName();
     private int loanAccountNumber;
     private View rootView;
 
@@ -105,15 +105,12 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment {
                         String totalRepaymentsPending = getResources().getString(R.string
                                 .pending) + " : ";
                         //Implementing the Footer here
-                        tv_totalPaid.setText(totalRepaymentsCompleted + String.valueOf(
-                                RepaymentSchedule.getNumberOfRepaymentsComplete(listOfActualPeriods)
-                        ));
-                        tv_totalOverdue.setText(totalRepaymentsOverdue + String.valueOf(
-                                RepaymentSchedule.getNumberOfRepaymentsOverDue(listOfActualPeriods)
-                        ));
-                        tv_totalUpcoming.setText(totalRepaymentsPending + String.valueOf(
-                                RepaymentSchedule.getNumberOfRepaymentsPending(listOfActualPeriods)
-                        ));
+                        tv_totalPaid.setText(totalRepaymentsCompleted + RepaymentSchedule
+                                .getNumberOfRepaymentsComplete(listOfActualPeriods));
+                        tv_totalOverdue.setText(totalRepaymentsOverdue + RepaymentSchedule
+                                .getNumberOfRepaymentsOverDue(listOfActualPeriods));
+                        tv_totalUpcoming.setText(totalRepaymentsPending + RepaymentSchedule
+                                .getNumberOfRepaymentsPending(listOfActualPeriods));
                         showProgress(false);
                     }
 
