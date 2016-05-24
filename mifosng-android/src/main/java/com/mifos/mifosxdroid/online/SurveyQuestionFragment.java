@@ -33,6 +33,7 @@ public class SurveyQuestionFragment extends Fragment {
 
 
     private static final String QUESTION_DATA = "Question Data";
+    private final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.survey_question_textView)
     TextView tv_question;
     @InjectView(R.id.radio1)
@@ -40,7 +41,6 @@ public class SurveyQuestionFragment extends Fragment {
     RadioButton button1;
     RadioButton btn;
     Context thiscontext;
-    private final String LOG_TAG = getClass().getSimpleName();
     private OnAnswerSelectedListener mCallback;
     private QuestionDatas mQuestionDatas;
     private String answer;

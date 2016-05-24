@@ -73,8 +73,10 @@ public class RepaymentTransactionSyncService {
             payload.setTransactionDate(DateHelper.getPayloadDate(context));
             SaveCollectionSheetTask task = new SaveCollectionSheetTask();
             task.execute(payload);
-        } else
+        } else {
             syncFinishListener.onSyncFinish("There is no data to sync", false);
+        }
+
     }
 
     private void deleteAllOfflineCollectionSheetData() {
@@ -112,8 +114,10 @@ public class RepaymentTransactionSyncService {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.clear();
                         editor.commit();
-                    } else
+                    } else {
                         isResponseNull = true;
+                    }
+
                 } catch (RetrofitError error) {
                     isResponseNull = true;
                 } catch (Exception ex) {
@@ -126,10 +130,12 @@ public class RepaymentTransactionSyncService {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (!isResponseNull)
+            if (!isResponseNull) {
                 syncFinishListener.onSyncFinish("Sync is completed successfully", true);
-            else
+            } else {
                 syncFinishListener.onSyncFinish("Couldn't sync the data, please try again", true);
+            }
+
         }
     }
 }
