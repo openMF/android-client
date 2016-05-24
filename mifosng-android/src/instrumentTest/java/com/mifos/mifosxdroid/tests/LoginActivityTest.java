@@ -38,7 +38,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     public static final String TEST_URL_2 = "www.google.com";
     public static final String TEST_URL_3 = "this.is.valid.url";
     public static final String TEST_URL_4 = "yahoo.in";
-    public static final String TEST_URL_5 = "10.0.2.2";
+    public final String TEST_URL_5 = getActivity().getString(R.string.test_ip);
 
     LoginActivity loginActivity;
     EditText et_mifos_domain;

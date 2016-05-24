@@ -9,6 +9,7 @@
     <string name="app_name">MifosXDroid</string>
     <string name="datatables">Datatables</string>
     <string name="login">Login</string>
+    <string name="test_ip">10.0.2.2</string>
     <string name="search">Search</string>
     <string name="group_name">Group Name</string>
     <string name="staff_name">Staff Name</string>
