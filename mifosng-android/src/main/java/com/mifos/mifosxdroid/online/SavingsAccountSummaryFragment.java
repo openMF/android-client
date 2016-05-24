@@ -467,20 +467,20 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
         hashMap.put("activatedOnDate", DateHelper.getCurrentDateAsNewDateFormat());
         hashMap.put("locale", "en");
 
-        App.apiManager.activateSavings(savingsAccountNumber, hashMap, new
-                        Callback<GenericResponse>() {
+        App.apiManager.activateSavings(savingsAccountNumber, hashMap,
+                new Callback<GenericResponse>() {
 
-                            @Override
-                            public void success(GenericResponse genericResponse, Response
-                                    response) {
-                                Toast.makeText(getActivity(), "Savings Account Activated", Toast
-                                        .LENGTH_LONG).show();
-                            }
+                    @Override
+                    public void success(GenericResponse genericResponse, Response
+                            response) {
+                        Toast.makeText(getActivity(), "Savings Account Activated", Toast
+                                .LENGTH_LONG).show();
+                    }
 
-                            @Override
-                            public void failure(RetrofitError retrofitError) {
-                            }
-                        }
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                    }
+                }
         );
     }
 
