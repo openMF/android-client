@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.R.layout;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -163,10 +164,10 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                                         paymentTypeOption
                                                 .getId());
                             }
-                            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>
-                                    (getActivity(),
-                                            android.R.layout.simple_spinner_item,
-                                            listOfPaymentTypes);
+                            ArrayAdapter<String> paymentTypeAdapter =
+                                    new ArrayAdapter<>(getActivity(),
+                                            layout.simple_spinner_item, listOfPaymentTypes);
+
                             paymentTypeAdapter.setDropDownViewResource(android.R.layout
                                     .simple_spinner_dropdown_item);
                             sp_paymentType.setAdapter(paymentTypeAdapter);
@@ -239,10 +240,10 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
         showProgress();
-        App.apiManager.processTransaction(savingsAccountType.getEndpoint(), Integer.parseInt
-                        (savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType,
-                savingsAccountTransactionRequest, new Callback<SavingsAccountTransactionResponse>
-                        () {
+        App.apiManager.processTransaction(savingsAccountType.getEndpoint(),
+                Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")),
+                transactionType, savingsAccountTransactionRequest,
+                new Callback<SavingsAccountTransactionResponse>() {
                     @Override
                     public void success(SavingsAccountTransactionResponse
                                                 savingsAccountTransactionResponse, Response
