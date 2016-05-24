@@ -63,10 +63,12 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
     @OnClick(R.id.bt_searchClient)
     public void performSearch() {
         String q = et_searchById.getEditableText().toString().trim();
-        if (!q.isEmpty())
+        if (!q.isEmpty()) {
             findClients(q);
-        else
+        } else {
             Toaster.show(et_searchById, "No Search Query Entered!");
+        }
+
     }
 
     public void findClients(final String name) {
