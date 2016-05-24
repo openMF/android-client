@@ -173,7 +173,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     }
 
     private void inflateGenderSpinner() {
-        final ArrayList<String> genderNames = FilterListObject(clientstemplate.getGenderOptions());
+        final ArrayList<String> genderNames = filterListObject(clientstemplate.getGenderOptions());
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, genderNames);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -202,7 +202,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     }
 
     private void inflateClientClassificationOptions() {
-        final ArrayList<String> ClientClassificationNames = FilterListObject(clientstemplate
+        final ArrayList<String> ClientClassificationNames = filterListObject(clientstemplate
                 .getClientClassificationOptions());
         ArrayAdapter<String> ClientClassificationAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, ClientClassificationNames);
@@ -236,7 +236,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     }
 
     private void inflateClientTypeOptions() {
-        final ArrayList<String> ClientTypeNames = FilterListObject(clientstemplate
+        final ArrayList<String> ClientTypeNames = filterListObject(clientstemplate
                 .getClientTypeOptions());
         final ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, ClientTypeNames);
@@ -453,10 +453,12 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     }
 
     public void onDatePicked(String date) {
-        if (mCurrentDateView != null && mCurrentDateView == tv_submissionDate)
+        if (mCurrentDateView != null && mCurrentDateView == tv_submissionDate) {
             tv_submissionDate.setText(date);
-        else if (mCurrentDateView != null && mCurrentDateView == tv_dateofbirth)
+        } else if (mCurrentDateView != null && mCurrentDateView == tv_dateofbirth) {
             tv_dateofbirth.setText(date);
+        }
+
     }
 
     public boolean isValidFirstName() {
@@ -544,7 +546,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         return result;
     }
 
-    public ArrayList<String> FilterListObject(List<Options> optionsList) {
+    public ArrayList<String> filterListObject(List<Options> optionsList) {
 
         ArrayList<String> optionsNameList = new ArrayList<>();
         for (Options options : optionsList) {
