@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -300,11 +301,11 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> amortizationTypeAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, amortizationTypeNames);
-                amortizationTypeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> amortizationTypeAdapter =
+                        new ArrayAdapter<>(getActivity(),
+                                layout.simple_spinner_item, amortizationTypeNames);
+                amortizationTypeAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
                 sp_amortization.setAdapter(amortizationTypeAdapter);
                 sp_amortization.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -389,11 +390,11 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> loanPTypeAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, loanPurposeOptionsTypeNames);
-                loanPTypeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> loanPTypeAdapter =
+                        new ArrayAdapter<>(getActivity(), layout.simple_spinner_item,
+                                loanPurposeOptionsTypeNames);
+
+                loanPTypeAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
                 sp_loan_purpose.setAdapter(loanPTypeAdapter);
                 sp_loan_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -674,38 +675,41 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> termFrequencyTypeAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, termFrequencyTypeNames);
-                termFrequencyTypeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> termFrequencyTypeAdapter =
+                        new ArrayAdapter<>(getActivity(),
+                                layout.simple_spinner_item, termFrequencyTypeNames);
+                termFrequencyTypeAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
                 sp_payment_periods.setAdapter(termFrequencyTypeAdapter);
-                sp_payment_periods.setOnItemSelectedListener(new AdapterView
-                        .OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        loanTermFrequency = termFrequencyTypeIdHashMap.get(termFrequencyTypeNames
-                                .get(i));
-                        Log.d("termFrequencyTypeId" + termFrequencyTypeNames.get(i), String
-                                .valueOf(loanTermFrequency));
-                        if (loanTermFrequency != -1) {
+                sp_payment_periods.setOnItemSelectedListener(
+                        new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int
+                                    i, long
+                                    l) {
+                                loanTermFrequency = termFrequencyTypeIdHashMap.get
+                                        (termFrequencyTypeNames
+                                        .get(i));
+                                Log.d("termFrequencyTypeId" + termFrequencyTypeNames.get(i), String
+                                        .valueOf(loanTermFrequency));
+                                if (loanTermFrequency != -1) {
 
 
-                        } else {
+                                } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund),
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), getString(R.string
+                                                    .error_select_fund),
+                                            Toast.LENGTH_SHORT).show();
 
-                        }
+                                }
 
-                    }
+                            }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
+                            }
+                        });
 
                 showProgress(false);
 

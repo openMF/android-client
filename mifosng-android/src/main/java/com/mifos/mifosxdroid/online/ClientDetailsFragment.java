@@ -345,24 +345,25 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                             PopupMenu menu = new PopupMenu(getActivity(), view);
                             menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
                                     .getMenu());
-                            menu.setOnMenuItemClickListener
-                                    (new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    switch (menuItem.getItemId()) {
-                                        case R.id.client_image_capture:
-                                            captureClientImage();
-                                            break;
-                                        case R.id.client_image_remove:
-                                            deleteClientImage();
-                                            break;
-                                        default:
-                                            Log.e("ClientDetailsFragment", "Unrecognized client " +
-                                                    "image menu item");
-                                    }
-                                    return true;
-                                }
-                            });
+                            menu.setOnMenuItemClickListener(
+                                    new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem menuItem) {
+                                            switch (menuItem.getItemId()) {
+                                                case R.id.client_image_capture:
+                                                    captureClientImage();
+                                                    break;
+                                                case R.id.client_image_remove:
+                                                    deleteClientImage();
+                                                    break;
+                                                default:
+                                                    Log.e("ClientDetailsFragment", "Unrecognized " +
+                                                            "client " +
+                                                            "image menu item");
+                                            }
+                                            return true;
+                                        }
+                                    });
                             menu.show();
                         }
                     });
@@ -395,9 +396,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 accountAccordion = new AccountAccordion(getActivity());
                 if (clientAccounts.getLoanAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.LOANS;
-                    final LoanAccountsListAdapter adapter = new LoanAccountsListAdapter
-                            (getActivity().getApplicationContext(), clientAccounts
-                                    .getLoanAccounts());
+                    final LoanAccountsListAdapter adapter =
+                            new LoanAccountsListAdapter(getActivity().getApplicationContext(),
+                                    clientAccounts.getLoanAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,
@@ -409,9 +410,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
                 if (clientAccounts.getNonRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter
-                            (getActivity().getApplicationContext(), clientAccounts
-                                    .getNonRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    clientAccounts.getNonRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,
@@ -424,9 +425,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
                 if (clientAccounts.getRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter
-                            (getActivity().getApplicationContext(), clientAccounts
-                                    .getRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    clientAccounts.getRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,

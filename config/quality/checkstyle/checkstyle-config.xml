@@ -32,15 +32,15 @@
             <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
         </module>
 
-        <module name="EmptyBlock">
+        <!-- <module name="EmptyBlock">
             <property name="option" value="TEXT"/>
             <property name="tokens" value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH, LITERAL_CATCH"/>
         </module>
-
+ -->
         <!-- Ignore the EmptyCatchBlock -->
-        <module name="EmptyCatchBlock">
+       <!--  <module name="EmptyCatchBlock">
             <property name="exceptionVariableName" value="expected|ignore"/>
-        </module>
+        </module> -->
 
         <module name="LeftCurly">
             <property name="maxLineLength" value="100"/>

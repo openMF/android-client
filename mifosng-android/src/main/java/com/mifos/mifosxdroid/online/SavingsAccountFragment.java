@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.R.layout;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -194,9 +195,10 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         final ArrayList<String> InterestPostingPeriodTypeNames = filterListObject
                 (savingproductstemplate.getInterestPostingPeriodTypeOptions());
 
-        final ArrayAdapter<String> interestPostingPeriodTypeAdapter = new ArrayAdapter<String>
-                (getActivity(),
-                        android.R.layout.simple_spinner_item, InterestPostingPeriodTypeNames);
+        final ArrayAdapter<String> interestPostingPeriodTypeAdapter =
+                new ArrayAdapter<>(getActivity(),
+                        layout.simple_spinner_item, InterestPostingPeriodTypeNames);
+
         interestPostingPeriodTypeAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);
         sp_interest_p_period.setAdapter(interestPostingPeriodTypeAdapter);
@@ -232,9 +234,9 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
         final ArrayList<String> interestCalculationTypeNames = filterListObject
                 (savingproductstemplate.getInterestCalculationTypeOptions());
-        final ArrayAdapter<String> interestCalculationTypeAdapter = new ArrayAdapter<String>
-                (getActivity(),
-                        android.R.layout.simple_spinner_item, interestCalculationTypeNames);
+        final ArrayAdapter<String> interestCalculationTypeAdapter =
+                new ArrayAdapter<>(getActivity(),
+                        layout.simple_spinner_item, interestCalculationTypeNames);
         interestCalculationTypeAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);
         sp_interest_calc.setAdapter(interestCalculationTypeAdapter);

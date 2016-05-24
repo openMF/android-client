@@ -99,21 +99,22 @@ public class GroupListFragment extends ProgressableFragment {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,
                                                 long l) {
                             int groupId = centerWithAssociations.getGroupMembers().get(i).getId();
-                            App.apiManager.getGroups(groupId, new Callback<GroupWithAssociations>
-                                    () {
-                                @Override
-                                public void success(GroupWithAssociations groupWithAssociations,
-                                                    Response response) {
-                                    if (groupWithAssociations != null)
-                                        mListener.loadClientsOfGroup(groupWithAssociations
-                                                .getClientMembers());
-                                }
+                            App.apiManager.getGroups(groupId,
+                                    new Callback<GroupWithAssociations>() {
+                                        @Override
+                                        public void success(GroupWithAssociations
+                                                                    groupWithAssociations,
+                                                            Response response) {
+                                            if (groupWithAssociations != null)
+                                                mListener.loadClientsOfGroup(groupWithAssociations
+                                                        .getClientMembers());
+                                        }
 
-                                @Override
-                                public void failure(RetrofitError retrofitError) {
+                                        @Override
+                                        public void failure(RetrofitError retrofitError) {
 
-                                }
-                            });
+                                        }
+                                    });
                         }
                     });
                     showProgress(false);

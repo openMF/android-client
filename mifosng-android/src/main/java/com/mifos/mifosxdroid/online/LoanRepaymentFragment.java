@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.R.layout;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -252,9 +253,10 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
                                                 .getId());
                             }
 
-                            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>
-                                    (getActivity(), android.R.layout.simple_spinner_item,
-                                            listOfPaymentTypes);
+                            ArrayAdapter<String> paymentTypeAdapter =
+                                    new ArrayAdapter<>(getActivity(),
+                                            layout.simple_spinner_item, listOfPaymentTypes);
+
                             paymentTypeAdapter.setDropDownViewResource(android.R.layout
                                     .simple_spinner_dropdown_item);
                             sp_paymentType.setAdapter(paymentTypeAdapter);

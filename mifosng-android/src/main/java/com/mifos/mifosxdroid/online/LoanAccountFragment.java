@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -324,37 +326,40 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> amortizationTypeAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, amortizationTypeNames);
-                amortizationTypeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> amortizationTypeAdapter =
+                        new ArrayAdapter<>(getActivity(), layout.simple_spinner_item,
+                                amortizationTypeNames);
+                amortizationTypeAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
                 sp_amortization.setAdapter(amortizationTypeAdapter);
-                sp_amortization.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        amortizationTypeId = amortizationTypeIdHashMap.get(amortizationTypeNames
-                                .get(i));
-                        Log.d("ammortization" + amortizationTypeNames.get(i), String.valueOf
-                                (amortizationTypeId));
-                        if (amortizationTypeId != -1) {
+                sp_amortization.setOnItemSelectedListener(
+                        new OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                                       int i, long l) {
+                                amortizationTypeId =
+                                        amortizationTypeIdHashMap
+                                                .get(amortizationTypeNames.get(i));
+                                Log.d("ammortization" + amortizationTypeNames.get(i), String.valueOf
+                                        (amortizationTypeId));
+                                if (amortizationTypeId != -1) {
 
 
-                        } else {
+                                } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund),
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), getString(R.string
+                                                    .error_select_fund),
+                                            Toast.LENGTH_SHORT).show();
 
-                        }
+                                }
 
-                    }
+                            }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
+                            }
+                        });
 
                 showProgress(false);
 
@@ -414,37 +419,41 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> loanPTypeAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, loanPurposeOptionsTypeNames);
-                loanPTypeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> loanPTypeAdapter =
+                        new ArrayAdapter<>(getActivity(), layout.simple_spinner_item,
+                                loanPurposeOptionsTypeNames);
+                loanPTypeAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
                 sp_loan_purpose.setAdapter(loanPTypeAdapter);
-                sp_loan_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        loanPurposeId = loanPurposeNameIdHashMap.get(loanPurposeOptionsTypeNames
-                                .get(i));
-                        Log.d("loanpurpose" + loanPurposeOptionsTypeNames.get(i), String.valueOf
-                                (loanPurposeId));
-                        if (loanPurposeId != -1) {
+                sp_loan_purpose.setOnItemSelectedListener(
+                        new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int
+                                    i, long
+                                                               l) {
+                                loanPurposeId = loanPurposeNameIdHashMap.get
+                                        (loanPurposeOptionsTypeNames
+                                                .get(i));
+                                Log.d("loanpurpose" + loanPurposeOptionsTypeNames.get(i), String
+                                        .valueOf
+                                                (loanPurposeId));
+                                if (loanPurposeId != -1) {
 
 
-                        } else {
+                                } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_fund),
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), getString(R.string
+                                                    .error_select_fund),
+                                            Toast.LENGTH_SHORT).show();
 
-                        }
+                                }
 
-                    }
+                            }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
+                            }
+                        });
 
                 showProgress(false);
 
@@ -702,38 +711,41 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> termFrequencyTypeAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, termFrequencyTypeNames);
-                termFrequencyTypeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> termFrequencyTypeAdapter =
+                        new ArrayAdapter<>(getActivity(),
+                                layout.simple_spinner_item, termFrequencyTypeNames);
+                termFrequencyTypeAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
                 sp_payment_periods.setAdapter(termFrequencyTypeAdapter);
-                sp_payment_periods.setOnItemSelectedListener(new AdapterView
-                        .OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        loanTermFrequency = termFrequencyTypeIdHashMap.get(termFrequencyTypeNames
-                                .get(i));
-                        Log.d("loanTermFrequency" + termFrequencyTypeNames.get(i), String.valueOf
-                                (loanTermFrequency));
-                        if (loanTermFrequency != -1) {
+                sp_payment_periods.setOnItemSelectedListener(
+                        new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int
+                                    i, long
+                                                               l) {
+                                loanTermFrequency = termFrequencyTypeIdHashMap.get
+                                        (termFrequencyTypeNames
+                                                .get(i));
+                                Log.d("loanTermFrequency" + termFrequencyTypeNames.get(i), String
+                                        .valueOf
+                                                (loanTermFrequency));
+                                if (loanTermFrequency != -1) {
 
 
-                        } else {
+                                } else {
 
-                            Toast.makeText(getActivity(), getString(R.string
-                                    .error_select_frequency), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), getString(R.string
+                                            .error_select_frequency), Toast.LENGTH_SHORT).show();
 
-                        }
+                                }
 
-                    }
+                            }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
+                            }
+                        });
 
                 showProgress(false);
 
@@ -791,16 +803,16 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> loanFundNameAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, loanFundNames);
-                loanFundNameAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> loanFundNameAdapter =
+                        new ArrayAdapter<>(getActivity(),
+                                layout.simple_spinner_item, loanFundNames);
+                loanFundNameAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
                 sp_fund.setAdapter(loanFundNameAdapter);
                 sp_fund.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i,
+                                               long l) {
                         fundId = loanFundNameIdHashMap.get(loanFundNames.get(i));
                         Log.d("fundId " + loanFundNames.get(i), String.valueOf(fundId));
                         if (fundId != -1) {
@@ -876,16 +888,16 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> loanOfficerNameAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, loanOfficerNames);
-                loanOfficerNameAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> loanOfficerNameAdapter = new ArrayAdapter<>(
+                        getActivity(), layout.simple_spinner_item, loanOfficerNames);
+                loanOfficerNameAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
+
                 sp_loan_officer.setAdapter(loanOfficerNameAdapter);
                 sp_loan_officer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i,
+                                               long l) {
                         loanOfficerId = loanOfficerNameIdHashMap.get(loanOfficerNames.get(i));
                         Log.d("loanOfficer " + loanOfficerNames.get(i), String.valueOf
                                 (loanOfficerId));
@@ -962,17 +974,16 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
                 }
-                final ArrayAdapter<String> interestTypeMethodAdapter = new ArrayAdapter<String>
-                        (getActivity(),
-                                android.R.layout.simple_spinner_item, interestTypeNames);
+                final ArrayAdapter<String> interestTypeMethodAdapter =
+                        new ArrayAdapter<>(getActivity(),
+                                layout.simple_spinner_item, interestTypeNames);
                 interestTypeMethodAdapter.setDropDownViewResource(android.R.layout
                         .simple_spinner_dropdown_item);
                 sp_interest_type.setAdapter(interestTypeMethodAdapter);
-                sp_interest_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
-                        () {
+                sp_interest_type.setOnItemSelectedListener(new OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i,
+                                               long l) {
                         interestTypeId = interestTypeIdHashMap.get(interestTypeNames.get(i));
                         Log.d("interestType " + interestTypeNames.get(i), String.valueOf
                                 (interestTypeId));

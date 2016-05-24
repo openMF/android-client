@@ -156,24 +156,25 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
                 staffAdapter.notifyDataSetChanged();
                 staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sp_loan_officers.setAdapter(staffAdapter);
-                sp_loan_officers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener
-                        () {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position,
-                                               long id) {
-                        int staffId = staffNameIdHashMap.get(staffNames.get(position));
-                        if (staffId != -1) {
-                            inflateCenterSpinner(officeId, staffId);
-                            inflateGroupSpinner(officeId, staffId);
-                        } else
-                            Toaster.show(rootView, getString(R.string.error_select_staff));
-                    }
+                sp_loan_officers.setOnItemSelectedListener(
+                        new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int
+                                    position,
+                                                       long id) {
+                                int staffId = staffNameIdHashMap.get(staffNames.get(position));
+                                if (staffId != -1) {
+                                    inflateCenterSpinner(officeId, staffId);
+                                    inflateGroupSpinner(officeId, staffId);
+                                } else
+                                    Toaster.show(rootView, getString(R.string.error_select_staff));
+                            }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
+                            }
+                        });
             }
 
             @Override

@@ -227,22 +227,23 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
 
-        App.apiManager.createLoanCharges(loanAccountNumber, chargesPayload, new Callback<Charges>
-                () {
-            @Override
-            public void success(Charges charges, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG)
-                        .show();
+        App.apiManager.createLoanCharges(loanAccountNumber, chargesPayload,
+                new Callback<Charges>() {
+                    @Override
+                    public void success(Charges charges, Response response) {
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                        Toast.makeText(getActivity(), "Charge created successfully", Toast
+                                .LENGTH_LONG)
+                                .show();
 
-            }
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                        Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+                    }
+                });
 
 
     }

@@ -217,9 +217,9 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 accountAccordion = new AccountAccordion(getActivity());
                 if (groupAccounts.getLoanAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.LOANS;
-                    final LoanAccountsListAdapter adapter = new LoanAccountsListAdapter
-                            (getActivity().getApplicationContext(), groupAccounts.getLoanAccounts
-                                    ());
+                    final LoanAccountsListAdapter adapter =
+                            new LoanAccountsListAdapter(getActivity().getApplicationContext(),
+                                    groupAccounts.getLoanAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,
@@ -231,9 +231,9 @@ public class GroupDetailsFragment extends ProgressableFragment {
 
                 if (groupAccounts.getNonRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter
-                            (getActivity().getApplicationContext(), groupAccounts
-                                    .getNonRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    groupAccounts.getNonRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,
@@ -246,9 +246,9 @@ public class GroupDetailsFragment extends ProgressableFragment {
 
                 if (groupAccounts.getRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter
-                            (getActivity().getApplicationContext(), groupAccounts
-                                    .getRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    groupAccounts.getRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,

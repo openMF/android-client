@@ -124,8 +124,9 @@ public class DocumentListFragment extends ProgressableFragment {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,
                                                 long l) {
-                            AsyncFileDownloader asyncFileDownloader = new AsyncFileDownloader
-                                    (getActivity(), documents.get(i).getFileName());
+                            AsyncFileDownloader asyncFileDownloader =
+                                    new AsyncFileDownloader(getActivity(),
+                                            documents.get(i).getFileName());
                             asyncFileDownloader.execute(entityType, String.valueOf(entityId),
                                     String.valueOf(documents.get(i).getId()));
                         }

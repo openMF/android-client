@@ -70,8 +70,8 @@ public class ClientIdentifiersFragment extends ProgressableFragment {
                 if (getActivity() == null) return;
 
                 if (identifiers != null && identifiers.size() > 0) {
-                    IdentifierListAdapter identifierListAdapter = new IdentifierListAdapter
-                            (getActivity(), identifiers, clientId);
+                    IdentifierListAdapter identifierListAdapter =
+                            new IdentifierListAdapter(getActivity(), identifiers, clientId);
                     lv_identifiers.setAdapter(identifierListAdapter);
                 } else {
                     Toast.makeText(getActivity(), getString(R.string
