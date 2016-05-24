@@ -40,7 +40,7 @@ public class SurveyQuestionFragment extends Fragment {
     RadioButton button1;
     RadioButton btn;
     Context thiscontext;
-    private String LOG_TAG = getClass().getSimpleName();
+    private final String LOG_TAG = getClass().getSimpleName();
     private OnAnswerSelectedListener mCallback;
     private QuestionDatas mQuestionDatas;
     private String answer;
@@ -75,22 +75,22 @@ public class SurveyQuestionFragment extends Fragment {
             radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 public void onCheckedChanged(RadioGroup mRadioGroup2,
                                              int checkedId2) {
-                    for (int i = 0; i < mRadioGroup2.getChildCount(); i++) {
-                        btn = (RadioButton) mRadioGroup2.getChildAt(i);
+                    for (int j = 0; j < mRadioGroup2.getChildCount(); j++) {
+                        btn = (RadioButton) mRadioGroup2.getChildAt(j);
                         int t = mRadioGroup2.getId();
                         Log.d(LOG_TAG, "" + t);
 
                         if (btn.getId() == checkedId2) {
                             answer = btn.getText().toString();
                             mScorecardValues.setQuestionId(mQuestionDatas.getQuestionId());
-                            mScorecardValues.setResponseId(mQuestionDatas.getResponseDatas().get
-                                    (i).getResponseId());
-                            mScorecardValues.setValue(mQuestionDatas.getResponseDatas().get(i)
-                                    .getValue());
+                            mScorecardValues.setResponseId(mQuestionDatas.getResponseDatas()
+                                    .get(j).getResponseId());
+                            mScorecardValues.setValue(mQuestionDatas.getResponseDatas()
+                                    .get(j).getValue());
                             mCallback.answer(mScorecardValues);
                             Log.d(LOG_TAG, "Q R V" + mQuestionDatas.getQuestionId() + " " +
-                                    mQuestionDatas.getResponseDatas().get(i).getResponseId()
-                                    + " " + mQuestionDatas.getResponseDatas().get(i).getValue());
+                                    mQuestionDatas.getResponseDatas().get(j).getResponseId()
+                                    + " " + mQuestionDatas.getResponseDatas().get(j).getValue());
                             return;
                         }
                     }
