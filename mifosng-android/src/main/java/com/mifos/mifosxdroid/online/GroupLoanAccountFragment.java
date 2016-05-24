@@ -210,9 +210,9 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                     loansList.add(loansname.getName());
                     loansNameIdHashMap.put(loansname.getName(), loansname.getId());
                 }
-                ArrayAdapter<String> loansAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, loansList);
-                loansAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> loansAdapter = new ArrayAdapter<>(getActivity(),
+                        layout.simple_spinner_item, loansList);
+                loansAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
                 sp_lproduct.setAdapter(loansAdapter);
                 sp_lproduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -250,7 +250,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -485,11 +485,13 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "", e);
                 }
-                final ArrayAdapter<String> interestCalculationPeriodTypeAdapter = new
-                        ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, interestCalculationPeriodTypeNames);
-                interestCalculationPeriodTypeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> interestCalculationPeriodTypeAdapter =
+                        new ArrayAdapter<>(getActivity(),
+                                layout.simple_spinner_item,
+                                interestCalculationPeriodTypeNames);
+
+                interestCalculationPeriodTypeAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
                 sp_interestcalculationperiod.setAdapter(interestCalculationPeriodTypeAdapter);
                 sp_interestcalculationperiod.setOnItemSelectedListener(new AdapterView
                         .OnItemSelectedListener() {
@@ -583,12 +585,14 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "", e);
                 }
-                final ArrayAdapter<String> transactionProcessingStrategyAdapter = new
-                        ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item,
-                        transactionProcessingStrategyTypeNames);
-                transactionProcessingStrategyAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                final ArrayAdapter<String> transactionProcessingStrategyAdapter =
+                        new ArrayAdapter<>(getActivity(),
+                                layout.simple_spinner_item,
+                                transactionProcessingStrategyTypeNames);
+
+                transactionProcessingStrategyAdapter.setDropDownViewResource(
+                        layout.simple_spinner_dropdown_item);
+
                 sp_repaymentstrategy.setAdapter(transactionProcessingStrategyAdapter);
                 sp_repaymentstrategy.setOnItemSelectedListener(new AdapterView
                         .OnItemSelectedListener() {

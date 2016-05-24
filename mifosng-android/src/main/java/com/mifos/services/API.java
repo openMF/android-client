@@ -193,12 +193,12 @@ public class API {
         Callback<T> cb = new Callback<T>() {
             @Override
             public void success(T o, Response response) {
-                System.out.println("Object " + o);
+                Log.d(TAG, "Object " + o);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                System.out.println("Error: " + retrofitError);
+                Log.d(TAG, "Error: " + retrofitError);
             }
         };
 
@@ -209,12 +209,12 @@ public class API {
         Callback<List<T>> cb = new Callback<List<T>>() {
             @Override
             public void success(List<T> o, Response response) {
-                System.out.println("Object " + o);
+                Log.d(TAG, "Object " + o);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                System.out.println("Error: " + retrofitError);
+                Log.d(TAG, "Error: " + retrofitError);
             }
         };
 
