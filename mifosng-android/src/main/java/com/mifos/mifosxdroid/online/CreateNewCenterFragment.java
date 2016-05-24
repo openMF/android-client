@@ -89,10 +89,12 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
                 .OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked)
+                if (isChecked) {
                     tv_activationDate.setVisibility(View.VISIBLE);
-                else
+                } else {
                     tv_activationDate.setVisibility(View.GONE);
+                }
+
             }
         });
 
