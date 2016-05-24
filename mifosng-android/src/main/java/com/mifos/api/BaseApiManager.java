@@ -39,7 +39,7 @@ import retrofit.converter.GsonConverter;
 public class BaseApiManager {
 
 
-    private ApiEndpoint API_ENDPOINT = new ApiEndpoint();
+    private final ApiEndpoint API_ENDPOINT = new ApiEndpoint();
 
     private AuthService authApi;
     private CenterService centerApi;
