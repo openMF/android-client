@@ -53,7 +53,7 @@ import retrofit.client.Response;
 public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker
         .OnDatePickListener {
 
-    public  final String LOG_TAG = getClass().getSimpleName();
+    public final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
     @InjectView(R.id.amount_due_charge)
@@ -210,7 +210,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }

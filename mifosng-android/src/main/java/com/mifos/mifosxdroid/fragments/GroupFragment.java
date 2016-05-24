@@ -93,7 +93,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
                     syncItem.setEnabled(false);
             }
         } catch (IndexOutOfBoundsException e) {
-            Log.d(LOG_TAG,e.getMessage());
+            Log.d(LOG_TAG, e.getMessage());
             syncItem.setEnabled(false);
         }
 

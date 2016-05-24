@@ -275,7 +275,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }

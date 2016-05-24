@@ -78,7 +78,7 @@ public class SurveyQuestionFragment extends Fragment {
                     for (int i = 0; i < mRadioGroup2.getChildCount(); i++) {
                         btn = (RadioButton) mRadioGroup2.getChildAt(i);
                         int t = mRadioGroup2.getId();
-                        Log.d(LOG_TAG,""+t);
+                        Log.d(LOG_TAG, "" + t);
 
                         if (btn.getId() == checkedId2) {
                             answer = btn.getText().toString();

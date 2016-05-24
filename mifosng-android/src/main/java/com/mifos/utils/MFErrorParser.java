@@ -39,7 +39,7 @@ public class MFErrorParser {
             Log.d("MFErrorParser", out.toString());
             MFErrorResponse mfErrorResponse = new Gson().fromJson(out.toString(), MFErrorResponse
                     .class);
-            Log.d(LOG_TAG,mfErrorResponse.toString());
+            Log.d(LOG_TAG, mfErrorResponse.toString());
             List<MFError> mfErrorList = mfErrorResponse.getErrors();
 
             for (MFError mfError : mfErrorList) {
@@ -47,7 +47,7 @@ public class MFErrorParser {
                         .LENGTH_LONG).show();
             }
         } catch (IOException e) {
-            Log.d(LOG_TAG,e.getMessage());
+            Log.d(LOG_TAG, e.getMessage());
         } catch (IllegalStateException e) {
             Log.d(LOG_TAG, e.getMessage());
         } catch (Exception e) {

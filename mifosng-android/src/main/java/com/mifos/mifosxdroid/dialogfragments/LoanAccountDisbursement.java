@@ -51,8 +51,8 @@ import retrofit.client.Response;
 public class LoanAccountDisbursement extends DialogFragment implements MFDatePicker
         .OnDatePickListener {
 
-    public final String LOG_TAG = getClass().getSimpleName();
     public static int loanAccountNumber;
+    public final String LOG_TAG = getClass().getSimpleName();
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
     @InjectView(R.id.tv_loan_disbursement_dates)
@@ -202,7 +202,7 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
             }
         });
 

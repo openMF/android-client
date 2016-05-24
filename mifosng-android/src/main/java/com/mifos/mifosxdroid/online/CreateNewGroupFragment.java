@@ -199,7 +199,7 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
             }
         });

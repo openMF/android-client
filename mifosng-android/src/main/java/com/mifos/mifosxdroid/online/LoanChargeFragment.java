@@ -192,7 +192,7 @@ public class LoanChargeFragment extends MifosBaseFragment {
                             Log.i("Error", "" + retrofitError.getResponse().getStatus());
                             if (retrofitError.getResponse().getStatus() ==
                                     org.apache.http.HttpStatus
-                                    .SC_UNAUTHORIZED) {
+                                            .SC_UNAUTHORIZED) {
                                 Toast.makeText(getActivity(), "Authorization Expired - Please " +
                                         "Login Again", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getActivity(), LoginActivity.class));

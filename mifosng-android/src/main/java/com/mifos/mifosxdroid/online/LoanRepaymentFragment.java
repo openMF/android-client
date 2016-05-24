@@ -317,7 +317,7 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
                     {"Fees", et_fees.getText().toString()},
                     {"Total", String.valueOf(calculateTotal())}
             };
-            Log.d(LOG_TAG,FlipTable.of(headers, data));
+            Log.d(LOG_TAG, FlipTable.of(headers, data));
 
             String formReviewString = new StringBuilder().append(data[0][0] + " : " + data[0][1])
                     .append("\n")

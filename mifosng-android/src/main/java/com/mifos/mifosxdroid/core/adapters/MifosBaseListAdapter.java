@@ -80,6 +80,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param items The items to add at the end of the array.
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public void addAll(T... items) {
         synchronized (mLock) {
             Collections.addAll(list, items);

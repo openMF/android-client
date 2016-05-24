@@ -340,7 +340,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
             }
         });
 
@@ -386,7 +386,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(LOG_TAG,error.getLocalizedMessage());
+                Log.d(LOG_TAG, error.getLocalizedMessage());
 
             }
         });

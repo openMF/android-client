@@ -94,7 +94,7 @@ public class IdentifierListAdapter extends BaseAdapter {
                             public void success(GenericResponse genericResponse, Response
                                     response) {
 
-                                Log.d(LOG_TAG,genericResponse.toString());
+                                Log.d(LOG_TAG, genericResponse.toString());
 
                             }
 

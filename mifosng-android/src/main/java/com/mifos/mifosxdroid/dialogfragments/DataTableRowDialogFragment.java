@@ -9,13 +9,13 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.util.Log;
 
 import com.mifos.App;
 import com.mifos.api.GenericResponse;
@@ -190,7 +190,7 @@ public class DataTableRowDialogFragment extends DialogFragment {
                 try {
                     onSaveActionRequested();
                 } catch (RequiredFieldException e) {
-                    Log.d(LOG_TAG,e.getMessage());
+                    Log.d(LOG_TAG, e.getMessage());
                 }
             }
         });

@@ -47,8 +47,8 @@ import retrofit.mime.TypedFile;
  */
 public class DocumentDialogFragment extends DialogFragment {
 
-    private final String LOG_TAG = getClass().getSimpleName();
     private static final int FILE_SELECT_CODE = 0;
+    private final String LOG_TAG = getClass().getSimpleName();
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
     @InjectView(R.id.et_document_name)
@@ -171,7 +171,7 @@ public class DocumentDialogFragment extends DialogFragment {
                         bt_upload.setEnabled(true);
 
                     } catch (URISyntaxException e) {
-                        Log.d(LOG_TAG,e.getMessage());
+                        Log.d(LOG_TAG, e.getMessage());
                     }
                 }
                 break;
@@ -200,9 +200,9 @@ public class DocumentDialogFragment extends DialogFragment {
 
 
         String[] parts = fileChoosen.getName().split("\\.");
-        Log.d(LOG_TAG,"Extension :" + parts[1]);
+        Log.d(LOG_TAG, "Extension :" + parts[1]);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(parts[1]);
-        Log.d(LOG_TAG,"Mime Type = " + mimeType);
+        Log.d(LOG_TAG, "Mime Type = " + mimeType);
 
         TypedFile typedFile = new TypedFile(mimeType, fileChoosen);
 
@@ -218,7 +218,7 @@ public class DocumentDialogFragment extends DialogFragment {
                                     .uploaded_successfully), fileChoosen.getName()), Toast
                                     .LENGTH_SHORT).show();
 
-                            Log.d(LOG_TAG,genericResponse.toString());
+                            Log.d(LOG_TAG, genericResponse.toString());
                         }
                         safeUIBlockingUtility.safelyUnBlockUI();
                         getDialog().dismiss();

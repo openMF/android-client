@@ -199,7 +199,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                 {"Payment Type", sp_paymentType.getSelectedItem().toString()},
                 {"Amount", et_transactionAmount.getEditableText().toString()}
         };
-        Log.d(LOG_TAG,FlipTable.of(headers, data));
+        Log.d(LOG_TAG, FlipTable.of(headers, data));
         StringBuilder formReviewStringBuilder = new StringBuilder();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {

@@ -30,8 +30,6 @@ import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
-import org.apache.http.HttpStatus;
-
 import javax.net.ssl.SSLHandshakeException;
 
 import butterknife.ButterKnife;
@@ -164,11 +162,12 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
             hideProgress();
             if (retrofitError.getCause() instanceof SSLHandshakeException) {
                 promptUserToByPassTheSSLHandshake();
-            } else if (retrofitError.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+            } else if (retrofitError.getResponse().getStatus() ==
+                    org.apache.http.HttpStatus.SC_UNAUTHORIZED) {
                 Toaster.show(findViewById(android.R.id.content), getString(R.string
                         .error_login_failed));
-            } else if (retrofitError.getResponse().getStatus() == HttpStatus
-                    .SC_INTERNAL_SERVER_ERROR) {
+            } else if (retrofitError.getResponse().getStatus() ==
+                    org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 Toaster.show(findViewById(android.R.id.content), "Internal server error");
             }
         } catch (NullPointerException e) {

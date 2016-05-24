@@ -404,7 +404,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(LOG_TAG,error.getLocalizedMessage());
+                Log.d(LOG_TAG, error.getLocalizedMessage());
 
                 showProgress(false);
             }
