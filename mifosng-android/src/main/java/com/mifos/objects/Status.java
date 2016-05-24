@@ -10,7 +10,7 @@ package com.mifos.objects;
  */
 public class Status {
 
-    private static String STATUS_ACTIVE = "Active";
+    private static final String STATUS_ACTIVE = "Active";
 
     private int id;
     private String code;

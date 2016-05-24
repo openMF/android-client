@@ -12,7 +12,7 @@ import java.util.List;
 
 public class User {
 
-    public static String AUTHENTICATION_KEY = "authenticationKey";
+    public static final String AUTHENTICATION_KEY = "authenticationKey";
 
     private String username;
     private int userId;
