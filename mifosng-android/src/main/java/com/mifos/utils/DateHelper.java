@@ -62,14 +62,14 @@ public class DateHelper {
      * @return replaces month with a string like Jan or Feb..etc
      */
     public static String getDateAsStringUsedForCollectionSheetPayload(String date) {
-        final StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         if (date != null) {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append("-");
+            builder.append('-');
             builder.append(getMonthName(month));
-            builder.append("-");
+            builder.append('-');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
@@ -88,9 +88,9 @@ public class DateHelper {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append("-");
+            builder.append('-');
             builder.append(getMonthName(month));
-            builder.append("-");
+            builder.append('-');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
@@ -149,9 +149,9 @@ public class DateHelper {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(integersOfDate.get(2))
-                .append(" ")
+                .append(' ')
                 .append(getMonthName(integersOfDate.get(1)))
-                .append(" ")
+                .append(' ')
                 .append(integersOfDate.get(0));
 
         return stringBuilder.toString();
@@ -265,9 +265,9 @@ public class DateHelper {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append(" ");
-            builder.append(DateHelper.getMonthName(month));
-            builder.append(" ");
+            builder.append(' ');
+            builder.append(getMonthName(month));
+            builder.append(' ');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
@@ -288,9 +288,9 @@ public class DateHelper {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append(" ");
-            builder.append(DateHelper.getMonthName(month));
-            builder.append(" ");
+            builder.append(' ');
+            builder.append(getMonthName(month));
+            builder.append(' ');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
