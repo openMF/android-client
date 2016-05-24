@@ -52,8 +52,9 @@ public class SaveOfflineDataHelper {
     private HashMap<Long, Integer> saveSyncState() {
         syncState.clear();
         List<MeetingCenter> listCenters = Select.from(MeetingCenter.class).list();
-        for (MeetingCenter center : listCenters)
+        for (MeetingCenter center : listCenters) {
             syncState.put(center.getCenterId(), center.getIsSynced());
+        }
         return syncState;
     }
 
@@ -116,10 +117,12 @@ public class SaveOfflineDataHelper {
 
             MeetingCenter meetingCenter1 = new MeetingCenter();
             meetingCenter1.setMeetingDate(meetingDate);
-            if (syncState.get(meetingCenter.getId()) != null)
+            if (syncState.get(meetingCenter.getId()) != null) {
                 meetingCenter1.setIsSynced(syncState.get(meetingCenter.getId()));
-            else
+            } else {
                 meetingCenter1.setIsSynced(meetingCenter.getIsSynced());
+            }
+
 
             meetingCenter1.setStatus(status);
             meetingCenter1.setActive(meetingCenter.isActive());
