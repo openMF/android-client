@@ -307,7 +307,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     }
 
-    private void InterestCompoundingPeriodType() {
+    private void interestCompoundingPeriodType() {
 
         final ArrayList<String> InterestCompoundingPeriodType = filterListObject
                 (savingproductstemplate.getInterestCompoundingPeriodTypeOptions());
@@ -393,7 +393,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
                 if (response.getStatus() == 200) {
                     savingproductstemplate = savingProductsTemplate;
-                    InterestCompoundingPeriodType();
+                    interestCompoundingPeriodType();
                     inflateinterestCalculationDaysInYearType();
                     inflateInterestCalculationTypeSpinner();
                     inflateInterestPostingPeriodType();
