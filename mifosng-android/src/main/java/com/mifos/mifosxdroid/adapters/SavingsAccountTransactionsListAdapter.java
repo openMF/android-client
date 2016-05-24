@@ -73,7 +73,7 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
                 .getTransactionType().getValue());
         reusableViewHolder.tv_transactionAmount.setText(listOfTransactions.get(i).getCurrency()
                 .getDisplaySymbol()
-                + " " + String.valueOf(listOfTransactions.get(i).getAmount()));
+                + " " + listOfTransactions.get(i).getAmount());
         if (listOfTransactions.get(i).getTransactionType().getDeposit()) {
             reusableViewHolder.tv_transactionAmount.setTextColor(Color.parseColor("#08860C"));
         } else if (listOfTransactions.get(i).getTransactionType().getWithdrawal()) {
