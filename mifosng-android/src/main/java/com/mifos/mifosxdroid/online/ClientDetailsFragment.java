@@ -325,7 +325,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                                 Toast.LENGTH_SHORT).show();
                         tv_activationDate.setText("");
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.d(TAG, e.getLocalizedMessage());
                     }
                     tv_office.setText(client.getOfficeName());
 
@@ -463,8 +463,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 if (dataTables != null) {
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
                     clientDataTables.clear();
-                    while (dataTableIterator.hasNext())
+                    while (dataTableIterator.hasNext()) {
                         clientDataTables.add(dataTableIterator.next());
+                    }
+
                 }
                 showProgress(false);
             }
@@ -774,10 +776,14 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (bmp != null) iv_clientImage.setImageBitmap(bmp);
-            else
-                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            pb_imageProgressBar.setVisibility(GONE);
+            if (bmp != null) {
+                iv_clientImage.setImageBitmap(bmp);
+            } else {
+                iv_clientImage.setImageDrawable(getResources()
+                        .getDrawable(R.drawable.ic_launcher));
+                pb_imageProgressBar.setVisibility(GONE);
+            }
+
         }
     }
 
