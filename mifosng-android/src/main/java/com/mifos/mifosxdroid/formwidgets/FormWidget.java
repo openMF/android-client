@@ -19,20 +19,20 @@ public abstract class FormWidget {
 
     public static final LayoutParams defaultLayoutParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    public static String SCHEMA_KEY_TYPE = "type";
-    public static String SCHEMA_KEY_BOOL = "BOOLEAN";
-    public static String SCHEMA_KEY_INT = "INTEGER";
-    public static String SCHEMA_KEY_DECIMAL = "DECIMAL";
-    public static String SCHEMA_KEY_STRING = "STRING";
-    public static String SCHEMA_KEY_TEXT = "TEXT";
-    public static String SCHEMA_KEY_CODELOOKUP = "CODELOOKUP";
-    public static String SCHEMA_KEY_CODEVALUE = "CODEVALUE";
-    public static String SCHEMA_KEY_DATE = "DATE";
-    public static String SCHEMA_KEY_PRIORITY = "priority";
-    public static String SCHEMA_KEY_DEFAULT = "default";
-    public static String SCHEMA_KEY_OPTIONS = "options";
-    public static String SCHEMA_KEY_META = "meta";
-    public static String SCHEMA_KEY_HINT = "hint";
+    public static final String SCHEMA_KEY_TYPE = "type";
+    public static final String SCHEMA_KEY_BOOL = "BOOLEAN";
+    public static final String SCHEMA_KEY_INT = "INTEGER";
+    public static final String SCHEMA_KEY_DECIMAL = "DECIMAL";
+    public static final String SCHEMA_KEY_STRING = "STRING";
+    public static final String SCHEMA_KEY_TEXT = "TEXT";
+    public static final String SCHEMA_KEY_CODELOOKUP = "CODELOOKUP";
+    public static final String SCHEMA_KEY_CODEVALUE = "CODEVALUE";
+    public static final String SCHEMA_KEY_DATE = "DATE";
+    public static final String SCHEMA_KEY_PRIORITY = "priority";
+    public static final String SCHEMA_KEY_DEFAULT = "default";
+    public static final String SCHEMA_KEY_OPTIONS = "options";
+    public static final String SCHEMA_KEY_META = "meta";
+    public static final String SCHEMA_KEY_HINT = "hint";
     protected View view;
     protected String property;
     protected String displayText;
