@@ -35,8 +35,6 @@ import retrofit.client.Response;
 public class LoanRepaymentScheduleFragment extends ProgressableFragment {
 
 
-    private String LOG_TAG = getClass().getSimpleName();
-
     @InjectView(R.id.lv_repayment_schedule)
     ListView lv_repaymentSchedule;
     @InjectView(R.id.tv_total_paid)
@@ -45,6 +43,7 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment {
     TextView tv_totalUpcoming;
     @InjectView(R.id.tv_total_overdue)
     TextView tv_totalOverdue;
+    private String LOG_TAG = getClass().getSimpleName();
     private int loanAccountNumber;
     private View rootView;
 

@@ -684,14 +684,13 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment impleme
                 sp_payment_periods.setOnItemSelectedListener(
                         new AdapterView.OnItemSelectedListener() {
                             @Override
-                            public void onItemSelected(AdapterView<?> adapterView, View view, int
-                                    i, long
-                                    l) {
+                            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                                       int i, long l) {
+
                                 loanTermFrequency = termFrequencyTypeIdHashMap.get
-                                        (termFrequencyTypeNames
-                                        .get(i));
-                                Log.d("termFrequencyTypeId" + termFrequencyTypeNames.get(i), String
-                                        .valueOf(loanTermFrequency));
+                                        (termFrequencyTypeNames.get(i));
+                                Log.d("termFrequencyTypeId" + termFrequencyTypeNames.get(i),
+                                        String.valueOf(loanTermFrequency));
                                 if (loanTermFrequency != -1) {
 
 
