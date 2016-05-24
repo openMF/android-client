@@ -104,7 +104,7 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
             staffId = Integer.parseInt(etStaffId.getEditableText().toString());
         } catch (NumberFormatException e) {
             //Here request user for a valid value
-            Toaster.show(findViewById(android.R.id.content), "Staff ID is not valid Integer");
+            Toaster.show(findViewById(id.content), "Staff ID is not valid Integer");
             etStaffId.requestFocus();
             isValidInteger = false;
         }
@@ -113,7 +113,7 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
             branchId = Integer.parseInt(etBranchId.getEditableText().toString());
         } catch (NumberFormatException e) {
             //Here request user for a valid value
-            Toaster.show(findViewById(android.R.id.content), "Branch ID is not valid Integer");
+            Toaster.show(findViewById(id.content), "Branch ID is not valid Integer");
             etBranchId.requestFocus();
             isValidInteger = false;
         }
