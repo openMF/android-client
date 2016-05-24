@@ -5,6 +5,9 @@ package com.mifos.objects.templates.clients;
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
+import com.google.gson.annotations.SerializedName;
+
+
 /**
  * Created by rajan on 13/3/16.
  */
@@ -16,8 +19,12 @@ public class StaffOptions {
     private String displayName;
     private int officeId;
     private String officeName;
-    private boolean isLoanOfficer;
-    private boolean isActive;
+
+    @SerializedName("isLoanOfficer")
+    private boolean isLoan_officer;
+
+    @SerializedName("isActive")
+    private boolean is_Active;
 
     public int getId() {
         return id;
@@ -68,19 +75,19 @@ public class StaffOptions {
     }
 
     public boolean isLoanOfficer() {
-        return isLoanOfficer;
+        return isLoan_officer;
     }
 
     public void setIsLoanOfficer(boolean isLoanOfficer) {
-        this.isLoanOfficer = isLoanOfficer;
+        this.isLoan_officer = isLoanOfficer;
     }
 
     public boolean isActive() {
-        return isActive;
+        return is_Active;
     }
 
     public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+        this.is_Active = isActive;
     }
 
     @Override
@@ -92,8 +99,8 @@ public class StaffOptions {
                 ", displayName='" + displayName + '\'' +
                 ", officeId=" + officeId +
                 ", officeName='" + officeName + '\'' +
-                ", isLoanOfficer=" + isLoanOfficer +
-                ", isActive=" + isActive +
+                ", isLoanOfficer=" + isLoan_officer +
+                ", isActive=" + is_Active +
                 '}';
     }
 }
