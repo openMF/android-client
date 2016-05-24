@@ -33,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.content.res.ResourcesCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -287,7 +288,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
      * Use this method to fetch and inflate client details
      * in the fragment
      */
-    @SuppressWarnings("deprecation")
     public void getClientDetails() {
         showProgress(true);
         App.apiManager.getClient(clientId, new Callback<Client>() {
@@ -336,8 +336,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                         imageLoadingAsyncTask = new ImageLoadingAsyncTask();
                         imageLoadingAsyncTask.execute(client.getId());
                     } else {
-                        iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable
-                                .ic_launcher));
+                        iv_clientImage.setImageDrawable(
+                                ResourcesCompat.getDrawable(getResources(), R.drawable
+                                        .ic_launcher, null));
+
                         pb_imageProgressBar.setVisibility(GONE);
                     }
 
@@ -779,8 +781,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             if (bmp != null) {
                 iv_clientImage.setImageBitmap(bmp);
             } else {
-                iv_clientImage.setImageDrawable(getResources()
-                        .getDrawable(R.drawable.ic_launcher));
+                iv_clientImage.setImageDrawable(
+                        ResourcesCompat.getDrawable(getResources(),
+                                R.drawable.ic_launcher, null));
                 pb_imageProgressBar.setVisibility(GONE);
             }
 

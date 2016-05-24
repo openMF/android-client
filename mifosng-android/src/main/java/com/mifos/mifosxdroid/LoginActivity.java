@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -81,7 +82,6 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
 
         }
 
-        @SuppressWarnings("deprecation")
         @Override
         public void afterTextChanged(Editable editable) {
             Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer
@@ -89,8 +89,12 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
             instanceURL = ValidationUtil.getInstanceUrl(et_domain.getText().toString(), port);
             isValidUrl = ValidationUtil.isValidUrl(instanceURL);
             tv_full_url.setText(instanceURL);
-            tv_full_url.setTextColor(isValidUrl ? getResources().getColor(R.color.green_light) :
-                    getResources().getColor(R.color.red_light));
+            tv_full_url.setTextColor(isValidUrl ?
+                    ContextCompat.getColor(getApplicationContext(),
+                            R.color.green_light) :
+                    ContextCompat.getColor(getApplicationContext(),
+                            R.color.red_light));
+
         }
     };
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.support.v4.content.ContextCompat;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.savings.SavingsAccount;
@@ -69,22 +70,24 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
 
         if (savingsAccountList.get(i).getStatus().getActive()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.savings_account_status_active));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context,
+                            R.color.savings_account_status_active));
 
         } else if (savingsAccountList.get(i).getStatus().getApproved()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.status_approved));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.status_approved));
 
         } else if (savingsAccountList.get(i).getStatus().getSubmittedAndPendingApproval()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.status_submitted_and_pending_approval));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context,
+                            R.color.status_submitted_and_pending_approval));
 
         } else {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.status_closed));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.status_closed));
         }
 
         Double accountBalance = savingsAccountList.get(i).getAccountBalance();

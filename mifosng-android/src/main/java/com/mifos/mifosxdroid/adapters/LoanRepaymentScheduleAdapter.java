@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.support.v4.content.ContextCompat;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Period;
@@ -53,7 +54,6 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -75,16 +75,18 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter {
                 .getTotalPaidForPeriod()));
 
         if (periodList.get(i).getComplete()) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.light_green));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.light_green));
+
         } else if (!periodList.get(i).getComplete()
                 && (periodList.get(i).getTotalOverdue() != null && periodList.get(i)
                 .getTotalOverdue() > 0)) {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.light_red));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.light_red));
         } else {
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.light_blue));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.light_blue));
+
         }
 
 

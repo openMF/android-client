@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.content.ContextCompat;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
@@ -161,7 +162,6 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
 
         App.apiManager.getLoanById(loanAccountNumber, new Callback<LoanWithAssociations>() {
 
-            @SuppressWarnings("deprecation")
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
@@ -180,36 +180,41 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
                     inflateLoanSummary(loanWithAssociations);
                     // if Loan is already active
                     // the Transaction Would be Make Repayment
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
-                            .light_green));
+                    view_status_indicator.setBackgroundColor(
+                            ContextCompat.getColor(getActivity(), R.color.light_green));
+
                     bt_processLoanTransaction.setText("Make Repayment");
                     processLoanTransactionAction = TRANSACTION_REPAYMENT;
 
                 } else if (loanWithAssociations.getStatus().getPendingApproval()) {
                     // if Loan is Pending for Approval
                     // the Action would be Approve Loan
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color.blue));
+                    view_status_indicator.setBackgroundColor(
+                            ContextCompat.getColor(getActivity(), R.color.blue));
                     bt_processLoanTransaction.setText("Approve Loan");
                     processLoanTransactionAction = ACTION_APPROVE_LOAN;
                 } else if (loanWithAssociations.getStatus().getWaitingForDisbursal()) {
                     // if Loan is Waiting for Disbursal
                     // the Action would be Disburse Loan
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
-                            .light_yellow));
+                    view_status_indicator.setBackgroundColor(
+                            ContextCompat.getColor(getActivity(), R.color.light_yellow));
+
                     bt_processLoanTransaction.setText("Disburse Loan");
                     processLoanTransactionAction = ACTION_DISBURSE_LOAN;
                 } else if (loanWithAssociations.getStatus().getClosedObligationsMet()) {
                     inflateLoanSummary(loanWithAssociations);
                     // if Loan is Closed after the obligations are met
                     // the make payment will be disabled so that no more payment can be collected
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
-                            .black));
+                    view_status_indicator.setBackgroundColor(
+                            ContextCompat.getColor(getActivity(), R.color.black));
+
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Make Repayment");
                 } else {
                     inflateLoanSummary(loanWithAssociations);
-                    view_status_indicator.setBackgroundColor(getResources().getColor(R.color
-                            .black));
+                    view_status_indicator.setBackgroundColor(
+                            ContextCompat.getColor(getActivity(), R.color.black));
+
                     bt_processLoanTransaction.setEnabled(false);
                     bt_processLoanTransaction.setText("Loan Closed");
                 }

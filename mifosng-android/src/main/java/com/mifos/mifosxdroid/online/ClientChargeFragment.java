@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.support.v4.content.res.ResourcesCompat;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
@@ -132,14 +133,14 @@ public class ClientChargeFragment extends MifosBaseFragment {
     }
 
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         MenuItem menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_CHARGES, Menu
                 .NONE, getString(R.string.add_new));
-        menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable
-                .ic_action_content_new));
+        menuItemAddNewDocument.setIcon(
+                ResourcesCompat.getDrawable(getResources(),
+                        R.drawable.ic_action_content_new, null));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.support.v4.content.ContextCompat;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.Status;
@@ -78,13 +79,13 @@ public class GroupListAdapter extends BaseAdapter {
          * if Status is Active or not
          */
         if (Status.isActive(group.getStatus().getValue())) {
-            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources
-                    ().getColor(R.color.deposit_green));
+            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.deposit_green));
             reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R
                     .string.active));
         } else {
-            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(context.getResources
-                    ().getColor(R.color.light_red));
+            reusableGroupViewHolder.view_statusIndicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.light_red));
             reusableGroupViewHolder.tv_statusText.setText(context.getResources().getString(R
                     .string.inactive));
         }

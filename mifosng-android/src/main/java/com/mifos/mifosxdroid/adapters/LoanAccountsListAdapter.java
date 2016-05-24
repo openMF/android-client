@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import  android.support.v4.content.ContextCompat;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.LoanAccount;
@@ -52,7 +53,6 @@ public class LoanAccountsListAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -68,29 +68,30 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
         if (loanAccountList.get(i).getStatus().getActive()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.loan_status_disbursed));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.loan_status_disbursed));
 
         } else if (loanAccountList.get(i).getStatus().getWaitingForDisbursal()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.status_approved));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.status_approved));
 
         } else if (loanAccountList.get(i).getStatus().getPendingApproval()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.status_submitted_and_pending_approval));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context,
+                            R.color.status_submitted_and_pending_approval));
 
         } else if (loanAccountList.get(i).getStatus().getActive() && loanAccountList.get(i)
                 .getInArrears()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.red));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.red));
 
         } else {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(context.getResources()
-                    .getColor(R.color.status_closed));
+            reusableViewHolder.view_status_indicator.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.status_closed));
 
         }
 
