@@ -34,11 +34,11 @@ import static org.hamcrest.Matchers.startsWith;
  */
 public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginActivity> {
 
-    String TEST_URL_1 = "demo.mifos.org";
-    String TEST_URL_2 = "www.google.com";
-    String TEST_URL_3 = "this.is.valid.url";
-    String TEST_URL_4 = "yahoo.in";
-    String TEST_URL_5 = "10.0.2.2";
+    public static final String TEST_URL_1 = "demo.mifos.org";
+    public static final String TEST_URL_2 = "www.google.com";
+    public static final String TEST_URL_3 = "this.is.valid.url";
+    public static final String TEST_URL_4 = "yahoo.in";
+    public static final String TEST_URL_5 = "10.0.2.2";
 
     LoginActivity loginActivity;
     EditText et_mifos_domain;
@@ -122,7 +122,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     }
 
     @MediumTest
-    public void testSaveLastAccessedInstanceDomainName_savesProvidedString() {
+    public void testSaveLastAccessedInstanceDomainNameSavesProvidedString() {
         PrefManager.setInstanceDomain(TEST_URL_1);
         assertEquals(TEST_URL_1, PrefManager.getInstanceDomain());
 
@@ -132,7 +132,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     @MediumTest
     @Suppress // TODO: Fix ComparisonFailure: expected:<[demo.mifos.org]> but was:<[www.google.com]>
-    public void testValidateUserInputs_savesValidDomainToSharedProperties() {
+    public void testValidateUserInputsSavesValidDomainToSharedProperties() {
         saveLastAccessedInstanceDomainName(TEST_URL_2);
         enterMifosInstanceDomain(TEST_URL_1);
         getActivity().runOnUiThread(new Runnable() {
@@ -150,7 +150,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     @MediumTest
     @Suppress // TODO: Fix expected:<https://demo.[mifos.org:80]/mifosng-provider/ap...>
     // but was:<https://demo.[openmf.org]/mifosng-provider/ap...>
-    public void testValidateUserInputs_setsAPIinstanceUrl() {
+    public void testValidateUserInputsSetsAPIinstanceUrl() {
         saveLastAccessedInstanceDomainName(TEST_URL_2);
         enterMifosInstanceDomain(TEST_URL_1);
         getActivity().runOnUiThread(new Runnable() {
@@ -163,7 +163,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     }
 
     @SmallTest
-    public void testMoreOptions_displaysOfflineMenuItem() {
+    public void testMoreOptionsDisplaysOfflineMenuItem() {
         onView(withContentDescription("More options")).perform(click());
         onView(withText(is(startsWith("Offline")))).check(matches(isDisplayed()));
     }
