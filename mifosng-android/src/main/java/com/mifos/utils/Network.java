@@ -11,9 +11,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class Network {
-    public static int TYPE_WIFI = 1;
-    public static int TYPE_MOBILE = 2;
-    public static int TYPE_NOT_CONNECTED = 0;
+    public static final int TYPE_WIFI = 1;
+    public static final int TYPE_MOBILE = 2;
+    public static final int TYPE_NOT_CONNECTED = 0;
 
 
     public static int getConnectivityStatus(Context context) {
