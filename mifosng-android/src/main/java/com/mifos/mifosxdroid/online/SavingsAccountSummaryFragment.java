@@ -96,13 +96,13 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
     private SharedPreferences sharedPreferences;
     private int processSavingTransactionAction = -1;
     private SavingsAccountWithAssociations savingsAccountWithAssociations;
-    private boolean LOADMORE; // variable to enable and disable loading of data into listview
+    private boolean loadmore; // variable to enable and disable loading of data into listview
     // variables to capture position of first visible items
     // so that while loading the listview does not scroll automatically
     private int index, top;
     // variables to control amount of data loading on each load
-    private int INITIAL = 0;
-    private int FINAL = 5;
+    private int initial = 0;
+    private int last = 5;
     private OnFragmentInteractionListener mListener;
 
     public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber, DepositType
@@ -201,10 +201,10 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
                             savingsAccountTransactionsListAdapter = new
                                     SavingsAccountTransactionsListAdapter(getActivity(),
                                     savingsAccountWithAssociations.getTransactions().size() <
-                                            FINAL ?
+                                            last ?
                                             savingsAccountWithAssociations.getTransactions() :
                                             savingsAccountWithAssociations.getTransactions()
-                                                    .subList(INITIAL, FINAL)
+                                                    .subList(initial, last)
                             );
                             lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
 
@@ -396,7 +396,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
         lv_Transactions.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                LOADMORE = !(scrollState == SCROLL_STATE_IDLE);
+                loadmore = !(scrollState == SCROLL_STATE_IDLE);
             }
 
             @Override
@@ -407,8 +407,8 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
                 if (firstVisibleItem == 0)
                     return;
 
-                if (lastItem == totalItemCount && LOADMORE) {
-                    LOADMORE = false;
+                if (lastItem == totalItemCount && loadmore) {
+                    loadmore = false;
                     loadNextFiveTransactions();
                 }
             }
@@ -419,12 +419,12 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
         index = lv_Transactions.getFirstVisiblePosition();
         View v = lv_Transactions.getChildAt(0);
         top = (v == null) ? 0 : v.getTop();
-        FINAL += 5;
-        if (FINAL > listOfAllTransactions.size()) {
-            FINAL = listOfAllTransactions.size();
+        last += 5;
+        if (last > listOfAllTransactions.size()) {
+            last = listOfAllTransactions.size();
             savingsAccountTransactionsListAdapter =
                     new SavingsAccountTransactionsListAdapter(getActivity(),
-                            listOfAllTransactions.subList(INITIAL, FINAL));
+                            listOfAllTransactions.subList(initial, last));
             savingsAccountTransactionsListAdapter.notifyDataSetChanged();
             lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
             lv_Transactions.setSelectionFromTop(index, top);
@@ -433,7 +433,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
 
         savingsAccountTransactionsListAdapter =
                 new SavingsAccountTransactionsListAdapter(getActivity(),
-                        listOfAllTransactions.subList(INITIAL, FINAL));
+                        listOfAllTransactions.subList(initial, last));
         savingsAccountTransactionsListAdapter.notifyDataSetChanged();
         lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
         lv_Transactions.setSelectionFromTop(index, top);
