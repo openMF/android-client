@@ -117,8 +117,10 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
                             inflateStaffSpinner(officeId);
                             inflateCenterSpinner(officeId, -1);
                             inflateGroupSpinner(officeId, -1);
-                        } else
+                        } else {
                             Toaster.show(rootView, getString(R.string.error_select_office));
+                        }
+
                     }
 
                     @Override
@@ -166,8 +168,10 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
                                 if (staffId != -1) {
                                     inflateCenterSpinner(officeId, staffId);
                                     inflateGroupSpinner(officeId, staffId);
-                                } else
+                                } else {
                                     Toaster.show(rootView, getString(R.string.error_select_staff));
+                                }
+
                             }
 
                             @Override
@@ -220,10 +224,12 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
                     public void onItemSelected(AdapterView<?> parent, View view, int position,
                                                long id) {
                         int centerId = centerNameIdHashMap.get(centerNames.get(position));
-                        if (centerId != -1)
+                        if (centerId != -1) {
                             inflateGroupSpinner(centerId);
-                        else
+                        } else {
                             Toaster.show(rootView, getString(R.string.error_select_center));
+                        }
+
                     }
 
                     @Override
