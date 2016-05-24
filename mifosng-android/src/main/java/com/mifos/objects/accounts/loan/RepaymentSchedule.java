@@ -65,8 +65,8 @@ public class RepaymentSchedule {
         int count = 0;
 
         for (Period period : periodList) {
-            if (period.getTotalOverdue() != null && period.getTotalOverdue() > 0) {
-                if (!period.getComplete())
+            if (period.getTotalOverdue() != null && period.getTotalOverdue() > 0
+                    && !period.getComplete()) {
                     count++;
             }
 
