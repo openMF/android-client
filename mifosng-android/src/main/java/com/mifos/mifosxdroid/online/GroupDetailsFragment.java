@@ -284,8 +284,9 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 if (dataTables != null) {
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
                     clientDataTables.clear();
-                    while (dataTableIterator.hasNext())
+                    while (dataTableIterator.hasNext()) {
                         clientDataTables.add(dataTableIterator.next());
+                    }
                 }
                 showProgress(false);
             }
