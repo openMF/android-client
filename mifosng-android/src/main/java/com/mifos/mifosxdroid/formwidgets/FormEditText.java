@@ -23,7 +23,7 @@ public class FormEditText extends FormWidget {
     protected TextView label;
     protected EditText input;
 
-    private Boolean isDateField;
+    private Boolean isDateAvailable;
 
     public FormEditText(Context context, String name) {
 
@@ -35,7 +35,7 @@ public class FormEditText extends FormWidget {
         input = new EditText(context);
         input.setLayoutParams(FormWidget.defaultLayoutParams);
         input.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        isDateField = false;
+        isDateAvailable = false;
         layout.addView(label);
         layout.addView(input);
 
@@ -58,12 +58,12 @@ public class FormEditText extends FormWidget {
     }
 
     public Boolean isDateField() {
-        return isDateField;
+        return isDateAvailable;
     }
 
     public void setIsDateField(Boolean isDateField, final FragmentManager fragmentManager) {
 
-        this.isDateField = isDateField;
+        this.isDateAvailable = isDateField;
 
         if (isDateField()) {
 
@@ -91,7 +91,7 @@ public class FormEditText extends FormWidget {
 
         } else {
             throw new RuntimeException("This EditText must be a Date Field! Please check if " +
-                    "you've set isDateField = true or not");
+                    "you've set isDateAvailable = true or not");
         }
 
     }
