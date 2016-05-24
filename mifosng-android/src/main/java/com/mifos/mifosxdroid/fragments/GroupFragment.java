@@ -18,12 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.api.RepaymentTransactionSyncService;
+import com.mifos.api.RepaymentTransactionSyncService.SyncFinishListener;
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
@@ -41,11 +43,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class GroupFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener,
-        RepaymentTransactionSyncService.SyncFinishListener {
+public class GroupFragment extends MifosBaseFragment implements OnItemClickListener,
+        SyncFinishListener {
 
     private final String LOG_TAG = getClass().getSimpleName();
-    private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
+    private final List<MifosGroup> groupList = new ArrayList<>();
     @InjectView(R.id.lv_group)
     ListView lv_group;
     @InjectView(R.id.progress_group)
@@ -137,8 +139,10 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
             tv_empty_group.setText("There is no data for center " + centerId + " on " + date);
             progressGroup.setVisibility(View.GONE);
 
-        } else
+        } else {
             tv_empty_group.setVisibility(View.GONE);
+        }
+
     }
 
     private List<MifosGroup> getAllGroups() {
@@ -164,8 +168,8 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
 
     private void setCenterAsSynced() {
         if (centerId != -1) {
-            List<MeetingCenter> center = Select.from(MeetingCenter.class).where(com.orm.query
-                    .Condition.prop("center_id").eq(centerId)).list();
+            List<MeetingCenter> center = Select.from(MeetingCenter.class)
+                    .where(Condition.prop("center_id").eq(centerId)).list();
             center.get(0).setIsSynced(1);
             center.get(0).save();
             getActivity().finish();
