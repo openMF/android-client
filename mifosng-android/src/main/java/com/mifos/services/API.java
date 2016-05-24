@@ -62,8 +62,6 @@ import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.MFErrorResponse;
 import com.squareup.okhttp.OkHttpClient;
 
-import org.apache.http.HttpStatus;
-
 import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -832,6 +830,7 @@ public class API {
 
     }
 
+    @SuppressWarnings("deprecation")
     static class MifosRestErrorHandler implements ErrorHandler {
         @Override
         public Throwable handleError(RetrofitError retrofitError) {
@@ -839,11 +838,11 @@ public class API {
             Response response = retrofitError.getResponse();
             if (response != null) {
 
-                if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                if (response.getStatus() == org.apache.http.HttpStatus.SC_UNAUTHORIZED) {
                     Log.e("Status", "Authentication Error.");
 
 
-                } else if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                } else if (response.getStatus() == org.apache.http.HttpStatus.SC_BAD_REQUEST) {
 
                     MFErrorResponse mfErrorResponse = new Gson().fromJson(response.getBody()
                             .toString(), MFErrorResponse.class);
@@ -855,7 +854,7 @@ public class API {
                         retrofit.client.Header header = iterator.next();
                         Log.d("Header ", header.toString());
                     }
-                } else if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
+                } else if (response.getStatus() == org.apache.http.HttpStatus.SC_FORBIDDEN) {
 
                     MFErrorResponse mfErrorResponse = new Gson().fromJson(response.getBody()
                             .toString(), MFErrorResponse.class);

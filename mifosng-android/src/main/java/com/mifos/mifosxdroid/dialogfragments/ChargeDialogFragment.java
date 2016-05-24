@@ -53,7 +53,7 @@ import retrofit.client.Response;
 public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker
         .OnDatePickListener {
 
-    public static final String TAG = "ChargeDialogFragment";
+    public  final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
     @InjectView(R.id.amount_due_charge)
@@ -142,7 +142,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "Charges Loaded Successfully");
 
                 final List<Charges> charges = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -172,7 +172,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, e.getMessage());
                 }
                 final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, chargesNames);
@@ -210,7 +210,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }

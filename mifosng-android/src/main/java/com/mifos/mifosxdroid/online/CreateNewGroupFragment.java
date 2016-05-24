@@ -55,7 +55,7 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
         .OnDatePickListener {
 
 
-    private static final String TAG = "CreateNewGroup";
+    private final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.et_group_name)
     EditText et_groupName;
     @InjectView(R.id.et_group_external_id)
@@ -199,7 +199,7 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
 
             }
         });

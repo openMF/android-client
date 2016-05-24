@@ -76,6 +76,7 @@ public class DocumentListFragment extends ProgressableFragment {
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();

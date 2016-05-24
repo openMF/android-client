@@ -26,8 +26,6 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
 
-import org.apache.http.HttpStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,6 +143,7 @@ public class GroupsListFragment extends MifosBaseFragment {
 
                 }
 
+                @SuppressWarnings("deprecation")
                 @Override
                 public void failure(RetrofitError retrofitError) {
 
@@ -153,7 +152,8 @@ public class GroupsListFragment extends MifosBaseFragment {
                     if (getActivity() != null) {
                         try {
                             Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                            if (retrofitError.getResponse().getStatus() == HttpStatus
+                            if (retrofitError.getResponse().getStatus() ==
+                                    org.apache.http.HttpStatus
                                     .SC_UNAUTHORIZED) {
                                 Toast.makeText(getActivity(), "Authorization Expired - Please " +
                                         "Login Again", Toast.LENGTH_SHORT).show();
@@ -224,6 +224,7 @@ public class GroupsListFragment extends MifosBaseFragment {
 
                         }
 
+                        @SuppressWarnings("deprecation")
                         @Override
                         public void failure(RetrofitError retrofitError) {
 
@@ -232,7 +233,8 @@ public class GroupsListFragment extends MifosBaseFragment {
                             if (getActivity() != null) {
                                 try {
                                     Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                                    if (retrofitError.getResponse().getStatus() == HttpStatus
+                                    if (retrofitError.getResponse().getStatus() ==
+                                            org.apache.http.HttpStatus
                                             .SC_UNAUTHORIZED) {
                                         Toast.makeText(getActivity(), "Authorization Expired - " +
                                                 "Please Login Again", Toast.LENGTH_SHORT).show();

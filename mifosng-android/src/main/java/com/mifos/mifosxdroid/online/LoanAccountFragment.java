@@ -65,7 +65,7 @@ import retrofit.client.Response;
 public class LoanAccountFragment extends ProgressableDialogFragment implements MFDatePicker
         .OnDatePickListener {
 
-    public static final String TAG = "LoanAccountFragment";
+    public final String LOG_TAG = getClass().getSimpleName();
     View rootView;
 
     @InjectView(R.id.sp_lproduct)
@@ -275,7 +275,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -293,7 +293,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<AmortizationType> amortizationType = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -324,7 +324,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> amortizationTypeAdapter =
                         new ArrayAdapter<>(getActivity(), layout.simple_spinner_item,
@@ -368,7 +368,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -384,7 +384,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<LoanPurposeOptions> loanPurposeOptionsType = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -417,7 +417,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> loanPTypeAdapter =
                         new ArrayAdapter<>(getActivity(), layout.simple_spinner_item,
@@ -462,7 +462,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -478,7 +478,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<InterestCalculationPeriodType> interestCalculationPeriodType = new
                         ArrayList<>();
@@ -517,7 +517,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> interestCalculationPeriodTypeAdapter = new
                         ArrayAdapter<String>(getActivity(),
@@ -560,7 +560,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -576,7 +576,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<TransactionProcessingStrategy> transactionProcessingStrategyType = new
                         ArrayList<>();
@@ -616,7 +616,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> transactionProcessingStrategyAdapter = new
                         ArrayAdapter<String>(getActivity(),
@@ -661,7 +661,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -677,7 +677,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<TermFrequencyTypeOptions> termFrequencyType = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -709,7 +709,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> termFrequencyTypeAdapter =
                         new ArrayAdapter<>(getActivity(),
@@ -754,7 +754,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -771,7 +771,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<LoanFund> loanFund = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -801,7 +801,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> loanFundNameAdapter =
                         new ArrayAdapter<>(getActivity(),
@@ -840,7 +840,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -856,7 +856,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<FieldOfficerOptions> loanOfficer = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -886,7 +886,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> loanOfficerNameAdapter = new ArrayAdapter<>(
                         getActivity(), layout.simple_spinner_item, loanOfficerNames);
@@ -926,7 +926,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -942,7 +942,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<InterestType> interestType = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -972,7 +972,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> interestTypeMethodAdapter =
                         new ArrayAdapter<>(getActivity(),
@@ -1012,7 +1012,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }

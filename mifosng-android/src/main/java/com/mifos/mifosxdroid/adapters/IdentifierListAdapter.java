@@ -33,6 +33,7 @@ import retrofit.client.Response;
  */
 public class IdentifierListAdapter extends BaseAdapter {
 
+    public final String LOG_TAG = getClass().getSimpleName();
     Context context;
     LayoutInflater layoutInflater;
     List<Identifier> identifiers = new ArrayList<Identifier>();
@@ -93,7 +94,7 @@ public class IdentifierListAdapter extends BaseAdapter {
                             public void success(GenericResponse genericResponse, Response
                                     response) {
 
-                                System.out.println(genericResponse.toString());
+                                Log.d(LOG_TAG,genericResponse.toString());
 
                             }
 

@@ -53,6 +53,8 @@ import retrofit.client.Response;
 public class LoanRepaymentFragment extends ProgressableFragment implements MFDatePicker
         .OnDatePickListener {
 
+    public final String LOG_TAG = getClass().getSimpleName();
+
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
     @InjectView(R.id.tv_loan_product_short_name)
@@ -315,7 +317,7 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
                     {"Fees", et_fees.getText().toString()},
                     {"Total", String.valueOf(calculateTotal())}
             };
-            System.out.println(FlipTable.of(headers, data));
+            Log.d(LOG_TAG,FlipTable.of(headers, data));
 
             String formReviewString = new StringBuilder().append(data[0][0] + " : " + data[0][1])
                     .append("\n")
@@ -367,7 +369,7 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
         request.setDateFormat("dd MM yyyy");
         request.setTransactionDate(dateString);
         String builtRequest = new Gson().toJson(request);
-        Log.i("TAG", builtRequest);
+        Log.i("LOG_TAG", builtRequest);
 
         showProgress(true);
 

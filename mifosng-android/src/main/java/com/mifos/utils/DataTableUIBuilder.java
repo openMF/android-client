@@ -37,6 +37,7 @@ import retrofit.client.Response;
  * This is a helper class that is used to generate a layout for
  * Data Table Fragments dynamically based on the data received.
  */
+@SuppressWarnings("deprecation")
 public class DataTableUIBuilder {
 
     int tableIndex;

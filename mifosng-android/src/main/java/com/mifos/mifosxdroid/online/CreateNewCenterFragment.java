@@ -237,6 +237,7 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

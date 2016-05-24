@@ -155,6 +155,7 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
         this.clientList = clientList;
     }
 
+    @SuppressWarnings("deprecation")
     public void setInfiniteScrollListener(final ClientNameListAdapter clientNameListAdapter) {
 
         rv_clients.setOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {

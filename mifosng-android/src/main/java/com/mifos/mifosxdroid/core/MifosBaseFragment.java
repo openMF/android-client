@@ -24,6 +24,7 @@ public class MifosBaseFragment extends Fragment {
     private Activity activity;
     private InputMethodManager inputManager;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

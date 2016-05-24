@@ -51,7 +51,7 @@ import retrofit.client.Response;
 public class LoanAccountDisbursement extends DialogFragment implements MFDatePicker
         .OnDatePickListener {
 
-    public static final String TAG = "LoanAccountDisbursement";
+    public final String LOG_TAG = getClass().getSimpleName();
     public static int loanAccountNumber;
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
@@ -166,7 +166,7 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 ArrayAdapter<String> paymentAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, paymentNames);
@@ -202,7 +202,7 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
             }
         });
 

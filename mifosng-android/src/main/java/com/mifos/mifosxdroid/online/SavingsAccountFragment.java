@@ -52,7 +52,7 @@ import retrofit.client.Response;
 public class SavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker
         .OnDatePickListener {
 
-    public static final String TAG = "SavingsAccountFragment";
+    public final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.sp_product)
     Spinner sp_product;
     @InjectView(R.id.et_client_external_id)
@@ -404,7 +404,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println(error.getLocalizedMessage());
+                Log.d(LOG_TAG,error.getLocalizedMessage());
 
                 showProgress(false);
             }

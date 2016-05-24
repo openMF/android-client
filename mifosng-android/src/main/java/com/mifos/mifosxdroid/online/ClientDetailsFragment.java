@@ -239,6 +239,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
+    @SuppressWarnings("deprecation")
     public void deleteClientImage() {
         App.apiManager.deleteClientImage(clientId, new Callback<Response>() {
             @Override
@@ -286,6 +287,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
      * Use this method to fetch and inflate client details
      * in the fragment
      */
+    @SuppressWarnings( "deprecation" )
     public void getClientDetails() {
         showProgress(true);
         App.apiManager.getClient(clientId, new Callback<Client>() {
@@ -769,6 +771,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             return null;
         }
 
+        @SuppressWarnings( "deprecation" )
         @Override
         protected void onPostExecute(Void aVoid) {
             if (bmp != null) iv_clientImage.setImageBitmap(bmp);

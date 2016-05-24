@@ -34,8 +34,6 @@ import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
-import org.apache.http.HttpStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,6 +132,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
@@ -161,6 +160,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("deprecation")
     public void fetchChargesList() {
 
         //Check if ClientListFragment has a clientList
@@ -187,7 +187,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
                     if (getActivity() != null) {
                         try {
                             Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                            if (retrofitError.getResponse().getStatus() == HttpStatus
+                            if (retrofitError.getResponse().getStatus() ==
+                                    org.apache.http.HttpStatus
                                     .SC_UNAUTHORIZED) {
                                 Toast.makeText(getActivity(), "Authorization Expired - Please " +
                                         "Login Again", Toast.LENGTH_SHORT).show();
@@ -212,6 +213,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
 
     }
 
+    @SuppressWarnings("deprecation")
     public void setInfiniteScrollListener(final ChargeNameListAdapter chargesNameListAdapter) {
 
         lv_charges.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -244,6 +246,7 @@ public class ClientChargeFragment extends MifosBaseFragment {
 
                         }
 
+                        @SuppressWarnings("deprecation")
                         @Override
                         public void failure(RetrofitError retrofitError) {
 
@@ -252,7 +255,8 @@ public class ClientChargeFragment extends MifosBaseFragment {
                             if (getActivity() != null) {
                                 try {
                                     Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                                    if (retrofitError.getResponse().getStatus() == HttpStatus
+                                    if (retrofitError.getResponse().getStatus() ==
+                                            org.apache.http.HttpStatus
                                             .SC_UNAUTHORIZED) {
                                         Toast.makeText(getActivity(), "Authorization Expired - " +
                                                 "Please Login Again", Toast.LENGTH_SHORT).show();

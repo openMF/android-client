@@ -83,6 +83,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
 
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void afterTextChanged(Editable editable) {
             Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer
@@ -156,6 +157,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void failure(RetrofitError retrofitError) {
         try {

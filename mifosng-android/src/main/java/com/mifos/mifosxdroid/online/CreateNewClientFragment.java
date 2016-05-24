@@ -56,7 +56,7 @@ import retrofit.client.Response;
 public class CreateNewClientFragment extends ProgressableFragment implements MFDatePicker
         .OnDatePickListener {
 
-    private static final String TAG = "CreateNewClient";
+    private final String LOG_TAG = getClass().getSimpleName();
     public DialogFragment mfDatePicker;
     public DialogFragment newDatePicker;
     @InjectView(R.id.et_client_first_name)
@@ -340,7 +340,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG,retrofitError.getLocalizedMessage());
             }
         });
 
@@ -386,7 +386,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println(error.getLocalizedMessage());
+                Log.d(LOG_TAG,error.getLocalizedMessage());
 
             }
         });

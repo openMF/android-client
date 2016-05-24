@@ -161,6 +161,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
 
         App.apiManager.getLoanById(loanAccountNumber, new Callback<LoanWithAssociations>() {
 
+            @SuppressWarnings("deprecation")
             @Override
             public void success(LoanWithAssociations loanWithAssociations, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */

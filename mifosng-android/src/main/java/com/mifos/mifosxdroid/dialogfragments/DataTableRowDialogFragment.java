@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.util.Log;
 
 import com.mifos.App;
 import com.mifos.api.GenericResponse;
@@ -46,6 +47,8 @@ import retrofit.client.Response;
  * Created by ishankhanna on 01/08/14.
  */
 public class DataTableRowDialogFragment extends DialogFragment {
+
+    private final String LOG_TAG = getClass().getSimpleName();
 
     private DataTable dataTable;
     private int entityId;
@@ -187,7 +190,7 @@ public class DataTableRowDialogFragment extends DialogFragment {
                 try {
                     onSaveActionRequested();
                 } catch (RequiredFieldException e) {
-                    e.printStackTrace();
+                    Log.d(LOG_TAG,e.getMessage());
                 }
             }
         });

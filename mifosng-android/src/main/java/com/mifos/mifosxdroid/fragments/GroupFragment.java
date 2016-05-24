@@ -44,7 +44,7 @@ import butterknife.InjectView;
 public class GroupFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener,
         RepaymentTransactionSyncService.SyncFinishListener {
 
-    public static final String TAG = "Group Fragment";
+    private final String LOG_TAG = getClass().getSimpleName();
     private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
     @InjectView(R.id.lv_group)
     ListView lv_group;
@@ -93,7 +93,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
                     syncItem.setEnabled(false);
             }
         } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG,e.getMessage());
             syncItem.setEnabled(false);
         }
 
@@ -149,7 +149,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(getActivity(), ClientActivity.class);
         intent.putExtra("group_id", groupList.get(i).getId());
-        Log.i(TAG, "onItemClick = Group ID:" + groupList.get(i).getId());
+        Log.i(LOG_TAG, "onItemClick = Group ID:" + groupList.get(i).getId());
         startActivity(intent);
     }
 

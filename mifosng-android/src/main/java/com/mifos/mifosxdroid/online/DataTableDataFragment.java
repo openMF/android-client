@@ -64,6 +64,7 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
         return rootView;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();

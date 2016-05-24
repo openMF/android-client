@@ -21,6 +21,8 @@ import retrofit.client.Response;
 
 public class MFErrorParser {
 
+    public static final String LOG_TAG = "MFErrorParser";
+
     public static void parseError(Response response) {
 
 
@@ -37,7 +39,7 @@ public class MFErrorParser {
             Log.d("MFErrorParser", out.toString());
             MFErrorResponse mfErrorResponse = new Gson().fromJson(out.toString(), MFErrorResponse
                     .class);
-            System.out.println(mfErrorResponse.toString());
+            Log.d(LOG_TAG,mfErrorResponse.toString());
             List<MFError> mfErrorList = mfErrorResponse.getErrors();
 
             for (MFError mfError : mfErrorList) {
@@ -45,11 +47,11 @@ public class MFErrorParser {
                         .LENGTH_LONG).show();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG,e.getMessage());
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG, e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG, e.getMessage());
         }
 
     }

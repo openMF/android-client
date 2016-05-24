@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -59,6 +60,7 @@ import static android.view.View.VISIBLE;
  */
 public class GroupDetailsFragment extends ProgressableFragment {
 
+    public final String LOG_TAG = getClass().getSimpleName();
     public static int groupId;
     public static List<DataTable> clientDataTables = new ArrayList<>();
     private final String TAG = GroupDetailsFragment.class.getSimpleName();
@@ -183,7 +185,7 @@ public class GroupDetailsFragment extends ProgressableFragment {
                                 Toast.LENGTH_SHORT).show();
                         tv_activationDate.setText("");
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.d(LOG_TAG,e.getMessage());
                     }
                     tv_office.setText(group.getOfficeName());
 

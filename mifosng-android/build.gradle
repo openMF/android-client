@@ -114,6 +114,12 @@ tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
         pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
 }
 
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+    }
+}
+
 dependencies {
 
 
