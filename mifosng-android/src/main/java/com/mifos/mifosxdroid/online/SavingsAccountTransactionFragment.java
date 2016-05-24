@@ -24,6 +24,7 @@ import com.jakewharton.fliptables.FlipTable;
 import com.mifos.App;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.R.string;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -116,12 +117,14 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container,
                 false);
-        if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT))
-            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " +
+        if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
+            setToolbarTitle(getResources().getString(string.savingsAccount) + " " +
                     getResources().getString(R.string.deposit));
-        else
+        } else {
             setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " +
                     getResources().getString(R.string.withdrawal));
+        }
+
         ButterKnife.inject(this, rootView);
         inflateUI();
         return rootView;
@@ -170,8 +173,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                                     new ArrayAdapter<>(getActivity(),
                                             layout.simple_spinner_item, listOfPaymentTypes);
 
-                            paymentTypeAdapter.setDropDownViewResource(android.R.layout
-                                    .simple_spinner_dropdown_item);
+                            paymentTypeAdapter.setDropDownViewResource(
+                                    layout.simple_spinner_dropdown_item);
                             sp_paymentType.setAdapter(paymentTypeAdapter);
                         }
                         showProgress(false);
@@ -204,10 +207,9 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {
                 formReviewStringBuilder.append(data[i][j]);
-                if (j == 0)
-                    formReviewStringBuilder.append(" : ");
+                if (j == 0) formReviewStringBuilder.append(" : ");
             }
-            formReviewStringBuilder.append("\n");
+            formReviewStringBuilder.append('\n');
         }
         new AlertDialog.Builder(getActivity())
                 .setTitle("Review Payment Details")
