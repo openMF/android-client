@@ -22,9 +22,8 @@ public class Scorecard {
         super();
     }
 
-    public Scorecard(final int userId, final int clientId, final Date createdOn, final
-    List<ScorecardValues> scorecardValues) {
-
+    public Scorecard(final int userId, final int clientId, final Date createdOn,
+                     final List<ScorecardValues> scorecardValues) {
         super();
         this.userId = userId;
         this.clientId = clientId;
