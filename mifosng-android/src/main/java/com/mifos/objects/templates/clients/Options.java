@@ -5,6 +5,8 @@ package com.mifos.objects.templates.clients;
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by rajan on 13/3/16.
  */
@@ -14,7 +16,9 @@ public class Options {
     private String name;
     private int position;
     private String description;
-    private boolean isActive;
+
+    @SerializedName("isActive")
+    private boolean is_Active;
 
     public int getId() {
         return id;
@@ -49,11 +53,11 @@ public class Options {
     }
 
     public boolean isActive() {
-        return isActive;
+        return is_Active;
     }
 
     public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+        this.is_Active = isActive;
     }
 
     @Override
@@ -63,7 +67,7 @@ public class Options {
                 ", name='" + name + '\'' +
                 ", position=" + position +
                 ", description='" + description + '\'' +
-                ", isActive=" + isActive +
+                ", isActive=" + is_Active +
                 '}';
     }
 }
