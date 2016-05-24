@@ -5,10 +5,10 @@ import android.test.ViewAsserts;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.test.suitebuilder.annotation.Suppress;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
-import android.util.Log;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CentersActivity;
