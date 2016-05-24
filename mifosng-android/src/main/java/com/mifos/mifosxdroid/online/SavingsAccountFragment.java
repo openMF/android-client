@@ -157,10 +157,9 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                     savingsList.add(savingsname.getName());
                     savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
                 }
-                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, savingsList);
-                savingsAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
+                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<>(getActivity(),
+                        layout.simple_spinner_item, savingsList);
+                savingsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
                 sp_product.setAdapter(savingsAdapter);
                 sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -199,8 +198,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
                 new ArrayAdapter<>(getActivity(),
                         layout.simple_spinner_item, InterestPostingPeriodTypeNames);
 
-        interestPostingPeriodTypeAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
+        interestPostingPeriodTypeAdapter.setDropDownViewResource(
+                layout.simple_spinner_dropdown_item);
         sp_interest_p_period.setAdapter(interestPostingPeriodTypeAdapter);
         sp_interest_p_period.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -237,8 +236,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         final ArrayAdapter<String> interestCalculationTypeAdapter =
                 new ArrayAdapter<>(getActivity(),
                         layout.simple_spinner_item, interestCalculationTypeNames);
-        interestCalculationTypeAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
+        interestCalculationTypeAdapter.setDropDownViewResource(
+                layout.simple_spinner_dropdown_item);
         sp_interest_calc.setAdapter(interestCalculationTypeAdapter);
         sp_interest_calc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -272,11 +271,12 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         final ArrayList<String> InterestCalculationDaysInYearTypeNames = filterListObject
                 (savingproductstemplate.getInterestCalculationDaysInYearTypeOptions());
 
-        final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter = new
-                ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, InterestCalculationDaysInYearTypeNames);
-        interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
+        final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter =
+                new ArrayAdapter<>(getActivity(),
+                        layout.simple_spinner_item,
+                        InterestCalculationDaysInYearTypeNames);
+        interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(
+                layout.simple_spinner_dropdown_item);
         sp_days_in_year.setAdapter(interestCalculationDaysInYearTypeAdapter);
         sp_days_in_year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -312,11 +312,12 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         final ArrayList<String> InterestCompoundingPeriodType = filterListObject
                 (savingproductstemplate.getInterestCompoundingPeriodTypeOptions());
 
-        final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter = new
-                ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, InterestCompoundingPeriodType);
-        interestCompoundingPeriodTypeAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
+        final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter =
+                new ArrayAdapter<>(getActivity(),
+                        layout.simple_spinner_item,
+                        InterestCompoundingPeriodType);
+        interestCompoundingPeriodTypeAdapter.setDropDownViewResource(
+                layout.simple_spinner_dropdown_item);
         sp_interest_comp.setAdapter(interestCompoundingPeriodTypeAdapter);
         sp_interest_comp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
