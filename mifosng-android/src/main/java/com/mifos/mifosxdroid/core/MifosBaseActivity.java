@@ -144,10 +144,12 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     @Override
     public void onBackPressed() {
         // check if the nav mDrawer is open
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START))
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
-        else
+        } else {
             super.onBackPressed();
+        }
+
     }
 
     @Override
