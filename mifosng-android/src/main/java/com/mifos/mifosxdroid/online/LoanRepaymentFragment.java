@@ -259,8 +259,8 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
                                     new ArrayAdapter<>(getActivity(),
                                             layout.simple_spinner_item, listOfPaymentTypes);
 
-                            paymentTypeAdapter.setDropDownViewResource(android.R.layout
-                                    .simple_spinner_dropdown_item);
+                            paymentTypeAdapter.setDropDownViewResource(
+                                    layout.simple_spinner_dropdown_item);
                             sp_paymentType.setAdapter(paymentTypeAdapter);
 
                             et_amount.setText(String.valueOf(loanRepaymentTemplate
