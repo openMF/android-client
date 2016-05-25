@@ -11,7 +11,7 @@
  */
 
 apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
+//apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
 dependencies {
@@ -21,7 +21,7 @@ dependencies {
 def qualityConfigDir = "$project.rootDir/config/quality";
 def reportsDir = "$project.buildDir/reports"
 
-check.dependsOn 'checkstyle', 'findbugs', 'pmd'
+check.dependsOn 'checkstyle', 'pmd'
 
 task checkstyle(type: Checkstyle, group: 'Verification', description: 'Runs code style checks') {
     configFile file("$qualityConfigDir/checkstyle/checkstyle-config.xml")
@@ -38,34 +38,34 @@ task checkstyle(type: Checkstyle, group: 'Verification', description: 'Runs code
     classpath = files( )
 }
 
-task findbugs(type: FindBugs,
-        group: 'Verification',
-        description: 'Inspect java bytecode for bugs',
-        dependsOn: ['compileDebugSources','compileReleaseSources']) {
-
-    ignoreFailures = false
-    effort = "max"
-    reportLevel = "high"
-    excludeFilter = new File("$qualityConfigDir/findbugs/android-exclude-filter.xml")
-    classes = files("$project.rootDir/app/build/intermediates/classes")
-
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
-
-    reports {
-        xml.enabled = true
-        html.enabled = false
-        xml {
-            destination "$reportsDir/findbugs/findbugs.xml"
-        }
-        html {
-            destination "$reportsDir/findbugs/findbugs.html"
-        }
-    }
-
-    classpath = files()
-}
+//task findbugs(type: FindBugs,
+//        group: 'Verification',
+//        description: 'Inspect java bytecode for bugs',
+//        dependsOn: ['compileDebugSources','compileReleaseSources']) {
+//
+//    ignoreFailures = false
+//    effort = "max"
+//    reportLevel = "high"
+//    excludeFilter = new File("$qualityConfigDir/findbugs/android-exclude-filter.xml")
+//    classes = files("$project.rootDir/app/build/intermediates/classes")
+//
+//    source 'src'
+//    include '**/*.java'
+//    exclude '**/gen/**'
+//
+//    reports {
+//        xml.enabled = true
+//        html.enabled = false
+//        xml {
+//            destination "$reportsDir/findbugs/findbugs.xml"
+//        }
+//        html {
+//            destination "$reportsDir/findbugs/findbugs.html"
+//        }
+//    }
+//
+//    classpath = files()
+//}
 
 
 task pmd(type: Pmd, group: 'Verification', description: 'Inspect sourcecode for bugs') {
