@@ -33,7 +33,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author fomenkoo
  */
-public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private final String TAG = LocationService.class.getSimpleName();
 
@@ -70,7 +71,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
                 .setSmallIcon(R.drawable.ic_launcher);
 
         Intent resultIntent = new Intent(this, PathTrackingActivity.class);
-        controlIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        controlIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent
+                .FLAG_UPDATE_CURRENT);
 
         Log.i(TAG, "service created");
         apiClient.connect();
@@ -144,12 +146,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Log.i(TAG, "Connection to location services failed" + connectionResult.getErrorCode());
     }
 
-    public class LocalBinder extends Binder {
-        public LocationService getService() {
-            return LocationService.this;
-        }
-    }
-
     @Override
     public void onDestroy() {
         if (apiClient != null)
@@ -170,5 +166,11 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         PAUSED,
         STOPPED,
         FAILURE
+    }
+
+    public class LocalBinder extends Binder {
+        public LocationService getService() {
+            return LocationService.this;
+        }
     }
 }

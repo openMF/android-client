@@ -19,7 +19,8 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 /**
  * @author fomenkoo
  */
-public class MifosMapActivity extends MifosBaseActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationChangeListener {
+public class MifosMapActivity extends MifosBaseActivity implements OnMapReadyCallback, GoogleMap
+        .OnMyLocationChangeListener {
 
     protected GoogleMap map;
 
@@ -40,7 +41,8 @@ public class MifosMapActivity extends MifosBaseActivity implements OnMapReadyCal
 
     @Override
     public void onMyLocationChange(Location loc) {
-        CameraUpdate position = CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 13);
+        CameraUpdate position = CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(),
+                loc.getLongitude()), 13);
         map.moveCamera(position);
         map.setOnMyLocationChangeListener(null);
     }

@@ -4,11 +4,13 @@
  */
 
 package com.mifos.mifosxdroid.adapters;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -18,22 +20,22 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import android.widget.BaseAdapter;
 
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
-public class SurveyListAdapter extends BaseAdapter{
+public class SurveyListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<Survey> listSurvey;
     private Resources resources;
 
-    public SurveyListAdapter(Context context, List<Survey> listSurvey){
+    public SurveyListAdapter(Context context, List<Survey> listSurvey) {
 
         layoutInflater = LayoutInflater.from(context);
         this.listSurvey = listSurvey;
         resources = context.getResources();
     }
+
     @Override
     public int getCount() {
         return this.listSurvey.size();
@@ -53,11 +55,11 @@ public class SurveyListAdapter extends BaseAdapter{
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         ViewHolder viewHolder;
-        if(view==null){
-            view = layoutInflater.inflate(R.layout.row_surveys_list_item,viewGroup,false);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_surveys_list_item, viewGroup, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) view.getTag();
         }
         final Survey survey = listSurvey.get(i);
@@ -66,7 +68,7 @@ public class SurveyListAdapter extends BaseAdapter{
         return view;
     }
 
-    public static class ViewHolder{
+    public static class ViewHolder {
         @InjectView(R.id.tv_survey_name)
         TextView tv_survey_name;
         @InjectView(R.id.tv_description)

@@ -4,6 +4,7 @@
  */
 
 package com.mifos.objects.survey;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,8 @@ public class Survey {
     }
 
     public void setQuestionDatas(List<QuestionDatas> questionDatas) {
-        this.questionDatas = questionDatas;}
+        this.questionDatas = questionDatas;
+    }
 
     public int getId() {
         return id;

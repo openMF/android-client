@@ -5,65 +5,69 @@ package com.mifos.objects.templates.clients;
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by rajan on 13/3/16.
  */
 public class Options {
 
-	private int id;
-	private String name;
-	private int position;
-	private String description;
-	private boolean isActive;
+    private int id;
+    private String name;
+    private int position;
+    private String description;
 
-	public int getId() {
-		return id;
-	}
+    @SerializedName("isActive")
+    private boolean is_Active;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getPosition() {
-		return position;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPosition(int position) {
-		this.position = position;
-	}
+    public int getPosition() {
+        return position;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public boolean isActive() {
-		return isActive;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
-	}
+    public boolean isActive() {
+        return is_Active;
+    }
 
-	@Override
-	public String toString() {
-		return "Options{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", position=" + position +
-				", description='" + description + '\'' +
-				", isActive=" + isActive +
-				'}';
-	}
+    public void setIsActive(boolean isActive) {
+        this.is_Active = isActive;
+    }
+
+    @Override
+    public String toString() {
+        return "Options{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", position=" + position +
+                ", description='" + description + '\'' +
+                ", isActive=" + is_Active +
+                '}';
+    }
 }

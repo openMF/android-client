@@ -20,6 +20,7 @@ public class Page<T> {
     public List<T> getPageItems() {
         return pageItems;
     }
+
     public void setPageItems(List<T> pageItems) {
         this.pageItems = pageItems;
     }

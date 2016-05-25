@@ -5,8 +5,6 @@
 
 package com.mifos.mifosxdroid.tests;
 
-import android.content.Intent;
-
 import com.mifos.utils.DateHelper;
 
 import org.junit.Test;
@@ -15,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by ahmed on 4/14/2016.

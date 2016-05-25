@@ -94,20 +94,6 @@ public class AccountOptions {
         this.tagId = tagId;
     }
 
-    public class TagId {
-
-        private Integer id;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-    }
-
     @Override
     public String toString() {
         return "AccountOptions{" +
@@ -121,5 +107,19 @@ public class AccountOptions {
                 ", nameDecorated='" + nameDecorated + '\'' +
                 ", tagId=" + tagId +
                 '}';
+    }
+
+    public class TagId {
+
+        private Integer id;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
     }
 }

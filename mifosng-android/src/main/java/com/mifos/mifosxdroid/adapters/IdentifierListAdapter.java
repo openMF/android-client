@@ -14,10 +14,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Identifier;
-import com.mifos.api.GenericResponse;
-import com.mifos.App;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,7 @@ import retrofit.client.Response;
  */
 public class IdentifierListAdapter extends BaseAdapter {
 
+    public final String LOG_TAG = getClass().getSimpleName();
     Context context;
     LayoutInflater layoutInflater;
     List<Identifier> identifiers = new ArrayList<Identifier>();
@@ -77,28 +78,34 @@ public class IdentifierListAdapter extends BaseAdapter {
 
         final Identifier identifier = identifiers.get(i);
         reusableIdentifierViewHolder.tv_identifier_id.setText(String.valueOf(identifier.getId()));
-        reusableIdentifierViewHolder.tv_identifier_descrption.setText(identifier.getDescription()==null?"":identifier.getDescription());
-        reusableIdentifierViewHolder.tv_identifier_type.setText(identifier.getDocumentType().getName());
+        reusableIdentifierViewHolder.tv_identifier_descrption.setText(identifier.getDescription()
+                == null ? "" : identifier.getDescription());
+        reusableIdentifierViewHolder.tv_identifier_type.setText(identifier.getDocumentType()
+                .getName());
 
-        reusableIdentifierViewHolder.bt_delete_identifier.setOnClickListener(new View.OnClickListener() {
+        reusableIdentifierViewHolder.bt_delete_identifier.setOnClickListener(new View
+                .OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                App.apiManager.deleteIdentifier(clientId, identifier.getId(), new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
+                App.apiManager.deleteIdentifier(clientId, identifier.getId(), new
+                        Callback<GenericResponse>() {
+                            @Override
+                            public void success(GenericResponse genericResponse, Response
+                                    response) {
 
-                        System.out.println(genericResponse.toString());
+                                Log.d(LOG_TAG, genericResponse.toString());
 
-                    }
+                            }
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
 
-                        Log.d(getClass().getSimpleName(),retrofitError.getLocalizedMessage());
+                                Log.d(getClass().getSimpleName(), retrofitError
+                                        .getLocalizedMessage());
 
-                    }
-                });
+                            }
+                        });
 
             }
         });
@@ -121,7 +128,9 @@ public class IdentifierListAdapter extends BaseAdapter {
         @InjectView(R.id.bt_delete_identifier)
         Button bt_delete_identifier;
 
-        public ReusableIdentifierViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableIdentifierViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
 
 
     }

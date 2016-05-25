@@ -9,12 +9,12 @@ package com.mifos.services.data;
  */
 public class CenterPayload {
 
+    String dateFormat;
+    String locale;
     private String name;
     private int officeId;
     private boolean active;
     private String activationDate;
-    String dateFormat;
-    String locale;
 
     public String getDateFormat() {
         return dateFormat;
@@ -64,7 +64,6 @@ public class CenterPayload {
     public void setActivationDate(String activationDate) {
         this.activationDate = activationDate;
     }
-
 
 
 }

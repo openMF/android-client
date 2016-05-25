@@ -4,8 +4,8 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.objects.organisation.Office;
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.organisation.Office;
 
 import java.util.List;
 

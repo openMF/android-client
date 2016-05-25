@@ -36,7 +36,8 @@ import retrofit.client.Response;
 public class SurveyListFragment extends ProgressableFragment {
 
     private static final String CLIENTID = "ClientID";
-    @InjectView(R.id.lv_surveys_list) ListView lv_surveys_list;
+    @InjectView(R.id.lv_surveys_list)
+    ListView lv_surveys_list;
     private SurveyListAdapter surveyListAdapter;
     private OnFragmentInteractionListener mListener;
     private View rootView;
@@ -51,7 +52,8 @@ public class SurveyListFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_survey_list, container, false);
         ButterKnife.inject(this, rootView);
 
@@ -69,7 +71,7 @@ public class SurveyListFragment extends ProgressableFragment {
                 lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        mListener.loadSurveyQuestion(surveys.get(i),clientId);
+                        mListener.loadSurveyQuestion(surveys.get(i), clientId);
                     }
                 });
                 showProgress(false);
@@ -84,18 +86,12 @@ public class SurveyListFragment extends ProgressableFragment {
         return rootView;
     }
 
-    public interface OnFragmentInteractionListener {
-
-        void loadSurveyQuestion(Survey survey , int Clientid);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.mItem_search)
             getActivity().finish();
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -104,8 +100,15 @@ public class SurveyListFragment extends ProgressableFragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement " +
+                    "OnFragmentInteractionListener");
         }
+    }
+
+
+    public interface OnFragmentInteractionListener {
+
+        void loadSurveyQuestion(Survey survey, int Clientid);
     }
 
 }

@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.R.layout;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -50,19 +50,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanRepaymentFragment extends ProgressableFragment implements MFDatePicker.OnDatePickListener {
+public class LoanRepaymentFragment extends ProgressableFragment implements MFDatePicker
+        .OnDatePickListener {
 
-    private View rootView;
-
-    // Arguments Passed From the Loan Account Summary Fragment
-    private String clientName;
-    private String loanAccountNumber;
-    private String loanProductName;
-    private Double amountInArrears;
-
-    // Values fetched from Loan Repayment Template
-    private List<PaymentTypeOption> paymentTypeOptionList;
-    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<>();
+    public final String LOG_TAG = getClass().getSimpleName();
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -88,7 +79,15 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
     Spinner sp_paymentType;
     @InjectView(R.id.bt_paynow)
     Button bt_paynow;
-
+    private View rootView;
+    // Arguments Passed From the Loan Account Summary Fragment
+    private String clientName;
+    private String loanAccountNumber;
+    private String loanProductName;
+    private Double amountInArrears;
+    // Values fetched from Loan Repayment Template
+    private List<PaymentTypeOption> paymentTypeOptionList;
+    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<>();
     private DialogFragment mfDatePicker;
 
     public static LoanRepaymentFragment newInstance(LoanWithAssociations loanWithAssociations) {
@@ -98,9 +97,12 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
             args.putString(Constants.CLIENT_NAME, loanWithAssociations.getClientName());
             args.putString(Constants.LOAN_PRODUCT_NAME, loanWithAssociations.getLoanProductName());
             args.putString(Constants.LOAN_ACCOUNT_NUMBER, loanWithAssociations.getAccountNo());
-            args.putDouble(Constants.AMOUNT_IN_ARREARS, loanWithAssociations.getSummary().getTotalOverdue());
-            //args.putDouble(Constants.AMOUNT_DUE, loanWithAssociations.getSummary().getPrincipalDisbursed());
-            //args.putDouble(Constants.FEES_DUE, loanWithAssociations.getSummary().getFeeChargesOutstanding());
+            args.putDouble(Constants.AMOUNT_IN_ARREARS, loanWithAssociations.getSummary()
+                    .getTotalOverdue());
+            //args.putDouble(Constants.AMOUNT_DUE, loanWithAssociations.getSummary()
+            // .getPrincipalDisbursed());
+            //args.putDouble(Constants.FEES_DUE, loanWithAssociations.getSummary()
+            // .getFeeChargesOutstanding());
             fragment.setArguments(args);
         }
         return fragment;
@@ -121,7 +123,8 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_repayment, container, false);
         setToolbarTitle("Loan Repayment");
         ButterKnife.inject(this, rootView);
@@ -226,45 +229,56 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
 
 
     public void inflatePaymentOptions() {
-        App.apiManager.getLoanRepayTemplate(Integer.parseInt(loanAccountNumber), new Callback<LoanRepaymentTemplate>() {
+        App.apiManager.getLoanRepayTemplate(Integer.parseInt(loanAccountNumber), new
+                Callback<LoanRepaymentTemplate>() {
 
-            @Override
-            public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response response) {
+                    @Override
+                    public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response
+                            response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
+                        if (getActivity() == null) return;
 
-                if (loanRepaymentTemplate != null) {
-                    tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
-                    inflateRepaymentDate();
-                    List<String> listOfPaymentTypes = new ArrayList<String>();
-                    paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
-                    // Sorting has to be done on the basis of
-                    // PaymentTypeOption.position because it is specified
-                    // by the users on Mifos X Platform.
-                    Collections.sort(paymentTypeOptionList);
+                        if (loanRepaymentTemplate != null) {
+                            tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
+                            inflateRepaymentDate();
+                            List<String> listOfPaymentTypes = new ArrayList<String>();
+                            paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
+                            // Sorting has to be done on the basis of
+                            // PaymentTypeOption.position because it is specified
+                            // by the users on Mifos X Platform.
+                            Collections.sort(paymentTypeOptionList);
 
-                    for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
-                        listOfPaymentTypes.add(paymentTypeOption.getName());
-                        paymentTypeHashMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
+                            for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
+                                listOfPaymentTypes.add(paymentTypeOption.getName());
+                                paymentTypeHashMap.put(paymentTypeOption.getName(),
+                                        paymentTypeOption
+                                                .getId());
+                            }
+
+                            ArrayAdapter<String> paymentTypeAdapter =
+                                    new ArrayAdapter<>(getActivity(),
+                                            layout.simple_spinner_item, listOfPaymentTypes);
+
+                            paymentTypeAdapter.setDropDownViewResource(
+                                    layout.simple_spinner_dropdown_item);
+                            sp_paymentType.setAdapter(paymentTypeAdapter);
+
+                            et_amount.setText(String.valueOf(loanRepaymentTemplate
+                                    .getPrincipalPortion()
+                                    + loanRepaymentTemplate.getInterestPortion()));
+                            et_additionalPayment.setText("0.0");
+                            et_fees.setText(String.valueOf(loanRepaymentTemplate
+                                    .getFeeChargesPortion()));
+
+                        }
+                        showProgress(false);
                     }
 
-                    ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, listOfPaymentTypes);
-                    paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_paymentType.setAdapter(paymentTypeAdapter);
-
-                    et_amount.setText(String.valueOf(loanRepaymentTemplate.getPrincipalPortion() + loanRepaymentTemplate.getInterestPortion()));
-                    et_additionalPayment.setText("0.0");
-                    et_fees.setText(String.valueOf(loanRepaymentTemplate.getFeeChargesPortion()));
-
-                }
-                showProgress(false);
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                showProgress(false);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        showProgress(false);
+                    }
+                });
 
     }
 
@@ -279,7 +293,8 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
         tv_repaymentDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
 
@@ -302,7 +317,7 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
                     {"Fees", et_fees.getText().toString()},
                     {"Total", String.valueOf(calculateTotal())}
             };
-            System.out.println(FlipTable.of(headers, data));
+            Log.d(LOG_TAG, FlipTable.of(headers, data));
 
             String formReviewString = new StringBuilder().append(data[0][0] + " : " + data[0][1])
                     .append("\n")
@@ -333,7 +348,8 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
                     })
                     .show();
         } catch (NullPointerException npe) {
-            Toaster.show(rootView, "Please make sure every field has a value, before submitting repayment!");
+            Toaster.show(rootView, "Please make sure every field has a value, before submitting " +
+                    "repayment!");
         }
     }
 
@@ -346,31 +362,34 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
         //TODO Implement a proper builder method here
         String dateString = tv_repaymentDate.getText().toString().replace("-", " ");
         final LoanRepaymentRequest request = new LoanRepaymentRequest();
-        request.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType.getSelectedItem().toString())));
+        request.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType
+                .getSelectedItem().toString())));
         request.setLocale("en");
         request.setTransactionAmount(String.valueOf(calculateTotal()));
         request.setDateFormat("dd MM yyyy");
         request.setTransactionDate(dateString);
         String builtRequest = new Gson().toJson(request);
-        Log.i("TAG", builtRequest);
+        Log.i("LOG_TAG", builtRequest);
 
         showProgress(true);
 
-        App.apiManager.submitPayment(Integer.parseInt(loanAccountNumber), request, new Callback<LoanRepaymentResponse>() {
-            @Override
-            public void success(LoanRepaymentResponse resp, Response response) {
-                if (resp != null)
-                    Toaster.show(rootView, "Payment Successful, Transaction ID = " + resp.getResourceId());
-                showProgress(false);
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-            }
+        App.apiManager.submitPayment(Integer.parseInt(loanAccountNumber), request, new
+                Callback<LoanRepaymentResponse>() {
+                    @Override
+                    public void success(LoanRepaymentResponse resp, Response response) {
+                        if (resp != null)
+                            Toaster.show(rootView, "Payment Successful, Transaction ID = " + resp
+                                    .getResourceId());
+                        showProgress(false);
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();
+                    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Payment Failed");
-                showProgress(false);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Toaster.show(rootView, "Payment Failed");
+                        showProgress(false);
+                    }
+                });
     }
 
     public interface OnFragmentInteractionListener {

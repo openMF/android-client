@@ -1,4 +1,3 @@
-
 /*
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
@@ -136,7 +135,8 @@ public class SavingsAccountWithAssociations {
         return interestCompoundingPeriodType;
     }
 
-    public void setInterestCompoundingPeriodType(InterestCompoundingPeriodType interestCompoundingPeriodType) {
+    public void setInterestCompoundingPeriodType(InterestCompoundingPeriodType
+                                                         interestCompoundingPeriodType) {
         this.interestCompoundingPeriodType = interestCompoundingPeriodType;
     }
 
@@ -160,7 +160,8 @@ public class SavingsAccountWithAssociations {
         return interestCalculationDaysInYearType;
     }
 
-    public void setInterestCalculationDaysInYearType(InterestCalculationDaysInYearType interestCalculationDaysInYearType) {
+    public void setInterestCalculationDaysInYearType(InterestCalculationDaysInYearType
+                                                             interestCalculationDaysInYearType) {
         this.interestCalculationDaysInYearType = interestCalculationDaysInYearType;
     }
 
@@ -243,7 +244,6 @@ public class SavingsAccountWithAssociations {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-
 
 
 }

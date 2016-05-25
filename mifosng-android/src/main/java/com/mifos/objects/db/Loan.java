@@ -25,13 +25,11 @@ public class Loan extends SugarRecord<Loan> {
     private Client client;
     private String isPaymentChanged;
 
-    public String getIsPaymentChanged()
-    {
+    public String getIsPaymentChanged() {
         return isPaymentChanged;
     }
 
-    public void setIsPaymentChanged(String isPaymentChanged)
-    {
+    public void setIsPaymentChanged(String isPaymentChanged) {
         this.isPaymentChanged = isPaymentChanged;
     }
 

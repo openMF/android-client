@@ -30,24 +30,27 @@ public class UnsafeSSLSocketFactory extends SSLSocketFactory {
 
     SSLContext sslContext = SSLContext.getInstance("TLS");
 
-    public UnsafeSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
+    public UnsafeSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException,
+            KeyManagementException, KeyStoreException, UnrecoverableKeyException {
 
         // Create a trust manager that does not validate certificate chains
-        final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
 
             @Override
-            public void checkServerTrusted( final X509Certificate[] chain, final String authType ) {
+            public void checkServerTrusted(final X509Certificate[] chain, final String authType) {
             }
 
             @Override
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws
+                    CertificateException {
             }
 
             @Override
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
-        } };
+        }
+        };
 
         sslContext.init(null, trustAllCerts, null);
     }
@@ -63,7 +66,8 @@ public class UnsafeSSLSocketFactory extends SSLSocketFactory {
     }
 
     @Override
-    public Socket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
+    public Socket createSocket(Socket s, String host, int port, boolean autoClose) throws
+            IOException {
         return null;
     }
 
@@ -73,7 +77,8 @@ public class UnsafeSSLSocketFactory extends SSLSocketFactory {
     }
 
     @Override
-    public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException {
+    public Socket createSocket(String host, int port, InetAddress localHost, int localPort)
+            throws IOException, UnknownHostException {
         return null;
     }
 
@@ -83,7 +88,8 @@ public class UnsafeSSLSocketFactory extends SSLSocketFactory {
     }
 
     @Override
-    public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+    public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int
+            localPort) throws IOException {
         return null;
     }
 }

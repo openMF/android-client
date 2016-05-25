@@ -19,8 +19,8 @@ package com.mifos.utils;
 import android.support.test.espresso.IdlingResource;
 
 /**
- * @author  Rajan Maurya
- * Contains a static reference to {@link IdlingResource}.
+ * @author Rajan Maurya
+ *         Contains a static reference to {@link IdlingResource}.
  */
 public class EspressoIdlingResource {
 

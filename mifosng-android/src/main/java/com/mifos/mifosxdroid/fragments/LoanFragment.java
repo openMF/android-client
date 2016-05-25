@@ -27,15 +27,16 @@ import butterknife.InjectView;
 
 
 public class LoanFragment extends MifosBaseFragment {
+    final List<Loan> loansClientHave = new ArrayList<Loan>();
+    private final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.lv_loan)
     ListView lv_loans;
     LoanListAdapter adapter = null;
     private int clientId;
-    final private String tag = getClass().getSimpleName();
-    final List<Loan> loansClientHave = new ArrayList<Loan>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loan, null);
         ButterKnife.inject(this, view);
         getClientId();
@@ -57,9 +58,10 @@ public class LoanFragment extends MifosBaseFragment {
 
     private List<Loan> getLoans() {
         loansClientHave.clear();
-        List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)).list();
-        Log.i(tag, "Looking for loan with client ID:" + clientId);
-        Log.i(tag, "Loans in ClientFragment from DB:" + loanList.toString());
+        List<Loan> loanList = Select.from(Loan.class).where(Condition.prop("client").eq(clientId)
+        ).list();
+        Log.i(LOG_TAG, "Looking for loan with client ID:" + clientId);
+        Log.i(LOG_TAG, "Loans in ClientFragment from DB:" + loanList.toString());
         loansClientHave.addAll(loanList);
         return loansClientHave;
     }

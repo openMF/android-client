@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.mifos.App;
 import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
@@ -42,7 +43,6 @@ import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.db.RepaymentTransaction;
 import com.mifos.objects.db.Status;
 import com.mifos.utils.DateHelper;
-import com.mifos.App;
 import com.mifos.utils.Network;
 import com.mifos.utils.SaveOfflineDataHelper;
 import com.orm.query.Select;
@@ -57,7 +57,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CenterListFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener,
+public class CenterListFragment extends MifosBaseFragment implements AdapterView
+        .OnItemClickListener,
         SaveOfflineDataHelper.OfflineDataSaveListener {
 
     public static final String TAG = "Center List Fragment";
@@ -74,7 +75,8 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
     private String date;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_center_list, null);
         ButterKnife.inject(this, view);
         setHasOptionsMenu(true);
@@ -129,11 +131,14 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
         if (Network.isOnline(getActivity().getApplicationContext())) {
             String dateFormant = "dd-MMM-yyyy";
             String locale = "en";
-            SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            SharedPreferences preferences = getActivity().getSharedPreferences
+                    (OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
             int staffId = preferences.getInt(OfflineCenterInputActivity.STAFF_ID_KEY, -1);
-            String meetingDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null));
+            String meetingDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                    (preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null));
             int branchId = preferences.getInt(OfflineCenterInputActivity.BRANCH_ID_KEY, -1);
-            Log.i(TAG, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" + branchId);
+            Log.i(TAG, "staffId:" + staffId + ", meetingDate: " + meetingDate + " , branchId:" +
+                    branchId);
             //TODO -- Need to ask ---  Hard coding date format and locale
 
             App.apiManager.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
@@ -143,22 +148,25 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
                             Log.i(TAG, "-----------Success-----Got the list of centers--------");
                             for (OfflineCenter center : centers) {
                                 if (center != null) {
-                                    SaveOfflineDataHelper helper = new SaveOfflineDataHelper(getActivity());
+                                    SaveOfflineDataHelper helper =
+                                            new SaveOfflineDataHelper(getActivity());
                                     helper.setOfflineDataSaveListener(CenterListFragment.this);
                                     helper.saveOfflineCenterData(getActivity(), center);
                                 }
                             }
-                            if (centers.size() > 0)
+                            if (centers.size() > 0) {
                                 setAdapter();
-                            else
+                            } else {
                                 startCenterInputActivity();
+                            }
 
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
                             try {
-                                Toast.makeText(getActivity(), getString(R.string.error_login_again), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), getString(R.string
+                                        .error_login_again), Toast.LENGTH_LONG).show();
                             } catch (Exception ex) {
                                 Crashlytics.logException(ex);
                             } finally {
@@ -197,7 +205,8 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
     }
 
     private void startCenterInputActivity() {
-        SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences
+                (OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();

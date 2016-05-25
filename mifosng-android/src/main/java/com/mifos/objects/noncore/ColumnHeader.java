@@ -25,8 +25,8 @@ public class ColumnHeader {
     Boolean isColumnPrimaryKey;
 
     /**
-     *  columnValues are actually Code Values that are either created by
-     *  system or defined manually by users
+     * columnValues are actually Code Values that are either created by
+     * system or defined manually by users
      */
 
     List<ColumnValue> columnValues;

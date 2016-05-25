@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.formwidgets.FormEditText;
@@ -25,10 +28,8 @@ import com.mifos.mifosxdroid.formwidgets.FormWidget;
 import com.mifos.objects.noncore.ColumnHeader;
 import com.mifos.objects.noncore.ColumnValue;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.api.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.MFErrorParser;
-import com.mifos.App;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ import retrofit.client.Response;
  * Created by ishankhanna on 01/08/14.
  */
 public class DataTableRowDialogFragment extends DialogFragment {
+
+    private final String LOG_TAG = getClass().getSimpleName();
 
     private DataTable dataTable;
     private int entityId;
@@ -81,23 +84,27 @@ public class DataTableRowDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         /**
          * This is very Important
          * It is used to auto resize the dialog when a Keyboard appears.
          * And User can still easily scroll through the form. Sweet, isn't it?
          */
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams
+                .SOFT_INPUT_ADJUST_RESIZE);
 
-        rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container, false);
+        rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container,
+                false);
 
         ButterKnife.inject(this, rootView);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.ll_data_table_entry_form);
 
         getDialog().setTitle(dataTable.getRegisteredTableName());
 
-        safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableRowDialogFragment.this.getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableRowDialogFragment.this
+                .getActivity());
 
         createForm();
 
@@ -114,29 +121,36 @@ public class DataTableRowDialogFragment extends DialogFragment {
             ColumnHeader columnHeader = columnHeaderIterator.next();
             if (!columnHeader.getIsColumnPrimaryKey()) {
 
-                if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_STRING) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_TEXT)) {
+                if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_STRING) ||
+                        columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_TEXT)) {
 
-                    FormEditText formEditText = new FormEditText(getActivity(), columnHeader.getColumnName());
+                    FormEditText formEditText = new FormEditText(getActivity(), columnHeader
+                            .getColumnName());
                     formWidgets.add(formEditText);
                     linearLayout.addView(formEditText.getView());
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_INT)) {
 
-                    FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity(), columnHeader.getColumnName());
+                    FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity
+                            (), columnHeader.getColumnName());
                     formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_INT);
                     formWidgets.add(formNumericEditText);
                     linearLayout.addView(formNumericEditText.getView());
 
 
-                } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
+                } else if (columnHeader.getColumnDisplayType().equals(FormWidget
+                        .SCHEMA_KEY_DECIMAL)) {
 
-                    FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity(), columnHeader.getColumnName());
+                    FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity
+                            (), columnHeader.getColumnName());
                     formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_DECIMAL);
                     formWidgets.add(formNumericEditText);
                     linearLayout.addView(formNumericEditText.getView());
 
 
-                } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODELOOKUP) || columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_CODEVALUE)) {
+                } else if (columnHeader.getColumnDisplayType().equals(FormWidget
+                        .SCHEMA_KEY_CODELOOKUP) || columnHeader.getColumnDisplayType().equals
+                        (FormWidget.SCHEMA_KEY_CODEVALUE)) {
 
                     List<String> columnValueStrings = new ArrayList<String>();
                     List<Integer> columnValueIds = new ArrayList<Integer>();
@@ -146,14 +160,16 @@ public class DataTableRowDialogFragment extends DialogFragment {
                         columnValueIds.add(columnValue.getId());
                     }
 
-                    FormSpinner formSpinner = new FormSpinner(getActivity(), columnHeader.getColumnName(), columnValueStrings, columnValueIds);
+                    FormSpinner formSpinner = new FormSpinner(getActivity(), columnHeader
+                            .getColumnName(), columnValueStrings, columnValueIds);
                     formSpinner.setReturnType(FormWidget.SCHEMA_KEY_CODEVALUE);
                     formWidgets.add(formSpinner);
                     linearLayout.addView(formSpinner.getView());
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DATE)) {
 
-                    FormEditText formEditText = new FormEditText(getActivity(), columnHeader.getColumnName());
+                    FormEditText formEditText = new FormEditText(getActivity(), columnHeader
+                            .getColumnName());
                     formEditText.setIsDateField(true, getActivity().getSupportFragmentManager());
                     formWidgets.add(formEditText);
                     linearLayout.addView(formEditText.getView());
@@ -174,7 +190,7 @@ public class DataTableRowDialogFragment extends DialogFragment {
                 try {
                     onSaveActionRequested();
                 } catch (RequiredFieldException e) {
-                    e.printStackTrace();
+                    Log.d(LOG_TAG, e.getMessage());
                 }
             }
         });
@@ -192,12 +208,15 @@ public class DataTableRowDialogFragment extends DialogFragment {
 
             FormWidget formWidget = widgetIterator.next();
             if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_INT)) {
-                payload.put(formWidget.getPropertyName(), Integer.parseInt(formWidget.getValue().equals("") ? "0" : formWidget.getValue()));
+                payload.put(formWidget.getPropertyName(), Integer.parseInt(formWidget.getValue()
+                        .equals("") ? "0" : formWidget.getValue()));
             } else if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
-                payload.put(formWidget.getPropertyName(), Double.parseDouble(formWidget.getValue().equals("") ? "0.0" : formWidget.getValue()));
+                payload.put(formWidget.getPropertyName(), Double.parseDouble(formWidget.getValue
+                        ().equals("") ? "0.0" : formWidget.getValue()));
             } else if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_CODEVALUE)) {
                 FormSpinner formSpinner = (FormSpinner) formWidget;
-                payload.put(formWidget.getPropertyName(), formSpinner.getIdOfSelectedItem(formWidget.getValue()));
+                payload.put(formWidget.getPropertyName(), formSpinner.getIdOfSelectedItem
+                        (formWidget.getValue()));
             } else {
                 payload.put(formWidget.getPropertyName(), formWidget.getValue());
             }
@@ -206,23 +225,24 @@ public class DataTableRowDialogFragment extends DialogFragment {
 
         safeUIBlockingUtility.safelyBlockUI();
 
-        App.apiManager.addDataTableEntry(dataTable.getRegisteredTableName(), entityId, payload, new Callback<GenericResponse>() {
-            @Override
-            public void success(GenericResponse genericResponse, Response response) {
+        App.apiManager.addDataTableEntry(dataTable.getRegisteredTableName(), entityId, payload,
+                new Callback<GenericResponse>() {
+                    @Override
+                    public void success(GenericResponse genericResponse, Response response) {
 
-                safeUIBlockingUtility.safelyUnBlockUI();
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
 
-                MFErrorParser.parseError(retrofitError.getResponse());
-                safeUIBlockingUtility.safelyUnBlockUI();
-                getActivity().getSupportFragmentManager().popBackStack();
+                        MFErrorParser.parseError(retrofitError.getResponse());
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                        getActivity().getSupportFragmentManager().popBackStack();
 
-            }
-        });
+                    }
+                });
 
 
     }

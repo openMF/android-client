@@ -8,12 +8,12 @@ package com.mifos.exceptions;
 import android.content.Context;
 import android.widget.Toast;
 
-public class ShortOfLengthException extends Exception{
+public class ShortOfLengthException extends Exception {
 
     private int minimumCharacters;
     private String inputField;
 
-    public ShortOfLengthException(String inputField,int minimumCharacters){
+    public ShortOfLengthException(String inputField, int minimumCharacters) {
         super();
         this.minimumCharacters = minimumCharacters;
         this.inputField = inputField;
@@ -21,7 +21,7 @@ public class ShortOfLengthException extends Exception{
 
     @Override
     public String toString() {
-        return inputField +" Field Expects at least " + minimumCharacters
+        return inputField + " Field Expects at least " + minimumCharacters
                 + " characters";
     }
 

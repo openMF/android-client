@@ -5,95 +5,102 @@ package com.mifos.objects.templates.clients;
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
+import com.google.gson.annotations.SerializedName;
+
+
 /**
  * Created by rajan on 13/3/16.
  */
 public class StaffOptions {
 
-	private int id;
-	private String firstname;
-	private String lastname;
-	private String displayName;
-	private int officeId;
-	private String officeName;
-	private boolean isLoanOfficer;
-	private boolean isActive;
+    private int id;
+    private String firstname;
+    private String lastname;
+    private String displayName;
+    private int officeId;
+    private String officeName;
 
-	public int getId() {
-		return id;
-	}
+    @SerializedName("isLoanOfficer")
+    private boolean isLoan_officer;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @SerializedName("isActive")
+    private boolean is_Active;
 
-	public String getLastname() {
-		return lastname;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getFirstname() {
-		return firstname;
-	}
+    public String getLastname() {
+        return lastname;
+    }
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public String getFirstname() {
+        return firstname;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
-	public int getOfficeId() {
-		return officeId;
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	public void setOfficeId(int officeId) {
-		this.officeId = officeId;
-	}
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	public String getOfficeName() {
-		return officeName;
-	}
+    public int getOfficeId() {
+        return officeId;
+    }
 
-	public void setOfficeName(String officeName) {
-		this.officeName = officeName;
-	}
+    public void setOfficeId(int officeId) {
+        this.officeId = officeId;
+    }
 
-	public boolean isLoanOfficer() {
-		return isLoanOfficer;
-	}
+    public String getOfficeName() {
+        return officeName;
+    }
 
-	public void setIsLoanOfficer(boolean isLoanOfficer) {
-		this.isLoanOfficer = isLoanOfficer;
-	}
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 
-	public boolean isActive() {
-		return isActive;
-	}
+    public boolean isLoanOfficer() {
+        return isLoan_officer;
+    }
 
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
-	}
+    public void setIsLoanOfficer(boolean isLoanOfficer) {
+        this.isLoan_officer = isLoanOfficer;
+    }
 
-	@Override
-	public String toString() {
-		return "StaffOptions{" +
-				"id=" + id +
-				", firstname='" + firstname + '\'' +
-				", lastname='" + lastname + '\'' +
-				", displayName='" + displayName + '\'' +
-				", officeId=" + officeId +
-				", officeName='" + officeName + '\'' +
-				", isLoanOfficer=" + isLoanOfficer +
-				", isActive=" + isActive +
-				'}';
-	}
+    public boolean isActive() {
+        return is_Active;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.is_Active = isActive;
+    }
+
+    @Override
+    public String toString() {
+        return "StaffOptions{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", officeId=" + officeId +
+                ", officeName='" + officeName + '\'' +
+                ", isLoanOfficer=" + isLoan_officer +
+                ", isActive=" + is_Active +
+                '}';
+    }
 }

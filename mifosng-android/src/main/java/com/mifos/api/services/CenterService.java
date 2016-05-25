@@ -35,11 +35,13 @@ public interface CenterService {
     void getAllCenters(Callback<List<Center>> callback);
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
-    void getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int centerId,
-                                                               Callback<CenterWithAssociations> centerWithAssociationsCallback);
+    void getCenterWithGroupMembersAndCollectionMeetingCalendar
+            (@Path("centerId") int centerId,
+             Callback<CenterWithAssociations> centerWithAssociationsCallback);
 
     @GET(APIEndPoint.CENTERS)
-    void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> additionalParams,
+    void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object>
+            additionalParams,
                                Callback<List<Center>> centersCallback);
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
@@ -47,13 +49,16 @@ public interface CenterService {
                                Callback<CenterWithAssociations> centerWithAssociationsCallback);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
-    void getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload, Callback<CollectionSheet> callback);
+    void getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload,
+                            Callback<CollectionSheet> callback);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload);
+    SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload
+            collectionSheetPayload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
+    void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload
+            collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
 
 
     @POST(APIEndPoint.CLIENTS + "")

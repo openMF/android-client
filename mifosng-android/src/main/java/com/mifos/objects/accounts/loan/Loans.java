@@ -9,6 +9,7 @@ package com.mifos.objects.accounts.loan;
  */
 
 import com.mifos.objects.Currency;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -279,7 +280,8 @@ public class Loans {
         return interestCalculationPeriodType;
     }
 
-    public void setInterestCalculationPeriodType(InterestCalculationPeriodType interestCalculationPeriodType) {
+    public void setInterestCalculationPeriodType(InterestCalculationPeriodType
+                                                         interestCalculationPeriodType) {
         this.interestCalculationPeriodType = interestCalculationPeriodType;
     }
 

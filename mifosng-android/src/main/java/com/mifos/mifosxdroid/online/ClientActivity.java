@@ -16,7 +16,8 @@ import com.mifos.utils.Constants;
 
 import butterknife.ButterKnife;
 
-public class ClientActivity extends MifosBaseActivity implements ClientDetailsFragment.OnFragmentInteractionListener,
+public class ClientActivity extends MifosBaseActivity implements ClientDetailsFragment
+        .OnFragmentInteractionListener,
         LoanAccountSummaryFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {
 
@@ -37,7 +38,8 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
      */
     @Override
     public void loadLoanAccountSummary(int loanAccountNumber) {
-        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber), true, R.id.container);
+        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber), true, R.id
+                .container);
     }
 
     /**
@@ -48,7 +50,8 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
      */
     @Override
     public void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType) {
-        replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber, accountType), true, R.id.container);
+        replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber,
+                accountType), true, R.id.container);
     }
 
     /**
@@ -96,7 +99,10 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
      * The transactionType defines if the transaction is a Deposit or a Withdrawal
      */
     @Override
-    public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType, DepositType accountType) {
-        replaceFragment(SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType, accountType), true, R.id.container);
+    public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations,
+                              String transactionType, DepositType accountType) {
+        replaceFragment(SavingsAccountTransactionFragment.newInstance
+                (savingsAccountWithAssociations, transactionType, accountType), true, R.id
+                .container);
     }
 }

@@ -4,10 +4,9 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.api.model.APIEndPoint;
-import com.mifos.api.model.ScorecardPayload;
 
 import java.util.List;
 
@@ -29,5 +28,6 @@ public interface SurveyService {
     void getSurvey(@Path("surveyId") int surveyId, Callback<Survey> surveyCallback);
 
     @POST(APIEndPoint.SURVEYS + "/{surveyId}/scorecards")
-    void submitScore(@Path("surveyId") int surveyId, @Body Scorecard scorecardPayload, Callback<Scorecard> callback);
+    void submitScore(@Path("surveyId") int surveyId, @Body Scorecard scorecardPayload,
+                     Callback<Scorecard> callback);
 }

@@ -20,7 +20,7 @@ import com.mifos.utils.EspressoIdlingResource;
  */
 public class DashboardActivity extends MifosBaseActivity {
 
-    public final static String TAG = DashboardActivity.class.getSimpleName();
+    public static final String TAG = DashboardActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

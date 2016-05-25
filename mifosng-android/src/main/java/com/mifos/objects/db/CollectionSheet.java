@@ -18,9 +18,6 @@ public class CollectionSheet extends SugarRecord<CollectionSheet> {
     @Ignore
     public List<MifosGroup> groups;
 
-//	     public LoanProduct loanProducts[];
-//	     public AttendanceTypeOptions attendanceTypeOptions[];
-
     public void saveData(long centerId) {
 
         for (MifosGroup group : groups) {

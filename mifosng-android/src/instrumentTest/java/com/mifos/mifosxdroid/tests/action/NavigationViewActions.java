@@ -48,8 +48,8 @@ public final class NavigationViewActions {
     /**
      * Returns a {@link ViewAction} that navigates to a menu item in {@link NavigationView} using a
      * menu item resource id.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * View constraints:
      * <ul>
      * <li>View must be a child of a {@link DrawerLayout}
@@ -82,8 +82,8 @@ public final class NavigationViewActions {
 
             private String getErrorMessage(Menu menu, View view) {
                 String NEW_LINE = System.getProperty("line.separator");
-                StringBuilder errorMessage = new StringBuilder("Menu item was not found, "
-                        + "available menu items:")
+                StringBuilder errorMessage = new StringBuilder(20)
+                        .append("Menu item was not found, available menu items:")
                         .append(NEW_LINE);
                 for (int position = 0; position < menu.size(); position++) {
                     errorMessage.append("[MenuItem] position=")

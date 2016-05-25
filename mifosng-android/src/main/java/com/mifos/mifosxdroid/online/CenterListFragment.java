@@ -17,7 +17,6 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -47,7 +46,8 @@ public class CenterListFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_centers_list, container, false);
         lv_centers_list = (ListView) rootView.findViewById(R.id.lv_center_list);
         setToolbarTitle(getResources().getString(R.string.title_activity_centers));
@@ -68,30 +68,43 @@ public class CenterListFragment extends ProgressableFragment {
                     }
                 });
 
-                lv_centers_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                lv_centers_list.setOnItemLongClickListener(new AdapterView
+                        .OnItemLongClickListener() {
                     @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int
+                            position, long id) {
                         showProgress(true);
-                        App.apiManager.getCentersGroupAndMeeting(centers.get(position).getId(), new Callback<CenterWithAssociations>() {
-                            @Override
-                            public void success(final CenterWithAssociations centerWithAssociations, Response response) {
-                                showProgress(false);
-                                MFDatePicker mfDatePicker = new MFDatePicker();
-                                mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
+                        App.apiManager.getCentersGroupAndMeeting(centers.get(position).getId(),
+                                new Callback<CenterWithAssociations>() {
                                     @Override
-                                    public void onDatePicked(String date) {
-                                        mListener.loadCollectionSheetForCenter(centers.get(position).getId(), date, centerWithAssociations.getCollectionMeetingCalendar().getId());
+                                    public void success(final CenterWithAssociations
+                                                                centerWithAssociations, Response
+                                                                response) {
+                                        showProgress(false);
+                                        MFDatePicker mfDatePicker = new MFDatePicker();
+                                        mfDatePicker.setOnDatePickListener(new MFDatePicker
+                                                .OnDatePickListener() {
+                                            @Override
+                                            public void onDatePicked(String date) {
+                                                mListener.loadCollectionSheetForCenter(centers.get
+                                                                (position).getId(), date,
+                                                        centerWithAssociations
+                                                                .getCollectionMeetingCalendar()
+                                                                .getId());
+                                            }
+                                        });
+                                        mfDatePicker.show(getActivity().getSupportFragmentManager(),
+                                                MFDatePicker.TAG);
+                                    }
+
+                                    @Override
+                                    public void failure(RetrofitError retrofitError) {
+                                        showProgress(false);
+                                        Toaster.show(rootView, "Cannot Generate Collection Sheet," +
+                                                " There " +
+                                                "was some problem!");
                                     }
                                 });
-                                mfDatePicker.show(getActivity().getSupportFragmentManager(), MFDatePicker.TAG);
-                            }
-
-                            @Override
-                            public void failure(RetrofitError retrofitError) {
-                                showProgress(false);
-                                Toaster.show(rootView, "Cannot Generate Collection Sheet, There was some problem!");
-                            }
-                        });
                         return true;
                     }
                 });
@@ -104,12 +117,6 @@ public class CenterListFragment extends ProgressableFragment {
             }
         });
         return rootView;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void loadGroupsOfCenter(int centerId);
-
-        void loadCollectionSheetForCenter(int centerId, String collectionDate, int calenderInstanceId);
     }
 
     @Override
@@ -125,7 +132,15 @@ public class CenterListFragment extends ProgressableFragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement " +
+                    "OnFragmentInteractionListener");
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void loadGroupsOfCenter(int centerId);
+
+        void loadCollectionSheetForCenter(int centerId, String collectionDate, int
+                calenderInstanceId);
     }
 }

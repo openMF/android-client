@@ -47,18 +47,16 @@ import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
- *
+ * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class LoanChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
+public class LoanChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker
+        .OnDatePickListener {
 
-    public static final String TAG = "LoanChargeFragment";
+    public final String LOG_TAG = getClass().getSimpleName();
     View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
-
-    private OnDialogFragmentInteractionListener mListener;
-
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
     @InjectView(R.id.amount_due_charge)
@@ -69,10 +67,11 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     EditText charge_locale;
     @InjectView(R.id.bt_save_charge)
     Button bt_save_charge;
+    String duedateString;
+    private OnDialogFragmentInteractionListener mListener;
     private DialogFragment mfDatePicker;
     private int Id;
     private int loanAccountNumber;
-    String duedateString;
     private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<String, Integer>();
     private String chargeName;
 
@@ -100,7 +99,8 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
@@ -111,7 +111,8 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
         inflateChargesSpinner();
 
         duedateString = charge_due_date.getText().toString();
-        duedateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(duedateString).replace("-", " ");
+        duedateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(duedateString)
+                .replace("-", " ");
 
         bt_save_charge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,22 +139,16 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
     }
 
-
-    public interface OnDialogFragmentInteractionListener {
-
-
-    }
-
     private void inflateChargesSpinner() {
         showProgress(true);
-        App.apiManager.getAllChargesV3(loanAccountNumber,new Callback<Response>() {
+        App.apiManager.getAllChargesV3(loanAccountNumber, new Callback<Response>() {
 
             @Override
             public void success(final Response result, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "");
 
                 final List<Charges> charges = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -183,15 +178,17 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, "", e);
                 }
                 final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, chargesNames);
-                chargesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                chargesAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_charge_name.setAdapter(chargesAdapter);
                 sp_charge_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         Id = chargeNameIdHashMap.get(chargesNames.get(i));
                         Log.d("chargesoptionss" + chargesNames.get(i), String.valueOf(Id));
                         if (Id != -1) {
@@ -199,7 +196,8 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_charge), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_charge)
+                                    , Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -218,7 +216,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -229,24 +227,26 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         safeUIBlockingUtility.safelyBlockUI();
 
-        App.apiManager.createLoanCharges(loanAccountNumber, chargesPayload, new Callback<Charges>() {
-            @Override
-            public void success(Charges charges, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG).show();
+        App.apiManager.createLoanCharges(loanAccountNumber, chargesPayload,
+                new Callback<Charges>() {
+                    @Override
+                    public void success(Charges charges, Response response) {
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                        Toast.makeText(getActivity(), "Charge created successfully", Toast
+                                .LENGTH_LONG)
+                                .show();
 
-            }
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        safeUIBlockingUtility.safelyUnBlockUI();
+                        Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+                    }
+                });
 
 
     }
-
 
     public void inflatedueDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
@@ -256,9 +256,16 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
         charge_due_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
+
+    }
+
+
+    public interface OnDialogFragmentInteractionListener {
+
 
     }
 }

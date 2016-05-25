@@ -34,7 +34,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ClientSearchFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener {
+public class ClientSearchFragment extends MifosBaseFragment implements AdapterView
+        .OnItemClickListener {
 
     private static final String TAG = ClientSearchFragment.class.getSimpleName();
 
@@ -48,7 +49,8 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
     private ClientSearchAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_client_search, null);
         ButterKnife.inject(this, rootView);
         setToolbarTitle(getResources().getString(R.string.dashboard));
@@ -61,10 +63,12 @@ public class ClientSearchFragment extends MifosBaseFragment implements AdapterVi
     @OnClick(R.id.bt_searchClient)
     public void performSearch() {
         String q = et_searchById.getEditableText().toString().trim();
-        if (!q.isEmpty())
+        if (!q.isEmpty()) {
             findClients(q);
-        else
+        } else {
             Toaster.show(et_searchById, "No Search Query Entered!");
+        }
+
     }
 
     public void findClients(final String name) {

@@ -4,9 +4,9 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.objects.noncore.Document;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.noncore.Document;
 
 import java.util.List;
 
@@ -29,7 +29,8 @@ public interface DocumentService {
                             Callback<List<Document>> documentListCallback);
 
     /**
-     * @param entityType              - Type for which document is being uploaded (Client, Loan or Savings etc)
+     * @param entityType              - Type for which document is being uploaded (Client, Loan
+     *                                or Savings etc)
      * @param entityId                - Id of Entity
      * @param nameOfDocument          - Document Name
      * @param description             - Mandatory - Document Description

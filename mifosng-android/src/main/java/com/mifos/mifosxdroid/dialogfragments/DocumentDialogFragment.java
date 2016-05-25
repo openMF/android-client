@@ -21,12 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.App;
+import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
-import com.mifos.api.GenericResponse;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
-import com.mifos.App;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.io.File;
@@ -47,13 +47,10 @@ import retrofit.mime.TypedFile;
  */
 public class DocumentDialogFragment extends DialogFragment {
 
-    public static final String TAG = "DocumentDialogFragment";
+    private static final int FILE_SELECT_CODE = 0;
+    private final String LOG_TAG = getClass().getSimpleName();
     View rootView;
-
     SafeUIBlockingUtility safeUIBlockingUtility;
-
-    private OnDialogFragmentInteractionListener mListener;
-
     @InjectView(R.id.et_document_name)
     EditText et_document_name;
     @InjectView(R.id.et_document_description)
@@ -62,9 +59,7 @@ public class DocumentDialogFragment extends DialogFragment {
     TextView tv_choose_file;
     @InjectView(R.id.bt_upload)
     Button bt_upload;
-
-    private static final int FILE_SELECT_CODE = 0;
-
+    private OnDialogFragmentInteractionListener mListener;
     private String entityType;
 
     private int entityId;
@@ -100,7 +95,8 @@ public class DocumentDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         getDialog().setTitle(R.string.upload_document);
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
@@ -128,7 +124,8 @@ public class DocumentDialogFragment extends DialogFragment {
         documentName = et_document_name.getEditableText().toString();
 
         if (documentName == null || documentName.equals(""))
-            throw new RequiredFieldException(getResources().getString(R.string.name), getString(R.string.message_field_required));
+            throw new RequiredFieldException(getResources().getString(R.string.name), getString(R
+                    .string.message_field_required));
 
         documentDescription = et_document_description.getEditableText().toString();
 
@@ -136,12 +133,6 @@ public class DocumentDialogFragment extends DialogFragment {
             documentDescription = "";
 
         uploadFile();
-
-    }
-
-    public interface OnDialogFragmentInteractionListener {
-
-        public void initiateFileUpload(String name, String description);
 
     }
 
@@ -153,7 +144,7 @@ public class DocumentDialogFragment extends DialogFragment {
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
 
-                    Log.d(TAG, "File Uri: " + uri.toString());
+                    Log.d(LOG_TAG, "File Uri: " + uri.toString());
                     // Get the path
                     try {
 
@@ -162,10 +153,12 @@ public class DocumentDialogFragment extends DialogFragment {
                         if (scheme.equals("file")) {
                             filePath = FileUtils.getPath(getActivity(), uri);
                             fileChoosen = new File(filePath);
-                            Log.d(TAG, "File Path: " + filePath);
+                            Log.d(LOG_TAG, "File Path: " + filePath);
                         } else if (scheme.equals("content")) {
 
-                            Toast.makeText(getActivity(), "The application currently does not support file picking from apps other than File Managers.",
+                            Toast.makeText(getActivity(), "The application currently does not " +
+                                            "support file picking from apps other than File " +
+                                            "Managers.",
                                     Toast.LENGTH_SHORT).show();
                             resultCode = Activity.RESULT_CANCELED;
                         }
@@ -178,7 +171,7 @@ public class DocumentDialogFragment extends DialogFragment {
                         bt_upload.setEnabled(true);
 
                     } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        Log.d(LOG_TAG, e.getMessage());
                     }
                 }
                 break;
@@ -207,9 +200,9 @@ public class DocumentDialogFragment extends DialogFragment {
 
 
         String[] parts = fileChoosen.getName().split("\\.");
-        System.out.println("Extension :" + parts[1]);
+        Log.d(LOG_TAG, "Extension :" + parts[1]);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(parts[1]);
-        System.out.println("Mime Type = " + mimeType);
+        Log.d(LOG_TAG, "Mime Type = " + mimeType);
 
         TypedFile typedFile = new TypedFile(mimeType, fileChoosen);
 
@@ -221,9 +214,11 @@ public class DocumentDialogFragment extends DialogFragment {
 
                         if (genericResponse != null) {
 
-                            Toast.makeText(getActivity(), String.format(getString(R.string.uploaded_successfully), fileChoosen.getName()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), String.format(getString(R.string
+                                    .uploaded_successfully), fileChoosen.getName()), Toast
+                                    .LENGTH_SHORT).show();
 
-                            System.out.println(genericResponse.toString());
+                            Log.d(LOG_TAG, genericResponse.toString());
                         }
                         safeUIBlockingUtility.safelyUnBlockUI();
                         getDialog().dismiss();
@@ -233,7 +228,8 @@ public class DocumentDialogFragment extends DialogFragment {
                     @Override
                     public void failure(RetrofitError retrofitError) {
 
-                        Toast.makeText(getActivity(), getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.upload_failed), Toast
+                                .LENGTH_SHORT).show();
                         getDialog().dismiss();
                         safeUIBlockingUtility.safelyUnBlockUI();
                         getDialog().dismiss();
@@ -242,6 +238,12 @@ public class DocumentDialogFragment extends DialogFragment {
                     }
                 }
         );
+
+    }
+
+    public interface OnDialogFragmentInteractionListener {
+
+        public void initiateFileUpload(String name, String description);
 
     }
 

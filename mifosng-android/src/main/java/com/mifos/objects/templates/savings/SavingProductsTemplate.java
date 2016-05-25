@@ -10,6 +10,7 @@ import java.util.List;
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+
 /**
  * Created by rajan on 13/3/16.
  */
@@ -71,7 +72,8 @@ public class SavingProductsTemplate {
         return interestCalculationDaysInYearType;
     }
 
-    public void setInterestCalculationDaysInYearType(InterestType interestCalculationDaysInYearType) {
+    public void setInterestCalculationDaysInYearType(InterestType
+                                                             interestCalculationDaysInYearType) {
         this.interestCalculationDaysInYearType = interestCalculationDaysInYearType;
     }
 
@@ -95,7 +97,8 @@ public class SavingProductsTemplate {
         return interestCompoundingPeriodTypeOptions;
     }
 
-    public void setInterestCompoundingPeriodTypeOptions(List<InterestType> interestCompoundingPeriodTypeOptions) {
+    public void setInterestCompoundingPeriodTypeOptions(
+            List<InterestType> interestCompoundingPeriodTypeOptions) {
         this.interestCompoundingPeriodTypeOptions = interestCompoundingPeriodTypeOptions;
     }
 
@@ -103,7 +106,8 @@ public class SavingProductsTemplate {
         return interestPostingPeriodTypeOptions;
     }
 
-    public void setInterestPostingPeriodTypeOptions(List<InterestType> interestPostingPeriodTypeOptions) {
+    public void setInterestPostingPeriodTypeOptions(List<InterestType>
+                                                            interestPostingPeriodTypeOptions) {
         this.interestPostingPeriodTypeOptions = interestPostingPeriodTypeOptions;
     }
 
@@ -111,7 +115,8 @@ public class SavingProductsTemplate {
         return interestCalculationTypeOptions;
     }
 
-    public void setInterestCalculationTypeOptions(List<InterestType> interestCalculationTypeOptions) {
+    public void setInterestCalculationTypeOptions(List<InterestType>
+                                                          interestCalculationTypeOptions) {
         this.interestCalculationTypeOptions = interestCalculationTypeOptions;
     }
 
@@ -119,7 +124,8 @@ public class SavingProductsTemplate {
         return interestCalculationDaysInYearTypeOptions;
     }
 
-    public void setInterestCalculationDaysInYearTypeOptions(List<InterestType> interestCalculationDaysInYearTypeOptions) {
+    public void setInterestCalculationDaysInYearTypeOptions(
+            List<InterestType> interestCalculationDaysInYearTypeOptions) {
         this.interestCalculationDaysInYearTypeOptions = interestCalculationDaysInYearTypeOptions;
     }
 
@@ -127,7 +133,8 @@ public class SavingProductsTemplate {
         return lockinPeriodFrequencyTypeOptions;
     }
 
-    public void setLockinPeriodFrequencyTypeOptions(List<InterestType> lockinPeriodFrequencyTypeOptions) {
+    public void setLockinPeriodFrequencyTypeOptions(List<InterestType>
+                                                            lockinPeriodFrequencyTypeOptions) {
         this.lockinPeriodFrequencyTypeOptions = lockinPeriodFrequencyTypeOptions;
     }
 
@@ -200,7 +207,8 @@ public class SavingProductsTemplate {
                 ", interestCompoundingPeriodTypeOptions=" + interestCompoundingPeriodTypeOptions +
                 ", interestPostingPeriodTypeOptions=" + interestPostingPeriodTypeOptions +
                 ", interestCalculationTypeOptions=" + interestCalculationTypeOptions +
-                ", interestCalculationDaysInYearTypeOptions=" + interestCalculationDaysInYearTypeOptions +
+                ", interestCalculationDaysInYearTypeOptions=" +
+                interestCalculationDaysInYearTypeOptions +
                 ", lockinPeriodFrequencyTypeOptions=" + lockinPeriodFrequencyTypeOptions +
                 ", withdrawalFeeTypeOptions=" + withdrawalFeeTypeOptions +
                 ", paymentTypeOptions=" + paymentTypeOptions +

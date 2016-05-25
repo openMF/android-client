@@ -52,7 +52,6 @@ public class GroupPayload {
     }
 
 
-
     public int getOfficeId() {
         return officeId;
     }

@@ -1,11 +1,9 @@
-
 /*
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
 package com.mifos.objects.accounts.loan;
-
 
 
 import java.util.HashMap;
@@ -22,7 +20,6 @@ public class LoanAccount {
     private LoanType loanType;
     private Integer loanCycle;
     private Boolean inArrears;
-
 
 
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();

@@ -11,9 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,7 +37,7 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     List<Client> pageItems;
     private Context mContext;
 
-    public ClientNameListAdapter(Context context, List<Client> pageItems){
+    public ClientNameListAdapter(Context context, List<Client> pageItems) {
 
         layoutInflater = LayoutInflater.from(context);
         this.pageItems = pageItems;
@@ -61,10 +59,11 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof ViewHolder){
+        if (holder instanceof ViewHolder) {
 
             Client client = getItem(position);
-            ((ViewHolder) holder).tv_clientName.setText(client.getFirstname() + " " + client.getLastname());
+            ((ViewHolder) holder).tv_clientName.setText(client.getFirstname() + " " + client
+                    .getLastname());
             ((ViewHolder) holder).tv_clientAccountNumber.setText(client.getAccountNo().toString());
 
             // lazy the  load profile picture
@@ -99,8 +98,7 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 ((ViewHolder) holder).iv_userPicture.setImageBitmap(result);
                             }
                         });
-            } else
-            {
+            } else {
                 ((ViewHolder) holder).iv_userPicture.setImageResource(R.drawable.ic_dp_placeholder);
             }
         }
@@ -118,9 +116,12 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.tv_clientName) TextView tv_clientName;
-        @InjectView(R.id.tv_clientAccountNumber) TextView tv_clientAccountNumber;
-        @InjectView(R.id.iv_user_picture) ImageView iv_userPicture;
+        @InjectView(R.id.tv_clientName)
+        TextView tv_clientName;
+        @InjectView(R.id.tv_clientAccountNumber)
+        TextView tv_clientAccountNumber;
+        @InjectView(R.id.iv_user_picture)
+        ImageView iv_userPicture;
 
         public ViewHolder(View v) {
             super(v);

@@ -41,7 +41,8 @@ public class MifosGroup extends SugarRecord<MifosGroup> {
     }
 
     public boolean isNew() {
-        long count = Select.from(MifosGroup.class).where(Condition.prop("group_id").eq(groupId)).count();
+        long count = Select.from(MifosGroup.class).where(Condition.prop("group_id").eq(groupId))
+                .count();
         return count == 0;
     }
 

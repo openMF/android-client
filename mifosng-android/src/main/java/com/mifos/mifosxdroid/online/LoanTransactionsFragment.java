@@ -52,7 +52,8 @@ public class LoanTransactionsFragment extends MifosBaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_transactions, container, false);
         ButterKnife.inject(this, rootView);
         inflateLoanTransactions();
@@ -71,7 +72,8 @@ public class LoanTransactionsFragment extends MifosBaseFragment {
             public void success(LoanWithAssociations loan, Response response) {
                 if (loan != null) {
                     Log.i("Transaction List Size", "" + loan.getTransactions().size());
-                    LoanTransactionAdapter adapter = new LoanTransactionAdapter(getActivity(), loan.getTransactions());
+                    LoanTransactionAdapter adapter = new LoanTransactionAdapter(getActivity(),
+                            loan.getTransactions());
                     elv_loanTransactions.setAdapter(adapter);
                     elv_loanTransactions.setGroupIndicator(null);
                 }

@@ -701,13 +701,15 @@ public class ClientListFragmentTest {
             "      }\n" +
             "    }\n" +
             "  ]";
-
+    @Rule
+    public ActivityTestRule<DashboardActivity> mDashboardActivity =
+            new ActivityTestRule<>(DashboardActivity.class);
     private List<Client> clientList = new ArrayList<>();
 
     /**
      * A custom {@link Matcher} which matches an item in a {@link RecyclerView} by its text.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * View constraints:
      * <ul>
      * <li>View must be a child of a {@link RecyclerView}
@@ -733,10 +735,6 @@ public class ClientListFragmentTest {
         };
     }
 
-    @Rule
-    public ActivityTestRule<DashboardActivity> mDashboardActivity =
-            new ActivityTestRule<>(DashboardActivity.class);
-
     /**
      * Convenience method to register an IdlingResources with Espresso. IdlingResource resource is
      * a great way to tell Espresso when your app is in an idle state. This helps Espresso to
@@ -746,20 +744,22 @@ public class ClientListFragmentTest {
     public void registerIdlingResource() {
 
         Gson gson = new Gson();
-        clientList= gson.fromJson(CLIENTLIST_JSON, new TypeToken<List<Client>>(){}.getType());
+        clientList = gson.fromJson(CLIENTLIST_JSON, new TypeToken<List<Client>>() {
+        }.getType());
         Log.d("Clients", clientList.get(5).getDisplayName());
         Espresso.registerIdlingResources(
                 mDashboardActivity.getActivity().getCountingIdlingResource());
     }
 
-        /**
-         * When project is successfully enable any architecture, we have to pass
-         * this fake client list data to the view layer and remain will not to change.
-         * test case automatically pass.
-         * @throws Exception
-         */
+    /**
+     * When project is successfully enable any architecture, we have to pass
+     * this fake client list data to the view layer and remain will not to change.
+     * test case automatically pass.
+     *
+     * @throws Exception
+     */
     @Test
-    public void testOpenClientListFragment() throws Exception{
+    public void testOpenClientListFragment() throws Exception {
         // Open Drawer to click on navigation.
         onView(withId(R.id.drawer))
                 .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
@@ -791,7 +791,6 @@ public class ClientListFragmentTest {
         Espresso.unregisterIdlingResources(
                 mDashboardActivity.getActivity().getCountingIdlingResource());
     }
-
 
 
 }

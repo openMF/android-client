@@ -22,6 +22,10 @@ public class SavingsPayload {
         return interestCompoundingPeriodType;
     }
 
+    public void setInterestCompoundingPeriodType(Integer interestCompoundingPeriodType) {
+        this.interestCompoundingPeriodType = interestCompoundingPeriodType;
+    }
+
     public String getNominalAnnualInterestRate() {
         return nominalAnnualInterestRate;
     }
@@ -84,11 +88,6 @@ public class SavingsPayload {
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
-    }
-
-
-    public void setInterestCompoundingPeriodType(Integer interestCompoundingPeriodType) {
-        this.interestCompoundingPeriodType = interestCompoundingPeriodType;
     }
 
     public Integer getInterestCalculationType() {

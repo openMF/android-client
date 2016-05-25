@@ -25,7 +25,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 /**
  * Created by ahmed fathy on 11/04/16.
  */
-public class SurveyQuestionViewPagerActivityTest extends ActivityInstrumentationTestCase2<SurveyQuestionViewPager> {
+public class SurveyQuestionViewPagerActivityTest extends
+        ActivityInstrumentationTestCase2<SurveyQuestionViewPager> {
 
     /* mock data */
     public static final int N_QUESTIONS = 3;
@@ -218,7 +219,7 @@ public class SurveyQuestionViewPagerActivityTest extends ActivityInstrumentation
      * swipe left to go back to question 1
      * swipe right two times to question 3
      */
-    public void testSwipeNavigate()  {
+    public void testSwipeNavigate() {
 
         assertEquals(1 + "/" + N_QUESTIONS, getActivity().getToolbar().getSubtitle());
 

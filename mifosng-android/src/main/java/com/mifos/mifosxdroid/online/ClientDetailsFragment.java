@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,7 +47,6 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.CircularImageView;
@@ -89,16 +89,16 @@ import static android.view.View.OnTouchListener;
 import static android.view.View.VISIBLE;
 
 
-public class ClientDetailsFragment extends ProgressableFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class ClientDetailsFragment extends ProgressableFragment implements GoogleApiClient
+        .ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private final String TAG = ClientDetailsFragment.class.getSimpleName();
-    public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
+    public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
-    List<Charges> chargesList = new ArrayList<Charges>();
     public static List<DataTable> clientDataTables = new ArrayList<>();
+    private final String TAG = ClientDetailsFragment.class.getSimpleName();
+    List<Charges> chargesList = new ArrayList<Charges>();
     @InjectView(R.id.tv_fullName)
     TextView tv_fullName;
     @InjectView(R.id.tv_accountNumber)
@@ -156,7 +156,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     @Override
     public void onDetach() {
-        if (imageLoadingAsyncTask != null && !imageLoadingAsyncTask.getStatus().equals(AsyncTask.Status.FINISHED))
+        if (imageLoadingAsyncTask != null && !imageLoadingAsyncTask.getStatus().equals(AsyncTask
+                .Status.FINISHED))
             imageLoadingAsyncTask.cancel(true);
         super.onDetach();
     }
@@ -171,7 +172,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
         ButterKnife.inject(this, rootView);
         inflateClientInformation();
@@ -184,7 +186,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().getClass().getSimpleName() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(getActivity().getClass().getSimpleName() + " must " +
+                    "implement OnFragmentInteractionListener");
         }
     }
 
@@ -237,6 +240,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
+    @SuppressWarnings("deprecation")
     public void deleteClientImage() {
         App.apiManager.deleteClientImage(clientId, new Callback<Response>() {
             @Override
@@ -308,7 +312,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
                         Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
                         Locale currentLocale = getResources().getConfiguration().locale;
-                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, currentLocale);
+                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                                currentLocale);
                         String dateString = df.format(date);
                         tv_activationDate.setText(dateString);
 
@@ -316,10 +321,11 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                             rowActivation.setVisibility(GONE);
 
                     } catch (IndexOutOfBoundsException e) {
-                        Toast.makeText(getActivity(), getString(R.string.error_client_inactive), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.error_client_inactive),
+                                Toast.LENGTH_SHORT).show();
                         tv_activationDate.setText("");
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.d(TAG, e.getLocalizedMessage());
                     }
                     tv_office.setText(client.getOfficeName());
 
@@ -330,7 +336,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                         imageLoadingAsyncTask = new ImageLoadingAsyncTask();
                         imageLoadingAsyncTask.execute(client.getId());
                     } else {
-                        iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+                        iv_clientImage.setImageDrawable(
+                                ResourcesCompat.getDrawable(getResources(), R.drawable
+                                        .ic_launcher, null));
+
                         pb_imageProgressBar.setVisibility(GONE);
                     }
 
@@ -338,23 +347,27 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                         @Override
                         public void onClick(View view) {
                             PopupMenu menu = new PopupMenu(getActivity(), view);
-                            menu.getMenuInflater().inflate(R.menu.client_image_popup, menu.getMenu());
-                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    switch (menuItem.getItemId()) {
-                                        case R.id.client_image_capture:
-                                            captureClientImage();
-                                            break;
-                                        case R.id.client_image_remove:
-                                            deleteClientImage();
-                                            break;
-                                        default:
-                                            Log.e("ClientDetailsFragment", "Unrecognized client image menu item");
-                                    }
-                                    return true;
-                                }
-                            });
+                            menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
+                                    .getMenu());
+                            menu.setOnMenuItemClickListener(
+                                    new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem menuItem) {
+                                            switch (menuItem.getItemId()) {
+                                                case R.id.client_image_capture:
+                                                    captureClientImage();
+                                                    break;
+                                                case R.id.client_image_remove:
+                                                    deleteClientImage();
+                                                    break;
+                                                default:
+                                                    Log.e("ClientDetailsFragment", "Unrecognized " +
+                                                            "client " +
+                                                            "image menu item");
+                                            }
+                                            return true;
+                                        }
+                                    });
                             menu.show();
                         }
                     });
@@ -387,10 +400,13 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 accountAccordion = new AccountAccordion(getActivity());
                 if (clientAccounts.getLoanAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.LOANS;
-                    final LoanAccountsListAdapter adapter = new LoanAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getLoanAccounts());
+                    final LoanAccountsListAdapter adapter =
+                            new LoanAccountsListAdapter(getActivity().getApplicationContext(),
+                                    clientAccounts.getLoanAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
                             mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
                         }
                     });
@@ -398,22 +414,30 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
                 if (clientAccounts.getNonRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getNonRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    clientAccounts.getNonRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(), adapter.getItem(i).getDepositType());
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                                    adapter.getItem(i).getDepositType());
                         }
                     });
                 }
 
                 if (clientAccounts.getRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter(getActivity().getApplicationContext(), clientAccounts.getRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    clientAccounts.getRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(), adapter.getItem(i).getDepositType());
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                                    adapter.getItem(i).getDepositType());
                         }
                     });
                 }
@@ -441,8 +465,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 if (dataTables != null) {
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
                     clientDataTables.clear();
-                    while (dataTableIterator.hasNext())
+                    while (dataTableIterator.hasNext()) {
                         clientDataTables.add(dataTableIterator.next());
+                    }
+
                 }
                 showProgress(false);
             }
@@ -488,7 +514,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void onConnected(Bundle bundle) {
         locationAvailable.set(true);
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation
+                (mGoogleApiClient);
         Log.d(TAG, "Connected to location services");
         try {
             Log.d(TAG, "Current location: " + mLastLocation.toString());
@@ -509,13 +536,15 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         if (connectionResult.hasResolution()) {
             try {
                 // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(getActivity(), CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                connectionResult.startResolutionForResult(getActivity(),
+                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
                 /*
                  * Thrown if Google Play services canceled the original
                  * PendingIntent
                  */
             } catch (IntentSender.SendIntentException e) {
-                Log.e(TAG, "Connection to location services failed" + connectionResult.getErrorCode(), e);
+                Log.e(TAG, "Connection to location services failed" + connectionResult
+                        .getErrorCode(), e);
                 Toaster.show(rootView, "Connection to location services failed.");
             }
         } else { // No resolution available.
@@ -525,32 +554,40 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     }
 
     public void loadDocuments() {
-        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
+                .ENTITY_TYPE_CLIENTS, clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, documentListFragment);
         fragmentTransaction.commit();
     }
 
     public void loadClientCharges() {
-        ClientChargeFragment clientChargeFragment = ClientChargeFragment.newInstance(clientId, chargesList);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        ClientChargeFragment clientChargeFragment = ClientChargeFragment.newInstance(clientId,
+                chargesList);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, clientChargeFragment);
         fragmentTransaction.commit();
     }
 
     public void loadIdentifiers() {
-        ClientIdentifiersFragment clientIdentifiersFragment = ClientIdentifiersFragment.newInstance(clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        ClientIdentifiersFragment clientIdentifiersFragment = ClientIdentifiersFragment
+                .newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, clientIdentifiersFragment);
         fragmentTransaction.commit();
     }
 
     public void addsavingsaccount() {
-        SavingsAccountFragment savingsAccountFragment = SavingsAccountFragment.newInstance(clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        SavingsAccountFragment savingsAccountFragment = SavingsAccountFragment.newInstance
+                (clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, savingsAccountFragment);
         fragmentTransaction.commit();
@@ -558,11 +595,13 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     public void addloanaccount() {
         LoanAccountFragment loanAccountFragment = LoanAccountFragment.newInstance(clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, loanAccountFragment);
         fragmentTransaction.commit();
     }
+
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);
 
@@ -571,13 +610,36 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
 
     private static class AccountAccordion {
+        private final Activity context;
+        private Section currentSection;
+
+        private AccountAccordion(Activity context) {
+            this.context = context;
+            Section.configure(context, this);
+        }
+
+        public void setCurrentSection(Section currentSection) {
+            // close previous section
+            if (this.currentSection != null) {
+                this.currentSection.close(context);
+            }
+
+            this.currentSection = currentSection;
+
+            // open new section
+            if (this.currentSection != null) {
+                this.currentSection.open(context);
+            }
+        }
+
         private enum Section {
             LOANS(R.id.account_accordion_section_loans, R.string.loanAccounts),
             SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts),
             RECURRING(R.id.account_accordion_section_recurring, R.string.recurringAccount);
 
             private static final MaterialIcons LIST_OPEN_ICON = MaterialIcons.md_add_circle_outline;
-            private static final MaterialIcons LIST_CLOSED_ICON = MaterialIcons.md_remove_circle_outline;
+            private static final MaterialIcons LIST_CLOSED_ICON = MaterialIcons
+                    .md_remove_circle_outline;
 
             private final int sectionId;
             private final int textViewStringId;
@@ -587,12 +649,19 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 this.textViewStringId = textViewStringId;
             }
 
+            public static void configure(Activity context, final AccountAccordion accordion) {
+                for (Section section : Section.values()) {
+                    section.configureSection(context, accordion);
+                }
+            }
+
             public TextView getTextView(Activity context) {
                 return (TextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts);
             }
 
             public IconTextView getIconView(Activity context) {
-                return (IconTextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts_icon);
+                return (IconTextView) getSectionView(context).findViewById(R.id
+                        .tv_toggle_accounts_icon);
             }
 
             public ListView getListView(Activity context) {
@@ -607,7 +676,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 return context.findViewById(this.sectionId);
             }
 
-            public void connect(Activity context, ListAdapter adapter, AdapterView.OnItemClickListener onItemClickListener) {
+            public void connect(Activity context, ListAdapter adapter, AdapterView
+                    .OnItemClickListener onItemClickListener) {
                 getCountView(context).setText(String.valueOf(adapter.getCount()));
                 ListView listView = getListView(context);
                 listView.setAdapter(adapter);
@@ -665,34 +735,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 // initialize section in closed state
                 close(context);
             }
-
-            public static void configure(Activity context, final AccountAccordion accordion) {
-                for (Section section : Section.values()) {
-                    section.configureSection(context, accordion);
-                }
-            }
-        }
-
-        private final Activity context;
-        private Section currentSection;
-
-        private AccountAccordion(Activity context) {
-            this.context = context;
-            Section.configure(context, this);
-        }
-
-        public void setCurrentSection(Section currentSection) {
-            // close previous section
-            if (this.currentSection != null) {
-                this.currentSection.close(context);
-            }
-
-            this.currentSection = currentSection;
-
-            // open new section
-            if (this.currentSection != null) {
-                this.currentSection.open(context);
-            }
         }
     }
 
@@ -714,10 +756,13 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                     + "/images?maxHeight=120&maxWidth=120";
 
             try {
-                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
+                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
+                        .openConnection();
                 httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT, "default");
-                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken());
+                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT,
+                        "default");
+                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH,
+                        PrefManager.getToken());
                 httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();
@@ -730,12 +775,18 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             return null;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (bmp != null) iv_clientImage.setImageBitmap(bmp);
-            else
-                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            pb_imageProgressBar.setVisibility(GONE);
+            if (bmp != null) {
+                iv_clientImage.setImageBitmap(bmp);
+            } else {
+                iv_clientImage.setImageDrawable(
+                        ResourcesCompat.getDrawable(getResources(),
+                                R.drawable.ic_launcher, null));
+                pb_imageProgressBar.setVisibility(GONE);
+            }
+
         }
     }
 

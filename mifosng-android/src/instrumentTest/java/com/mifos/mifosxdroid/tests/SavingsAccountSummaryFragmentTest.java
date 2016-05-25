@@ -25,7 +25,8 @@ import com.mifos.utils.FragmentConstants;
  * Created by Gabriel Esteban on 07/12/14.
  */
 @Suppress // TODO: Fix NPE
-public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTestCase2<ClientActivity> {
+public class SavingsAccountSummaryFragmentTest extends
+        ActivityInstrumentationTestCase2<ClientActivity> {
 
     ClientActivity clientActivity;
 
@@ -70,7 +71,8 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
         //Moving to SavingsAccountSummaryFragment with the following id and account type
         SavingsAccountSummaryFragment savingsAccountSummaryFragment
                 = SavingsAccountSummaryFragment.newInstance(419, depositType);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.global_container, savingsAccountSummaryFragment).commit();
 
@@ -79,10 +81,14 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
 
         //instantiating the views that we're going to test@InjectView(R.id.tv_clientName)
         tv_clientName = (TextView) clientActivity.findViewById(R.id.tv_clientName);
-        quickContactBadge = (QuickContactBadge) clientActivity.findViewById(R.id.quickContactBadge_client);
-        tv_savingsProductName = (TextView) clientActivity.findViewById(R.id.tv_savings_product_short_name);
-        tv_savingsAccountNumber = (TextView) clientActivity.findViewById(R.id.tv_savingsAccountNumber);
-        tv_savingsAccountBalance = (TextView) clientActivity.findViewById(R.id.tv_savings_account_balance);
+        quickContactBadge = (QuickContactBadge) clientActivity.findViewById(R.id
+                .quickContactBadge_client);
+        tv_savingsProductName = (TextView) clientActivity.findViewById(R.id
+                .tv_savings_product_short_name);
+        tv_savingsAccountNumber = (TextView) clientActivity.findViewById(R.id
+                .tv_savingsAccountNumber);
+        tv_savingsAccountBalance = (TextView) clientActivity.findViewById(R.id
+                .tv_savings_account_balance);
         tv_totalDeposits = (TextView) clientActivity.findViewById(R.id.tv_total_deposits);
         tv_totalWithdrawals = (TextView) clientActivity.findViewById(R.id.tv_total_withdrawals);
         lv_Transactions = (ListView) clientActivity.findViewById(R.id.lv_savings_transactions);
@@ -130,13 +136,17 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
      * Should be tested alone because sometimes it can cause problems with the Application Context.
      * <p/>
      * Maybe it should be reviewed the {@link com.mifos.mifosxdroid.online.DocumentListFragment},
-     * because is who is throwing out a NullPointerException after closing the fragment. The method who
+     * because is who is throwing out a NullPointerException after closing the fragment. The
+     * method who
      * throws the exception is inflateDocumentList on the API request.
      * <p/>
      * Here the logcat output:
-     * java.lang.NullPointerException: Attempt to invoke virtual method 'android.content.Context android.support.v4.app.FragmentActivity.getApplicationContext()' on a null object reference
-     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:201)
-     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success(SavingsAccountSummaryFragment.java:169)
+     * java.lang.NullPointerException: Attempt to invoke virtual method 'android.content.Context
+     * android.support.v4.app.FragmentActivity.getApplicationContext()' on a null object reference
+     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success
+     * (SavingsAccountSummaryFragment.java:201)
+     * at com.mifos.mifosxdroid.online.SavingsAccountSummaryFragment$1.success
+     * (SavingsAccountSummaryFragment.java:169)
      * at retrofit.CallbackRunnable$1.run(CallbackRunnable.java:41)
      * at android.os.Handler.handleCallback(Handler.java:739)
      * at android.os.Handler.dispatchMessage(Handler.java:95)
@@ -153,7 +163,8 @@ public class SavingsAccountSummaryFragmentTest extends ActivityInstrumentationTe
     public void testClientDocumentsFragmentShowed() throws InterruptedException {
         //clicking the button
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-        getInstrumentation().invokeMenuActionSync(clientActivity, SavingsAccountSummaryFragment.MENU_ITEM_DOCUMENTS, 0);
+        getInstrumentation().invokeMenuActionSync(clientActivity, SavingsAccountSummaryFragment
+                .MENU_ITEM_DOCUMENTS, 0);
 
         //if something is wrong, invokeMenuActionSync will take an exception
 

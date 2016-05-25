@@ -23,8 +23,6 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.Changes;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.utils.Constants;
@@ -52,12 +50,10 @@ import retrofit.client.Response;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker.OnDatePickListener {
+public class ChargeDialogFragment extends ProgressableDialogFragment implements MFDatePicker
+        .OnDatePickListener {
 
-    public static final String TAG = "ChargeDialogFragment";
-    private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
-
+    public final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.sp_charge_name)
     Spinner sp_charge_name;
     @InjectView(R.id.amount_due_charge)
@@ -68,10 +64,12 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
     EditText charge_locale;
     @InjectView(R.id.bt_save_charge)
     Button bt_save_charge;
+    String duedateString;
+    private View rootView;
+    private SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
     private int Id;
     private int clientId;
-    String duedateString;
     private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<String, Integer>();
     private String chargeName;
 
@@ -99,7 +97,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
@@ -110,7 +109,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
         inflateChargesSpinner();
 
         duedateString = charge_due_date.getText().toString();
-        duedateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(duedateString).replace("-", " ");
+        duedateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(duedateString)
+                .replace("-", " ");
 
         bt_save_charge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,14 +135,14 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
 
     private void inflateChargesSpinner() {
         showProgress(true);
-        App.apiManager.getAllChargesV2(clientId,new Callback<Response>() {
+        App.apiManager.getAllChargesV2(clientId, new Callback<Response>() {
 
             @Override
             public void success(final Response result, Response response) {
                 /* Activity is null - Fragment has been detached; no need to do anything. */
                 if (getActivity() == null) return;
 
-                Log.d(TAG, "");
+                Log.d(LOG_TAG, "Charges Loaded Successfully");
 
                 final List<Charges> charges = new ArrayList<>();
                 // you can use this array to populate your spinner
@@ -172,15 +172,17 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
                     }
                     String stringResult = sb.toString();
                 } catch (Exception e) {
-                    Log.e(TAG, "", e);
+                    Log.e(LOG_TAG, e.getMessage());
                 }
                 final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_spinner_item, chargesNames);
-                chargesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                chargesAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
                 sp_charge_name.setAdapter(chargesAdapter);
                 sp_charge_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                            l) {
                         Id = chargeNameIdHashMap.get(chargesNames.get(i));
                         Log.d("chargesoptionss" + chargesNames.get(i), String.valueOf(Id));
                         if (Id != -1) {
@@ -188,7 +190,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
 
                         } else {
 
-                            Toast.makeText(getActivity(), getString(R.string.error_select_charge), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.error_select_charge)
+                                    , Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -207,7 +210,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
             @Override
             public void failure(RetrofitError retrofitError) {
 
-                System.out.println(retrofitError.getLocalizedMessage());
+                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
 
                 showProgress(false);
             }
@@ -221,7 +224,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
             @Override
             public void success(Charges charges, Response response) {
                 safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG)
+                        .show();
             }
 
             @Override
@@ -238,7 +242,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements 
         charge_due_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants.DFRAG_DATE_PICKER);
+                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                        .DFRAG_DATE_PICKER);
             }
         });
     }

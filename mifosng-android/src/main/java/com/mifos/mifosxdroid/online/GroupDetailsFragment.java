@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,9 +60,10 @@ import static android.view.View.VISIBLE;
  */
 public class GroupDetailsFragment extends ProgressableFragment {
 
-    private final String TAG = GroupDetailsFragment.class.getSimpleName();
     public static int groupId;
     public static List<DataTable> clientDataTables = new ArrayList<>();
+    public final String LOG_TAG = getClass().getSimpleName();
+    private final String TAG = GroupDetailsFragment.class.getSimpleName();
     @InjectView(R.id.tv_groupsName)
     TextView tv_fullName;
     @InjectView(R.id.tv_groupexternalId)
@@ -107,7 +109,8 @@ public class GroupDetailsFragment extends ProgressableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_details, container, false);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         ButterKnife.inject(this, rootView);
@@ -121,7 +124,8 @@ public class GroupDetailsFragment extends ProgressableFragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().getClass().getSimpleName() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(getActivity().getClass().getSimpleName() + " must " +
+                    "implement OnFragmentInteractionListener");
         }
     }
 
@@ -168,7 +172,8 @@ public class GroupDetailsFragment extends ProgressableFragment {
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
                         Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
                         Locale currentLocale = getResources().getConfiguration().locale;
-                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, currentLocale);
+                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                                currentLocale);
                         String dateString = df.format(date);
                         tv_activationDate.setText(dateString);
 
@@ -176,10 +181,11 @@ public class GroupDetailsFragment extends ProgressableFragment {
                             rowActivation.setVisibility(GONE);
 
                     } catch (IndexOutOfBoundsException e) {
-                        Toast.makeText(getActivity(), getString(R.string.error_group_inactive), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.error_group_inactive),
+                                Toast.LENGTH_SHORT).show();
                         tv_activationDate.setText("");
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.d(LOG_TAG, e.getMessage());
                     }
                     tv_office.setText(group.getOfficeName());
 
@@ -213,10 +219,13 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 accountAccordion = new AccountAccordion(getActivity());
                 if (groupAccounts.getLoanAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.LOANS;
-                    final LoanAccountsListAdapter adapter = new LoanAccountsListAdapter(getActivity().getApplicationContext(), groupAccounts.getLoanAccounts());
+                    final LoanAccountsListAdapter adapter =
+                            new LoanAccountsListAdapter(getActivity().getApplicationContext(),
+                                    groupAccounts.getLoanAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
                             mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
                         }
                     });
@@ -224,22 +233,30 @@ public class GroupDetailsFragment extends ProgressableFragment {
 
                 if (groupAccounts.getNonRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter(getActivity().getApplicationContext(), groupAccounts.getNonRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    groupAccounts.getNonRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(), adapter.getItem(i).getDepositType());
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                                    adapter.getItem(i).getDepositType());
                         }
                     });
                 }
 
                 if (groupAccounts.getRecurringSavingsAccounts().size() > 0) {
                     AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
-                    final SavingsAccountsListAdapter adapter = new SavingsAccountsListAdapter(getActivity().getApplicationContext(), groupAccounts.getRecurringSavingsAccounts());
+                    final SavingsAccountsListAdapter adapter =
+                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                                    groupAccounts.getRecurringSavingsAccounts());
                     section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(), adapter.getItem(i).getDepositType());
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                                long l) {
+                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                                    adapter.getItem(i).getDepositType());
                         }
                     });
                 }
@@ -267,8 +284,9 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 if (dataTables != null) {
                     Iterator<DataTable> dataTableIterator = dataTables.iterator();
                     clientDataTables.clear();
-                    while (dataTableIterator.hasNext())
+                    while (dataTableIterator.hasNext()) {
                         clientDataTables.add(dataTableIterator.next());
+                    }
                 }
                 showProgress(false);
             }
@@ -281,23 +299,26 @@ public class GroupDetailsFragment extends ProgressableFragment {
     }
 
 
-
-
     public void loadDocuments() {
-        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, groupId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
+                .ENTITY_TYPE_CLIENTS, groupId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
         fragmentTransaction.replace(R.id.container, documentListFragment);
         fragmentTransaction.commit();
     }
 
     public void addgrouploanaccount() {
-        GroupLoanAccountFragment grouploanAccountFragment = GroupLoanAccountFragment.newInstance(groupId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        GroupLoanAccountFragment grouploanAccountFragment = GroupLoanAccountFragment.newInstance
+                (groupId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
         fragmentTransaction.replace(R.id.container, grouploanAccountFragment);
         fragmentTransaction.commit();
     }
+
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);
 
@@ -306,13 +327,36 @@ public class GroupDetailsFragment extends ProgressableFragment {
 
 
     private static class AccountAccordion {
+        private final Activity context;
+        private Section currentSection;
+
+        private AccountAccordion(Activity context) {
+            this.context = context;
+            Section.configure(context, this);
+        }
+
+        public void setCurrentSection(Section currentSection) {
+            // close previous section
+            if (this.currentSection != null) {
+                this.currentSection.close(context);
+            }
+
+            this.currentSection = currentSection;
+
+            // open new section
+            if (this.currentSection != null) {
+                this.currentSection.open(context);
+            }
+        }
+
         private enum Section {
             LOANS(R.id.account_accordion_section_loans, R.string.loanAccounts),
             SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts),
             RECURRING(R.id.account_accordion_section_recurring, R.string.recurringAccount);
 
             private static final MaterialIcons LIST_OPEN_ICON = MaterialIcons.md_add_circle_outline;
-            private static final MaterialIcons LIST_CLOSED_ICON = MaterialIcons.md_remove_circle_outline;
+            private static final MaterialIcons LIST_CLOSED_ICON = MaterialIcons
+                    .md_remove_circle_outline;
 
             private final int sectionId;
             private final int textViewStringId;
@@ -322,12 +366,19 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 this.textViewStringId = textViewStringId;
             }
 
+            public static void configure(Activity context, final AccountAccordion accordion) {
+                for (Section section : Section.values()) {
+                    section.configureSection(context, accordion);
+                }
+            }
+
             public TextView getTextView(Activity context) {
                 return (TextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts);
             }
 
             public IconTextView getIconView(Activity context) {
-                return (IconTextView) getSectionView(context).findViewById(R.id.tv_toggle_accounts_icon);
+                return (IconTextView) getSectionView(context).findViewById(R.id
+                        .tv_toggle_accounts_icon);
             }
 
             public ListView getListView(Activity context) {
@@ -342,7 +393,8 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 return context.findViewById(this.sectionId);
             }
 
-            public void connect(Activity context, ListAdapter adapter, AdapterView.OnItemClickListener onItemClickListener) {
+            public void connect(Activity context, ListAdapter adapter, AdapterView
+                    .OnItemClickListener onItemClickListener) {
                 getCountView(context).setText(String.valueOf(adapter.getCount()));
                 ListView listView = getListView(context);
                 listView.setAdapter(adapter);
@@ -399,34 +451,6 @@ public class GroupDetailsFragment extends ProgressableFragment {
                 }
                 // initialize section in closed state
                 close(context);
-            }
-
-            public static void configure(Activity context, final AccountAccordion accordion) {
-                for (Section section : Section.values()) {
-                    section.configureSection(context, accordion);
-                }
-            }
-        }
-
-        private final Activity context;
-        private Section currentSection;
-
-        private AccountAccordion(Activity context) {
-            this.context = context;
-            Section.configure(context, this);
-        }
-
-        public void setCurrentSection(Section currentSection) {
-            // close previous section
-            if (this.currentSection != null) {
-                this.currentSection.close(context);
-            }
-
-            this.currentSection = currentSection;
-
-            // open new section
-            if (this.currentSection != null) {
-                this.currentSection.open(context);
             }
         }
     }

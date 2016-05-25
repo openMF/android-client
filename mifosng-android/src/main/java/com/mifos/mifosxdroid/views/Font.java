@@ -26,9 +26,14 @@ public enum Font {
         this.fontName = fontName;
         typeface = App.typefaceManager.get(fontName.hashCode());
         if (typeface == null) {
-            typeface = Typeface.createFromAsset(App.getSugarContext().getApplicationContext().getAssets(), pathToFont + File.separator + fontName);
+            typeface = Typeface.createFromAsset(App.getSugarContext().getApplicationContext()
+                    .getAssets(), pathToFont + File.separator + fontName);
             App.typefaceManager.put(fontName.hashCode(), typeface);
         }
+    }
+
+    public static Font getFont(int typeface) {
+        return values()[typeface];
     }
 
     public Typeface getTypeface() {
@@ -37,9 +42,5 @@ public enum Font {
 
     public String getFontName() {
         return fontName;
-    }
-
-    public static Font getFont(int typeface) {
-        return values()[typeface];
     }
 }

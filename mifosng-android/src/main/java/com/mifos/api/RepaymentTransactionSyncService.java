@@ -46,20 +46,24 @@ public class RepaymentTransactionSyncService {
     public void syncRepayments(Context context) {
         List<RepaymentTransaction> transactions = Select.from(RepaymentTransaction.class).list();
         Log.i(TAG, "Fetching transactions from Database:" + transactions);
-        List<MeetingCenter> centerList = Select.from(MeetingCenter.class).where(com.orm.query.Condition.prop("center_id").eq(centerId)).list();
+        List<MeetingCenter> centerList = Select.from(MeetingCenter.class).where(com.orm.query
+                .Condition.prop("center_id").eq(centerId)).list();
         MeetingCenter center = centerList.get(0);
         if (transactions.size() > 0) {
-            List<BulkRepaymentTransactions> repaymentTransactions = new ArrayList<BulkRepaymentTransactions>();
+            List<BulkRepaymentTransactions> repaymentTransactions = new
+                    ArrayList<BulkRepaymentTransactions>();
 
             for (RepaymentTransaction transaction : transactions) {
                 Loan loan = transaction.getLoan();
-                if (loan.getAccountStatusId() == 300) //ToDO need to ask about hard coding
-                {
-                    repaymentTransactions.add(new BulkRepaymentTransactions(loan.getLoanId(), transaction.getTransactionAmount()));
+                //ToDO need to ask about hard coding
+                if (loan.getAccountStatusId() == 300) {
+                    repaymentTransactions.add(new BulkRepaymentTransactions(loan.getLoanId(),
+                            transaction.getTransactionAmount()));
                 }
             }
 
-            BulkRepaymentTransactions[] repaymentTransactionArray = new BulkRepaymentTransactions[repaymentTransactions.size()];
+            BulkRepaymentTransactions[] repaymentTransactionArray = new
+                    BulkRepaymentTransactions[repaymentTransactions.size()];
             repaymentTransactions.toArray(repaymentTransactionArray);
 
 
@@ -69,8 +73,10 @@ public class RepaymentTransactionSyncService {
             payload.setTransactionDate(DateHelper.getPayloadDate(context));
             SaveCollectionSheetTask task = new SaveCollectionSheetTask();
             task.execute(payload);
-        } else
+        } else {
             syncFinishListener.onSyncFinish("There is no data to sync", false);
+        }
+
     }
 
     private void deleteAllOfflineCollectionSheetData() {
@@ -99,15 +105,19 @@ public class RepaymentTransactionSyncService {
 
             if (Network.isOnline(App.getContext())) {
                 try {
-                    SharedPreferences preferences = App.getContext().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
-                    SaveResponse response = App.apiManager.saveCollectionSheet((int) centerId, collectionSheetPayloads[0]);
+                    SharedPreferences preferences = App.getContext().getSharedPreferences
+                            (OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+                    SaveResponse response = App.apiManager.saveCollectionSheet((int) centerId,
+                            collectionSheetPayloads[0]);
                     if (response != null) {
                         Log.i(TAG, "saveCollectionSheet - Response:" + response.toString());
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.clear();
                         editor.commit();
-                    } else
+                    } else {
                         isResponseNull = true;
+                    }
+
                 } catch (RetrofitError error) {
                     isResponseNull = true;
                 } catch (Exception ex) {
@@ -120,10 +130,12 @@ public class RepaymentTransactionSyncService {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (!isResponseNull)
+            if (!isResponseNull) {
                 syncFinishListener.onSyncFinish("Sync is completed successfully", true);
-            else
+            } else {
                 syncFinishListener.onSyncFinish("Couldn't sync the data, please try again", true);
+            }
+
         }
     }
 }

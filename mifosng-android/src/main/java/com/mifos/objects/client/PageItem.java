@@ -182,8 +182,7 @@ public class PageItem {
         this.externalId = externalId;
     }
 
-    public String getFormattedActivationDateAsString()
-    {
+    public String getFormattedActivationDateAsString() {
         //TODO Format Date Based on Current Locale
         /**
          * Integer List Contains
@@ -194,7 +193,7 @@ public class PageItem {
 
         Calendar calendar = Calendar.getInstance();
         // Note, java.util.Calendar month is zero-indexed.
-        calendar.set(activationDate.get(0),activationDate.get(1)-1,activationDate.get(2));
+        calendar.set(activationDate.get(0), activationDate.get(1) - 1, activationDate.get(2));
 
         DateFormat dateFormat = DateFormat.getDateInstance();
         return dateFormat.format(calendar.getTime()).toString();

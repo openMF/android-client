@@ -1,4 +1,3 @@
-
 /*
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
@@ -8,7 +7,7 @@ package com.mifos.objects;
 
 import com.google.gson.annotations.Expose;
 
-public class PaymentTypeOption implements Comparable<PaymentTypeOption>{
+public class PaymentTypeOption implements Comparable<PaymentTypeOption> {
 
     @Expose
     private Integer id;
@@ -44,6 +43,7 @@ public class PaymentTypeOption implements Comparable<PaymentTypeOption>{
     /**
      * Compares two payment type options on the basis
      * of their position specified.
+     *
      * @param another
      * @return
      */

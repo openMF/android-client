@@ -26,10 +26,12 @@ import retrofit.http.QueryMap;
  */
 public interface GroupService {
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
-    void getGroupWithAssociations(@Path("groupId") int groupId, Callback<GroupWithAssociations> groupWithAssociationsCallback);
+    void getGroupWithAssociations(@Path("groupId") int groupId, Callback<GroupWithAssociations>
+            groupWithAssociationsCallback);
 
     @GET(APIEndPoint.GROUPS)
-    void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params, Callback<List<Group>> listOfGroupsCallback);
+    void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object>
+            params, Callback<List<Group>> listOfGroupsCallback);
 
     @POST(APIEndPoint.GROUPS)
     void createGroup(@Body GroupPayload groupPayload, Callback<Group> callback);
@@ -37,13 +39,13 @@ public interface GroupService {
     @GET(APIEndPoint.GROUPS + "/{groupId}")
     void getGroup(@Path("groupId") int groupId, Callback<Group> groupCallback);
 
-    @GET(APIEndPoint.GROUPS+"?paged=true")
-    void listAllGroups(@Query("offset") int offset, @Query("limit") int limit, Callback<Page<Group>> callback);
+    @GET(APIEndPoint.GROUPS + "?paged=true")
+    void listAllGroups(@Query("offset") int offset, @Query("limit") int limit,
+                       Callback<Page<Group>> callback);
 
 
-    @GET(APIEndPoint.GROUPS+"?paged=true")
-    void listAllGroup( Callback<Page<Group>> callback);
-
+    @GET(APIEndPoint.GROUPS + "?paged=true")
+    void listAllGroup(Callback<Page<Group>> callback);
 
 
 }
