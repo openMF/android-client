@@ -69,7 +69,7 @@ public class ClientPayload extends DefaultPayload {
         return middlename;
     }
 
-    public void setMiddlename(String mobilenumber) {
+    public void setMiddlename(String middlename) {
         this.middlename = middlename;
     }
 
