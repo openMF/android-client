@@ -61,7 +61,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment {
     private static final int ACTION_ACTIVATE_SAVINGS = 5;
     public static int savingsAccountNumber;
     public static DepositType savingsAccountType;
-    public static List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
+    public List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
     @InjectView(R.id.quickContactBadge_client)

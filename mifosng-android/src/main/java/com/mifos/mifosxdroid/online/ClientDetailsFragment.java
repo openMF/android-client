@@ -96,7 +96,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     public static int clientId;
-    public static List<DataTable> clientDataTables = new ArrayList<>();
+    public List<DataTable> clientDataTables = new ArrayList<>();
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
     List<Charges> chargesList = new ArrayList<Charges>();
     @InjectView(R.id.tv_fullName)
