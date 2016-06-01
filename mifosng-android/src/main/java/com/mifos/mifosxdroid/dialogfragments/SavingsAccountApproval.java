@@ -40,8 +40,8 @@ public class SavingsAccountApproval extends DialogFragment implements MFDatePick
         .OnDatePickListener {
 
     public static final String TAG = "SavingsAccountApproval";
-    public static int savingsAccountNumber;
-    public static DepositType savingsAccountType;
+    public int savingsAccountNumber;
+    public DepositType savingsAccountType;
     View rootView;
     @InjectView(R.id.et_s_approval_date)
     TextView et_s_approval_date;

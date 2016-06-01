@@ -95,7 +95,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
-    public static int clientId;
+    public int clientId;
     public List<DataTable> clientDataTables = new ArrayList<>();
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
     List<Charges> chargesList = new ArrayList<Charges>();

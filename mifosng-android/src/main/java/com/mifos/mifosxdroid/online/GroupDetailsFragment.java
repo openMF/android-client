@@ -60,7 +60,7 @@ import static android.view.View.VISIBLE;
  */
 public class GroupDetailsFragment extends ProgressableFragment {
 
-    public static int groupId;
+    public int groupId;
     public List<DataTable> clientDataTables = new ArrayList<>();
     public final String LOG_TAG = getClass().getSimpleName();
     private final String TAG = GroupDetailsFragment.class.getSimpleName();

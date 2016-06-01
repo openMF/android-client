@@ -6,6 +6,13 @@
     <Match>
         <Class name="~.*\.Manifest\$.*"/>
     </Match>
+
+    <!--Ignore the static App.java instance initialization-->
+    <Match>
+        <Class name="com.mifos.App"/>
+        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+    </Match>
+
     <!-- All bugs in test classes, except for JUnit-specific bugs -->
     <Match>
         <Class name="~.*\.*Test" />
