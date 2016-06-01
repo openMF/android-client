@@ -31,10 +31,11 @@ import butterknife.InjectView;
  */
 public class CollectionListAdapter extends BaseExpandableListAdapter {
 
-    public static List<MifosGroup> sMifosGroups = new ArrayList<MifosGroup>();
     //Map for RepaymentTransaction<Loan Id, Transaction Amount>
     //TODO Check about SparseArray in Android and try to convert Map into SparseArray Implementation
-    public static final Map<Integer, Double> sRepaymentTransactions = new HashMap<Integer, Double>();
+    public static final Map<Integer, Double> sRepaymentTransactions = new HashMap<Integer,
+            Double>();
+    public static List<MifosGroup> sMifosGroups = new ArrayList<MifosGroup>();
     Context context;
     LayoutInflater layoutInflater;
 
