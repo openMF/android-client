@@ -38,7 +38,7 @@ import retrofit.client.Response;
 public class LoanAccountApproval extends DialogFragment implements MFDatePicker.OnDatePickListener {
 
     public static final String TAG = "LoanAccountApproval";
-    public static int loanAccountNumber;
+    public int loanAccountNumber;
     View rootView;
     @InjectView(R.id.tv_loan_approval_dates)
     TextView tv_loan_approval_dates;

@@ -60,10 +60,10 @@ import static android.view.View.VISIBLE;
  */
 public class GroupDetailsFragment extends ProgressableFragment {
 
-    public static int groupId;
-    public static List<DataTable> clientDataTables = new ArrayList<>();
     public final String LOG_TAG = getClass().getSimpleName();
     private final String TAG = GroupDetailsFragment.class.getSimpleName();
+    public int groupId;
+    public List<DataTable> clientDataTables = new ArrayList<>();
     @InjectView(R.id.tv_groupsName)
     TextView tv_fullName;
     @InjectView(R.id.tv_groupexternalId)

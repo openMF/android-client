@@ -51,8 +51,8 @@ import retrofit.client.Response;
 public class LoanAccountDisbursement extends DialogFragment implements MFDatePicker
         .OnDatePickListener {
 
-    public static int loanAccountNumber;
     public final String LOG_TAG = getClass().getSimpleName();
+    public int loanAccountNumber;
     View rootView;
     SafeUIBlockingUtility safeUIBlockingUtility;
     @InjectView(R.id.tv_loan_disbursement_dates)

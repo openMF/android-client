@@ -65,8 +65,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment {
     private static final int ACTION_APPROVE_LOAN = 0;
     private static final int ACTION_DISBURSE_LOAN = 1;
     private static final int TRANSACTION_REPAYMENT = 2;
-    public static int loanAccountNumber;
-    public static List<DataTable> loanDataTables = new ArrayList<DataTable>();
+    public int loanAccountNumber;
+    public List<DataTable> loanDataTables = new ArrayList<DataTable>();
     @InjectView(R.id.view_status_indicator)
     View view_status_indicator;
     @InjectView(R.id.tv_clientName)
