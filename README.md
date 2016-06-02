@@ -1,4 +1,6 @@
 ### Status
+
+[![Join the chat at https://gitter.im/openMF/android-client](https://badges.gitter.im/openMF/android-client.svg)](https://gitter.im/openMF/android-client?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/openMF/android-client.svg?branch=master)](https://travis-ci.org/openMF/android-client)
 
 # Android Client for MifosX
