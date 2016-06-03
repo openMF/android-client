@@ -1,1 +1,31 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+// Define versions in a single place
+ext {
+    // Sdk and tools
+    minSdkVersion = 11
+    targetSdkVersion = 22
+    compileSdkVersion = 23
+    buildToolsVersion = '23.0.2'
+
+    // App dependencies
+    supportLibraryVersion = '23.1.1'
+    playServicesVersion = '8.3.0'
+    mapUtilsServices = '0.4.2'
+    daggerVersion = '2.2'
+    raizLabsDBFlow = '3.0.0-beta1'
+    espressoVersion = '2.2.1'
+    runnerVersion = '0.4.1'
+    rulesVersion = '0.4.1'
+
+    guavaVersion = '18.0'
+    junitVersion = '4.12'
+    mockitoVersion = '1.10.19'
+    powerMockito = '1.6.2'
+    hamcrestVersion = '1.3'
+
+
+}
