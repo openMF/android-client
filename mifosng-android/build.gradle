@@ -122,10 +122,10 @@ allprojects {
 
 dependencies {
 
-    apt 'com.google.dagger:dagger-compiler:2.2'
-    apt 'com.github.Raizlabs.DBFlow:dbflow-processor:3.0.0-beta1'
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:3.0.0-beta1"
-    compile "com.github.Raizlabs.DBFlow:dbflow:3.0.0-beta1"
+    apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
+    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
     compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
     // You must install or update the Support Repository through the SDK manager to use this dependency.
 
@@ -136,7 +136,7 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     compile "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
-    compile 'com.google.dagger:dagger:2.2'
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
 
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
