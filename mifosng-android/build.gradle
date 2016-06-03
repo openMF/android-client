@@ -147,13 +147,16 @@ dependencies {
 
     //Square dependencies
     compile "com.squareup.retrofit:retrofit:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersionLatest"
+    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersionLatest"
     compile "com.squareup.okhttp:okhttp:$rootProject.okHttpVersion"
     compile "com.squareup.okhttp:okhttp-urlconnection:$rootProject.okHttpVersion"
     compile "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     compile 'javax.annotation:jsr250-api:1.0@jar'
 
-
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.4'
 
     compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
     compile 'com.crashlytics.android:crashlytics:1.+'

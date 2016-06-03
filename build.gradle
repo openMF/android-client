@@ -21,15 +21,10 @@ ext {
     runnerVersion = '0.4.1'
     rulesVersion = '0.4.1'
     retrofitVersion = '1.9.0'
+    retrofitVersionLatest = '2.0.0'
     okHttpVersion = '2.0.0'
     flipTableVersion = '1.0.1'
     butterKnifeVersion = '6.1.0'
-
-    guavaVersion = '18.0'
-    junitVersion = '4.12'
-    mockitoVersion = '1.10.19'
-    powerMockito = '1.6.2'
-    hamcrestVersion = '1.3'
 
 
 }
