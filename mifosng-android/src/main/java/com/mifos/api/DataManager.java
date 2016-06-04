@@ -14,7 +14,7 @@ import rx.Observable;
 @Singleton
 public class DataManager {
 
-    public final BaseApiManager mBaseApiManager;
+    private final BaseApiManager mBaseApiManager;
 
     @Inject
     public DataManager(BaseApiManager baseApiManager) {

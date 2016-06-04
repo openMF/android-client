@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -33,15 +32,13 @@ import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
+import javax.inject.Inject;
 import javax.net.ssl.SSLHandshakeException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
@@ -50,29 +47,31 @@ import static android.view.View.VISIBLE;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class LoginActivity extends MifosBaseActivity implements Callback<User> {
+public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
-    @InjectView(R.id.et_instanceURL)
-    EditText et_domain;
-    @InjectView(R.id.et_username)
-    EditText et_username;
-    @InjectView(R.id.et_password)
-    EditText et_password;
-    @InjectView(R.id.tv_constructed_instance_url)
-    TextView tv_full_url;
-    @InjectView(R.id.bt_connectionSettings)
-    TextView bt_connectionSettings;
-    @InjectView(R.id.et_tenantIdentifier)
-    EditText et_tenantIdentifier;
-    @InjectView(R.id.et_instancePort)
-    EditText et_port;
-    @InjectView(R.id.ll_connectionSettings)
-    LinearLayout ll_connectionSettings;
+    @InjectView(R.id.et_instanceURL) EditText et_domain;
+
+    @InjectView(R.id.et_username) EditText et_username;
+
+    @InjectView(R.id.et_password) EditText et_password;
+
+    @InjectView(R.id.tv_constructed_instance_url) TextView tv_full_url;
+
+    @InjectView(R.id.bt_connectionSettings) TextView bt_connectionSettings;
+
+    @InjectView(R.id.et_tenantIdentifier) EditText et_tenantIdentifier;
+
+    @InjectView(R.id.et_instancePort) EditText et_port;
+
+    @InjectView(R.id.ll_connectionSettings) LinearLayout ll_connectionSettings;
 
     private String username;
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
+
+    @Inject LoginPresenter mLoginPresenter;
+
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -103,21 +102,26 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getActivityComponent().inject(this);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+        mLoginPresenter.attachView(this);
 
         et_port.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (!PrefManager.getPort().equals("80"))
             et_port.setText(PrefManager.getPort());
 
         et_domain.setText(PrefManager.getInstanceDomain());
+
         bt_connectionSettings.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                ll_connectionSettings.setVisibility(ll_connectionSettings.getVisibility() ==
-                        VISIBLE ? GONE : VISIBLE);
+                ll_connectionSettings.setVisibility(
+                        ll_connectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
             }
         });
+
         et_domain.addTextChangedListener(urlWatcher);
         et_port.addTextChangedListener(urlWatcher);
         urlWatcher.afterTextChanged(null);
@@ -141,9 +145,9 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         return true;
     }
 
+
     @Override
-    public void success(User user, Response response) {
-        hideProgress();
+    public void onLoginSuccessful(User user) {
         Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " "
                 + user.getUsername());
         // Saving userID
@@ -157,32 +161,40 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         // Saving user's token
         PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
 
-        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+        startActivity(new Intent(this, DashboardActivity.class));
         finish();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void failure(RetrofitError retrofitError) {
+    public void onLoginError(Throwable throwable) {
         try {
-            hideProgress();
-            if (retrofitError.getCause() instanceof SSLHandshakeException) {
+
+            if (throwable.getCause() instanceof SSLHandshakeException) {
                 promptUserToByPassTheSSLHandshake();
-            } else if (retrofitError.getResponse().getStatus() ==
+            } /*else if (throwable.getResponse().getStatus() ==
                     org.apache.http.HttpStatus.SC_UNAUTHORIZED) {
                 Toaster.show(findViewById(android.R.id.content), getString(R.string
                         .error_login_failed));
             } else if (retrofitError.getResponse().getStatus() ==
                     org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 Toaster.show(findViewById(android.R.id.content), "Internal server error");
-            }
+            }*/
         } catch (NullPointerException e) {
-            if (Network.getConnectivityStatusString(LoginActivity.this).equals("Not connected to " +
+            if (Network.getConnectivityStatusString(this).equals("Not connected to " +
                     "Internet")) {
                 Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
             } else {
                 Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
             }
+        }
+    }
+
+    @Override
+    public void showProgress(boolean show) {
+        if(show){
+            showProgress("Logging In");
+        }else {
+            hideProgress();
         }
     }
 
@@ -224,9 +236,7 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         if (!validateUserInputs())
             return;
 
-        showProgress("Logging In");
-        App.apiManager.setupEndpoint(instanceURL);
-        App.apiManager.login(username, password, this);
+        mLoginPresenter.login(instanceURL,username,password);
     }
 
     @OnEditorAction(R.id.et_password)
@@ -249,5 +259,11 @@ public class LoginActivity extends MifosBaseActivity implements Callback<User> {
         if (item.getItemId() == R.id.offline)
             startActivity(new Intent(this, OfflineCenterInputActivity.class));
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLoginPresenter.detachView();
     }
 }

@@ -5,8 +5,6 @@
 
 package com.mifos.api;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
@@ -15,7 +13,6 @@ import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.SearchedEntity;
-import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
@@ -71,11 +68,11 @@ import retrofit.mime.TypedFile;
  */
 public class ApiManager extends BaseApiManager {
 
-    public void login(String username, String password, Callback<User> callback) {
+   /* public void login(String username, String password, Callback<User> callback) {
         Log.i(getClass().getSimpleName(), "Login - " + username + " Password - " + password);
         getAuthApi().authenticate(username, password, callback);
     }
-
+*/
     /**
      * Search API
      */

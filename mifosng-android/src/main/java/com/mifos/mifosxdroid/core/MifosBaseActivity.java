@@ -33,6 +33,9 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
+import com.mifos.mifosxdroid.injection.component.ActivityComponent;
+import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
+import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientListFragment;
 import com.mifos.mifosxdroid.online.ClientSearchFragment;
@@ -50,6 +53,8 @@ import retrofit.client.Response;
 public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback,
         NavigationView.OnNavigationItemSelectedListener {
 
+    private ActivityComponent mActivityComponent;
+
     protected Toolbar toolbar;
     private ProgressDialog progress;
     private NavigationView mNavigationView;
@@ -62,6 +67,16 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+    }
+
+    public ActivityComponent getActivityComponent() {
+        if (mActivityComponent == null) {
+            mActivityComponent = DaggerActivityComponent.builder()
+                    .activityModule(new ActivityModule(this))
+                    .applicationComponent(App.get(this).getComponent())
+                    .build();
+        }
+        return mActivityComponent;
     }
 
     public void setActionBarTitle(String title) {
