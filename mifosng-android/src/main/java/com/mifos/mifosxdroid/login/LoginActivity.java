@@ -49,28 +49,37 @@ import static android.view.View.VISIBLE;
  */
 public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
-    @InjectView(R.id.et_instanceURL) EditText et_domain;
+    @InjectView(R.id.et_instanceURL)
+    EditText et_domain;
 
-    @InjectView(R.id.et_username) EditText et_username;
+    @InjectView(R.id.et_username)
+    EditText et_username;
 
-    @InjectView(R.id.et_password) EditText et_password;
+    @InjectView(R.id.et_password)
+    EditText et_password;
 
-    @InjectView(R.id.tv_constructed_instance_url) TextView tv_full_url;
+    @InjectView(R.id.tv_constructed_instance_url)
+    TextView tv_full_url;
 
-    @InjectView(R.id.bt_connectionSettings) TextView bt_connectionSettings;
+    @InjectView(R.id.bt_connectionSettings)
+    TextView bt_connectionSettings;
 
-    @InjectView(R.id.et_tenantIdentifier) EditText et_tenantIdentifier;
+    @InjectView(R.id.et_tenantIdentifier)
+    EditText et_tenantIdentifier;
 
-    @InjectView(R.id.et_instancePort) EditText et_port;
+    @InjectView(R.id.et_instancePort)
+    EditText et_port;
 
-    @InjectView(R.id.ll_connectionSettings) LinearLayout ll_connectionSettings;
+    @InjectView(R.id.ll_connectionSettings)
+    LinearLayout ll_connectionSettings;
 
     private String username;
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
 
-    @Inject LoginPresenter mLoginPresenter;
+    @Inject
+    LoginPresenter mLoginPresenter;
 
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
@@ -191,9 +200,9 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @Override
     public void showProgress(boolean show) {
-        if(show){
+        if (show) {
             showProgress("Logging In");
-        }else {
+        } else {
             hideProgress();
         }
     }
@@ -236,7 +245,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         if (!validateUserInputs())
             return;
 
-        mLoginPresenter.login(instanceURL,username,password);
+        mLoginPresenter.login(instanceURL, username, password);
     }
 
     @OnEditorAction(R.id.et_password)
