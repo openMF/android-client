@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.injection.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.squareup.otto.Bus;
 
@@ -40,10 +41,10 @@ public class ApplicationModule {
         return new Bus();
     }
 
-    /*@Provides
+    @Provides
     @Singleton
-    RibotsService provideRibotsService() {
-        return RibotsService.Creator.newRibotsService();
-    }*/
+    BaseApiManager provideBaseApiManager() {
+        return new BaseApiManager();
+    }
 
 }

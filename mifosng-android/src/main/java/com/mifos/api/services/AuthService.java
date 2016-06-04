@@ -7,9 +7,9 @@ package com.mifos.api.services;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.User;
 
-import retrofit.Callback;
 import retrofit.http.POST;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -17,7 +17,7 @@ import retrofit.http.Query;
 public interface AuthService {
 
     @POST(APIEndPoint.AUTHENTICATION)
-    void authenticate(@Query("username") String username, @Query("password") String password,
-                      Callback<User> userCallback);
+    Observable<User> authenticate(@Query("username") String username,
+                                  @Query("password") String password);
 
 }

@@ -26,7 +26,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.App;
-import com.mifos.mifosxdroid.LoginActivity;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;

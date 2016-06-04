@@ -3,6 +3,8 @@ package com.mifos.mifosxdroid.injection.component;
 import android.app.Application;
 import android.content.Context;
 
+import com.mifos.api.BaseApiManager;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.squareup.otto.Bus;
@@ -19,15 +21,12 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
-    //void inject(SyncService syncService);
 
     @ApplicationContext
     Context context();
     Application application();
-//    RibotsService ribotsService();
-//    PreferencesHelper preferencesHelper();
-//    DatabaseHelper databaseHelper();
-//    DataManager dataManager();
+    BaseApiManager baseApiManager();
+    DataManager dataManager();
     Bus eventBus();
 
 }

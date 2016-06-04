@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.mifos.mifosxdroid.LoginActivity;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;

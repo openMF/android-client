@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.mifos.App;
 import com.mifos.mifosxdroid.GroupActivity;
-import com.mifos.mifosxdroid.LoginActivity;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
