@@ -48,7 +48,7 @@ public class BaseApiManager {
     private DataTableService dataTableApi;
     private LoanService loanApi;
     private SavingsAccountService savingsApi;
-    private ChargeService chargeService;
+    private ChargeService chargeApi;
     private CreateSavingsAccountService createSavingsAccountService;
     private SearchService searchApi;
     private GpsCoordinatesService gpsApi;
@@ -77,7 +77,7 @@ public class BaseApiManager {
         officeApi = createApi(OfficeService.class, API_ENDPOINT);
         staffApi = createApi(StaffService.class, API_ENDPOINT);
         surveyApi = createApi(SurveyService.class, API_ENDPOINT);
-        chargeService = createApi(ChargeService.class, API_ENDPOINT);
+        chargeApi = createApi(ChargeService.class, API_ENDPOINT);
         createSavingsAccountService = createApi(CreateSavingsAccountService.class, API_ENDPOINT);
         groupAccountsServiceApi = createApi(GroupAccountService.class, API_ENDPOINT);
 
@@ -175,8 +175,8 @@ public class BaseApiManager {
         return surveyApi;
     }
 
-    public ChargeService getChargeService() {
-        return chargeService;
+    public ChargeService getChargeApi() {
+        return chargeApi;
     }
 
     public CreateSavingsAccountService getCreateSavingsAccountService() {

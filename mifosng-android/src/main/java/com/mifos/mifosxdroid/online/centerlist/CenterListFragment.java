@@ -43,7 +43,7 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
     private View rootView;
 
     @InjectView(R.id.lv_center_list)
-    private ListView lv_centers_list;
+    ListView lv_centers_list;
 
     private CentersListAdapter centersListAdapter;
     private OnFragmentInteractionListener mListener;

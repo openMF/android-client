@@ -15,7 +15,7 @@ import android.view.KeyEvent;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.dialogfragments.ChargeDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
-import com.mifos.mifosxdroid.online.ClientChargeFragment;
+import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.ClientDetailsFragment;
 import com.mifos.utils.Constants;
 

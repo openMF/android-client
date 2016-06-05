@@ -419,29 +419,29 @@ public class ApiManager extends BaseApiManager {
      */
 
     public void getAllCharges(Callback<Response> callback) {
-//        getChargeService().getAllCharges(callback);
+//        getChargeApi().getAllCharges(callback);
     }
 
     public void getAllChargesV2(int clientId, Callback<Response> callback) {
-        getChargeService().getAllChargesS(clientId, callback);
+        getChargeApi().getAllChargesS(clientId, callback);
     }
 
 
     public void getAllChargesV3(int loanId, Callback<Response> callback) {
-        getChargeService().getAllChargev3(loanId, callback);
+        getChargeApi().getAllChargev3(loanId, callback);
     }
 
-    public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
-        getChargeService().getListOfCharges(clientId, callback);
-    }
+    /*public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
+        getChargeApi().getListOfCharges(clientId, callback);
+    }*/
 
     public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
-        getChargeService().createCharges(clientId, payload, callback);
+        getChargeApi().createCharges(clientId, payload, callback);
     }
 
     public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges>
             callback) {
-        getChargeService().createLoanCharges(loanId, chargesPayload, callback);
+        getChargeApi().createLoanCharges(loanId, chargesPayload, callback);
     }
 
 
