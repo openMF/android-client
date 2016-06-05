@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.injection.component;
 import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
+import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 
 import dagger.Component;
 
@@ -15,5 +16,7 @@ import dagger.Component;
 public interface ActivityComponent {
 
     void inject(LoginActivity loginActivity);
+
+    void inject(CenterListFragment centerListFragment);
 
 }

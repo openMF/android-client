@@ -12,5 +12,4 @@ public interface LoginMvpView extends MvpView{
 
     void onLoginError(Throwable throwable);
 
-    void showProgress(boolean show);
 }
