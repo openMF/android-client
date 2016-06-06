@@ -46,6 +46,7 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
     ListView lv_centers_list;
 
     private CentersListAdapter centersListAdapter;
+
     private OnFragmentInteractionListener mListener;
 
     private List<Center> mCentersList;
@@ -131,7 +132,7 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
     }
 
     @Override
-    public void showProgressBar(boolean b) {
+    public void showProgressbar(boolean b) {
         showProgress(b);
     }
 

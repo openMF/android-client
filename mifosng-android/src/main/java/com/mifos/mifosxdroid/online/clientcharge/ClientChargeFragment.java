@@ -9,7 +9,6 @@ package com.mifos.mifosxdroid.online.clientcharge;
  */
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -48,23 +47,27 @@ import retrofit.client.Response;
 public class ClientChargeFragment extends MifosBaseFragment implements ClientChargeMvpView {
 
     public static final int MENU_ITEM_ADD_NEW_CHARGES = 2000;
+
     @InjectView(R.id.lv_charges)
     ListView lv_charges;
-    List<Charges> chargesList = new ArrayList<Charges>();
+
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    List<Charges> chargesList = new ArrayList<Charges>();
+
     private View rootView;
+
     private Context context;
-    private SharedPreferences sharedPreferences;
+
     private int clientId;
-    private int index = 0;
-    private int top = 0;
+
     private boolean isInfiniteScrollEnabled = false;
 
     @Inject
     ClientChargePresenter mClientChargePresenter;
 
-    ChargeNameListAdapter chargesNameListAdapter;
+    ChargeNameListAdapter mChargesNameListAdapter;
 
     public ClientChargeFragment() {
 
@@ -129,11 +132,11 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
     public void inflateChargeList() {
 
-        chargesNameListAdapter = new ChargeNameListAdapter(context, chargesList, clientId);
-        lv_charges.setAdapter(chargesNameListAdapter);
+        mChargesNameListAdapter = new ChargeNameListAdapter(context, chargesList, clientId);
+        lv_charges.setAdapter(mChargesNameListAdapter);
 
         if (isInfiniteScrollEnabled) {
-            setInfiniteScrollListener(chargesNameListAdapter);
+            setInfiniteScrollListener();
         }
 
 
@@ -185,7 +188,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     }
 
     @SuppressWarnings("deprecation")
-    public void setInfiniteScrollListener(final ChargeNameListAdapter chargesNameListAdapter) {
+    public void setInfiniteScrollListener() {
 
         lv_charges.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -211,10 +214,6 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
     }
 
-
-    public List<Charges> getChargesList() {
-        return chargesList;
-    }
 
     public void setChargesList(List<Charges> chargesList) {
         this.chargesList = chargesList;
@@ -260,15 +259,15 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     public void showMoreClientCharges(Page<Charges> chargesPage) {
 
         chargesList.addAll(chargesPage.getPageItems());
-        chargesNameListAdapter.notifyDataSetChanged();
-        index = lv_charges.getFirstVisiblePosition();
+        mChargesNameListAdapter.notifyDataSetChanged();
         View v = lv_charges.getChildAt(0);
-        top = (v == null) ? 0 : v.getTop();
-        lv_charges.setSelectionFromTop(index, top);
+        lv_charges.setSelectionFromTop(
+                lv_charges.getFirstVisiblePosition(),
+                (v == null) ? 0 : v.getTop());
     }
 
     @Override
-    public void showProgressBar(boolean b) {
+    public void showProgressbar(boolean b) {
         if (b) {
             showProgress("Loading Charges");
         } else {

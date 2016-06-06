@@ -8,5 +8,5 @@ package com.mifos.mifosxdroid.base;
  */
 public interface MvpView {
 
-    void showProgressBar(boolean b);
+    void showProgressbar(boolean b);
 }

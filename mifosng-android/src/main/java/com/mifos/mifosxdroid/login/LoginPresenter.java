@@ -39,25 +39,25 @@ public class LoginPresenter implements Presenter<LoginMvpView> {
 
     public void login(String instanceURL, String username, String password) {
         App.apiManager.setupEndpoint(instanceURL);
-        mLoginMvpView.showProgressBar(true);
+        mLoginMvpView.showProgressbar(true);
         mSubscription = mDataManager.login(username, password)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        mLoginMvpView.showProgressBar(false);
+                        mLoginMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mLoginMvpView.showProgressBar(false);
+                        mLoginMvpView.showProgressbar(false);
                         mLoginMvpView.onLoginError(e);
                     }
 
                     @Override
                     public void onNext(User user) {
-                        mLoginMvpView.showProgressBar(false);
+                        mLoginMvpView.showProgressbar(false);
                         mLoginMvpView.onLoginSuccessful(user);
                     }
                 });

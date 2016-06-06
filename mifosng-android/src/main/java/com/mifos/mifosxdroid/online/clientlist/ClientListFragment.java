@@ -45,14 +45,19 @@ public class ClientListFragment extends MifosBaseFragment
 
     @InjectView(R.id.rv_clients)
     RecyclerView rv_clients;
+
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
     private View rootView;
+
     private List<Client> clientList = new ArrayList<>();
+
     private LinearLayoutManager layoutManager;
+
     private int totalFilteredRecords = 0;
-    private int limit = 200;
+
+    private int limit = 100;
 
     private boolean isInfiniteScrollEnabled = true;
 
@@ -119,7 +124,9 @@ public class ClientListFragment extends MifosBaseFragment
                 fetchClientList();
             }
         });
+
         fetchClientList();
+
         return rootView;
     }
 
@@ -192,7 +199,7 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     @Override
-    public void showProgressBar(boolean b) {
+    public void showProgressbar(boolean b) {
 
     }
 

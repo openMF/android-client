@@ -41,7 +41,7 @@ public class CenterListPresenter implements Presenter<CenterListMvpView> {
     }
 
     public void loadCenters() {
-        mCenterListMvpView.showProgressBar(true);
+        mCenterListMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription  = mDataManager.getCenters()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,18 +49,18 @@ public class CenterListPresenter implements Presenter<CenterListMvpView> {
                 .subscribe(new Subscriber<List<Center>>() {
                     @Override
                     public void onCompleted() {
-                        mCenterListMvpView.showProgressBar(false);
+                        mCenterListMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mCenterListMvpView.showProgressBar(false);
+                        mCenterListMvpView.showProgressbar(false);
                         mCenterListMvpView.showCenterGroupFetchinError();
                     }
 
                     @Override
                     public void onNext(List<Center> centers) {
-                        mCenterListMvpView.showProgressBar(false);
+                        mCenterListMvpView.showProgressbar(false);
                         mCenterListMvpView.showCenters(centers);
                     }
                 });
@@ -68,7 +68,7 @@ public class CenterListPresenter implements Presenter<CenterListMvpView> {
     }
 
     public void loadCentersGroupAndMeeting(final int id) {
-        mCenterListMvpView.showProgressBar(true);
+        mCenterListMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getCentersGroupAndMeeting(id)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -76,17 +76,17 @@ public class CenterListPresenter implements Presenter<CenterListMvpView> {
                 .subscribe(new Subscriber<CenterWithAssociations>() {
                     @Override
                     public void onCompleted() {
-                        mCenterListMvpView.showProgressBar(false);
+                        mCenterListMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mCenterListMvpView.showProgressBar(false);
+                        mCenterListMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onNext(CenterWithAssociations centerWithAssociations) {
-                        mCenterListMvpView.showProgressBar(false);
+                        mCenterListMvpView.showProgressbar(false);
                         mCenterListMvpView.showCentersGroupAndMeeting(
                                 centerWithAssociations, id);
                     }

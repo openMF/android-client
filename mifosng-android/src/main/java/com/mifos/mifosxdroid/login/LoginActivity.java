@@ -199,7 +199,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     }
 
     @Override
-    public void showProgressBar(boolean show) {
+    public void showProgressbar(boolean show) {
         if (show) {
             showProgress("Logging In");
         } else {

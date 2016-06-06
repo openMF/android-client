@@ -1,7 +1,7 @@
-package com.mifos.mifosxdroid.online.clientlist;
+package com.mifos.mifosxdroid.online.clientchoose;
 
 import com.mifos.api.DataManager;
-import com.mifos.mifosxdroid.base.Presenter;
+import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 
@@ -13,34 +13,32 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Rajan Maurya on 6/6/16.
+ * Created by Rajan Maurya on 06/06/16.
  */
-public class ClientListPresenter implements Presenter<ClientListMvpView> {
-
+public class ClientChoosePresenter extends BasePresenter<ClientChooseMvpView> {
 
     private final DataManager mDataManager;
     private Subscription mSubscription;
-    private ClientListMvpView mClientListMvpView;
 
     @Inject
-    public ClientListPresenter(DataManager dataManager) {
+    public ClientChoosePresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }
 
     @Override
-    public void attachView(ClientListMvpView mvpView) {
-        mClientListMvpView = mvpView;
+    public void attachView(ClientChooseMvpView mvpView) {
+        super.attachView(mvpView);
     }
 
     @Override
     public void detachView() {
-        mClientListMvpView = null;
+        super.detachView();
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-
-    public void loadClients() {
-        mClientListMvpView.showProgressbar(true);
+    public void loadClientsList() {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getAllClients()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,26 +46,29 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
                 .subscribe(new Subscriber<Page<Client>>() {
                     @Override
                     public void onCompleted() {
-                        mClientListMvpView.showProgressbar(false);
+                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientListMvpView.showProgressbar(false);
-                        mClientListMvpView.showErrorFetchingClients(
-                                "\"There was some error fetching list.\"");
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError(
+                                "\"Cannot get clients, There might be some" + " problem!\"");
                     }
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
-                        mClientListMvpView.showProgressbar(false);
-                        mClientListMvpView.showClientList(clientPage);
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showClientList(clientPage);
                     }
                 });
+
+
     }
 
-    public void loadMoreClients(int offset, int limit) {
-        mClientListMvpView.showProgressbar(true);
+    public void loadMoreClientList(int offset, int limit) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getAllClients(offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -75,22 +76,23 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
                 .subscribe(new Subscriber<Page<Client>>() {
                     @Override
                     public void onCompleted() {
-                        mClientListMvpView.showProgressbar(false);
+                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientListMvpView.showProgressbar(false);
-                        mClientListMvpView.showErrorFetchingClients(
-                                "\"There was some error fetching list.\"");
-
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError(
+                                "\"Cannot get clients, There might be some" + " problem!\"");
                     }
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
-                        mClientListMvpView.showProgressbar(false);
-                        mClientListMvpView.showMoreClientsList(clientPage);
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showMoreClientList(clientPage);
                     }
                 });
+
     }
+
 }

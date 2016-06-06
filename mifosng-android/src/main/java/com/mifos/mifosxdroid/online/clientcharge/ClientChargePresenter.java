@@ -41,7 +41,7 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
     }
 
     public void loadCharges(int id) {
-        mClientChargeMvpView.showProgressBar(true);
+        mClientChargeMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getClientCharges(id)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,12 +49,12 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
                 .subscribe(new Subscriber<Page<Charges>>() {
                     @Override
                     public void onCompleted() {
-                        mClientChargeMvpView.showProgressBar(false);
+                        mClientChargeMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientChargeMvpView.showProgressBar(false);
+                        mClientChargeMvpView.showProgressbar(false);
                         if (e instanceof RetrofitError) {
                             Response response = ((RetrofitError) e).getResponse();
                             mClientChargeMvpView.showFetchingErrorCharges(response);
@@ -63,14 +63,14 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
 
                     @Override
                     public void onNext(Page<Charges> chargesPage) {
-                        mClientChargeMvpView.showProgressBar(false);
+                        mClientChargeMvpView.showProgressbar(false);
                         mClientChargeMvpView.showChargesList(chargesPage);
                     }
                 });
     }
 
     public void loadMoreClientCharges(int clientId) {
-        mClientChargeMvpView.showProgressBar(true);
+        mClientChargeMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getClientCharges(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,12 +78,12 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
                 .subscribe(new Subscriber<Page<Charges>>() {
                     @Override
                     public void onCompleted() {
-                        mClientChargeMvpView.showProgressBar(false);
+                        mClientChargeMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientChargeMvpView.showProgressBar(false);
+                        mClientChargeMvpView.showProgressbar(false);
                         if (e instanceof RetrofitError) {
                             Response response = ((RetrofitError) e).getResponse();
                             mClientChargeMvpView.showFetchingErrorCharges(response);
@@ -92,7 +92,7 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
 
                     @Override
                     public void onNext(Page<Charges> chargesPage) {
-                        mClientChargeMvpView.showProgressBar(false);
+                        mClientChargeMvpView.showProgressbar(false);
                         mClientChargeMvpView.showMoreClientCharges(chargesPage);
                     }
                 });
