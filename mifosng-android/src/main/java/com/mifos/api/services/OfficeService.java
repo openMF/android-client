@@ -11,6 +11,7 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.GET;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -22,5 +23,5 @@ public interface OfficeService {
      * @param listOfOfficesCallback
      */
     @GET(APIEndPoint.OFFICES)
-    void getAllOffices(Callback<List<Office>> listOfOfficesCallback);
+    Observable<List<Office>> getAllOffices();
 }

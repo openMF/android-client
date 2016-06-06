@@ -125,10 +125,10 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().getCenterWithGroupMembersAndCollectionMeetingCalendar(id, callback);
     }*/
 
-    public void getCentersInOffice(int id, Map<String, Object> params, Callback<List<Center>>
+    /*public void getCentersInOffice(int id, Map<String, Object> params, Callback<List<Center>>
             callback) {
         getCenterApi().getAllCentersInOffice(id, params, callback);
-    }
+    }*/
 
     /*public void getGroupsByCenter(int id, Callback<CenterWithAssociations> callback) {
         getCenterApi().getAllGroupsForCenter(id, callback);
@@ -338,10 +338,10 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().getGroupWithAssociations(group, callback);
     }*/
 
-    public void getGroupsByOffice(int office, Map<String, Object> params, Callback<List<Group>>
+   /* public void getGroupsByOffice(int office, Map<String, Object> params, Callback<List<Group>>
             callback) {
         getGroupApi().getAllGroupsInOffice(office, params, callback);
-    }
+    }*/
 
     public void createGroup(GroupPayload groupPayload, Callback<Group> callback) {
         getGroupApi().createGroup(groupPayload, callback);
@@ -398,17 +398,17 @@ public class ApiManager extends BaseApiManager {
      * Offices API
      */
 
-    public void getOffices(Callback<List<Office>> callback) {
+    /*public void getOffices(Callback<List<Office>> callback) {
         getOfficeApi().getAllOffices(callback);
-    }
+    }*/
 
     /**
      * Staff API
      */
 
-    public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
+   /* public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
         getStaffApi().getStaffForOffice(officeId, callback);
-    }
+    }*/
 
     public void getAllStaff(Callback<List<Staff>> listOfStaffsCallback) {
         getStaffApi().getAllStaff(listOfStaffsCallback);

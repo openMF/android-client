@@ -10,6 +10,7 @@ import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
+import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment;
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 
 import dagger.Component;
@@ -39,5 +40,7 @@ public interface ActivityComponent {
     void inject(DocumentListFragment documentListFragment);
 
     void inject(GroupListFragment groupListFragment);
+
+    void inject(GenerateCollectionSheetFragment generateCollectionSheetFragment);
 
 }

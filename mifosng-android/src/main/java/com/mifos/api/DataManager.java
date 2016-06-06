@@ -7,11 +7,15 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.Staff;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,6 +63,10 @@ public class DataManager {
 
     public Observable<CenterWithAssociations> getGroupsByCenter(int id) {
         return mBaseApiManager.getCenterApi().getAllGroupsForCenter(id);
+    }
+
+    public Observable<List<Center>> getCentersInOffice(int id, Map<String, Object> params) {
+        return mBaseApiManager.getCenterApi().getAllCentersInOffice(id,params);
     }
 
 
@@ -111,6 +119,26 @@ public class DataManager {
      */
     public Observable<GroupWithAssociations> getGroups(int groupid) {
         return mBaseApiManager.getGroupApi().getGroupWithAssociations(groupid);
+    }
+
+    public Observable<List<Group>> getGroupsByOffice(int office, Map<String, Object> params) {
+        return mBaseApiManager.getGroupApi().getAllGroupsInOffice(office,params);
+    }
+
+
+    /**
+     * Offices API
+     */
+    public Observable<List<Office>> getOffices() {
+        return mBaseApiManager.getOfficeApi().getAllOffices();
+    }
+
+
+    /**
+     * Staff API
+     */
+    public Observable<List<Staff>> getStaffInOffice(int officeId) {
+        return mBaseApiManager.getStaffApi().getStaffForOffice(officeId);
     }
 
 
