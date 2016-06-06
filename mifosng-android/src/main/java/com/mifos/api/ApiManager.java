@@ -386,9 +386,9 @@ public class ApiManager extends BaseApiManager {
      * Identifiers API
      */
 
-    public void getIdentifiers(int clientId, Callback<List<Identifier>> callback) {
+    /*public void getIdentifiers(int clientId, Callback<List<Identifier>> callback) {
         getIdentifierApi().getListOfIdentifiers(clientId, callback);
-    }
+    }*/
 
     public void deleteIdentifier(int clientId, int id, Callback<GenericResponse> callback) {
         getIdentifierApi().deleteIdentifier(clientId, id, callback);

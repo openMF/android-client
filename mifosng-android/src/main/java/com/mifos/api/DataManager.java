@@ -6,6 +6,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.noncore.Identifier;
 
 import java.util.List;
 
@@ -74,6 +75,14 @@ public class DataManager {
 
     public Observable<Page<Client>> getAllClients(int offset, int limit) {
         return mBaseApiManager.getClientsApi().getAllClients(offset, limit);
+    }
+
+    /**
+     * Identifiers API
+     */
+
+    public Observable<List<Identifier>> getIdentifiers(int clientid) {
+        return mBaseApiManager.getIdentifierApi().getListOfIdentifiers(clientid);
     }
 
 }

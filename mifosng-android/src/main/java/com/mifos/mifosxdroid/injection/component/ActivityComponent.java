@@ -6,6 +6,7 @@ import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
+import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 
 import dagger.Component;
@@ -27,5 +28,7 @@ public interface ActivityComponent {
     void inject(ClientListFragment clientListFragment);
 
     void inject(ClientChooseFragment clientChooseFragment);
+
+    void inject(ClientIdentifiersFragment clientIdentifiersFragment);
 
 }
