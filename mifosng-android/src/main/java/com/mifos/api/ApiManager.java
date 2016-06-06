@@ -12,7 +12,6 @@ import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
@@ -31,14 +30,8 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.group.Center;
-import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
-import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.DataTable;
-import com.mifos.objects.noncore.Document;
-import com.mifos.objects.noncore.Identifier;
-import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
@@ -48,10 +41,8 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
-import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
-import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.services.data.SavingsPayload;
 
@@ -343,10 +334,10 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().getAllGroupsInOffice(office, params, callback);
     }*/
 
-    public void createGroup(GroupPayload groupPayload, Callback<Group> callback) {
+    /*public void createGroup(GroupPayload groupPayload, Callback<Group> callback) {
         getGroupApi().createGroup(groupPayload, callback);
 
-    }
+    }*/
 
     public void getGroup(int group, Callback<Group> groupCallback) {
         getGroupApi().getGroup(group, groupCallback);

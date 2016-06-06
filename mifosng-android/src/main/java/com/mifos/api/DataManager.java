@@ -14,6 +14,7 @@ import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.GroupPayload;
 
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class DataManager {
     }
 
     public Observable<List<Center>> getCentersInOffice(int id, Map<String, Object> params) {
-        return mBaseApiManager.getCenterApi().getAllCentersInOffice(id,params);
+        return mBaseApiManager.getCenterApi().getAllCentersInOffice(id, params);
     }
 
     public Observable<Center> createCenter(CenterPayload centerPayload) {
@@ -127,7 +128,11 @@ public class DataManager {
     }
 
     public Observable<List<Group>> getGroupsByOffice(int office, Map<String, Object> params) {
-        return mBaseApiManager.getGroupApi().getAllGroupsInOffice(office,params);
+        return mBaseApiManager.getGroupApi().getAllGroupsInOffice(office, params);
+    }
+
+    public Observable<Group> createGroup(GroupPayload groupPayload) {
+        return mBaseApiManager.getGroupApi().createGroup(groupPayload);
     }
 
 

@@ -35,7 +35,7 @@ public interface GroupService {
                                                  @QueryMap Map<String, Object> params);
 
     @POST(APIEndPoint.GROUPS)
-    void createGroup(@Body GroupPayload groupPayload, Callback<Group> callback);
+    Observable<Group> createGroup(@Body GroupPayload groupPayload);
 
     @GET(APIEndPoint.GROUPS + "/{groupId}")
     void getGroup(@Path("groupId") int groupId, Callback<Group> groupCallback);

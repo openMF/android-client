@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.createnewgroup;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -27,11 +27,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Group;
@@ -44,32 +44,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
-public class CreateNewGroupFragment extends ProgressableFragment implements MFDatePicker
-        .OnDatePickListener {
+public class CreateNewGroupFragment extends ProgressableFragment
+        implements MFDatePicker.OnDatePickListener, CreateNewGroupMvpView {
 
 
     private final String LOG_TAG = getClass().getSimpleName();
+
     @InjectView(R.id.et_group_name)
     EditText et_groupName;
+
     @InjectView(R.id.et_group_external_id)
     EditText et_groupexternalId;
+
     @InjectView(R.id.cb_group_active_status)
     CheckBox cb_groupActiveStatus;
+
     @InjectView(R.id.tv_group_submission_date)
     TextView tv_submissionDate;
+
     @InjectView(R.id.tv_group_activationDate)
     TextView tv_activationDate;
+
     @InjectView(R.id.sp_group_offices)
     Spinner sp_offices;
+
     @InjectView(R.id.bt_submit)
     Button bt_submit;
+
+    @Inject
+    CreateNewGroupPresenter mCreateNewGroupPresenter;
+
     String activationdateString;
     int officeId;
     Boolean result = true;
@@ -92,13 +102,17 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_group, null);
+
         ButterKnife.inject(this, rootView);
+        mCreateNewGroupPresenter.attachView(this);
+
         inflateOfficeSpinner();
         inflateSubmissionDate();
         inflateActivationDate();
@@ -150,85 +164,16 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        showProgress(true);
-        App.apiManager.getOffices(new Callback<List<Office>>() {
-
-            @Override
-            public void success(List<Office> offices, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
-
-                final ArrayList<String> officeList = new ArrayList<String>();
-
-                for (Office office : offices) {
-                    officeList.add(office.getName());
-                    officeNameIdHashMap.put(office.getName(), office.getId());
-                }
-                ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, officeList);
-                officeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
-                sp_offices.setAdapter(officeAdapter);
-                sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        officeId = officeNameIdHashMap.get(officeList.get(i));
-                        Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-                        if (officeId != -1) {
-
-
-                        } else {
-
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office)
-                                    , Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                showProgress(false);
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
-
-            }
-        });
-
+        mCreateNewGroupPresenter.loadOffices();
     }
 
     private void initiateGroupCreation(GroupPayload groupPayload) {
         //TextField validations
-
         if (!isValidGroupName()) {
             return;
         }
-        App.apiManager.createGroup(groupPayload, new Callback<Group>() {
-            @Override
-            public void success(Group group, Response response) {
-                showProgress(false);
-                Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG)
-                        .show();
 
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                showProgress(false);
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
+        mCreateNewGroupPresenter.createGroup(groupPayload);
     }
 
 
@@ -302,13 +247,72 @@ public class CreateNewGroupFragment extends ProgressableFragment implements MFDa
 
 
     @Override
+    public void showOffices(List<Office> offices) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
+
+        final ArrayList<String> officeList = new ArrayList<String>();
+
+        for (Office office : offices) {
+            officeList.add(office.getName());
+            officeNameIdHashMap.put(office.getName(), office.getId());
+        }
+        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, officeList);
+        officeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
+        sp_offices.setAdapter(officeAdapter);
+        sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                    l) {
+                officeId = officeNameIdHashMap.get(officeList.get(i));
+                Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+                if (officeId != -1) {
+
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office)
+                            , Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void showGroupCreatedSuccessfully(Group group) {
+        Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mCreateNewGroupPresenter.detachView();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
     }
-
 }
