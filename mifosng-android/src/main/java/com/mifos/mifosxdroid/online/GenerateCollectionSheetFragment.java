@@ -282,7 +282,7 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
     }
 
     public void inflateGroupSpinner(final int centerId) {
-        App.apiManager.getGroupsByCenter(centerId, new Callback<CenterWithAssociations>() {
+        /*App.apiManager.getGroupsByCenter(centerId, new Callback<CenterWithAssociations>() {
             @Override
             public void success(CenterWithAssociations centerWithAssociations, Response response) {
                 List<Group> groups = centerWithAssociations.getGroupMembers();
@@ -305,6 +305,6 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment {
             public void failure(RetrofitError retrofitError) {
 
             }
-        });
+        });*/
     }
 }

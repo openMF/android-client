@@ -7,6 +7,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 
@@ -56,6 +57,10 @@ public class DataManager {
                 .getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
     }
 
+    public Observable<CenterWithAssociations> getGroupsByCenter(int id) {
+        return mBaseApiManager.getCenterApi().getAllGroupsForCenter(id);
+    }
+
 
     /**
      * Charges API
@@ -99,5 +104,14 @@ public class DataManager {
     public Observable<List<Document>> getDocumentsList(String type, int id) {
         return mBaseApiManager.getDocumentApi().getListOfDocuments(type, id);
     }
+
+
+    /**
+     * Groups API
+     */
+    public Observable<GroupWithAssociations> getGroups(int groupid) {
+        return mBaseApiManager.getGroupApi().getGroupWithAssociations(groupid);
+    }
+
 
 }

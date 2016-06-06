@@ -130,9 +130,9 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().getAllCentersInOffice(id, params, callback);
     }
 
-    public void getGroupsByCenter(int id, Callback<CenterWithAssociations> callback) {
+    /*public void getGroupsByCenter(int id, Callback<CenterWithAssociations> callback) {
         getCenterApi().getAllGroupsForCenter(id, callback);
-    }
+    }*/
 
     public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
         getCenterApi().getCollectionSheet(id, payload, callback);
@@ -334,9 +334,9 @@ public class ApiManager extends BaseApiManager {
      * Groups API
      */
 
-    public void getGroups(int group, Callback<GroupWithAssociations> callback) {
+    /*public void getGroups(int group, Callback<GroupWithAssociations> callback) {
         getGroupApi().getGroupWithAssociations(group, callback);
-    }
+    }*/
 
     public void getGroupsByOffice(int office, Map<String, Object> params, Callback<List<Group>>
             callback) {

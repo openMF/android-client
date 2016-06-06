@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.grouplist;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -24,6 +26,8 @@ import com.mifos.utils.Constants;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -31,15 +35,30 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class GroupListFragment extends ProgressableFragment {
+public class GroupListFragment extends ProgressableFragment
+        implements GroupListMvpView, AdapterView.OnItemClickListener{
 
     @InjectView(R.id.lv_group_list)
     ListView lv_groupList;
 
+    @Inject
+    GroupListPresenter mGroupListPresenter;
+
+    private GroupListAdapter mGroupListAdapter;
+
+    private CenterWithAssociations mCenterWithAssociations;
+
     private View rootView;
+
     private OnFragmentInteractionListener mListener;
 
     private int centerId;
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mGroupListPresenter.loadGroups(
+                mCenterWithAssociations.getGroupMembers().get(position).getId());
+    }
 
     public static GroupListFragment newInstance(int centerId) {
         GroupListFragment fragment = new GroupListFragment();
@@ -52,6 +71,7 @@ public class GroupListFragment extends ProgressableFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             centerId = getArguments().getInt(Constants.CENTER_ID);
     }
@@ -60,10 +80,51 @@ public class GroupListFragment extends ProgressableFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_list, container, false);
+
         ButterKnife.inject(this, rootView);
+        mGroupListPresenter.attachView(this);
+
         setToolbarTitle(getResources().getString(R.string.title_center_list));
+        lv_groupList.setOnItemClickListener(this);
+
         inflateGroupList();
+
         return rootView;
+    }
+
+
+    public void inflateGroupList() {
+        mGroupListPresenter.loadGroupByCenter(centerId);
+    }
+
+
+    @Override
+    public void showGroupList(CenterWithAssociations centerWithAssociations) {
+        if (centerWithAssociations != null) {
+
+            mCenterWithAssociations = centerWithAssociations;
+            mGroupListAdapter = new GroupListAdapter(getActivity(),
+                    centerWithAssociations.getGroupMembers());
+            lv_groupList.setAdapter(mGroupListAdapter);
+
+        }
+    }
+
+    @Override
+    public void showGroups(GroupWithAssociations groupWithAssociations) {
+        if (groupWithAssociations != null)
+            mListener.loadClientsOfGroup(groupWithAssociations
+                    .getClientMembers());
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
     }
 
     @Override
@@ -78,54 +139,16 @@ public class GroupListFragment extends ProgressableFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mGroupListPresenter.detachView();
+    }
+
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public void inflateGroupList() {
-        showProgress(true);
-        App.apiManager.getGroupsByCenter(centerId, new Callback<CenterWithAssociations>() {
-            @Override
-            public void success(final CenterWithAssociations centerWithAssociations, Response
-                    response) {
-                if (centerWithAssociations != null) {
-
-                    GroupListAdapter groupListAdapter = new GroupListAdapter(getActivity(),
-                            centerWithAssociations.getGroupMembers());
-                    lv_groupList.setAdapter(groupListAdapter);
-                    lv_groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            int groupId = centerWithAssociations.getGroupMembers().get(i).getId();
-                            App.apiManager.getGroups(groupId,
-                                    new Callback<GroupWithAssociations>() {
-                                        @Override
-                                        public void success(GroupWithAssociations
-                                                                    groupWithAssociations,
-                                                            Response response) {
-                                            if (groupWithAssociations != null)
-                                                mListener.loadClientsOfGroup(groupWithAssociations
-                                                        .getClientMembers());
-                                        }
-
-                                        @Override
-                                        public void failure(RetrofitError retrofitError) {
-
-                                        }
-                                    });
-                        }
-                    });
-                    showProgress(false);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                showProgress(false);
-            }
-        });
     }
 
     public interface OnFragmentInteractionListener {

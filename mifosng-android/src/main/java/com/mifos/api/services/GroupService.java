@@ -20,14 +20,15 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.http.QueryMap;
+import rx.Observable;
 
 /**
  * @author fomenkoo
  */
 public interface GroupService {
+
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
-    void getGroupWithAssociations(@Path("groupId") int groupId, Callback<GroupWithAssociations>
-            groupWithAssociationsCallback);
+    Observable<GroupWithAssociations> getGroupWithAssociations(@Path("groupId") int groupId);
 
     @GET(APIEndPoint.GROUPS)
     void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object>

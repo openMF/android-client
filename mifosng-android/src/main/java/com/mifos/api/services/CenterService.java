@@ -45,8 +45,8 @@ public interface CenterService {
                                Callback<List<Center>> centersCallback);
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
-    void getAllGroupsForCenter(@Path("centerId") int centerId,
-                               Callback<CenterWithAssociations> centerWithAssociationsCallback);
+    Observable<CenterWithAssociations> getAllGroupsForCenter(@Path("centerId") int centerId);
+
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
     void getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload,
