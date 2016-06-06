@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.utils.EspressoIdlingResource;
 
 /**

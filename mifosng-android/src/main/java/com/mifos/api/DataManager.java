@@ -13,6 +13,7 @@ import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.services.data.CenterPayload;
 
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,10 @@ public class DataManager {
 
     public Observable<List<Center>> getCentersInOffice(int id, Map<String, Object> params) {
         return mBaseApiManager.getCenterApi().getAllCentersInOffice(id,params);
+    }
+
+    public Observable<Center> createCenter(CenterPayload centerPayload) {
+        return mBaseApiManager.getCenterApi().createCenter(centerPayload);
     }
 
 

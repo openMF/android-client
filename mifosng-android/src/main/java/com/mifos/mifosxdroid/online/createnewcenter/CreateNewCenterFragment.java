@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.createnewcenter;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -11,6 +11,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
@@ -44,6 +46,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -51,20 +55,27 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CreateNewCenterFragment extends Fragment implements MFDatePicker.OnDatePickListener {
+public class CreateNewCenterFragment extends Fragment
+        implements MFDatePicker.OnDatePickListener, CreateNewCenterMvpView {
 
 
     private static final String TAG = "CreateNewCenter";
+
     @InjectView(R.id.et_center_name)
     EditText et_centerName;
+
     @InjectView(R.id.cb_center_active_status)
     CheckBox cb_centerActiveStatus;
+
     @InjectView(R.id.tv_center_activationDate)
     TextView tv_activationDate;
+
     @InjectView(R.id.sp_center_offices)
     Spinner sp_offices;
+
     @InjectView(R.id.bt_submit)
     Button bt_submit;
+
     int officeId;
     Boolean result = true;
     private View rootView;
@@ -72,16 +83,28 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
 
+    @Inject
+    CreateNewCenterPresenter mCreateNewCenterPresenter;
+
     public static CreateNewCenterFragment newInstance() {
         CreateNewCenterFragment createNewCenterFragment = new CreateNewCenterFragment();
         return createNewCenterFragment;
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_center, null);
+
         ButterKnife.inject(this, rootView);
+        mCreateNewCenterPresenter.attachView(this);
+
         inflateOfficeSpinner();
         inflateActivationDate();
         //client active checkbox onCheckedListener
@@ -124,65 +147,14 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        App.apiManager.getOffices(new Callback<List<Office>>() {
-
-            @Override
-            public void success(List<Office> offices, Response response) {
-                final List<String> officeList = new ArrayList<String>();
-
-                for (Office office : offices) {
-                    officeList.add(office.getName());
-                    officeNameIdHashMap.put(office.getName(), office.getId());
-                }
-                ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, officeList);
-                officeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
-                sp_offices.setAdapter(officeAdapter);
-                sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        officeId = officeNameIdHashMap.get(officeList.get(i));
-                        Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-                        if (officeId != -1) {
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office)
-                                    , Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-            }
-        });
+        mCreateNewCenterPresenter.loadOffices();
     }
 
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
 
         if (isValidCenterName()) {
-            App.apiManager.createCenter(centerPayload, new Callback<Center>() {
-                @Override
-                public void success(Center center, Response response) {
-                    Toast.makeText(getActivity(), "Center created successfully", Toast
-                            .LENGTH_LONG).show();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                }
-            });
+            mCreateNewCenterPresenter.createCenter(centerPayload);
         }
     }
 
@@ -239,6 +211,57 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
     }
 
 
+    @Override
+    public void showOffices(List<Office> offices) {
+        final List<String> officeList = new ArrayList<String>();
+
+        for (Office office : offices) {
+            officeList.add(office.getName());
+            officeNameIdHashMap.put(office.getName(), office.getId());
+        }
+        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, officeList);
+        officeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
+        sp_offices.setAdapter(officeAdapter);
+        sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView,
+                                       View view, int i, long l) {
+                officeId = officeNameIdHashMap.get(officeList.get(i));
+                Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+                if (officeId != -1) {
+
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office)
+                            , Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void centerCreatedSuccessfully(Center center) {
+        Toast.makeText(getActivity(), "Center created successfully", Toast
+                .LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
@@ -246,8 +269,13 @@ public class CreateNewCenterFragment extends Fragment implements MFDatePicker.On
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mCreateNewCenterPresenter.detachView();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }
-
 }

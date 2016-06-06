@@ -152,9 +152,9 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId, callback);
     }
 
-    public void createCenter(CenterPayload centerPayload, Callback<Center> callback) {
+    /*public void createCenter(CenterPayload centerPayload, Callback<Center> callback) {
         getCenterApi().createCenter(centerPayload, callback);
-    }
+    }*/
 
     /**
      * Client Accounts API
