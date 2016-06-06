@@ -9,6 +9,7 @@ import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 
 import dagger.Component;
 
@@ -33,5 +34,7 @@ public interface ActivityComponent {
     void inject(ClientIdentifiersFragment clientIdentifiersFragment);
 
     void inject(ClientSearchFragment clientSearchFragment);
+
+    void inject(DocumentListFragment documentListFragment);
 
 }

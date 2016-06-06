@@ -3,11 +3,12 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.documentlist;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.dialogfragments.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
@@ -29,21 +32,28 @@ import com.mifos.utils.FragmentConstants;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DocumentListFragment extends ProgressableFragment {
+public class DocumentListFragment extends ProgressableFragment implements DocumentListMvpView{
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
     @InjectView(R.id.lv_documents)
     ListView lv_documents;
 
+    @Inject
+    DocumentListPresenter mDocumentListPresenter;
+
     private View rootView;
+
     private String entityType;
+
     private int entityId;
 
     public static DocumentListFragment newInstance(String entityType, int entiyId) {
@@ -58,6 +68,9 @@ public class DocumentListFragment extends ProgressableFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+
         if (getArguments() != null) {
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -70,20 +83,23 @@ public class DocumentListFragment extends ProgressableFragment {
             savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_document_list, container, false);
+
         ButterKnife.inject(this, rootView);
+        mDocumentListPresenter.attachView(this);
+
         inflateDocumentList();
         return rootView;
     }
 
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         MenuItem menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu
                 .NONE, getString(R.string.add_new));
-        menuItemAddNewDocument.setIcon(getResources().getDrawable(R.drawable
-                .ic_action_content_new));
+        menuItemAddNewDocument
+                .setIcon(ContextCompat
+                .getDrawable(getActivity(), R.drawable.ic_action_content_new));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -106,41 +122,49 @@ public class DocumentListFragment extends ProgressableFragment {
     }
 
     public void inflateDocumentList() {
-        showProgress(true);
-        App.apiManager.getDocumentsList(entityType, entityId, new Callback<List<Document>>() {
-            @Override
-            public void success(final List<Document> documents, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
+        mDocumentListPresenter.loadDocumentList(entityType, entityId);
+    }
 
-                if (documents != null) {
-                    for (Document document : documents) {
-                        Log.w(document.getFileName(), document.getSize() + " bytes");
-                    }
+    @Override
+    public void showDocumentList(final List<Document> documents) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
 
-                    DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity
-                            (), documents);
-                    lv_documents.setAdapter(documentListAdapter);
-                    lv_documents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            AsyncFileDownloader asyncFileDownloader =
-                                    new AsyncFileDownloader(getActivity(),
-                                            documents.get(i).getFileName());
-                            asyncFileDownloader.execute(entityType, String.valueOf(entityId),
-                                    String.valueOf(documents.get(i).getId()));
-                        }
-                    });
+        if (documents != null) {
+            for (Document document : documents) {
+                Log.w(document.getFileName(), document.getSize() + " bytes");
+            }
+
+            DocumentListAdapter documentListAdapter = new DocumentListAdapter(getActivity
+                    (), documents);
+            lv_documents.setAdapter(documentListAdapter);
+            lv_documents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                        long l) {
+                    AsyncFileDownloader asyncFileDownloader =
+                            new AsyncFileDownloader(getActivity(),
+                                    documents.get(i).getFileName());
+                    asyncFileDownloader.execute(entityType, String.valueOf(entityId),
+                            String.valueOf(documents.get(i).getId()));
                 }
-                showProgress(false);
-            }
+            });
+        }
+    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.d("Error", retrofitError.getLocalizedMessage());
-                showProgress(false);
-            }
-        });
+    @Override
+    public void showFetchingError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDocumentListPresenter.detachView();
     }
 }
