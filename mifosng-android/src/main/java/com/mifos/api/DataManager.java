@@ -1,5 +1,6 @@
 package com.mifos.api;
 
+import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
@@ -42,8 +43,6 @@ public class DataManager {
     /**
      * Center API
      */
-
-
     //Return Centers List
     public Observable<List<Center>> getCenters() {
         return mBaseApiManager.getCenterApi().getAllCenters();
@@ -60,15 +59,14 @@ public class DataManager {
     /**
      * Charges API
      */
-
     public Observable<Page<Charges>> getClientCharges(int id) {
         return mBaseApiManager.getChargeApi().getListOfCharges(id);
     }
 
+
     /**
      * Client API
      */
-
     public Observable<Page<Client>> getAllClients() {
         return mBaseApiManager.getClientsApi().getAllClients();
     }
@@ -84,5 +82,13 @@ public class DataManager {
     public Observable<List<Identifier>> getIdentifiers(int clientid) {
         return mBaseApiManager.getIdentifierApi().getListOfIdentifiers(clientid);
     }
+
+    /**
+     * Search API
+     */
+    public Observable<List<SearchedEntity>> searchClientsByName(String query) {
+        return mBaseApiManager.getSearchApi().searchClientsByName(query);
+    }
+
 
 }

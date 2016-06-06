@@ -77,9 +77,9 @@ public class ApiManager extends BaseApiManager {
      * Search API
      */
 
-    public void searchClientsByName(String name, Callback<List<SearchedEntity>> callback) {
+    /*public void searchClientsByName(String name, Callback<List<SearchedEntity>> callback) {
         getSearchApi().searchClientsByName(name, callback);
-    }
+    }*/
 
     /**
      * Clients API

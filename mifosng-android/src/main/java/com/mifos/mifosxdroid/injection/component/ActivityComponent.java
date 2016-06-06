@@ -8,6 +8,7 @@ import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
+import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 
 import dagger.Component;
 
@@ -30,5 +31,7 @@ public interface ActivityComponent {
     void inject(ClientChooseFragment clientChooseFragment);
 
     void inject(ClientIdentifiersFragment clientIdentifiersFragment);
+
+    void inject(ClientSearchFragment clientSearchFragment);
 
 }
