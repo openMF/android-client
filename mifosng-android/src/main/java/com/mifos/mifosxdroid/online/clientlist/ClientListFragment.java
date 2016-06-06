@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.clientlist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListner.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
@@ -29,18 +31,17 @@ import com.mifos.utils.EspressoIdlingResource;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class ClientListFragment extends MifosBaseFragment implements RecyclerItemClickListner
-        .OnItemClickListener {
+public class ClientListFragment extends MifosBaseFragment
+        implements OnItemClickListener, ClientListMvpView{
 
     @InjectView(R.id.rv_clients)
     RecyclerView rv_clients;
@@ -54,6 +55,11 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
     private int limit = 200;
 
     private boolean isInfiniteScrollEnabled = true;
+
+    ClientNameListAdapter clientNameListAdapter;
+
+    @Inject
+    ClientListPresenter mClientListPresenter;
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
@@ -84,12 +90,20 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         setToolbarTitle(getResources().getString(R.string.clients));
         ButterKnife.inject(this, rootView);
+
+        mClientListPresenter.attachView(this);
 
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -110,8 +124,7 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
     }
 
     public void inflateClientList() {
-        ClientNameListAdapter clientNameListAdapter = new ClientNameListAdapter(getContext(),
-                clientList);
+        clientNameListAdapter = new ClientNameListAdapter(getContext(), clientList);
         rv_clients.setAdapter(clientNameListAdapter);
 
         // initialize OnScroll Listener
@@ -121,34 +134,8 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
 
     public void fetchClientList() {
         EspressoIdlingResource.increment(); // App is busy until further notice.
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
         totalFilteredRecords = 0;
-        App.apiManager.listClients(new Callback<Page<Client>>() {
-            @Override
-            public void success(Page<Client> page, Response response) {
-                totalFilteredRecords = page.getTotalFilteredRecords();
-                clientList = page.getPageItems();
-                inflateClientList();
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-                EspressoIdlingResource.decrement(); // App is idle.
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-                Toaster.show(rootView, "There was some error fetching list.");
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-                EspressoIdlingResource.decrement(); // App is idle.
-            }
-        });
+        mClientListPresenter.loadClients();
     }
 
     public void setClientList(List<Client> clientList) {
@@ -162,32 +149,7 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
             @Override
             public void onLoadMore(int current_page) {
                 Toaster.show(rootView, "Loading More Clients");
-                swipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(true);
-                    }
-                });
-                App.apiManager.listClients(clientList.size(), limit, new Callback<Page<Client>>() {
-                    @Override
-                    public void success(Page<Client> clientPage, Response response) {
-                        clientList.addAll(clientPage.getPageItems());
-                        clientNameListAdapter.notifyDataSetChanged();
-                        swipeRefreshLayout.setRefreshing(false);
-
-                        //checking the response size if size is zero then show toast No More
-                        // Clients Available for fetch
-                        if (clientPage.getPageItems().size() == 0 && (totalFilteredRecords ==
-                                clientList.size()))
-                            Toaster.show(rootView, "No more clients Available");
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        Toaster.show(rootView, "There was some error fetching list.");
-                    }
-                });
+                mClientListPresenter.loadMoreClients(clientList.size(), limit);
 
             }
         });
@@ -198,4 +160,45 @@ public class ClientListFragment extends MifosBaseFragment implements RecyclerIte
         this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
     }
 
+    @Override
+    public void showClientList(Page<Client> clientPage) {
+        totalFilteredRecords = clientPage.getTotalFilteredRecords();
+        clientList = clientPage.getPageItems();
+        inflateClientList();
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+        EspressoIdlingResource.decrement(); // App is idle.
+    }
+
+    @Override
+    public void showErrorFetchingClients(String s) {
+        Toaster.show(rootView, s);
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+        EspressoIdlingResource.decrement(); // App is idle.
+    }
+
+    @Override
+    public void showMoreClientsList(Page<Client> clientPage) {
+        clientList.addAll(clientPage.getPageItems());
+        clientNameListAdapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
+
+        //checking the response size if size is zero then show toast No More
+        // Clients Available for fetch
+        if (clientPage.getPageItems().size() == 0 && (totalFilteredRecords ==
+                clientList.size()))
+            Toaster.show(rootView, "No more clients Available");
+    }
+
+    @Override
+    public void showProgressBar(boolean b) {
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mClientListPresenter.detachView();
+    }
 }

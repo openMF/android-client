@@ -22,6 +22,7 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -30,11 +31,11 @@ public interface ClientService {
 
     //This is a default call and Loads client from 0 to 200
     @GET(APIEndPoint.CLIENTS)
-    void listAllClients(Callback<Page<Client>> callback);
+    Observable<Page<Client>> getAllClients();
 
     @GET(APIEndPoint.CLIENTS)
-    void listAllClients(@Query("offset") int offset, @Query("limit") int limit,
-                        Callback<Page<Client>> callback);
+    Observable<Page<Client>> getAllClients(@Query("offset") int offset,
+                                           @Query("limit") int limit);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     void getClient(@Path("clientId") int clientId, Callback<Client> clientCallback);

@@ -15,22 +15,17 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientChooseAdapter;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.client.Page;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -75,7 +70,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
         shouldCheckForMoreClients = false;
         areMoreClientsAvailable = true;
         totalFilteredRecords = 0;
-        App.apiManager.listClients(new Callback<Page<Client>>() {
+        /*App.apiManager.listClients(new Callback<Page<Client>>() {
             @Override
             public void success(Page<Client> page, Response response) {
                 clients = page.getPageItems();
@@ -92,7 +87,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
                 Toaster.show(root, "Cannot get clients, There might be some problem!");
                 showProgress(false);
             }
-        });
+        });*/
     }
 
     @Override
@@ -120,7 +115,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
                     if (!loadmore && areMoreClientsAvailable) {
                         loadmore = true;
                         Toaster.show(root, "Loading More Clients");
-                        App.apiManager.listClients(clients.size(), limit, new
+                        /*App.apiManager.listClients(clients.size(), limit, new
                                 Callback<Page<Client>>() {
                                     @Override
                                     public void success(Page<Client> clientPage, Response
@@ -143,7 +138,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
                                     public void failure(RetrofitError retrofitError) {
                                         Toaster.show(root, "There was some error fetching list.");
                                     }
-                                });
+                                });*/
                     } else if (shouldCheckForMoreClients)
                         Toaster.show(root, "No more clients Available");
                 }

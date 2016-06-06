@@ -85,13 +85,13 @@ public class ApiManager extends BaseApiManager {
      * Clients API
      */
 
-    public void listClients(Callback<Page<Client>> callback) {
+    /*public void listClients(Callback<Page<Client>> callback) {
         getClientsApi().listAllClients(callback);
-    }
+    }*/
 
-    public void listClients(int offset, int limit, Callback<Page<Client>> callback) {
+    /*public void listClients(int offset, int limit, Callback<Page<Client>> callback) {
         getClientsApi().listAllClients(offset, limit, callback);
-    }
+    }*/
 
     public void getClient(int id, Callback<Client> callback) {
         getClientsApi().getClient(id, callback);

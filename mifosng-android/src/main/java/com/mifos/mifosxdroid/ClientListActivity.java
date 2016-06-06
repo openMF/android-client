@@ -8,7 +8,7 @@ package com.mifos.mifosxdroid;
 import android.os.Bundle;
 
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.online.ClientListFragment;
+import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 
 public class ClientListActivity extends MifosBaseActivity {
     public void onCreate(Bundle savedInstanceState) {

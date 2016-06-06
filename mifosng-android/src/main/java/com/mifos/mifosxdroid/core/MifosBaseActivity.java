@@ -37,7 +37,7 @@ import com.mifos.mifosxdroid.injection.component.ActivityComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.online.CentersActivity;
-import com.mifos.mifosxdroid.online.ClientListFragment;
+import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.GroupsListFragment;
 import com.mifos.objects.client.Client;

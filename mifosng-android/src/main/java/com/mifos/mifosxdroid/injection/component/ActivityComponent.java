@@ -5,6 +5,7 @@ import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
+import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 
 import dagger.Component;
 
@@ -21,5 +22,7 @@ public interface ActivityComponent {
     void inject(CenterListFragment centerListFragment);
 
     void inject(ClientChargeFragment clientChargeFragment);
+
+    void inject(ClientListFragment clientListFragment);
 
 }
