@@ -6,6 +6,7 @@ import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
+import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
@@ -57,5 +58,7 @@ public interface ActivityComponent {
     void inject(DataTableDataFragment dataTableDataFragment);
 
     void inject(GroupDetailsFragment groupDetailsFragment);
+
+    void inject(ClientDetailsFragment clientDetailsFragment);
 
 }

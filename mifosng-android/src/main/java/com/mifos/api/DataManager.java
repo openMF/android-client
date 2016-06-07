@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
+import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
@@ -27,6 +28,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 import rx.Observable;
 
 /**
@@ -106,6 +109,18 @@ public class DataManager {
 
     public Observable<Client> createClient(ClientPayload clientPayload) {
         return mBaseApiManager.getClientsApi().createClient(clientPayload);
+    }
+
+    public Observable<Client> getClient(int id) {
+        return mBaseApiManager.getClientsApi().getClient(id);
+    }
+
+    public Observable<Response> uploadClientImage(int id, TypedFile image) {
+        return mBaseApiManager.getClientsApi().uploadClientImage(id,image);
+    }
+
+    public Observable<Response> deleteClientImage(int clientId) {
+        return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
     }
 
 
@@ -198,6 +213,13 @@ public class DataManager {
 
     public Observable<List<DataTable>> getLoanDataTable() {
         return mBaseApiManager.getDataTableApi().getTableOf("m_loan");
+    }
+
+    /**
+     * Client Accounts API
+     */
+    public Observable<ClientAccounts> getClientAccounts(int clientId) {
+        return mBaseApiManager.getAccountsApi().getAllAccountsOfClient(clientId);
     }
 
 

@@ -38,16 +38,15 @@ public interface ClientService {
                                            @Query("limit") int limit);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
-    void getClient(@Path("clientId") int clientId, Callback<Client> clientCallback);
+    Observable<Client> getClient(@Path("clientId") int clientId);
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
-    void uploadClientImage(@Path("clientId") int clientId,
-                           @Part("file") TypedFile file,
-                           Callback<Response> responseCallback);
+    Observable<Response> uploadClientImage(@Path("clientId") int clientId,
+                                           @Part("file") TypedFile file);
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
-    void deleteClientImage(@Path("clientId") int clientId, Callback<Response> responseCallback);
+    Observable<Response> deleteClientImage(@Path("clientId") int clientId);
 
     //TODO: Implement when API Fixed
     @GET("/clients/{clientId}/images")

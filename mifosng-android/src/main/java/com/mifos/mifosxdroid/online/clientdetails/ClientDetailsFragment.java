@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.clientdetails;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
@@ -47,8 +48,11 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.LoanAccountFragment;
+import com.mifos.mifosxdroid.online.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
@@ -79,6 +83,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -93,43 +99,62 @@ import static android.view.View.VISIBLE;
 
 
 public class ClientDetailsFragment extends ProgressableFragment implements GoogleApiClient
-        .ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        .ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,
+        ClientDetailsMvpView {
 
     public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
+
     public int clientId;
     public List<DataTable> clientDataTables = new ArrayList<>();
     List<Charges> chargesList = new ArrayList<Charges>();
+
     @InjectView(R.id.tv_fullName)
     TextView tv_fullName;
+
     @InjectView(R.id.tv_accountNumber)
     TextView tv_accountNumber;
+
     @InjectView(R.id.tv_externalId)
     TextView tv_externalId;
+
     @InjectView(R.id.tv_activationDate)
     TextView tv_activationDate;
+
     @InjectView(R.id.tv_office)
     TextView tv_office;
+
     @InjectView(R.id.iv_clientImage)
     CircularImageView iv_clientImage;
+
     @InjectView(R.id.pb_imageProgressBar)
     ProgressBar pb_imageProgressBar;
+
     @InjectView(R.id.row_account)
     TableRow rowAccount;
+
     @InjectView(R.id.row_external)
     TableRow rowExternal;
+
     @InjectView(R.id.row_activation)
     TableRow rowActivation;
+
     @InjectView(R.id.row_office)
     TableRow rowOffice;
+
     @InjectView(R.id.row_group)
     TableRow rowGroup;
+
     @InjectView(R.id.row_staff)
     TableRow rowStaff;
+
     @InjectView(R.id.row_loan)
     TableRow rowLoan;
+
+    @Inject
+    ClientDetailsPresenter mClientDetailsPresenter;
 
     private View rootView;
     private OnFragmentInteractionListener mListener;
@@ -168,6 +193,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
         setHasOptionsMenu(true);
@@ -178,8 +204,12 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
+
         ButterKnife.inject(this, rootView);
+        mClientDetailsPresenter.attachView(this);
+
         inflateClientInformation();
+
         return rootView;
     }
 
@@ -234,7 +264,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     }
 
     public void inflateClientInformation() {
-        getClientDetails();
+        mClientDetailsPresenter.loadClientInformation(clientId);
     }
 
     public void captureClientImage() {
@@ -243,217 +273,22 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
-    @SuppressWarnings("deprecation")
-    public void deleteClientImage() {
-        App.apiManager.deleteClientImage(clientId, new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                Toaster.show(rootView, "Image deleted");
-                iv_clientImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Failed to delete image");
-            }
-        });
-    }
-
     /**
      * A service to upload the image of the client.
      *
      * @param pngFile - PNG images supported at the moment
      */
     private void uploadImage(File pngFile) {
-        final String imagePath = pngFile.getAbsolutePath();
-        pb_imageProgressBar.setVisibility(VISIBLE);
-        App.apiManager.uploadClientImage(clientId,
-                new TypedFile("image/png", pngFile),
-                new Callback<Response>() {
-                    @Override
-                    public void success(Response response, Response response2) {
-                        Toaster.show(rootView, R.string.client_image_updated);
-                        iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
-                        pb_imageProgressBar.setVisibility(GONE);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toaster.show(rootView, "Failed to update image");
-                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                        imageLoadingAsyncTask.execute(clientId);
-                    }
-                }
-        );
+        mClientDetailsPresenter.uploadImage(clientId,pngFile);
     }
 
-    /**
-     * Use this method to fetch and inflate client details
-     * in the fragment
-     */
-    public void getClientDetails() {
-        showProgress(true);
-        App.apiManager.getClient(clientId, new Callback<Client>() {
-            @Override
-            public void success(final Client client, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
-
-                if (client != null) {
-                    setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
-                    tv_fullName.setText(client.getDisplayName());
-                    tv_accountNumber.setText(client.getAccountNo());
-                    tv_externalId.setText(client.getExternalId());
-                    if (TextUtils.isEmpty(client.getAccountNo()))
-                        rowAccount.setVisibility(GONE);
-
-                    if (TextUtils.isEmpty(client.getExternalId()))
-                        rowExternal.setVisibility(GONE);
-
-                    try {
-                        List<Integer> dateObj = client.getActivationDate();
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-                        Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
-                        Locale currentLocale = getResources().getConfiguration().locale;
-                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
-                                currentLocale);
-                        String dateString = df.format(date);
-                        tv_activationDate.setText(dateString);
-
-                        if (TextUtils.isEmpty(dateString))
-                            rowActivation.setVisibility(GONE);
-
-                    } catch (IndexOutOfBoundsException e) {
-                        Toast.makeText(getActivity(), getString(R.string.error_client_inactive),
-                                Toast.LENGTH_SHORT).show();
-                        tv_activationDate.setText("");
-                    } catch (ParseException e) {
-                        Log.d(TAG, e.getLocalizedMessage());
-                    }
-                    tv_office.setText(client.getOfficeName());
-
-                    if (TextUtils.isEmpty(client.getOfficeName()))
-                        rowOffice.setVisibility(GONE);
-
-                    if (client.isImagePresent()) {
-                        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                        imageLoadingAsyncTask.execute(client.getId());
-                    } else {
-                        iv_clientImage.setImageDrawable(
-                                ResourcesCompat.getDrawable(getResources(), R.drawable
-                                        .ic_launcher, null));
-
-                        pb_imageProgressBar.setVisibility(GONE);
-                    }
-
-                    iv_clientImage.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            PopupMenu menu = new PopupMenu(getActivity(), view);
-                            menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
-                                    .getMenu());
-                            menu.setOnMenuItemClickListener(
-                                    new PopupMenu.OnMenuItemClickListener() {
-                                        @Override
-                                        public boolean onMenuItemClick(MenuItem menuItem) {
-                                            switch (menuItem.getItemId()) {
-                                                case R.id.client_image_capture:
-                                                    captureClientImage();
-                                                    break;
-                                                case R.id.client_image_remove:
-                                                    deleteClientImage();
-                                                    break;
-                                                default:
-                                                    Log.e("ClientDetailsFragment", "Unrecognized " +
-                                                            "client " +
-                                                            "image menu item");
-                                            }
-                                            return true;
-                                        }
-                                    });
-                            menu.show();
-                        }
-                    });
-                    showProgress(false);
-                    inflateClientsAccounts();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Client not found.");
-                showProgress(false);
-            }
-        });
-    }
 
     /**
      * Use this method to fetch and inflate all loan and savings accounts
      * of the client and inflate them in the fragment
      */
     public void inflateClientsAccounts() {
-        showProgress(true);
-        App.apiManager.getClientAccounts(clientId, new Callback<ClientAccounts>() {
-            @Override
-            public void success(final ClientAccounts clientAccounts, Response response) {
-                // Proceed only when the fragment is added to the activity.
-                if (!isAdded()) {
-                    return;
-                }
-                accountAccordion = new AccountAccordion(getActivity());
-                if (clientAccounts.getLoanAccounts().size() > 0) {
-                    AccountAccordion.Section section = AccountAccordion.Section.LOANS;
-                    final LoanAccountsListAdapter adapter =
-                            new LoanAccountsListAdapter(getActivity().getApplicationContext(),
-                                    clientAccounts.getLoanAccounts());
-                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
-                        }
-                    });
-                }
-
-                if (clientAccounts.getNonRecurringSavingsAccounts().size() > 0) {
-                    AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
-                    final SavingsAccountsListAdapter adapter =
-                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
-                                    clientAccounts.getNonRecurringSavingsAccounts());
-                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
-                                    adapter.getItem(i).getDepositType());
-                        }
-                    });
-                }
-
-                if (clientAccounts.getRecurringSavingsAccounts().size() > 0) {
-                    AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
-                    final SavingsAccountsListAdapter adapter =
-                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
-                                    clientAccounts.getRecurringSavingsAccounts());
-                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
-                                    adapter.getItem(i).getDepositType());
-                        }
-                    });
-                }
-                showProgress(false);
-                inflateDataTablesList();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Accounts not found.");
-                showProgress(false);
-            }
-        });
+        mClientDetailsPresenter.loadClientAccount(clientId);
     }
 
     /**
@@ -461,26 +296,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress(true);
-        App.apiManager.getClientDataTable(new Callback<List<DataTable>>() {
-            @Override
-            public void success(List<DataTable> dataTables, Response response) {
-                if (dataTables != null) {
-                    Iterator<DataTable> dataTableIterator = dataTables.iterator();
-                    clientDataTables.clear();
-                    while (dataTableIterator.hasNext()) {
-                        clientDataTables.add(dataTableIterator.next());
-                    }
-
-                }
-                showProgress(false);
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                showProgress(false);
-            }
-        });
+        mClientDetailsPresenter.loadClientDataTable();
     }
 
     /**
@@ -508,6 +324,12 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         if (mGoogleApiClient != null)
             mGoogleApiClient.disconnect();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mClientDetailsPresenter.detachView();
     }
 
     @Override
@@ -603,6 +425,190 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, loanAccountFragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(false);
+    }
+
+    @Override
+    public void showClientDataTable(List<DataTable> dataTables) {
+        if (dataTables != null) {
+            Iterator<DataTable> dataTableIterator = dataTables.iterator();
+            clientDataTables.clear();
+            while (dataTableIterator.hasNext()) {
+                clientDataTables.add(dataTableIterator.next());
+            }
+
+        }
+    }
+
+    @Override
+    public void showClientInformation(Client client) {
+        if (client != null) {
+            setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
+            tv_fullName.setText(client.getDisplayName());
+            tv_accountNumber.setText(client.getAccountNo());
+            tv_externalId.setText(client.getExternalId());
+            if (TextUtils.isEmpty(client.getAccountNo()))
+                rowAccount.setVisibility(GONE);
+
+            if (TextUtils.isEmpty(client.getExternalId()))
+                rowExternal.setVisibility(GONE);
+
+            try {
+                List<Integer> dateObj = client.getActivationDate();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+                Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
+                Locale currentLocale = getResources().getConfiguration().locale;
+                DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                        currentLocale);
+                String dateString = df.format(date);
+                tv_activationDate.setText(dateString);
+
+                if (TextUtils.isEmpty(dateString))
+                    rowActivation.setVisibility(GONE);
+
+            } catch (IndexOutOfBoundsException e) {
+                Toast.makeText(getActivity(), getString(R.string.error_client_inactive),
+                        Toast.LENGTH_SHORT).show();
+                tv_activationDate.setText("");
+            } catch (ParseException e) {
+                Log.d(TAG, e.getLocalizedMessage());
+            }
+            tv_office.setText(client.getOfficeName());
+
+            if (TextUtils.isEmpty(client.getOfficeName()))
+                rowOffice.setVisibility(GONE);
+
+            if (client.isImagePresent()) {
+                imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+                imageLoadingAsyncTask.execute(client.getId());
+            } else {
+                iv_clientImage.setImageDrawable(
+                        ResourcesCompat.getDrawable(getResources(), R.drawable
+                                .ic_launcher, null));
+
+                pb_imageProgressBar.setVisibility(GONE);
+            }
+
+            iv_clientImage.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu menu = new PopupMenu(getActivity(), view);
+                    menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
+                            .getMenu());
+                    menu.setOnMenuItemClickListener(
+                            new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    switch (menuItem.getItemId()) {
+                                        case R.id.client_image_capture:
+                                            captureClientImage();
+                                            break;
+                                        case R.id.client_image_remove:
+                                            mClientDetailsPresenter.deleteClientImage(clientId);
+                                            break;
+                                        default:
+                                            Log.e("ClientDetailsFragment", "Unrecognized " +
+                                                    "client " +
+                                                    "image menu item");
+                                    }
+                                    return true;
+                                }
+                            });
+                    menu.show();
+                }
+            });
+            inflateClientsAccounts();
+        }
+    }
+
+    @Override
+    public void showUploadImageSuccessfully(Response response, String imagePath) {
+        Toaster.show(rootView, R.string.client_image_updated);
+        iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+    }
+
+    @Override
+    public void showUploadImageFailed(String s) {
+        Toaster.show(rootView, s);
+        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+        imageLoadingAsyncTask.execute(clientId);
+    }
+
+    @Override
+    public void showUploadImageProgressbar(boolean b) {
+        if (b) {
+            pb_imageProgressBar.setVisibility(VISIBLE);
+        } else {
+            pb_imageProgressBar.setVisibility(GONE);
+        }
+    }
+
+    @Override
+    public void showClientImageDeletedSuccessfully() {
+        Toaster.show(rootView, "Image deleted");
+        iv_clientImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_launcher));
+    }
+
+    @Override
+    public void showClientAccount(ClientAccounts clientAccounts) {
+        // Proceed only when the fragment is added to the activity.
+        if (!isAdded()) {
+            return;
+        }
+        accountAccordion = new AccountAccordion(getActivity());
+        if (clientAccounts.getLoanAccounts().size() > 0) {
+            AccountAccordion.Section section = AccountAccordion.Section.LOANS;
+            final LoanAccountsListAdapter adapter =
+                    new LoanAccountsListAdapter(getActivity().getApplicationContext(),
+                            clientAccounts.getLoanAccounts());
+            section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                        long l) {
+                    mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
+                }
+            });
+        }
+
+        if (clientAccounts.getNonRecurringSavingsAccounts().size() > 0) {
+            AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
+            final SavingsAccountsListAdapter adapter =
+                    new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                            clientAccounts.getNonRecurringSavingsAccounts());
+            section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                        long l) {
+                    mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                            adapter.getItem(i).getDepositType());
+                }
+            });
+        }
+
+        if (clientAccounts.getRecurringSavingsAccounts().size() > 0) {
+            AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
+            final SavingsAccountsListAdapter adapter =
+                    new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                            clientAccounts.getRecurringSavingsAccounts());
+            section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                        long l) {
+                    mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                            adapter.getItem(i).getDepositType());
+                }
+            });
+        }
+        inflateDataTablesList();
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     public interface OnFragmentInteractionListener {
@@ -778,15 +784,14 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             return null;
         }
 
-        @SuppressWarnings("deprecation")
+
         @Override
         protected void onPostExecute(Void aVoid) {
             if (bmp != null) {
                 iv_clientImage.setImageBitmap(bmp);
             } else {
                 iv_clientImage.setImageDrawable(
-                        ResourcesCompat.getDrawable(getResources(),
-                                R.drawable.ic_launcher, null));
+                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_launcher));
                 pb_imageProgressBar.setVisibility(GONE);
             }
 

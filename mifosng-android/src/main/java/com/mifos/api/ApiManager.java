@@ -80,17 +80,17 @@ public class ApiManager extends BaseApiManager {
     /*public void listClients(int offset, int limit, Callback<Page<Client>> callback) {
         getClientsApi().listAllClients(offset, limit, callback);
     }*/
-    public void getClient(int id, Callback<Client> callback) {
+    /*public void getClient(int id, Callback<Client> callback) {
         getClientsApi().getClient(id, callback);
-    }
+    }*/
 
-    public void uploadClientImage(int id, TypedFile image, Callback<Response> callback) {
+    /*public void uploadClientImage(int id, TypedFile image, Callback<Response> callback) {
         getClientsApi().uploadClientImage(id, image, callback);
-    }
+    }*/
 
-    public void deleteClientImage(int id, Callback<Response> callback) {
+    /*public void deleteClientImage(int id, Callback<Response> callback) {
         getClientsApi().deleteClientImage(id, callback);
-    }
+    }*/
 
     /*public void createClient(ClientPayload payload, Callback<Client> callback) {
         getClientsApi().createClient(payload, callback);
@@ -146,9 +146,9 @@ public class ApiManager extends BaseApiManager {
      * Client Accounts API
      */
 
-    public void getClientAccounts(int id, Callback<ClientAccounts> callback) {
+    /*public void getClientAccounts(int id, Callback<ClientAccounts> callback) {
         getAccountsApi().getAllAccountsOfClient(id, callback);
-    }
+    }*/
 
     /**
      * Data tables API
