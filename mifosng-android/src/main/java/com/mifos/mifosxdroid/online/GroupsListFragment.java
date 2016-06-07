@@ -18,10 +18,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.App;
-import com.mifos.mifosxdroid.LoginActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;

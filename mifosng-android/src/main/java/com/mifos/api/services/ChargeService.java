@@ -15,6 +15,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import rx.Observable;
 
 /**
  * @author nellyk
@@ -30,8 +31,7 @@ public interface ChargeService {
     void getAllChargev3(@Path("loanId") int loanId, Callback<Response> callback);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>>
-            chargeListCallback);
+    Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
     void createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload,

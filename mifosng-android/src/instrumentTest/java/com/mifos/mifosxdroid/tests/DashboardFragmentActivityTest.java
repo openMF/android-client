@@ -28,7 +28,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.online.CentersActivity;
-import com.mifos.mifosxdroid.online.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;

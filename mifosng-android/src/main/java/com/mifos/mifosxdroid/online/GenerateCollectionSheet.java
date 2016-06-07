@@ -10,6 +10,7 @@ import android.view.Menu;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment;
 
 
 public class GenerateCollectionSheet extends MifosBaseActivity {

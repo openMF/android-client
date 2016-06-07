@@ -12,6 +12,9 @@ import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
 import com.mifos.api.ApiManager;
+import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
+import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
+import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.orm.SugarApp;
 
 import java.util.HashMap;
@@ -28,12 +31,18 @@ public class App extends SugarApp {
 
     private static App instance;
 
+    ApplicationComponent mApplicationComponent;
+
     public static Context getContext() {
         return instance;
     }
 
     public static App getInstance() {
         return instance;
+    }
+
+    public static App get(Context context) {
+        return (App) context.getApplicationContext();
     }
 
     @Override
@@ -44,6 +53,20 @@ public class App extends SugarApp {
 
         apiManager = new ApiManager();
         Iconify.with(new MaterialModule());
+    }
+
+    public ApplicationComponent getComponent() {
+        if (mApplicationComponent == null) {
+            mApplicationComponent = DaggerApplicationComponent.builder()
+                    .applicationModule(new ApplicationModule(this))
+                    .build();
+        }
+        return mApplicationComponent;
+    }
+
+    // Needed to replace the component with a test specific one
+    public void setComponent(ApplicationComponent applicationComponent) {
+        mApplicationComponent = applicationComponent;
     }
 
 }

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Spinner;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.online.CreateNewCenterFragment;
+import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.DashboardActivity;
 
 import org.hamcrest.Description;
