@@ -10,8 +10,9 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.mifos.App;
+import com.mifos.api.DataManager;
 import com.mifos.api.model.Payload;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.db.CollectionMeetingCalendar;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.EntityType;
@@ -24,9 +25,13 @@ import com.orm.query.Select;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SaveOfflineDataHelper {
 
@@ -41,12 +46,16 @@ public class SaveOfflineDataHelper {
     private String tag = getClass().getSimpleName();
     private int centerCount = 0;
 
+    @Inject
+    DataManager mDataManager;
+
     public SaveOfflineDataHelper(Context context) {
         this.mContext = context;
     }
 
     public void setOfflineDataSaveListener(OfflineDataSaveListener offlineDataSaveListener) {
         this.offlineDataSaveListener = offlineDataSaveListener;
+        new MifosBaseActivity().getActivityComponent().inject(this);
     }
 
     private HashMap<Long, Integer> saveSyncState() {
@@ -158,22 +167,31 @@ public class SaveOfflineDataHelper {
             MeetingCenter center = meetingCenterList[centerCount];
             final long centerId = center.getId();
             Log.i(tag, "Fetching Group data for Center Id:" + centerId);
-            App.apiManager.getCollectionSheet(centerId, getPayload(context, center), new
-                    Callback<CollectionSheet>() {
+
+            Observable<CollectionSheet> call = mDataManager.getCollectionSheet(centerId,
+                    getPayload(context, center));
+            Subscription subscription = call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<CollectionSheet>() {
                         @Override
-                        public void success(CollectionSheet collectionSheet, Response arg1) {
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(context, "There was some error fetching data.", Toast
+                                    .LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onNext(CollectionSheet collectionSheet) {
                             if (collectionSheet != null) {
                                 collectionSheet.saveData(centerId);
                                 centerCount++;
                                 if (centerCount < meetingCenterList.length)
                                     getGroupsData(context, meetingCenterList);
                             }
-                        }
-
-                        @Override
-                        public void failure(RetrofitError arg0) {
-                            Toast.makeText(context, "There was some error fetching data.", Toast
-                                    .LENGTH_SHORT).show();
                         }
                     });
         }
