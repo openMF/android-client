@@ -21,14 +21,12 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountDisbursement;
-import com.mifos.mifosxdroid.online.LoanChargeFragment;
+import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -47,9 +45,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 09/05/14.

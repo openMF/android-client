@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.loancharge;
 /**
  * Created by nellyk on 1/22/2016.
  */
@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.dialogfragments.LoanChargeDialogFragment;
 import com.mifos.mifosxdroid.login.LoginActivity;
@@ -39,6 +40,8 @@ import com.mifos.utils.FragmentConstants;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -46,14 +49,22 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanChargeFragment extends MifosBaseFragment {
+public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeMvpView{
 
     public static final int MENU_ITEM_ADD_NEW_LOAN_CHARGES = 3000;
+
     @InjectView(R.id.lv_charges)
     ListView lv_charges;
-    List<Charges> chargesList = new ArrayList<Charges>();
+
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @Inject
+    LoanChargePresenter mLoanChargePresenter;
+
+    private ChargeNameListAdapter mChargesNameListAdapter;
+
+    List<Charges> chargesList = new ArrayList<Charges>();
     private View rootView;
     private Context context;
     private SharedPreferences sharedPreferences;
@@ -93,6 +104,7 @@ public class LoanChargeFragment extends MifosBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
     }
@@ -103,7 +115,10 @@ public class LoanChargeFragment extends MifosBaseFragment {
         rootView = inflater.inflate(R.layout.fragment_charge_list, container, false);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
+
         ButterKnife.inject(this, rootView);
+        mLoanChargePresenter.attachView(this);
+
         setToolbarTitle(getString(R.string.charges));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -122,12 +137,12 @@ public class LoanChargeFragment extends MifosBaseFragment {
 
     public void inflateChargeList() {
 
-        final ChargeNameListAdapter chargesNameListAdapter = new ChargeNameListAdapter(context,
+        mChargesNameListAdapter = new ChargeNameListAdapter(context,
                 chargesList, loanAccountNumber);
-        lv_charges.setAdapter(chargesNameListAdapter);
+        lv_charges.setAdapter(mChargesNameListAdapter);
 
         if (isInfiniteScrollEnabled) {
-            setInfiniteScrollListener(chargesNameListAdapter);
+            setInfiniteScrollListener(mChargesNameListAdapter);
         }
 
 
@@ -169,50 +184,7 @@ public class LoanChargeFragment extends MifosBaseFragment {
         if (chargesList.size() > 0) {
             inflateChargeList();
         } else {
-
-            swipeRefreshLayout.setRefreshing(true);
-            //Get a Client List
-            App.apiManager.getListOfLoanCharges(loanAccountNumber, new Callback<Page<Charges>>() {
-                @Override
-                public void success(Page<Charges> page, Response response) {
-                    chargesList = page.getPageItems();
-                    inflateChargeList();
-                    swipeRefreshLayout.setRefreshing(false);
-
-                }
-
-                @SuppressWarnings("deprecation")
-                @Override
-                public void failure(RetrofitError retrofitError) {
-
-                    swipeRefreshLayout.setRefreshing(false);
-
-                    if (getActivity() != null) {
-                        try {
-                            Log.i("Error", "" + retrofitError.getResponse().getStatus());
-                            if (retrofitError.getResponse().getStatus() ==
-                                    org.apache.http.HttpStatus
-                                            .SC_UNAUTHORIZED) {
-                                Toast.makeText(getActivity(), "Authorization Expired - Please " +
-                                        "Login Again", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getActivity(), LoginActivity.class));
-                                getActivity().finish();
-
-                            } else {
-                                Toast.makeText(getActivity(), "There was some error fetching list" +
-                                        ".", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (NullPointerException npe) {
-                            Toast.makeText(getActivity(), "There is some problem with your " +
-                                    "internet connection.", Toast.LENGTH_SHORT).show();
-
-                        }
-
-
-                    }
-                }
-            });
-
+            mLoanChargePresenter.loadLoanChargesList(loanAccountNumber);
         }
 
 
@@ -231,69 +203,7 @@ public class LoanChargeFragment extends MifosBaseFragment {
                     visibleItemCount, int totalItemCount) {
 
                 if (firstVisibleItem + visibleItemCount >= totalItemCount) {
-
-                    swipeRefreshLayout.setRefreshing(true);
-
-                    App.apiManager.getListOfCharges(loanAccountNumber, new
-                            Callback<Page<Charges>>() {
-
-                                @Override
-                                public void success(Page<Charges> chargesPage, Response response) {
-
-
-                                    chargesList.addAll(chargesPage.getPageItems());
-                                    chargesNameListAdapter.notifyDataSetChanged();
-                                    index = lv_charges.getFirstVisiblePosition();
-                                    View v = lv_charges.getChildAt(0);
-                                    top = (v == null) ? 0 : v.getTop();
-                                    lv_charges.setSelectionFromTop(index, top);
-                                    swipeRefreshLayout.setRefreshing(false);
-
-                                }
-
-                                @SuppressWarnings("deprecation")
-                                @Override
-                                public void failure(RetrofitError retrofitError) {
-
-                                    swipeRefreshLayout.setRefreshing(false);
-
-                                    if (getActivity() != null) {
-                                        try {
-                                            Log.i("Error", "" + retrofitError.getResponse()
-                                                    .getStatus());
-                                            if (retrofitError.getResponse().getStatus() ==
-                                                    org.apache.http.HttpStatus
-                                                            .SC_UNAUTHORIZED) {
-                                                Toast.makeText(getActivity(), "Authorization " +
-                                                        "Expired - " +
-                                                        "Please Login Again", Toast.LENGTH_SHORT)
-                                                        .show();
-                                                startActivity(new Intent(getActivity(),
-                                                        LoginActivity
-                                                                .class));
-                                                getActivity().finish();
-
-                                            } else {
-                                                Toast.makeText(getActivity(), "There was some " +
-                                                        "error " +
-                                                        "fetching list.", Toast.LENGTH_SHORT)
-                                                        .show();
-                                            }
-                                        } catch (NullPointerException npe) {
-                                            Toast.makeText(getActivity(), "There is some problem " +
-                                                    "with " +
-                                                    "your internet connection.", Toast
-                                                    .LENGTH_SHORT).show();
-
-                                        }
-
-
-                                    }
-
-                                }
-
-                            });
-
+                    mLoanChargePresenter.loadChargesList(loanAccountNumber);
                 }
 
 
@@ -313,5 +223,59 @@ public class LoanChargeFragment extends MifosBaseFragment {
 
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
         this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
+    }
+
+    @Override
+    public void showLoanChargesList(Page<Charges> chargesPage) {
+        chargesList = chargesPage.getPageItems();
+        inflateChargeList();
+    }
+
+    @Override
+    public void showChargesList(Page<Charges> chargesPage) {
+        chargesList.addAll(chargesPage.getPageItems());
+        mChargesNameListAdapter.notifyDataSetChanged();
+        index = lv_charges.getFirstVisiblePosition();
+        View v = lv_charges.getChildAt(0);
+        top = (v == null) ? 0 : v.getTop();
+        lv_charges.setSelectionFromTop(index, top);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showFetchingError(Response response) {
+        if (getActivity() != null) {
+            try {
+                Log.i("Error", "" + response.getStatus());
+                if (response.getStatus() == 401) {
+                    Toast.makeText(getActivity(), "Authorization Expired - Please " +
+                            "Login Again", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    getActivity().finish();
+
+                } else {
+                    Toast.makeText(getActivity(), "There was some error fetching list" +
+                            ".", Toast.LENGTH_SHORT).show();
+                }
+            } catch (NullPointerException npe) {
+                Toast.makeText(getActivity(), "There is some problem with your " +
+                        "internet connection.", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+        }
+    }
+
+
+    @Override
+    public void showProgressbar(boolean b) {
+        swipeRefreshLayout.setRefreshing(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mLoanChargePresenter.detachView();
     }
 }

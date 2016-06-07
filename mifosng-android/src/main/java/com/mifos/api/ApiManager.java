@@ -243,13 +243,13 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().getGroupLoansAccountTemplate(groupId, productId, grouploanCallback);
     }
 
-    public void getListOfLoanCharges(int loanId, Callback<Page<Charges>> loanchargeListCallback) {
+    /*public void getListOfLoanCharges(int loanId, Callback<Page<Charges>> loanchargeListCallback) {
         getLoanApi().getListOfLoanCharges(loanId, loanchargeListCallback);
-    }
+    }*/
 
-    public void getListOfCharges(int clientId, Callback<Page<Charges>> chargeListCallback) {
+    /*public void getListOfCharges(int clientId, Callback<Page<Charges>> chargeListCallback) {
         getLoanApi().getListOfCharges(clientId, chargeListCallback);
-    }
+    }*/
 
 
     /**

@@ -247,5 +247,16 @@ public class DataManager {
         return mBaseApiManager.getSavingsApi().activateSavings(savingsAccountId,request);
     }
 
+    /**
+     * Loan API
+     *
+     */
+    public Observable<Page<Charges>> getListOfLoanCharges(int loanId) {
+        return mBaseApiManager.getLoanApi().getListOfLoanCharges(loanId);
+    }
+
+    public Observable<Page<Charges>> getListOfCharges(int clientId) {
+        return mBaseApiManager.getLoanApi().getListOfCharges(clientId);
+    }
 
 }

@@ -19,6 +19,7 @@ import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSh
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment;
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment;
 
 import dagger.Component;
@@ -66,4 +67,6 @@ public interface ActivityComponent {
     void inject(LoanAccountSummaryFragment loanAccountSummaryFragment);
 
     void inject(SavingsAccountSummaryFragment savingsAccountSummaryFragment);
+
+    void inject(LoanChargeFragment loanChargeFragment);
 }

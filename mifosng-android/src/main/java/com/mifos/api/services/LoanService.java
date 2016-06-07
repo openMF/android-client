@@ -12,6 +12,7 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
+import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.organisation.ProductLoans;
@@ -95,13 +96,11 @@ public interface LoanService {
             productId, Callback<Response> grouploanCallback);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
-    void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>>
-            loanchargeListCallback);
+    Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>>
-            chargeListCallback);
+    Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
 
 
 }
