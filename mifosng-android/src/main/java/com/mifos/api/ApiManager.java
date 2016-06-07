@@ -17,8 +17,6 @@ import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
@@ -32,7 +30,6 @@ import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
@@ -252,24 +249,23 @@ public class ApiManager extends BaseApiManager {
                                   Callback<SavingsAccountWithAssociations> callback) {
         getSavingsApi().getSavingsAccountWithAssociations(type, accountId, association, callback);
     }*/
-    public void getSavingsAccountTemplate(String type, int accountId, String transactionType,
+    /*public void getSavingsAccountTemplate(String type, int accountId, String transactionType,
                                           Callback<SavingsAccountTransactionTemplate> callback) {
         getSavingsApi().getSavingsAccountTransactionTemplate(type, accountId, transactionType,
                 callback);
-    }
+    }*/
 
-    public void processTransaction(String type, int accountId, String transactionType,
+    /*public void processTransaction(String type, int accountId, String transactionType,
                                    SavingsAccountTransactionRequest request,
                                    Callback<SavingsAccountTransactionResponse> callback) {
         getSavingsApi().processTransaction(type, accountId, transactionType, request, callback);
-    }
+    }*/
 
     /*public void activateSavings(int savingsAccountId, HashMap<String, Object> request,
                                 Callback<GenericResponse> callback) {
         getSavingsApi().activateSavings(savingsAccountId, request, callback);
 
     }*/
-
     public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval,
                                           Callback<GenericResponse> callback) {
         getSavingsApi().approveSavingsApplication(savingsAccountId, savingsApproval, callback);

@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.savingaccounttransaction;
 
 import android.R.layout;
 import android.app.AlertDialog;
@@ -21,10 +21,10 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
-import com.mifos.App;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.R.string;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -43,29 +43,35 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class SavingsAccountTransactionFragment extends ProgressableFragment implements
-        MFDatePicker.OnDatePickListener {
+        MFDatePicker.OnDatePickListener, SavingAccountTransactionMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
+
     @InjectView(R.id.tv_savingsAccountNumber)
     TextView tv_accountNumber;
+
     @InjectView(R.id.tv_transaction_date)
     TextView tv_transactionDate;
+
     @InjectView(R.id.et_transaction_amount)
     EditText et_transactionAmount;
+
     @InjectView(R.id.sp_payment_type)
     Spinner sp_paymentType;
+
+    @Inject
+    SavingAccountTransactionPresenter mSavingAccountTransactionPresenter;
 
     private View rootView;
     private String savingsAccountNumber;
@@ -104,6 +110,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER);
             transactionType = getArguments().getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE);
@@ -126,12 +133,13 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         }
 
         ButterKnife.inject(this, rootView);
+        mSavingAccountTransactionPresenter.attachView(this);
+
         inflateUI();
         return rootView;
     }
 
     public void inflateUI() {
-        showProgress(true);
         tv_clientName.setText(clientName);
         tv_accountNumber.setText(savingsAccountNumber);
         //TODO Implement QuickContactBadge here
@@ -140,51 +148,9 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
     public void inflatePaymentOptions() {
-        App.apiManager.getSavingsAccountTemplate(savingsAccountType.getEndpoint(), Integer
-                .parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType, new
-                Callback<SavingsAccountTransactionTemplate>() {
-                    @Override
-                    public void success(SavingsAccountTransactionTemplate
-                                                savingsAccountTransactionTemplate, Response
-                                                response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                        if (getActivity() == null) return;
-
-                        if (savingsAccountTransactionTemplate != null) {
-                            List<String> listOfPaymentTypes = new ArrayList<>();
-                            paymentTypeOptionList = savingsAccountTransactionTemplate
-                                    .getPaymentTypeOptions();
-                            // Sorting has to be done on the basis of
-                            // PaymentTypeOption.position because it is specified
-                            // by the users on Mifos X Platform.
-                            Collections.sort(paymentTypeOptionList);
-                            Iterator<PaymentTypeOption> paymentTypeOptionIterator =
-                                    paymentTypeOptionList
-                                            .iterator();
-                            while (paymentTypeOptionIterator.hasNext()) {
-                                PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator
-                                        .next();
-                                listOfPaymentTypes.add(paymentTypeOption.getName());
-                                paymentTypeHashMap.put(paymentTypeOption.getName(),
-                                        paymentTypeOption
-                                                .getId());
-                            }
-                            ArrayAdapter<String> paymentTypeAdapter =
-                                    new ArrayAdapter<>(getActivity(),
-                                            layout.simple_spinner_item, listOfPaymentTypes);
-
-                            paymentTypeAdapter.setDropDownViewResource(
-                                    layout.simple_spinner_dropdown_item);
-                            sp_paymentType.setAdapter(paymentTypeAdapter);
-                        }
-                        showProgress(false);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        showProgress(false);
-                    }
-                });
+        mSavingAccountTransactionPresenter.loadSavingAccountTemplate(
+                savingsAccountType.getEndpoint(),
+                Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType);
     }
 
     @OnClick(R.id.bt_reviewTransaction)
@@ -243,41 +209,10 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
-        showProgress();
-        App.apiManager.processTransaction(savingsAccountType.getEndpoint(),
+
+        mSavingAccountTransactionPresenter.processTransaction(savingsAccountType.getEndpoint(),
                 Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")),
-                transactionType, savingsAccountTransactionRequest,
-                new Callback<SavingsAccountTransactionResponse>() {
-                    @Override
-                    public void success(SavingsAccountTransactionResponse
-                                                savingsAccountTransactionResponse, Response
-                                                response) {
-                        /* Activity is null - Fragment has been detached; no need to do anything. */
-                        if (getActivity() == null) return;
-
-                        if (savingsAccountTransactionResponse != null) {
-                            if (transactionType.equals(Constants
-                                    .SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
-                                Toaster.show(rootView, "Deposit Successful, Transaction ID = " +
-                                        savingsAccountTransactionResponse.getResourceId());
-                                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                            } else if (transactionType.equals(Constants
-                                    .SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
-                                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = "
-                                        + savingsAccountTransactionResponse.getResourceId());
-                                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                            }
-                        }
-                        hideProgress();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toaster.show(rootView, "Transaction Failed");
-                        hideProgress();
-                    }
-                }
-        );
+                transactionType, savingsAccountTransactionRequest);
     }
 
     @OnClick(R.id.bt_cancelTransaction)
@@ -303,5 +238,78 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     @Override
     public void onDatePicked(String date) {
         tv_transactionDate.setText(date);
+    }
+
+
+    @Override
+    public void showSavingAccountTemplate(SavingsAccountTransactionTemplate
+                                                  savingsAccountTransactionTemplate) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
+
+        if (savingsAccountTransactionTemplate != null) {
+            List<String> listOfPaymentTypes = new ArrayList<>();
+            paymentTypeOptionList = savingsAccountTransactionTemplate
+                    .getPaymentTypeOptions();
+            // Sorting has to be done on the basis of
+            // PaymentTypeOption.position because it is specified
+            // by the users on Mifos X Platform.
+            Collections.sort(paymentTypeOptionList);
+            Iterator<PaymentTypeOption> paymentTypeOptionIterator =
+                    paymentTypeOptionList
+                            .iterator();
+            while (paymentTypeOptionIterator.hasNext()) {
+                PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator
+                        .next();
+                listOfPaymentTypes.add(paymentTypeOption.getName());
+                paymentTypeHashMap.put(paymentTypeOption.getName(),
+                        paymentTypeOption
+                                .getId());
+            }
+            ArrayAdapter<String> paymentTypeAdapter =
+                    new ArrayAdapter<>(getActivity(),
+                            layout.simple_spinner_item, listOfPaymentTypes);
+
+            paymentTypeAdapter.setDropDownViewResource(
+                    layout.simple_spinner_dropdown_item);
+            sp_paymentType.setAdapter(paymentTypeAdapter);
+        }
+    }
+
+    @Override
+    public void showTransactionSuccessfullyDone(SavingsAccountTransactionResponse
+                                                        savingsAccountTransactionResponse) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
+
+        if (savingsAccountTransactionResponse != null) {
+            if (transactionType.equals(Constants
+                    .SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
+                Toaster.show(rootView, "Deposit Successful, Transaction ID = " +
+                        savingsAccountTransactionResponse.getResourceId());
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+            } else if (transactionType.equals(Constants
+                    .SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
+                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = "
+                        + savingsAccountTransactionResponse.getResourceId());
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
+        }
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSavingAccountTransactionPresenter.detachView();
     }
 }

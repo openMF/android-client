@@ -52,19 +52,18 @@ public interface SavingsAccountService {
      *                                                  Account Transaction Template
      */
     @GET("/{savingsAccountType}/{savingsAccountId}/transactions/template")
-    void getSavingsAccountTransactionTemplate(@Path("savingsAccountType") String savingsAccountType,
-                                              @Path("savingsAccountId") int savingsAccountId,
-                                              @Query("command") String transactionType,
-                                              Callback<SavingsAccountTransactionTemplate>
-                                                      savingsAccountTransactionTemplateCallback);
+    Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
+            @Path("savingsAccountType") String savingsAccountType,
+            @Path("savingsAccountId") int savingsAccountId,
+            @Query("command") String transactionType);
+
 
     @POST("/{savingsAccountType}/{savingsAccountId}/transactions")
-    void processTransaction(@Path("savingsAccountType") String savingsAccountType,
-                            @Path("savingsAccountId") int savingsAccountId,
-                            @Query("command") String transactionType,
-                            @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest,
-                            Callback<SavingsAccountTransactionResponse>
-                                    savingsAccountTransactionResponseCallback);
+    Observable<SavingsAccountTransactionResponse> processTransaction(
+            @Path("savingsAccountType") String savingsAccountType,
+            @Path("savingsAccountId") int savingsAccountId,
+            @Query("command") String transactionType,
+            @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest);
 
 
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}/?command=activate")

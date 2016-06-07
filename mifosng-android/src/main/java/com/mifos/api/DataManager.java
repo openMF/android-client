@@ -7,6 +7,8 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
@@ -21,6 +23,7 @@ import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
 
@@ -245,6 +248,19 @@ public class DataManager {
     public Observable<GenericResponse> activateSavings(int savingsAccountId,
                                                        HashMap<String, Object> request) {
         return mBaseApiManager.getSavingsApi().activateSavings(savingsAccountId, request);
+    }
+
+    public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTemplate(
+            String type, int accountId, String transactionType) {
+        return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
+                accountId, transactionType);
+    }
+
+    public Observable<SavingsAccountTransactionResponse> processTransaction(
+            String type, int accountId, String transactionType,
+            SavingsAccountTransactionRequest request) {
+        return mBaseApiManager.getSavingsApi().processTransaction(type, accountId, transactionType,
+                request);
     }
 
     /**
