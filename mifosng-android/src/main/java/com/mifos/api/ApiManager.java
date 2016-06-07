@@ -8,7 +8,6 @@ package com.mifos.api;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
-import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
@@ -20,7 +19,6 @@ import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
-import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.ProductLoans;
@@ -111,18 +109,18 @@ public class ApiManager extends BaseApiManager {
     /*public void getGroupsByCenter(int id, Callback<CenterWithAssociations> callback) {
         getCenterApi().getAllGroupsForCenter(id, callback);
     }*/
-    public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
+    /*public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
         getCenterApi().getCollectionSheet(id, payload, callback);
-    }
+    }*/
 
     public SaveResponse saveCollectionSheet(int id, CollectionSheetPayload payload) {
         return getCenterApi().saveCollectionSheet(id, payload);
     }
 
-    public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload,
+    /*public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload,
                                          Callback<SaveResponse> callback) {
-        getCenterApi().saveCollectionSheet(id, payload, callback);
-    }
+        getCenterApi().saveCollectionSheetAsync(id, payload, callback);
+    }*/
 
     public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId,
                               int staffId, Callback<List<OfflineCenter>> callback) {

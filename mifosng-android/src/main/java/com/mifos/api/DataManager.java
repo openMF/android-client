@@ -2,6 +2,9 @@ package com.mifos.api;
 
 import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
+import com.mifos.api.model.CollectionSheetPayload;
+import com.mifos.api.model.Payload;
+import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -13,6 +16,7 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
@@ -89,6 +93,14 @@ public class DataManager {
         return mBaseApiManager.getCenterApi().createCenter(centerPayload);
     }
 
+    public Observable<CollectionSheet> getCollectionSheet(long id, Payload payload) {
+        return mBaseApiManager.getCenterApi().getCollectionSheet(id, payload);
+    }
+
+    public Observable<SaveResponse> saveCollectionSheetAsync(int id,
+                                                             CollectionSheetPayload payload) {
+        return mBaseApiManager.getCenterApi().saveCollectionSheetAsync(id,payload);
+    }
 
     /**
      * Charges API

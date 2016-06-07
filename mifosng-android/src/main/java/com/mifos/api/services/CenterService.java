@@ -48,16 +48,17 @@ public interface CenterService {
 
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
-    void getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload,
-                            Callback<CollectionSheet> callback);
+    Observable<CollectionSheet> getCollectionSheet(@Path("centerId") long centerId,
+                                                   @Body Payload payload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
     SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload
             collectionSheetPayload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload
-            collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
+    Observable<SaveResponse> saveCollectionSheetAsync(
+            @Path("centerId") int centerId,
+            @Body CollectionSheetPayload collectionSheetPayload);
 
 
     @POST(APIEndPoint.CLIENTS + "")
