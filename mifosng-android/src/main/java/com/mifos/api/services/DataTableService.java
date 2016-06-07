@@ -19,6 +19,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -30,9 +31,8 @@ public interface DataTableService {
 
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-    void getDataOfDataTable(@Path("dataTableName") String dataTableName,
-                            @Path("entityId") int entityId,
-                            Callback<JsonArray> jsonArrayCallback);
+    Observable<JsonArray> getDataOfDataTable(@Path("dataTableName") String dataTableName,
+                                             @Path("entityId") int entityId);
 
     //TODO Improve Body Implementation with Payload
     @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")

@@ -5,7 +5,6 @@
 
 package com.mifos.api;
 
-import com.google.gson.JsonArray;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
@@ -169,9 +168,9 @@ public class ApiManager extends BaseApiManager {
         getDataTableApi().getTableOf("m_loan", callback);
     }
 
-    public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {
+    /*public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {
         getDataTableApi().getDataOfDataTable(table, entityId, callback);
-    }
+    }*/
 
     public void addDataTableEntry(String table, int entityId, Map<String, Object> payload,
                                   Callback<GenericResponse> callback) {

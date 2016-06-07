@@ -3,42 +3,52 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.datatabledata;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.dialogfragments.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.DataTableUIBuilder;
 import com.mifos.utils.FragmentConstants;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
-public class DataTableDataFragment extends ProgressableFragment implements DataTableUIBuilder
-        .DataTableActionListener {
+public class DataTableDataFragment extends ProgressableFragment
+        implements DataTableUIBuilder.DataTableActionListener, DataTableDataMvpView {
+
     public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
+    @InjectView(R.id.linear_layout_datatables)
+    LinearLayout linearLayout;
+
+    @Inject
+    DataTableDataPresenter mDataTableDataPresenter;
+
     private DataTable dataTable;
+
     private int entityId;
+
     private View rootView;
-    private LinearLayout linearLayout;
+
 
     public static DataTableDataFragment newInstance(DataTable dataTable, int entityId) {
         DataTableDataFragment fragment = new DataTableDataFragment();
@@ -50,6 +60,7 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
         setHasOptionsMenu(true);
     }
 
@@ -58,9 +69,14 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
             savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false);
-        linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_datatables);
+
+        ButterKnife.inject(this, rootView);
+        mDataTableDataPresenter.attachView(this);
+
         setToolbarTitle(dataTable.getRegisteredTableName());
+
         inflateView();
+
         return rootView;
     }
 
@@ -94,34 +110,7 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
     }
 
     public void inflateView() {
-        showProgress(true);
-        App.apiManager.getDataTableInfo(dataTable.getRegisteredTableName(), entityId, new
-                Callback<JsonArray>() {
-                    @Override
-                    public void success(JsonArray jsonElements, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                        if (getActivity() == null) return;
-
-                        if (jsonElements != null) {
-                            linearLayout.invalidate();
-                            DataTableUIBuilder.DataTableActionListener mListener =
-                                    (DataTableUIBuilder
-                                            .DataTableActionListener) getActivity()
-                                            .getSupportFragmentManager()
-                                            .findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
-                            linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable,
-                                    jsonElements, linearLayout, getActivity(), entityId, mListener);
-                        }
-                        showProgress(false);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Log.i(getActivity().getLocalClassName(), retrofitError
-                                .getLocalizedMessage());
-                        showProgress(false);
-                    }
-                });
+        mDataTableDataPresenter.loadDataTableInfo(dataTable.getRegisteredTableName(), entityId);
     }
 
     @Override
@@ -132,5 +121,36 @@ public class DataTableDataFragment extends ProgressableFragment implements DataT
     @Override
     public void onRowDeleted() {
         inflateView();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDataTableDataPresenter.detachView();
+    }
+
+    @Override
+    public void showDataTableInfo(JsonArray jsonElements) {
+
+        if (jsonElements != null) {
+            linearLayout.invalidate();
+            DataTableUIBuilder.DataTableActionListener mListener =
+                    (DataTableUIBuilder
+                            .DataTableActionListener) getActivity()
+                            .getSupportFragmentManager()
+                            .findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE);
+            linearLayout = new DataTableUIBuilder().getDataTableLayout(dataTable,
+                    jsonElements, linearLayout, getActivity(), entityId, mListener);
+        }
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
     }
 }

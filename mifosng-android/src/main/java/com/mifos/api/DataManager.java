@@ -1,5 +1,6 @@
 package com.mifos.api;
 
+import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
@@ -161,5 +162,12 @@ public class DataManager {
         return mBaseApiManager.getStaffApi().getStaffForOffice(officeId);
     }
 
+
+    /**
+     * DataTable API
+     */
+    public Observable<JsonArray> getDataTableInfo(String table, int entityId) {
+        return mBaseApiManager.getDataTableApi().getDataOfDataTable(table,entityId);
+    }
 
 }
