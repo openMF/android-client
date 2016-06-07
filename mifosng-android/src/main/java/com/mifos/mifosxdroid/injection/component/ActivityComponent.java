@@ -10,6 +10,7 @@ import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
+import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment;
@@ -48,5 +49,7 @@ public interface ActivityComponent {
     void inject(CreateNewCenterFragment createNewCenterFragment);
 
     void inject(CreateNewGroupFragment createNewGroupFragment);
+
+    void inject(CreateNewClientFragment createNewClientFragment);
 
 }

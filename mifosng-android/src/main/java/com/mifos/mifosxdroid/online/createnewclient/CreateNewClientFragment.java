@@ -4,7 +4,7 @@
  */
 
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.createnewclient;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,12 +23,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -46,47 +46,64 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
-public class CreateNewClientFragment extends ProgressableFragment implements MFDatePicker
-        .OnDatePickListener {
+public class CreateNewClientFragment extends ProgressableFragment
+        implements MFDatePicker.OnDatePickListener, CreateNewClientMvpView {
 
     private final String LOG_TAG = getClass().getSimpleName();
-    public DialogFragment mfDatePicker;
-    public DialogFragment newDatePicker;
+
+    public DialogFragment mfDatePicker, newDatePicker;
+
     @InjectView(R.id.et_client_first_name)
     EditText et_clientFirstName;
+
     @InjectView(R.id.et_client_last_name)
     EditText et_clientLastName;
+
     @InjectView(R.id.et_client_middle_name)
     EditText et_clientMiddleName;
+
     @InjectView(R.id.et_client_mobile_no)
     EditText et_clientMobileNo;
+
     @InjectView(R.id.et_client_external_id)
     EditText et_clientexternalId;
+
     @InjectView(R.id.cb_client_active_status)
     CheckBox cb_clientActiveStatus;
+
     @InjectView(R.id.tv_submission_date)
     TextView tv_submissionDate;
+
     @InjectView(R.id.tv_dateofbirth)
     TextView tv_dateofbirth;
+
     @InjectView(R.id.sp_offices)
     Spinner sp_offices;
+
     @InjectView(R.id.sp_gender)
     Spinner spGender;
+
     @InjectView(R.id.sp_client_type)
     Spinner spClientType;
+
     @InjectView(R.id.sp_staff)
     Spinner sp_staff;
+
     @InjectView(R.id.sp_client_classification)
     Spinner spClientClassification;
+
     @InjectView(R.id.bt_submit)
     Button bt_submit;
+
+    @Inject
+    CreateNewClientPresenter mCreateNewClientPresenter;
+
     int officeId;
     int clientTypeId;
     int staffId;
@@ -123,10 +140,18 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
+
         ButterKnife.inject(this, rootView);
+        mCreateNewClientPresenter.attachView(this);
 
         inflateOfficeSpinner();
         inflateSubmissionDate();
@@ -264,132 +289,16 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
     }
 
     private void getClientTemplate() {
-        showProgress(true);
-        App.apiManager.getClientTemplate(new Callback<ClientsTemplate>() {
-            @Override
-            public void success(ClientsTemplate clientsTemplate, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
-
-                if (response.getStatus() == 200) {
-                    clientstemplate = clientsTemplate;
-                    inflateGenderSpinner();
-                    inflateClientTypeOptions();
-                    inflateClientClassificationOptions();
-                }
-                showProgress(false);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                showProgress(false);
-            }
-        });
+        mCreateNewClientPresenter.loadClientTemplate();
     }
 
     //inflating office list spinner
     private void inflateOfficeSpinner() {
-        showProgress(true);
-        App.apiManager.getOffices(new Callback<List<Office>>() {
-            @Override
-            public void success(List<Office> offices, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
-
-                final List<String> officeList = new ArrayList<String>();
-
-                for (Office office : offices) {
-                    officeList.add(office.getName());
-                    officeNameIdHashMap.put(office.getName(), office.getId());
-                }
-                ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, officeList);
-                officeAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
-                sp_offices.setAdapter(officeAdapter);
-                sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        officeId = officeNameIdHashMap.get(officeList.get(i));
-                        Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-                        if (officeId != -1) {
-
-                            inflateStaffSpinner(officeId);
-
-
-                        } else {
-
-                            Toast.makeText(getActivity(), getString(R.string.error_select_office)
-                                    , Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
-            }
-        });
-
+        mCreateNewClientPresenter.loadOffices();
     }
 
     public void inflateStaffSpinner(final int officeId) {
-
-        App.apiManager.getStaffInOffice(officeId, new Callback<List<Staff>>() {
-            @Override
-            public void success(List<Staff> staffs, Response response) {
-
-                final List<String> staffNames = new ArrayList<String>();
-                for (Staff staff : staffs) {
-                    staffNames.add(staff.getDisplayName());
-                    staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
-                }
-                ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, staffNames);
-                staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp_staff.setAdapter(staffAdapter);
-                sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position,
-                                               long id) {
-
-                        staffId = staffNameIdHashMap.get(staffNames.get(position));
-                        Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
-                        if (staffId != -1) {
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_select_staff),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-
-                });
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(LOG_TAG, error.getLocalizedMessage());
-
-            }
-        });
+        mCreateNewClientPresenter.loadStaffInOffices(officeId);
     }
 
     private void initiateClientCreation(ClientPayload clientPayload) {
@@ -402,20 +311,7 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         }
         if (isValidLastName()) {
 
-            showProgress(true);
-            App.apiManager.createClient(clientPayload, new Callback<Client>() {
-                @Override
-                public void success(Client client, Response response) {
-                    showProgress(false);
-                    Toaster.show(rootView, "Client created successfully");
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    showProgress(false);
-                    Toaster.show(rootView, "Error creating client");
-                }
-            });
+            mCreateNewClientPresenter.createClient(clientPayload);
         }
     }
 
@@ -555,4 +451,109 @@ public class CreateNewClientFragment extends ProgressableFragment implements MFD
         return optionsNameList;
     }
 
+    @Override
+    public void showClientTemplate(ClientsTemplate clientsTemplate) {
+
+            clientstemplate = clientsTemplate;
+            inflateGenderSpinner();
+            inflateClientTypeOptions();
+            inflateClientClassificationOptions();
+    }
+
+    @Override
+    public void showOffices(List<Office> offices) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
+
+        final List<String> officeList = new ArrayList<String>();
+
+        for (Office office : offices) {
+            officeList.add(office.getName());
+            officeNameIdHashMap.put(office.getName(), office.getId());
+        }
+        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, officeList);
+        officeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
+        sp_offices.setAdapter(officeAdapter);
+        sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                    l) {
+                officeId = officeNameIdHashMap.get(officeList.get(i));
+                Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
+                if (officeId != -1) {
+
+                    inflateStaffSpinner(officeId);
+
+
+                } else {
+
+                    Toast.makeText(getActivity(), getString(R.string.error_select_office)
+                            , Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Toaster.show(rootView, "office");
+    }
+
+    @Override
+    public void showStaffInOffices(List<Staff> staffs) {
+        final List<String> staffNames = new ArrayList<String>();
+        for (Staff staff : staffs) {
+            staffNames.add(staff.getDisplayName());
+            staffNameIdHashMap.put(staff.getDisplayName(), staff.getId());
+        }
+        ArrayAdapter<String> staffAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, staffNames);
+        staffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_staff.setAdapter(staffAdapter);
+        sp_staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                       long id) {
+
+                staffId = staffNameIdHashMap.get(staffNames.get(position));
+                Log.d("staffId " + staffNames.get(position), String.valueOf(staffId));
+                if (staffId != -1) {
+
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_select_staff),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+
+        Toaster.show(rootView, "staffin office");
+    }
+
+    @Override
+    public void showClientCreatedSuccessfully(Client client) {
+        Toaster.show(rootView, "Client created successfully");
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
 }

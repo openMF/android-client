@@ -66,6 +66,7 @@ public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpVi
 
     public void createCenter(CenterPayload centerPayload) {
         checkViewAttached();
+        getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.createCenter(centerPayload)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,16 +74,18 @@ public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpVi
                 .subscribe(new Subscriber<Center>() {
                     @Override
                     public void onCompleted() {
-
+                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
                         getMvpView().showFetchingError("Try again");
                     }
 
                     @Override
                     public void onNext(Center center) {
+                        getMvpView().showProgressbar(false);
                         getMvpView().centerCreatedSuccessfully(center);
                     }
                 });

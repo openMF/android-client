@@ -1,5 +1,6 @@
 package com.mifos.api;
 
+import com.mifos.api.model.ClientPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.client.Charges;
@@ -13,6 +14,7 @@ import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
 
@@ -93,6 +95,14 @@ public class DataManager {
 
     public Observable<Page<Client>> getAllClients(int offset, int limit) {
         return mBaseApiManager.getClientsApi().getAllClients(offset, limit);
+    }
+
+    public Observable<ClientsTemplate> getClientTemplate() {
+        return mBaseApiManager.getClientsApi().getClientTemplate();
+    }
+
+    public Observable<Client> createClient(ClientPayload clientPayload) {
+        return mBaseApiManager.getClientsApi().createClient(clientPayload);
     }
 
 

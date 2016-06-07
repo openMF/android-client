@@ -6,7 +6,6 @@
 package com.mifos.api;
 
 import com.google.gson.JsonArray;
-import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
@@ -37,7 +36,6 @@ import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
@@ -96,13 +94,13 @@ public class ApiManager extends BaseApiManager {
         getClientsApi().deleteClientImage(id, callback);
     }
 
-    public void createClient(ClientPayload payload, Callback<Client> callback) {
+    /*public void createClient(ClientPayload payload, Callback<Client> callback) {
         getClientsApi().createClient(payload, callback);
-    }
+    }*/
 
-    public void getClientTemplate(Callback<ClientsTemplate> callback) {
+    /*public void getClientTemplate(Callback<ClientsTemplate> callback) {
         getClientsApi().getClientTemplate(callback);
-    }
+    }*/
 
     /**
      * Centers API

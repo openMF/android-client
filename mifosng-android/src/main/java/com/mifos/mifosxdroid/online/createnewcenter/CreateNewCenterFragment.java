@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,12 +28,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
@@ -50,12 +49,9 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
-public class CreateNewCenterFragment extends Fragment
+public class CreateNewCenterFragment extends MifosBaseFragment
         implements MFDatePicker.OnDatePickListener, CreateNewCenterMvpView {
 
 
@@ -254,12 +250,16 @@ public class CreateNewCenterFragment extends Fragment
 
     @Override
     public void showFetchingError(String s) {
-
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showProgressbar(boolean b) {
-
+        if (b) {
+            showProgress();
+        } else {
+            hideProgress();
+        }
     }
 
     @SuppressWarnings("deprecation")
