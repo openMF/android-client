@@ -256,10 +256,10 @@ public class ApiManager extends BaseApiManager {
      * Savings API
      */
 
-    public void getSavingsAccount(String type, int accountId, String association,
+    /*public void getSavingsAccount(String type, int accountId, String association,
                                   Callback<SavingsAccountWithAssociations> callback) {
         getSavingsApi().getSavingsAccountWithAssociations(type, accountId, association, callback);
-    }
+    }*/
 
     public void getSavingsAccountTemplate(String type, int accountId, String transactionType,
                                           Callback<SavingsAccountTransactionTemplate> callback) {
@@ -273,11 +273,11 @@ public class ApiManager extends BaseApiManager {
         getSavingsApi().processTransaction(type, accountId, transactionType, request, callback);
     }
 
-    public void activateSavings(int savingsAccountId, HashMap<String, Object> request,
+    /*public void activateSavings(int savingsAccountId, HashMap<String, Object> request,
                                 Callback<GenericResponse> callback) {
         getSavingsApi().activateSavings(savingsAccountId, request, callback);
 
-    }
+    }*/
 
     public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval,
                                           Callback<GenericResponse> callback) {

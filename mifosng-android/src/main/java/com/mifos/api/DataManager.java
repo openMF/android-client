@@ -7,6 +7,7 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -23,6 +24,7 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -230,6 +232,20 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanAccountNumber);
     }
 
+
+    /**
+     * Savings API
+     */
+    public Observable<SavingsAccountWithAssociations> getSavingsAccount(
+            String type, int accountId, String association) {
+        return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
+                type,accountId, association);
+    }
+
+    public Observable<GenericResponse> activateSavings(int savingsAccountId,
+                                                       HashMap<String, Object> request) {
+        return mBaseApiManager.getSavingsApi().activateSavings(savingsAccountId,request);
+    }
 
 
 }

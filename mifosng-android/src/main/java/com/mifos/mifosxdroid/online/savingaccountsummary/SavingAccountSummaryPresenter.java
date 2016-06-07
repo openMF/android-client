@@ -1,10 +1,12 @@
-package com.mifos.mifosxdroid.online.loanaccountsummary;
+package com.mifos.mifosxdroid.online.savingaccountsummary;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,18 +19,18 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummaryMvpView> {
+public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
 
     private final DataManager mDataManager;
     private Subscription mSubscription;
 
     @Inject
-    public LoanAccountSummaryPresenter(DataManager dataManager) {
+    public SavingAccountSummaryPresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }
 
     @Override
-    public void attachView(LoanAccountSummaryMvpView mvpView) {
+    public void attachView(SavingsAccountSummaryMvpView mvpView) {
         super.attachView(mvpView);
     }
 
@@ -38,11 +40,11 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadLoanDataTable() {
+    public void loadSavingDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanDataTable()
+        mSubscription = mDataManager.getSavingsDataTable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
@@ -54,25 +56,25 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Loan DataTable not found.");
+                        getMvpView().showFetchingError("Saving DataTable not found");
                     }
 
                     @Override
                     public void onNext(List<DataTable> dataTables) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showLoanDataTable(dataTables);
+                        getMvpView().showSavingDataTable(dataTables);
                     }
                 });
     }
 
-    public void loadLoanById(int loanAccountNumber) {
+    public void loadSavingAccount(String type, int accountId, String association) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanById(loanAccountNumber)
+        mSubscription = mDataManager.getSavingsAccount(type,accountId,association)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanWithAssociations>() {
+                .subscribe(new Subscriber<SavingsAccountWithAssociations>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -81,15 +83,40 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Loan Account not found.");
+                        getMvpView().showErrorFetchingSavingAccount("Internal Server Error");
                     }
 
                     @Override
-                    public void onNext(LoanWithAssociations loanWithAssociations) {
+                    public void onNext(
+                            SavingsAccountWithAssociations savingsAccountWithAssociations) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showLoanById(loanWithAssociations);
+                        getMvpView().showSavingAccount(savingsAccountWithAssociations);
                     }
                 });
     }
 
+
+    public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
+        checkViewAttached();
+        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscription = mDataManager.activateSavings(savingsAccountId,request)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<GenericResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(GenericResponse genericResponse) {
+                        getMvpView().showSavingsActivatedSuccessfully(genericResponse);
+                    }
+                });
+    }
 }

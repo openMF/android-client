@@ -201,7 +201,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         setToolbarTitle(getResources().getString(R.string.loanAccountSummary));
         //TODO Implement cases to enable/disable repayment button
         bt_processLoanTransaction.setEnabled(false);
-        
+
         mLoanAccountSummaryPresenter.loadLoanById(loanAccountNumber);
     }
 
