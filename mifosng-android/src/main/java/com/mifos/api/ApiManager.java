@@ -17,10 +17,8 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
@@ -321,13 +319,13 @@ public class ApiManager extends BaseApiManager {
     /*public void getGroup(int group, Callback<Group> groupCallback) {
         getGroupApi().getGroup(group, groupCallback);
     }*/
-    public void listAllGroups(int offset, int limit, Callback<Page<Group>> callback) {
+    /*public void listAllGroups(int offset, int limit, Callback<Page<Group>> callback) {
         getGroupApi().listAllGroups(offset, limit, callback);
-    }
+    }*/
 
-    public void listAllGroup(Callback<Page<Group>> callback) {
-        getGroupApi().listAllGroup(callback);
-    }
+   /* public void listAllGroup(Callback<Page<Group>> callback) {
+        getGroupApi().getAllGroup(callback);
+    }*/
 
     /**
      * GroupAccountsService

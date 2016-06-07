@@ -13,7 +13,6 @@ import com.mifos.services.data.GroupPayload;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -41,12 +40,10 @@ public interface GroupService {
     Observable<Group> getGroup(@Path("groupId") int groupId);
 
     @GET(APIEndPoint.GROUPS + "?paged=true")
-    void listAllGroups(@Query("offset") int offset, @Query("limit") int limit,
-                       Callback<Page<Group>> callback);
-
+    Observable<Page<Group>> listAllGroups(@Query("offset") int offset, @Query("limit") int limit);
 
     @GET(APIEndPoint.GROUPS + "?paged=true")
-    void listAllGroup(Callback<Page<Group>> callback);
+    Observable<Page<Group>> getAllGroup();
 
 
 }

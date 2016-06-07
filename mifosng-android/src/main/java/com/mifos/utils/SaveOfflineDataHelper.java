@@ -51,11 +51,11 @@ public class SaveOfflineDataHelper {
 
     public SaveOfflineDataHelper(Context context) {
         this.mContext = context;
+        new MifosBaseActivity().getActivityComponent().inject(this);
     }
 
     public void setOfflineDataSaveListener(OfflineDataSaveListener offlineDataSaveListener) {
         this.offlineDataSaveListener = offlineDataSaveListener;
-        new MifosBaseActivity().getActivityComponent().inject(this);
     }
 
     private HashMap<Long, Integer> saveSyncState() {
