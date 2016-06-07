@@ -28,6 +28,8 @@ import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mifos.App;
 import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.BaseApiManager;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
@@ -46,6 +48,11 @@ import com.mifos.utils.PrefManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author fomenkoo
@@ -58,6 +65,7 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     private ProgressDialog progress;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
+    private DataManager mDataManager;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -240,23 +248,36 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         actionBarDrawerToggle.syncState();
 
         // make an API call to fetch logged in client's details
-        //TODO Uncomment for loading client Details
-        //loadClientDetails();
+        loadClientDetails();
     }
 
     /**
      * downloads the client name and picture(if exists)
      * sets the downloaded data to the nav drawer account header
      */
-    //TODO Setup MVP
-    /*private void loadClientDetails() {
+    //TODO Setup In MVP
+    private void loadClientDetails() {
 
         // download client details
         final int userId = PrefManager.getUserId();
-        App.apiManager.getClient(userId, new Callback<Client>() {
+        BaseApiManager baseApiManager = new BaseApiManager();
+        mDataManager = new DataManager(baseApiManager);
+        Observable<Client> call = mDataManager.getClient(userId);
+        Subscription subscription = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Client>() {
                     @Override
-                    public void success(Client client, final Response response) {
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Client client) {
                         // add name to profile
                         String name = client.getDisplayName();
                         TextView textViewUsername = (TextView) findViewById(R.id.tv_user_name);
@@ -299,16 +320,8 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                                     });
                         }
                     }
-
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                }
-
-        );
-    }*/
+                });
+    }
 
     public void startNavigationClickActivity(final Intent intent) {
         android.os.Handler handler = new android.os.Handler();
