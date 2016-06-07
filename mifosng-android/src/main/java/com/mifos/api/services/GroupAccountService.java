@@ -3,7 +3,6 @@ package com.mifos.api.services;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.accounts.GroupAccounts;
 
-import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import rx.Observable;

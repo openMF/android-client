@@ -71,7 +71,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsAccount(type,accountId,association)
+        mSubscription = mDataManager.getSavingsAccount(type, accountId, association)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountWithAssociations>() {
@@ -99,7 +99,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
     public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
         checkViewAttached();
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.activateSavings(savingsAccountId,request)
+        mSubscription = mDataManager.activateSavings(savingsAccountId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {

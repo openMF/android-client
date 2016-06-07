@@ -23,13 +23,11 @@ import android.widget.Toast;
 
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.GroupLoanAccountFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.objects.accounts.GroupAccounts;
@@ -53,9 +51,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -63,49 +58,35 @@ import static android.view.View.VISIBLE;
 /**
  * Created by nellyk on 2/27/2016.
  */
-public class GroupDetailsFragment extends ProgressableFragment implements GroupDetailsMvpView{
+public class GroupDetailsFragment extends ProgressableFragment implements GroupDetailsMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
-
-    @InjectView(R.id.tv_groupsName)
-    TextView tv_fullName;
-
-    @InjectView(R.id.tv_groupexternalId)
-    TextView tv_externalId;
-
-    @InjectView(R.id.tv_groupactivationDate)
-    TextView tv_activationDate;
-
-    @InjectView(R.id.tv_groupoffice)
-    TextView tv_office;
-
-    @InjectView(R.id.row_account)
-    TableRow rowAccount;
-
-    @InjectView(R.id.row_external)
-    TableRow rowExternal;
-
-    @InjectView(R.id.row_activation)
-    TableRow rowActivation;
-
-    @InjectView(R.id.row_office)
-    TableRow rowOffice;
-
-    @InjectView(R.id.row_group)
-    TableRow rowGroup;
-
-    @InjectView(R.id.row_staff)
-    TableRow rowStaff;
-
-    @InjectView(R.id.row_loan)
-    TableRow rowLoan;
-
-    @Inject
-    GroupDetailsPresenter mGroupDetailsPresenter;
-
     public int groupId;
     public List<DataTable> clientDataTables = new ArrayList<>();
-
+    @InjectView(R.id.tv_groupsName)
+    TextView tv_fullName;
+    @InjectView(R.id.tv_groupexternalId)
+    TextView tv_externalId;
+    @InjectView(R.id.tv_groupactivationDate)
+    TextView tv_activationDate;
+    @InjectView(R.id.tv_groupoffice)
+    TextView tv_office;
+    @InjectView(R.id.row_account)
+    TableRow rowAccount;
+    @InjectView(R.id.row_external)
+    TableRow rowExternal;
+    @InjectView(R.id.row_activation)
+    TableRow rowActivation;
+    @InjectView(R.id.row_office)
+    TableRow rowOffice;
+    @InjectView(R.id.row_group)
+    TableRow rowGroup;
+    @InjectView(R.id.row_staff)
+    TableRow rowStaff;
+    @InjectView(R.id.row_loan)
+    TableRow rowLoan;
+    @Inject
+    GroupDetailsPresenter mGroupDetailsPresenter;
     private View rootView;
     private SharedPreferences sharedPreferences;
     private OnFragmentInteractionListener mListener;
@@ -122,7 +103,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             groupId = getArguments().getInt(Constants.GROUP_ID);
         setHasOptionsMenu(true);

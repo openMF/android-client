@@ -119,7 +119,7 @@ public class DataManager {
     }
 
     public Observable<Response> uploadClientImage(int id, TypedFile image) {
-        return mBaseApiManager.getClientsApi().uploadClientImage(id,image);
+        return mBaseApiManager.getClientsApi().uploadClientImage(id, image);
     }
 
     public Observable<Response> deleteClientImage(int clientId) {
@@ -239,17 +239,16 @@ public class DataManager {
     public Observable<SavingsAccountWithAssociations> getSavingsAccount(
             String type, int accountId, String association) {
         return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
-                type,accountId, association);
+                type, accountId, association);
     }
 
     public Observable<GenericResponse> activateSavings(int savingsAccountId,
                                                        HashMap<String, Object> request) {
-        return mBaseApiManager.getSavingsApi().activateSavings(savingsAccountId,request);
+        return mBaseApiManager.getSavingsApi().activateSavings(savingsAccountId, request);
     }
 
     /**
      * Loan API
-     *
      */
     public Observable<Page<Charges>> getListOfLoanCharges(int loanId) {
         return mBaseApiManager.getLoanApi().getListOfLoanCharges(loanId);

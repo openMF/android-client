@@ -12,7 +12,7 @@ import retrofit.client.Response;
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public interface ClientDetailsMvpView extends MvpView{
+public interface ClientDetailsMvpView extends MvpView {
 
     void showClientDataTable(List<DataTable> dataTables);
 

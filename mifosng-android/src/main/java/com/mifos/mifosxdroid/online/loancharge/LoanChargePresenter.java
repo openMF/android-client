@@ -17,7 +17,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView>{
+public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
 
     private final DataManager mDataManager;
     private Subscription mSubscription;

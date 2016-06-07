@@ -42,7 +42,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.mifos.App;
 import com.mifos.api.ApiRequestInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PinpointClientActivity;
@@ -87,10 +86,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedFile;
 
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
@@ -193,7 +189,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
         setHasOptionsMenu(true);
@@ -279,7 +275,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
      * @param pngFile - PNG images supported at the moment
      */
     private void uploadImage(File pngFile) {
-        mClientDetailsPresenter.uploadImage(clientId,pngFile);
+        mClientDetailsPresenter.uploadImage(clientId, pngFile);
     }
 
 
@@ -550,7 +546,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void showClientImageDeletedSuccessfully() {
         Toaster.show(rootView, "Image deleted");
-        iv_clientImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_launcher));
+        iv_clientImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable
+                .ic_launcher));
     }
 
     @Override

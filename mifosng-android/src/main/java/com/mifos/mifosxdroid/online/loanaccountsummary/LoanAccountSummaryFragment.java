@@ -26,9 +26,9 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.LoanAccountDisbursement;
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
+import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.noncore.DataTable;
@@ -50,7 +50,7 @@ import butterknife.OnClick;
  * Created by ishankhanna on 09/05/14.
  */
 public class LoanAccountSummaryFragment extends ProgressableFragment
-        implements LoanAccountSummaryMvpView{
+        implements LoanAccountSummaryMvpView {
 
 
     public static final int MENU_ITEM_DATA_TABLES = 1001;
@@ -171,7 +171,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         //Necessary Call to add and update the Menu in a Fragment

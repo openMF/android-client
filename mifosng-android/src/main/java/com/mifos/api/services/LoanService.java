@@ -12,7 +12,6 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.organisation.ProductLoans;

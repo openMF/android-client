@@ -10,8 +10,6 @@ import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
@@ -21,15 +19,12 @@ import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Group;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
@@ -43,7 +38,6 @@ import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.services.data.SavingsPayload;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -169,7 +163,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {
         getDataTableApi().getDataOfDataTable(table, entityId, callback);
     }*/
-
     public void addDataTableEntry(String table, int entityId, Map<String, Object> payload,
                                   Callback<GenericResponse> callback) {
         getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
@@ -187,7 +180,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getLoanById(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanByIdWithAllAssociations(loan, callback);
     }*/
-
     public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
         getLoanApi().getLoanRepaymentTemplate(loan, callback);
     }
@@ -260,7 +252,6 @@ public class ApiManager extends BaseApiManager {
                                   Callback<SavingsAccountWithAssociations> callback) {
         getSavingsApi().getSavingsAccountWithAssociations(type, accountId, association, callback);
     }*/
-
     public void getSavingsAccountTemplate(String type, int accountId, String transactionType,
                                           Callback<SavingsAccountTransactionTemplate> callback) {
         getSavingsApi().getSavingsAccountTransactionTemplate(type, accountId, transactionType,
@@ -336,7 +327,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getGroup(int group, Callback<Group> groupCallback) {
         getGroupApi().getGroup(group, groupCallback);
     }*/
-
     public void listAllGroups(int offset, int limit, Callback<Page<Group>> callback) {
         getGroupApi().listAllGroups(offset, limit, callback);
     }

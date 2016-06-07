@@ -24,7 +24,6 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
@@ -53,9 +52,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class SavingsAccountSummaryFragment extends ProgressableFragment
@@ -141,7 +137,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
@@ -348,7 +344,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         hashMap.put("activatedOnDate", DateHelper.getCurrentDateAsNewDateFormat());
         hashMap.put("locale", "en");
 
-        mSavingAccountSummaryPresenter.activateSavings(savingsAccountNumber,hashMap);
+        mSavingAccountSummaryPresenter.activateSavings(savingsAccountNumber, hashMap);
     }
 
     public void toggleTransactionCapabilityOfAccount(Status status) {

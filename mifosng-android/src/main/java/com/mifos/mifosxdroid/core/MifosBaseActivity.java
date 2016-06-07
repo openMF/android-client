@@ -45,9 +45,6 @@ import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.PrefManager;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;

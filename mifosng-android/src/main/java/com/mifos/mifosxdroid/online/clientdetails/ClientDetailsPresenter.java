@@ -101,7 +101,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
         final String imagePath = pngFile.getAbsolutePath();
         getMvpView().showUploadImageProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.uploadClientImage(id,new TypedFile("image/png", pngFile))
+        mSubscription = mDataManager.uploadClientImage(id, new TypedFile("image/png", pngFile))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Response>() {
@@ -118,7 +118,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     @Override
                     public void onNext(Response response) {
                         getMvpView().showUploadImageProgressbar(false);
-                        getMvpView().showUploadImageSuccessfully(response,imagePath);
+                        getMvpView().showUploadImageSuccessfully(response, imagePath);
                     }
                 });
     }
@@ -151,7 +151,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription  = mDataManager.getClientAccounts(clientId)
+        mSubscription = mDataManager.getClientAccounts(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<ClientAccounts>() {

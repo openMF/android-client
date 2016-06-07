@@ -25,7 +25,6 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -44,12 +43,10 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeMvpView{
+public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeMvpView {
 
     public static final int MENU_ITEM_ADD_NEW_LOAN_CHARGES = 3000;
 
@@ -61,10 +58,8 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
 
     @Inject
     LoanChargePresenter mLoanChargePresenter;
-
-    private ChargeNameListAdapter mChargesNameListAdapter;
-
     List<Charges> chargesList = new ArrayList<Charges>();
+    private ChargeNameListAdapter mChargesNameListAdapter;
     private View rootView;
     private Context context;
     private SharedPreferences sharedPreferences;
@@ -104,7 +99,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
     }
