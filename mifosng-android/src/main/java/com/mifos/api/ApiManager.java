@@ -154,17 +154,17 @@ public class ApiManager extends BaseApiManager {
      * Data tables API
      */
 
-    public void getSavingsDataTable(Callback<List<DataTable>> callback) {
+    /*public void getSavingsDataTable(Callback<List<DataTable>> callback) {
         getDataTableApi().getTableOf("m_savings_account", callback);
-    }
+    }*/
 
-    public void getClientDataTable(Callback<List<DataTable>> callback) {
+    /*public void getClientDataTable(Callback<List<DataTable>> callback) {
         getDataTableApi().getTableOf("m_client", callback);
-    }
+    }*/
 
-    public void getLoanDataTable(Callback<List<DataTable>> callback) {
+    /*public void getLoanDataTable(Callback<List<DataTable>> callback) {
         getDataTableApi().getTableOf("m_loan", callback);
-    }
+    }*/
 
     /*public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {
         getDataTableApi().getDataOfDataTable(table, entityId, callback);
@@ -333,9 +333,9 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().createGroup(groupPayload, callback);
 
     }*/
-    public void getGroup(int group, Callback<Group> groupCallback) {
+    /*public void getGroup(int group, Callback<Group> groupCallback) {
         getGroupApi().getGroup(group, groupCallback);
-    }
+    }*/
 
     public void listAllGroups(int offset, int limit, Callback<Page<Group>> callback) {
         getGroupApi().listAllGroups(offset, limit, callback);
@@ -350,9 +350,9 @@ public class ApiManager extends BaseApiManager {
      */
 
 
-    public void getAllGroupsOfClient(int groupId, Callback<GroupAccounts> groupAccountsCallback) {
+    /*public void getAllGroupsOfClient(int groupId, Callback<GroupAccounts> groupAccountsCallback) {
         getGroupAccountsServiceApi().getAllGroupsOfClient(groupId, groupAccountsCallback);
-    }
+    }*/
 
     /**
      * Documents API

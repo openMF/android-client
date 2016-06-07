@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
+import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -11,6 +12,7 @@ import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
+import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
@@ -146,6 +148,10 @@ public class DataManager {
         return mBaseApiManager.getGroupApi().createGroup(groupPayload);
     }
 
+    public Observable<Group> getGroup(int groupId) {
+        return mBaseApiManager.getGroupApi().getGroup(groupId);
+    }
+
 
     /**
      * Offices API
@@ -169,5 +175,30 @@ public class DataManager {
     public Observable<JsonArray> getDataTableInfo(String table, int entityId) {
         return mBaseApiManager.getDataTableApi().getDataOfDataTable(table, entityId);
     }
+
+
+    /**
+     * GroupAccountsService
+     */
+    public Observable<GroupAccounts> getAllGroupsOfClient(int groupId) {
+        return mBaseApiManager.getGroupAccountsServiceApi().getAllGroupsOfClient(groupId);
+    }
+
+
+    /**
+     * Data tables API
+     */
+    public Observable<List<DataTable>> getSavingsDataTable() {
+        return mBaseApiManager.getDataTableApi().getTableOf("m_savings_account");
+    }
+
+    public Observable<List<DataTable>> getClientDataTable() {
+        return mBaseApiManager.getDataTableApi().getTableOf("m_client");
+    }
+
+    public Observable<List<DataTable>> getLoanDataTable() {
+        return mBaseApiManager.getDataTableApi().getTableOf("m_loan");
+    }
+
 
 }

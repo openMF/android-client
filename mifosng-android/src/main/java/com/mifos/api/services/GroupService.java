@@ -38,7 +38,7 @@ public interface GroupService {
     Observable<Group> createGroup(@Body GroupPayload groupPayload);
 
     @GET(APIEndPoint.GROUPS + "/{groupId}")
-    void getGroup(@Path("groupId") int groupId, Callback<Group> groupCallback);
+    Observable<Group> getGroup(@Path("groupId") int groupId);
 
     @GET(APIEndPoint.GROUPS + "?paged=true")
     void listAllGroups(@Query("offset") int offset, @Query("limit") int limit,

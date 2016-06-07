@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.groupdetails;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -27,8 +27,10 @@ import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.GroupLoanAccountFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
@@ -47,6 +49,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -59,35 +63,49 @@ import static android.view.View.VISIBLE;
 /**
  * Created by nellyk on 2/27/2016.
  */
-public class GroupDetailsFragment extends ProgressableFragment {
+public class GroupDetailsFragment extends ProgressableFragment implements GroupDetailsMvpView{
 
     public final String LOG_TAG = getClass().getSimpleName();
-    private final String TAG = GroupDetailsFragment.class.getSimpleName();
-    public int groupId;
-    public List<DataTable> clientDataTables = new ArrayList<>();
+
     @InjectView(R.id.tv_groupsName)
     TextView tv_fullName;
+
     @InjectView(R.id.tv_groupexternalId)
     TextView tv_externalId;
+
     @InjectView(R.id.tv_groupactivationDate)
     TextView tv_activationDate;
+
     @InjectView(R.id.tv_groupoffice)
     TextView tv_office;
 
     @InjectView(R.id.row_account)
     TableRow rowAccount;
+
     @InjectView(R.id.row_external)
     TableRow rowExternal;
+
     @InjectView(R.id.row_activation)
     TableRow rowActivation;
+
     @InjectView(R.id.row_office)
     TableRow rowOffice;
+
     @InjectView(R.id.row_group)
     TableRow rowGroup;
+
     @InjectView(R.id.row_staff)
     TableRow rowStaff;
+
     @InjectView(R.id.row_loan)
     TableRow rowLoan;
+
+    @Inject
+    GroupDetailsPresenter mGroupDetailsPresenter;
+
+    public int groupId;
+    public List<DataTable> clientDataTables = new ArrayList<>();
+
     private View rootView;
     private SharedPreferences sharedPreferences;
     private OnFragmentInteractionListener mListener;
@@ -104,6 +122,7 @@ public class GroupDetailsFragment extends ProgressableFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             groupId = getArguments().getInt(Constants.GROUP_ID);
         setHasOptionsMenu(true);
@@ -113,9 +132,14 @@ public class GroupDetailsFragment extends ProgressableFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_details, container, false);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         ButterKnife.inject(this, rootView);
+        mGroupDetailsPresenter.attachView(this);
+
         inflateClientInformation();
+
         return rootView;
     }
 
@@ -152,125 +176,12 @@ public class GroupDetailsFragment extends ProgressableFragment {
     }
 
     public void inflateClientInformation() {
-        getGroupDetails();
+        mGroupDetailsPresenter.loadGroup(groupId);
     }
 
-    public void getGroupDetails() {
-        showProgress(true);
-        App.apiManager.getGroup(groupId, new Callback<Group>() {
-            @Override
-            public void success(final Group group, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
-
-                if (group != null) {
-                    setToolbarTitle(getString(R.string.group) + " - " + group.getName());
-                    tv_fullName.setText(group.getName());
-                    tv_externalId.setText(group.getExternalId());
-
-                    try {
-                        List<Integer> dateObj = group.getActivationDate();
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-                        Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
-                        Locale currentLocale = getResources().getConfiguration().locale;
-                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
-                                currentLocale);
-                        String dateString = df.format(date);
-                        tv_activationDate.setText(dateString);
-
-                        if (TextUtils.isEmpty(dateString))
-                            rowActivation.setVisibility(GONE);
-
-                    } catch (IndexOutOfBoundsException e) {
-                        Toast.makeText(getActivity(), getString(R.string.error_group_inactive),
-                                Toast.LENGTH_SHORT).show();
-                        tv_activationDate.setText("");
-                    } catch (ParseException e) {
-                        Log.d(LOG_TAG, e.getMessage());
-                    }
-                    tv_office.setText(group.getOfficeName());
-
-                    if (TextUtils.isEmpty(group.getOfficeName()))
-                        rowOffice.setVisibility(GONE);
-
-                    showProgress(false);
-                    inflateClientsAccounts();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Client not found.");
-                showProgress(false);
-            }
-        });
-    }
 
     public void inflateClientsAccounts() {
-
-        showProgress(true);
-
-        App.apiManager.getAllGroupsOfClient(groupId, new Callback<GroupAccounts>() {
-            @Override
-            public void success(final GroupAccounts groupAccounts, Response response) {
-                // Proceed only when the fragment is added to the activity.
-                if (!isAdded()) {
-                    return;
-                }
-                accountAccordion = new AccountAccordion(getActivity());
-                if (groupAccounts.getLoanAccounts().size() > 0) {
-                    AccountAccordion.Section section = AccountAccordion.Section.LOANS;
-                    final LoanAccountsListAdapter adapter =
-                            new LoanAccountsListAdapter(getActivity().getApplicationContext(),
-                                    groupAccounts.getLoanAccounts());
-                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
-                        }
-                    });
-                }
-
-                if (groupAccounts.getNonRecurringSavingsAccounts().size() > 0) {
-                    AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
-                    final SavingsAccountsListAdapter adapter =
-                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
-                                    groupAccounts.getNonRecurringSavingsAccounts());
-                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
-                                    adapter.getItem(i).getDepositType());
-                        }
-                    });
-                }
-
-                if (groupAccounts.getRecurringSavingsAccounts().size() > 0) {
-                    AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
-                    final SavingsAccountsListAdapter adapter =
-                            new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
-                                    groupAccounts.getRecurringSavingsAccounts());
-                    section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i,
-                                                long l) {
-                            mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
-                                    adapter.getItem(i).getDepositType());
-                        }
-                    });
-                }
-                showProgress(false);
-                inflateDataTablesList();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Accounts not found.");
-                showProgress(false);
-            }
-        });
+        mGroupDetailsPresenter.loadGroupsOfClients(groupId);
     }
 
     /**
@@ -278,25 +189,7 @@ public class GroupDetailsFragment extends ProgressableFragment {
      * menu options
      */
     public void inflateDataTablesList() {
-        showProgress(true);
-        App.apiManager.getClientDataTable(new Callback<List<DataTable>>() {
-            @Override
-            public void success(List<DataTable> dataTables, Response response) {
-                if (dataTables != null) {
-                    Iterator<DataTable> dataTableIterator = dataTables.iterator();
-                    clientDataTables.clear();
-                    while (dataTableIterator.hasNext()) {
-                        clientDataTables.add(dataTableIterator.next());
-                    }
-                }
-                showProgress(false);
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                showProgress(false);
-            }
-        });
+        mGroupDetailsPresenter.loadClientDataTable();
     }
 
 
@@ -319,6 +212,123 @@ public class GroupDetailsFragment extends ProgressableFragment {
         fragmentTransaction.replace(R.id.container, grouploanAccountFragment);
         fragmentTransaction.commit();
     }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
+
+    @Override
+    public void showGroup(Group group) {
+        if (group != null) {
+            setToolbarTitle(getString(R.string.group) + " - " + group.getName());
+            tv_fullName.setText(group.getName());
+            tv_externalId.setText(group.getExternalId());
+
+            try {
+                List<Integer> dateObj = group.getActivationDate();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+                Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
+                Locale currentLocale = getResources().getConfiguration().locale;
+                DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                        currentLocale);
+                String dateString = df.format(date);
+                tv_activationDate.setText(dateString);
+
+                if (TextUtils.isEmpty(dateString))
+                    rowActivation.setVisibility(GONE);
+
+            } catch (IndexOutOfBoundsException e) {
+                Toast.makeText(getActivity(), getString(R.string.error_group_inactive),
+                        Toast.LENGTH_SHORT).show();
+                tv_activationDate.setText("");
+            } catch (ParseException e) {
+                Log.d(LOG_TAG, e.getMessage());
+            }
+            tv_office.setText(group.getOfficeName());
+
+            if (TextUtils.isEmpty(group.getOfficeName()))
+                rowOffice.setVisibility(GONE);
+
+            inflateClientsAccounts();
+        }
+    }
+
+    @Override
+    public void showGroupsOfClient(GroupAccounts groupAccounts) {
+        // Proceed only when the fragment is added to the activity.
+        if (!isAdded()) {
+            return;
+        }
+        accountAccordion = new AccountAccordion(getActivity());
+        if (groupAccounts.getLoanAccounts().size() > 0) {
+            AccountAccordion.Section section = AccountAccordion.Section.LOANS;
+            final LoanAccountsListAdapter adapter =
+                    new LoanAccountsListAdapter(getActivity().getApplicationContext(),
+                            groupAccounts.getLoanAccounts());
+            section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                        long l) {
+                    mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
+                }
+            });
+        }
+
+        if (groupAccounts.getNonRecurringSavingsAccounts().size() > 0) {
+            AccountAccordion.Section section = AccountAccordion.Section.SAVINGS;
+            final SavingsAccountsListAdapter adapter =
+                    new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                            groupAccounts.getNonRecurringSavingsAccounts());
+            section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                        long l) {
+                    mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                            adapter.getItem(i).getDepositType());
+                }
+            });
+        }
+
+        if (groupAccounts.getRecurringSavingsAccounts().size() > 0) {
+            AccountAccordion.Section section = AccountAccordion.Section.RECURRING;
+            final SavingsAccountsListAdapter adapter =
+                    new SavingsAccountsListAdapter(getActivity().getApplicationContext(),
+                            groupAccounts.getRecurringSavingsAccounts());
+            section.connect(getActivity(), adapter, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                        long l) {
+                    mListener.loadSavingsAccountSummary(adapter.getItem(i).getId(),
+                            adapter.getItem(i).getDepositType());
+                }
+            });
+        }
+        inflateDataTablesList();
+    }
+
+    @Override
+    public void showClientDataTable(List<DataTable> dataTables) {
+        if (dataTables != null) {
+            Iterator<DataTable> dataTableIterator = dataTables.iterator();
+            clientDataTables.clear();
+            while (dataTableIterator.hasNext()) {
+                clientDataTables.add(dataTableIterator.next());
+            }
+        }
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mGroupDetailsPresenter.detachView();
+    }
+
 
     public interface OnFragmentInteractionListener {
         void loadLoanAccountSummary(int loanAccountNumber);

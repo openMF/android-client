@@ -27,7 +27,7 @@ import rx.Observable;
 public interface DataTableService {
 
     @GET(APIEndPoint.DATATABLES)
-    void getTableOf(@Query("apptable") String table, Callback<List<DataTable>> callback);
+    Observable<List<DataTable>> getTableOf(@Query("apptable") String table);
 
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")

@@ -15,6 +15,7 @@ import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment;
+import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment;
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 
 import dagger.Component;
@@ -54,5 +55,7 @@ public interface ActivityComponent {
     void inject(CreateNewClientFragment createNewClientFragment);
 
     void inject(DataTableDataFragment dataTableDataFragment);
+
+    void inject(GroupDetailsFragment groupDetailsFragment);
 
 }
