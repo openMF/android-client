@@ -254,6 +254,9 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanAccountNumber);
     }
 
+    public Observable<LoanWithAssociations> getLoanTransactions(int loan) {
+        return mBaseApiManager.getLoanApi().getLoanWithTransactions(loan);
+    }
 
     /**
      * Savings API

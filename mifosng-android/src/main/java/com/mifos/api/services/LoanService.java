@@ -67,8 +67,7 @@ public interface LoanService {
                                   Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
-    void getLoanWithTransactions(@Path("loanId") int loanId,
-                                 Callback<LoanWithAssociations> loanWithAssociationsCallback);
+    Observable<LoanWithAssociations> getLoanWithTransactions(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.CREATELOANSPRODUCTS)
     void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback);
