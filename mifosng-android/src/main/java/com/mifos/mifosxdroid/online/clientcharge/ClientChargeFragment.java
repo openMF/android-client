@@ -55,19 +55,13 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     SwipeRefreshLayout swipeRefreshLayout;
 
     List<Charges> chargesList = new ArrayList<Charges>();
-
-    private View rootView;
-
-    private Context context;
-
-    private int clientId;
-
-    private boolean isInfiniteScrollEnabled = false;
-
     @Inject
     ClientChargePresenter mClientChargePresenter;
-
     ChargeNameListAdapter mChargesNameListAdapter;
+    private View rootView;
+    private Context context;
+    private int clientId;
+    private boolean isInfiniteScrollEnabled = false;
 
     public ClientChargeFragment() {
 

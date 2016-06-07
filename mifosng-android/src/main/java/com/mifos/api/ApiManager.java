@@ -80,7 +80,6 @@ public class ApiManager extends BaseApiManager {
     /*public void listClients(int offset, int limit, Callback<Page<Client>> callback) {
         getClientsApi().listAllClients(offset, limit, callback);
     }*/
-
     public void getClient(int id, Callback<Client> callback) {
         getClientsApi().getClient(id, callback);
     }
@@ -121,7 +120,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getGroupsByCenter(int id, Callback<CenterWithAssociations> callback) {
         getCenterApi().getAllGroupsForCenter(id, callback);
     }*/
-
     public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
         getCenterApi().getCollectionSheet(id, payload, callback);
     }
@@ -335,7 +333,6 @@ public class ApiManager extends BaseApiManager {
         getGroupApi().createGroup(groupPayload, callback);
 
     }*/
-
     public void getGroup(int group, Callback<Group> groupCallback) {
         getGroupApi().getGroup(group, groupCallback);
     }
@@ -364,7 +361,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getDocumentsList(String type, int id, Callback<List<Document>> callback) {
         getDocumentApi().getListOfDocuments(type, id, callback);
     }*/
-
     public void createDocument(String type, int id, String name, String desc, TypedFile file,
                                Callback<GenericResponse> callback) {
         getDocumentApi().createDocument(type, id, name, desc, file, callback);
@@ -377,7 +373,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getIdentifiers(int clientId, Callback<List<Identifier>> callback) {
         getIdentifierApi().getListOfIdentifiers(clientId, callback);
     }*/
-
     public void deleteIdentifier(int clientId, int id, Callback<GenericResponse> callback) {
         getIdentifierApi().deleteIdentifier(clientId, id, callback);
     }
@@ -397,7 +392,6 @@ public class ApiManager extends BaseApiManager {
    /* public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
         getStaffApi().getStaffForOffice(officeId, callback);
     }*/
-
     public void getAllStaff(Callback<List<Staff>> listOfStaffsCallback) {
         getStaffApi().getAllStaff(listOfStaffsCallback);
     }

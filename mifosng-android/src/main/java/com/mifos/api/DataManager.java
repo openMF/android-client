@@ -44,8 +44,8 @@ public class DataManager {
 
     /**
      * @param username Username
-     * @param password  Password
-     * @return  Basic OAuth
+     * @param password Password
+     * @return Basic OAuth
      */
     public Observable<User> login(String username, String password) {
         return mBaseApiManager.getAuthApi().authenticate(username, password);
@@ -167,7 +167,7 @@ public class DataManager {
      * DataTable API
      */
     public Observable<JsonArray> getDataTableInfo(String table, int entityId) {
-        return mBaseApiManager.getDataTableApi().getDataOfDataTable(table,entityId);
+        return mBaseApiManager.getDataTableApi().getDataOfDataTable(table, entityId);
     }
 
 }

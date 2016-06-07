@@ -24,9 +24,13 @@ public interface ApplicationComponent {
 
     @ApplicationContext
     Context context();
+
     Application application();
+
     BaseApiManager baseApiManager();
+
     DataManager dataManager();
+
     Bus eventBus();
 
 }

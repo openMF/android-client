@@ -142,7 +142,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
@@ -454,10 +454,10 @@ public class CreateNewClientFragment extends ProgressableFragment
     @Override
     public void showClientTemplate(ClientsTemplate clientsTemplate) {
 
-            clientstemplate = clientsTemplate;
-            inflateGenderSpinner();
-            inflateClientTypeOptions();
-            inflateClientClassificationOptions();
+        clientstemplate = clientsTemplate;
+        inflateGenderSpinner();
+        inflateClientTypeOptions();
+        inflateClientClassificationOptions();
     }
 
     @Override

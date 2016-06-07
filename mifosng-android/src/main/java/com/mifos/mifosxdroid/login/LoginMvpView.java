@@ -6,7 +6,7 @@ import com.mifos.objects.User;
 /**
  * Created by Rajan Maurya on 4/6/16.
  */
-public interface LoginMvpView extends MvpView{
+public interface LoginMvpView extends MvpView {
 
     void onLoginSuccessful(User user);
 

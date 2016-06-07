@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -26,23 +25,17 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class ClientIdentifiersFragment extends ProgressableFragment
-        implements ClientIdentifiersMvpView{
+        implements ClientIdentifiersMvpView {
 
     @InjectView(R.id.lv_identifiers)
     ListView lv_identifiers;
-
-    private View rootView;
-
-    private int clientId;
-
     @Inject
     ClientIdentifiersPresenter mClientIdentifiersPresenter;
+    private View rootView;
+    private int clientId;
 
     public static ClientIdentifiersFragment newInstance(int clientId) {
         ClientIdentifiersFragment fragment = new ClientIdentifiersFragment();
@@ -55,7 +48,7 @@ public class ClientIdentifiersFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -96,7 +89,7 @@ public class ClientIdentifiersFragment extends ProgressableFragment
 
     @Override
     public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s , Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

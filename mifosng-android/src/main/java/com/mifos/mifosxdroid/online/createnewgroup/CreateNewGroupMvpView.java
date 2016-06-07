@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Rajan Maurya on 06/06/16.
  */
-public interface CreateNewGroupMvpView extends MvpView{
+public interface CreateNewGroupMvpView extends MvpView {
 
     void showOffices(List<Office> offices);
 

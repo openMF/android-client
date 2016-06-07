@@ -41,30 +41,22 @@ import butterknife.InjectView;
  * Created by ishankhanna on 09/02/14.
  */
 public class ClientListFragment extends MifosBaseFragment
-        implements OnItemClickListener, ClientListMvpView{
+        implements OnItemClickListener, ClientListMvpView {
 
     @InjectView(R.id.rv_clients)
     RecyclerView rv_clients;
 
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
-
-    private View rootView;
-
-    private List<Client> clientList = new ArrayList<>();
-
-    private LinearLayoutManager layoutManager;
-
-    private int totalFilteredRecords = 0;
-
-    private int limit = 100;
-
-    private boolean isInfiniteScrollEnabled = true;
-
     ClientNameListAdapter clientNameListAdapter;
-
     @Inject
     ClientListPresenter mClientListPresenter;
+    private View rootView;
+    private List<Client> clientList = new ArrayList<>();
+    private LinearLayoutManager layoutManager;
+    private int totalFilteredRecords = 0;
+    private int limit = 100;
+    private boolean isInfiniteScrollEnabled = true;
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
@@ -97,7 +89,7 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override

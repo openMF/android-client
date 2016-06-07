@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -30,13 +29,10 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class GroupListFragment extends ProgressableFragment
-        implements GroupListMvpView, AdapterView.OnItemClickListener{
+        implements GroupListMvpView, AdapterView.OnItemClickListener {
 
     @InjectView(R.id.lv_group_list)
     ListView lv_groupList;
@@ -54,12 +50,6 @@ public class GroupListFragment extends ProgressableFragment
 
     private int centerId;
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mGroupListPresenter.loadGroups(
-                mCenterWithAssociations.getGroupMembers().get(position).getId());
-    }
-
     public static GroupListFragment newInstance(int centerId) {
         GroupListFragment fragment = new GroupListFragment();
         Bundle args = new Bundle();
@@ -69,9 +59,15 @@ public class GroupListFragment extends ProgressableFragment
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mGroupListPresenter.loadGroups(
+                mCenterWithAssociations.getGroupMembers().get(position).getId());
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             centerId = getArguments().getInt(Constants.CENTER_ID);
     }

@@ -9,7 +9,6 @@ import com.mifos.objects.organisation.Office;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.http.GET;
 import rx.Observable;
 

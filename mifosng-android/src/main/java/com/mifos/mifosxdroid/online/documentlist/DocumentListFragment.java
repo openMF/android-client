@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -36,11 +35,8 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
-public class DocumentListFragment extends ProgressableFragment implements DocumentListMvpView{
+public class DocumentListFragment extends ProgressableFragment implements DocumentListMvpView {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
@@ -69,7 +65,7 @@ public class DocumentListFragment extends ProgressableFragment implements Docume
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
 
         if (getArguments() != null) {
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
@@ -99,7 +95,7 @@ public class DocumentListFragment extends ProgressableFragment implements Docume
                 .NONE, getString(R.string.add_new));
         menuItemAddNewDocument
                 .setIcon(ContextCompat
-                .getDrawable(getActivity(), R.drawable.ic_action_content_new));
+                        .getDrawable(getActivity(), R.drawable.ic_action_content_new));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

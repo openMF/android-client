@@ -41,6 +41,10 @@ public class App extends SugarApp {
         return instance;
     }
 
+    public static App get(Context context) {
+        return (App) context.getApplicationContext();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -49,10 +53,6 @@ public class App extends SugarApp {
 
         apiManager = new ApiManager();
         Iconify.with(new MaterialModule());
-    }
-
-    public static App get(Context context) {
-        return (App) context.getApplicationContext();
     }
 
     public ApplicationComponent getComponent() {

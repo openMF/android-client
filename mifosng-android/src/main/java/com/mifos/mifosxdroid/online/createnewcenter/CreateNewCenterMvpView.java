@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.online.createnewcenter;
 
-import com.google.android.gms.maps.MapView;
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;

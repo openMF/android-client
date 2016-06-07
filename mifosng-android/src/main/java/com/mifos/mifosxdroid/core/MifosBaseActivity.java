@@ -37,9 +37,9 @@ import com.mifos.mifosxdroid.injection.component.ActivityComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.online.CentersActivity;
+import com.mifos.mifosxdroid.online.GroupsListFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
-import com.mifos.mifosxdroid.online.GroupsListFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.PrefManager;
 
@@ -53,9 +53,8 @@ import retrofit.client.Response;
 public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback,
         NavigationView.OnNavigationItemSelectedListener {
 
-    private ActivityComponent mActivityComponent;
-
     protected Toolbar toolbar;
+    private ActivityComponent mActivityComponent;
     private ProgressDialog progress;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;

@@ -56,7 +56,7 @@ public class ClientSearchFragment extends MifosBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class ClientSearchFragment extends MifosBaseFragment
 
     @Override
     public void showFetchingError(String s) {
-        Toast.makeText(getActivity(),s,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
         EspressoIdlingResource.decrement(); // App is idle.
     }
 

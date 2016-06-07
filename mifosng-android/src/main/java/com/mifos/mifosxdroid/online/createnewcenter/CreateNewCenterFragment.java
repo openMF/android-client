@@ -74,13 +74,12 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     int officeId;
     Boolean result = true;
+    @Inject
+    CreateNewCenterPresenter mCreateNewCenterPresenter;
     private View rootView;
     private String activationdateString;
     private DialogFragment newDatePicker;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
-
-    @Inject
-    CreateNewCenterPresenter mCreateNewCenterPresenter;
 
     public static CreateNewCenterFragment newInstance() {
         CreateNewCenterFragment createNewCenterFragment = new CreateNewCenterFragment();
@@ -90,7 +89,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class CenterListPresenter implements Presenter<CenterListMvpView> {
     public void loadCenters() {
         mCenterListMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription  = mDataManager.getCenters()
+        mSubscription = mDataManager.getCenters()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Center>>() {

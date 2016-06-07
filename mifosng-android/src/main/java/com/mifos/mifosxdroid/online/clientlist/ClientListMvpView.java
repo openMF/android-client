@@ -7,7 +7,7 @@ import com.mifos.objects.client.Page;
 /**
  * Created by Rajan Maurya on 6/6/16.
  */
-public interface ClientListMvpView extends MvpView{
+public interface ClientListMvpView extends MvpView {
 
 
     void showClientList(Page<Client> clientPage);

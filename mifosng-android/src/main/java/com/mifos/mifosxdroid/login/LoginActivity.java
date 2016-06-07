@@ -72,15 +72,12 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @InjectView(R.id.ll_connectionSettings)
     LinearLayout ll_connectionSettings;
-
+    @Inject
+    LoginPresenter mLoginPresenter;
     private String username;
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
-
-    @Inject
-    LoginPresenter mLoginPresenter;
-
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

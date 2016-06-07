@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
  * Created by Rajan Maurya on 06/06/16.
  */
 public class GenerateCollectionSheetPresenter
-        extends BasePresenter<GenerateCollectionSheetMvpView>{
+        extends BasePresenter<GenerateCollectionSheetMvpView> {
 
     private final DataManager mDataManager;
     private Subscription mSubscription;

@@ -26,11 +26,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.App;
-import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.dialogfragments.LoanChargeDialogFragment;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;

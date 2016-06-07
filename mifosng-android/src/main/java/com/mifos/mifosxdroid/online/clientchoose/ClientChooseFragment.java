@@ -41,27 +41,17 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
 
     @InjectView(R.id.lv_clients)
     ListView results;
-
-    private View root;
-
-    private List<Client> clients = new ArrayList<>();
-
-    private ClientChooseAdapter adapter;
-
-    private boolean areMoreClientsAvailable = true;
-
-    private int totalFilteredRecords = 0;
-
-    private boolean shouldCheckForMoreClients = false;
-
-    private boolean loadmore = false;
-
-    private int limit = 100;
-
-    private boolean isInfiniteScrollEnabled = true;
-
     @Inject
     ClientChoosePresenter mClientChoosePresenter;
+    private View root;
+    private List<Client> clients = new ArrayList<>();
+    private ClientChooseAdapter adapter;
+    private boolean areMoreClientsAvailable = true;
+    private int totalFilteredRecords = 0;
+    private boolean shouldCheckForMoreClients = false;
+    private boolean loadmore = false;
+    private int limit = 100;
+    private boolean isInfiniteScrollEnabled = true;
 
     public static ClientChooseFragment newInstance() {
         ClientChooseFragment fragment = new ClientChooseFragment();
@@ -73,7 +63,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
@@ -125,7 +115,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
                     if (!loadmore && areMoreClientsAvailable) {
                         loadmore = true;
                         Toaster.show(root, "Loading More Clients");
-                        mClientChoosePresenter.loadMoreClientList(clients.size(),limit);
+                        mClientChoosePresenter.loadMoreClientList(clients.size(), limit);
                     } else if (shouldCheckForMoreClients)
                         Toaster.show(root, "No more clients Available");
                 }

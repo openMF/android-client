@@ -38,28 +38,23 @@ import butterknife.InjectView;
  */
 
 //TODO Replace ListView to RecyclerView 
-public class CenterListFragment extends ProgressableFragment implements CenterListMvpView{
-
-    private View rootView;
+public class CenterListFragment extends ProgressableFragment implements CenterListMvpView {
 
     @InjectView(R.id.lv_center_list)
     ListView lv_centers_list;
-
-    private CentersListAdapter centersListAdapter;
-
-    private OnFragmentInteractionListener mListener;
-
-    private List<Center> mCentersList;
-
     @Inject
     CenterListPresenter mCenterListPresenter;
+    private View rootView;
+    private CentersListAdapter centersListAdapter;
+    private OnFragmentInteractionListener mListener;
+    private List<Center> mCentersList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mCentersList = new ArrayList<>();
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
