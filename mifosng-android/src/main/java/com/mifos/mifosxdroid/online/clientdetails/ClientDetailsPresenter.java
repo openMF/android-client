@@ -9,6 +9,8 @@ import com.mifos.objects.noncore.DataTable;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import rx.Subscriber;
@@ -24,6 +26,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
     private final DataManager mDataManager;
     private Subscription mSubscription;
 
+    @Inject
     public ClientDetailsPresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }

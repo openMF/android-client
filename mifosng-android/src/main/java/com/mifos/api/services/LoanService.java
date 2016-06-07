@@ -28,6 +28,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -35,8 +36,7 @@ import retrofit.http.Query;
 public interface LoanService {
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=all")
-    void getLoanByIdWithAllAssociations(@Path("loanId") int loanId,
-                                        Callback<LoanWithAssociations> loanCallback);
+    Observable<LoanWithAssociations> getLoanByIdWithAllAssociations(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
     void getLoanRepaymentTemplate(@Path("loanId") int loanId,

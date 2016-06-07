@@ -6,6 +6,7 @@ import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -221,6 +222,14 @@ public class DataManager {
     public Observable<ClientAccounts> getClientAccounts(int clientId) {
         return mBaseApiManager.getAccountsApi().getAllAccountsOfClient(clientId);
     }
+
+    /**
+     * Loans API
+     */
+    public Observable<LoanWithAssociations> getLoanById(int loanAccountNumber) {
+        return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanAccountNumber);
+    }
+
 
 
 }

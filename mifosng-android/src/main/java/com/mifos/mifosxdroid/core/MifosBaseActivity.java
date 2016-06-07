@@ -240,14 +240,16 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         actionBarDrawerToggle.syncState();
 
         // make an API call to fetch logged in client's details
-        loadClientDetails();
+        //TODO Uncomment for loading client Details
+        //loadClientDetails();
     }
 
     /**
      * downloads the client name and picture(if exists)
      * sets the downloaded data to the nav drawer account header
      */
-    private void loadClientDetails() {
+    //TODO Setup MVP
+    /*private void loadClientDetails() {
 
         // download client details
         final int userId = PrefManager.getUserId();
@@ -306,7 +308,7 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                 }
 
         );
-    }
+    }*/
 
     public void startNavigationClickActivity(final Intent intent) {
         android.os.Handler handler = new android.os.Handler();
