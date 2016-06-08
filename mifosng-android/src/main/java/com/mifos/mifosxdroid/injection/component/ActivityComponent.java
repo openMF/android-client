@@ -4,6 +4,7 @@ import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
@@ -117,4 +118,6 @@ public interface ActivityComponent {
     void inject(DataTableRowDialogFragment dataTableRowDialogFragment);
 
     void inject(DocumentDialogFragment documentDialogFragment);
+
+    void inject(LoanAccountApproval loanAccountApproval);
 }

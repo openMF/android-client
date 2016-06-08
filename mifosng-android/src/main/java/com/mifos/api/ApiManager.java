@@ -7,7 +7,6 @@ package com.mifos.api;
 
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
@@ -158,10 +157,10 @@ public class ApiManager extends BaseApiManager {
     /*public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
         getLoanApi().getLoanRepaymentTemplate(loan, callback);
     }*/
-    public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse>
+    /*public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse>
             callback) {
         getLoanApi().approveLoanApplication(loanId, loanApproval, callback);
-    }
+    }*/
 
     public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement,
                              Callback<GenericResponse> genericResponseCallback) {

@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.dialogfragments;
+package com.mifos.mifosxdroid.dialogfragments.loanaccountapproval;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -17,38 +17,49 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * @author nellyk
  */
-public class LoanAccountApproval extends DialogFragment implements MFDatePicker.OnDatePickListener {
+public class LoanAccountApproval extends DialogFragment
+        implements MFDatePicker.OnDatePickListener, LoanAccountApprovalMvpView {
 
-    public static final String TAG = "LoanAccountApproval";
+    public final String LOG_TAG =  getClass().getSimpleName();
+
     public int loanAccountNumber;
+
     View rootView;
+
     @InjectView(R.id.tv_loan_approval_dates)
     TextView tv_loan_approval_dates;
+
     @InjectView(R.id.bt_approve_loan)
     Button bt_approve_loan;
+
     @InjectView(R.id.et_approved_amount)
     EditText et_approved_amount;
+
     @InjectView(R.id.et_approval_note)
     EditText et_approval_note;
+
+    @Inject
+    LoanAccountApprovalPresenter mLoanAccountApprovalPresenter;
+
     String approvaldate;
+
     private DialogFragment mfDatePicker;
 
     public static LoanAccountApproval newInstance(int loanAccountNumber) {
@@ -62,6 +73,7 @@ public class LoanAccountApproval extends DialogFragment implements MFDatePicker.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         }
@@ -86,7 +98,10 @@ public class LoanAccountApproval extends DialogFragment implements MFDatePicker.
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.dialog_fragment_approve_loan, null);
+
         ButterKnife.inject(this, rootView);
+        mLoanAccountApprovalPresenter.attachView(this);
+
         inflateApprovalDate();
         approvaldate = tv_loan_approval_dates.getText().toString();
         approvaldate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvaldate)
@@ -116,22 +131,7 @@ public class LoanAccountApproval extends DialogFragment implements MFDatePicker.
 
 
     private void initiateLoanApproval(final LoanApproval loanApproval) {
-
-        App.apiManager.approveLoan(loanAccountNumber,
-                loanApproval,
-                new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
-                        Toast.makeText(getActivity(), "Loan Approved", Toast.LENGTH_LONG).show();
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                    }
-                }
-        );
+        mLoanAccountApprovalPresenter.approveLoan(loanAccountNumber, loanApproval);
     }
 
 
@@ -151,4 +151,24 @@ public class LoanAccountApproval extends DialogFragment implements MFDatePicker.
     }
 
 
+    @Override
+    public void showLoanApproveSuccessfully(GenericResponse genericResponse) {
+        Toast.makeText(getActivity(), "Loan Approved", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showLoanApproveFailed(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mLoanAccountApprovalPresenter.detachView();
+    }
 }

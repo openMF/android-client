@@ -45,9 +45,8 @@ public interface LoanService {
     //  Mandatory Fields
     //  1. String approvedOnDate
     @POST(APIEndPoint.LOANS + "/{loanId}?command=approve")
-    void approveLoanApplication(@Path("loanId") int loanId,
-                                @Body LoanApproval loanApproval,
-                                Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> approveLoanApplication(@Path("loanId") int loanId,
+                                                       @Body LoanApproval loanApproval);
 
     //  Mandatory Fields
     //  String actualDisbursementDate
