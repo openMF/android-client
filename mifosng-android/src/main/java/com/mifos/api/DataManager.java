@@ -239,6 +239,12 @@ public class DataManager {
         return mBaseApiManager.getDataTableApi().getDataOfDataTable(table, entityId);
     }
 
+    public Observable<GenericResponse> addDataTableEntry(
+            String table, int entityId, Map<String, Object> payload) {
+        return mBaseApiManager.getDataTableApi()
+                .createEntryInDataTable(table,entityId,payload);
+    }
+
 
     /**
      * GroupAccountsService

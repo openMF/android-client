@@ -148,10 +148,10 @@ public class ApiManager extends BaseApiManager {
     /*public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {
         getDataTableApi().getDataOfDataTable(table, entityId, callback);
     }*/
-    public void addDataTableEntry(String table, int entityId, Map<String, Object> payload,
+    /*public void addDataTableEntry(String table, int entityId, Map<String, Object> payload,
                                   Callback<GenericResponse> callback) {
         getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
-    }
+    }*/
 
     public void removeDataTableEntry(String table, int entity, int rowId,
                                      Callback<GenericResponse> callback) {

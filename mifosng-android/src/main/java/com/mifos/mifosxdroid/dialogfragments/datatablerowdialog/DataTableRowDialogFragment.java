@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.dialogfragments;
+package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -21,6 +21,8 @@ import com.mifos.App;
 import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.formwidgets.FormEditText;
 import com.mifos.mifosxdroid.formwidgets.FormNumericEditText;
 import com.mifos.mifosxdroid.formwidgets.FormSpinner;
@@ -38,7 +40,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -46,7 +51,8 @@ import retrofit.client.Response;
 /**
  * Created by ishankhanna on 01/08/14.
  */
-public class DataTableRowDialogFragment extends DialogFragment {
+public class DataTableRowDialogFragment extends DialogFragment
+        implements DataTableRowDialogMvpView{
 
     private final String LOG_TAG = getClass().getSimpleName();
 
@@ -56,7 +62,11 @@ public class DataTableRowDialogFragment extends DialogFragment {
 
     private View rootView;
 
-    private LinearLayout linearLayout;
+    @InjectView(R.id.ll_data_table_entry_form)
+    LinearLayout linearLayout;
+
+    @Inject
+    DataTableRowDialogPresenter mDataTableRowDialogPresenter;
 
     private SafeUIBlockingUtility safeUIBlockingUtility;
 
@@ -76,11 +86,13 @@ public class DataTableRowDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return super.onCreateDialog(savedInstanceState);
+
     }
 
     @Override
@@ -99,7 +111,8 @@ public class DataTableRowDialogFragment extends DialogFragment {
                 false);
 
         ButterKnife.inject(this, rootView);
-        linearLayout = (LinearLayout) rootView.findViewById(R.id.ll_data_table_entry_form);
+        mDataTableRowDialogPresenter.attachView(this);
+
 
         getDialog().setTitle(dataTable.getRegisteredTableName());
 
@@ -223,28 +236,39 @@ public class DataTableRowDialogFragment extends DialogFragment {
 
         }
 
-        safeUIBlockingUtility.safelyBlockUI();
 
-        App.apiManager.addDataTableEntry(dataTable.getRegisteredTableName(), entityId, payload,
-                new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
+        //AddDataTableEntry ApI
+        mDataTableRowDialogPresenter.addDataTableEntry(
+                dataTable.getRegisteredTableName(), entityId, payload);
 
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        getActivity().getSupportFragmentManager().popBackStack();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-
-                        MFErrorParser.parseError(retrofitError.getResponse());
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        getActivity().getSupportFragmentManager().popBackStack();
-
-                    }
-                });
 
 
     }
 
+    @Override
+    public void showDataTableEntrySuccessfully(GenericResponse genericResponse) {
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void showError(String s, Response response) {
+        Toaster.show(rootView, s);
+        MFErrorParser.parseError(response);
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        if (b) {
+            safeUIBlockingUtility.safelyBlockUI();
+        } else {
+            safeUIBlockingUtility.safelyUnBlockUI();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDataTableRowDialogPresenter.detachView();
+    }
 }
