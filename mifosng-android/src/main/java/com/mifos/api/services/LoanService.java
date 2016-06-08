@@ -39,8 +39,7 @@ public interface LoanService {
     Observable<LoanWithAssociations> getLoanByIdWithAllAssociations(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
-    void getLoanRepaymentTemplate(@Path("loanId") int loanId,
-                                  Callback<LoanRepaymentTemplate> loanRepaymentTemplateCallback);
+    Observable<LoanRepaymentTemplate> getLoanRepaymentTemplate(@Path("loanId") int loanId);
 
 
     //  Mandatory Fields
@@ -58,9 +57,9 @@ public interface LoanService {
                              Callback<GenericResponse> genericResponseCallback);
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
-    void submitPayment(@Path("loanId") int loanId,
-                       @Body LoanRepaymentRequest loanRepaymentRequest,
-                       Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
+    Observable<LoanRepaymentResponse> submitPayment(
+            @Path("loanId") int loanId,
+            @Body LoanRepaymentRequest loanRepaymentRequest);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     void getLoanRepaymentSchedule(@Path("loanId") int loanId,

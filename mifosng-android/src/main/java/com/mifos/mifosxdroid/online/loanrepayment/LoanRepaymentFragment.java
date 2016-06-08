@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.loanrepayment;
 
 import android.R.layout;
 import android.app.AlertDialog;
@@ -24,8 +24,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
@@ -42,43 +42,57 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
-public class LoanRepaymentFragment extends ProgressableFragment implements MFDatePicker
-        .OnDatePickListener {
+public class LoanRepaymentFragment extends ProgressableFragment
+        implements MFDatePicker.OnDatePickListener, LoanRepaymentMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
     @InjectView(R.id.tv_clientName)
     TextView tv_clientName;
+
     @InjectView(R.id.tv_loan_product_short_name)
     TextView tv_loanProductShortName;
+
     @InjectView(R.id.tv_loanAccountNumber)
     TextView tv_loanAccountNumber;
+
     @InjectView(R.id.tv_in_arrears)
     TextView tv_inArrears;
+
     @InjectView(R.id.tv_amount_due)
     TextView tv_amountDue;
+
     @InjectView(R.id.tv_repayment_date)
     TextView tv_repaymentDate;
+
     @InjectView(R.id.et_amount)
     EditText et_amount;
+
     @InjectView(R.id.et_additional_payment)
     EditText et_additionalPayment;
+
     @InjectView(R.id.et_fees)
     EditText et_fees;
+
     @InjectView(R.id.tv_total)
     TextView tv_total;
+
     @InjectView(R.id.sp_payment_type)
     Spinner sp_paymentType;
+
     @InjectView(R.id.bt_paynow)
     Button bt_paynow;
+
+    @Inject
+    LoanRepaymentPresenter mLoanRepaymentPresenter;
+
     private View rootView;
     // Arguments Passed From the Loan Account Summary Fragment
     private String clientName;
@@ -111,6 +125,7 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             clientName = getArguments().getString(Constants.CLIENT_NAME);
             loanAccountNumber = getArguments().getString(Constants.LOAN_ACCOUNT_NUMBER);
@@ -127,14 +142,16 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_repayment, container, false);
         setToolbarTitle("Loan Repayment");
+
         ButterKnife.inject(this, rootView);
+        mLoanRepaymentPresenter.attachView(this);
+
         inflateUI();
         return rootView;
     }
 
 
     public void inflateUI() {
-        showProgress(false);
         tv_clientName.setText(clientName);
         tv_loanProductShortName.setText(loanProductName);
         tv_loanAccountNumber.setText(loanAccountNumber);
@@ -229,57 +246,7 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
 
 
     public void inflatePaymentOptions() {
-        App.apiManager.getLoanRepayTemplate(Integer.parseInt(loanAccountNumber), new
-                Callback<LoanRepaymentTemplate>() {
-
-                    @Override
-                    public void success(LoanRepaymentTemplate loanRepaymentTemplate, Response
-                            response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                        if (getActivity() == null) return;
-
-                        if (loanRepaymentTemplate != null) {
-                            tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
-                            inflateRepaymentDate();
-                            List<String> listOfPaymentTypes = new ArrayList<String>();
-                            paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
-                            // Sorting has to be done on the basis of
-                            // PaymentTypeOption.position because it is specified
-                            // by the users on Mifos X Platform.
-                            Collections.sort(paymentTypeOptionList);
-
-                            for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
-                                listOfPaymentTypes.add(paymentTypeOption.getName());
-                                paymentTypeHashMap.put(paymentTypeOption.getName(),
-                                        paymentTypeOption
-                                                .getId());
-                            }
-
-                            ArrayAdapter<String> paymentTypeAdapter =
-                                    new ArrayAdapter<>(getActivity(),
-                                            layout.simple_spinner_item, listOfPaymentTypes);
-
-                            paymentTypeAdapter.setDropDownViewResource(
-                                    layout.simple_spinner_dropdown_item);
-                            sp_paymentType.setAdapter(paymentTypeAdapter);
-
-                            et_amount.setText(String.valueOf(loanRepaymentTemplate
-                                    .getPrincipalPortion()
-                                    + loanRepaymentTemplate.getInterestPortion()));
-                            et_additionalPayment.setText("0.0");
-                            et_fees.setText(String.valueOf(loanRepaymentTemplate
-                                    .getFeeChargesPortion()));
-
-                        }
-                        showProgress(false);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        showProgress(false);
-                    }
-                });
-
+        mLoanRepaymentPresenter.loanLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber));
     }
 
     public void inflateRepaymentDate() {
@@ -371,25 +338,72 @@ public class LoanRepaymentFragment extends ProgressableFragment implements MFDat
         String builtRequest = new Gson().toJson(request);
         Log.i("LOG_TAG", builtRequest);
 
-        showProgress(true);
+        mLoanRepaymentPresenter.submitPayment(Integer.parseInt(loanAccountNumber), request);
+    }
 
-        App.apiManager.submitPayment(Integer.parseInt(loanAccountNumber), request, new
-                Callback<LoanRepaymentResponse>() {
-                    @Override
-                    public void success(LoanRepaymentResponse resp, Response response) {
-                        if (resp != null)
-                            Toaster.show(rootView, "Payment Successful, Transaction ID = " + resp
-                                    .getResourceId());
-                        showProgress(false);
-                        getActivity().getSupportFragmentManager().popBackStackImmediate();
-                    }
+    @Override
+    public void showLoanRepayTemplate(LoanRepaymentTemplate loanRepaymentTemplate) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toaster.show(rootView, "Payment Failed");
-                        showProgress(false);
-                    }
-                });
+        if (loanRepaymentTemplate != null) {
+            tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
+            inflateRepaymentDate();
+            List<String> listOfPaymentTypes = new ArrayList<String>();
+            paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
+            // Sorting has to be done on the basis of
+            // PaymentTypeOption.position because it is specified
+            // by the users on Mifos X Platform.
+            Collections.sort(paymentTypeOptionList);
+
+            for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
+                listOfPaymentTypes.add(paymentTypeOption.getName());
+                paymentTypeHashMap.put(paymentTypeOption.getName(),
+                        paymentTypeOption
+                                .getId());
+            }
+
+            ArrayAdapter<String> paymentTypeAdapter =
+                    new ArrayAdapter<>(getActivity(),
+                            layout.simple_spinner_item, listOfPaymentTypes);
+
+            paymentTypeAdapter.setDropDownViewResource(
+                    layout.simple_spinner_dropdown_item);
+            sp_paymentType.setAdapter(paymentTypeAdapter);
+
+            et_amount.setText(String.valueOf(loanRepaymentTemplate
+                    .getPrincipalPortion()
+                    + loanRepaymentTemplate.getInterestPortion()));
+            et_additionalPayment.setText("0.0");
+            et_fees.setText(String.valueOf(loanRepaymentTemplate
+                    .getFeeChargesPortion()));
+
+        }
+    }
+
+    @Override
+    public void showPaymentSubmittedSuccessfully(LoanRepaymentResponse loanRepaymentResponse) {
+        if (loanRepaymentResponse != null) {
+            Toaster.show(rootView, "Payment Successful, Transaction ID = " +
+                    loanRepaymentResponse.getResourceId());
+        }
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mLoanRepaymentPresenter.detachView();
     }
 
     public interface OnFragmentInteractionListener {

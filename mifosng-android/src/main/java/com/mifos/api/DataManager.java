@@ -9,6 +9,8 @@ import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
@@ -29,6 +31,7 @@ import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
@@ -299,6 +302,16 @@ public class DataManager {
     public Observable<Page<Charges>> getListOfCharges(int clientId) {
         return mBaseApiManager.getLoanApi().getListOfCharges(clientId);
     }
+
+    public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(int loanId) {
+        return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId);
+    }
+
+    public Observable<LoanRepaymentResponse> submitPayment(
+            int loanId, LoanRepaymentRequest request) {
+        return mBaseApiManager.getLoanApi().submitPayment(loanId,request);
+    }
+
 
     /**
      * SavingsAccount API

@@ -22,6 +22,7 @@ import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
+import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment;
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsFragment;
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionFragment;
@@ -87,4 +88,6 @@ public interface ActivityComponent {
     void inject(LoanTransactionsFragment loanTransactionsFragment);
 
     void inject(SavingsAccountFragment savingsAccountFragment);
+
+    void inject(LoanRepaymentFragment loanRepaymentFragment);
 }

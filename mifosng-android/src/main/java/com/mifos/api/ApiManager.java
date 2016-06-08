@@ -11,8 +11,6 @@ import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
@@ -22,7 +20,6 @@ import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
@@ -169,9 +166,9 @@ public class ApiManager extends BaseApiManager {
     /*public void getLoanById(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanByIdWithAllAssociations(loan, callback);
     }*/
-    public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
+    /*public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
         getLoanApi().getLoanRepaymentTemplate(loan, callback);
-    }
+    }*/
 
     public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse>
             callback) {
@@ -183,10 +180,10 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().disburseLoan(loanId, loanDisbursement, genericResponseCallback);
     }
 
-    public void submitPayment(int loan, LoanRepaymentRequest request,
+    /*public void submitPayment(int loan, LoanRepaymentRequest request,
                               Callback<LoanRepaymentResponse> callback) {
         getLoanApi().submitPayment(loan, request, callback);
-    }
+    }*/
 
     public void getLoanRepaySchedule(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanRepaymentSchedule(loan, callback);
