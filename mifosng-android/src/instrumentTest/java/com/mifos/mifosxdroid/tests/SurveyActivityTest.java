@@ -12,7 +12,7 @@ import android.test.suitebuilder.annotation.MediumTest;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SurveyActivity;
-import com.mifos.mifosxdroid.online.SurveyListFragment;
+import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
 
 import static android.support.test.espresso.Espresso.onData;

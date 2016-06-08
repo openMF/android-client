@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.surveylist;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,11 +18,14 @@ import android.widget.ListView;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.survey.Survey;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,11 +36,16 @@ import retrofit.client.Response;
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
-public class SurveyListFragment extends ProgressableFragment {
+public class SurveyListFragment extends ProgressableFragment implements SurveyListMvpView{
 
     private static final String CLIENTID = "ClientID";
+
     @InjectView(R.id.lv_surveys_list)
     ListView lv_surveys_list;
+
+    @Inject
+    SurveyListPresenter mSurveyListPresenter;
+
     private SurveyListAdapter surveyListAdapter;
     private OnFragmentInteractionListener mListener;
     private View rootView;
@@ -52,37 +60,23 @@ public class SurveyListFragment extends ProgressableFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_survey_list, container, false);
+
         ButterKnife.inject(this, rootView);
+        mSurveyListPresenter.attachView(this);
 
         clientId = getArguments().getInt(CLIENTID);
 
-        showProgress(true);
-        App.apiManager.getAllSurveys(new Callback<List<Survey>>() {
-            @Override
-            public void success(final List<Survey> surveys, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
+        mSurveyListPresenter.loadSurveyList();
 
-                surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
-                lv_surveys_list.setAdapter(surveyListAdapter);
-                lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        mListener.loadSurveyQuestion(surveys.get(i), clientId);
-                    }
-                });
-                showProgress(false);
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Toaster.show(rootView, "Couldn't Fetch List of Surveys");
-                showProgress(false);
-            }
-        });
         return rootView;
     }
 
@@ -105,6 +99,33 @@ public class SurveyListFragment extends ProgressableFragment {
         }
     }
 
+    @Override
+    public void showAllSurvey(final List<Survey> surveys) {
+        surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
+        lv_surveys_list.setAdapter(surveyListAdapter);
+        lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mListener.loadSurveyQuestion(surveys.get(i), clientId);
+            }
+        });
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSurveyListPresenter.detachView();
+    }
 
     public interface OnFragmentInteractionListener {
 
