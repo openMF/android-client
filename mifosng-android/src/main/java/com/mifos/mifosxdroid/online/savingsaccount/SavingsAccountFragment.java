@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.online;
+package com.mifos.mifosxdroid.online.savingsaccount;
 
 import android.R.layout;
 import android.os.Bundle;
@@ -20,9 +20,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.InterestType;
 import com.mifos.objects.client.Savings;
@@ -38,39 +39,51 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class SavingsAccountFragment extends ProgressableDialogFragment implements MFDatePicker
-        .OnDatePickListener {
+public class SavingsAccountFragment extends ProgressableDialogFragment
+        implements MFDatePicker.OnDatePickListener, SavingsAccountMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
+
     @InjectView(R.id.sp_product)
     Spinner sp_product;
+
     @InjectView(R.id.et_client_external_id)
     EditText et_client_external_id;
+
     @InjectView(R.id.tv_submittedon_date)
     TextView tv_submittedon_date;
+
     @InjectView(R.id.et_nominal_annual)
     EditText et_nominal_annual;
+
     @InjectView(R.id.sp_interest_calc)
     Spinner sp_interest_calc;
+
     @InjectView(R.id.sp_interest_comp)
     Spinner sp_interest_comp;
+
     @InjectView(R.id.sp_interest_p_period)
     Spinner sp_interest_p_period;
+
     @InjectView(R.id.sp_days_in_year)
     Spinner sp_days_in_year;
+
     @InjectView(R.id.bt_submit)
     Button bt_submit;
+
+    @Inject
+    SavingsAccountPresenter mSavingsAccountPresenter;
+    
     private View rootView;
     private SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
@@ -95,6 +108,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -104,8 +118,11 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_add_savings_account, null);
+
         ButterKnife.inject(this, rootView);
-        inflatesubmissionDate();
+        mSavingsAccountPresenter.attachView(this);
+
+        inflateSubmissionDate();
         inflateSavingsSpinner();
         getSavingsAccountTemplateAPI();
 
@@ -143,50 +160,11 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     }
 
     private void inflateSavingsSpinner() {
-        showProgress(true);
-        App.apiManager.getSavingsAccounts(new Callback<List<ProductSavings>>() {
+        mSavingsAccountPresenter.loadSavingsAccounts();
+    }
 
-            @Override
-            public void success(List<ProductSavings> savings, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
-
-                final List<String> savingsList = new ArrayList<String>();
-
-                for (ProductSavings savingsname : savings) {
-                    savingsList.add(savingsname.getName());
-                    savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
-                }
-                ArrayAdapter<String> savingsAdapter = new ArrayAdapter<>(getActivity(),
-                        layout.simple_spinner_item, savingsList);
-                savingsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
-                sp_product.setAdapter(savingsAdapter);
-                sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        productId = savingsNameIdHashMap.get(savingsList.get(i));
-                        Log.d("productId " + savingsList.get(i), String.valueOf(productId));
-                        if (productId != -1) {
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string
-                                    .error_select_product), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-                showProgress(false);
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                showProgress(false);
-            }
-        });
+    private void initiateSavingCreation(SavingsPayload savingsPayload) {
+        mSavingsAccountPresenter.createSavingsAccount(savingsPayload);
     }
 
     private void inflateInterestPostingPeriodType() {
@@ -347,29 +325,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     }
 
-    private void initiateSavingCreation(SavingsPayload savingsPayload) {
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
-        safeUIBlockingUtility.safelyBlockUI();
-
-        App.apiManager.createSavingsAccount(savingsPayload, new Callback<Savings>() {
-            @Override
-            public void success(Savings savings, Response response) {
-                safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "The Savings Account has been submitted for " +
-                        "Approval", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                safeUIBlockingUtility.safelyUnBlockUI();
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-    }
-
-    public void inflatesubmissionDate() {
+    public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
         tv_submittedon_date.setText(MFDatePicker.getDatePickedAsString());
 
@@ -384,35 +340,10 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     }
 
     private void getSavingsAccountTemplateAPI() {
-        showProgress(true);
-        App.apiManager.getSavingsAccountTemplate(new Callback<SavingProductsTemplate>() {
-            @Override
-            public void success(SavingProductsTemplate savingProductsTemplate, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
-                if (getActivity() == null) return;
-
-                if (response.getStatus() == 200) {
-                    savingproductstemplate = savingProductsTemplate;
-                    interestCompoundingPeriodType();
-                    inflateinterestCalculationDaysInYearType();
-                    inflateInterestCalculationTypeSpinner();
-                    inflateInterestPostingPeriodType();
-                }
-
-                showProgress(false);
-            }
-
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(LOG_TAG, error.getLocalizedMessage());
-
-                showProgress(false);
-            }
-        });
-
+        mSavingsAccountPresenter.loadSavingsAccountTemplate();
     }
 
+    //TODO Replace this method with Presenter rxJava filter method
     private ArrayList<String> filterListObject(List<InterestType> interestTypes) {
 
         ArrayList<String> InterestValueList = new ArrayList<>();
@@ -421,5 +352,74 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         }
 
         return InterestValueList;
+    }
+
+    @Override
+    public void showSavingsAccounts(List<ProductSavings> productSavings) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
+
+        final List<String> savingsList = new ArrayList<String>();
+
+        for (ProductSavings savingsname : productSavings) {
+            savingsList.add(savingsname.getName());
+            savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
+        }
+        ArrayAdapter<String> savingsAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, savingsList);
+        savingsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_product.setAdapter(savingsAdapter);
+        sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                    l) {
+                productId = savingsNameIdHashMap.get(savingsList.get(i));
+                Log.d("productId " + savingsList.get(i), String.valueOf(productId));
+                if (productId != -1) {
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string
+                            .error_select_product), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void showSavingsAccountCreatedSuccessfully(Savings savings) {
+        Toast.makeText(getActivity(), "The Savings Account has been submitted for " +
+                "Approval", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showSavingsAccountTemplate(SavingProductsTemplate savingProductsTemplate) {
+        /* Activity is null - Fragment has been detached; no need to do anything. */
+        if (getActivity() == null) return;
+
+            savingproductstemplate = savingProductsTemplate;
+            interestCompoundingPeriodType();
+            inflateinterestCalculationDaysInYearType();
+            inflateInterestCalculationTypeSpinner();
+            inflateInterestPostingPeriodType();
+    }
+
+    @Override
+    public void showFetchingError(String s) {
+        Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSavingsAccountPresenter.detachView();
     }
 }

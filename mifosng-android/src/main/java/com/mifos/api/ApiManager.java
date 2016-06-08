@@ -17,19 +17,15 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.organisation.ProductLoans;
-import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
-import com.mifos.services.data.SavingsPayload;
 
 import java.util.List;
 import java.util.Map;
@@ -413,19 +409,19 @@ public class ApiManager extends BaseApiManager {
      * SavingsAccount API
      */
 
-    public void getSavingsAccounts(Callback<List<ProductSavings>> callback) {
+    /*public void getSavingsAccounts(Callback<List<ProductSavings>> callback) {
         getCreateSavingsAccountService().getAllSavingsAccounts(callback);
-    }
+    }*/
 
-    public void createSavingsAccount(SavingsPayload savingsPayload, Callback<Savings> callback) {
+    /*public void createSavingsAccount(SavingsPayload savingsPayload, Callback<Savings> callback) {
         getCreateSavingsAccountService().createSavingsAccount(savingsPayload, callback);
-    }
+    }*/
 
 
-    public void getSavingsAccountTemplate(Callback<SavingProductsTemplate>
+    /*public void getSavingsAccountTemplate(Callback<SavingProductsTemplate>
                                                   savingProductsTemplateCallback) {
         getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
-    }
+    }*/
 
 
 }

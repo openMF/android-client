@@ -25,6 +25,7 @@ import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsFragment;
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionFragment;
+import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.utils.SaveOfflineDataHelper;
 
 import dagger.Component;
@@ -84,4 +85,6 @@ public interface ActivityComponent {
     void inject(GroupsListFragment groupsListFragment);
 
     void inject(LoanTransactionsFragment loanTransactionsFragment);
+
+    void inject(SavingsAccountFragment savingsAccountFragment);
 }

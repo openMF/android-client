@@ -16,6 +16,7 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -25,11 +26,14 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.GroupPayload;
+import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;
 import java.util.List;
@@ -190,7 +194,7 @@ public class DataManager {
     }
 
     public Observable<Page<Group>> listAllGroups(int offset, int limit) {
-        return mBaseApiManager.getGroupApi().listAllGroups(offset,limit);
+        return mBaseApiManager.getGroupApi().listAllGroups(offset, limit);
     }
 
     /**
@@ -295,5 +299,23 @@ public class DataManager {
     public Observable<Page<Charges>> getListOfCharges(int clientId) {
         return mBaseApiManager.getLoanApi().getListOfCharges(clientId);
     }
+
+    /**
+     * SavingsAccount API
+     */
+    public Observable<List<ProductSavings>> getSavingsAccounts() {
+        return mBaseApiManager.getCreateSavingsAccountService().getAllSavingsAccounts();
+    }
+
+    public Observable<Savings> createSavingsAccount(SavingsPayload savingsPayload) {
+        return mBaseApiManager
+                .getCreateSavingsAccountService()
+                .createSavingsAccount(savingsPayload);
+    }
+
+    public Observable<SavingProductsTemplate> getSavingsAccountTemplate() {
+        return mBaseApiManager.getCreateSavingsAccountService().getSavingsAccountTemplate();
+    }
+
 
 }

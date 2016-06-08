@@ -51,7 +51,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.LoanAccountFragment;
-import com.mifos.mifosxdroid.online.SavingsAccountFragment;
+import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
