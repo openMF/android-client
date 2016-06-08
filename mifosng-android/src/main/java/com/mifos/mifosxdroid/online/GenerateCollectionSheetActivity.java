@@ -13,7 +13,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment;
 
 
-public class GenerateCollectionSheet extends MifosBaseActivity {
+public class GenerateCollectionSheetActivity extends MifosBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

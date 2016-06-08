@@ -191,10 +191,10 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().getLoanWithTransactions(loan, callback);
     }*/
 
-    public void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback) {
+    /*public void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback) {
         getLoanApi().getAllLoans(listOfLoansCallback);
 
-    }
+    }*/
 
     public void getLoansAccountTemplate(int clientId, int productId, Callback<Response>
             loanCallback) {
@@ -210,14 +210,14 @@ public class ApiManager extends BaseApiManager {
 
     }
 
-    public void createGroupLoansAccount(GroupLoanPayload loansPayload, Callback<Loans> callback) {
+    /*public void createGroupLoansAccount(GroupLoanPayload loansPayload, Callback<Loans> callback) {
         getLoanApi().createGroupLoansAccount(loansPayload, callback);
-    }
+    }*/
 
-    public void getGroupLoansAccountTemplate(int groupId, int productId, Callback<Response>
+    /*public void getGroupLoansAccountTemplate(int groupId, int productId, Callback<Response>
             grouploanCallback) {
         getLoanApi().getGroupLoansAccountTemplate(groupId, productId, grouploanCallback);
-    }
+    }*/
 
     /*public void getListOfLoanCharges(int loanId, Callback<Page<Charges>> loanchargeListCallback) {
         getLoanApi().getListOfLoanCharges(loanId, loanchargeListCallback);

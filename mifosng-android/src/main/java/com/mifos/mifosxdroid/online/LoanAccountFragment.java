@@ -221,11 +221,11 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
 
     private void inflateLoansProductSpinner() {
         showProgress(true);
-        App.apiManager.getAllLoans(new Callback<List<ProductLoans>>() {
+        /*App.apiManager.getAllLoans(new Callback<List<ProductLoans>>() {
 
             @Override
             public void success(List<ProductLoans> loans, Response response) {
-                /* Activity is null - Fragment has been detached; no need to do anything. */
+                *//* Activity is null - Fragment has been detached; no need to do anything. *//*
                 if (getActivity() == null) return;
 
                 final List<String> loansList = new ArrayList<String>();
@@ -280,7 +280,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment implements M
                 showProgress(false);
             }
         });
-
+*/
     }
 
 

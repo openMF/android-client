@@ -69,7 +69,7 @@ public interface LoanService {
     Observable<LoanWithAssociations> getLoanWithTransactions(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.CREATELOANSPRODUCTS)
-    void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback);
+    Observable<List<ProductLoans>> getAllLoans();
 
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
@@ -85,12 +85,12 @@ public interface LoanService {
     void getLoanTemplate(@Path("loanId") int loanId, Callback<Response> loanTemplateCallback);
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
-    void createGroupLoansAccount(@Body GroupLoanPayload loansPayload, Callback<Loans> callback);
+    Observable<Loans> createGroupLoansAccount(@Body GroupLoanPayload loansPayload);
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=group")
-    void getGroupLoansAccountTemplate(@Query("groupId") int groupId, @Query("productId") int
-            productId, Callback<Response> grouploanCallback);
+    Observable<Response> getGroupLoansAccountTemplate(@Query("groupId") int groupId,
+                                                      @Query("productId") int productId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
     Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);

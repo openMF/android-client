@@ -12,6 +12,7 @@ import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -28,6 +29,7 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -35,6 +37,7 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.SavingsPayload;
 
@@ -263,6 +266,18 @@ public class DataManager {
 
     public Observable<LoanWithAssociations> getLoanTransactions(int loan) {
         return mBaseApiManager.getLoanApi().getLoanWithTransactions(loan);
+    }
+
+    public Observable<List<ProductLoans>> getAllLoans() {
+        return mBaseApiManager.getLoanApi().getAllLoans();
+    }
+
+    public Observable<Response> getGroupLoansAccountTemplate(int groupId, int productId) {
+        return mBaseApiManager.getLoanApi().getGroupLoansAccountTemplate(groupId, productId);
+    }
+
+    public Observable<Loans> createGroupLoansAccount(GroupLoanPayload loansPayload) {
+        return mBaseApiManager.getLoanApi().createGroupLoansAccount(loansPayload);
     }
 
     /**
