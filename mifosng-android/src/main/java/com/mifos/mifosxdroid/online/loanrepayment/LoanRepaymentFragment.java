@@ -125,7 +125,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             clientName = getArguments().getString(Constants.CLIENT_NAME);
             loanAccountNumber = getArguments().getString(Constants.LOAN_ACCOUNT_NUMBER);

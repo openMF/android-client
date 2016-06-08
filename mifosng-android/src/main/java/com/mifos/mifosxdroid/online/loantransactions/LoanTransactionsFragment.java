@@ -28,7 +28,7 @@ import butterknife.InjectView;
 
 
 public class LoanTransactionsFragment extends MifosBaseFragment
-        implements LoanTransactionsMvpView{
+        implements LoanTransactionsMvpView {
 
     @InjectView(R.id.elv_loan_transactions)
     ExpandableListView elv_loanTransactions;
@@ -52,7 +52,7 @@ public class LoanTransactionsFragment extends MifosBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         setHasOptionsMenu(false);
@@ -85,7 +85,7 @@ public class LoanTransactionsFragment extends MifosBaseFragment
     public void showProgressbar(boolean b) {
         if (b) {
             showProgress();
-        }else {
+        } else {
             hideProgress();
         }
     }

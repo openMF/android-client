@@ -74,7 +74,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.listAllGroups(offset,limit)
+        mSubscription = mDataManager.listAllGroups(offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Group>>() {

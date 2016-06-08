@@ -309,7 +309,7 @@ public class DataManager {
 
     public Observable<LoanRepaymentResponse> submitPayment(
             int loanId, LoanRepaymentRequest request) {
-        return mBaseApiManager.getLoanApi().submitPayment(loanId,request);
+        return mBaseApiManager.getLoanApi().submitPayment(loanId, request);
     }
 
 

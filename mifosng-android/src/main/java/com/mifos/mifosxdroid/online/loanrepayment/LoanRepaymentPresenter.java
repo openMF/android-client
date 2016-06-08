@@ -68,7 +68,7 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.submitPayment(loanId,request)
+        mSubscription = mDataManager.submitPayment(loanId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentResponse>() {

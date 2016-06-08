@@ -19,7 +19,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 7/6/16.
  */
-public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpView>{
+public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpView> {
 
     private final DataManager mDataManager;
     private Subscription mSubscription;
@@ -43,7 +43,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
     public void loadCollectionSheet(long id, Payload payload) {
         checkViewAttached();
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getCollectionSheet(id,payload)
+        mSubscription = mDataManager.getCollectionSheet(id, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<CollectionSheet>() {
@@ -67,7 +67,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
     public void saveCollectionSheet(int id, CollectionSheetPayload payload) {
         checkViewAttached();
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.saveCollectionSheetAsync(id,payload)
+        mSubscription = mDataManager.saveCollectionSheetAsync(id, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SaveResponse>() {

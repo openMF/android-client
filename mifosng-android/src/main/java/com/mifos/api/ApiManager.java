@@ -103,7 +103,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
         getCenterApi().getCollectionSheet(id, payload, callback);
     }*/
-
     public SaveResponse saveCollectionSheet(int id, CollectionSheetPayload payload) {
         return getCenterApi().saveCollectionSheet(id, payload);
     }
@@ -169,7 +168,6 @@ public class ApiManager extends BaseApiManager {
     /*public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
         getLoanApi().getLoanRepaymentTemplate(loan, callback);
     }*/
-
     public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse>
             callback) {
         getLoanApi().approveLoanApplication(loanId, loanApproval, callback);

@@ -40,7 +40,7 @@ import retrofit.client.Response;
 /**
  * Created by nellyk on 2/27/2016.
  */
-public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView{
+public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView {
 
 
     @InjectView(R.id.lv_groups)
@@ -51,10 +51,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
-
-    private GroupNameListAdapter mGroupListAdapter;
-
     List<Group> groupList = new ArrayList<Group>();
+    private GroupNameListAdapter mGroupListAdapter;
     private GroupListFragment.OnFragmentInteractionListener mListener;
     private View rootView;
     private Context context;
@@ -89,7 +87,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
@@ -172,7 +170,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
                     offset += limit + 1;
                     //Load More Groups
-                    mGroupsListPresenter.loadMoreGroups(offset,limit);
+                    mGroupsListPresenter.loadMoreGroups(offset, limit);
                 }
             }
         });

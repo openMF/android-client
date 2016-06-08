@@ -68,7 +68,7 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
 
     }
 
-    public void createSavingsAccount(SavingsPayload savingsPayload){
+    public void createSavingsAccount(SavingsPayload savingsPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();

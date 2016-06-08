@@ -7,7 +7,7 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 /**
  * Created by Rajan Maurya on 8/6/16.
  */
-public interface LoanRepaymentMvpView extends MvpView{
+public interface LoanRepaymentMvpView extends MvpView {
 
     void showLoanRepayTemplate(LoanRepaymentTemplate loanRepaymentTemplate);
 

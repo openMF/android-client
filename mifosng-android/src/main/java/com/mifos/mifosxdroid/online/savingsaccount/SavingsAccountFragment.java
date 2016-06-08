@@ -83,7 +83,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
 
     @Inject
     SavingsAccountPresenter mSavingsAccountPresenter;
-    
+
     private View rootView;
     private SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
@@ -108,7 +108,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -400,11 +400,11 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
-            savingproductstemplate = savingProductsTemplate;
-            interestCompoundingPeriodType();
-            inflateinterestCalculationDaysInYearType();
-            inflateInterestCalculationTypeSpinner();
-            inflateInterestPostingPeriodType();
+        savingproductstemplate = savingProductsTemplate;
+        interestCompoundingPeriodType();
+        inflateinterestCalculationDaysInYearType();
+        inflateInterestCalculationTypeSpinner();
+        inflateInterestPostingPeriodType();
     }
 
     @Override

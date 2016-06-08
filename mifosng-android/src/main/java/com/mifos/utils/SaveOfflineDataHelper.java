@@ -41,13 +41,12 @@ public class SaveOfflineDataHelper {
         syncState = new HashMap<Long, Integer>();
     }
 
+    @Inject
+    DataManager mDataManager;
     private Context mContext;
     private OfflineDataSaveListener offlineDataSaveListener;
     private String tag = getClass().getSimpleName();
     private int centerCount = 0;
-
-    @Inject
-    DataManager mDataManager;
 
     public SaveOfflineDataHelper(Context context) {
         this.mContext = context;

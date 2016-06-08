@@ -50,28 +50,24 @@ import retrofit.client.Response;
  * Use the {@link CollectionSheetFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CollectionSheetFragment extends MifosBaseFragment implements CollectionSheetMvpView{
+public class CollectionSheetFragment extends MifosBaseFragment implements CollectionSheetMvpView {
 
-
-    public final String LOG_TAG = getClass().getSimpleName();
 
     public static final String COLLECTION_SHEET_ONLINE = "Collection Sheet Online";
     private static final int MENU_ITEM_SEARCH = 2000;
     private static final int MENU_ITEM_REFRESH = 2001;
     private static final int MENU_ITEM_SAVE = 2002;
-
+    public final String LOG_TAG = getClass().getSimpleName();
     @InjectView(R.id.exlv_collection_sheet)
     ExpandableListView expandableListView;
 
     @Inject
     CollectionSheetPresenter mCollectionSheetPresenter;
-
+    CollectionListAdapter collectionListAdapter;
     private int centerId; // Center for which collection sheet is being generated
     private String dateOfCollection; // Date of Meeting on which collection has to be done.
     private int calendarInstanceId;
     private View rootView;
-
-    CollectionListAdapter collectionListAdapter;
 
     public CollectionSheetFragment() {
         // Required empty public constructor
@@ -97,7 +93,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             centerId = getArguments().getInt(Constants.CENTER_ID);
             dateOfCollection = getArguments().getString(Constants.DATE_OF_COLLECTION);
@@ -220,7 +216,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         collectionSheetPayload.setDateFormat("dd-MM-YYYY");
 
         //Saving Collection Sheet
-        mCollectionSheetPresenter.saveCollectionSheet(centerId,collectionSheetPayload);
+        mCollectionSheetPresenter.saveCollectionSheet(centerId, collectionSheetPayload);
 
     }
 
