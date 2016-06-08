@@ -39,10 +39,9 @@ public interface DocumentService {
      */
     @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
     @Multipart
-    void createDocument(@Path("entityType") String entityType,
-                        @Path("entityId") int entityId,
-                        @Part("name") String nameOfDocument,
-                        @Part("description") String description,
-                        @Part("file") TypedFile typedFile,
-                        Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> createDocument(@Path("entityType") String entityType,
+                                               @Path("entityId") int entityId,
+                                               @Part("name") String nameOfDocument,
+                                               @Part("description") String description,
+                                               @Part("file") TypedFile typedFile);
 }

@@ -187,6 +187,12 @@ public class DataManager {
         return mBaseApiManager.getDocumentApi().getListOfDocuments(type, id);
     }
 
+    public Observable<GenericResponse> createDocument(
+            String type, int id, String name, String desc, TypedFile file) {
+        return mBaseApiManager.getDocumentApi().createDocument(type, id, name, desc, file);
+    }
+
+
 
     /**
      * Groups API

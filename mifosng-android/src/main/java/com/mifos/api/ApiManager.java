@@ -21,7 +21,6 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.client.Response;
-import retrofit.mime.TypedFile;
 
 /**
  * @author fomenkoo
@@ -326,10 +325,10 @@ public class ApiManager extends BaseApiManager {
     /*public void getDocumentsList(String type, int id, Callback<List<Document>> callback) {
         getDocumentApi().getListOfDocuments(type, id, callback);
     }*/
-    public void createDocument(String type, int id, String name, String desc, TypedFile file,
+    /*public void createDocument(String type, int id, String name, String desc, TypedFile file,
                                Callback<GenericResponse> callback) {
         getDocumentApi().createDocument(type, id, name, desc, file, callback);
-    }
+    }*/
 
     /**
      * Identifiers API

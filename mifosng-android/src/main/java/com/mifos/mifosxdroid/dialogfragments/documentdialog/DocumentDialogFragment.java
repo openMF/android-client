@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.dialogfragments;
+package com.mifos.mifosxdroid.dialogfragments.documentdialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -21,10 +21,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
 import com.mifos.utils.SafeUIBlockingUtility;
@@ -32,12 +32,11 @@ import com.mifos.utils.SafeUIBlockingUtility;
 import java.io.File;
 import java.net.URISyntaxException;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 /**
@@ -45,29 +44,39 @@ import retrofit.mime.TypedFile;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update Documents
  */
-public class DocumentDialogFragment extends DialogFragment {
+public class DocumentDialogFragment extends DialogFragment implements DocumentDialogMvpView {
 
     private static final int FILE_SELECT_CODE = 0;
+
     private final String LOG_TAG = getClass().getSimpleName();
+
     View rootView;
+
     SafeUIBlockingUtility safeUIBlockingUtility;
+
     @InjectView(R.id.et_document_name)
     EditText et_document_name;
+
     @InjectView(R.id.et_document_description)
     EditText et_document_description;
+
     @InjectView(R.id.tv_choose_file)
     TextView tv_choose_file;
+
     @InjectView(R.id.bt_upload)
     Button bt_upload;
-    private OnDialogFragmentInteractionListener mListener;
-    private String entityType;
 
-    private int entityId;
+    @Inject
+    DocumentDialogPresenter mDocumentDialogPresenter;
+
+    private OnDialogFragmentInteractionListener mListener;
 
     private String documentName;
     private String documentDescription;
-
+    private String entityType;
     private String filePath;
+
+    private int entityId;
 
     private File fileChoosen;
 
@@ -83,6 +92,7 @@ public class DocumentDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -103,6 +113,7 @@ public class DocumentDialogFragment extends DialogFragment {
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
 
         ButterKnife.inject(this, rootView);
+        mDocumentDialogPresenter.attachView(this);
 
         return rootView;
     }
@@ -198,7 +209,6 @@ public class DocumentDialogFragment extends DialogFragment {
 
     public void uploadFile() {
 
-
         String[] parts = fileChoosen.getName().split("\\.");
         Log.d(LOG_TAG, "Extension :" + parts[1]);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(parts[1]);
@@ -206,39 +216,43 @@ public class DocumentDialogFragment extends DialogFragment {
 
         TypedFile typedFile = new TypedFile(mimeType, fileChoosen);
 
-        safeUIBlockingUtility.safelyBlockUI();
-        App.apiManager.createDocument(entityType, entityId, documentName, documentDescription,
-                typedFile, new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
-
-                        if (genericResponse != null) {
-
-                            Toast.makeText(getActivity(), String.format(getString(R.string
-                                    .uploaded_successfully), fileChoosen.getName()), Toast
-                                    .LENGTH_SHORT).show();
-
-                            Log.d(LOG_TAG, genericResponse.toString());
-                        }
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        getDialog().dismiss();
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-
-                        Toast.makeText(getActivity(), getString(R.string.upload_failed), Toast
-                                .LENGTH_SHORT).show();
-                        getDialog().dismiss();
-                        safeUIBlockingUtility.safelyUnBlockUI();
-                        getDialog().dismiss();
+        mDocumentDialogPresenter.createDocument(entityType, entityId,
+                documentName, documentDescription, typedFile);
+    }
 
 
-                    }
-                }
-        );
+    @Override
+    public void showDocumentedCreatedSuccessfully(GenericResponse genericResponse) {
+        if (genericResponse != null) {
 
+            Toast.makeText(getActivity(), String.format(getString(R.string
+                    .uploaded_successfully), fileChoosen.getName()), Toast
+                    .LENGTH_SHORT).show();
+
+            Log.d(LOG_TAG, genericResponse.toString());
+        }
+        getDialog().dismiss();
+    }
+
+    @Override
+    public void showError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        getDialog().dismiss();
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        if (b) {
+            safeUIBlockingUtility.safelyBlockUI();
+        } else {
+            safeUIBlockingUtility.safelyUnBlockUI();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDocumentDialogPresenter.detachView();
     }
 
     public interface OnDialogFragmentInteractionListener {
