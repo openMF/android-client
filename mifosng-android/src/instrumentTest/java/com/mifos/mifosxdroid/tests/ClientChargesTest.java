@@ -13,7 +13,7 @@ import android.test.suitebuilder.annotation.MediumTest;
 import android.view.KeyEvent;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.dialogfragments.ChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;

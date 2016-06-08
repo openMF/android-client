@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.injection.component;
 
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
+import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
@@ -108,4 +109,6 @@ public interface ActivityComponent {
     void inject(SurveySubmitFragment surveySubmitFragment);
 
     void inject(PinpointClientActivity pinpointClientActivity);
+
+    void inject(ChargeDialogFragment chargeDialogFragment);
 }

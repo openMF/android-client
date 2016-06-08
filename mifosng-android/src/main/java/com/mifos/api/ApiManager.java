@@ -377,9 +377,9 @@ public class ApiManager extends BaseApiManager {
 //        getChargeApi().getAllCharges(callback);
     }
 
-    public void getAllChargesV2(int clientId, Callback<Response> callback) {
+    /*public void getAllChargesV2(int clientId, Callback<Response> callback) {
         getChargeApi().getAllChargesS(clientId, callback);
-    }
+    }*/
 
 
     public void getAllChargesV3(int loanId, Callback<Response> callback) {
@@ -390,9 +390,9 @@ public class ApiManager extends BaseApiManager {
         getChargeApi().getListOfCharges(clientId, callback);
     }*/
 
-    public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
+    /*public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
         getChargeApi().createCharges(clientId, payload, callback);
-    }
+    }*/
 
     public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges>
             callback) {

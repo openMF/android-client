@@ -5,6 +5,7 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.services.data.ChargesPayload;
@@ -25,7 +26,7 @@ public interface ChargeService {
     void listAllCharges(Callback<Response> chargesCallback);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
-    void getAllChargesS(@Path("clientId") int clientId, Callback<Response> callback);
+    Observable<Response> getAllChargesS(@Path("clientId") int clientId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
     void getAllChargev3(@Path("loanId") int loanId, Callback<Response> callback);
@@ -34,8 +35,8 @@ public interface ChargeService {
     Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-    void createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload,
-                       Callback<Charges> callback);
+    Observable<Charges> createCharges(@Path("clientId") int clientId,
+                                     @Body ChargesPayload chargesPayload);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
     void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>>

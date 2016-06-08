@@ -15,6 +15,7 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
+import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -41,6 +42,7 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.SavingsPayload;
@@ -123,6 +125,13 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().getListOfCharges(id);
     }
 
+    public Observable<Response> getAllChargesV2(int clientId) {
+        return mBaseApiManager.getChargeApi().getAllChargesS(clientId);
+    }
+
+    public Observable<Charges> createCharges(int clientId, ChargesPayload payload) {
+        return mBaseApiManager.getChargeApi().createCharges(clientId, payload);
+    }
 
     /**
      * Client API
