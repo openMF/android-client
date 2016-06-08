@@ -26,7 +26,7 @@ public interface SurveyService {
     Observable<List<Survey>> getAllSurveys();
 
     @GET(APIEndPoint.SURVEYS + "/{surveyId}")
-    void getSurvey(@Path("surveyId") int surveyId, Callback<Survey> surveyCallback);
+    Observable<Survey> getSurvey(@Path("surveyId") int surveyId);
 
     @POST(APIEndPoint.SURVEYS + "/{surveyId}/scorecards")
     Observable<Scorecard> submitScore(@Path("surveyId") int surveyId,

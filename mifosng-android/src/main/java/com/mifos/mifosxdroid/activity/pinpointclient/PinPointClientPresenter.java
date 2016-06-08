@@ -1,10 +1,9 @@
-package com.mifos.mifosxdroid.online.surveylist;
+package com.mifos.mifosxdroid.activity.pinpointclient;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.model.GpsCoordinatesRequest;
+import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.survey.Survey;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,18 +15,19 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 08/06/16.
  */
-public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
+public class PinPointClientPresenter extends BasePresenter<PinPointClientMvpView> {
+
 
     private final DataManager mDataManager;
     private Subscription mSubscription;
 
     @Inject
-    public SurveyListPresenter(DataManager dataManager) {
+    public PinPointClientPresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }
 
     @Override
-    public void attachView(SurveyListMvpView mvpView) {
+    public void attachView(PinPointClientMvpView mvpView) {
         super.attachView(mvpView);
     }
 
@@ -37,14 +37,14 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadSurveyList(){
+    public void updateGpsData(int clientId, GpsCoordinatesRequest gpsCoordinatesRequest) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription  = mDataManager.getAllSurvey()
+        mSubscription = mDataManager.updateGpsData(clientId, gpsCoordinatesRequest)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Survey>>() {
+                .subscribe(new Subscriber<GpsCoordinatesResponse>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -53,13 +53,13 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Couldn't Fetch List of Surveys");
+                        getMvpView().showFailedToUpdateGpsData("Error saving client location!");
                     }
 
                     @Override
-                    public void onNext(List<Survey> surveys) {
+                    public void onNext(GpsCoordinatesResponse gpsCoordinatesResponse) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showAllSurvey(surveys);
+                        getMvpView().showGpsDataUpdatedSuccessfully(gpsCoordinatesResponse);
                     }
                 });
     }

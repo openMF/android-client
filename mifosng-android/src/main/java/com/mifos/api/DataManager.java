@@ -3,6 +3,8 @@ package com.mifos.api;
 import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
+import com.mifos.api.model.GpsCoordinatesRequest;
+import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.SearchedEntity;
@@ -366,6 +368,23 @@ public class DataManager {
 
     public Observable<Scorecard> submitScore(int survey, Scorecard scorecardPayload) {
         return mBaseApiManager.getSurveyApi().submitScore(survey,scorecardPayload);
+    }
+
+    public Observable<Survey> getSurvey(int surveyId) {
+        return mBaseApiManager.getSurveyApi().getSurvey(surveyId);
+    }
+
+    /**
+     * GPS API
+     */
+    public Observable<GpsCoordinatesResponse> sendGpsData(
+            int clientId, GpsCoordinatesRequest  gpsCoordinatesRequest){
+        return mBaseApiManager.getGpsApi().setGpsCoordinates(clientId, gpsCoordinatesRequest);
+    }
+
+    public Observable<GpsCoordinatesResponse> updateGpsData(int client,
+                                                            GpsCoordinatesRequest request) {
+        return mBaseApiManager.getGpsApi().updateGpsCoordinates(client, request);
     }
 
 

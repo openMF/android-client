@@ -268,9 +268,9 @@ public class ApiManager extends BaseApiManager {
         getSurveyApi().getAllSurveys(callback);
     }*/
 
-    public void getSurvey(int survey, Callback<Survey> callback) {
+    /*public void getSurvey(int survey, Callback<Survey> callback) {
         getSurveyApi().getSurvey(survey, callback);
-    }
+    }*/
 
     /*public void submitScore(int survey, Scorecard scorecardPayload, Callback<Scorecard> callback) {
         getSurveyApi().submitScore(survey, scorecardPayload, callback);
@@ -280,15 +280,15 @@ public class ApiManager extends BaseApiManager {
      * GPS API
      */
 
-    public void sendGpsData(int client, GpsCoordinatesRequest request,
+    /*public void sendGpsData(int client, GpsCoordinatesRequest request,
                             Callback<GpsCoordinatesResponse> callback) {
         getGpsApi().setGpsCoordinates(client, request, callback);
-    }
+    }*/
 
-    public void updateGpsData(int client, GpsCoordinatesRequest request,
+    /*public void updateGpsData(int client, GpsCoordinatesRequest request,
                               Callback<GpsCoordinatesResponse> callback) {
         getGpsApi().updateGpsCoordinates(client, request, callback);
-    }
+    }*/
 
     /**
      * Groups API

@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.activity;
+package com.mifos.mifosxdroid.activity.pinpointclient;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +15,11 @@ import com.mifos.App;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.activity.MifosMapActivity;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+
+import javax.inject.Inject;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -24,16 +28,23 @@ import retrofit.client.Response;
 /**
  * @author fomenkoo
  */
-public class PinpointClientActivity extends MifosMapActivity {
+public class PinpointClientActivity extends MifosMapActivity implements PinPointClientMvpView{
 
     public static final String EXTRA_CLIENT_ID = "extra_client_id";
     private MarkerOptions client = new MarkerOptions();
     private int clientId;
 
+    @Inject
+    PinPointClientPresenter mPinPointClientPresenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivityComponent().inject(this);
         setContentView(R.layout.activity_toolbar_container);
+
+        mPinPointClientPresenter.attachView(this);
+
         showBackButton();
         loadMap(R.id.container);
         clientId = getIntent().getIntExtra(EXTRA_CLIENT_ID, 0);
@@ -71,23 +82,36 @@ public class PinpointClientActivity extends MifosMapActivity {
                 return false;
             }
 
-            App.apiManager.updateGpsData(clientId, new GpsCoordinatesRequest(client.getPosition()
-            ), new Callback<GpsCoordinatesResponse>() {
-                @Override
-                public void success(GpsCoordinatesResponse gpsCoordinatesResponse, Response
-                        response) {
-                    hideProgress();
-                    finish();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Toaster.show(findViewById(android.R.id.content), "Error saving client " +
-                            "location!");
-                    hideProgress();
-                }
-            });
+            //Update Gps Data API
+            mPinPointClientPresenter.updateGpsData(clientId, new GpsCoordinatesRequest(client
+                    .getPosition()));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showGpsDataUpdatedSuccessfully(GpsCoordinatesResponse gpsCoordinatesResponse) {
+        finish();
+    }
+
+    @Override
+    public void showFailedToUpdateGpsData(String s) {
+        Toaster.show(findViewById(android.R.id.content),  s);
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        if (b) {
+            showProgress("Updating Gps Data");
+        } else {
+            hideProgress();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPinPointClientPresenter.detachView();
+
     }
 }

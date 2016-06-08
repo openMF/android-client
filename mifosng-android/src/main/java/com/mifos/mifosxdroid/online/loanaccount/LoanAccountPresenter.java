@@ -6,6 +6,8 @@ import com.mifos.objects.organisation.ProductLoans;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit.client.Response;
 import rx.Subscriber;
 import rx.Subscription;
@@ -20,6 +22,7 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
     private final DataManager mDataManager;
     private Subscription mSubscription;
 
+    @Inject
     public LoanAccountPresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }
