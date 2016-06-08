@@ -6,7 +6,7 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 /**
  * Created by Rajan Maurya on 08/06/16.
  */
-public interface LoanRepaymentScheduleMvpView extends MvpView{
+public interface LoanRepaymentScheduleMvpView extends MvpView {
 
     void showLoanRepaySchedule(LoanWithAssociations loanWithAssociations);
 

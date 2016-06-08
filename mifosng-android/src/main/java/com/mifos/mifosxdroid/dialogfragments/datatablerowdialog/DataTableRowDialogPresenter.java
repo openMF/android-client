@@ -57,13 +57,14 @@ public class DataTableRowDialogPresenter extends BasePresenter<DataTableRowDialo
                         getMvpView().showProgressbar(false);
                         if (e instanceof RetrofitError) {
                             Response response = ((RetrofitError) e).getResponse();
-                            getMvpView().showError("Try Again",response);
+                            getMvpView().showError("Try Again", response);
                         }
                     }
 
                     @Override
                     public void onNext(GenericResponse genericResponse) {
                         getMvpView().showProgressbar(false);
+                        getMvpView().showDataTableEntrySuccessfully(genericResponse);
                     }
                 });
     }

@@ -1,8 +1,6 @@
 package com.mifos.mifosxdroid.dialogfragments.chargedialog;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.Changes;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 
 import retrofit.client.Response;

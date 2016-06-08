@@ -178,7 +178,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -358,17 +358,17 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                 JSONArray interestCalculationPeriodTypes = obj.getJSONArray
                         ("interestCalculationPeriodTypeOptions");
                 for (int i = 0; i < interestCalculationPeriodTypes.length(); i++) {
-                    JSONObject interestCalculationPeriodTypeObject =
-                            interestCalculationPeriodTypes.getJSONObject(i);
-                    InterestCalculationPeriodType interestCalculationPeriod = new
-                            InterestCalculationPeriodType();
+                    JSONObject interestCalculationPeriodTypeObject
+                            = interestCalculationPeriodTypes.getJSONObject(i);
+                    InterestCalculationPeriodType interestCalculationPeriod
+                            = new InterestCalculationPeriodType();
                     interestCalculationPeriod.setId(interestCalculationPeriodTypeObject
                             .optInt("id"));
-                    interestCalculationPeriod.setValue
-                            (interestCalculationPeriodTypeObject.optString("value"));
+                    interestCalculationPeriod
+                            .setValue(interestCalculationPeriodTypeObject.optString("value"));
                     interestCalculationPeriodType.add(interestCalculationPeriod);
-                    interestCalculationPeriodTypeNames.add
-                            (interestCalculationPeriodTypeObject.optString("value"));
+                    interestCalculationPeriodTypeNames
+                            .add(interestCalculationPeriodTypeObject.optString("value"));
                     interestCalculationPeriodTypeIdHashMap.put(interestCalculationPeriod
                             .getValue(), interestCalculationPeriod.getId());
                 }
@@ -443,15 +443,15 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                             transactionProcessingStrategyTypes.getJSONObject(i);
                     TransactionProcessingStrategy transactionProcessingStrategy = new
                             TransactionProcessingStrategy();
-                    transactionProcessingStrategy.setId
-                            (transactionProcessingStrategyTypeObject.optInt("id"));
-                    transactionProcessingStrategy.setName
-                            (transactionProcessingStrategyTypeObject.optString("name"));
+                    transactionProcessingStrategy
+                            .setId(transactionProcessingStrategyTypeObject.optInt("id"));
+                    transactionProcessingStrategy
+                            .setName(transactionProcessingStrategyTypeObject.optString("name"));
                     transactionProcessingStrategyType.add(transactionProcessingStrategy);
-                    transactionProcessingStrategyTypeNames.add
-                            (transactionProcessingStrategyTypeObject.optString("name"));
-                    transactionProcessingStrategyTypeIdHashMap.put
-                            (transactionProcessingStrategy.getName(),
+                    transactionProcessingStrategyTypeNames
+                            .add(transactionProcessingStrategyTypeObject.optString("name"));
+                    transactionProcessingStrategyTypeIdHashMap
+                            .put(transactionProcessingStrategy.getName(),
                                     transactionProcessingStrategy.getId());
                 }
 

@@ -8,7 +8,6 @@ import com.mifos.api.model.APIEndPoint;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -22,7 +21,8 @@ public interface GpsCoordinatesService {
 
     @POST(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}")
     Observable<GpsCoordinatesResponse> setGpsCoordinates(@Path("clientId") int clientId,
-                                 @Body GpsCoordinatesRequest gpsCoordinatesRequest);
+                                                         @Body GpsCoordinatesRequest
+                                                                 gpsCoordinatesRequest);
 
     @PUT(APIEndPoint.DATATABLES + "/gps_coordinates/{clientId}")
     Observable<GpsCoordinatesResponse> updateGpsCoordinates(

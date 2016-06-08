@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -29,14 +28,11 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
-public class SurveyListFragment extends ProgressableFragment implements SurveyListMvpView{
+public class SurveyListFragment extends ProgressableFragment implements SurveyListMvpView {
 
     private static final String CLIENTID = "ClientID";
 
@@ -62,7 +58,7 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override

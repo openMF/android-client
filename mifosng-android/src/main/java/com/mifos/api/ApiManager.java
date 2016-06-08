@@ -6,26 +6,18 @@
 package com.mifos.api;
 
 import com.mifos.api.model.CollectionSheetPayload;
-import com.mifos.api.model.GpsCoordinatesRequest;
-import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
-import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.Staff;
-import com.mifos.objects.survey.Scorecard;
-import com.mifos.objects.survey.Survey;
 import com.mifos.services.data.ChargesPayload;
-import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
-import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -152,7 +144,6 @@ public class ApiManager extends BaseApiManager {
                                   Callback<GenericResponse> callback) {
         getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
     }*/
-
     public void removeDataTableEntry(String table, int entity, int rowId,
                                      Callback<GenericResponse> callback) {
         getDataTableApi().deleteEntryOfDataTableManyToMany(table, entity, rowId, callback);
@@ -272,7 +263,8 @@ public class ApiManager extends BaseApiManager {
         getSurveyApi().getSurvey(survey, callback);
     }*/
 
-    /*public void submitScore(int survey, Scorecard scorecardPayload, Callback<Scorecard> callback) {
+    /*public void submitScore(int survey, Scorecard scorecardPayload, Callback<Scorecard>
+    callback) {
         getSurveyApi().submitScore(survey, scorecardPayload, callback);
     }*/
 

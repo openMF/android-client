@@ -3,7 +3,6 @@ package com.mifos.mifosxdroid.online.grouploanaccount;
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.ProductLoans;
-import com.mifos.services.data.GroupLoanPayload;
 
 import java.util.List;
 

@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.mifos.App;
 import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
@@ -44,30 +43,23 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * Created by ishankhanna on 01/08/14.
  */
 public class DataTableRowDialogFragment extends DialogFragment
-        implements DataTableRowDialogMvpView{
+        implements DataTableRowDialogMvpView {
 
     private final String LOG_TAG = getClass().getSimpleName();
-
+    @InjectView(R.id.ll_data_table_entry_form)
+    LinearLayout linearLayout;
+    @Inject
+    DataTableRowDialogPresenter mDataTableRowDialogPresenter;
     private DataTable dataTable;
     private int entityId;
     private SharedPreferences sharedPreferences;
-
     private View rootView;
-
-    @InjectView(R.id.ll_data_table_entry_form)
-    LinearLayout linearLayout;
-
-    @Inject
-    DataTableRowDialogPresenter mDataTableRowDialogPresenter;
-
     private SafeUIBlockingUtility safeUIBlockingUtility;
 
     private List<FormWidget> formWidgets = new ArrayList<FormWidget>();
@@ -86,7 +78,7 @@ public class DataTableRowDialogFragment extends DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
     @Override
@@ -240,7 +232,6 @@ public class DataTableRowDialogFragment extends DialogFragment
         //AddDataTableEntry ApI
         mDataTableRowDialogPresenter.addDataTableEntry(
                 dataTable.getRegisteredTableName(), entityId, payload);
-
 
 
     }

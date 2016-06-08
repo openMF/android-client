@@ -5,7 +5,6 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.services.data.ChargesPayload;
@@ -36,7 +35,7 @@ public interface ChargeService {
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
     Observable<Charges> createCharges(@Path("clientId") int clientId,
-                                     @Body ChargesPayload chargesPayload);
+                                      @Body ChargesPayload chargesPayload);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
     void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>>

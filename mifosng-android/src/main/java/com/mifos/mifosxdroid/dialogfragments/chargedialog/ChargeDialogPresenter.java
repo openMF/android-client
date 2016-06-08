@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.dialogfragments.chargedialog;
 
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.client.Charges;
 import com.mifos.services.data.ChargesPayload;
 
@@ -65,7 +64,7 @@ public class ChargeDialogPresenter extends BasePresenter<ChargeDialogMvpView> {
                 });
     }
 
-    public void createCharges(int clientId, ChargesPayload payload){
+    public void createCharges(int clientId, ChargesPayload payload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();

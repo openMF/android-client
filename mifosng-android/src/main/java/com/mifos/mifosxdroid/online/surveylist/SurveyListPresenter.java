@@ -37,11 +37,11 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadSurveyList(){
+    public void loadSurveyList() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription  = mDataManager.getAllSurvey()
+        mSubscription = mDataManager.getAllSurvey()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Survey>>() {

@@ -10,9 +10,9 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
 import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
+import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.objects.survey.Survey;
 
 public class SurveyActivity extends MifosBaseActivity implements SurveyListFragment

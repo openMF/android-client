@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online.loanrepaymentschedule;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -31,13 +29,10 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class LoanRepaymentScheduleFragment extends ProgressableFragment
-        implements LoanRepaymentScheduleMvpView{
+        implements LoanRepaymentScheduleMvpView {
 
 
     private final String LOG_TAG = getClass().getSimpleName();
@@ -71,7 +66,7 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         setHasOptionsMenu(false);

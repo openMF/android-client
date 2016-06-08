@@ -22,7 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
@@ -53,8 +52,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -119,7 +116,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     Button bt_loan_submit;
 
     @Inject
-    GroupLoanAccountPresenter  mGroupLoanAccountPresenter;
+    GroupLoanAccountPresenter mGroupLoanAccountPresenter;
 
     Response mResponse;
 
@@ -158,7 +155,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             groupId = getArguments().getInt(Constants.GROUP_ID);
     }
@@ -300,7 +297,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
     private void inflateLoanPurposeSpinner() {
-        mGroupLoanAccountPresenter.loadGroupLoansAccountTemplate(groupId,productId);
+        mGroupLoanAccountPresenter.loadGroupLoansAccountTemplate(groupId, productId);
     }
 
     private void inflateInterestCalculationPeriodSpinner(Response result) {
@@ -330,11 +327,11 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
                             InterestCalculationPeriodType();
                     interestCalculationPeriod.setId(interestCalculationPeriodTypeObject
                             .optInt("id"));
-                    interestCalculationPeriod.setValue
-                            (interestCalculationPeriodTypeObject.optString("value"));
+                    interestCalculationPeriod
+                            .setValue(interestCalculationPeriodTypeObject.optString("value"));
                     interestCalculationPeriodType.add(interestCalculationPeriod);
-                    interestCalculationPeriodTypeNames.add
-                            (interestCalculationPeriodTypeObject.optString("value"));
+                    interestCalculationPeriodTypeNames
+                            .add(interestCalculationPeriodTypeObject.optString("value"));
                     interestCalculationPeriodTypeIdHashMap.put(interestCalculationPeriod
                             .getValue(), interestCalculationPeriod.getId());
                 }
@@ -406,15 +403,15 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
                             transactionProcessingStrategyTypes.getJSONObject(i);
                     TransactionProcessingStrategy transactionProcessingStrategy = new
                             TransactionProcessingStrategy();
-                    transactionProcessingStrategy.setId
-                            (transactionProcessingStrategyTypeObject.optInt("id"));
-                    transactionProcessingStrategy.setName
-                            (transactionProcessingStrategyTypeObject.optString("name"));
+                    transactionProcessingStrategy
+                            .setId(transactionProcessingStrategyTypeObject.optInt("id"));
+                    transactionProcessingStrategy
+                            .setName(transactionProcessingStrategyTypeObject.optString("name"));
                     transactionProcessingStrategyType.add(transactionProcessingStrategy);
-                    transactionProcessingStrategyTypeNames.add
-                            (transactionProcessingStrategyTypeObject.optString("name"));
-                    transactionProcessingStrategyTypeIdHashMap.put
-                            (transactionProcessingStrategy.getName(),
+                    transactionProcessingStrategyTypeNames
+                            .add(transactionProcessingStrategyTypeObject.optString("name"));
+                    transactionProcessingStrategyTypeIdHashMap
+                            .put(transactionProcessingStrategy.getName(),
                                     transactionProcessingStrategy.getId());
                 }
 

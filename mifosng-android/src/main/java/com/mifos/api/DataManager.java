@@ -15,7 +15,6 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.accounts.savings.Charge;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -242,7 +241,7 @@ public class DataManager {
     public Observable<GenericResponse> addDataTableEntry(
             String table, int entityId, Map<String, Object> payload) {
         return mBaseApiManager.getDataTableApi()
-                .createEntryInDataTable(table,entityId,payload);
+                .createEntryInDataTable(table, entityId, payload);
     }
 
 
@@ -382,7 +381,7 @@ public class DataManager {
     }
 
     public Observable<Scorecard> submitScore(int survey, Scorecard scorecardPayload) {
-        return mBaseApiManager.getSurveyApi().submitScore(survey,scorecardPayload);
+        return mBaseApiManager.getSurveyApi().submitScore(survey, scorecardPayload);
     }
 
     public Observable<Survey> getSurvey(int surveyId) {
@@ -393,7 +392,7 @@ public class DataManager {
      * GPS API
      */
     public Observable<GpsCoordinatesResponse> sendGpsData(
-            int clientId, GpsCoordinatesRequest  gpsCoordinatesRequest){
+            int clientId, GpsCoordinatesRequest gpsCoordinatesRequest) {
         return mBaseApiManager.getGpsApi().setGpsCoordinates(clientId, gpsCoordinatesRequest);
     }
 

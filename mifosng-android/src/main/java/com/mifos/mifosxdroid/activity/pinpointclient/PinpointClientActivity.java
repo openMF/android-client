@@ -11,31 +11,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
-import com.mifos.App;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.MifosMapActivity;
-import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 
 import javax.inject.Inject;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 /**
  * @author fomenkoo
  */
-public class PinpointClientActivity extends MifosMapActivity implements PinPointClientMvpView{
+public class PinpointClientActivity extends MifosMapActivity implements PinPointClientMvpView {
 
     public static final String EXTRA_CLIENT_ID = "extra_client_id";
-    private MarkerOptions client = new MarkerOptions();
-    private int clientId;
-
     @Inject
     PinPointClientPresenter mPinPointClientPresenter;
+    private MarkerOptions client = new MarkerOptions();
+    private int clientId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,7 +89,7 @@ public class PinpointClientActivity extends MifosMapActivity implements PinPoint
 
     @Override
     public void showFailedToUpdateGpsData(String s) {
-        Toaster.show(findViewById(android.R.id.content),  s);
+        Toaster.show(findViewById(android.R.id.content), s);
     }
 
     @Override
