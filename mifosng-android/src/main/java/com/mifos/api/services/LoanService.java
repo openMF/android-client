@@ -77,8 +77,8 @@ public interface LoanService {
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=individual")
-    void getLoansAccountTemplate(@Query("clientId") int clientId, @Query("productId") int
-            productId, Callback<Response> loanCallback);
+    Observable<Response> getLoansAccountTemplate(@Query("clientId") int clientId,
+                                                 @Query("productId") int productId);
 
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")

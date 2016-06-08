@@ -196,10 +196,10 @@ public class ApiManager extends BaseApiManager {
 
     }*/
 
-    public void getLoansAccountTemplate(int clientId, int productId, Callback<Response>
+    /*public void getLoansAccountTemplate(int clientId, int productId, Callback<Response>
             loanCallback) {
         getLoanApi().getLoansAccountTemplate(clientId, productId, loanCallback);
-    }
+    }*/
 
     public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback) {
         getLoanApi().createLoansAccount(loansPayload, callback);

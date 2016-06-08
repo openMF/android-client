@@ -280,6 +280,10 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().createGroupLoansAccount(loansPayload);
     }
 
+    public Observable<Response> getLoansAccountTemplate(int clientId, int productId) {
+        return mBaseApiManager.getLoanApi().getLoansAccountTemplate(clientId, productId);
+    }
+
     /**
      * Savings API
      */
