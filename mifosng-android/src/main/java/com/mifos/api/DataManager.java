@@ -284,6 +284,11 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().getLoansAccountTemplate(clientId, productId);
     }
 
+    public Observable<LoanWithAssociations> getLoanRepaySchedule(int loanId) {
+        return mBaseApiManager.getLoanApi().getLoanRepaymentSchedule(loanId);
+    }
+
+
     /**
      * Savings API
      */

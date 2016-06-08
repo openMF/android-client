@@ -183,9 +183,9 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().submitPayment(loan, request, callback);
     }*/
 
-    public void getLoanRepaySchedule(int loan, Callback<LoanWithAssociations> callback) {
+    /*public void getLoanRepaySchedule(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanRepaymentSchedule(loan, callback);
-    }
+    }*/
 
    /* public void getLoanTransactions(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanWithTransactions(loan, callback);
