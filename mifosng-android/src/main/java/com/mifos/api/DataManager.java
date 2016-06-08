@@ -32,6 +32,7 @@ import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
@@ -362,5 +363,10 @@ public class DataManager {
     public Observable<List<Survey>> getAllSurvey() {
         return mBaseApiManager.getSurveyApi().getAllSurveys();
     }
+
+    public Observable<Scorecard> submitScore(int survey, Scorecard scorecardPayload) {
+        return mBaseApiManager.getSurveyApi().submitScore(survey,scorecardPayload);
+    }
+
 
 }
