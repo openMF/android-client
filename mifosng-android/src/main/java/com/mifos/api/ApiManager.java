@@ -7,7 +7,6 @@ package com.mifos.api;
 
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.client.Charges;
@@ -162,10 +161,10 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().approveLoanApplication(loanId, loanApproval, callback);
     }*/
 
-    public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement,
+    /*public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement,
                              Callback<GenericResponse> genericResponseCallback) {
         getLoanApi().disburseLoan(loanId, loanDisbursement, genericResponseCallback);
-    }
+    }*/
 
     /*public void submitPayment(int loan, LoanRepaymentRequest request,
                               Callback<LoanRepaymentResponse> callback) {
@@ -194,10 +193,10 @@ public class ApiManager extends BaseApiManager {
         getLoanApi().createLoansAccount(loansPayload, callback);
     }
 
-    public void getLoanTemplate(int loanId, Callback<Response> loanTemplateCallback) {
+    /*public void getLoanTemplate(int loanId, Callback<Response> loanTemplateCallback) {
         getLoanApi().getLoanTemplate(loanId, loanTemplateCallback);
 
-    }
+    }*/
 
     /*public void createGroupLoansAccount(GroupLoanPayload loansPayload, Callback<Loans> callback) {
         getLoanApi().createGroupLoansAccount(loansPayload, callback);

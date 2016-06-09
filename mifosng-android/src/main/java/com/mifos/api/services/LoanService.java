@@ -51,9 +51,8 @@ public interface LoanService {
     //  Mandatory Fields
     //  String actualDisbursementDate
     @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
-    public void disburseLoan(@Path("loanId") int loanId,
-                             @Body LoanDisbursement loanDisbursement,
-                             Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> disburseLoan(@Path("loanId") int loanId,
+                                             @Body LoanDisbursement loanDisbursement);
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
     Observable<LoanRepaymentResponse> submitPayment(
@@ -80,7 +79,7 @@ public interface LoanService {
 
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
-    void getLoanTemplate(@Path("loanId") int loanId, Callback<Response> loanTemplateCallback);
+    Observable<Response> getLoanTemplate(@Path("loanId") int loanId);
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
     Observable<Loans> createGroupLoansAccount(@Body GroupLoanPayload loansPayload);

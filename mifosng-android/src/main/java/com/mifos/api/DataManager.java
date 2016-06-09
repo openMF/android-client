@@ -12,6 +12,7 @@ import com.mifos.objects.User;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
+import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -315,6 +316,15 @@ public class DataManager {
 
     public Observable<GenericResponse> approveLoan(int loanId, LoanApproval loanApproval) {
         return mBaseApiManager.getLoanApi().approveLoanApplication(loanId, loanApproval);
+    }
+
+    public Observable<Response> getLoanTemplate(int loanId) {
+        return mBaseApiManager.getLoanApi().getLoanTemplate(loanId);
+    }
+
+    public Observable<GenericResponse> dispurseLoan(int loanId,
+                                                    LoanDisbursement loanDisbursement) {
+        return mBaseApiManager.getLoanApi().disburseLoan(loanId, loanDisbursement);
     }
 
 

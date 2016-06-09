@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.dialogfragments;
+package com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -20,9 +20,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.PaymentTypeOptions;
@@ -39,34 +40,48 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * Created by nellyk on 1/22/2016.
  */
-public class LoanAccountDisbursement extends DialogFragment implements MFDatePicker
-        .OnDatePickListener {
+public class LoanAccountDisbursement extends DialogFragment implements
+        MFDatePicker.OnDatePickListener, LoanAccountDisbursementMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
+
     public int loanAccountNumber;
-    View rootView;
+
     SafeUIBlockingUtility safeUIBlockingUtility;
+
     @InjectView(R.id.tv_loan_disbursement_dates)
     TextView loan_disbursement_dates;
+
     @InjectView(R.id.bt_disburse_loan)
     Button bt_disburse_loan;
+
     @InjectView(R.id.sp_loan_payment_type)
     Spinner sp_payment_type;
+
     @InjectView(R.id.et_disbursed_amount)
     EditText et_disbursed_amount;
+
     @InjectView(R.id.et_disbursement_note)
     EditText et_disbursement_note;
+
+    @Inject
+    LoanAccountDisbursementPresenter mLoanAccountDisbursementPresenter;
+
     int paymentTypeId;
+
     String disbursement_dates;
+
+    View rootView;
+
     private OnDialogFragmentInteractionListener mListener;
     private DialogFragment mfDatePicker;
     private HashMap<String, Integer> paymentNameIdHashMap = new HashMap<String, Integer>();
@@ -82,6 +97,7 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         }
@@ -105,7 +121,12 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.dialog_fragment_disburse_loan, null);
+
         ButterKnife.inject(this, rootView);
+        mLoanAccountDisbursementPresenter.attachView(this);
+
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+
         inflateDisbursementDate();
         inflatePaymentTypeSpinner();
         disbursement_dates = loan_disbursement_dates.getText().toString();
@@ -137,95 +158,11 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
     }
 
     private void inflatePaymentTypeSpinner() {
-        App.apiManager.getLoanTemplate(loanAccountNumber, new Callback<Response>() {
-            @Override
-            public void success(Response result, Response response) {
-                final ArrayList<PaymentTypeOptions> paymentOption = new
-                        ArrayList<PaymentTypeOptions>();
-                final ArrayList<String> paymentNames = new ArrayList<String>();
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                String line;
-                try {
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    JSONObject obj = new JSONObject(sb.toString());
-                    if (obj.has("paymentTypeOptions")) {
-                        JSONArray paymentOptions = obj.getJSONArray("paymentTypeOptions");
-                        for (int i = 0; i < paymentOptions.length(); i++) {
-                            JSONObject paymentObject = paymentOptions.getJSONObject(i);
-                            PaymentTypeOptions payment = new PaymentTypeOptions();
-                            payment.setId(paymentObject.optInt("id"));
-                            payment.setName(paymentObject.optString("name"));
-                            paymentOption.add(payment);
-                            paymentNames.add(paymentObject.optString("name"));
-                            paymentNameIdHashMap.put(payment.getName(), payment.getId());
-                        }
-                    }
-                    String stringResult = sb.toString();
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, "", e);
-                }
-                ArrayAdapter<String> paymentAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, paymentNames);
-                paymentAdapter.setDropDownViewResource(android.R.layout
-                        .simple_spinner_dropdown_item);
-                sp_payment_type.setAdapter(paymentAdapter);
-                sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                            l) {
-                        paymentTypeId = paymentNameIdHashMap.get(paymentNames.get(i));
-                        Log.d("paymentId " + paymentNames.get(i), String.valueOf(paymentTypeId));
-                        if (paymentTypeId != -1) {
-
-
-                        } else {
-
-                            Toast.makeText(getActivity(), getString(R.string
-                                    .error_select_payment), Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-                Log.d(LOG_TAG, retrofitError.getLocalizedMessage());
-            }
-        });
-
+        mLoanAccountDisbursementPresenter.loadLoanTemplate(loanAccountNumber);
     }
 
     private void initiateLoanDisbursement(final LoanDisbursement loanDisbursement) {
-
-        App.apiManager.dispurseLoan(loanAccountNumber,
-                loanDisbursement,
-                new Callback<GenericResponse>() {
-                    @Override
-                    public void success(GenericResponse genericResponse, Response response) {
-                        Toast.makeText(getActivity(), "The Loan has been Disbursed", Toast
-                                .LENGTH_LONG).show();
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-                    }
-                }
-        );
+        mLoanAccountDisbursementPresenter.dispurseLoan(loanAccountNumber, loanDisbursement);
     }
 
     public void inflateDisbursementDate() {
@@ -243,6 +180,92 @@ public class LoanAccountDisbursement extends DialogFragment implements MFDatePic
 
     }
 
+    @Override
+    public void showLoanTemplate(Response result) {
+
+        final ArrayList<PaymentTypeOptions> paymentOption = new
+                ArrayList<PaymentTypeOptions>();
+        final ArrayList<String> paymentNames = new ArrayList<String>();
+        BufferedReader reader = null;
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try {
+            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            JSONObject obj = new JSONObject(sb.toString());
+            if (obj.has("paymentTypeOptions")) {
+                JSONArray paymentOptions = obj.getJSONArray("paymentTypeOptions");
+                for (int i = 0; i < paymentOptions.length(); i++) {
+                    JSONObject paymentObject = paymentOptions.getJSONObject(i);
+                    PaymentTypeOptions payment = new PaymentTypeOptions();
+                    payment.setId(paymentObject.optInt("id"));
+                    payment.setName(paymentObject.optString("name"));
+                    paymentOption.add(payment);
+                    paymentNames.add(paymentObject.optString("name"));
+                    paymentNameIdHashMap.put(payment.getName(), payment.getId());
+                }
+            }
+            String stringResult = sb.toString();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "", e);
+        }
+        ArrayAdapter<String> paymentAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, paymentNames);
+        paymentAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
+        sp_payment_type.setAdapter(paymentAdapter);
+        sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
+                    l) {
+                paymentTypeId = paymentNameIdHashMap.get(paymentNames.get(i));
+                Log.d("paymentId " + paymentNames.get(i), String.valueOf(paymentTypeId));
+                if (paymentTypeId != -1) {
+
+
+                } else {
+
+                    Toast.makeText(getActivity(), getString(R.string
+                            .error_select_payment), Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void showDispurseLoanSuccessfully(GenericResponse genericResponse) {
+        Toast.makeText(getActivity(), "The Loan has been Disbursed", Toast
+                .LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showError(String s) {
+        Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        if (b) {
+            safeUIBlockingUtility.safelyBlockUI();
+        } else {
+            safeUIBlockingUtility.safelyUnBlockUI();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mLoanAccountDisbursementPresenter.detachView();
+    }
 
     public interface OnDialogFragmentInteractionListener {
 
