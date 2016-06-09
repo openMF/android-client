@@ -42,8 +42,8 @@ public interface DataTableService {
             @Body Map<String, Object> requestPayload);
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
-    void deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName,
-                                          @Path("entityId") int entityId,
-                                          @Path("dataTableRowId") int dataTableRowId,
-                                          Callback<GenericResponse> callback);
+    Observable<GenericResponse> deleteEntryOfDataTableManyToMany(
+            @Path("dataTableName") String dataTableName,
+            @Path("entityId") int entityId,
+            @Path("dataTableRowId") int dataTableRowId);
 }

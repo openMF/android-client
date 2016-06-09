@@ -273,18 +273,6 @@ public class DataManager {
                 .createEntryInDataTable(table, entityId, payload);
     }
 
-
-    /**
-     * GroupAccountsService
-     */
-    public Observable<GroupAccounts> getAllGroupsOfClient(int groupId) {
-        return mBaseApiManager.getGroupAccountsServiceApi().getAllGroupsOfClient(groupId);
-    }
-
-
-    /**
-     * Data tables API
-     */
     public Observable<List<DataTable>> getSavingsDataTable() {
         return mBaseApiManager.getDataTableApi().getTableOf("m_savings_account");
     }
@@ -296,6 +284,21 @@ public class DataManager {
     public Observable<List<DataTable>> getLoanDataTable() {
         return mBaseApiManager.getDataTableApi().getTableOf("m_loan");
     }
+
+    public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId) {
+        return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
+                table, entity, rowId);
+    }
+
+
+
+    /**
+     * GroupAccountsService
+     */
+    public Observable<GroupAccounts> getAllGroupsOfClient(int groupId) {
+        return mBaseApiManager.getGroupAccountsServiceApi().getAllGroupsOfClient(groupId);
+    }
+
 
     /**
      * Client Accounts API

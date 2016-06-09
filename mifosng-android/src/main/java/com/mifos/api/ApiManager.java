@@ -139,10 +139,10 @@ public class ApiManager extends BaseApiManager {
                                   Callback<GenericResponse> callback) {
         getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
     }*/
-    public void removeDataTableEntry(String table, int entity, int rowId,
+    /*public void removeDataTableEntry(String table, int entity, int rowId,
                                      Callback<GenericResponse> callback) {
         getDataTableApi().deleteEntryOfDataTableManyToMany(table, entity, rowId, callback);
-    }
+    }*/
 
     /**
      * Loans API
