@@ -191,6 +191,10 @@ public class DataManager {
         return mBaseApiManager.getIdentifierApi().getListOfIdentifiers(clientid);
     }
 
+    public Observable<GenericResponse> deleteIdentifier(int clientId, int id) {
+        return mBaseApiManager.getIdentifierApi().deleteIdentifier(clientId, id);
+    }
+
 
     /**
      * Search API

@@ -332,9 +332,9 @@ public class ApiManager extends BaseApiManager {
     /*public void getIdentifiers(int clientId, Callback<List<Identifier>> callback) {
         getIdentifierApi().getListOfIdentifiers(clientId, callback);
     }*/
-    public void deleteIdentifier(int clientId, int id, Callback<GenericResponse> callback) {
+    /*public void deleteIdentifier(int clientId, int id, Callback<GenericResponse> callback) {
         getIdentifierApi().deleteIdentifier(clientId, id, callback);
-    }
+    }*/
 
     /**
      * Offices API

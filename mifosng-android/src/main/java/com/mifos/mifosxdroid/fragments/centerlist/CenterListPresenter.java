@@ -6,6 +6,8 @@ import com.mifos.objects.db.OfflineCenter;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -19,6 +21,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
     private final DataManager mDataManager;
     private Subscription mSubscription;
 
+    @Inject
     public CenterListPresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }

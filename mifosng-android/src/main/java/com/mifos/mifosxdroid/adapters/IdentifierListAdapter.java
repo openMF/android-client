@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.mifos.App;
+import com.mifos.api.BaseApiManager;
+import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Identifier;
@@ -27,6 +29,11 @@ import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ishankhanna on 03/07/14.
@@ -34,10 +41,18 @@ import retrofit.client.Response;
 public class IdentifierListAdapter extends BaseAdapter {
 
     public final String LOG_TAG = getClass().getSimpleName();
+
     Context context;
+
     LayoutInflater layoutInflater;
+
     List<Identifier> identifiers = new ArrayList<Identifier>();
+
     int clientId;
+
+    DataManager dataManager;
+    BaseApiManager baseApiManager;
+
 
     public IdentifierListAdapter(Context context, List<Identifier> identifierList, int clientId) {
 
@@ -45,6 +60,8 @@ public class IdentifierListAdapter extends BaseAdapter {
         layoutInflater = LayoutInflater.from(context);
         identifiers = identifierList;
         this.clientId = clientId;
+        baseApiManager = new BaseApiManager();
+        dataManager = new DataManager(baseApiManager);
     }
 
     @Override
@@ -88,22 +105,23 @@ public class IdentifierListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                App.apiManager.deleteIdentifier(clientId, identifier.getId(), new
-                        Callback<GenericResponse>() {
+                Observable<GenericResponse> call = dataManager.deleteIdentifier(clientId, identifier.getId());
+                Subscription subscription = call.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<GenericResponse>() {
                             @Override
-                            public void success(GenericResponse genericResponse, Response
-                                    response) {
-
-                                Log.d(LOG_TAG, genericResponse.toString());
+                            public void onCompleted() {
 
                             }
 
                             @Override
-                            public void failure(RetrofitError retrofitError) {
+                            public void onError(Throwable e) {
+                                Log.d(getClass().getSimpleName(),e.getMessage());
+                            }
 
-                                Log.d(getClass().getSimpleName(), retrofitError
-                                        .getLocalizedMessage());
-
+                            @Override
+                            public void onNext(GenericResponse genericResponse) {
+                                Log.d(LOG_TAG, genericResponse.toString());
                             }
                         });
 
