@@ -28,7 +28,7 @@ public interface ChargeService {
     Observable<Response> getAllChargesS(@Path("clientId") int clientId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
-    void getAllChargev3(@Path("loanId") int loanId, Callback<Response> callback);
+    Observable<Response> getAllChargev3(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
     Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
@@ -43,7 +43,7 @@ public interface ChargeService {
 
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
-    void createLoanCharges(@Path("loanId") int loanId, @Body ChargesPayload chargesPayload,
-                           Callback<Charges> callback);
+    Observable<Charges> createLoanCharges(@Path("loanId") int loanId,
+                                          @Body ChargesPayload chargesPayload);
 
 }

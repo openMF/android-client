@@ -9,10 +9,8 @@ import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
-import com.mifos.objects.client.Charges;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.organisation.Staff;
-import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
@@ -371,9 +369,9 @@ public class ApiManager extends BaseApiManager {
     }*/
 
 
-    public void getAllChargesV3(int loanId, Callback<Response> callback) {
+    /*public void getAllChargesV3(int loanId, Callback<Response> callback) {
         getChargeApi().getAllChargev3(loanId, callback);
-    }
+    }*/
 
     /*public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
         getChargeApi().getListOfCharges(clientId, callback);
@@ -383,10 +381,10 @@ public class ApiManager extends BaseApiManager {
         getChargeApi().createCharges(clientId, payload, callback);
     }*/
 
-    public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges>
+    /*public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges>
             callback) {
         getChargeApi().createLoanCharges(loanId, chargesPayload, callback);
-    }
+    }*/
 
 
     /**

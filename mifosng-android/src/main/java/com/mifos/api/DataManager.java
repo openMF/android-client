@@ -134,6 +134,15 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().createCharges(clientId, payload);
     }
 
+    public Observable<Response> getAllChargesV3(int loanId) {
+        return mBaseApiManager.getChargeApi().getAllChargev3(loanId);
+    }
+
+    public Observable<Charges> createLoanCharges(int loanId, ChargesPayload chargesPayload) {
+        return mBaseApiManager.getChargeApi().createLoanCharges(loanId, chargesPayload);
+    }
+
+
     /**
      * Client API
      */
