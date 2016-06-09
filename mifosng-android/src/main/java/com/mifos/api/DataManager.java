@@ -265,7 +265,7 @@ public class DataManager {
         return mBaseApiManager.getStaffApi().getStaffForOffice(officeId);
     }
 
-    public Observable<List<Staff>> getAllStaff(){
+    public Observable<List<Staff>> getAllStaff() {
         return mBaseApiManager.getStaffApi().getAllStaff();
     }
 
@@ -298,7 +298,6 @@ public class DataManager {
         return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
                 table, entity, rowId);
     }
-
 
 
     /**

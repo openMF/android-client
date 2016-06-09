@@ -12,7 +12,6 @@ import com.mifos.objects.noncore.DataTable;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;

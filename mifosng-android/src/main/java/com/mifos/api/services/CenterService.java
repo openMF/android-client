@@ -17,7 +17,6 @@ import com.mifos.services.data.CenterPayload;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -52,9 +51,9 @@ public interface CenterService {
                                                    @Body Payload payload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    Observable<SaveResponse> saveCollectionSheet(@Path("centerId") int centerId, @Body
-    CollectionSheetPayload
-            collectionSheetPayload);
+    Observable<SaveResponse> saveCollectionSheet(
+            @Path("centerId") int centerId,
+            @Body CollectionSheetPayload collectionSheetPayload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
     Observable<SaveResponse> saveCollectionSheetAsync(

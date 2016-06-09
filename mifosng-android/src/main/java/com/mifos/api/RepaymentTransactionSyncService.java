@@ -29,7 +29,6 @@ import com.orm.query.Select;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.RetrofitError;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -40,11 +39,10 @@ public class RepaymentTransactionSyncService {
 
     private static final String TAG = RepaymentTransactionSyncService.class.getSimpleName();
     private final String tag = getClass().getSimpleName();
+    DataManager mDataManager;
+    BaseApiManager mBaseApiManager;
     private SyncFinishListener syncFinishListener;
     private long centerId;
-
-    DataManager mDataManager ;
-    BaseApiManager mBaseApiManager;
 
     public RepaymentTransactionSyncService(SyncFinishListener syncFinishListener, long centerId) {
         this.syncFinishListener = syncFinishListener;
@@ -143,8 +141,9 @@ public class RepaymentTransactionSyncService {
                                         SharedPreferences.Editor editor = preferences.edit();
                                         editor.clear();
                                         editor.commit();
-                                    } else
+                                    } else {
                                         isResponseNull = true;
+                                    }
                                 }
                             });
 

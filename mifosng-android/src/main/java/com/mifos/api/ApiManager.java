@@ -5,19 +5,6 @@
 
 package com.mifos.api;
 
-import com.mifos.api.model.CollectionSheetPayload;
-import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.accounts.loan.SavingsApproval;
-import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.organisation.Staff;
-import com.mifos.services.data.LoansPayload;
-
-import java.util.List;
-
-import retrofit.Callback;
-import retrofit.client.Response;
-
 /**
  * @author fomenkoo
  */

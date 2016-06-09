@@ -8,6 +8,7 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.mifos.App;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
@@ -29,9 +29,6 @@ import com.mifos.objects.noncore.DataTable;
 
 import java.util.Iterator;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -165,7 +162,7 @@ public class DataTableUIBuilder {
             });
 
             View v = new View(context);
-            v.setBackgroundColor(context.getResources().getColor(R.color.black));
+            v.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
             parentLayout.addView(tableLayout);
             parentLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
                     .MATCH_PARENT, 5));

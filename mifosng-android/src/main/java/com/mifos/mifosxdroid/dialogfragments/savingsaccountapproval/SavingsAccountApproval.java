@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.App;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -34,9 +33,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * @author nellyk
@@ -81,7 +77,7 @@ public class SavingsAccountApproval extends DialogFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity)getActivity()).getActivityComponent().inject(this);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
@@ -111,7 +107,7 @@ public class SavingsAccountApproval extends DialogFragment implements
         ButterKnife.inject(this, rootView);
         mSavingsAccountApprovalPresenter.attachView(this);
 
-        safeUIBlockingUtility  = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
 
         inflateApprovalDate();
 
@@ -144,7 +140,7 @@ public class SavingsAccountApproval extends DialogFragment implements
 
     private void initiateSavingsApproval(final SavingsApproval savingsApproval) {
         mSavingsAccountApprovalPresenter.approveSavingsApplication(
-                savingsAccountNumber,savingsApproval);
+                savingsAccountNumber, savingsApproval);
     }
 
 
@@ -170,7 +166,7 @@ public class SavingsAccountApproval extends DialogFragment implements
 
     @Override
     public void showError(String s) {
-        Toaster.show(rootView , s);
+        Toaster.show(rootView, s);
     }
 
     @Override

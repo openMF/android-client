@@ -9,7 +9,6 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.services.data.ChargesPayload;
 
-import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;

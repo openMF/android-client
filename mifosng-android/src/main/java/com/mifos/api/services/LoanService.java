@@ -21,7 +21,6 @@ import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;

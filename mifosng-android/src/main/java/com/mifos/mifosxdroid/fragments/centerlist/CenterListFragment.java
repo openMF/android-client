@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.mifos.App;
 import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
@@ -55,19 +54,14 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class CenterListFragment extends MifosBaseFragment implements
         AdapterView.OnItemClickListener,
         SaveOfflineDataHelper.OfflineDataSaveListener, CenterListMvpView {
 
-    public final String TAG = getClass().getSimpleName();
-
     public static final String CENTER_ID = "offline_center_id";
-
+    public final String TAG = getClass().getSimpleName();
     private final List<MeetingCenter> centerList = new ArrayList<MeetingCenter>();
 
     @InjectView(R.id.lv_center)

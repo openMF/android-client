@@ -10,7 +10,6 @@ import com.mifos.objects.noncore.Identifier;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Path;

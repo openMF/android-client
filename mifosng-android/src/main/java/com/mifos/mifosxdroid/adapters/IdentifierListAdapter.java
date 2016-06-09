@@ -14,7 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mifos.App;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
@@ -26,9 +25,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -105,7 +101,8 @@ public class IdentifierListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                Observable<GenericResponse> call = dataManager.deleteIdentifier(clientId, identifier.getId());
+                Observable<GenericResponse> call = dataManager.deleteIdentifier(clientId,
+                        identifier.getId());
                 Subscription subscription = call.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<GenericResponse>() {
@@ -116,7 +113,7 @@ public class IdentifierListAdapter extends BaseAdapter {
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.d(getClass().getSimpleName(),e.getMessage());
+                                Log.d(getClass().getSimpleName(), e.getMessage());
                             }
 
                             @Override
