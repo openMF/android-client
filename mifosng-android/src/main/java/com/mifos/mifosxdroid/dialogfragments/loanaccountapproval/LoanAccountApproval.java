@@ -37,7 +37,7 @@ import butterknife.InjectView;
 public class LoanAccountApproval extends DialogFragment
         implements MFDatePicker.OnDatePickListener, LoanAccountApprovalMvpView {
 
-    public final String LOG_TAG =  getClass().getSimpleName();
+    public final String LOG_TAG = getClass().getSimpleName();
 
     public int loanAccountNumber;
 

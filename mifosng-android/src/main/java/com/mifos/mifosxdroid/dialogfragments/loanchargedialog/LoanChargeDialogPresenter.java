@@ -22,7 +22,7 @@ public class LoanChargeDialogPresenter extends BasePresenter<LoanChargeDialogMvp
     private Subscription mSubscription;
 
     @Inject
-    public LoanChargeDialogPresenter (DataManager dataManager) {
+    public LoanChargeDialogPresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }
 

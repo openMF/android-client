@@ -10,7 +10,6 @@ import com.mifos.objects.noncore.Document;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;

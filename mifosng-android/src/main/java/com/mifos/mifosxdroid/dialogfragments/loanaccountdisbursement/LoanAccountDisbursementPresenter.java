@@ -38,7 +38,7 @@ public class LoanAccountDisbursementPresenter
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadLoanTemplate(int loanId){
+    public void loadLoanTemplate(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
@@ -65,7 +65,7 @@ public class LoanAccountDisbursementPresenter
                 });
     }
 
-    public void dispurseLoan (int loanId, LoanDisbursement loanDisbursement) {
+    public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
