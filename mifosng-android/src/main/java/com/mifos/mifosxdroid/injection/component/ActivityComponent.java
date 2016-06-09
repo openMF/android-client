@@ -129,4 +129,6 @@ public interface ActivityComponent {
     void inject(LoanChargeDialogFragment loanChargeDialogFragment);
 
     void inject(SavingsAccountApproval savingsAccountApproval);
+
+    void inject(com.mifos.mifosxdroid.fragments.centerlist.CenterListFragment centerListFragment);
 }

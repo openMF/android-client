@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.fragments;
+package com.mifos.mifosxdroid.fragments.centerlist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CenterAdapter;
+import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.objects.db.AttendanceType;
@@ -50,6 +51,8 @@ import com.orm.query.Select;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -57,22 +60,39 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class CenterListFragment extends MifosBaseFragment implements AdapterView
-        .OnItemClickListener,
-        SaveOfflineDataHelper.OfflineDataSaveListener {
+public class CenterListFragment extends MifosBaseFragment implements
+        AdapterView.OnItemClickListener,
+        SaveOfflineDataHelper.OfflineDataSaveListener, CenterListMvpView {
 
-    public static final String TAG = "Center List Fragment";
+    public final String TAG = getClass().getSimpleName();
+
     public static final String CENTER_ID = "offline_center_id";
+
     private final List<MeetingCenter> centerList = new ArrayList<MeetingCenter>();
+
     @InjectView(R.id.lv_center)
     ListView lv_center;
+
     @InjectView(R.id.progress_center)
     ProgressBar progressCenter;
-    CenterAdapter adapter = null;
-    View view;
+
     @InjectView(R.id.tv_empty_center)
     TextView tv_empty_center;
+
+    @Inject
+    CenterListPresenter mCenterListPresenter;
+
+    CenterAdapter adapter = null;
+
+    View view;
+
     private String date;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -141,42 +161,8 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
                     branchId);
             //TODO -- Need to ask ---  Hard coding date format and locale
 
-            App.apiManager.getCenterList(dateFormant, locale, meetingDate, branchId, staffId,
-                    new Callback<List<OfflineCenter>>() {
-                        @Override
-                        public void success(List<OfflineCenter> centers, Response response) {
-                            Log.i(TAG, "-----------Success-----Got the list of centers--------");
-                            for (OfflineCenter center : centers) {
-                                if (center != null) {
-                                    SaveOfflineDataHelper helper =
-                                            new SaveOfflineDataHelper(getActivity());
-                                    helper.setOfflineDataSaveListener(CenterListFragment.this);
-                                    helper.saveOfflineCenterData(getActivity(), center);
-                                }
-                            }
-                            if (centers.size() > 0) {
-                                setAdapter();
-                            } else {
-                                startCenterInputActivity();
-                            }
-
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            try {
-                                Toast.makeText(getActivity(), getString(R.string
-                                        .error_login_again), Toast.LENGTH_LONG).show();
-                            } catch (Exception ex) {
-                                Crashlytics.logException(ex);
-                            } finally {
-                                getActivity().finish();
-                                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-
-                        }
-                    });
+            mCenterListPresenter.loadCenterList(dateFormant, locale, meetingDate,
+                    branchId, staffId);
         }
     }
 
@@ -226,5 +212,42 @@ public class CenterListFragment extends MifosBaseFragment implements AdapterView
     public void dataSaved() {
         centerList.clear();
         setAdapter();
+    }
+
+    @Override
+    public void showCenterList(List<OfflineCenter> centers) {
+        Log.i(TAG, "-----------Success-----Got the list of centers--------");
+        for (OfflineCenter center : centers) {
+            if (center != null) {
+                SaveOfflineDataHelper helper =
+                        new SaveOfflineDataHelper(getActivity());
+                helper.setOfflineDataSaveListener(CenterListFragment.this);
+                helper.saveOfflineCenterData(getActivity(), center);
+            }
+        }
+        if (centers.size() > 0) {
+            setAdapter();
+        } else {
+            startCenterInputActivity();
+        }
+    }
+
+    @Override
+    public void showError(String s) {
+        try {
+            Toast.makeText(getActivity(), getString(R.string
+                    .error_login_again), Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Crashlytics.logException(ex);
+        } finally {
+            getActivity().finish();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+
     }
 }

@@ -70,7 +70,7 @@ public interface LoanService {
 
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
-    void createLoansAccount(@Body LoansPayload loansPayload, Callback<Loans> callback);
+    Observable<Loans> createLoansAccount(@Body LoansPayload loansPayload);
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=individual")

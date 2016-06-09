@@ -2,7 +2,9 @@ package com.mifos.mifosxdroid.online.loanaccount;
 
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.ProductLoans;
+import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
 
@@ -81,7 +83,7 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("");
+                        getMvpView().showFetchingError("Failed to load AccountTemplate");
                     }
 
                     @Override
@@ -92,4 +94,31 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                 });
     }
 
+    public void createLoansAccount(LoansPayload loansPayload) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscription = mDataManager.createLoansAccount(loansPayload)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<Loans>() {
+                    @Override
+                    public void onCompleted() {
+                        getMvpView().showProgressbar(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError("Try Again");
+                    }
+
+                    @Override
+                    public void onNext(Loans loans) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showLoanAccountCreatedSuccessfully(loans);
+
+                    }
+                });
+    }
 }

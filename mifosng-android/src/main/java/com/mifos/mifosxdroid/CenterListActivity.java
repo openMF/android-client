@@ -8,7 +8,7 @@ package com.mifos.mifosxdroid;
 import android.os.Bundle;
 
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.fragments.CenterListFragment;
+import com.mifos.mifosxdroid.fragments.centerlist.CenterListFragment;
 
 public class CenterListActivity extends MifosBaseActivity {
     public void onCreate(Bundle savedInstanceState) {

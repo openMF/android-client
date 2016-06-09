@@ -68,7 +68,10 @@ public interface CenterService {
     Observable<Center> createCenter(@Body CenterPayload centerPayload);
 
     @GET(APIEndPoint.CENTERS)
-    void getCenterList(@Query("dateFormat") String dateFormat, @Query("locale") String locale,
-                       @Query("meetingDate") String meetingDate, @Query("officeId") int officeId,
-                       @Query("staffId") int staffId, Callback<List<OfflineCenter>> callback);
+    Observable<List<OfflineCenter>> getCenterList(
+            @Query("dateFormat") String dateFormat,
+            @Query("locale") String locale,
+            @Query("meetingDate") String meetingDate,
+            @Query("officeId") int officeId,
+            @Query("staffId") int staffId);
 }

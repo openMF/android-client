@@ -99,10 +99,10 @@ public class ApiManager extends BaseApiManager {
         getCenterApi().saveCollectionSheetAsync(id, payload, callback);
     }*/
 
-    public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId,
+    /*public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId,
                               int staffId, Callback<List<OfflineCenter>> callback) {
         getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId, callback);
-    }
+    }*/
 
     /*public void createCenter(CenterPayload centerPayload, Callback<Center> callback) {
         getCenterApi().createCenter(centerPayload, callback);
@@ -186,9 +186,9 @@ public class ApiManager extends BaseApiManager {
             loanCallback) {
         getLoanApi().getLoansAccountTemplate(clientId, productId, loanCallback);
     }*/
-    public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback) {
+   /* public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback) {
         getLoanApi().createLoansAccount(loansPayload, callback);
-    }
+    }*/
 
     /*public void getLoanTemplate(int loanId, Callback<Response> loanTemplateCallback) {
         getLoanApi().getLoanTemplate(loanId, loanTemplateCallback);

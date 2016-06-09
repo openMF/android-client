@@ -777,23 +777,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
     private void initiateLoanCreation(LoansPayload loansPayload) {
-        showProgress(true);
-        App.apiManager.createLoansAccount(loansPayload, new Callback<Loans>() {
-            @Override
-            public void success(Loans loans, Response response) {
-                showProgress(false);
-                Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast
-                        .LENGTH_LONG).show();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                showProgress(false);
-                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
-            }
-        });
-
-
+        mLoanAccountPresenter.createLoansAccount(loansPayload);
     }
 
     public void inflatesubmissionDate() {
@@ -952,6 +936,12 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
                     }
                 });
+    }
+
+    @Override
+    public void showLoanAccountCreatedSuccessfully(Loans loans) {
+        Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast
+                .LENGTH_LONG).show();
     }
 
     @Override
