@@ -14,7 +14,6 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 
 import java.util.HashMap;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -71,8 +70,8 @@ public interface SavingsAccountService {
                                                 @Body HashMap<String, Object> genericRequest);
 
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}?command=approve")
-    void approveSavingsApplication(@Path("savingsAccountId") int savingsAccountId,
-                                   @Body SavingsApproval savingsApproval,
-                                   Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> approveSavingsApplication(
+            @Path("savingsAccountId") int savingsAccountId,
+            @Body SavingsApproval savingsApproval);
 
 }

@@ -22,8 +22,9 @@ import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SurveyPagerAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.online.SurveyLastFragment.DisableSwipe;
 import com.mifos.mifosxdroid.online.SurveyQuestionFragment.OnAnswerSelectedListener;
+import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment;
+import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment.DisableSwipe;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.ScorecardValues;
 import com.mifos.objects.survey.Survey;
@@ -134,7 +135,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements OnAnsw
                     fragments.add(SurveyQuestionFragment.newInstance((new Gson()).toJson(survey
                             .getQuestionDatas().get(i))));
                 }
-                fragments.add(SurveyLastFragment.newInstance());
+                fragments.add(SurveySubmitFragment.newInstance());
                 mPagerAdapter.notifyDataSetChanged();
 
             } else {

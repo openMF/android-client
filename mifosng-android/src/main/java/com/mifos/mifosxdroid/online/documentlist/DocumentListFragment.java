@@ -23,7 +23,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.dialogfragments.DocumentDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AsyncFileDownloader;
 import com.mifos.utils.Constants;

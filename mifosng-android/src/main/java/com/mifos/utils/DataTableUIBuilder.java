@@ -8,6 +8,7 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,16 +21,19 @@ import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.mifos.App;
+import com.mifos.api.BaseApiManager;
+import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
 
 import java.util.Iterator;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ishankhanna on 17/06/14.
@@ -121,33 +125,44 @@ public class DataTableUIBuilder {
             tableLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+
                     Toast.makeText(context, "Deleting Row " + tableIndex, Toast.LENGTH_SHORT)
                             .show();
-                    App.apiManager.removeDataTableEntry(dataTable.getRegisteredTableName(),
-                            entityId,
-                            Integer.parseInt(jsonElement.getAsJsonObject().get(dataTable
-                                    .getColumnHeaderData().get(0).getColumnName()).toString()),
-                            new Callback<GenericResponse>() {
+
+                    BaseApiManager baseApiManager = new BaseApiManager();
+                    DataManager dataManager = new DataManager(baseApiManager);
+                    Observable<GenericResponse> call = dataManager.removeDataTableEntry(
+                            dataTable.getRegisteredTableName(), entityId,
+                            Integer.parseInt(jsonElement.getAsJsonObject()
+                                    .get(dataTable.getColumnHeaderData()
+                                            .get(0).getColumnName()).toString()));
+                    Subscription subscription = call.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<GenericResponse>() {
                                 @Override
-                                public void success(GenericResponse genericResponse, Response
-                                        response) {
-                                    Toast.makeText(context, "Deleted Row " + tableIndex, Toast
-                                            .LENGTH_SHORT).show();
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onNext(GenericResponse genericResponse) {
+                                    Toast.makeText(context, "Deleted Row " +
+                                            tableIndex, Toast.LENGTH_SHORT).show();
                                     dataTableActionListener.onRowDeleted();
                                 }
+                            });
 
-                                @Override
-                                public void failure(RetrofitError retrofitError) {
-
-                                }
-                            }
-                    );
                     return true;
                 }
             });
 
             View v = new View(context);
-            v.setBackgroundColor(context.getResources().getColor(R.color.black));
+            v.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
             parentLayout.addView(tableLayout);
             parentLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
                     .MATCH_PARENT, 5));

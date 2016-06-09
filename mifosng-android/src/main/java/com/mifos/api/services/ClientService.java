@@ -10,7 +10,6 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 
-import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -50,7 +49,7 @@ public interface ClientService {
 
     //TODO: Implement when API Fixed
     @GET("/clients/{clientId}/images")
-    void getClientImage(@Path("clientId") int clientId, Callback<TypedString> callback);
+    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
 
     @POST(APIEndPoint.CLIENTS)
     Observable<Client> createClient(@Body ClientPayload clientPayload);

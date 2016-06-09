@@ -31,6 +31,7 @@ import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.fragments.centerlist.CenterListFragment;
 import com.mifos.objects.db.MeetingCenter;
 import com.mifos.objects.db.MifosGroup;
 import com.orm.query.Condition;

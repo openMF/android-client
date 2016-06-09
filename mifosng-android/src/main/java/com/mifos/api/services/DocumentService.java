@@ -10,7 +10,6 @@ import com.mifos.objects.noncore.Document;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
@@ -39,10 +38,9 @@ public interface DocumentService {
      */
     @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
     @Multipart
-    void createDocument(@Path("entityType") String entityType,
-                        @Path("entityId") int entityId,
-                        @Part("name") String nameOfDocument,
-                        @Part("description") String description,
-                        @Part("file") TypedFile typedFile,
-                        Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> createDocument(@Path("entityType") String entityType,
+                                               @Path("entityId") int entityId,
+                                               @Part("name") String nameOfDocument,
+                                               @Part("description") String description,
+                                               @Part("file") TypedFile typedFile);
 }

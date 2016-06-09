@@ -88,7 +88,7 @@
 
 
         <activity
-            android:name=".online.GenerateCollectionSheet"
+            android:name=".online.GenerateCollectionSheetActivity"
             android:label="@string/title_activity_generate_collection_sheet"
             android:parentActivityName=".online.DashboardActivity">
             <meta-data
@@ -112,7 +112,7 @@
             android:label="@string/survey"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.PinpointClientActivity"
+            android:name=".activity.pinpointclient.PinpointClientActivity"
             android:label="@string/pinpoint"
             android:screenOrientation="portrait" />
 

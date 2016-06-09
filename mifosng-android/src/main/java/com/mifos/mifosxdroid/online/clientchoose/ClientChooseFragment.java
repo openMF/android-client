@@ -20,7 +20,7 @@ import com.mifos.mifosxdroid.adapters.ClientChooseAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.online.SurveyListFragment;
+import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 

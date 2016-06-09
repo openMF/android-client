@@ -29,7 +29,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.dialogfragments.LoanChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
 import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;

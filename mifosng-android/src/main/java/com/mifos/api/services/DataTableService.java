@@ -12,7 +12,6 @@ import com.mifos.objects.noncore.DataTable;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -36,14 +35,14 @@ public interface DataTableService {
 
     //TODO Improve Body Implementation with Payload
     @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-    void createEntryInDataTable(@Path("dataTableName") String dataTableName,
-                                @Path("entityId") int entityId,
-                                @Body Map<String, Object> requestPayload,
-                                Callback<GenericResponse> callback);
+    Observable<GenericResponse> createEntryInDataTable(
+            @Path("dataTableName") String dataTableName,
+            @Path("entityId") int entityId,
+            @Body Map<String, Object> requestPayload);
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
-    void deleteEntryOfDataTableManyToMany(@Path("dataTableName") String dataTableName,
-                                          @Path("entityId") int entityId,
-                                          @Path("dataTableRowId") int dataTableRowId,
-                                          Callback<GenericResponse> callback);
+    Observable<GenericResponse> deleteEntryOfDataTableManyToMany(
+            @Path("dataTableName") String dataTableName,
+            @Path("entityId") int entityId,
+            @Path("dataTableRowId") int dataTableRowId);
 }

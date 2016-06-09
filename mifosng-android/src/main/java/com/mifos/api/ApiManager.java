@@ -5,43 +5,6 @@
 
 package com.mifos.api;
 
-import com.mifos.api.model.CollectionSheetPayload;
-import com.mifos.api.model.GpsCoordinatesRequest;
-import com.mifos.api.model.GpsCoordinatesResponse;
-import com.mifos.api.model.Payload;
-import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.accounts.loan.LoanApproval;
-import com.mifos.objects.accounts.loan.LoanDisbursement;
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
-import com.mifos.objects.accounts.loan.LoanWithAssociations;
-import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.accounts.loan.SavingsApproval;
-import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Page;
-import com.mifos.objects.client.Savings;
-import com.mifos.objects.db.CollectionSheet;
-import com.mifos.objects.db.OfflineCenter;
-import com.mifos.objects.group.Group;
-import com.mifos.objects.organisation.ProductLoans;
-import com.mifos.objects.organisation.ProductSavings;
-import com.mifos.objects.organisation.Staff;
-import com.mifos.objects.survey.Scorecard;
-import com.mifos.objects.survey.Survey;
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-import com.mifos.objects.templates.savings.SavingProductsTemplate;
-import com.mifos.services.data.ChargesPayload;
-import com.mifos.services.data.GroupLoanPayload;
-import com.mifos.services.data.LoansPayload;
-import com.mifos.services.data.SavingsPayload;
-
-import java.util.List;
-import java.util.Map;
-
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-
 /**
  * @author fomenkoo
  */
@@ -111,23 +74,22 @@ public class ApiManager extends BaseApiManager {
     /*public void getGroupsByCenter(int id, Callback<CenterWithAssociations> callback) {
         getCenterApi().getAllGroupsForCenter(id, callback);
     }*/
-    public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
+    /*public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
         getCenterApi().getCollectionSheet(id, payload, callback);
-    }
-
-    public SaveResponse saveCollectionSheet(int id, CollectionSheetPayload payload) {
+    }*/
+    /*public SaveResponse saveCollectionSheet(int id, CollectionSheetPayload payload) {
         return getCenterApi().saveCollectionSheet(id, payload);
-    }
+    }*/
 
-    public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload,
+    /*public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload,
                                          Callback<SaveResponse> callback) {
-        getCenterApi().saveCollectionSheet(id, payload, callback);
-    }
+        getCenterApi().saveCollectionSheetAsync(id, payload, callback);
+    }*/
 
-    public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId,
+    /*public void getCenterList(String dateFormat, String locale, String meetingDate, int officeId,
                               int staffId, Callback<List<OfflineCenter>> callback) {
         getCenterApi().getCenterList(dateFormat, locale, meetingDate, officeId, staffId, callback);
-    }
+    }*/
 
     /*public void createCenter(CenterPayload centerPayload, Callback<Center> callback) {
         getCenterApi().createCenter(centerPayload, callback);
@@ -160,15 +122,14 @@ public class ApiManager extends BaseApiManager {
     /*public void getDataTableInfo(String table, int entityId, Callback<JsonArray> callback) {
         getDataTableApi().getDataOfDataTable(table, entityId, callback);
     }*/
-    public void addDataTableEntry(String table, int entityId, Map<String, Object> payload,
+    /*public void addDataTableEntry(String table, int entityId, Map<String, Object> payload,
                                   Callback<GenericResponse> callback) {
         getDataTableApi().createEntryInDataTable(table, entityId, payload, callback);
-    }
-
-    public void removeDataTableEntry(String table, int entity, int rowId,
+    }*/
+    /*public void removeDataTableEntry(String table, int entity, int rowId,
                                      Callback<GenericResponse> callback) {
         getDataTableApi().deleteEntryOfDataTableManyToMany(table, entity, rowId, callback);
-    }
+    }*/
 
     /**
      * Loans API
@@ -177,60 +138,58 @@ public class ApiManager extends BaseApiManager {
     /*public void getLoanById(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanByIdWithAllAssociations(loan, callback);
     }*/
-    public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
+    /*public void getLoanRepayTemplate(int loan, Callback<LoanRepaymentTemplate> callback) {
         getLoanApi().getLoanRepaymentTemplate(loan, callback);
-    }
-
-    public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse>
+    }*/
+    /*public void approveLoan(int loanId, LoanApproval loanApproval, Callback<GenericResponse>
             callback) {
         getLoanApi().approveLoanApplication(loanId, loanApproval, callback);
-    }
+    }*/
 
-    public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement,
+    /*public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement,
                              Callback<GenericResponse> genericResponseCallback) {
         getLoanApi().disburseLoan(loanId, loanDisbursement, genericResponseCallback);
-    }
+    }*/
 
-    public void submitPayment(int loan, LoanRepaymentRequest request,
+    /*public void submitPayment(int loan, LoanRepaymentRequest request,
                               Callback<LoanRepaymentResponse> callback) {
         getLoanApi().submitPayment(loan, request, callback);
-    }
+    }*/
 
-    public void getLoanRepaySchedule(int loan, Callback<LoanWithAssociations> callback) {
+    /*public void getLoanRepaySchedule(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanRepaymentSchedule(loan, callback);
-    }
+    }*/
 
-    public void getLoanTransactions(int loan, Callback<LoanWithAssociations> callback) {
+   /* public void getLoanTransactions(int loan, Callback<LoanWithAssociations> callback) {
         getLoanApi().getLoanWithTransactions(loan, callback);
-    }
+    }*/
 
-    public void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback) {
+    /*public void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback) {
         getLoanApi().getAllLoans(listOfLoansCallback);
 
-    }
+    }*/
 
-    public void getLoansAccountTemplate(int clientId, int productId, Callback<Response>
+    /*public void getLoansAccountTemplate(int clientId, int productId, Callback<Response>
             loanCallback) {
         getLoanApi().getLoansAccountTemplate(clientId, productId, loanCallback);
-    }
-
-    public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback) {
+    }*/
+   /* public void createLoansAccount(LoansPayload loansPayload, Callback<Loans> callback) {
         getLoanApi().createLoansAccount(loansPayload, callback);
-    }
+    }*/
 
-    public void getLoanTemplate(int loanId, Callback<Response> loanTemplateCallback) {
+    /*public void getLoanTemplate(int loanId, Callback<Response> loanTemplateCallback) {
         getLoanApi().getLoanTemplate(loanId, loanTemplateCallback);
 
-    }
+    }*/
 
-    public void createGroupLoansAccount(GroupLoanPayload loansPayload, Callback<Loans> callback) {
+    /*public void createGroupLoansAccount(GroupLoanPayload loansPayload, Callback<Loans> callback) {
         getLoanApi().createGroupLoansAccount(loansPayload, callback);
-    }
+    }*/
 
-    public void getGroupLoansAccountTemplate(int groupId, int productId, Callback<Response>
+    /*public void getGroupLoansAccountTemplate(int groupId, int productId, Callback<Response>
             grouploanCallback) {
         getLoanApi().getGroupLoansAccountTemplate(groupId, productId, grouploanCallback);
-    }
+    }*/
 
     /*public void getListOfLoanCharges(int loanId, Callback<Page<Charges>> loanchargeListCallback) {
         getLoanApi().getListOfLoanCharges(loanId, loanchargeListCallback);
@@ -266,42 +225,43 @@ public class ApiManager extends BaseApiManager {
         getSavingsApi().activateSavings(savingsAccountId, request, callback);
 
     }*/
-    public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval,
+    /*public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval,
                                           Callback<GenericResponse> callback) {
         getSavingsApi().approveSavingsApplication(savingsAccountId, savingsApproval, callback);
 
-    }
+    }*/
 
 
     /**
      * Surveys API
      */
 
-    public void getAllSurveys(Callback<List<Survey>> callback) {
+    /*public void getAllSurveys(Callback<List<Survey>> callback) {
         getSurveyApi().getAllSurveys(callback);
-    }
+    }*/
 
-    public void getSurvey(int survey, Callback<Survey> callback) {
+    /*public void getSurvey(int survey, Callback<Survey> callback) {
         getSurveyApi().getSurvey(survey, callback);
-    }
+    }*/
 
-    public void submitScore(int survey, Scorecard scorecardPayload, Callback<Scorecard> callback) {
+    /*public void submitScore(int survey, Scorecard scorecardPayload, Callback<Scorecard>
+    callback) {
         getSurveyApi().submitScore(survey, scorecardPayload, callback);
-    }
+    }*/
 
     /**
      * GPS API
      */
 
-    public void sendGpsData(int client, GpsCoordinatesRequest request,
+    /*public void sendGpsData(int client, GpsCoordinatesRequest request,
                             Callback<GpsCoordinatesResponse> callback) {
         getGpsApi().setGpsCoordinates(client, request, callback);
-    }
+    }*/
 
-    public void updateGpsData(int client, GpsCoordinatesRequest request,
+    /*public void updateGpsData(int client, GpsCoordinatesRequest request,
                               Callback<GpsCoordinatesResponse> callback) {
         getGpsApi().updateGpsCoordinates(client, request, callback);
-    }
+    }*/
 
     /**
      * Groups API
@@ -323,13 +283,13 @@ public class ApiManager extends BaseApiManager {
     /*public void getGroup(int group, Callback<Group> groupCallback) {
         getGroupApi().getGroup(group, groupCallback);
     }*/
-    public void listAllGroups(int offset, int limit, Callback<Page<Group>> callback) {
+    /*public void listAllGroups(int offset, int limit, Callback<Page<Group>> callback) {
         getGroupApi().listAllGroups(offset, limit, callback);
-    }
+    }*/
 
-    public void listAllGroup(Callback<Page<Group>> callback) {
-        getGroupApi().listAllGroup(callback);
-    }
+   /* public void listAllGroup(Callback<Page<Group>> callback) {
+        getGroupApi().getAllGroup(callback);
+    }*/
 
     /**
      * GroupAccountsService
@@ -347,10 +307,10 @@ public class ApiManager extends BaseApiManager {
     /*public void getDocumentsList(String type, int id, Callback<List<Document>> callback) {
         getDocumentApi().getListOfDocuments(type, id, callback);
     }*/
-    public void createDocument(String type, int id, String name, String desc, TypedFile file,
+    /*public void createDocument(String type, int id, String name, String desc, TypedFile file,
                                Callback<GenericResponse> callback) {
         getDocumentApi().createDocument(type, id, name, desc, file, callback);
-    }
+    }*/
 
     /**
      * Identifiers API
@@ -359,9 +319,9 @@ public class ApiManager extends BaseApiManager {
     /*public void getIdentifiers(int clientId, Callback<List<Identifier>> callback) {
         getIdentifierApi().getListOfIdentifiers(clientId, callback);
     }*/
-    public void deleteIdentifier(int clientId, int id, Callback<GenericResponse> callback) {
+    /*public void deleteIdentifier(int clientId, int id, Callback<GenericResponse> callback) {
         getIdentifierApi().deleteIdentifier(clientId, id, callback);
-    }
+    }*/
 
     /**
      * Offices API
@@ -378,58 +338,58 @@ public class ApiManager extends BaseApiManager {
    /* public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
         getStaffApi().getStaffForOffice(officeId, callback);
     }*/
-    public void getAllStaff(Callback<List<Staff>> listOfStaffsCallback) {
+    /*public void getAllStaff(Callback<List<Staff>> listOfStaffsCallback) {
         getStaffApi().getAllStaff(listOfStaffsCallback);
-    }
+    }*/
 
     /**
      * Charge API
      */
 
-    public void getAllCharges(Callback<Response> callback) {
-//        getChargeApi().getAllCharges(callback);
-    }
+    /*public void getAllCharges(Callback<Response> callback) {
+        getChargeApi().getAllCharges(callback);
+    }*/
 
-    public void getAllChargesV2(int clientId, Callback<Response> callback) {
+    /*public void getAllChargesV2(int clientId, Callback<Response> callback) {
         getChargeApi().getAllChargesS(clientId, callback);
-    }
+    }*/
 
 
-    public void getAllChargesV3(int loanId, Callback<Response> callback) {
+    /*public void getAllChargesV3(int loanId, Callback<Response> callback) {
         getChargeApi().getAllChargev3(loanId, callback);
-    }
+    }*/
 
     /*public void getClientCharges(int clientId, Callback<Page<Charges>> callback) {
         getChargeApi().getListOfCharges(clientId, callback);
     }*/
 
-    public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
+    /*public void createCharges(int clientId, ChargesPayload payload, Callback<Charges> callback) {
         getChargeApi().createCharges(clientId, payload, callback);
-    }
+    }*/
 
-    public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges>
+    /*public void createLoanCharges(int loanId, ChargesPayload chargesPayload, Callback<Charges>
             callback) {
         getChargeApi().createLoanCharges(loanId, chargesPayload, callback);
-    }
+    }*/
 
 
     /**
      * SavingsAccount API
      */
 
-    public void getSavingsAccounts(Callback<List<ProductSavings>> callback) {
+    /*public void getSavingsAccounts(Callback<List<ProductSavings>> callback) {
         getCreateSavingsAccountService().getAllSavingsAccounts(callback);
-    }
+    }*/
 
-    public void createSavingsAccount(SavingsPayload savingsPayload, Callback<Savings> callback) {
+    /*public void createSavingsAccount(SavingsPayload savingsPayload, Callback<Savings> callback) {
         getCreateSavingsAccountService().createSavingsAccount(savingsPayload, callback);
-    }
+    }*/
 
 
-    public void getSavingsAccountTemplate(Callback<SavingProductsTemplate>
+    /*public void getSavingsAccountTemplate(Callback<SavingProductsTemplate>
                                                   savingProductsTemplateCallback) {
         getCreateSavingsAccountService().getSavingsAccountTemplate(savingProductsTemplateCallback);
-    }
+    }*/
 
 
 }

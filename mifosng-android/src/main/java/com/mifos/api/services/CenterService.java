@@ -17,7 +17,6 @@ import com.mifos.services.data.CenterPayload;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -48,26 +47,31 @@ public interface CenterService {
 
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
-    void getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload,
-                            Callback<CollectionSheet> callback);
+    Observable<CollectionSheet> getCollectionSheet(@Path("centerId") long centerId,
+                                                   @Body Payload payload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload
-            collectionSheetPayload);
+    Observable<SaveResponse> saveCollectionSheet(
+            @Path("centerId") int centerId,
+            @Body CollectionSheetPayload collectionSheetPayload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload
-            collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
+    Observable<SaveResponse> saveCollectionSheetAsync(
+            @Path("centerId") int centerId,
+            @Body CollectionSheetPayload collectionSheetPayload);
 
 
-    @POST(APIEndPoint.CLIENTS + "")
-    void uploadNewClientDetails();
+    /*@POST(APIEndPoint.CLIENTS + "")
+    void uploadNewClientDetails();*/
 
     @POST(APIEndPoint.CENTERS)
     Observable<Center> createCenter(@Body CenterPayload centerPayload);
 
     @GET(APIEndPoint.CENTERS)
-    void getCenterList(@Query("dateFormat") String dateFormat, @Query("locale") String locale,
-                       @Query("meetingDate") String meetingDate, @Query("officeId") int officeId,
-                       @Query("staffId") int staffId, Callback<List<OfflineCenter>> callback);
+    Observable<List<OfflineCenter>> getCenterList(
+            @Query("dateFormat") String dateFormat,
+            @Query("locale") String locale,
+            @Query("meetingDate") String meetingDate,
+            @Query("officeId") int officeId,
+            @Query("staffId") int staffId);
 }

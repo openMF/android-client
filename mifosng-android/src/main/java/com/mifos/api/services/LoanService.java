@@ -21,7 +21,6 @@ import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -39,60 +38,55 @@ public interface LoanService {
     Observable<LoanWithAssociations> getLoanByIdWithAllAssociations(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
-    void getLoanRepaymentTemplate(@Path("loanId") int loanId,
-                                  Callback<LoanRepaymentTemplate> loanRepaymentTemplateCallback);
+    Observable<LoanRepaymentTemplate> getLoanRepaymentTemplate(@Path("loanId") int loanId);
 
 
     //  Mandatory Fields
     //  1. String approvedOnDate
     @POST(APIEndPoint.LOANS + "/{loanId}?command=approve")
-    void approveLoanApplication(@Path("loanId") int loanId,
-                                @Body LoanApproval loanApproval,
-                                Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> approveLoanApplication(@Path("loanId") int loanId,
+                                                       @Body LoanApproval loanApproval);
 
     //  Mandatory Fields
     //  String actualDisbursementDate
     @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
-    public void disburseLoan(@Path("loanId") int loanId,
-                             @Body LoanDisbursement loanDisbursement,
-                             Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> disburseLoan(@Path("loanId") int loanId,
+                                             @Body LoanDisbursement loanDisbursement);
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
-    void submitPayment(@Path("loanId") int loanId,
-                       @Body LoanRepaymentRequest loanRepaymentRequest,
-                       Callback<LoanRepaymentResponse> loanRepaymentResponseCallback);
+    Observable<LoanRepaymentResponse> submitPayment(
+            @Path("loanId") int loanId,
+            @Body LoanRepaymentRequest loanRepaymentRequest);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
-    void getLoanRepaymentSchedule(@Path("loanId") int loanId,
-                                  Callback<LoanWithAssociations> loanWithRepaymentScheduleCallback);
+    Observable<LoanWithAssociations> getLoanRepaymentSchedule(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
-    void getLoanWithTransactions(@Path("loanId") int loanId,
-                                 Callback<LoanWithAssociations> loanWithAssociationsCallback);
+    Observable<LoanWithAssociations> getLoanWithTransactions(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.CREATELOANSPRODUCTS)
-    void getAllLoans(Callback<List<ProductLoans>> listOfLoansCallback);
+    Observable<List<ProductLoans>> getAllLoans();
 
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
-    void createLoansAccount(@Body LoansPayload loansPayload, Callback<Loans> callback);
+    Observable<Loans> createLoansAccount(@Body LoansPayload loansPayload);
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=individual")
-    void getLoansAccountTemplate(@Query("clientId") int clientId, @Query("productId") int
-            productId, Callback<Response> loanCallback);
+    Observable<Response> getLoansAccountTemplate(@Query("clientId") int clientId,
+                                                 @Query("productId") int productId);
 
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
-    void getLoanTemplate(@Path("loanId") int loanId, Callback<Response> loanTemplateCallback);
+    Observable<Response> getLoanTemplate(@Path("loanId") int loanId);
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
-    void createGroupLoansAccount(@Body GroupLoanPayload loansPayload, Callback<Loans> callback);
+    Observable<Loans> createGroupLoansAccount(@Body GroupLoanPayload loansPayload);
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=group")
-    void getGroupLoansAccountTemplate(@Query("groupId") int groupId, @Query("productId") int
-            productId, Callback<Response> grouploanCallback);
+    Observable<Response> getGroupLoansAccountTemplate(@Query("groupId") int groupId,
+                                                      @Query("productId") int productId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
     Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);

@@ -9,7 +9,6 @@ import com.mifos.objects.organisation.Staff;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;
 import rx.Observable;
@@ -24,9 +23,9 @@ public interface StaffService {
 
 
     @GET(APIEndPoint.STAFF)
-    void getAllStaff(Callback<List<Staff>> listOfStaffsCallback);
+    Observable<List<Staff>> getAllStaff();
 
     @GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
-    void getFieldStaffForOffice(Callback<List<Staff>> staffListCallback);
+    Observable<List<Staff>> getFieldStaffForOffice();
 
 }
