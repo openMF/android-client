@@ -7,6 +7,7 @@ import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragme
 import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval.SavingsAccountApproval;
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
@@ -126,4 +127,6 @@ public interface ActivityComponent {
     void inject(LoanAccountDisbursement loanAccountDisbursement);
 
     void inject(LoanChargeDialogFragment loanChargeDialogFragment);
+
+    void inject(SavingsAccountApproval savingsAccountApproval);
 }

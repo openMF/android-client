@@ -17,6 +17,7 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
+import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -361,6 +362,12 @@ public class DataManager {
             SavingsAccountTransactionRequest request) {
         return mBaseApiManager.getSavingsApi().processTransaction(type, accountId, transactionType,
                 request);
+    }
+
+    public Observable<GenericResponse> approveSavingsApplication(int savingsAccountId,
+                                                                 SavingsApproval savingsApproval) {
+        return mBaseApiManager.getSavingsApi().approveSavingsApplication(
+                savingsAccountId, savingsApproval);
     }
 
     /**

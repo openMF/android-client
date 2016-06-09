@@ -238,11 +238,11 @@ public class ApiManager extends BaseApiManager {
         getSavingsApi().activateSavings(savingsAccountId, request, callback);
 
     }*/
-    public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval,
+    /*public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval,
                                           Callback<GenericResponse> callback) {
         getSavingsApi().approveSavingsApplication(savingsAccountId, savingsApproval, callback);
 
-    }
+    }*/
 
 
     /**

@@ -71,8 +71,8 @@ public interface SavingsAccountService {
                                                 @Body HashMap<String, Object> genericRequest);
 
     @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}?command=approve")
-    void approveSavingsApplication(@Path("savingsAccountId") int savingsAccountId,
-                                   @Body SavingsApproval savingsApproval,
-                                   Callback<GenericResponse> genericResponseCallback);
+    Observable<GenericResponse> approveSavingsApplication(
+            @Path("savingsAccountId") int savingsAccountId,
+            @Body SavingsApproval savingsApproval);
 
 }
