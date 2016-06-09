@@ -90,9 +90,9 @@ public class ApiManager extends BaseApiManager {
     /*public void getCollectionSheet(long id, Payload payload, Callback<CollectionSheet> callback) {
         getCenterApi().getCollectionSheet(id, payload, callback);
     }*/
-    public SaveResponse saveCollectionSheet(int id, CollectionSheetPayload payload) {
+    /*public SaveResponse saveCollectionSheet(int id, CollectionSheetPayload payload) {
         return getCenterApi().saveCollectionSheet(id, payload);
-    }
+    }*/
 
     /*public void saveCollectionSheetAsync(int id, CollectionSheetPayload payload,
                                          Callback<SaveResponse> callback) {
@@ -351,17 +351,17 @@ public class ApiManager extends BaseApiManager {
    /* public void getStaffInOffice(int officeId, Callback<List<Staff>> callback) {
         getStaffApi().getStaffForOffice(officeId, callback);
     }*/
-    public void getAllStaff(Callback<List<Staff>> listOfStaffsCallback) {
+    /*public void getAllStaff(Callback<List<Staff>> listOfStaffsCallback) {
         getStaffApi().getAllStaff(listOfStaffsCallback);
-    }
+    }*/
 
     /**
      * Charge API
      */
 
-    public void getAllCharges(Callback<Response> callback) {
-//        getChargeApi().getAllCharges(callback);
-    }
+    /*public void getAllCharges(Callback<Response> callback) {
+        getChargeApi().getAllCharges(callback);
+    }*/
 
     /*public void getAllChargesV2(int clientId, Callback<Response> callback) {
         getChargeApi().getAllChargesS(clientId, callback);

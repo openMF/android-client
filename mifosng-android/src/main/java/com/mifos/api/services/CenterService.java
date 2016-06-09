@@ -52,7 +52,8 @@ public interface CenterService {
                                                    @Body Payload payload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload
+    Observable<SaveResponse> saveCollectionSheet(@Path("centerId") int centerId, @Body
+    CollectionSheetPayload
             collectionSheetPayload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
@@ -61,8 +62,8 @@ public interface CenterService {
             @Body CollectionSheetPayload collectionSheetPayload);
 
 
-    @POST(APIEndPoint.CLIENTS + "")
-    void uploadNewClientDetails();
+    /*@POST(APIEndPoint.CLIENTS + "")
+    void uploadNewClientDetails();*/
 
     @POST(APIEndPoint.CENTERS)
     Observable<Center> createCenter(@Body CenterPayload centerPayload);

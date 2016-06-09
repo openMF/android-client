@@ -117,6 +117,12 @@ public class DataManager {
         return mBaseApiManager.getCenterApi().getCollectionSheet(id, payload);
     }
 
+    public Observable<SaveResponse> saveCollectionSheet(int centerId, CollectionSheetPayload
+            collectionSheetPayload) {
+        return mBaseApiManager.getCenterApi().saveCollectionSheet(
+                centerId, collectionSheetPayload);
+    }
+
     public Observable<SaveResponse> saveCollectionSheetAsync(int id,
                                                              CollectionSheetPayload payload) {
         return mBaseApiManager.getCenterApi().saveCollectionSheetAsync(id, payload);
@@ -259,6 +265,9 @@ public class DataManager {
         return mBaseApiManager.getStaffApi().getStaffForOffice(officeId);
     }
 
+    public Observable<List<Staff>> getAllStaff(){
+        return mBaseApiManager.getStaffApi().getAllStaff();
+    }
 
     /**
      * DataTable API

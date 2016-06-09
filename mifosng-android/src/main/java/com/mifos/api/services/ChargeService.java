@@ -22,7 +22,7 @@ import rx.Observable;
  */
 public interface ChargeService {
     @GET(APIEndPoint.CHARGES)
-    void listAllCharges(Callback<Response> chargesCallback);
+    Observable<Response> listAllCharges();
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
     Observable<Response> getAllChargesS(@Path("clientId") int clientId);
@@ -38,8 +38,7 @@ public interface ChargeService {
                                       @Body ChargesPayload chargesPayload);
 
     @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
-    void getListOfLoanCharges(@Path("loanId") int loanId, Callback<Page<Charges>>
-            loanchargeListCallback);
+    Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
