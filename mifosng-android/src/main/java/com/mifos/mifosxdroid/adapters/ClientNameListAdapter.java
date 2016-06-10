@@ -26,7 +26,7 @@ import com.mifos.utils.PrefManager;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by ishankhanna on 27/02/14.
@@ -116,16 +116,16 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.tv_clientName)
+        @BindView(R.id.tv_clientName)
         TextView tv_clientName;
-        @InjectView(R.id.tv_clientAccountNumber)
+        @BindView(R.id.tv_clientAccountNumber)
         TextView tv_clientAccountNumber;
-        @InjectView(R.id.iv_user_picture)
+        @BindView(R.id.iv_user_picture)
         ImageView iv_userPicture;
 
         public ViewHolder(View v) {
             super(v);
-            ButterKnife.inject(this, v);
+            ButterKnife.bind(this, v);
         }
     }
 }

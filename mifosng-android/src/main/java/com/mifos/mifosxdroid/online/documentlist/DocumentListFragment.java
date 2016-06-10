@@ -34,13 +34,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 public class DocumentListFragment extends ProgressableFragment implements DocumentListMvpView {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
-    @InjectView(R.id.lv_documents)
+    @BindView(R.id.lv_documents)
     ListView lv_documents;
 
     @Inject
@@ -80,7 +80,7 @@ public class DocumentListFragment extends ProgressableFragment implements Docume
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_document_list, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mDocumentListPresenter.attachView(this);
 
         inflateDocumentList();

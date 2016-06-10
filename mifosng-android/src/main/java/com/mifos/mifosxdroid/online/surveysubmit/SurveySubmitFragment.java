@@ -27,7 +27,7 @@ import com.mifos.objects.survey.Scorecard;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -38,10 +38,10 @@ public class SurveySubmitFragment extends ProgressableFragment implements Commun
 
     public Context context;
 
-    @InjectView(R.id.btn_submit)
+    @BindView(R.id.btn_submit)
     Button btn_submit;
 
-    @InjectView(R.id.survey_submit_textView)
+    @BindView(R.id.survey_submit_textView)
     TextView tv_submit;
 
     @Inject
@@ -83,7 +83,7 @@ public class SurveySubmitFragment extends ProgressableFragment implements Commun
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_survey_last, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mSurveySubmitPresenter.attachView(this);
 
         return view;

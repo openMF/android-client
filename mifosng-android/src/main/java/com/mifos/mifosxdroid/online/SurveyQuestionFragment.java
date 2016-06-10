@@ -24,7 +24,7 @@ import com.mifos.objects.survey.QuestionDatas;
 import com.mifos.objects.survey.ScorecardValues;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by Nasim Banu on 28,January,2016.
@@ -34,9 +34,9 @@ public class SurveyQuestionFragment extends Fragment {
 
     private static final String QUESTION_DATA = "Question Data";
     private final String LOG_TAG = getClass().getSimpleName();
-    @InjectView(R.id.survey_question_textView)
+    @BindView(R.id.survey_question_textView)
     TextView tv_question;
-    @InjectView(R.id.radio1)
+    @BindView(R.id.radio1)
     RadioGroup radioGroup1;
     RadioButton button1;
     RadioButton btn;
@@ -58,7 +58,7 @@ public class SurveyQuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_survey_question, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         thiscontext = container.getContext();
         mQuestionDatas = (new Gson()).fromJson(getArguments().getString(QUESTION_DATA),
                 QuestionDatas.class);

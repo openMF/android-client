@@ -45,7 +45,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 
@@ -54,40 +54,40 @@ public class LoanRepaymentFragment extends ProgressableFragment
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.tv_clientName)
+    @BindView(R.id.tv_clientName)
     TextView tv_clientName;
 
-    @InjectView(R.id.tv_loan_product_short_name)
+    @BindView(R.id.tv_loan_product_short_name)
     TextView tv_loanProductShortName;
 
-    @InjectView(R.id.tv_loanAccountNumber)
+    @BindView(R.id.tv_loanAccountNumber)
     TextView tv_loanAccountNumber;
 
-    @InjectView(R.id.tv_in_arrears)
+    @BindView(R.id.tv_in_arrears)
     TextView tv_inArrears;
 
-    @InjectView(R.id.tv_amount_due)
+    @BindView(R.id.tv_amount_due)
     TextView tv_amountDue;
 
-    @InjectView(R.id.tv_repayment_date)
+    @BindView(R.id.tv_repayment_date)
     TextView tv_repaymentDate;
 
-    @InjectView(R.id.et_amount)
+    @BindView(R.id.et_amount)
     EditText et_amount;
 
-    @InjectView(R.id.et_additional_payment)
+    @BindView(R.id.et_additional_payment)
     EditText et_additionalPayment;
 
-    @InjectView(R.id.et_fees)
+    @BindView(R.id.et_fees)
     EditText et_fees;
 
-    @InjectView(R.id.tv_total)
+    @BindView(R.id.tv_total)
     TextView tv_total;
 
-    @InjectView(R.id.sp_payment_type)
+    @BindView(R.id.sp_payment_type)
     Spinner sp_paymentType;
 
-    @InjectView(R.id.bt_paynow)
+    @BindView(R.id.bt_paynow)
     Button bt_paynow;
 
     @Inject
@@ -143,7 +143,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
         rootView = inflater.inflate(R.layout.fragment_loan_repayment, container, false);
         setToolbarTitle("Loan Repayment");
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mLoanRepaymentPresenter.attachView(this);
 
         inflateUI();

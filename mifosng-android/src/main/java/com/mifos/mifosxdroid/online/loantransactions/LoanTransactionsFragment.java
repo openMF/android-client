@@ -24,13 +24,13 @@ import com.mifos.utils.Constants;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class LoanTransactionsFragment extends MifosBaseFragment
         implements LoanTransactionsMvpView {
 
-    @InjectView(R.id.elv_loan_transactions)
+    @BindView(R.id.elv_loan_transactions)
     ExpandableListView elv_loanTransactions;
 
     @Inject
@@ -63,7 +63,7 @@ public class LoanTransactionsFragment extends MifosBaseFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_transactions, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mLoanTransactionsPresenter.attachView(this);
 
         inflateLoanTransactions();

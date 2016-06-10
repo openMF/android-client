@@ -32,7 +32,7 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         showBackButton();
         int clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
         replaceFragment(ClientDetailsFragment.newInstance(clientId), false, R.id.container);

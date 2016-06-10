@@ -51,7 +51,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 /**
@@ -64,55 +64,55 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.sp_lproduct)
+    @BindView(R.id.sp_lproduct)
     Spinner sp_lproduct;
 
-    @InjectView(R.id.sp_loan_purpose)
+    @BindView(R.id.sp_loan_purpose)
     Spinner sp_loan_purpose;
 
-    @InjectView(R.id.tv_submittedon_date)
+    @BindView(R.id.tv_submittedon_date)
     TextView tv_submittedon_date;
 
-    @InjectView(R.id.et_client_external_id)
+    @BindView(R.id.et_client_external_id)
     EditText et_client_external_id;
 
-    @InjectView(R.id.et_nominal_annual)
+    @BindView(R.id.et_nominal_annual)
     EditText et_nominal_annual;
 
-    @InjectView(R.id.et_principal)
+    @BindView(R.id.et_principal)
     EditText et_principal;
 
-    @InjectView(R.id.et_loanterm)
+    @BindView(R.id.et_loanterm)
     EditText et_loanterm;
 
-    @InjectView(R.id.et_numberofrepayments)
+    @BindView(R.id.et_numberofrepayments)
     EditText et_numberofrepayments;
 
-    @InjectView(R.id.et_repaidevery)
+    @BindView(R.id.et_repaidevery)
     EditText et_repaidevery;
 
-    @InjectView(R.id.sp_payment_periods)
+    @BindView(R.id.sp_payment_periods)
     Spinner sp_payment_periods;
 
-    @InjectView(R.id.et_nominal_interest_rate)
+    @BindView(R.id.et_nominal_interest_rate)
     EditText et_nominal_interest_rate;
 
-    @InjectView(R.id.sp_amortization)
+    @BindView(R.id.sp_amortization)
     Spinner sp_amortization;
 
-    @InjectView(R.id.sp_interestcalculationperiod)
+    @BindView(R.id.sp_interestcalculationperiod)
     Spinner sp_interestcalculationperiod;
 
-    @InjectView(R.id.sp_repaymentstrategy)
+    @BindView(R.id.sp_repaymentstrategy)
     Spinner sp_repaymentstrategy;
 
-    @InjectView(R.id.ck_calculateinterest)
+    @BindView(R.id.ck_calculateinterest)
     CheckBox ck_calculateinterest;
 
-    @InjectView(R.id.disbursementon_date)
+    @BindView(R.id.disbursementon_date)
     TextView tv_disbursementon_date;
 
-    @InjectView(R.id.bt_loan_submit)
+    @BindView(R.id.bt_loan_submit)
     Button bt_loan_submit;
 
     @Inject
@@ -170,7 +170,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_add_loan, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mGroupLoanAccountPresenter.attachView(this);
 
         inflateSubmissionDate();

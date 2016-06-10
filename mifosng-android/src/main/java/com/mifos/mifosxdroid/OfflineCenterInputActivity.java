@@ -22,7 +22,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class OfflineCenterInputActivity extends MifosBaseActivity implements DatePickerDialog
@@ -31,11 +31,11 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
     public static final String STAFF_ID_KEY = "pref_staff_id";
     public static final String BRANCH_ID_KEY = "pref_branch_id";
     public static final String TRANSACTION_DATE_KEY = "pref_transaction_date";
-    @InjectView(R.id.et_staff_id)
+    @BindView(R.id.et_staff_id)
     EditText etStaffId;
-    @InjectView(R.id.et_branch_id)
+    @BindView(R.id.et_branch_id)
     EditText etBranchId;
-    @InjectView(R.id.tv_select_date)
+    @BindView(R.id.tv_select_date)
     TextView tvSelectDate;
     private String date;
     private int staffId;
@@ -47,7 +47,7 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
             finishAndStartCenterListActivity();
         }
         setContentView(R.layout.activity_center_details);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         showBackButton();
     }
 

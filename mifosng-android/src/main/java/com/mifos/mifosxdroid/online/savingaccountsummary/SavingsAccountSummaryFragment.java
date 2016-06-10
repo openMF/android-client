@@ -50,7 +50,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 
@@ -66,40 +66,40 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     public DepositType savingsAccountType;
     public List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
 
-    @InjectView(R.id.tv_clientName)
+    @BindView(R.id.tv_clientName)
     TextView tv_clientName;
 
-    @InjectView(R.id.quickContactBadge_client)
+    @BindView(R.id.quickContactBadge_client)
     QuickContactBadge quickContactBadge;
 
-    @InjectView(R.id.tv_savings_product_short_name)
+    @BindView(R.id.tv_savings_product_short_name)
     TextView tv_savingsProductName;
 
-    @InjectView(R.id.tv_savingsAccountNumber)
+    @BindView(R.id.tv_savingsAccountNumber)
     TextView tv_savingsAccountNumber;
 
-    @InjectView(R.id.tv_savings_account_balance)
+    @BindView(R.id.tv_savings_account_balance)
     TextView tv_savingsAccountBalance;
 
-    @InjectView(R.id.tv_total_deposits)
+    @BindView(R.id.tv_total_deposits)
     TextView tv_totalDeposits;
 
-    @InjectView(R.id.tv_total_withdrawals)
+    @BindView(R.id.tv_total_withdrawals)
     TextView tv_totalWithdrawals;
 
-    @InjectView(R.id.lv_savings_transactions)
+    @BindView(R.id.lv_savings_transactions)
     ListView lv_Transactions;
 
-    @InjectView(R.id.tv_interest_earned)
+    @BindView(R.id.tv_interest_earned)
     TextView tv_interestEarned;
 
-    @InjectView(R.id.bt_deposit)
+    @BindView(R.id.bt_deposit)
     Button bt_deposit;
 
-    @InjectView(R.id.bt_withdrawal)
+    @BindView(R.id.bt_withdrawal)
     Button bt_withdrawal;
 
-    @InjectView(R.id.bt_approve_saving)
+    @BindView(R.id.bt_approve_saving)
     Button bt_approve_saving;
 
     @Inject
@@ -150,7 +150,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mSavingAccountSummaryPresenter.attachView(this);
 
         inflateSavingsAccountSummary();

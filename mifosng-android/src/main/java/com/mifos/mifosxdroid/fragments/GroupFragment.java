@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class GroupFragment extends MifosBaseFragment implements OnItemClickListener,
@@ -49,13 +49,13 @@ public class GroupFragment extends MifosBaseFragment implements OnItemClickListe
 
     private final String LOG_TAG = getClass().getSimpleName();
     private final List<MifosGroup> groupList = new ArrayList<>();
-    @InjectView(R.id.lv_group)
+    @BindView(R.id.lv_group)
     ListView lv_group;
-    @InjectView(R.id.progress_group)
+    @BindView(R.id.progress_group)
     ProgressBar progressGroup;
     MifosGroupListAdapter adapter = null;
     View view;
-    @InjectView(R.id.tv_empty_group)
+    @BindView(R.id.tv_empty_group)
     TextView tv_empty_group;
     private MenuItem syncItem;
     private String date;
@@ -67,7 +67,7 @@ public class GroupFragment extends MifosBaseFragment implements OnItemClickListe
         view = inflater.inflate(R.layout.fragment_group, null);
         init();
         setHasOptionsMenu(true);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         return view;
     }

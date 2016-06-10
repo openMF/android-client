@@ -85,7 +85,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 import static android.view.View.GONE;
@@ -107,46 +107,46 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public List<DataTable> clientDataTables = new ArrayList<>();
     List<Charges> chargesList = new ArrayList<Charges>();
 
-    @InjectView(R.id.tv_fullName)
+    @BindView(R.id.tv_fullName)
     TextView tv_fullName;
 
-    @InjectView(R.id.tv_accountNumber)
+    @BindView(R.id.tv_accountNumber)
     TextView tv_accountNumber;
 
-    @InjectView(R.id.tv_externalId)
+    @BindView(R.id.tv_externalId)
     TextView tv_externalId;
 
-    @InjectView(R.id.tv_activationDate)
+    @BindView(R.id.tv_activationDate)
     TextView tv_activationDate;
 
-    @InjectView(R.id.tv_office)
+    @BindView(R.id.tv_office)
     TextView tv_office;
 
-    @InjectView(R.id.iv_clientImage)
+    @BindView(R.id.iv_clientImage)
     CircularImageView iv_clientImage;
 
-    @InjectView(R.id.pb_imageProgressBar)
+    @BindView(R.id.pb_imageProgressBar)
     ProgressBar pb_imageProgressBar;
 
-    @InjectView(R.id.row_account)
+    @BindView(R.id.row_account)
     TableRow rowAccount;
 
-    @InjectView(R.id.row_external)
+    @BindView(R.id.row_external)
     TableRow rowExternal;
 
-    @InjectView(R.id.row_activation)
+    @BindView(R.id.row_activation)
     TableRow rowActivation;
 
-    @InjectView(R.id.row_office)
+    @BindView(R.id.row_office)
     TableRow rowOffice;
 
-    @InjectView(R.id.row_group)
+    @BindView(R.id.row_group)
     TableRow rowGroup;
 
-    @InjectView(R.id.row_staff)
+    @BindView(R.id.row_staff)
     TableRow rowStaff;
 
-    @InjectView(R.id.row_loan)
+    @BindView(R.id.row_loan)
     TableRow rowLoan;
 
     @Inject
@@ -201,7 +201,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mClientDetailsPresenter.attachView(this);
 
         inflateClientInformation();

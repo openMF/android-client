@@ -18,7 +18,7 @@ import com.mifos.objects.group.Group;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 public class GroupNameListAdapter extends BaseAdapter {
 
@@ -70,13 +70,13 @@ public class GroupNameListAdapter extends BaseAdapter {
 
     static class ReusableViewHolder {
 
-        @InjectView(R.id.tv_grouplistName)
+        @BindView(R.id.tv_grouplistName)
         TextView tv_groupsName;
-        @InjectView(R.id.tv_groupsId)
+        @BindView(R.id.tv_groupsId)
         TextView tv_groupsId;
 
         public ReusableViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }

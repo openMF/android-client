@@ -35,7 +35,7 @@ import java.net.URISyntaxException;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 import retrofit.mime.TypedFile;
 
@@ -54,16 +54,16 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    @InjectView(R.id.et_document_name)
+    @BindView(R.id.et_document_name)
     EditText et_document_name;
 
-    @InjectView(R.id.et_document_description)
+    @BindView(R.id.et_document_description)
     EditText et_document_description;
 
-    @InjectView(R.id.tv_choose_file)
+    @BindView(R.id.tv_choose_file)
     TextView tv_choose_file;
 
-    @InjectView(R.id.bt_upload)
+    @BindView(R.id.bt_upload)
     Button bt_upload;
 
     @Inject
@@ -112,7 +112,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mDocumentDialogPresenter.attachView(this);
 
         return rootView;

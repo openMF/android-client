@@ -47,7 +47,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class CreateNewGroupFragment extends ProgressableFragment
@@ -56,25 +56,25 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     private final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.et_group_name)
+    @BindView(R.id.et_group_name)
     EditText et_groupName;
 
-    @InjectView(R.id.et_group_external_id)
+    @BindView(R.id.et_group_external_id)
     EditText et_groupexternalId;
 
-    @InjectView(R.id.cb_group_active_status)
+    @BindView(R.id.cb_group_active_status)
     CheckBox cb_groupActiveStatus;
 
-    @InjectView(R.id.tv_group_submission_date)
+    @BindView(R.id.tv_group_submission_date)
     TextView tv_submissionDate;
 
-    @InjectView(R.id.tv_group_activationDate)
+    @BindView(R.id.tv_group_activationDate)
     TextView tv_activationDate;
 
-    @InjectView(R.id.sp_group_offices)
+    @BindView(R.id.sp_group_offices)
     Spinner sp_offices;
 
-    @InjectView(R.id.bt_submit)
+    @BindView(R.id.bt_submit)
     Button bt_submit;
 
     @Inject
@@ -110,7 +110,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_group, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mCreateNewGroupPresenter.attachView(this);
 
         inflateOfficeSpinner();

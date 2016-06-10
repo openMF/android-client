@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class ClientListAdapter extends BaseAdapter {
@@ -93,15 +93,15 @@ public class ClientListAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        @InjectView(R.id.tv_clientName)
+        @BindView(R.id.tv_clientName)
         TextView tv_client_name;
-        @InjectView(R.id.tv_product_short_name)
+        @BindView(R.id.tv_product_short_name)
         TextView tv_product_short_name;
-        @InjectView(R.id.et_amt_paid)
+        @BindView(R.id.et_amt_paid)
         EditText et_amt_paid;
 
         public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }

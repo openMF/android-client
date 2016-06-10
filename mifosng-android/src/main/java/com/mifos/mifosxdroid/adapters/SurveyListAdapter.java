@@ -19,7 +19,7 @@ import com.mifos.objects.survey.Survey;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by Nasim Banu on 27,January,2016.
@@ -69,13 +69,13 @@ public class SurveyListAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        @InjectView(R.id.tv_survey_name)
+        @BindView(R.id.tv_survey_name)
         TextView tv_survey_name;
-        @InjectView(R.id.tv_description)
+        @BindView(R.id.tv_description)
         TextView tv_description;
 
         public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }

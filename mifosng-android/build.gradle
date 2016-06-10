@@ -114,9 +114,12 @@ tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
         pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
 }
 
-allprojects {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+tasks.withType(JavaCompile) {
+    configure(options) {
+        // TODO
+        compilerArgs << "-Xlint:deprecation"
+        compilerArgs << "-Xlint:-unchecked"
+        compilerArgs << "-Xlint:-rawtypes"
     }
 }
 
@@ -145,6 +148,11 @@ dependencies {
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     provided 'javax.annotation:jsr250-api:1.0'                //Required by Dagger2
 
+    //Butter Knife
+    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    apt "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+
+
     //Square dependencies
     compile "com.squareup.retrofit:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersionLatest"
@@ -152,7 +160,7 @@ dependencies {
     compile "com.squareup.okhttp:okhttp:$rootProject.okHttpVersion"
     compile "com.squareup.okhttp:okhttp-urlconnection:$rootProject.okHttpVersion"
     compile "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
-    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+
     compile 'javax.annotation:jsr250-api:1.0@jar'
     compile 'com.squareup:otto:1.3.8'
 

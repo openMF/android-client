@@ -27,7 +27,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by Nasim Banu on 27,January,2016.
@@ -36,7 +36,7 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
 
     private static final String CLIENTID = "ClientID";
 
-    @InjectView(R.id.lv_surveys_list)
+    @BindView(R.id.lv_surveys_list)
     ListView lv_surveys_list;
 
     @Inject
@@ -66,7 +66,7 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_survey_list, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mSurveyListPresenter.attachView(this);
 
         clientId = getArguments().getInt(CLIENTID);

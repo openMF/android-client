@@ -48,7 +48,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class CreateNewCenterFragment extends MifosBaseFragment
@@ -57,19 +57,19 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     private static final String TAG = "CreateNewCenter";
 
-    @InjectView(R.id.et_center_name)
+    @BindView(R.id.et_center_name)
     EditText et_centerName;
 
-    @InjectView(R.id.cb_center_active_status)
+    @BindView(R.id.cb_center_active_status)
     CheckBox cb_centerActiveStatus;
 
-    @InjectView(R.id.tv_center_activationDate)
+    @BindView(R.id.tv_center_activationDate)
     TextView tv_activationDate;
 
-    @InjectView(R.id.sp_center_offices)
+    @BindView(R.id.sp_center_offices)
     Spinner sp_offices;
 
-    @InjectView(R.id.bt_submit)
+    @BindView(R.id.bt_submit)
     Button bt_submit;
 
     int officeId;
@@ -97,7 +97,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_center, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mCreateNewCenterPresenter.attachView(this);
 
         inflateOfficeSpinner();

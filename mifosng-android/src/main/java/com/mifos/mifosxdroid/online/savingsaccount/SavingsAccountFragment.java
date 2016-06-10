@@ -42,7 +42,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -54,31 +54,31 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.sp_product)
+    @BindView(R.id.sp_product)
     Spinner sp_product;
 
-    @InjectView(R.id.et_client_external_id)
+    @BindView(R.id.et_client_external_id)
     EditText et_client_external_id;
 
-    @InjectView(R.id.tv_submittedon_date)
+    @BindView(R.id.tv_submittedon_date)
     TextView tv_submittedon_date;
 
-    @InjectView(R.id.et_nominal_annual)
+    @BindView(R.id.et_nominal_annual)
     EditText et_nominal_annual;
 
-    @InjectView(R.id.sp_interest_calc)
+    @BindView(R.id.sp_interest_calc)
     Spinner sp_interest_calc;
 
-    @InjectView(R.id.sp_interest_comp)
+    @BindView(R.id.sp_interest_comp)
     Spinner sp_interest_comp;
 
-    @InjectView(R.id.sp_interest_p_period)
+    @BindView(R.id.sp_interest_p_period)
     Spinner sp_interest_p_period;
 
-    @InjectView(R.id.sp_days_in_year)
+    @BindView(R.id.sp_days_in_year)
     Spinner sp_days_in_year;
 
-    @InjectView(R.id.bt_submit)
+    @BindView(R.id.bt_submit)
     Button bt_submit;
 
     @Inject
@@ -119,7 +119,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_add_savings_account, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mSavingsAccountPresenter.attachView(this);
 
         inflateSubmissionDate();

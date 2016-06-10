@@ -32,7 +32,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ClientSearchFragment extends MifosBaseFragment
@@ -40,10 +40,10 @@ public class ClientSearchFragment extends MifosBaseFragment
 
     private static final String TAG = ClientSearchFragment.class.getSimpleName();
 
-    @InjectView(R.id.et_search_by_id)
+    @BindView(R.id.et_search_by_id)
     EditText et_searchById;
 
-    @InjectView(R.id.lv_searchResults)
+    @BindView(R.id.lv_searchResults)
     ListView results;
 
     @Inject
@@ -64,7 +64,7 @@ public class ClientSearchFragment extends MifosBaseFragment
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_client_search, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mClientSearchPresenter.attachView(this);
 
         setToolbarTitle(getResources().getString(R.string.dashboard));

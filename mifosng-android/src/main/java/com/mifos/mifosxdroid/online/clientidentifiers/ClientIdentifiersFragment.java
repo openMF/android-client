@@ -24,13 +24,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class ClientIdentifiersFragment extends ProgressableFragment
         implements ClientIdentifiersMvpView {
 
-    @InjectView(R.id.lv_identifiers)
+    @BindView(R.id.lv_identifiers)
     ListView lv_identifiers;
     @Inject
     ClientIdentifiersPresenter mClientIdentifiersPresenter;
@@ -58,7 +58,7 @@ public class ClientIdentifiersFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_identifiers, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mClientIdentifiersPresenter.attachView(this);
 
         setToolbarTitle(getString(R.string.identifiers));

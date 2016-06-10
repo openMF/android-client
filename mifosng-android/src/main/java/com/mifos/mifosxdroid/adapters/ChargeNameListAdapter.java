@@ -18,7 +18,7 @@ import com.mifos.objects.client.Charges;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by ishankhanna on 03/07/14.
@@ -77,17 +77,17 @@ public class ChargeNameListAdapter extends BaseAdapter {
 
     public static class ReusableChargeViewHolder {
 
-        @InjectView(R.id.tv_charger_id)
+        @BindView(R.id.tv_charger_id)
         TextView tv_charger_id;
-        @InjectView(R.id.tv_chargeName)
+        @BindView(R.id.tv_chargeName)
         TextView tv_charge_Name;
-        @InjectView(R.id.tv_charge_amount)
+        @BindView(R.id.tv_charge_amount)
         TextView tv_charge_amount;
-        @InjectView(R.id.tv_charge_duedate)
+        @BindView(R.id.tv_charge_duedate)
         TextView tv_charge_duedate;
 
         public ReusableChargeViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
 

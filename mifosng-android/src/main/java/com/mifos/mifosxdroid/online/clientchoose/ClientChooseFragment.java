@@ -30,7 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 /**
@@ -39,7 +39,7 @@ import butterknife.InjectView;
 public class ClientChooseFragment extends ProgressableFragment implements AdapterView
         .OnItemClickListener, ClientChooseMvpView {
 
-    @InjectView(R.id.lv_clients)
+    @BindView(R.id.lv_clients)
     ListView results;
     @Inject
     ClientChoosePresenter mClientChoosePresenter;
@@ -71,7 +71,7 @@ public class ClientChooseFragment extends ProgressableFragment implements Adapte
             savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_client_choose, null);
 
-        ButterKnife.inject(this, root);
+        ButterKnife.bind(this, root);
         mClientChoosePresenter.attachView(this);
 
         adapter = new ClientChooseAdapter(getContext(), clients, R.layout.list_item_client);

@@ -43,7 +43,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 /**
@@ -56,19 +56,19 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.sp_charge_name)
+    @BindView(R.id.sp_charge_name)
     Spinner sp_charge_name;
 
-    @InjectView(R.id.amount_due_charge)
+    @BindView(R.id.amount_due_charge)
     EditText et_amout_due;
 
-    @InjectView(R.id.et_date)
+    @BindView(R.id.et_date)
     EditText charge_due_date;
 
-    @InjectView(R.id.et_charge_locale)
+    @BindView(R.id.et_charge_locale)
     EditText charge_locale;
 
-    @InjectView(R.id.bt_save_charge)
+    @BindView(R.id.bt_save_charge)
     Button bt_save_charge;
 
     @Inject
@@ -116,7 +116,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.dialog_fragment_charge, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mChargeDialogPresenter.attachView(this);
 
         inflatedueDate();

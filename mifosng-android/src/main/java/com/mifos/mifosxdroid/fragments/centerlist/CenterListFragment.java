@@ -53,7 +53,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class CenterListFragment extends MifosBaseFragment implements
@@ -64,13 +64,13 @@ public class CenterListFragment extends MifosBaseFragment implements
     public final String TAG = getClass().getSimpleName();
     private final List<MeetingCenter> centerList = new ArrayList<MeetingCenter>();
 
-    @InjectView(R.id.lv_center)
+    @BindView(R.id.lv_center)
     ListView lv_center;
 
-    @InjectView(R.id.progress_center)
+    @BindView(R.id.progress_center)
     ProgressBar progressCenter;
 
-    @InjectView(R.id.tv_empty_center)
+    @BindView(R.id.tv_empty_center)
     TextView tv_empty_center;
 
     @Inject
@@ -92,7 +92,7 @@ public class CenterListFragment extends MifosBaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_center_list, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         if (getAllCenters().size() == 0)
             getData();

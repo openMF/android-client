@@ -29,7 +29,7 @@ import com.mifos.utils.FragmentConstants;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class DataTableDataFragment extends ProgressableFragment
@@ -37,7 +37,7 @@ public class DataTableDataFragment extends ProgressableFragment
 
     public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
 
-    @InjectView(R.id.linear_layout_datatables)
+    @BindView(R.id.linear_layout_datatables)
     LinearLayout linearLayout;
 
     @Inject
@@ -70,7 +70,7 @@ public class DataTableDataFragment extends ProgressableFragment
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mDataTableDataPresenter.attachView(this);
 
         setToolbarTitle(dataTable.getRegisteredTableName());

@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class CreateNewClientFragment extends ProgressableFragment
@@ -59,46 +59,46 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     public DialogFragment mfDatePicker, newDatePicker;
 
-    @InjectView(R.id.et_client_first_name)
+    @BindView(R.id.et_client_first_name)
     EditText et_clientFirstName;
 
-    @InjectView(R.id.et_client_last_name)
+    @BindView(R.id.et_client_last_name)
     EditText et_clientLastName;
 
-    @InjectView(R.id.et_client_middle_name)
+    @BindView(R.id.et_client_middle_name)
     EditText et_clientMiddleName;
 
-    @InjectView(R.id.et_client_mobile_no)
+    @BindView(R.id.et_client_mobile_no)
     EditText et_clientMobileNo;
 
-    @InjectView(R.id.et_client_external_id)
+    @BindView(R.id.et_client_external_id)
     EditText et_clientexternalId;
 
-    @InjectView(R.id.cb_client_active_status)
+    @BindView(R.id.cb_client_active_status)
     CheckBox cb_clientActiveStatus;
 
-    @InjectView(R.id.tv_submission_date)
+    @BindView(R.id.tv_submission_date)
     TextView tv_submissionDate;
 
-    @InjectView(R.id.tv_dateofbirth)
+    @BindView(R.id.tv_dateofbirth)
     TextView tv_dateofbirth;
 
-    @InjectView(R.id.sp_offices)
+    @BindView(R.id.sp_offices)
     Spinner sp_offices;
 
-    @InjectView(R.id.sp_gender)
+    @BindView(R.id.sp_gender)
     Spinner spGender;
 
-    @InjectView(R.id.sp_client_type)
+    @BindView(R.id.sp_client_type)
     Spinner spClientType;
 
-    @InjectView(R.id.sp_staff)
+    @BindView(R.id.sp_staff)
     Spinner sp_staff;
 
-    @InjectView(R.id.sp_client_classification)
+    @BindView(R.id.sp_client_classification)
     Spinner spClientClassification;
 
-    @InjectView(R.id.bt_submit)
+    @BindView(R.id.bt_submit)
     Button bt_submit;
 
     @Inject
@@ -150,7 +150,7 @@ public class CreateNewClientFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mCreateNewClientPresenter.attachView(this);
 
         inflateOfficeSpinner();

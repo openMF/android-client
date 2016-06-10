@@ -31,7 +31,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by ishankhanna on 11/03/14.
@@ -40,7 +40,7 @@ import butterknife.InjectView;
 //TODO Replace ListView to RecyclerView 
 public class CenterListFragment extends ProgressableFragment implements CenterListMvpView {
 
-    @InjectView(R.id.lv_center_list)
+    @BindView(R.id.lv_center_list)
     ListView lv_centers_list;
     @Inject
     CenterListPresenter mCenterListPresenter;
@@ -64,7 +64,7 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
 
         setToolbarTitle(getResources().getString(R.string.title_activity_centers));
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mCenterListPresenter.attachView(this);
 
         mCenterListPresenter.loadCenters();

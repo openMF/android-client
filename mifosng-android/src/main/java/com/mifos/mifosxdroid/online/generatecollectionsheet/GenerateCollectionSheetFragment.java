@@ -34,7 +34,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 public class GenerateCollectionSheetFragment extends ProgressableFragment
         implements GenerateCollectionSheetMvpView {
@@ -46,16 +46,16 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment
     public static final String ORDER_BY_FIELD_NAME = "name";
     public static final String STAFF_ID = "staffId";
 
-    @InjectView(R.id.sp_branch_offices)
+    @BindView(R.id.sp_branch_offices)
     Spinner sp_offices;
 
-    @InjectView(R.id.sp_loan_officers)
+    @BindView(R.id.sp_loan_officers)
     Spinner sp_loan_officers;
 
-    @InjectView(R.id.sp_centers)
+    @BindView(R.id.sp_centers)
     Spinner sp_centers;
 
-    @InjectView(R.id.sp_groups)
+    @BindView(R.id.sp_groups)
     Spinner sp_groups;
 
     @Inject
@@ -86,7 +86,7 @@ public class GenerateCollectionSheetFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_generate_collection_sheet, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mGenerateCollectionSheetPresenter.attachView(this);
 
         inflateOfficeSpinner();
