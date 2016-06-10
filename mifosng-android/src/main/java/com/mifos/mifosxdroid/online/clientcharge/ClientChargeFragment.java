@@ -40,7 +40,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 //TODO Replace ListView To RecyclerView and Implement offset in Service Class
@@ -48,10 +48,10 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
     public static final int MENU_ITEM_ADD_NEW_CHARGES = 2000;
 
-    @InjectView(R.id.lv_charges)
+    @BindView(R.id.lv_charges)
     ListView lv_charges;
 
-    @InjectView(R.id.swipe_container)
+    @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
     List<Charges> chargesList = new ArrayList<Charges>();
@@ -105,7 +105,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
         rootView = inflater.inflate(R.layout.fragment_charge_list, container, false);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mClientChargePresenter.attachView(this);
 
         setToolbarTitle(getString(R.string.charges));

@@ -37,15 +37,15 @@ import java.util.Map;
 import java.util.Set;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class ClientFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener {
 
     private final String LOG_TAG = getClass().getSimpleName();
-    @InjectView(R.id.lv_clients)
+    @BindView(R.id.lv_clients)
     ListView lv_clients;
-    @InjectView(R.id.tv_total_amt_paid)
+    @BindView(R.id.tv_total_amt_paid)
     TextView tv_total_amt_paid;
     private ClientListAdapter adapter = null;
     private long groupId;
@@ -55,7 +55,7 @@ public class ClientFragment extends MifosBaseFragment implements AdapterView.OnI
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_offline_client, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         groupId = getArguments().getLong("group_id", 0);
         setAdapter();

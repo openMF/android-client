@@ -46,7 +46,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 
@@ -55,19 +55,19 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.tv_clientName)
+    @BindView(R.id.tv_clientName)
     TextView tv_clientName;
 
-    @InjectView(R.id.tv_savingsAccountNumber)
+    @BindView(R.id.tv_savingsAccountNumber)
     TextView tv_accountNumber;
 
-    @InjectView(R.id.tv_transaction_date)
+    @BindView(R.id.tv_transaction_date)
     TextView tv_transactionDate;
 
-    @InjectView(R.id.et_transaction_amount)
+    @BindView(R.id.et_transaction_amount)
     EditText et_transactionAmount;
 
-    @InjectView(R.id.sp_payment_type)
+    @BindView(R.id.sp_payment_type)
     Spinner sp_paymentType;
 
     @Inject
@@ -132,7 +132,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                     getResources().getString(R.string.withdrawal));
         }
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mSavingAccountTransactionPresenter.attachView(this);
 
         inflateUI();

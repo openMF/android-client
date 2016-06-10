@@ -43,7 +43,7 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 /**
@@ -58,19 +58,19 @@ public class LoanAccountDisbursement extends DialogFragment implements
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
-    @InjectView(R.id.tv_loan_disbursement_dates)
+    @BindView(R.id.tv_loan_disbursement_dates)
     TextView loan_disbursement_dates;
 
-    @InjectView(R.id.bt_disburse_loan)
+    @BindView(R.id.bt_disburse_loan)
     Button bt_disburse_loan;
 
-    @InjectView(R.id.sp_loan_payment_type)
+    @BindView(R.id.sp_loan_payment_type)
     Spinner sp_payment_type;
 
-    @InjectView(R.id.et_disbursed_amount)
+    @BindView(R.id.et_disbursed_amount)
     EditText et_disbursed_amount;
 
-    @InjectView(R.id.et_disbursement_note)
+    @BindView(R.id.et_disbursement_note)
     EditText et_disbursement_note;
 
     @Inject
@@ -122,7 +122,7 @@ public class LoanAccountDisbursement extends DialogFragment implements
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.dialog_fragment_disburse_loan, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mLoanAccountDisbursementPresenter.attachView(this);
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());

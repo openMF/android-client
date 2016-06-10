@@ -24,7 +24,7 @@ ext {
     retrofitVersionLatest = '2.0.0'
     okHttpVersion = '2.0.0'
     flipTableVersion = '1.0.1'
-    butterKnifeVersion = '6.1.0'
+    butterKnifeVersion = '8.0.1'
 
 
 }

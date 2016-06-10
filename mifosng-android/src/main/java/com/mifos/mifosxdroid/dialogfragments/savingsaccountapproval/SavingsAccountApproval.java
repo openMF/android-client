@@ -32,7 +32,7 @@ import com.mifos.utils.SafeUIBlockingUtility;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * @author nellyk
@@ -47,13 +47,13 @@ public class SavingsAccountApproval extends DialogFragment implements
 
     View rootView;
 
-    @InjectView(R.id.et_s_approval_date)
+    @BindView(R.id.et_s_approval_date)
     TextView et_s_approval_date;
 
-    @InjectView(R.id.bt_approve_savings)
+    @BindView(R.id.bt_approve_savings)
     Button bt_approve_savings;
 
-    @InjectView(R.id.et_savings_approval_reason)
+    @BindView(R.id.et_savings_approval_reason)
     EditText et_savings_approval_reason;
 
     @Inject
@@ -104,7 +104,7 @@ public class SavingsAccountApproval extends DialogFragment implements
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.dialog_fragment_approve_savings, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mSavingsAccountApprovalPresenter.attachView(this);
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());

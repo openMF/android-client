@@ -28,7 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class LoanRepaymentScheduleFragment extends ProgressableFragment
@@ -37,16 +37,16 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment
 
     private final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.lv_repayment_schedule)
+    @BindView(R.id.lv_repayment_schedule)
     ListView lv_repaymentSchedule;
 
-    @InjectView(R.id.tv_total_paid)
+    @BindView(R.id.tv_total_paid)
     TextView tv_totalPaid;
 
-    @InjectView(R.id.tv_total_upcoming)
+    @BindView(R.id.tv_total_upcoming)
     TextView tv_totalUpcoming;
 
-    @InjectView(R.id.tv_total_overdue)
+    @BindView(R.id.tv_total_overdue)
     TextView tv_totalOverdue;
 
     @Inject
@@ -78,7 +78,7 @@ public class LoanRepaymentScheduleFragment extends ProgressableFragment
         rootView = inflater.inflate(R.layout.fragment_loan_repayment_schedule, container, false);
         setToolbarTitle(getResources().getString(R.string.loan_repayment_schedule));
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mLoanRepaymentSchedulePresenter.attachView(this);
 
         inflateRepaymentSchedule();

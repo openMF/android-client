@@ -34,7 +34,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 /**
@@ -43,10 +43,10 @@ import retrofit.client.Response;
 public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView {
 
 
-    @InjectView(R.id.lv_groups)
+    @BindView(R.id.lv_groups)
     ListView lv_groups;
 
-    @InjectView(R.id.swipe_container)
+    @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
@@ -100,7 +100,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mGroupsListPresenter.attachView(this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

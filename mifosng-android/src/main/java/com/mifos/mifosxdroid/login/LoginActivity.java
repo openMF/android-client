@@ -36,7 +36,7 @@ import javax.inject.Inject;
 import javax.net.ssl.SSLHandshakeException;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 
@@ -49,28 +49,28 @@ import static android.view.View.VISIBLE;
  */
 public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
-    @InjectView(R.id.et_instanceURL)
+    @BindView(R.id.et_instanceURL)
     EditText et_domain;
 
-    @InjectView(R.id.et_username)
+    @BindView(R.id.et_username)
     EditText et_username;
 
-    @InjectView(R.id.et_password)
+    @BindView(R.id.et_password)
     EditText et_password;
 
-    @InjectView(R.id.tv_constructed_instance_url)
+    @BindView(R.id.tv_constructed_instance_url)
     TextView tv_full_url;
 
-    @InjectView(R.id.bt_connectionSettings)
+    @BindView(R.id.bt_connectionSettings)
     TextView bt_connectionSettings;
 
-    @InjectView(R.id.et_tenantIdentifier)
+    @BindView(R.id.et_tenantIdentifier)
     EditText et_tenantIdentifier;
 
-    @InjectView(R.id.et_instancePort)
+    @BindView(R.id.et_instancePort)
     EditText et_port;
 
-    @InjectView(R.id.ll_connectionSettings)
+    @BindView(R.id.ll_connectionSettings)
     LinearLayout ll_connectionSettings;
     @Inject
     LoginPresenter mLoginPresenter;
@@ -111,7 +111,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
         getActivityComponent().inject(this);
         setContentView(R.layout.activity_login);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mLoginPresenter.attachView(this);
 
         et_port.setInputType(InputType.TYPE_CLASS_NUMBER);

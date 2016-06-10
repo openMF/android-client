@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.login;
 
-import com.mifos.App;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.Presenter;
 import com.mifos.objects.User;
@@ -38,7 +37,7 @@ public class LoginPresenter implements Presenter<LoginMvpView> {
     }
 
     public void login(String instanceURL, String username, String password) {
-        App.apiManager.setupEndpoint(instanceURL);
+        mDataManager.mBaseApiManager.setupEndpoint(instanceURL);
         mLoginMvpView.showProgressbar(true);
         mSubscription = mDataManager.login(username, password)
                 .observeOn(AndroidSchedulers.mainThread())

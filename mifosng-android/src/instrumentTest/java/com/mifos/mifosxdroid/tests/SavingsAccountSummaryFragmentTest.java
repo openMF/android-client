@@ -80,7 +80,7 @@ public class SavingsAccountSummaryFragmentTest extends
         //waiting for the API
         Thread.sleep(8000);
 
-        //instantiating the views that we're going to test@InjectView(R.id.tv_clientName)
+        //instantiating the views that we're going to test@BindView(R.id.tv_clientName)
         tv_clientName = (TextView) clientActivity.findViewById(R.id.tv_clientName);
         quickContactBadge = (QuickContactBadge) clientActivity.findViewById(R.id
                 .quickContactBadge_client);

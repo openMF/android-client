@@ -28,13 +28,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 public class GroupListFragment extends ProgressableFragment
         implements GroupListMvpView, AdapterView.OnItemClickListener {
 
-    @InjectView(R.id.lv_group_list)
+    @BindView(R.id.lv_group_list)
     ListView lv_groupList;
 
     @Inject
@@ -77,7 +77,7 @@ public class GroupListFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_list, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mGroupListPresenter.attachView(this);
 
         setToolbarTitle(getResources().getString(R.string.title_center_list));

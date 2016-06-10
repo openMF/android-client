@@ -50,7 +50,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -63,27 +63,27 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     public final String LOG_TAG = getClass().getSimpleName();
     public int groupId;
     public List<DataTable> clientDataTables = new ArrayList<>();
-    @InjectView(R.id.tv_groupsName)
+    @BindView(R.id.tv_groupsName)
     TextView tv_fullName;
-    @InjectView(R.id.tv_groupexternalId)
+    @BindView(R.id.tv_groupexternalId)
     TextView tv_externalId;
-    @InjectView(R.id.tv_groupactivationDate)
+    @BindView(R.id.tv_groupactivationDate)
     TextView tv_activationDate;
-    @InjectView(R.id.tv_groupoffice)
+    @BindView(R.id.tv_groupoffice)
     TextView tv_office;
-    @InjectView(R.id.row_account)
+    @BindView(R.id.row_account)
     TableRow rowAccount;
-    @InjectView(R.id.row_external)
+    @BindView(R.id.row_external)
     TableRow rowExternal;
-    @InjectView(R.id.row_activation)
+    @BindView(R.id.row_activation)
     TableRow rowActivation;
-    @InjectView(R.id.row_office)
+    @BindView(R.id.row_office)
     TableRow rowOffice;
-    @InjectView(R.id.row_group)
+    @BindView(R.id.row_group)
     TableRow rowGroup;
-    @InjectView(R.id.row_staff)
+    @BindView(R.id.row_staff)
     TableRow rowStaff;
-    @InjectView(R.id.row_loan)
+    @BindView(R.id.row_loan)
     TableRow rowLoan;
     @Inject
     GroupDetailsPresenter mGroupDetailsPresenter;
@@ -116,7 +116,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mGroupDetailsPresenter.attachView(this);
 
         inflateClientInformation();

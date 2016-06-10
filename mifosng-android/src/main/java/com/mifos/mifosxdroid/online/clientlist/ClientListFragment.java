@@ -34,7 +34,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 /**
@@ -43,10 +43,10 @@ import butterknife.InjectView;
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView {
 
-    @InjectView(R.id.rv_clients)
+    @BindView(R.id.rv_clients)
     RecyclerView rv_clients;
 
-    @InjectView(R.id.swipe_container)
+    @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
     ClientNameListAdapter clientNameListAdapter;
     @Inject
@@ -98,7 +98,7 @@ public class ClientListFragment extends MifosBaseFragment
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         setToolbarTitle(getResources().getString(R.string.clients));
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
         mClientListPresenter.attachView(this);
 

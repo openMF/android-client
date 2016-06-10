@@ -42,7 +42,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 
@@ -50,10 +50,10 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
 
     public static final int MENU_ITEM_ADD_NEW_LOAN_CHARGES = 3000;
 
-    @InjectView(R.id.lv_charges)
+    @BindView(R.id.lv_charges)
     ListView lv_charges;
 
-    @InjectView(R.id.swipe_container)
+    @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
@@ -111,7 +111,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mLoanChargePresenter.attachView(this);
 
         setToolbarTitle(getString(R.string.charges));

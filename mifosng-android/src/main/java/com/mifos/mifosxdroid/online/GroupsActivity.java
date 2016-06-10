@@ -30,7 +30,7 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         showBackButton();
         int groupId = getIntent().getExtras().getInt(Constants.GROUP_ID);
         replaceFragment(GroupDetailsFragment.newInstance(groupId), false, R.id.container);

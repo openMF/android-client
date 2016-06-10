@@ -43,7 +43,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -71,79 +71,79 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     public int loanAccountNumber;
     public List<DataTable> loanDataTables = new ArrayList<DataTable>();
 
-    @InjectView(R.id.view_status_indicator)
+    @BindView(R.id.view_status_indicator)
     View view_status_indicator;
 
-    @InjectView(R.id.tv_clientName)
+    @BindView(R.id.tv_clientName)
     TextView tv_clientName;
 
-    @InjectView(R.id.quickContactBadge_client)
+    @BindView(R.id.quickContactBadge_client)
     QuickContactBadge quickContactBadge;
 
-    @InjectView(R.id.tv_loan_product_short_name)
+    @BindView(R.id.tv_loan_product_short_name)
     TextView tv_loan_product_short_name;
 
-    @InjectView(R.id.tv_loanAccountNumber)
+    @BindView(R.id.tv_loanAccountNumber)
     TextView tv_loanAccountNumber;
 
-    @InjectView(R.id.tv_amount_disbursed)
+    @BindView(R.id.tv_amount_disbursed)
     TextView tv_amount_disbursed;
 
-    @InjectView(R.id.tv_disbursement_date)
+    @BindView(R.id.tv_disbursement_date)
     TextView tv_disbursement_date;
 
-    @InjectView(R.id.tv_in_arrears)
+    @BindView(R.id.tv_in_arrears)
     TextView tv_in_arrears;
 
-    @InjectView(R.id.tv_loan_officer)
+    @BindView(R.id.tv_loan_officer)
     TextView tv_loan_officer;
 
-    @InjectView(R.id.tv_principal)
+    @BindView(R.id.tv_principal)
     TextView tv_principal;
 
-    @InjectView(R.id.tv_loan_principal_due)
+    @BindView(R.id.tv_loan_principal_due)
     TextView tv_loan_principal_due;
 
-    @InjectView(R.id.tv_loan_principal_paid)
+    @BindView(R.id.tv_loan_principal_paid)
     TextView tv_loan_principal_paid;
 
-    @InjectView(R.id.tv_interest)
+    @BindView(R.id.tv_interest)
     TextView tv_interest;
 
-    @InjectView(R.id.tv_loan_interest_due)
+    @BindView(R.id.tv_loan_interest_due)
     TextView tv_loan_interest_due;
 
-    @InjectView(R.id.tv_loan_interest_paid)
+    @BindView(R.id.tv_loan_interest_paid)
     TextView tv_loan_interest_paid;
 
-    @InjectView(R.id.tv_fees)
+    @BindView(R.id.tv_fees)
     TextView tv_fees;
 
-    @InjectView(R.id.tv_loan_fees_due)
+    @BindView(R.id.tv_loan_fees_due)
     TextView tv_loan_fees_due;
 
-    @InjectView(R.id.tv_loan_fees_paid)
+    @BindView(R.id.tv_loan_fees_paid)
     TextView tv_loan_fees_paid;
 
-    @InjectView(R.id.tv_penalty)
+    @BindView(R.id.tv_penalty)
     TextView tv_penalty;
 
-    @InjectView(R.id.tv_loan_penalty_due)
+    @BindView(R.id.tv_loan_penalty_due)
     TextView tv_loan_penalty_due;
 
-    @InjectView(R.id.tv_loan_penalty_paid)
+    @BindView(R.id.tv_loan_penalty_paid)
     TextView tv_loan_penalty_paid;
 
-    @InjectView(R.id.tv_total)
+    @BindView(R.id.tv_total)
     TextView tv_total;
 
-    @InjectView(R.id.tv_total_due)
+    @BindView(R.id.tv_total_due)
     TextView tv_total_due;
 
-    @InjectView(R.id.tv_total_paid)
+    @BindView(R.id.tv_total_paid)
     TextView tv_total_paid;
 
-    @InjectView(R.id.bt_processLoanTransaction)
+    @BindView(R.id.bt_processLoanTransaction)
     Button bt_processLoanTransaction;
 
     @Inject
@@ -183,7 +183,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mLoanAccountSummaryPresenter.attachView(this);
 
         inflateLoanAccountSummary();

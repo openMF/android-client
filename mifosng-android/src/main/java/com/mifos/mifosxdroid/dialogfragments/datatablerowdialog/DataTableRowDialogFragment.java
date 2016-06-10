@@ -42,7 +42,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 /**
@@ -52,7 +52,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         implements DataTableRowDialogMvpView {
 
     private final String LOG_TAG = getClass().getSimpleName();
-    @InjectView(R.id.ll_data_table_entry_form)
+    @BindView(R.id.ll_data_table_entry_form)
     LinearLayout linearLayout;
     @Inject
     DataTableRowDialogPresenter mDataTableRowDialogPresenter;
@@ -102,7 +102,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container,
                 false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mDataTableRowDialogPresenter.attachView(this);
 
 

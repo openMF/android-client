@@ -29,7 +29,7 @@ import com.mifos.utils.FragmentConstants;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * @author nellyk
@@ -43,16 +43,16 @@ public class LoanAccountApproval extends DialogFragment
 
     View rootView;
 
-    @InjectView(R.id.tv_loan_approval_dates)
+    @BindView(R.id.tv_loan_approval_dates)
     TextView tv_loan_approval_dates;
 
-    @InjectView(R.id.bt_approve_loan)
+    @BindView(R.id.bt_approve_loan)
     Button bt_approve_loan;
 
-    @InjectView(R.id.et_approved_amount)
+    @BindView(R.id.et_approved_amount)
     EditText et_approved_amount;
 
-    @InjectView(R.id.et_approval_note)
+    @BindView(R.id.et_approval_note)
     EditText et_approval_note;
 
     @Inject
@@ -99,7 +99,7 @@ public class LoanAccountApproval extends DialogFragment
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.dialog_fragment_approve_loan, null);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mLoanAccountApprovalPresenter.attachView(this);
 
         inflateApprovalDate();

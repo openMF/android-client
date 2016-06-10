@@ -20,7 +20,7 @@ import com.mifos.objects.accounts.loan.LoanAccount;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by ishankhanna on 01/03/14.
@@ -106,15 +106,15 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
     public static class ReusableViewHolder {
 
-        @InjectView(R.id.tv_amount)
+        @BindView(R.id.tv_amount)
         TextView tv_amount;
-        @InjectView(R.id.tv_accountNumber)
+        @BindView(R.id.tv_accountNumber)
         TextView tv_accountNumber;
-        @InjectView(R.id.view_status_indicator)
+        @BindView(R.id.view_status_indicator)
         View view_status_indicator;
 
         public ReusableViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }

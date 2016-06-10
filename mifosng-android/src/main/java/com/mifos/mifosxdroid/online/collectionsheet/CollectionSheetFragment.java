@@ -42,7 +42,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import retrofit.client.Response;
 
 /**
@@ -58,7 +58,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
     private static final int MENU_ITEM_REFRESH = 2001;
     private static final int MENU_ITEM_SAVE = 2002;
     public final String LOG_TAG = getClass().getSimpleName();
-    @InjectView(R.id.exlv_collection_sheet)
+    @BindView(R.id.exlv_collection_sheet)
     ExpandableListView expandableListView;
 
     @Inject
@@ -109,7 +109,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_collection_sheet, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         mCollectionSheetPresenter.attachView(this);
 
         fetchCollectionSheet();

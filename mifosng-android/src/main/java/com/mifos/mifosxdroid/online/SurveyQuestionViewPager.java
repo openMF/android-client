@@ -38,7 +38,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 
 /**
@@ -50,13 +50,13 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements OnAnsw
 
     public Communicator fragmentCommunicator;
 
-    @InjectView(R.id.surveyPager)
+    @BindView(R.id.surveyPager)
     ViewPager mViewPager;
-    @InjectView(R.id.btnNext)
+    @BindView(R.id.btnNext)
     Button btnNext;
-    @InjectView(R.id.tv_surveyEmpty)
+    @BindView(R.id.tv_surveyEmpty)
     TextView tv_surveyEmpty;
-    @InjectView(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
     Context context;
     private PagerAdapter mPagerAdapter = null;
@@ -73,7 +73,7 @@ public class SurveyQuestionViewPager extends MifosBaseActivity implements OnAnsw
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_question);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         context = this;
         mScorecard = new Scorecard();
         listScorecardValues = new ArrayList<>();

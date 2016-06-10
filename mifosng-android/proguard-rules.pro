@@ -18,14 +18,14 @@
 
 -dontobfuscate
 
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewInjector { *; }
-
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
-
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
+#-keep class butterknife.** { *; }
+#-dontwarn butterknife.internal.**
+#-keep class **$$ViewInjector { *; }
+#
+#-keepclasseswithmembernames class * {
+#    @butterknife.* <fields>;
+#}
+#
+#-keepclasseswithmembernames class * {
+#    @butterknife.* <methods>;
+#}
