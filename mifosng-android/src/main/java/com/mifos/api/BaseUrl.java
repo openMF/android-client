@@ -5,16 +5,16 @@
 
 package com.mifos.api;
 
-import retrofit.Endpoint;
-
 /**
  * @author fomenkoo
  */
-public class ApiEndpoint implements Endpoint {
+public class BaseUrl  {
 
-    public static final String API_ENDPOINT = "demo.openmf.org";
-    public static final String API_PATH = "/fineract-provider/api/v1";
     public static final String PROTOCOL_HTTPS = "https://";
+    public static final String API_ENDPOINT = "demo.openmf.org";
+    public static final String API_PATH = "/fineract-provider/api/v1/";
+    // "/" in the last of the base url always
+
 
     private String url;
 
@@ -22,14 +22,13 @@ public class ApiEndpoint implements Endpoint {
         this.url = instanceUrl;
     }
 
-    @Override
+
     public String getUrl() {
         if (url == null)
             return PROTOCOL_HTTPS + API_ENDPOINT + API_PATH;
         return url;
     }
 
-    @Override
     public String getName() {
         return "mifos";
     }

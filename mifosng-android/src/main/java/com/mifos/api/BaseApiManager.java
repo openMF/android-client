@@ -29,9 +29,13 @@ import com.mifos.utils.JsonDateSerializer;
 
 import java.util.Date;
 
-import retrofit.Endpoint;
-import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
+import okhttp3.OkHttpClient;
+import okhttp3.OkHttpClient.Builder;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author fomenkoo
@@ -39,7 +43,8 @@ import retrofit.converter.GsonConverter;
 public class BaseApiManager {
 
 
-    private final ApiEndpoint API_ENDPOINT = new ApiEndpoint();
+    private BaseUrl baseUrl = new BaseUrl();
+    private final String BASE_URL = baseUrl.getUrl();
 
     private AuthService authApi;
     private CenterService centerApi;
@@ -63,50 +68,60 @@ public class BaseApiManager {
     public BaseApiManager() {
         createAuthApi();
 
-        centerApi = createApi(CenterService.class, API_ENDPOINT);
-        accountsApi = createApi(ClientAccountsService.class, API_ENDPOINT);
-        clientsApi = createApi(ClientService.class, API_ENDPOINT);
-        dataTableApi = createApi(DataTableService.class, API_ENDPOINT);
-        loanApi = createApi(LoanService.class, API_ENDPOINT);
-        savingsApi = createApi(SavingsAccountService.class, API_ENDPOINT);
-        searchApi = createApi(SearchService.class, API_ENDPOINT);
-        gpsApi = createApi(GpsCoordinatesService.class, API_ENDPOINT);
-        groupApi = createApi(GroupService.class, API_ENDPOINT);
-        documentApi = createApi(DocumentService.class, API_ENDPOINT);
-        identifierApi = createApi(IdentifierService.class, API_ENDPOINT);
-        officeApi = createApi(OfficeService.class, API_ENDPOINT);
-        staffApi = createApi(StaffService.class, API_ENDPOINT);
-        surveyApi = createApi(SurveyService.class, API_ENDPOINT);
-        chargeApi = createApi(ChargeService.class, API_ENDPOINT);
-        createSavingsAccountService = createApi(CreateSavingsAccountService.class, API_ENDPOINT);
-        groupAccountsServiceApi = createApi(GroupAccountService.class, API_ENDPOINT);
+        centerApi = createApi(CenterService.class, BASE_URL);
+        accountsApi = createApi(ClientAccountsService.class, BASE_URL);
+        clientsApi = createApi(ClientService.class, BASE_URL);
+        dataTableApi = createApi(DataTableService.class, BASE_URL);
+        loanApi = createApi(LoanService.class, BASE_URL);
+        savingsApi = createApi(SavingsAccountService.class, BASE_URL);
+        searchApi = createApi(SearchService.class, BASE_URL);
+        gpsApi = createApi(GpsCoordinatesService.class, BASE_URL);
+        groupApi = createApi(GroupService.class, BASE_URL);
+        documentApi = createApi(DocumentService.class, BASE_URL);
+        identifierApi = createApi(IdentifierService.class, BASE_URL);
+        officeApi = createApi(OfficeService.class, BASE_URL);
+        staffApi = createApi(StaffService.class, BASE_URL);
+        surveyApi = createApi(SurveyService.class, BASE_URL);
+        chargeApi = createApi(ChargeService.class, BASE_URL);
+        createSavingsAccountService = createApi(CreateSavingsAccountService.class, BASE_URL);
+        groupAccountsServiceApi = createApi(GroupAccountService.class, BASE_URL);
 
     }
 
     public void setupEndpoint(String instanceUrl) {
-        API_ENDPOINT.updateInstanceUrl(instanceUrl);
+        baseUrl.updateInstanceUrl(instanceUrl);
     }
 
-    private <T> T createApi(Class<T> clazz, Endpoint endpoint) {
+    public OkHttpClient getOkHttpClient(){
+        HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
+        logger.setLevel(Level.BODY);
+        return new Builder()
+                .addInterceptor(logger)
+                .addInterceptor(new ApiRequestInterceptor())
+                .build();
+    }
+
+    private <T> T createApi(Class<T> clazz, String baseUrl) {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonDateSerializer()).create();
 
-        return new RestAdapter.Builder()
-                .setEndpoint(endpoint)
-                .setRequestInterceptor(new ApiRequestInterceptor())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setConverter(new GsonConverter(gson))
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(getOkHttpClient())
                 .build()
                 .create(clazz);
     }
 
     private void createAuthApi() {
-        authApi = new RestAdapter.Builder()
-                .setEndpoint(API_ENDPOINT)
-                .setConverter(new GsonConverter(new GsonBuilder().create()))
-                .setRequestInterceptor(new ApiRequestInterceptor())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+
+        authApi = new Retrofit.Builder()
+                .baseUrl(baseUrl.getUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(getOkHttpClient())
                 .build()
                 .create(AuthService.class);
     }

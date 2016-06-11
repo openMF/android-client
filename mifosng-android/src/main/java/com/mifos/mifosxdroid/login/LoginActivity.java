@@ -111,6 +111,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
         getActivityComponent().inject(this);
         setContentView(R.layout.activity_login);
+
         ButterKnife.bind(this);
         mLoginPresenter.attachView(this);
 
