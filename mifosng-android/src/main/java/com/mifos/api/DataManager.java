@@ -58,6 +58,9 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import okhttp3.MultipartBody;
+import okhttp3.MultipartBody.Part;
+import okhttp3.ResponseBody;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import rx.Observable;
@@ -141,7 +144,7 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().getListOfCharges(id);
     }
 
-    public Observable<Response> getAllChargesV2(int clientId) {
+    public Observable<ResponseBody> getAllChargesV2(int clientId) {
         return mBaseApiManager.getChargeApi().getAllChargesS(clientId);
     }
 
@@ -149,7 +152,7 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().createCharges(clientId, payload);
     }
 
-    public Observable<Response> getAllChargesV3(int loanId) {
+    public Observable<ResponseBody> getAllChargesV3(int loanId) {
         return mBaseApiManager.getChargeApi().getAllChargev3(loanId);
     }
 
@@ -181,11 +184,11 @@ public class DataManager {
         return mBaseApiManager.getClientsApi().getClient(id);
     }
 
-    public Observable<Response> uploadClientImage(int id, TypedFile image) {
-        return mBaseApiManager.getClientsApi().uploadClientImage(id, image);
+    public Observable<ResponseBody> uploadClientImage(int id, Part file) {
+        return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
     }
 
-    public Observable<Response> deleteClientImage(int clientId) {
+    public Observable<ResponseBody> deleteClientImage(int clientId) {
         return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
     }
 

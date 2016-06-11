@@ -84,9 +84,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
@@ -522,7 +522,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     }
 
     @Override
-    public void showUploadImageSuccessfully(Response response, String imagePath) {
+    public void showUploadImageSuccessfully(ResponseBody response, String imagePath) {
         Toaster.show(rootView, R.string.client_image_updated);
         iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
     }

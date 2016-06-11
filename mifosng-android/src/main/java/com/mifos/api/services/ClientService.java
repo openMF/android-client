@@ -10,17 +10,16 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.Part;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -41,15 +40,15 @@ public interface ClientService {
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
-    Observable<Response> uploadClientImage(@Path("clientId") int clientId,
-                                           @Part("file") TypedFile file);
+    Observable<ResponseBody> uploadClientImage(@Path("clientId") int clientId,
+                                               @Part MultipartBody.Part file);
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
-    Observable<Response> deleteClientImage(@Path("clientId") int clientId);
+    Observable<ResponseBody> deleteClientImage(@Path("clientId") int clientId);
 
     //TODO: Implement when API Fixed
-    @GET("/clients/{clientId}/images")
-    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
+//    @GET("/clients/{clientId}/images")
+//    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
 
     @POST(APIEndPoint.CLIENTS)
     Observable<Client> createClient(@Body ClientPayload clientPayload);

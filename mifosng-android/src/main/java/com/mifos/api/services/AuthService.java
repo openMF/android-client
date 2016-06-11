@@ -7,8 +7,8 @@ package com.mifos.api.services;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.User;
 
-import retrofit.http.POST;
-import retrofit.http.Query;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
