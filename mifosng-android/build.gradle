@@ -154,7 +154,7 @@ dependencies {
 
 
     //Square dependencies
-    compile "com.squareup.retrofit:retrofit:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersionLatest"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersionLatest"
     compile "com.squareup.okhttp:okhttp:$rootProject.okHttpVersion"
