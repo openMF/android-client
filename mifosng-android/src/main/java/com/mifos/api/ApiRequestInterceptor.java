@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
+import okhttp3.Request.Builder;
 import okhttp3.Response;
 
 /**
@@ -27,9 +28,8 @@ public class ApiRequestInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request chianrequest = chain.request();
-        Request.Builder builder = chianrequest.newBuilder()
-                .header(HEADER_TENANT, PrefManager.getTenant())
-                .header("Accept", "application/octet-stream");
+        Builder builder = chianrequest.newBuilder()
+                .header(HEADER_TENANT, PrefManager.getTenant());
 
         if (PrefManager.isAuthenticated())
             builder.header(HEADER_AUTH, PrefManager.getToken());
