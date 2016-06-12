@@ -7,8 +7,7 @@ import com.mifos.objects.client.Page;
 
 import javax.inject.Inject;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -54,9 +53,9 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        if (e instanceof RetrofitError) {
-                            Response response = ((RetrofitError) e).getResponse();
-                            getMvpView().showFetchingError(response);
+                        if (e instanceof HttpException) {
+                            HttpException response = (HttpException)e;
+                            getMvpView().showFetchingError(response.code());
                         }
                     }
 
@@ -84,9 +83,9 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        if (e instanceof RetrofitError) {
-                            Response response = ((RetrofitError) e).getResponse();
-                            getMvpView().showFetchingError(response);
+                        if (e instanceof HttpException) {
+                            HttpException response = (HttpException)e;
+                            getMvpView().showFetchingError(response.code());
                         }
                     }
 

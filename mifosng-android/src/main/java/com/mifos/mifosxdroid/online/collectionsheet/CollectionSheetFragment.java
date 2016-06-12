@@ -32,7 +32,6 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.MifosGroup;
 import com.mifos.utils.Constants;
-import com.mifos.utils.MFErrorParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,9 +40,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
+import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -240,10 +239,11 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
     }
 
     @Override
-    public void showFailedToSaveCollectionSheet(Response response) {
+    public void showFailedToSaveCollectionSheet(HttpException response) {
         if (response != null) {
-            if (response.getStatus() == 400 || response.getStatus() == 403) {
-                MFErrorParser.parseError(response);
+            if ((response.code() == 400) || (response.code() == 403)) {
+                //TODO for now, It is commented
+                //MFErrorParser.parseError(response.response().body());
             }
             Toast.makeText(getActivity(), "Collection Sheet could not be saved.",
                     Toast

@@ -33,9 +33,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
 
 /**
  * Created by nellyk on 2/27/2016.
@@ -198,11 +197,11 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     }
 
     @Override
-    public void showFetchingError(String s, Response response) {
+    public void showFetchingError(String s, int response) {
         if (getActivity() != null) {
             try {
-                Log.i("Error", "" + response.getStatus());
-                if (response.getStatus() == 401) {
+                Log.i("Error", "" + response);
+                if (response == 401) {
                     Toast.makeText(getActivity(), "Authorization Expired - Please " +
                             "Login Again", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), LoginActivity.class));
