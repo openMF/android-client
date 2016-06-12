@@ -70,7 +70,7 @@ public class RecyclerItemClickListner implements RecyclerView.OnItemTouchListene
     /**
      * A simple click listener whose methods can be overridden one by one.
      */
-    public static abstract class SimpleOnItemClickListener implements OnItemClickListener {
+    public abstract static class SimpleOnItemClickListener implements OnItemClickListener {
 
         /**
          * Called when an item is clicked. The default implementation is a no-op.

@@ -28,6 +28,7 @@ import java.net.URL;
  */
 public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
 
+    private final String LOG_TAG = getClass().getSimpleName();
     private Context context;
     private String fileName;
     private InputStream inputStream;
@@ -62,12 +63,15 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
                 + strings[2] + "/" //{documentId}
                 + "attachment";
 
-        File documentFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + fileName);
+        File documentFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                fileName);
         try {
-            HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
+            HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
+                    .openConnection();
             httpURLConnection.setRequestMethod("GET");
             httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT, "default");
-            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken());
+            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager
+                    .getToken());
             httpURLConnection.setDoInput(true);
             httpURLConnection.connect();
             Log.i("Connected", "True");
@@ -79,27 +83,28 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
             outputStream = new FileOutputStream(documentFile);
             int read;
             byte[] bytes = new byte[1024];
-            while ((read = inputStream.read(bytes)) != -1)
+            while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
+            }
             httpURLConnection.disconnect();
             Log.i("Connected", "False");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG, e.getLocalizedMessage());
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            Log.d(LOG_TAG, ioe.getLocalizedMessage());
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(LOG_TAG, e.getLocalizedMessage());
                 }
             }
             if (outputStream != null) {
                 try {
                     outputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(LOG_TAG, e.getLocalizedMessage());
                 }
             }
         }

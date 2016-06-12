@@ -7,8 +7,7 @@ package com.mifos.api.model;
 
 import com.google.gson.Gson;
 
-public class BulkRepaymentTransactions
-{
+public class BulkRepaymentTransactions {
     public int loanId;
     public double transactionAmount;
 
@@ -21,8 +20,7 @@ public class BulkRepaymentTransactions
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new Gson().toJson(this);
     }
 

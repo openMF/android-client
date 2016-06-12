@@ -18,50 +18,56 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.api.RepaymentTransactionSyncService;
+import com.mifos.api.RepaymentTransactionSyncService.SyncFinishListener;
 import com.mifos.mifosxdroid.ClientActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.MifosGroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.fragments.centerlist.CenterListFragment;
 import com.mifos.objects.db.MeetingCenter;
 import com.mifos.objects.db.MifosGroup;
-import com.mifos.api.RepaymentTransactionSyncService;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
-public class GroupFragment extends MifosBaseFragment implements AdapterView.OnItemClickListener, RepaymentTransactionSyncService.SyncFinishListener {
+public class GroupFragment extends MifosBaseFragment implements OnItemClickListener,
+        SyncFinishListener {
 
-    public static final String TAG = "Group Fragment";
-    private final List<MifosGroup> groupList = new ArrayList<MifosGroup>();
-    @InjectView(R.id.lv_group)
+    private final String LOG_TAG = getClass().getSimpleName();
+    private final List<MifosGroup> groupList = new ArrayList<>();
+    @BindView(R.id.lv_group)
     ListView lv_group;
-    @InjectView(R.id.progress_group)
+    @BindView(R.id.progress_group)
     ProgressBar progressGroup;
     MifosGroupListAdapter adapter = null;
     View view;
-    @InjectView(R.id.tv_empty_group)
+    @BindView(R.id.tv_empty_group)
     TextView tv_empty_group;
     private MenuItem syncItem;
     private String date;
     private long centerId;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_group, null);
         init();
         setHasOptionsMenu(true);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         return view;
     }
@@ -69,6 +75,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     private void init() {
         centerId = getActivity().getIntent().getLongExtra(CenterListFragment.CENTER_ID, -1);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -83,12 +90,13 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
             syncItem = menu.findItem(R.id.action_sync);
             if (centerId != -1) {
                 List<MeetingCenter> center = new ArrayList<MeetingCenter>();
-                center.addAll(Select.from(MeetingCenter.class).where(Condition.prop("center_id").eq(centerId)).list());
+                center.addAll(Select.from(MeetingCenter.class).where(Condition.prop("center_id")
+                        .eq(centerId)).list());
                 if (center.size() > 0 && center.get(0).getIsSynced() == 1)
                     syncItem.setEnabled(false);
             }
-        } catch (IndexOutOfBoundsException e){
-            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.d(LOG_TAG, e.getMessage());
             syncItem.setEnabled(false);
         }
 
@@ -98,11 +106,13 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.action_sync) {
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context
+                    .LAYOUT_INFLATER_SERVICE);
             View syncProgress = inflater.inflate(R.layout.sync_progress, null);
             MenuItemCompat.setActionView(item, syncProgress);
             if (centerId != -1) {
-                RepaymentTransactionSyncService syncService = new RepaymentTransactionSyncService(this, centerId);
+                RepaymentTransactionSyncService syncService =
+                        new RepaymentTransactionSyncService(this, centerId);
                 syncService.syncRepayments(getActivity());
             }
         }
@@ -123,14 +133,17 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
             if (syncItem != null)
                 MenuItemCompat.setActionView(syncItem, null);
 
-            SharedPreferences preferences = getActivity().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+            SharedPreferences preferences = getActivity().getSharedPreferences
+                    (OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
             date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
             tv_empty_group.setVisibility(View.VISIBLE);
             tv_empty_group.setText("There is no data for center " + centerId + " on " + date);
             progressGroup.setVisibility(View.GONE);
 
-        } else
+        } else {
             tv_empty_group.setVisibility(View.GONE);
+        }
+
     }
 
     private List<MifosGroup> getAllGroups() {
@@ -141,7 +154,7 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(getActivity(), ClientActivity.class);
         intent.putExtra("group_id", groupList.get(i).getId());
-        Log.i(TAG, "onItemClick = Group ID:" + groupList.get(i).getId());
+        Log.i(LOG_TAG, "onItemClick = Group ID:" + groupList.get(i).getId());
         startActivity(intent);
     }
 
@@ -156,7 +169,8 @@ public class GroupFragment extends MifosBaseFragment implements AdapterView.OnIt
 
     private void setCenterAsSynced() {
         if (centerId != -1) {
-            List<MeetingCenter> center = Select.from(MeetingCenter.class).where(com.orm.query.Condition.prop("center_id").eq(centerId)).list();
+            List<MeetingCenter> center = Select.from(MeetingCenter.class)
+                    .where(Condition.prop("center_id").eq(centerId)).list();
             center.get(0).setIsSynced(1);
             center.get(0).save();
             getActivity().finish();

@@ -7,21 +7,34 @@ package com.mifos.api;
 
 import com.mifos.utils.PrefManager;
 
-import retrofit.RequestInterceptor;
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Request.Builder;
+import okhttp3.Response;
 
 /**
  * @author fomenkoo
  */
-public class ApiRequestInterceptor implements RequestInterceptor {
+public class ApiRequestInterceptor implements Interceptor {
 
     public static final String HEADER_TENANT = "Fineract-Platform-TenantId";
     public static final String HEADER_AUTH = "Authorization";
 
+    public ApiRequestInterceptor() {
+    }
+
     @Override
-    public void intercept(RequestFacade request) {
-        request.addHeader(HEADER_TENANT, PrefManager.getTenant());
+    public Response intercept(Chain chain) throws IOException {
+        Request chianrequest = chain.request();
+        Builder builder = chianrequest.newBuilder()
+                .header(HEADER_TENANT, PrefManager.getTenant());
 
         if (PrefManager.isAuthenticated())
-            request.addHeader(HEADER_AUTH, PrefManager.getToken());
+            builder.header(HEADER_AUTH, PrefManager.getToken());
+
+        Request request = builder.build();
+        return chain.proceed(request);
     }
 }

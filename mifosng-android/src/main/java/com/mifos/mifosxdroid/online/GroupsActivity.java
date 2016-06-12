@@ -4,6 +4,13 @@ import android.os.Bundle;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment;
+import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment;
+import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleFragment;
+import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsFragment;
+import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment;
+import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -14,7 +21,8 @@ import butterknife.ButterKnife;
 /**
  * Created by nellyk on 2/27/2016.
  */
-public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFragment.OnFragmentInteractionListener,LoanAccountSummaryFragment.OnFragmentInteractionListener,
+public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFragment
+        .OnFragmentInteractionListener, LoanAccountSummaryFragment.OnFragmentInteractionListener,
         LoanRepaymentFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener {
 
@@ -22,11 +30,12 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         showBackButton();
         int groupId = getIntent().getExtras().getInt(Constants.GROUP_ID);
         replaceFragment(GroupDetailsFragment.newInstance(groupId), false, R.id.container);
     }
+
     /**
      * Called when a Loan Account is Selected
      * from the list of Loan Accounts on Client Details Fragment
@@ -34,7 +43,8 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
      */
     @Override
     public void loadLoanAccountSummary(int loanAccountNumber) {
-        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber), true, R.id.container);
+        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber), true, R.id
+                .container);
     }
 
     /**
@@ -45,7 +55,8 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
      */
     @Override
     public void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType) {
-        replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber, accountType), true, R.id.container);
+        replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber,
+                accountType), true, R.id.container);
     }
 
     /**
@@ -93,7 +104,10 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
      * The transactionType defines if the transaction is a Deposit or a Withdrawal
      */
     @Override
-    public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String transactionType, DepositType accountType) {
-        replaceFragment(SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType, accountType), true, R.id.container);
+    public void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations,
+                              String transactionType, DepositType accountType) {
+        replaceFragment(SavingsAccountTransactionFragment.newInstance
+                (savingsAccountWithAssociations, transactionType, accountType), true, R.id
+                .container);
     }
 }

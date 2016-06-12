@@ -13,6 +13,10 @@ import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
+import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
+import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.utils.EspressoIdlingResource;
 
 /**
@@ -20,7 +24,7 @@ import com.mifos.utils.EspressoIdlingResource;
  */
 public class DashboardActivity extends MifosBaseActivity {
 
-    public final static String TAG = DashboardActivity.class.getSimpleName();
+    public static final String TAG = DashboardActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

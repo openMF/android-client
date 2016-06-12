@@ -23,32 +23,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 17/07/14.
  */
 public class CollectionListAdapter extends BaseExpandableListAdapter {
 
-    Context context;
-    LayoutInflater layoutInflater;
-    public static List<MifosGroup> sMifosGroups = new ArrayList<MifosGroup>();
     //Map for RepaymentTransaction<Loan Id, Transaction Amount>
     //TODO Check about SparseArray in Android and try to convert Map into SparseArray Implementation
-    public static Map<Integer, Double> sRepaymentTransactions = new HashMap<Integer, Double>();
+    public static final Map<Integer, Double> sRepaymentTransactions = new HashMap<Integer,
+            Double>();
+    public static List<MifosGroup> sMifosGroups = new ArrayList<MifosGroup>();
+    Context context;
+    LayoutInflater layoutInflater;
 
     public CollectionListAdapter(Context context, List<MifosGroup> mifosGroups) {
         this.context = context;
         layoutInflater = LayoutInflater.from(this.context);
         sMifosGroups = mifosGroups;
 
-        for (MifosGroup mifosGroup : sMifosGroups)
-        {
-            for (Client client : mifosGroup.getClients())
-            {
-                for (Loan loan : client.getLoans())
-                {
+        for (MifosGroup mifosGroup : sMifosGroups) {
+            for (Client client : mifosGroup.getClients()) {
+                for (Loan loan : client.getLoans()) {
                     sRepaymentTransactions.put(loan.getLoanId(), loan.getTotalDue());
                 }
 
@@ -94,7 +92,8 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup
+            parent) {
 
         MifosGroupReusableViewHolder mifosGroupReusableViewHolder;
 
@@ -108,23 +107,23 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
 
         double groupTotalDue = 0;
 
-        for (Client client : sMifosGroups.get(groupPosition).getClients())
-        {
-            for (Loan loan : client.getLoans())
-            {
+        for (Client client : sMifosGroups.get(groupPosition).getClients()) {
+            for (Loan loan : client.getLoans()) {
                 groupTotalDue += sRepaymentTransactions.get(loan.getLoanId());
             }
 
         }
 
-        mifosGroupReusableViewHolder.tv_groupName.setText(sMifosGroups.get(groupPosition).getGroupName());
+        mifosGroupReusableViewHolder.tv_groupName.setText(sMifosGroups.get(groupPosition)
+                .getGroupName());
         mifosGroupReusableViewHolder.tv_groupTotal.setText(String.valueOf(groupTotalDue));
 
         return convertView;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View
+            convertView, ViewGroup parent) {
 
         ClientReusableViewHolder clientReusableViewHolder;
 
@@ -149,7 +148,8 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
         clientReusableViewHolder.tv_clientTotal.setText(String.valueOf(totalDue));
 
         CollectionSheetLoanAccountListAdapter collectionSheetLoanAccountListAdapter
-                = new CollectionSheetLoanAccountListAdapter(context, loans, groupPosition, childPosition);
+                = new CollectionSheetLoanAccountListAdapter(context, loans, groupPosition,
+                childPosition);
         clientReusableViewHolder.lv_loans.setAdapter(collectionSheetLoanAccountListAdapter);
 
         return convertView;
@@ -162,28 +162,29 @@ public class CollectionListAdapter extends BaseExpandableListAdapter {
 
     public static class MifosGroupReusableViewHolder {
 
-        @InjectView(R.id.tv_groupName)
+        @BindView(R.id.tv_groupName)
         TextView tv_groupName;
-        @InjectView(R.id.tv_groupTotal)
+        @BindView(R.id.tv_groupTotal)
         TextView tv_groupTotal;
 
         public MifosGroupReusableViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 
     public static class ClientReusableViewHolder {
 
-        @InjectView(R.id.tv_clientId)
+        @BindView(R.id.tv_clientId)
         TextView tv_clientId;
-        @InjectView(R.id.tv_clientName)
+        @BindView(R.id.tv_clientName)
         TextView tv_clientName;
-        @InjectView(R.id.tv_clientTotal)
+        @BindView(R.id.tv_clientTotal)
         TextView tv_clientTotal;
-        @InjectView(R.id.lv_loans)
+        @BindView(R.id.lv_loans)
         ListView lv_loans;
+
         public ClientReusableViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }

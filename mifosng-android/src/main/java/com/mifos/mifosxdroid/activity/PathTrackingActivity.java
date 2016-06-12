@@ -19,28 +19,27 @@ import com.mifos.mifosxdroid.LocationService;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * @author fomenkoo
  */
 public class PathTrackingActivity extends MifosBaseActivity implements ServiceConnection {
 
-    @InjectView(R.id.start)
+    @BindView(R.id.start)
     Button start;
 
-    @InjectView(R.id.stop)
+    @BindView(R.id.stop)
     Button stop;
-
-    private LocationService service;
     boolean bound = false;
+    private LocationService service;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_path_tracker);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

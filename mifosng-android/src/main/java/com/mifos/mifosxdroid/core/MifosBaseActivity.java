@@ -16,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,36 +26,43 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.Target;
 import com.mifos.App;
 import com.mifos.api.ApiRequestInterceptor;
-import com.mifos.mifosxdroid.ClientListActivity;
-import com.mifos.mifosxdroid.GroupListActivity;
+import com.mifos.api.BaseApiManager;
+import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
+import com.mifos.mifosxdroid.injection.component.ActivityComponent;
+import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
+import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.online.CentersActivity;
-import com.mifos.mifosxdroid.online.ClientListFragment;
-import com.mifos.mifosxdroid.online.ClientSearchFragment;
-import com.mifos.mifosxdroid.online.GroupsListFragment;
+import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
+import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.PrefManager;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author fomenkoo
  */
-public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback, NavigationView.OnNavigationItemSelectedListener {
+public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback,
+        NavigationView.OnNavigationItemSelectedListener {
 
-    private ProgressDialog progress;
     protected Toolbar toolbar;
+    private ActivityComponent mActivityComponent;
+    private ProgressDialog progress;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
+    private DataManager mDataManager;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -65,6 +71,16 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+    }
+
+    public ActivityComponent getActivityComponent() {
+        if (mActivityComponent == null) {
+            mActivityComponent = DaggerActivityComponent.builder()
+                    .activityModule(new ActivityModule(this))
+                    .applicationComponent(App.get(this).getComponent())
+                    .build();
+        }
+        return mActivityComponent;
     }
 
     public void setActionBarTitle(String title) {
@@ -130,9 +146,11 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {
         invalidateOptionsMenu();
         String backStateName = fragment.getClass().getName();
-        boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName, 0);
+        boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName,
+                0);
 
-        if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) == null) {
+        if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) ==
+                null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(containerId, fragment, backStateName);
             if (addToBackStack) {
@@ -145,10 +163,12 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     @Override
     public void onBackPressed() {
         // check if the nav mDrawer is open
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START))
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
-        else
+        } else {
             super.onBackPressed();
+        }
+
     }
 
     @Override
@@ -208,7 +228,8 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
         // setup drawer layout and sync to toolbar
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -231,14 +252,29 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
      * downloads the client name and picture(if exists)
      * sets the downloaded data to the nav drawer account header
      */
+    //TODO Setup In MVP
     private void loadClientDetails() {
 
         // download client details
         final int userId = PrefManager.getUserId();
-        App.apiManager.getClient(userId, new Callback<Client>() {
+        BaseApiManager baseApiManager = new BaseApiManager();
+        mDataManager = new DataManager(baseApiManager);
+        Observable<Client> call = mDataManager.getClient(userId);
+        Subscription subscription = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Client>() {
                     @Override
-                    public void success(Client client, final Response response) {
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Client client) {
                         // add name to profile
                         String name = client.getDisplayName();
                         TextView textViewUsername = (TextView) findViewById(R.id.tv_user_name);
@@ -252,12 +288,15 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                                     + userId
                                     + "/images?maxHeight=120&maxWidth=120";
                             GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                                    .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager.getTenant())
-                                    .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken())
+                                    .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager
+                                            .getTenant())
+                                    .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager
+                                            .getToken())
                                     .addHeader("Accept", "application/octet-stream")
                                     .build());
 
-                            ImageView imageViewUserPicture = (ImageView) findViewById(R.id.iv_user_picture);
+                            ImageView imageViewUserPicture = (ImageView) findViewById(R.id
+                                    .iv_user_picture);
                             Glide.with(getApplicationContext())
                                     .load(glideUrl)
                                     .asBitmap()
@@ -271,24 +310,17 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                                                 return;
 
                                             // set to image view
-                                            ImageView imageViewUserPicture = (ImageView) findViewById(R.id.iv_user_picture);
+                                            ImageView imageViewUserPicture = (ImageView)
+                                                    findViewById(R.id.iv_user_picture);
                                             imageViewUserPicture.setImageBitmap(result);
                                         }
                                     });
                         }
                     }
-
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                }
-
-        );
+                });
     }
 
-    public void startNavigationClickActivity(final Intent intent){
+    public void startNavigationClickActivity(final Intent intent) {
         android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(new Runnable() {
             @Override

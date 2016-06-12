@@ -17,13 +17,13 @@ import com.mifos.services.data.CenterPayload;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.http.QueryMap;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+import rx.Observable;
 
 /**
  * @author fomenkoo
@@ -32,38 +32,47 @@ public interface CenterService {
 
 
     @GET(APIEndPoint.CENTERS)
-    void getAllCenters(Callback<List<Center>> callback);
+    Observable<List<Center>> getAllCenters();
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
-    void getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") int centerId,
-                                                               Callback<CenterWithAssociations> centerWithAssociationsCallback);
+    Observable<CenterWithAssociations> getCenterWithGroupMembersAndCollectionMeetingCalendar
+            (@Path("centerId") int centerId);
 
     @GET(APIEndPoint.CENTERS)
-    void getAllCentersInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> additionalParams,
-                               Callback<List<Center>> centersCallback);
+    Observable<List<Center>> getAllCentersInOffice(@Query("officeId") int officeId,
+                                                   @QueryMap Map<String, Object> additionalParams);
+
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
-    void getAllGroupsForCenter(@Path("centerId") int centerId,
-                               Callback<CenterWithAssociations> centerWithAssociationsCallback);
+    Observable<CenterWithAssociations> getAllGroupsForCenter(@Path("centerId") int centerId);
+
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
-    void getCollectionSheet(@Path("centerId") long centerId, @Body Payload payload, Callback<CollectionSheet> callback);
+    Observable<CollectionSheet> getCollectionSheet(@Path("centerId") long centerId,
+                                                   @Body Payload payload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    SaveResponse saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload);
+    Observable<SaveResponse> saveCollectionSheet(
+            @Path("centerId") int centerId,
+            @Body CollectionSheetPayload collectionSheetPayload);
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    void saveCollectionSheet(@Path("centerId") int centerId, @Body CollectionSheetPayload collectionSheetPayload, Callback<SaveResponse> saveResponseCallback);
+    Observable<SaveResponse> saveCollectionSheetAsync(
+            @Path("centerId") int centerId,
+            @Body CollectionSheetPayload collectionSheetPayload);
 
 
-    @POST(APIEndPoint.CLIENTS + "")
-    void uploadNewClientDetails();
+    /*@POST(APIEndPoint.CLIENTS + "")
+    void uploadNewClientDetails();*/
 
     @POST(APIEndPoint.CENTERS)
-    void createCenter(@Body CenterPayload centerPayload, Callback<Center> callback);
+    Observable<Center> createCenter(@Body CenterPayload centerPayload);
 
     @GET(APIEndPoint.CENTERS)
-    void getCenterList(@Query("dateFormat") String dateFormat, @Query("locale") String locale,
-                       @Query("meetingDate") String meetingDate, @Query("officeId") int officeId,
-                       @Query("staffId") int staffId, Callback<List<OfflineCenter>> callback);
+    Observable<List<OfflineCenter>> getCenterList(
+            @Query("dateFormat") String dateFormat,
+            @Query("locale") String locale,
+            @Query("meetingDate") String meetingDate,
+            @Query("officeId") int officeId,
+            @Query("staffId") int staffId);
 }

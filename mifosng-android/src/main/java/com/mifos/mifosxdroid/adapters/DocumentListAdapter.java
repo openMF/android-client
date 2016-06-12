@@ -20,8 +20,8 @@ import com.mifos.objects.noncore.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 02/07/14.
@@ -74,7 +74,8 @@ public class DocumentListAdapter extends BaseAdapter {
         Document document = documents.get(i);
 
         reusableDocumentViewHolder.tv_doc_name.setText(document.getName());
-        reusableDocumentViewHolder.tv_doc_description.setText(document.getDescription()==null?"-":document.getDescription());
+        reusableDocumentViewHolder.tv_doc_description.setText(document.getDescription() == null ?
+                "-" : document.getDescription());
 
         MaterialIcons cloudIcon = MaterialIcons.md_cloud_download;
 //        Iconify.IconValue cloudIcon = Iconify.IconValue.fa_download;
@@ -91,14 +92,16 @@ public class DocumentListAdapter extends BaseAdapter {
 
     public static class ReusableDocumentViewHolder {
 
-        @InjectView(R.id.tv_doc_name)
+        @BindView(R.id.tv_doc_name)
         TextView tv_doc_name;
-        @InjectView(R.id.tv_doc_descrption)
+        @BindView(R.id.tv_doc_descrption)
         TextView tv_doc_description;
-        @InjectView(R.id.tv_doc_location_icon)
+        @BindView(R.id.tv_doc_location_icon)
         IconTextView tv_doc_location_icon;
 
-        public ReusableDocumentViewHolder(View view) { ButterKnife.inject(this, view); }
+        public ReusableDocumentViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
 
     }
 }

@@ -10,11 +10,16 @@ package com.mifos.objects;
  */
 public class Status {
 
-    private static String STATUS_ACTIVE = "Active";
+    private static final String STATUS_ACTIVE = "Active";
 
     private int id;
     private String code;
     private String value;
+
+    // Helper method to check if status is Active
+    public static boolean isActive(String value) {
+        return value.equalsIgnoreCase(STATUS_ACTIVE);
+    }
 
     public int getId() {
         return id;
@@ -38,12 +43,6 @@ public class Status {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-
-    // Helper method to check if status is Active
-    public static boolean isActive(String value) {
-        return value.equalsIgnoreCase(STATUS_ACTIVE);
     }
 
     @Override

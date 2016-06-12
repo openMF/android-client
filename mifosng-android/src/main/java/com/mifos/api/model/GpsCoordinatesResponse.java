@@ -9,8 +9,7 @@ package com.mifos.api.model;
  * Represents the response for GPS coordinates representing a client location.
  * TODO: finish this class.
  */
-public class GpsCoordinatesResponse
-{
+public class GpsCoordinatesResponse {
     Integer officeId;
     Integer clientId;
     Integer resourceId;

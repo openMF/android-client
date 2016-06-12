@@ -8,8 +8,7 @@ package com.mifos.mifosxdroid;
 import android.os.Bundle;
 
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.online.ClientListFragment;
-import com.mifos.mifosxdroid.online.GroupsListFragment;
+import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 
 public class GroupListActivity extends MifosBaseActivity {
     public void onCreate(Bundle savedInstanceState) {

@@ -17,15 +17,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 
 public class MFErrorParser {
 
-    public static void parseError(Response response) {
+    public static final String LOG_TAG = "MFErrorParser";
+
+    public static void parseError(ResponseBody response) {
 
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.byteStream
+                    ()));
             StringBuilder out = new StringBuilder();
             String newLine = System.getProperty("line.separator");
             String line;
@@ -34,19 +37,21 @@ public class MFErrorParser {
                 out.append(newLine);
             }
             Log.d("MFErrorParser", out.toString());
-            MFErrorResponse mfErrorResponse = new Gson().fromJson(out.toString(), MFErrorResponse.class);
-            System.out.println(mfErrorResponse.toString());
+            MFErrorResponse mfErrorResponse = new Gson().fromJson(out.toString(), MFErrorResponse
+                    .class);
+            Log.d(LOG_TAG, mfErrorResponse.toString());
             List<MFError> mfErrorList = mfErrorResponse.getErrors();
 
             for (MFError mfError : mfErrorList) {
-                Toast.makeText(App.getContext(), mfError.getDefaultUserMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getContext(), mfError.getDefaultUserMessage(), Toast
+                        .LENGTH_LONG).show();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG, e.getMessage());
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG, e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG, e.getMessage());
         }
 
     }

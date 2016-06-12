@@ -26,18 +26,20 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
+apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.triplet.play'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 22
+
         versionCode 20
         versionName "2.0.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         // A test runner provided by https://code.google.com/p/android-test-kit/
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -121,44 +123,75 @@ tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
         pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
 }
 
+tasks.withType(JavaCompile) {
+    configure(options) {
+        // TODO
+        compilerArgs << "-Xlint:deprecation"
+        compilerArgs << "-Xlint:-unchecked"
+        compilerArgs << "-Xlint:-rawtypes"
+    }
+}
+
 dependencies {
 
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
 
-    apt 'com.github.Raizlabs.DBFlow:dbflow-processor:3.0.0-beta1'
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:3.0.0-beta1"
-    compile "com.github.Raizlabs.DBFlow:dbflow:3.0.0-beta1"
     compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.google.android.gms:play-services-location:8.3.0'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.google.maps.android:android-maps-utils:0.4.2'
 
-    compile 'com.android.support:design:23.1.1'
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.jakewharton.fliptables:fliptables:1.0.1'
+    //DBFlow dependencies
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
+    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
+
+    // App's Support dependencies, including test
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
+    compile "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
+    compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+
+    //Dagger dependencies
+    apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    provided 'javax.annotation:jsr250-api:1.0'                //Required by Dagger2
+
+    //Butter Knife
+    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    apt "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+
+
+    //Square dependencies
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersionLatest"
+    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersionLatest"
+    compile "com.squareup.okhttp:okhttp:$rootProject.okHttpVersion"
+    compile "com.squareup.okhttp:okhttp-urlconnection:$rootProject.okHttpVersion"
+    compile "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+
     compile 'javax.annotation:jsr250-api:1.0@jar'
-    compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
+    compile 'com.squareup:otto:1.3.8'
 
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.4'
+
+    compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
     compile 'com.crashlytics.android:crashlytics:1.+'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
-    compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    compile "com.android.support.test.espresso:espresso-idling-resource:2.2.1"
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     // Android Testing Support Library's runner and rules
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile "com.android.support.test:rules:0.5"
+    androidTestCompile "com.android.support.test:runner:$rootProject.runnerVersion"
+    androidTestCompile "com.android.support.test:rules:$rootProject.rulesVersion"
 
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:2.2.2"
-    androidTestCompile "com.android.support.test.espresso:espresso-contrib:2.2.1"
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:2.2.1"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
 
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    testCompile 'junit:junit:4.12'
 
 }
     /*

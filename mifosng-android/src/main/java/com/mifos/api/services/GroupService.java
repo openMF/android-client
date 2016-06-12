@@ -13,37 +13,37 @@ import com.mifos.services.data.GroupPayload;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.http.QueryMap;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+import rx.Observable;
 
 /**
  * @author fomenkoo
  */
 public interface GroupService {
+
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
-    void getGroupWithAssociations(@Path("groupId") int groupId, Callback<GroupWithAssociations> groupWithAssociationsCallback);
+    Observable<GroupWithAssociations> getGroupWithAssociations(@Path("groupId") int groupId);
 
     @GET(APIEndPoint.GROUPS)
-    void getAllGroupsInOffice(@Query("officeId") int officeId, @QueryMap Map<String, Object> params, Callback<List<Group>> listOfGroupsCallback);
+    Observable<List<Group>> getAllGroupsInOffice(@Query("officeId") int officeId,
+                                                 @QueryMap Map<String, Object> params);
 
     @POST(APIEndPoint.GROUPS)
-    void createGroup(@Body GroupPayload groupPayload, Callback<Group> callback);
+    Observable<Group> createGroup(@Body GroupPayload groupPayload);
 
     @GET(APIEndPoint.GROUPS + "/{groupId}")
-    void getGroup(@Path("groupId") int groupId, Callback<Group> groupCallback);
+    Observable<Group> getGroup(@Path("groupId") int groupId);
 
-    @GET(APIEndPoint.GROUPS+"?paged=true")
-    void listAllGroups(@Query("offset") int offset, @Query("limit") int limit, Callback<Page<Group>> callback);
+    @GET(APIEndPoint.GROUPS + "?paged=true")
+    Observable<Page<Group>> listAllGroups(@Query("offset") int offset, @Query("limit") int limit);
 
-
-    @GET(APIEndPoint.GROUPS+"?paged=true")
-    void listAllGroup( Callback<Page<Group>> callback);
-
+    @GET(APIEndPoint.GROUPS + "?paged=true")
+    Observable<Page<Group>> getAllGroup();
 
 
 }

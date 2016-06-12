@@ -4,18 +4,17 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.api.model.APIEndPoint;
-import com.mifos.api.model.ScorecardPayload;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import rx.Observable;
 
 /**
  * @author
@@ -23,11 +22,12 @@ import retrofit.http.Path;
 public interface SurveyService {
 
     @GET(APIEndPoint.SURVEYS)
-    void getAllSurveys(Callback<List<Survey>> callback);
+    Observable<List<Survey>> getAllSurveys();
 
     @GET(APIEndPoint.SURVEYS + "/{surveyId}")
-    void getSurvey(@Path("surveyId") int surveyId, Callback<Survey> surveyCallback);
+    Observable<Survey> getSurvey(@Path("surveyId") int surveyId);
 
     @POST(APIEndPoint.SURVEYS + "/{surveyId}/scorecards")
-    void submitScore(@Path("surveyId") int surveyId, @Body Scorecard scorecardPayload, Callback<Scorecard> callback);
+    Observable<Scorecard> submitScore(@Path("surveyId") int surveyId,
+                                      @Body Scorecard scorecardPayload);
 }

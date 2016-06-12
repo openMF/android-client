@@ -30,7 +30,8 @@ public class CollectionMeetingCalendar extends SugarRecord<CollectionMeetingCale
     private List<Integer> startDate = new ArrayList<Integer>();
 
     public boolean isNew() {
-        long count = Select.from(CollectionMeetingCalendar.class).where(Condition.prop("id").eq(id)).count();
+        long count = Select.from(CollectionMeetingCalendar.class).where(Condition.prop("id").eq
+                (id)).count();
         return count == 0;
     }
 

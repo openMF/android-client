@@ -24,11 +24,11 @@ public class CollectionMeetingCalendar {
     private EntityType entityType;
     private Integer firstReminder;
     private CollectionFrequency frequency;
-    private String  humanReadable;
+    private String humanReadable;
     private Integer id;
     private Integer interval;
     private Integer lastUpdatedByUserId;
-    private String  lastUpdatedByUsername;
+    private String lastUpdatedByUsername;
     private List<Integer> lastUpdatedDate = new ArrayList<Integer>();
     private List<List<Integer>> nextTenRecurringDates = new ArrayList<List<Integer>>();
     private List<Integer> recentEligibleMeetingDate = new ArrayList<Integer>();

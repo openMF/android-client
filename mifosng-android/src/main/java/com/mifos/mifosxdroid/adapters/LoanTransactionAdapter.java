@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.mifosxdroid.R;
@@ -21,8 +22,8 @@ import com.mifos.utils.DateHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 21/06/14.
@@ -46,9 +47,12 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         children = new ArrayList<Child>();
         for (Transaction transaction : transactionList) {
 
-            Parent parent = new Parent(transaction.getDate(), transaction.getType(), transaction.getAmount());
-            Child child = new Child(transaction.getId(), transaction.getOfficeName(), transaction.getPrincipalPortion(),
-                    transaction.getInterestPortion(), transaction.getFeeChargesPortion(), transaction.getPenaltyChargesPortion());
+            Parent parent = new Parent(transaction.getDate(), transaction.getType(), transaction
+                    .getAmount());
+            Child child = new Child(transaction.getId(), transaction.getOfficeName(), transaction
+                    .getPrincipalPortion(),
+                    transaction.getInterestPortion(), transaction.getFeeChargesPortion(),
+                    transaction.getPenaltyChargesPortion());
 
             parents.add(parent);
             children.add(child);
@@ -111,7 +115,8 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         }
 
         Iconify.addIcons(reusableParentViewHolder.tv_arrow);
-        reusableParentViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(parents.get(i).getDate()));
+        reusableParentViewHolder.tv_transactionDate.setText(DateHelper.getDateAsString(parents
+                .get(i).getDate()));
 
 //        Iconify.addIcons(reusableParentViewHolder.tv_arrow);
         reusableParentViewHolder.tv_transactionDate.setText(
@@ -157,38 +162,38 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
 
     public static class ReusableParentViewHolder {
 
-        @InjectView(R.id.tv_arrow)
+        @BindView(R.id.tv_arrow)
         TextView tv_arrow;
-        @InjectView(R.id.tv_transaction_date)
+        @BindView(R.id.tv_transaction_date)
         TextView tv_transactionDate;
-        @InjectView(R.id.tv_transaction_type)
+        @BindView(R.id.tv_transaction_type)
         TextView tv_transactionType;
-        @InjectView(R.id.tv_transaction_amount)
+        @BindView(R.id.tv_transaction_amount)
         TextView tv_transactionAmount;
 
         public ReusableParentViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }
 
     public static class ReusableChildViewHolder {
 
-        @InjectView(R.id.tv_transaction_id)
+        @BindView(R.id.tv_transaction_id)
         TextView tv_transactionId;
-        @InjectView(R.id.tv_office_name)
+        @BindView(R.id.tv_office_name)
         TextView tv_officeName;
-        @InjectView(R.id.tv_principal)
+        @BindView(R.id.tv_principal)
         TextView tv_principal;
-        @InjectView(R.id.tv_interest)
+        @BindView(R.id.tv_interest)
         TextView tv_interest;
-        @InjectView(R.id.tv_fees)
+        @BindView(R.id.tv_fees)
         TextView tv_fees;
-        @InjectView(R.id.tv_penalties)
+        @BindView(R.id.tv_penalties)
         TextView tv_penalties;
 
         public ReusableChildViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }
@@ -249,7 +254,8 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         Double penaltyChargesPortion;
 
         public Child(Integer id, String officeName, Double principalPortion,
-                     Double interestPortion, Double feeChargesPortion, Double penaltyChargesPortion) {
+                     Double interestPortion, Double feeChargesPortion, Double
+                             penaltyChargesPortion) {
             this.id = id;
             this.officeName = officeName;
             this.principalPortion = principalPortion;

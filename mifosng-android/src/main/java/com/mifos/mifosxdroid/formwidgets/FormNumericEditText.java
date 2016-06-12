@@ -20,20 +20,19 @@ public class FormNumericEditText extends FormWidget {
     protected EditText input;
     protected int priority;
 
-    public FormNumericEditText(Context context, String property )
-    {
-        super( context, property );
+    public FormNumericEditText(Context context, String property) {
+        super(context, property);
 
-        label = new TextView( context );
-        label.setText( getDisplayText() );
+        label = new TextView(context);
+        label.setText(getDisplayText());
 
-        input = new EditText( context );
-        input.setInputType( InputType.TYPE_CLASS_PHONE );
-        input.setImeOptions( EditorInfo.IME_ACTION_DONE );
-        input.setLayoutParams( FormWidget.defaultLayoutParams );
+        input = new EditText(context);
+        input.setInputType(InputType.TYPE_CLASS_PHONE);
+        input.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        input.setLayoutParams(FormWidget.defaultLayoutParams);
 
-        layout.addView( label );
-        layout.addView( input );
+        layout.addView(label);
+        layout.addView(input);
     }
 
     public String getValue() {
@@ -41,11 +40,11 @@ public class FormNumericEditText extends FormWidget {
     }
 
     public void setValue(String value) {
-        input.setText( value );
+        input.setText(value);
     }
 
     @Override
-    public void setHint( String value ){
-        input.setHint( value );
+    public void setHint(String value) {
+        input.setHint(value);
     }
 }

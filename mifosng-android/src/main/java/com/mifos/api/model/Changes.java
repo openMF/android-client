@@ -8,13 +8,12 @@ package com.mifos.api.model;
 
 import com.google.gson.Gson;
 
-public class Changes
-{
+public class Changes {
     public String locale;
     public String dateFormat;
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new Gson().toJson(this);
     }
 }

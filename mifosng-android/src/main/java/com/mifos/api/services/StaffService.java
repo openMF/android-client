@@ -4,14 +4,16 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.objects.organisation.Staff;
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.organisation.Staff;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+import rx.Observable;
+
+;
 
 /**
  * @author fomenkoo
@@ -19,12 +21,13 @@ import retrofit.http.Query;
 public interface StaffService {
 
     @GET(APIEndPoint.STAFF + "?status=all")
-    void getStaffForOffice(@Query("officeId") int officeId, Callback<List<Staff>> staffListCallback);
+    Observable<List<Staff>> getStaffForOffice(@Query("officeId") int officeId);
 
 
-        @GET(APIEndPoint.STAFF)
-        void getAllStaff(Callback<List<Staff>> listOfStaffsCallback);
+    @GET(APIEndPoint.STAFF)
+    Observable<List<Staff>> getAllStaff();
 
-
+    @GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
+    Observable<List<Staff>> getFieldStaffForOffice();
 
 }

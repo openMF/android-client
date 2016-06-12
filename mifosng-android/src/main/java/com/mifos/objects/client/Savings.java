@@ -2,7 +2,6 @@ package com.mifos.objects.client;
 
 import com.mifos.objects.Currency;
 import com.mifos.objects.accounts.savings.DepositType;
-import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.accounts.savings.Status;
 
 import java.util.HashMap;

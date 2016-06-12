@@ -4,10 +4,6 @@
  */
 package com.mifos.objects.organisation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * Created by nkiboi on 12/15/2015.
  */

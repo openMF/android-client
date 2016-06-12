@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class GenericRequest {
 
-    HashMap<String,Object> requestFields = new HashMap<String, Object>();
+    HashMap<String, Object> requestFields = new HashMap<String, Object>();
 
     public HashMap<String, Object> getRequestFields() {
         return requestFields;

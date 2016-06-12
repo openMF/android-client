@@ -21,9 +21,21 @@ import java.util.List;
 /**
  * @author fomenkoo
  */
+@SuppressWarnings({"unchecked", "varargs"})
 public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
     private final Object mLock = new Object();
-
+    /**
+     * Handler for button elements in listview
+     */
+    View.OnClickListener buttonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ListView listView = (ListView) v.getParent();
+            int position = listView.getPositionForView(v);
+            listView.performItemClick(listView.getChildAt(position), position, listView
+                    .getItemIdAtPosition(position));
+        }
+    };
     private List<T> list;
     private Context context;
     private int layoutId;
@@ -45,6 +57,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param object The object to add at the end of the array.
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public void add(T object) {
         synchronized (mLock) {
             list.add(object);
@@ -57,6 +70,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param collection The Collection to add at the end of the array.
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public void addAll(Collection<? extends T> collection) {
         synchronized (mLock) {
             list.addAll(collection);
@@ -69,6 +83,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param items The items to add at the end of the array.
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public void addAll(T... items) {
         synchronized (mLock) {
             Collections.addAll(list, items);
@@ -94,6 +109,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param object The object to remove.
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public void remove(T object) {
         synchronized (mLock) {
             list.remove(object);
@@ -117,6 +133,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      * @param comparator The comparator used to sort the objects contained
      *                   in this adapter.
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public void sort(Comparator<? super T> comparator) {
         synchronized (mLock) {
             Collections.sort(list, comparator);
@@ -134,6 +151,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public T getItem(int position) {
         return (list != null && position >= 0 && position < getCount()) ? list.get(position) : null;
     }
@@ -144,6 +162,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      * @param item The item to retrieve the position of.
      * @return The position of the specified item.
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public int getPosition(T item) {
         return list != null ? list.indexOf(item) : -1;
     }
@@ -169,15 +188,17 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
         return getContext().getResources();
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
+    public List<T> getList() {
+        return list;
+    }
+
+    @SuppressWarnings({"unchecked", "varargs"})
     public void setList(List<T> list) {
         synchronized (mLock) {
             this.list = list;
         }
         notifyDataSetChanged();
-    }
-
-    public List<T> getList() {
-        return list;
     }
 
     public View getLayout() {
@@ -190,17 +211,5 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
         }
         return inflater;
     }
-
-    /**
-     * Handler for button elements in listview
-     */
-    View.OnClickListener buttonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            ListView listView = (ListView) v.getParent();
-            int position = listView.getPositionForView(v);
-            listView.performItemClick(listView.getChildAt(position), position, listView.getItemIdAtPosition(position));
-        }
-    };
 
 }

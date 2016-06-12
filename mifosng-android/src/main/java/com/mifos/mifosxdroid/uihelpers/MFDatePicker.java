@@ -29,11 +29,11 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
         calendar = Calendar.getInstance();
         dateSet = new StringBuilder()
                 .append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ?
-                        ("0"+calendar.get(Calendar.DAY_OF_MONTH))
+                        ("0" + calendar.get(Calendar.DAY_OF_MONTH))
                         : calendar.get(Calendar.DAY_OF_MONTH))
                 .append("-")
                 .append(calendar.get(Calendar.MONTH) + 1 < 10 ?
-                        ("0"+(calendar.get(Calendar.MONTH) + 1))
+                        ("0" + (calendar.get(Calendar.MONTH) + 1))
                         : calendar.get(Calendar.MONTH) + 1)
                 .append("-")
                 .append(calendar.get(Calendar.YEAR))
@@ -42,7 +42,7 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
 
     OnDatePickListener onDatePickListener;
 
-    public MFDatePicker(){
+    public MFDatePicker() {
 
     }
 
@@ -52,14 +52,18 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
         return mfDatePicker;
     }
 
+    public static String getDatePickedAsString() {
+        return dateSet;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        DatePickerDialog dialog=new DatePickerDialog(getActivity(),
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(),
                 this, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
-        
+
         dialog.getDatePicker().setMaxDate(new Date().getTime());
         return dialog;
     }
@@ -79,18 +83,13 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
 
     }
 
-    public static String getDatePickedAsString() {
-        return dateSet;
+    public void setOnDatePickListener(OnDatePickListener onDatePickListener) {
+        this.onDatePickListener = onDatePickListener;
     }
 
     public interface OnDatePickListener {
         public void onDatePicked(String date);
     }
-
-    public void setOnDatePickListener(OnDatePickListener onDatePickListener) {
-        this.onDatePickListener = onDatePickListener;
-    }
-
 
 
 }

@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:inAnimation="@android:anim/fade_in"
     android:outAnimation="@android:anim/fade_out"
-    tools:context="com.mifos.mifosxdroid.online.SavingsAccountTransactionFragment">
+    tools:context=".online.savingaccounttransaction.SavingsAccountTransactionFragment">
 
     <!-- Comment this out when editing the actual content -->
     <ProgressBar

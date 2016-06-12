@@ -3,9 +3,9 @@ package com.mifos.api.services;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.accounts.GroupAccounts;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Path;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import rx.Observable;
 
 /**
  * Created by nellyk on 3/20/2016.
@@ -14,6 +14,6 @@ import retrofit.http.Path;
 public interface GroupAccountService {
 
     @GET(APIEndPoint.GROUPS + "/{groupId}/accounts")
-    void getAllGroupsOfClient(@Path("groupId") int groupId, Callback<GroupAccounts> groupAccountsCallback);
+    Observable<GroupAccounts> getAllGroupsOfClient(@Path("groupId") int groupId);
 
 }

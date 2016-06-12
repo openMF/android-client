@@ -21,8 +21,8 @@ import com.mifos.objects.db.Loan;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by ishankhanna on 21/07/14.
@@ -37,7 +37,8 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
 
     int positionBeingEdited = -1;
 
-    public CollectionSheetLoanAccountListAdapter(Context context, List<Loan> loans, int groupPosition, int childPosition) {
+    public CollectionSheetLoanAccountListAdapter(Context context, List<Loan> loans, int
+            groupPosition, int childPosition) {
 
         layoutInflater = LayoutInflater.from(context);
         this.loans = loans;
@@ -75,8 +76,8 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
         }
 
 
-
-        Double transactionAmount = CollectionListAdapter.sRepaymentTransactions.get(loans.get(position).getLoanId());
+        Double transactionAmount = CollectionListAdapter.sRepaymentTransactions.get(loans.get
+                (position).getLoanId());
 
         reusableViewHolder.tv_amountDue.setText(String.valueOf(loans.get(position).getTotalDue()));
         reusableViewHolder.tv_loanShortName.setText(loans.get(position).getProductShortName());
@@ -97,9 +98,12 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
             public void afterTextChanged(Editable s) {
 
                 try {
-                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), s.toString().equals("")?0.00:Double.parseDouble(s.toString()));
-                }catch (NumberFormatException e) {
-                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position).getLoanId(), 0.00);
+                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position)
+                            .getLoanId(), s.toString().equals("") ? 0.00 : Double.parseDouble(s
+                            .toString()));
+                } catch (NumberFormatException e) {
+                    CollectionListAdapter.sRepaymentTransactions.put(loans.get(position)
+                            .getLoanId(), 0.00);
                 }
                 /* TODO Fix Live update of Amounts
                 CollectionSheetFragment.refreshFragment();
@@ -113,15 +117,15 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
 
     public static class ReusableViewHolder {
 
-        @InjectView(R.id.tv_loan_shortname)
+        @BindView(R.id.tv_loan_shortname)
         TextView tv_loanShortName;
-        @InjectView(R.id.tv_amountDue)
+        @BindView(R.id.tv_amountDue)
         TextView tv_amountDue;
-        @InjectView(R.id.et_amountPaid)
+        @BindView(R.id.et_amountPaid)
         EditText et_amountPaid;
 
         public ReusableViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 

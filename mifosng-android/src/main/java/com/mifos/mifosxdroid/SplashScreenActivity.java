@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.utils.PrefManager;
 
@@ -26,7 +27,7 @@ public class SplashScreenActivity extends MifosBaseActivity {
         if (!PrefManager.isAuthenticated()) {
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {
-            App.apiManager.setupEndpoint(PrefManager.getInstanceUrl());
+            App.baseApiManager.setupEndpoint(PrefManager.getInstanceUrl());
             startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
         }
         finish();

@@ -8,9 +8,7 @@ package com.mifos.objects.client;
 import com.mifos.objects.Status;
 import com.mifos.objects.Timeline;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**

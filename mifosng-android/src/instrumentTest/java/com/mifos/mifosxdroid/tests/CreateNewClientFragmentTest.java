@@ -13,7 +13,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.online.CreateNewClientFragment;
+import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.DashboardActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -24,7 +24,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 /**
  * Created by ahmed fathy on 26/03/16.
  */
-public class CreateNewClientFragmentTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
+public class CreateNewClientFragmentTest extends
+        ActivityInstrumentationTestCase2<DashboardActivity> {
 
     /* fields */
     private DashboardActivity dashboardActivity;
@@ -54,7 +55,8 @@ public class CreateNewClientFragmentTest extends ActivityInstrumentationTestCase
         Thread.sleep(5000);
 
         // reference views
-        createNewClientFragment = (CreateNewClientFragment) dashboardActivity.getSupportFragmentManager().findFragmentById(R.id.container);
+        createNewClientFragment = (CreateNewClientFragment) dashboardActivity
+                .getSupportFragmentManager().findFragmentById(R.id.container);
         textViewDateOfBirth = (TextView) dashboardActivity.findViewById(R.id.tv_dateofbirth);
         textViewSubmissionDate = (TextView) dashboardActivity.findViewById(R.id.tv_submission_date);
         checkBoxActive = (CheckBox) dashboardActivity.findViewById(R.id.cb_client_active_status);

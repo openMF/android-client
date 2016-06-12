@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by ishankhanna on 30/05/14.
@@ -27,6 +26,10 @@ public class DateHelper {
 
     public static final String DATE_FORMAT_VALUE = "dd MMM yyyy";
 
+    /**
+     * @return current date formatted as day - month - year where month is a number from 1 to 12
+     * (ex: 13 - 4 - 2014)
+     */
     public static String getCurrentDateAsString() {
 
         Calendar calendar = Calendar.getInstance();
@@ -39,6 +42,10 @@ public class DateHelper {
         return date;
     }
 
+    /**
+     * @return current date as [year-month-day] where month is a number from 1 to 12 (ex: [2014,
+     * 4, 14])
+     */
     public static List<Integer> getCurrentDateAsListOfIntegers() {
 
         List<Integer> date = new ArrayList<Integer>();
@@ -50,37 +57,50 @@ public class DateHelper {
         return date;
     }
 
+    /**
+     * @param date formatted as day-month-year where month is an integer from 1 to 12
+     * @return replaces month with a string like Jan or Feb..etc
+     */
     public static String getDateAsStringUsedForCollectionSheetPayload(String date) {
-        final StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         if (date != null) {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append("-");
+            builder.append('-');
             builder.append(getMonthName(month));
-            builder.append("-");
+            builder.append('-');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
         //Return as dd-mmm-yyyy
 
     }
+
+    /**
+     * @param date formatted as day-month-year where month is an integer from 1 to 12 (ex:
+     *             14-4-2016)
+     * @return replaces month with a string like Jan or Feb...etc (ex: 14-Apr-2016)
+     */
     public static String getDateAsStringUsedForDateofBirth(String date) {
         final StringBuilder builder = new StringBuilder();
         if (date != null) {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append("-");
+            builder.append('-');
             builder.append(getMonthName(month));
-            builder.append("-");
+            builder.append('-');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
         //Return as dd-mmm-yyyy
 
     }
-    //Currently supports on "dd MM yyyy"
+
+    /**
+     * @return current date formatted as day month year where month is from 1 to 12 (ex 14 4 2016)
+     */
     public static String getCurrentDateAsDateFormat() {
 
         Calendar calendar = Calendar.getInstance();
@@ -96,6 +116,9 @@ public class DateHelper {
 
     }
 
+    /**
+     * @return current date formatted as dd MMMM yyyy (ex: 14 April 2016)
+     */
     public static String getCurrentDateAsNewDateFormat() {
 
         Calendar calendar = Calendar.getInstance();
@@ -116,20 +139,19 @@ public class DateHelper {
     }
 
 
-
-
     /**
-     * @param integersOfDate
-     * @return date in format dd MMM yyyy
+     * the result string uses the list given in a reverse order ([x, y, z] results in "z y x")
+     *
+     * @param integersOfDate [year-month-day] (ex [2016, 4, 14])
+     * @return date in the format day month year (ex 14 Apr 2016)
      */
-
     public static String getDateAsString(List<Integer> integersOfDate) {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(integersOfDate.get(2))
-                .append(" ")
+                .append(' ')
                 .append(getMonthName(integersOfDate.get(1)))
-                .append(" ")
+                .append(' ')
                 .append(integersOfDate.get(0));
 
         return stringBuilder.toString();
@@ -137,10 +159,11 @@ public class DateHelper {
     }
 
     /**
+     * @param date1 a list of 3 numbers [year, month, day] (Ex [2016, 4, 14])
+     * @param date2 a list of 3 numbers [year, month, day] (Ex [2016, 3, 21])
      * @return zero if both date1 and date2 are equal, positive int if date1 > date2
      * and negative int if date1 < date2
      */
-
     public static int dateComparator(List<Integer> date1, List<Integer> date2) {
 
         /*
@@ -182,6 +205,10 @@ public class DateHelper {
         }
     }
 
+    /**
+     * @param month an integer from 1 to 12
+     * @return string representation of the month like Jan or Feb..etc
+     */
     public static String getMonthName(int month) {
         String monthName = "";
         switch (month) {
@@ -225,38 +252,56 @@ public class DateHelper {
         return monthName;
     }
 
+    /**
+     * @return the payload date from preferences forrmatted as day-month-year
+     * returns empty string if no value is saved in preferences
+     */
     public static String getPayloadDate(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(OfflineCenterInputActivity
+                .PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
         final StringBuilder builder = new StringBuilder();
         if (date != null) {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append(" ");
-            builder.append(DateHelper.getMonthName(month));
-            builder.append(" ");
+            builder.append(' ');
+            builder.append(getMonthName(month));
+            builder.append(' ');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
     }
 
+    /**
+     * same as getPayloadDate(Context context)
+     *
+     * @return the payload date from preferences forrmatted as day-month-year
+     * returns empty string if no value is saved in preferences
+     */
     public static String getPayloadDate() {
-        SharedPreferences preferences = App.getContext().getSharedPreferences(OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = App.getContext().getSharedPreferences
+                (OfflineCenterInputActivity.PREF_CENTER_DETAILS, Context.MODE_PRIVATE);
         String date = preferences.getString(OfflineCenterInputActivity.TRANSACTION_DATE_KEY, null);
         final StringBuilder builder = new StringBuilder();
         if (date != null) {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
-            builder.append(" ");
-            builder.append(DateHelper.getMonthName(month));
-            builder.append(" ");
+            builder.append(' ');
+            builder.append(getMonthName(month));
+            builder.append(' ');
             builder.append(splittedDate[2]);
         }
         return builder.toString();
     }
 
+    /**
+     * ex: date = 11,4,2016 separator = ,  result = [11, 4, 2016]
+     *
+     * @param date      string with tokken seperated by a seperator
+     * @param separator the strings that separates the tokkens to be parsed
+     */
     public static List<Integer> getDateList(String date, String separator) {
         String[] splittedDate = date.split(separator);
         List<Integer> dateList = new ArrayList<>();

@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.mifos.mifosxdroid.LoginActivity;
+import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
@@ -34,11 +34,11 @@ import static org.hamcrest.Matchers.startsWith;
  */
 public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginActivity> {
 
-    String TEST_URL_1 = "demo.mifos.org";
-    String TEST_URL_2 = "www.google.com";
-    String TEST_URL_3 = "this.is.valid.url";
-    String TEST_URL_4 = "yahoo.in";
-    String TEST_URL_5 = "10.0.2.2";
+    public static final String TEST_URL_1 = "demo.mifos.org";
+    public static final String TEST_URL_2 = "www.google.com";
+    public static final String TEST_URL_3 = "this.is.valid.url";
+    public static final String TEST_URL_4 = "yahoo.in";
+    public final String TEST_URL_5 = getActivity().getString(R.string.test_ip);
 
     LoginActivity loginActivity;
     EditText et_mifos_domain;
@@ -56,7 +56,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         loginActivity = getActivity();
         et_mifos_domain = (EditText) loginActivity.findViewById(R.id.et_instanceURL);
         et_username = (EditText) loginActivity.findViewById(R.id.et_username);
-        tv_constructed_instance_url = (TextView) loginActivity.findViewById(R.id.tv_constructed_instance_url);
+        tv_constructed_instance_url = (TextView) loginActivity.findViewById(R.id
+                .tv_constructed_instance_url);
     }
 
     @SmallTest
@@ -70,6 +71,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         assertEquals(View.VISIBLE, et_mifos_domain.getVisibility());
     }
 
+    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance1() {
         //Test if TextView has been instantiated
@@ -78,45 +80,54 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         // Set URL and check the color of the message, it turns green
         // only if the URL matches the pattern specified
         enterMifosInstanceDomain(TEST_URL_1);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
+    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance2() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
         enterMifosInstanceDomain(TEST_URL_2);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
 
+    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance3() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
 
         enterMifosInstanceDomain(TEST_URL_3);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
+    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance4() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
         enterMifosInstanceDomain(TEST_URL_4);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
+    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance5() {
         //Test if TextView has been instantiated
         assertNotNull(tv_constructed_instance_url);
         enterMifosInstanceDomain(TEST_URL_5);
-        assertEquals(loginActivity.getResources().getColor(R.color.green_light), tv_constructed_instance_url.getCurrentTextColor());
+        assertEquals(loginActivity.getResources().getColor(R.color.green_light),
+                tv_constructed_instance_url.getCurrentTextColor());
     }
 
     @MediumTest
-    public void testSaveLastAccessedInstanceDomainName_savesProvidedString() {
+    public void testSaveLastAccessedInstanceDomainNameSavesProvidedString() {
         PrefManager.setInstanceDomain(TEST_URL_1);
         assertEquals(TEST_URL_1, PrefManager.getInstanceDomain());
 
@@ -126,7 +137,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     @MediumTest
     @Suppress // TODO: Fix ComparisonFailure: expected:<[demo.mifos.org]> but was:<[www.google.com]>
-    public void testValidateUserInputs_savesValidDomainToSharedProperties() {
+    public void testValidateUserInputsSavesValidDomainToSharedProperties() {
         saveLastAccessedInstanceDomainName(TEST_URL_2);
         enterMifosInstanceDomain(TEST_URL_1);
         getActivity().runOnUiThread(new Runnable() {
@@ -136,14 +147,15 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
             }
         });
         getInstrumentation().waitForIdleSync();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences
+                (getInstrumentation().getTargetContext());
         assertEquals(TEST_URL_1, sharedPreferences.getString(Constants.INSTANCE_URL_KEY, ""));
     }
 
     @MediumTest
     @Suppress // TODO: Fix expected:<https://demo.[mifos.org:80]/mifosng-provider/ap...>
     // but was:<https://demo.[openmf.org]/mifosng-provider/ap...>
-    public void testValidateUserInputs_setsAPIinstanceUrl() {
+    public void testValidateUserInputsSetsAPIinstanceUrl() {
         saveLastAccessedInstanceDomainName(TEST_URL_2);
         enterMifosInstanceDomain(TEST_URL_1);
         getActivity().runOnUiThread(new Runnable() {
@@ -156,7 +168,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     }
 
     @SmallTest
-    public void testMoreOptions_displaysOfflineMenuItem() {
+    public void testMoreOptionsDisplaysOfflineMenuItem() {
         onView(withContentDescription("More options")).perform(click());
         onView(withText(is(startsWith("Offline")))).check(matches(isDisplayed()));
     }

@@ -135,13 +135,6 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
-            <Spinner
-                android:id="@+id/sp_loan_term"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
 
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
@@ -254,6 +247,54 @@
                 android:paddingTop="10dp"
                 android:text="@string/calculateinterest"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_fund"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/loan_fund"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_fund"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_loan_officer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/loan_officer"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_loan_officer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_interest_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/loan_interest_type"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_interest_type"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
 
             <Button
                 android:id="@+id/bt_loan_submit"

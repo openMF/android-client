@@ -6,56 +6,46 @@
 package com.mifos.api.model;
 
 //TODO Remove calendarId and TransactionDate from this Payload class;
-public class Payload
-{
+public class Payload {
     private String dateFormat = "dd MMMM YYYY";
     private String locale = "en";
     private long calendarId;
     private String transactionDate;
 
-    public String getDateFormat()
-    {
+    public String getDateFormat() {
         return dateFormat;
     }
 
-    public void setDateFormat(String dateFormat)
-    {
+    public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
     }
 
-    public String getLocale()
-    {
+    public String getLocale() {
         return locale;
     }
 
-    public void setLocale(String locale)
-    {
+    public void setLocale(String locale) {
         this.locale = locale;
     }
 
-    public long getCalendarId()
-    {
+    public long getCalendarId() {
         return calendarId;
     }
 
-    public void setCalendarId(long calendarId)
-    {
+    public void setCalendarId(long calendarId) {
         this.calendarId = calendarId;
     }
 
-    public String getTransactionDate()
-    {
+    public String getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(String transactionDate)
-    {
+    public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "{" +
                 "dateFormat='" + dateFormat + '\'' +
                 ", locale='" + locale + '\'' +

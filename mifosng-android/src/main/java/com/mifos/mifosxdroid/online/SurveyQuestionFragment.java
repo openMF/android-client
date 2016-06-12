@@ -17,12 +17,14 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.survey.QuestionDatas;
 import com.mifos.objects.survey.ScorecardValues;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by Nasim Banu on 28,January,2016.
@@ -30,21 +32,19 @@ import butterknife.InjectView;
 public class SurveyQuestionFragment extends Fragment {
 
 
-    public interface OnAnswerSelectedListener {
-        void answer(ScorecardValues scorecardValues);
-    }
-
     private static final String QUESTION_DATA = "Question Data";
-    @InjectView(R.id.survey_question_textView) TextView tv_question;
-    @InjectView(R.id.radio1) RadioGroup radioGroup1;
-    private String LOG_TAG = getClass().getSimpleName();
+    private final String LOG_TAG = getClass().getSimpleName();
+    @BindView(R.id.survey_question_textView)
+    TextView tv_question;
+    @BindView(R.id.radio1)
+    RadioGroup radioGroup1;
+    RadioButton button1;
+    RadioButton btn;
+    Context thiscontext;
     private OnAnswerSelectedListener mCallback;
     private QuestionDatas mQuestionDatas;
     private String answer;
     private ScorecardValues mScorecardValues;
-    RadioButton button1;
-    RadioButton btn;
-    Context thiscontext;
 
     public static SurveyQuestionFragment newInstance(String QuestionDatas) {
         SurveyQuestionFragment fragment = new SurveyQuestionFragment();
@@ -58,9 +58,10 @@ public class SurveyQuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_survey_question, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         thiscontext = container.getContext();
-        mQuestionDatas = (new Gson()).fromJson(getArguments().getString(QUESTION_DATA), QuestionDatas.class);
+        mQuestionDatas = (new Gson()).fromJson(getArguments().getString(QUESTION_DATA),
+                QuestionDatas.class);
         mScorecardValues = new ScorecardValues();
 
         tv_question.setText(mQuestionDatas.getText());
@@ -74,19 +75,22 @@ public class SurveyQuestionFragment extends Fragment {
             radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 public void onCheckedChanged(RadioGroup mRadioGroup2,
                                              int checkedId2) {
-                    for (int i = 0; i < mRadioGroup2.getChildCount(); i++) {
-                        btn = (RadioButton) mRadioGroup2.getChildAt(i);
+                    for (int j = 0; j < mRadioGroup2.getChildCount(); j++) {
+                        btn = (RadioButton) mRadioGroup2.getChildAt(j);
                         int t = mRadioGroup2.getId();
-                        System.out.println(t);
+                        Log.d(LOG_TAG, "" + t);
 
                         if (btn.getId() == checkedId2) {
                             answer = btn.getText().toString();
                             mScorecardValues.setQuestionId(mQuestionDatas.getQuestionId());
-                            mScorecardValues.setResponseId(mQuestionDatas.getResponseDatas().get(i).getResponseId());
-                            mScorecardValues.setValue(mQuestionDatas.getResponseDatas().get(i).getValue());
+                            mScorecardValues.setResponseId(mQuestionDatas.getResponseDatas()
+                                    .get(j).getResponseId());
+                            mScorecardValues.setValue(mQuestionDatas.getResponseDatas()
+                                    .get(j).getValue());
                             mCallback.answer(mScorecardValues);
-                            Log.d(LOG_TAG, "Q R V" + mQuestionDatas.getQuestionId() + " " + mQuestionDatas.getResponseDatas().get(i).getResponseId()
-                            + " " + mQuestionDatas.getResponseDatas().get(i).getValue());
+                            Log.d(LOG_TAG, "Q R V" + mQuestionDatas.getQuestionId() + " " +
+                                    mQuestionDatas.getResponseDatas().get(j).getResponseId()
+                                    + " " + mQuestionDatas.getResponseDatas().get(j).getValue());
                             return;
                         }
                     }
@@ -108,6 +112,10 @@ public class SurveyQuestionFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnAnswerSelectedListener");
         }
+    }
+
+    public interface OnAnswerSelectedListener {
+        void answer(ScorecardValues scorecardValues);
     }
 
 }

@@ -9,41 +9,40 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.services.data.ChargesPayload;
 
-import java.util.List;
-
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.Headers;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import okhttp3.ResponseBody;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import rx.Observable;
 
 /**
  * @author nellyk
  */
 public interface ChargeService {
+
     @GET(APIEndPoint.CHARGES)
-    void listAllCharges(Callback<Response> chargesCallback);
+    Observable<ResponseBody> listAllCharges();
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
-    void getAllChargesS(@Path("clientId") int clientId, Callback<Response> callback);
+    Observable<ResponseBody> getAllChargesS(@Path("clientId") int clientId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
-    void getAllChargev3(@Path ("loanId") int loanId,Callback<Response> callback);
+    Observable<ResponseBody> getAllChargev3(@Path("loanId") int loanId);
 
-    @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
-    void getListOfCharges(@Path("clientId") int clientId, Callback<Page<Charges>> chargeListCallback);
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/charges")
+    Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
 
-    @POST(APIEndPoint.CLIENTS + "/{clientId}"+ APIEndPoint.CHARGES)
-    void createCharges(@Path("clientId") int clientId, @Body ChargesPayload chargesPayload, Callback<Charges> callback);
+    @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
+    Observable<Charges> createCharges(@Path("clientId") int clientId,
+                                      @Body ChargesPayload chargesPayload);
 
-    @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
-    void getListOfLoanCharges(@Path("loanId") int loanId,Callback<Page<Charges>> loanchargeListCallback);
+    @GET(APIEndPoint.LOANS + "/{loanId}/charges")
+    Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 
-    @POST(APIEndPoint.LOANS +"/{loanId}/charges")
-    void createLoanCharges(@Path("loanId") int loanId,@Body ChargesPayload chargesPayload, Callback<Charges> callback);
+    @POST(APIEndPoint.LOANS + "/{loanId}/charges")
+    Observable<Charges> createLoanCharges(@Path("loanId") int loanId,
+                                          @Body ChargesPayload chargesPayload);
 
 }

@@ -23,7 +23,7 @@ public class MifosGroupListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<MifosGroup> groups;
 
-    public MifosGroupListAdapter(Context context, List<MifosGroup> groups){
+    public MifosGroupListAdapter(Context context, List<MifosGroup> groups) {
         layoutInflater = LayoutInflater.from(context);
         this.groups = groups;
     }
@@ -48,11 +48,11 @@ public class MifosGroupListAdapter extends BaseAdapter {
 
         ViewHolder viewHolder;
 
-        if(view==null){
-            view = layoutInflater.inflate(R.layout.row_group_list_item,viewGroup,false);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.row_group_list_item, viewGroup, false);
             viewHolder = new ViewHolder();
             view.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
@@ -63,14 +63,13 @@ public class MifosGroupListAdapter extends BaseAdapter {
 
         MifosGroup mifosGroup = groups.get(i);
         viewHolder.tv_group_name.setText(mifosGroup.getGroupName());
-        viewHolder.tv_staff_name.setText( mifosGroup.getStaffName());
+        viewHolder.tv_staff_name.setText(mifosGroup.getStaffName());
         viewHolder.tv_level_name.setText(mifosGroup.getLevelName());
 
         return view;
     }
 
-    public static class ViewHolder
-    {
+    public static class ViewHolder {
         TextView tv_group_name;
         TextView tv_staff_name;
         TextView tv_level_name;

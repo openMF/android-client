@@ -5,6 +5,8 @@
 
 package com.mifos.objects.accounts.loan;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -33,7 +35,10 @@ public class Period {
     Double penaltyChargesPaid;
     Double penaltyChargesWaived;
     Double penaltyChargesWrittenOff;
-    Integer period;
+
+    @SerializedName("period")
+    Integer periodValue;
+
     Double principalDue;
     Double principalLoanBalanceOutstanding;
     Double principalOriginalDue;
@@ -220,11 +225,11 @@ public class Period {
     }
 
     public Integer getPeriod() {
-        return period;
+        return periodValue;
     }
 
     public void setPeriod(Integer period) {
-        this.period = period;
+        this.periodValue = period;
     }
 
     public Double getPrincipalDue() {
@@ -379,7 +384,7 @@ public class Period {
                 ", penaltyChargesPaid=" + penaltyChargesPaid +
                 ", penaltyChargesWaived=" + penaltyChargesWaived +
                 ", penaltyChargesWrittenOff=" + penaltyChargesWrittenOff +
-                ", period=" + period +
+                ", period=" + periodValue +
                 ", principalDue=" + principalDue +
                 ", principalLoanBalanceOutstanding=" + principalLoanBalanceOutstanding +
                 ", principalOriginalDue=" + principalOriginalDue +

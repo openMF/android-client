@@ -14,13 +14,15 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.db.Loan;
 
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class ClientListAdapter extends BaseAdapter {
@@ -91,15 +93,15 @@ public class ClientListAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        @InjectView(R.id.tv_clientName)
+        @BindView(R.id.tv_clientName)
         TextView tv_client_name;
-        @InjectView(R.id.tv_product_short_name)
+        @BindView(R.id.tv_product_short_name)
         TextView tv_product_short_name;
-        @InjectView(R.id.et_amt_paid)
+        @BindView(R.id.et_amt_paid)
         EditText et_amt_paid;
 
         public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
     }
@@ -108,7 +110,7 @@ public class ClientListAdapter extends BaseAdapter {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             if (!hasFocus) {
-                Loan loan =(Loan) (v.getTag());
+                Loan loan = (Loan) (v.getTag());
                 try {
                     double changedValue = Double.parseDouble(((EditText) v).getText().toString());
                     listPaidAmounts.put(loan, changedValue);
@@ -118,7 +120,8 @@ public class ClientListAdapter extends BaseAdapter {
                         notifyDataSetChanged();
                     }
                 } catch (NumberFormatException e) {
-                    Toast.makeText(context, context.getString(R.string.error_invalid_amount), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.error_invalid_amount),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }

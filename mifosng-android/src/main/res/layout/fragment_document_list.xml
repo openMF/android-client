@@ -22,7 +22,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".online.DocumentListFragment">
+        tools:context=".online.documentlist.DocumentListFragment">
 
         <TableLayout
             android:id="@+id/tbl_header"
