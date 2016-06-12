@@ -7,7 +7,7 @@ import com.mifos.objects.accounts.loan.LoanDisbursement;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,7 +45,7 @@ public class LoanAccountDisbursementPresenter
         mSubscription = mDataManager.getLoanTemplate(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Response>() {
+                .subscribe(new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -58,7 +58,7 @@ public class LoanAccountDisbursementPresenter
                     }
 
                     @Override
-                    public void onNext(Response response) {
+                    public void onNext(ResponseBody response) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanTemplate(response);
                     }

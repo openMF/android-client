@@ -58,11 +58,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import okhttp3.MultipartBody;
 import okhttp3.MultipartBody.Part;
 import okhttp3.ResponseBody;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
 import rx.Observable;
 
 /**
@@ -353,7 +350,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().approveLoanApplication(loanId, loanApproval);
     }
 
-    public Observable<Response> getLoanTemplate(int loanId) {
+    public Observable<ResponseBody> getLoanTemplate(int loanId) {
         return mBaseApiManager.getLoanApi().getLoanTemplate(loanId);
     }
 
