@@ -39,9 +39,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
 
 //TODO Replace ListView To RecyclerView and Implement offset in Service Class
 public class ClientChargeFragment extends MifosBaseFragment implements ClientChargeMvpView {
@@ -225,12 +224,12 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     }
 
     @Override
-    public void showFetchingErrorCharges(Response response) {
+    public void showFetchingErrorCharges(int response) {
 
         if (getActivity() != null) {
             try {
-                Log.i("Error", "" + response.getStatus());
-                if (response.getStatus() == 401) {
+                Log.i("Error", "" + response);
+                if (response == 401) {
                     Toast.makeText(getActivity(), "Authorization Expired - Please " +
                             "Login Again", Toast.LENGTH_SHORT).show();
                     logout();

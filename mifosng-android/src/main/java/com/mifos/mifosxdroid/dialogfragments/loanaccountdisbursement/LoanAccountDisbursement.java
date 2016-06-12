@@ -42,9 +42,9 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -181,7 +181,7 @@ public class LoanAccountDisbursement extends DialogFragment implements
     }
 
     @Override
-    public void showLoanTemplate(Response result) {
+    public void showLoanTemplate(ResponseBody result) {
 
         final ArrayList<PaymentTypeOptions> paymentOption = new
                 ArrayList<PaymentTypeOptions>();
@@ -190,7 +190,7 @@ public class LoanAccountDisbursement extends DialogFragment implements
         StringBuilder sb = new StringBuilder();
         String line;
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }

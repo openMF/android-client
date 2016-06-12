@@ -50,9 +50,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -118,7 +118,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     @Inject
     GroupLoanAccountPresenter mGroupLoanAccountPresenter;
 
-    Response mResponse;
+    ResponseBody mResponse;
 
     String submittion_date;
     String disbursementon_date;
@@ -230,7 +230,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
 
-    private void inflateAmortizationSpinner(Response result) {
+    private void inflateAmortizationSpinner(ResponseBody result) {
 
         final List<AmortizationType> amortizationType = new ArrayList<>();
         // you can use this array to populate your spinner
@@ -239,7 +239,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -300,7 +300,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         mGroupLoanAccountPresenter.loadGroupLoansAccountTemplate(groupId, productId);
     }
 
-    private void inflateInterestCalculationPeriodSpinner(Response result) {
+    private void inflateInterestCalculationPeriodSpinner(ResponseBody result) {
 
         final List<InterestCalculationPeriodType> interestCalculationPeriodType = new
                 ArrayList<>();
@@ -311,7 +311,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -378,7 +378,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         });
     }
 
-    private void inflatetransactionProcessingStrategySpinner(Response result) {
+    private void inflatetransactionProcessingStrategySpinner(ResponseBody result) {
 
         final List<TransactionProcessingStrategy> transactionProcessingStrategyType = new
                 ArrayList<>();
@@ -389,7 +389,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -459,7 +459,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         });
     }
 
-    private void inflateFrequencyPeriodSpinner(Response result) {
+    private void inflateFrequencyPeriodSpinner(ResponseBody result) {
 
         final List<TermFrequencyTypeOptions> termFrequencyType = new ArrayList<>();
         // you can use this array to populate your spinner
@@ -468,7 +468,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -603,7 +603,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
     @Override
-    public void showLoanPurposeSpinner(Response result) {
+    public void showLoanPurposeSpinner(ResponseBody result) {
 
         mResponse = result;
 
@@ -620,7 +620,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);

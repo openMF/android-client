@@ -5,7 +5,7 @@
 
 package com.mifos.utils;
 
-import com.mifos.api.ApiEndpoint;
+import com.mifos.api.BaseUrl;
 
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -55,9 +55,9 @@ public class ValidationUtil {
     public static String getInstanceUrl(String validDomain, Integer port) {
         validDomain = sanitizeDomainNameInput(validDomain);
         if (port != null) {
-            return ApiEndpoint.PROTOCOL_HTTPS + validDomain + ":" + port + ApiEndpoint.API_PATH;
+            return BaseUrl.PROTOCOL_HTTPS + validDomain + ":" + port + BaseUrl.API_PATH;
         } else {
-            return ApiEndpoint.PROTOCOL_HTTPS + validDomain + ApiEndpoint.API_PATH;
+            return BaseUrl.PROTOCOL_HTTPS + validDomain + BaseUrl.API_PATH;
         }
     }
 

@@ -11,8 +11,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody.Part;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -99,12 +101,20 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
     public void uploadImage(int id, File pngFile) {
         checkViewAttached();
         final String imagePath = pngFile.getAbsolutePath();
+
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), pngFile);
+
+        // MultipartBody.Part is used to send also the actual file name
+        Part body = Part.createFormData("picture", pngFile.getName(), requestFile);
+
         getMvpView().showUploadImageProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.uploadClientImage(id, new TypedFile("image/png", pngFile))
+        mSubscription = mDataManager.uploadClientImage(id, body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Response>() {
+                .subscribe(new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showUploadImageProgressbar(false);
@@ -116,7 +126,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     }
 
                     @Override
-                    public void onNext(Response response) {
+                    public void onNext(ResponseBody response) {
                         getMvpView().showUploadImageProgressbar(false);
                         getMvpView().showUploadImageSuccessfully(response, imagePath);
                     }
@@ -129,7 +139,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
         mSubscription = mDataManager.deleteClientImage(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Response>() {
+                .subscribe(new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
 
@@ -141,7 +151,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     }
 
                     @Override
-                    public void onNext(Response response) {
+                    public void onNext(ResponseBody response) {
                         getMvpView().showClientImageDeletedSuccessfully();
                     }
                 });

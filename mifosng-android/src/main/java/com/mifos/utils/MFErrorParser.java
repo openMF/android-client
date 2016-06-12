@@ -17,18 +17,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 
 public class MFErrorParser {
 
     public static final String LOG_TAG = "MFErrorParser";
 
-    public static void parseError(Response response) {
+    public static void parseError(ResponseBody response) {
 
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody()
-                    .in()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.byteStream
+                    ()));
             StringBuilder out = new StringBuilder();
             String newLine = System.getProperty("line.separator");
             String line;

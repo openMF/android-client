@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -75,7 +75,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
         mSubscription = mDataManager.getGroupLoansAccountTemplate(groupId, productId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Response>() {
+                .subscribe(new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -88,7 +88,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
                     }
 
                     @Override
-                    public void onNext(Response response) {
+                    public void onNext(ResponseBody response) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanPurposeSpinner(response);
 

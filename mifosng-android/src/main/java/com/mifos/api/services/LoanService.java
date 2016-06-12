@@ -21,12 +21,12 @@ import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
 
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import okhttp3.ResponseBody;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -73,26 +73,26 @@ public interface LoanService {
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=individual")
-    Observable<Response> getLoansAccountTemplate(@Query("clientId") int clientId,
-                                                 @Query("productId") int productId);
+    Observable<ResponseBody> getLoansAccountTemplate(@Query("clientId") int clientId,
+                                                     @Query("productId") int productId);
 
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
-    Observable<Response> getLoanTemplate(@Path("loanId") int loanId);
+    Observable<ResponseBody> getLoanTemplate(@Path("loanId") int loanId);
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
     Observable<Loans> createGroupLoansAccount(@Body GroupLoanPayload loansPayload);
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=group")
-    Observable<Response> getGroupLoansAccountTemplate(@Query("groupId") int groupId,
-                                                      @Query("productId") int productId);
+    Observable<ResponseBody> getGroupLoansAccountTemplate(@Query("groupId") int groupId,
+                                                          @Query("productId") int productId);
 
-    @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
+    @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)
     Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 
-    @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)
     Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
 
 

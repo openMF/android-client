@@ -4,9 +4,13 @@ import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.base.BasePresenter;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
-import retrofit.mime.TypedFile;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody.Part;
+import okhttp3.RequestBody;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,11 +40,19 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void createDocument(String type, int id, String name, String desc, TypedFile file) {
+    public void createDocument(String type, int id, String name, String desc, File file) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
+
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        Part body = Part.createFormData("picture", file.getName(), requestFile);
+
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.createDocument(type, id, name, desc, file)
+        mSubscription = mDataManager.createDocument(type, id, name, desc, body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {

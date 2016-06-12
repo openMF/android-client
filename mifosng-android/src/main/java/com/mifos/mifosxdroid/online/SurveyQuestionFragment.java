@@ -23,8 +23,8 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.objects.survey.QuestionDatas;
 import com.mifos.objects.survey.ScorecardValues;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Nasim Banu on 28,January,2016.

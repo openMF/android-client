@@ -47,8 +47,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class CreateNewCenterFragment extends MifosBaseFragment

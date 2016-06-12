@@ -20,8 +20,8 @@ import com.mifos.objects.group.Group;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 28/06/14.

@@ -31,8 +31,8 @@ import com.mifos.utils.SafeUIBlockingUtility;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author nellyk

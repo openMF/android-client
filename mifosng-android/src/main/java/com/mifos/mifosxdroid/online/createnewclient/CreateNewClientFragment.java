@@ -48,8 +48,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class CreateNewClientFragment extends ProgressableFragment

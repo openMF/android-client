@@ -19,8 +19,8 @@ import com.mifos.objects.accounts.loan.LoanAccount;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 01/03/14.

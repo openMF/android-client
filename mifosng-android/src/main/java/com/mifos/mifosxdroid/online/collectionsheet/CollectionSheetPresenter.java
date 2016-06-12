@@ -9,8 +9,7 @@ import com.mifos.objects.db.CollectionSheet;
 
 import javax.inject.Inject;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -78,8 +77,8 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
 
                     @Override
                     public void onError(Throwable e) {
-                        if (e instanceof RetrofitError) {
-                            Response response = ((RetrofitError) e).getResponse();
+                        if (e instanceof HttpException) {
+                            HttpException response = (HttpException) e;
                             getMvpView().showFailedToSaveCollectionSheet(response);
                         }
                     }

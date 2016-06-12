@@ -14,11 +14,11 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 
 import java.util.HashMap;
 
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -35,7 +35,7 @@ public interface SavingsAccountService {
      *                                               Use this method to retrieve the Savings
      *                                               Account With Associations
      */
-    @GET("/{savingsAccountType}/{savingsAccountId}")
+    @GET("{savingsAccountType}/{savingsAccountId}")
     Observable<SavingsAccountWithAssociations> getSavingsAccountWithAssociations(
             @Path("savingsAccountType") String savingsAccountType,
             @Path("savingsAccountId") int savingsAccountId,
@@ -50,14 +50,14 @@ public interface SavingsAccountService {
      *                                                  Use this method to retrieve the Savings
      *                                                  Account Transaction Template
      */
-    @GET("/{savingsAccountType}/{savingsAccountId}/transactions/template")
+    @GET("{savingsAccountType}/{savingsAccountId}/transactions/template")
     Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
             @Path("savingsAccountType") String savingsAccountType,
             @Path("savingsAccountId") int savingsAccountId,
             @Query("command") String transactionType);
 
 
-    @POST("/{savingsAccountType}/{savingsAccountId}/transactions")
+    @POST("{savingsAccountType}/{savingsAccountId}/transactions")
     Observable<SavingsAccountTransactionResponse> processTransaction(
             @Path("savingsAccountType") String savingsAccountType,
             @Path("savingsAccountId") int savingsAccountId,

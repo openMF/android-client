@@ -7,7 +7,7 @@ import com.mifos.objects.noncore.DataTable;
 
 import java.util.List;
 
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -18,7 +18,7 @@ public interface ClientDetailsMvpView extends MvpView {
 
     void showClientInformation(Client client);
 
-    void showUploadImageSuccessfully(Response response, String imagePath);
+    void showUploadImageSuccessfully(ResponseBody response, String imagePath);
 
     void showUploadImageFailed(String s);
 

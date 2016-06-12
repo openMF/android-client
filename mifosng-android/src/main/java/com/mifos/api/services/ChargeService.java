@@ -9,34 +9,35 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.services.data.ChargesPayload;
 
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
+import okhttp3.ResponseBody;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
  * @author nellyk
  */
 public interface ChargeService {
+
     @GET(APIEndPoint.CHARGES)
-    Observable<Response> listAllCharges();
+    Observable<ResponseBody> listAllCharges();
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
-    Observable<Response> getAllChargesS(@Path("clientId") int clientId);
+    Observable<ResponseBody> getAllChargesS(@Path("clientId") int clientId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
-    Observable<Response> getAllChargev3(@Path("loanId") int loanId);
+    Observable<ResponseBody> getAllChargev3(@Path("loanId") int loanId);
 
-    @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/charges")
     Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
 
-    @POST(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.CHARGES)
+    @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
     Observable<Charges> createCharges(@Path("clientId") int clientId,
                                       @Body ChargesPayload chargesPayload);
 
-    @GET(APIEndPoint.LOANS + "/{loanId}" + APIEndPoint.CHARGES)
+    @GET(APIEndPoint.LOANS + "/{loanId}/charges")
     Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 

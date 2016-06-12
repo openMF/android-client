@@ -33,8 +33,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class GenerateCollectionSheetFragment extends ProgressableFragment
         implements GenerateCollectionSheetMvpView {

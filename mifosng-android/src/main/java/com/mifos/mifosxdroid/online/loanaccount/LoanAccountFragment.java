@@ -54,9 +54,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -133,7 +133,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Inject
     LoanAccountPresenter mLoanAccountPresenter;
 
-    Response mResponse;
+    ResponseBody mResponse;
 
     String submittion_date;
     String disbursementon_date;
@@ -252,7 +252,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
 
-    private void inflateAmortizationSpinner(Response result) {
+    private void inflateAmortizationSpinner(ResponseBody result) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
@@ -265,7 +265,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -330,7 +330,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         mLoanAccountPresenter.loadLoanAccountTemplate(clientId, productId);
     }
 
-    private void inflateInterestCalculationPeriodSpinner(Response result) {
+    private void inflateInterestCalculationPeriodSpinner(ResponseBody result) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
@@ -345,7 +345,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -411,7 +411,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         });
     }
 
-    private void inflatetransactionProcessingStrategySpinner(Response result) {
+    private void inflatetransactionProcessingStrategySpinner(ResponseBody result) {
          /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
@@ -426,7 +426,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -494,7 +494,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         });
     }
 
-    private void inflateFrequencyPeriodSpinner(Response result) {
+    private void inflateFrequencyPeriodSpinner(ResponseBody result) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
@@ -507,7 +507,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -570,7 +570,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
 
-    private void inflateLoanFundSpinner(Response result) {
+    private void inflateLoanFundSpinner(ResponseBody result) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
@@ -583,7 +583,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -637,7 +637,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         });
     }
 
-    private void inflateLoanOfficerSpinner(Response result) {
+    private void inflateLoanOfficerSpinner(ResponseBody result) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
@@ -650,7 +650,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -705,7 +705,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         });
     }
 
-    private void inflateInterestTypeMethodSpinner(Response result) {
+    private void inflateInterestTypeMethodSpinner(ResponseBody result) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
@@ -718,7 +718,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -848,7 +848,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
     @Override
-    public void showLoanAccountTemplate(Response result) {
+    public void showLoanAccountTemplate(ResponseBody result) {
 
         mResponse = result;
 
@@ -872,7 +872,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);

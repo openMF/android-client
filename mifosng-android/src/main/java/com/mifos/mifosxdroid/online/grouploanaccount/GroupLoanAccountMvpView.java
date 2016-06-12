@@ -6,7 +6,7 @@ import com.mifos.objects.organisation.ProductLoans;
 
 import java.util.List;
 
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by Rajan Maurya on 08/06/16.
@@ -15,7 +15,7 @@ public interface GroupLoanAccountMvpView extends MvpView {
 
     void showAllLoans(List<ProductLoans> productLoans);
 
-    void showLoanPurposeSpinner(Response response);
+    void showLoanPurposeSpinner(ResponseBody response);
 
     void showGroupLoansAccountCreatedSuccessfully(Loans loans);
 

@@ -30,7 +30,6 @@ import com.mifos.objects.noncore.ColumnHeader;
 import com.mifos.objects.noncore.ColumnValue;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
-import com.mifos.utils.MFErrorParser;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -41,9 +40,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 01/08/14.
@@ -242,9 +240,10 @@ public class DataTableRowDialogFragment extends DialogFragment
     }
 
     @Override
-    public void showError(String s, Response response) {
+    public void showError(String s, int response) {
         Toaster.show(rootView, s);
-        MFErrorParser.parseError(response);
+        //TODO for now, It is commented
+        //MFErrorParser.parseError(response);
         getActivity().getSupportFragmentManager().popBackStack();
     }
 

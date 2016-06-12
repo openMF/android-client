@@ -8,8 +8,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -55,9 +54,10 @@ public class DataTableRowDialogPresenter extends BasePresenter<DataTableRowDialo
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        if (e instanceof RetrofitError) {
-                            Response response = ((RetrofitError) e).getResponse();
-                            getMvpView().showError("Try Again", response);
+                        if (e instanceof HttpException) {
+                            HttpException response = ((HttpException) e);
+                            getMvpView().showError("Try Again",
+                                    response.code());
                         }
                     }
 

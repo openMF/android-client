@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**

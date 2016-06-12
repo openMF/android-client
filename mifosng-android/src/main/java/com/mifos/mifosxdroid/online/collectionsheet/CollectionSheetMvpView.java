@@ -4,7 +4,7 @@ import com.mifos.api.model.SaveResponse;
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.db.CollectionSheet;
 
-import retrofit.client.Response;
+import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * Created by Rajan Maurya on 7/6/16.
@@ -15,7 +15,7 @@ public interface CollectionSheetMvpView extends MvpView {
 
     void showCollectionSheetSuccessfullySaved(SaveResponse saveResponse);
 
-    void showFailedToSaveCollectionSheet(Response response);
+    void showFailedToSaveCollectionSheet(HttpException response);
 
     void showFetchingError(String s);
 }

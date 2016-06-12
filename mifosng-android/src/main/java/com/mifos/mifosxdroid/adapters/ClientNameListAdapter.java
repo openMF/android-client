@@ -25,8 +25,8 @@ import com.mifos.utils.PrefManager;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 27/02/14.

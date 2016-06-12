@@ -21,8 +21,8 @@ import com.mifos.objects.db.Loan;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class ClientListAdapter extends BaseAdapter {

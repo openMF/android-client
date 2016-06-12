@@ -58,8 +58,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
+import okhttp3.MultipartBody.Part;
+import okhttp3.ResponseBody;
 import rx.Observable;
 
 /**
@@ -141,7 +141,7 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().getListOfCharges(id);
     }
 
-    public Observable<Response> getAllChargesV2(int clientId) {
+    public Observable<ResponseBody> getAllChargesV2(int clientId) {
         return mBaseApiManager.getChargeApi().getAllChargesS(clientId);
     }
 
@@ -149,7 +149,7 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().createCharges(clientId, payload);
     }
 
-    public Observable<Response> getAllChargesV3(int loanId) {
+    public Observable<ResponseBody> getAllChargesV3(int loanId) {
         return mBaseApiManager.getChargeApi().getAllChargev3(loanId);
     }
 
@@ -181,11 +181,11 @@ public class DataManager {
         return mBaseApiManager.getClientsApi().getClient(id);
     }
 
-    public Observable<Response> uploadClientImage(int id, TypedFile image) {
-        return mBaseApiManager.getClientsApi().uploadClientImage(id, image);
+    public Observable<ResponseBody> uploadClientImage(int id, Part file) {
+        return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
     }
 
-    public Observable<Response> deleteClientImage(int clientId) {
+    public Observable<ResponseBody> deleteClientImage(int clientId) {
         return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
     }
 
@@ -218,7 +218,7 @@ public class DataManager {
     }
 
     public Observable<GenericResponse> createDocument(
-            String type, int id, String name, String desc, TypedFile file) {
+            String type, int id, String name, String desc, Part file) {
         return mBaseApiManager.getDocumentApi().createDocument(type, id, name, desc, file);
     }
 
@@ -330,7 +330,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().getAllLoans();
     }
 
-    public Observable<Response> getGroupLoansAccountTemplate(int groupId, int productId) {
+    public Observable<ResponseBody> getGroupLoansAccountTemplate(int groupId, int productId) {
         return mBaseApiManager.getLoanApi().getGroupLoansAccountTemplate(groupId, productId);
     }
 
@@ -338,7 +338,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().createGroupLoansAccount(loansPayload);
     }
 
-    public Observable<Response> getLoansAccountTemplate(int clientId, int productId) {
+    public Observable<ResponseBody> getLoansAccountTemplate(int clientId, int productId) {
         return mBaseApiManager.getLoanApi().getLoansAccountTemplate(clientId, productId);
     }
 
@@ -350,7 +350,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().approveLoanApplication(loanId, loanApproval);
     }
 
-    public Observable<Response> getLoanTemplate(int loanId) {
+    public Observable<ResponseBody> getLoanTemplate(int loanId) {
         return mBaseApiManager.getLoanApi().getLoanTemplate(loanId);
     }
 
