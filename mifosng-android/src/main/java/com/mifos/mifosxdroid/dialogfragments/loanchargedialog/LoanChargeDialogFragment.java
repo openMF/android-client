@@ -42,9 +42,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit.client.Response;
+import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -178,7 +178,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     }
 
     @Override
-    public void showAllChargesV3(Response result) {
+    public void showAllChargesV3(ResponseBody result) {
 
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
@@ -192,7 +192,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
