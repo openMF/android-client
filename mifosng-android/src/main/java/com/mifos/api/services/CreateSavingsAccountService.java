@@ -12,9 +12,9 @@ import com.mifos.services.data.SavingsPayload;
 
 import java.util.List;
 
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
 import rx.Observable;
 
 /**

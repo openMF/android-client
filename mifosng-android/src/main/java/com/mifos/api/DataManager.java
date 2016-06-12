@@ -221,7 +221,7 @@ public class DataManager {
     }
 
     public Observable<GenericResponse> createDocument(
-            String type, int id, String name, String desc, TypedFile file) {
+            String type, int id, String name, String desc, Part file) {
         return mBaseApiManager.getDocumentApi().createDocument(type, id, name, desc, file);
     }
 

@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,10 +33,9 @@ import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.mime.TypedFile;
 
 /**
  * Created by ishankhanna on 04/07/14.
@@ -156,23 +154,9 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     Uri uri = data.getData();
 
                     Log.d(LOG_TAG, "File Uri: " + uri.toString());
-                    // Get the path
                     try {
-
-                        String scheme = uri.getScheme();
-
-                        if (scheme.equals("file")) {
-                            filePath = FileUtils.getPath(getActivity(), uri);
-                            fileChoosen = new File(filePath);
-                            Log.d(LOG_TAG, "File Path: " + filePath);
-                        } else if (scheme.equals("content")) {
-
-                            Toast.makeText(getActivity(), "The application currently does not " +
-                                            "support file picking from apps other than File " +
-                                            "Managers.",
-                                    Toast.LENGTH_SHORT).show();
-                            resultCode = Activity.RESULT_CANCELED;
-                        }
+                        filePath = FileUtils.getPath(getActivity(), uri);
+                        fileChoosen = new File(filePath);
 
                         if (fileChoosen != null) {
                             tv_choose_file.setText(fileChoosen.getName());
@@ -182,7 +166,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                         bt_upload.setEnabled(true);
 
                     } catch (URISyntaxException e) {
-                        Log.d(LOG_TAG, e.getMessage());
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -192,32 +176,18 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
     @OnClick(R.id.tv_choose_file)
     public void openFilePicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        //TODO check android version and fire accordingly intent,
+        //TODO use ACTION_PICK_CONTENT for below 4.3 version
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        try {
-            startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    FILE_SELECT_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(getActivity(), "Please install a File Manager.",
-                    Toast.LENGTH_SHORT).show();
-        }
+        startActivityForResult(intent, FILE_SELECT_CODE);
     }
 
     public void uploadFile() {
 
-        String[] parts = fileChoosen.getName().split("\\.");
-        Log.d(LOG_TAG, "Extension :" + parts[1]);
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(parts[1]);
-        Log.d(LOG_TAG, "Mime Type = " + mimeType);
-
-        TypedFile typedFile = new TypedFile(mimeType, fileChoosen);
-
         mDocumentDialogPresenter.createDocument(entityType, entityId,
-                documentName, documentDescription, typedFile);
+                documentName, documentDescription, fileChoosen);
     }
 
 

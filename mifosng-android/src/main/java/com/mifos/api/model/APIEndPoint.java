@@ -19,11 +19,11 @@ public class APIEndPoint {
     public static final String LOANS = "/loans";
     public static final String SURVEYS = "/surveys";
     public static final String SEARCH = "/search";
-    public static final String CREATESAVINGSACCOUNTS = "/savingsaccounts";
-    public static final String CREATESAVINGSPRODUCTS = "/savingsproducts";
+    public static final String CREATESAVINGSACCOUNTS = "savingsaccounts";
+    public static final String CREATESAVINGSPRODUCTS = "savingsproducts";
     public static final String CREATELOANSACCOUNTS = "/loans";
     public static final String CREATELOANSPRODUCTS = "/loanproducts";
-    public static final String DATATABLES = "/datatables";
+    public static final String DATATABLES = "datatables";
     public static final String GROUPS = "/groups";
     public static final String DOCUMENTS = "/documents";
     public static final String IDENTIFIERS = "/identifiers";
