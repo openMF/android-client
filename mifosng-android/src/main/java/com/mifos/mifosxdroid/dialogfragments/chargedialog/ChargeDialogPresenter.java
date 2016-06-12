@@ -7,7 +7,7 @@ import com.mifos.services.data.ChargesPayload;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -44,7 +44,7 @@ public class ChargeDialogPresenter extends BasePresenter<ChargeDialogMvpView> {
         mSubscription = mDataManager.getAllChargesV2(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Response>() {
+                .subscribe(new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -57,7 +57,7 @@ public class ChargeDialogPresenter extends BasePresenter<ChargeDialogMvpView> {
                     }
 
                     @Override
-                    public void onNext(Response response) {
+                    public void onNext(ResponseBody response) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showAllChargesV2(response);
                     }
