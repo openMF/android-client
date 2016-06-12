@@ -23,7 +23,7 @@ import rx.Observable;
  */
 public interface DocumentService {
 
-    @GET("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
+    @GET("/{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     Observable<List<Document>> getListOfDocuments(@Path("entityType") String entityType,
                                                   @Path("entityId") int entityId);
 
@@ -36,7 +36,7 @@ public interface DocumentService {
      * @param typedFile               - Mandatory
      * @param genericResponseCallback - Response Callback
      */
-    @POST("/{entityType}/{entityId}" + APIEndPoint.DOCUMENTS)
+    @POST("/{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     @Multipart
     Observable<GenericResponse> createDocument(@Path("entityType") String entityType,
                                                @Path("entityId") int entityId,
