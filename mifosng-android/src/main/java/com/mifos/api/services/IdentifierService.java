@@ -10,9 +10,9 @@ import com.mifos.objects.noncore.Identifier;
 
 import java.util.List;
 
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.Path;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
@@ -21,10 +21,10 @@ import rx.Observable;
 public interface IdentifierService {
 
 
-    @GET(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS)
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
     Observable<List<Identifier>> getListOfIdentifiers(@Path("clientId") int clientId);
 
-    @DELETE(APIEndPoint.CLIENTS + "/{clientId}" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
+    @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
     Observable<GenericResponse> deleteIdentifier(@Path("clientId") int clientId,
                                                  @Path("identifierId") int identifierId);
 

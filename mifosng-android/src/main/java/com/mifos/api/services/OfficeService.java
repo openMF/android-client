@@ -9,8 +9,10 @@ import com.mifos.objects.organisation.Office;
 
 import java.util.List;
 
-import retrofit.http.GET;
+import retrofit2.http.GET;
 import rx.Observable;
+
+;
 
 /**
  * @author fomenkoo
