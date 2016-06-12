@@ -333,7 +333,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().getAllLoans();
     }
 
-    public Observable<Response> getGroupLoansAccountTemplate(int groupId, int productId) {
+    public Observable<ResponseBody> getGroupLoansAccountTemplate(int groupId, int productId) {
         return mBaseApiManager.getLoanApi().getGroupLoansAccountTemplate(groupId, productId);
     }
 
