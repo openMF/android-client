@@ -74,7 +74,7 @@ public interface LoanService {
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=individual")
     Observable<ResponseBody> getLoansAccountTemplate(@Query("clientId") int clientId,
-                                                 @Query("productId") int productId);
+                                                     @Query("productId") int productId);
 
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
@@ -86,7 +86,7 @@ public interface LoanService {
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=group")
     Observable<ResponseBody> getGroupLoansAccountTemplate(@Query("groupId") int groupId,
-                                                      @Query("productId") int productId);
+                                                          @Query("productId") int productId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)
     Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);

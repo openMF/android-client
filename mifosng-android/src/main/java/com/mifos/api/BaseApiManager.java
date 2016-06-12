@@ -92,7 +92,7 @@ public class BaseApiManager {
         baseUrl.updateInstanceUrl(instanceUrl);
     }
 
-    public OkHttpClient getOkHttpClient(){
+    public OkHttpClient getOkHttpClient() {
         HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
         logger.setLevel(Level.BODY);
         return new Builder()

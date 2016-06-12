@@ -21,8 +21,8 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 
 import java.util.Calendar;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class OfflineCenterInputActivity extends MifosBaseActivity implements DatePickerDialog

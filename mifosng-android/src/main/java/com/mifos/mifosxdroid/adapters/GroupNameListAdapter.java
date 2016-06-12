@@ -17,8 +17,8 @@ import com.mifos.objects.group.Group;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class GroupNameListAdapter extends BaseAdapter {
 

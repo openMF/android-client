@@ -18,8 +18,8 @@ import com.mifos.objects.db.MeetingCenter;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class CenterAdapter extends BaseAdapter {

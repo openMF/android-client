@@ -28,8 +28,8 @@ import com.mifos.utils.FragmentConstants;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author nellyk

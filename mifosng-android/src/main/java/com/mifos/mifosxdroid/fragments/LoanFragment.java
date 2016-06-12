@@ -22,8 +22,8 @@ import com.orm.query.Select;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class LoanFragment extends MifosBaseFragment {

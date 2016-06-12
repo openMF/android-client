@@ -166,7 +166,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                         bt_upload.setEnabled(true);
 
                     } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        Log.d(LOG_TAG, e.getLocalizedMessage());
                     }
                 }
                 break;

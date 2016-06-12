@@ -78,7 +78,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
                     @Override
                     public void onError(Throwable e) {
                         if (e instanceof HttpException) {
-                            HttpException response = (HttpException)e;
+                            HttpException response = (HttpException) e;
                             getMvpView().showFailedToSaveCollectionSheet(response);
                         }
                     }

@@ -19,8 +19,8 @@ import com.mifos.objects.accounts.savings.SavingsAccount;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 23/05/14.

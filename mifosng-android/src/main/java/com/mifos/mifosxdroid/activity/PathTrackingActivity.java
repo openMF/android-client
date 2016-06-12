@@ -19,8 +19,8 @@ import com.mifos.mifosxdroid.LocationService;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author fomenkoo

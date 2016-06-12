@@ -21,8 +21,8 @@ import com.mifos.objects.db.Loan;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 21/07/14.

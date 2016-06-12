@@ -35,8 +35,8 @@ import com.mifos.utils.ValidationUtil;
 import javax.inject.Inject;
 import javax.net.ssl.SSLHandshakeException;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 

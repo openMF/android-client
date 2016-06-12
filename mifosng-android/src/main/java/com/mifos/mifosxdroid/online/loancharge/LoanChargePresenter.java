@@ -54,7 +54,7 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
                         if (e instanceof HttpException) {
-                            HttpException response = (HttpException)e;
+                            HttpException response = (HttpException) e;
                             getMvpView().showFetchingError(response.code());
                         }
                     }
@@ -84,7 +84,7 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
                         if (e instanceof HttpException) {
-                            HttpException response = (HttpException)e;
+                            HttpException response = (HttpException) e;
                             getMvpView().showFetchingError(response.code());
                         }
                     }

@@ -8,7 +8,7 @@ package com.mifos.api;
 /**
  * @author fomenkoo
  */
-public class BaseUrl  {
+public class BaseUrl {
 
     public static final String PROTOCOL_HTTPS = "https://";
     public static final String API_ENDPOINT = "demo.openmf.org";

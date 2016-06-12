@@ -20,8 +20,8 @@ import com.mifos.objects.noncore.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 02/07/14.

@@ -27,7 +27,8 @@ public class MFErrorParser {
 
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.byteStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.byteStream
+                    ()));
             StringBuilder out = new StringBuilder();
             String newLine = System.getProperty("line.separator");
             String line;

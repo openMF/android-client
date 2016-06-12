@@ -55,7 +55,7 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
                     public void onError(Throwable e) {
                         mClientChargeMvpView.showProgressbar(false);
                         if (e instanceof HttpException) {
-                            HttpException response = (HttpException)e;
+                            HttpException response = (HttpException) e;
                             mClientChargeMvpView.showFetchingErrorCharges(response.code());
                         }
                     }
@@ -84,7 +84,7 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
                     public void onError(Throwable e) {
                         mClientChargeMvpView.showProgressbar(false);
                         if (e instanceof HttpException) {
-                            HttpException response = (HttpException)e;
+                            HttpException response = (HttpException) e;
                             mClientChargeMvpView.showFetchingErrorCharges(response.code());
                         }
                     }

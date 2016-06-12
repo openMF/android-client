@@ -17,8 +17,8 @@ import com.mifos.objects.client.Charges;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 03/07/14.

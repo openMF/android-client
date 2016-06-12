@@ -18,8 +18,8 @@ import com.mifos.objects.survey.Survey;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Nasim Banu on 27,January,2016.
