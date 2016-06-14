@@ -4,23 +4,24 @@
  */
 package com.mifos.mifosxdroid.online.groupslist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
+import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
@@ -39,28 +40,42 @@ import butterknife.ButterKnife;
 /**
  * Created by nellyk on 2/27/2016.
  */
-public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView {
+public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
+        RecyclerItemClickListner.OnItemClickListener {
 
 
-    @BindView(R.id.lv_groups)
-    ListView lv_groups;
+    @BindView(R.id.rv_groups)
+    RecyclerView rv_groups;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
-    List<Group> groupList = new ArrayList<Group>();
+
     private GroupNameListAdapter mGroupListAdapter;
     private GroupListFragment.OnFragmentInteractionListener mListener;
-    private View rootView;
-    private Context context;
-    private int offset = 0;
-    private int limit = 200;
-    private int index = 0;
-    private int top = 0;
 
+    private View rootView;
+    List<Group> groupList = new ArrayList<>();
+    private LinearLayoutManager layoutManager;
+    private int totalFilteredRecords = 0;
+    private int limit = 100;
     private boolean isInfiniteScrollEnabled = true;
+
+
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+        groupActivityIntent.putExtra(Constants.GROUP_ID, groupList.get(position).getId());
+        startActivity(groupActivityIntent);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
+    }
 
     public GroupsListFragment() {
 
@@ -97,18 +112,24 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         rootView = inflater.inflate(R.layout.fragment_groups, container, false);
         setToolbarTitle(getResources().getString(R.string.groups));
         setHasOptionsMenu(true);
-        context = getActivity().getApplicationContext();
+
 
         ButterKnife.bind(this, rootView);
         mGroupsListPresenter.attachView(this);
 
+        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_groups.setLayoutManager(layoutManager);
+        rv_groups.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_groups.setHasFixedSize(true);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Do Nothing For Now
-                swipeRefreshLayout.setRefreshing(false);
+                fetchGroupList();
             }
         });
+
         fetchGroupList();
 
         return rootView;
@@ -116,64 +137,34 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     public void inflateGroupList() {
 
-        mGroupListAdapter = new GroupNameListAdapter(context, groupList);
-        lv_groups.setAdapter(mGroupListAdapter);
-        lv_groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
-                groupActivityIntent.putExtra(Constants.GROUP_ID, groupList.get(i).getId());
-                startActivity(groupActivityIntent);
-
-            }
-        });
-
+        mGroupListAdapter = new GroupNameListAdapter(getActivity(), groupList);
+        rv_groups.setAdapter(mGroupListAdapter);
 
         if (isInfiniteScrollEnabled) {
-            setInfiniteScrollListener(mGroupListAdapter);
+            setInfiniteScrollListener();
         }
-
-
     }
 
     public void fetchGroupList() {
-        if (groupList.size() > 0) {
-            inflateGroupList();
-        } else {
-            mGroupsListPresenter.loadAllGroup();
-        }
+        totalFilteredRecords = 0;
+        mGroupsListPresenter.loadAllGroup();
     }
 
-    public List<Group> getGroupList() {
-        return groupList;
-    }
 
     public void setGroupList(List<Group> groupList) {
         this.groupList = groupList;
     }
 
-    public void setInfiniteScrollListener(final GroupNameListAdapter groupListAdapter) {
+    public void setInfiniteScrollListener() {
 
-        lv_groups.setOnScrollListener(new AbsListView.OnScrollListener() {
+        rv_groups.setOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
+            public void onLoadMore(int current_page) {
+                Toaster.show(rootView, "Loading More Clients");
+                mGroupsListPresenter.loadMoreGroups(groupList.size(), limit);
 
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int
-                    visibleItemCount, int totalItemCount) {
-
-                if (firstVisibleItem + visibleItemCount >= totalItemCount) {
-
-                    offset += limit + 1;
-                    //Load More Groups
-                    mGroupsListPresenter.loadMoreGroups(offset, limit);
-                }
             }
         });
-
     }
 
     public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
@@ -182,18 +173,23 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Override
     public void showGroups(Page<Group> groupPage) {
+        totalFilteredRecords = groupPage.getTotalFilteredRecords();
         groupList = groupPage.getPageItems();
         inflateGroupList();
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showMoreGroups(Page<Group> groupPage) {
         groupList.addAll(groupPage.getPageItems());
         mGroupListAdapter.notifyDataSetChanged();
-        index = lv_groups.getFirstVisiblePosition();
-        View v = lv_groups.getChildAt(0);
-        top = (v == null) ? 0 : v.getTop();
-        lv_groups.setSelectionFromTop(index, top);
+        swipeRefreshLayout.setRefreshing(false);
+
+        //checking the response size if size is zero then show toast No More
+        // Clients Available for fetch
+        if (groupPage.getPageItems().size() == 0 && (totalFilteredRecords == groupList.size()))
+            Toaster.show(rootView, "No more clients Available");
     }
 
     @Override
