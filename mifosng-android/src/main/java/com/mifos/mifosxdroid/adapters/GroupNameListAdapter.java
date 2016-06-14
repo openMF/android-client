@@ -6,10 +6,10 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -20,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GroupNameListAdapter extends BaseAdapter {
+public class GroupNameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     LayoutInflater layoutInflater;
     List<Group> pageItems;
@@ -31,12 +31,30 @@ public class GroupNameListAdapter extends BaseAdapter {
         this.pageItems = pageItems;
     }
 
+
     @Override
-    public int getCount() {
-        return pageItems.size();
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder vh;
+        View v = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.row_group_name, parent, false);
+        vh = new ViewHolder(v);
+        return vh;
     }
 
     @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ViewHolder) {
+            ((ViewHolder) holder).tv_groupsName.setText(pageItems.get(position).getName());
+            ((ViewHolder) holder).tv_groupsId.setText(pageItems.get(position).getId().toString());
+        }
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return pageItems.size();
+    }
+
     public Group getItem(int position) {
         return pageItems.get(position);
     }
@@ -46,38 +64,17 @@ public class GroupNameListAdapter extends BaseAdapter {
         return 0;
     }
 
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-
-        ReusableViewHolder reusableViewHolder;
-
-        if (view == null) {
-            view = layoutInflater.inflate(R.layout.row_group_name, null);
-            reusableViewHolder = new ReusableViewHolder(view);
-            view.setTag(reusableViewHolder);
-
-        } else {
-            reusableViewHolder = (ReusableViewHolder) view.getTag();
-        }
-
-        reusableViewHolder.tv_groupsName.setText(pageItems.get(position).getName());
-
-
-        reusableViewHolder.tv_groupsId.setText(pageItems.get(position).getId().toString());
-
-        return view;
-    }
-
-    static class ReusableViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_grouplistName)
         TextView tv_groupsName;
+
         @BindView(R.id.tv_groupsId)
         TextView tv_groupsId;
 
-        public ReusableViewHolder(View view) {
-            ButterKnife.bind(this, view);
+        public ViewHolder(View v) {
+            super(v);
+            ButterKnife.bind(this, v);
         }
-
     }
 }
