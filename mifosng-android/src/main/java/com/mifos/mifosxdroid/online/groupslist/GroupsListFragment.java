@@ -52,30 +52,15 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
-
+    List<Group> groupList = new ArrayList<>();
     private GroupNameListAdapter mGroupListAdapter;
     private GroupListFragment.OnFragmentInteractionListener mListener;
-
     private View rootView;
-    List<Group> groupList = new ArrayList<>();
     private LinearLayoutManager layoutManager;
     private int totalFilteredRecords = 0;
     private int limit = 100;
     private boolean isInfiniteScrollEnabled = true;
 
-
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
-        groupActivityIntent.putExtra(Constants.GROUP_ID, groupList.get(position).getId());
-        startActivity(groupActivityIntent);
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
-    }
 
     public GroupsListFragment() {
 
@@ -96,6 +81,18 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
             groupListFragment.setInfiniteScrollEnabled(false);
         }
         return groupListFragment;
+    }
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+        groupActivityIntent.putExtra(Constants.GROUP_ID, groupList.get(position).getId());
+        startActivity(groupActivityIntent);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
     }
 
     @Override
