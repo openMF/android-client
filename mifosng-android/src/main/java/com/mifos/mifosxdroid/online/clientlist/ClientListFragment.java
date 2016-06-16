@@ -132,7 +132,6 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     public void fetchClientList() {
-        EspressoIdlingResource.increment(); // App is busy until further notice.
         totalFilteredRecords = 0;
         mClientListPresenter.loadClients();
     }
@@ -164,17 +163,11 @@ public class ClientListFragment extends MifosBaseFragment
         totalFilteredRecords = clientPage.getTotalFilteredRecords();
         clientList = clientPage.getPageItems();
         inflateClientList();
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-        EspressoIdlingResource.decrement(); // App is idle.
     }
 
     @Override
     public void showErrorFetchingClients(String s) {
         Toaster.show(rootView, s);
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-        EspressoIdlingResource.decrement(); // App is idle.
     }
 
     @Override
@@ -192,7 +185,7 @@ public class ClientListFragment extends MifosBaseFragment
 
     @Override
     public void showProgressbar(boolean b) {
-
+        swipeRefreshLayout.setRefreshing(b);
     }
 
     @Override

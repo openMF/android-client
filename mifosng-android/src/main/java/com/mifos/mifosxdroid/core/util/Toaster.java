@@ -18,11 +18,17 @@ import com.mifos.App;
 public class Toaster {
 
     public static void show(View view, String text) {
-        Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
+        final Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG);
         View sbView = snackbar.getView();
         TextView textView = (TextView) sbView.findViewById(android.support.design.R.id
                 .snackbar_text);
         textView.setTextColor(Color.WHITE);
+        snackbar.setAction("OK", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        });
         snackbar.show();
     }
 

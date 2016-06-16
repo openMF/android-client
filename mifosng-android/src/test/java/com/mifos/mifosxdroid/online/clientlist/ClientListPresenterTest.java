@@ -19,6 +19,7 @@ import java.util.List;
 
 import rx.Observable;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -682,46 +683,86 @@ public class ClientListPresenterTest {
             "  ]";
 
 
-    ClientListPresenter clientListPresenter;
+    ClientListPresenter mClientListPresenter;
+
     @Mock DataManager mDataManager;
+
     @Mock ClientListMvpView mClientListMvpView;
+
+    private Page<Client> clientPage;
 
     @Rule
     public final RxSchedulersOverrideRule mOverrideSchedulersRule = new RxSchedulersOverrideRule();
 
     @Before
     public void setUp() throws Exception {
-        clientListPresenter = new ClientListPresenter(mDataManager);
-        clientListPresenter.attachView(mClientListMvpView);
-    }
 
+        mClientListPresenter = new ClientListPresenter(mDataManager);
+        mClientListPresenter.attachView(mClientListMvpView);
 
-    @Test
-    public void testLoadClients() throws Exception {
-
+        clientPage = new Page<>();
         Gson gson = new Gson();
-        List<Client> clientList = gson.fromJson(CLIENTLIST_JSON, new TypeToken<List<Client>>() {
-        }.getType());
-        Page<Client> clientPage = new Page<>();
+        List<Client> clientList = gson.fromJson(CLIENTLIST_JSON,
+                new TypeToken<List<Client>>() {}.getType());
         clientPage.setPageItems(clientList);
-
-        when(mDataManager.getAllClients()).thenReturn(Observable.just(clientPage));
-
-        clientListPresenter.loadClients();
-
-        verify(mClientListMvpView).showClientList(clientPage);
-
-
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testLoadMoreClients() throws Exception {
-
-        clientListPresenter.loadClients();
     }
 
     @After
     public void tearDown() {
-        clientListPresenter.detachView();
+        mClientListPresenter.detachView();
     }
+
+
+    @Test
+    public void testLoadClients() {
+
+        when(mDataManager.getAllClients()).thenReturn(Observable.just(clientPage));
+
+        mClientListPresenter.loadClients();
+
+        verify(mClientListMvpView).showClientList(clientPage);
+        verify(mClientListMvpView, never())
+                .showErrorFetchingClients("There was some error fetching list");
+
+    }
+
+    @Test
+    public void testLoadClientFails() {
+
+        when(mDataManager.getAllClients())
+                .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
+
+        mClientListPresenter.loadClients();
+        verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
+        verify(mClientListMvpView, never()).showClientList(clientPage);
+    }
+
+    @Test
+    public void testLoadMoreClients() {
+
+        when(mDataManager.getAllClients(0,clientPage.getPageItems().size()))
+                .thenReturn(Observable.just(clientPage));
+
+        mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
+
+        verify(mClientListMvpView).showMoreClientsList(clientPage);
+        verify(mClientListMvpView, never())
+                .showErrorFetchingClients("There was some error fetching list");
+
+    }
+
+    @Test
+    public void testLoadMoreClientFails() {
+        when(mDataManager.getAllClients(0,clientPage.getPageItems().size()))
+                .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
+
+        mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
+
+        verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
+        verify(mClientListMvpView, never()).showMoreClientsList(clientPage);
+    }
+
+
+
+
 }
