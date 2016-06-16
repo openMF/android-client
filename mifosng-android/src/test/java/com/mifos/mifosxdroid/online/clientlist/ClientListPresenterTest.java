@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientListPresenterTest {
 
-    //TODO Shift Fake Data in
+    //TODO Shift Fake Data in TestData factory
     public static final String CLIENTLIST_JSON = "[\n" +
             "    {\n" +
             "      \"id\": 1,\n" +
