@@ -16,7 +16,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 6/6/16.
  */
-    public class ClientListPresenter implements Presenter<ClientListMvpView> {
+public class ClientListPresenter implements Presenter<ClientListMvpView> {
 
 
     private final DataManager mDataManager;

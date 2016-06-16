@@ -26,7 +26,6 @@ import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
-import com.mifos.utils.EspressoIdlingResource;
 
 import java.util.ArrayList;
 import java.util.List;

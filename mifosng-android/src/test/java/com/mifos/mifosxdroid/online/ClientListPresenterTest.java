@@ -1,8 +1,10 @@
-package com.mifos.mifosxdroid.online.clientlist;
+package com.mifos.mifosxdroid.online;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mifos.api.DataManager;
+import com.mifos.mifosxdroid.online.clientlist.ClientListMvpView;
+import com.mifos.mifosxdroid.online.clientlist.ClientListPresenter;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -40,7 +42,7 @@ public class ClientListPresenterTest {
             "        \"value\": \"Active\"\n" +
             "      },\n" +
             "      \"subStatus\": {\n" +
-            "        \"isActive\": false\n" +
+            "      \"isActive\": false\n" +
             "      },\n" +
             "      \"active\": true,\n" +
             "      \"activationDate\": [\n" +
@@ -681,18 +683,14 @@ public class ClientListPresenterTest {
             "      }\n" +
             "    }\n" +
             "  ]";
-
-
-    ClientListPresenter mClientListPresenter;
-
-    @Mock DataManager mDataManager;
-
-    @Mock ClientListMvpView mClientListMvpView;
-
-    private Page<Client> clientPage;
-
     @Rule
     public final RxSchedulersOverrideRule mOverrideSchedulersRule = new RxSchedulersOverrideRule();
+    ClientListPresenter mClientListPresenter;
+    @Mock
+    DataManager mDataManager;
+    @Mock
+    ClientListMvpView mClientListMvpView;
+    private Page<Client> clientPage;
 
     @Before
     public void setUp() throws Exception {
@@ -703,7 +701,8 @@ public class ClientListPresenterTest {
         clientPage = new Page<>();
         Gson gson = new Gson();
         List<Client> clientList = gson.fromJson(CLIENTLIST_JSON,
-                new TypeToken<List<Client>>() {}.getType());
+                new TypeToken<List<Client>>() {
+                }.getType());
         clientPage.setPageItems(clientList);
     }
 
@@ -740,7 +739,7 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadMoreClients() {
 
-        when(mDataManager.getAllClients(0,clientPage.getPageItems().size()))
+        when(mDataManager.getAllClients(0, clientPage.getPageItems().size()))
                 .thenReturn(Observable.just(clientPage));
 
         mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
@@ -753,7 +752,7 @@ public class ClientListPresenterTest {
 
     @Test
     public void testLoadMoreClientFails() {
-        when(mDataManager.getAllClients(0,clientPage.getPageItems().size()))
+        when(mDataManager.getAllClients(0, clientPage.getPageItems().size()))
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
         mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
@@ -761,8 +760,6 @@ public class ClientListPresenterTest {
         verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
         verify(mClientListMvpView, never()).showMoreClientsList(clientPage);
     }
-
-
 
 
 }
