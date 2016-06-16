@@ -92,15 +92,6 @@ public class BaseApiManager {
         baseUrl.updateInstanceUrl(instanceUrl);
     }
 
-    public OkHttpClient getOkHttpClient() {
-        HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
-        logger.setLevel(Level.BODY);
-        return new Builder()
-                .addInterceptor(logger)
-                .addInterceptor(new ApiRequestInterceptor())
-                .build();
-    }
-
     private <T> T createApi(Class<T> clazz, String baseUrl) {
 
         Gson gson = new GsonBuilder()
@@ -110,7 +101,7 @@ public class BaseApiManager {
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(getOkHttpClient())
+                .client(new MifosOkHttpClient().getMifosOkHttpClient())
                 .build()
                 .create(clazz);
     }
@@ -121,7 +112,7 @@ public class BaseApiManager {
                 .baseUrl(baseUrl.getUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(getOkHttpClient())
+                .client(new MifosOkHttpClient().getMifosOkHttpClient())
                 .build()
                 .create(AuthService.class);
     }
