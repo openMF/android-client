@@ -42,7 +42,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
@@ -765,9 +765,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
                         .openConnection();
                 httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT,
+                httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_TENANT,
                         "default");
-                httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH,
+                httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_AUTH,
                         PrefManager.getToken());
                 httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
                 httpURLConnection.setDoInput(true);

@@ -1,6 +1,7 @@
 package com.mifos.api;
 
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -11,48 +12,53 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
 
 /**
  * Created by Rajan Maurya on 16/06/16.
  */
 public class MifosOkHttpClient {
 
+
     public OkHttpClient getMifosOkHttpClient() {
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
         try {
             // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[]{
+            TrustManager[] trustAllCerts = {
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(
-                                java.security.cert.X509Certificate[] chain,
+                                X509Certificate[] chain,
                                 String authType) throws CertificateException {
                         }
 
                         @Override
                         public void checkServerTrusted(
-                                java.security.cert.X509Certificate[] chain,
+                                X509Certificate[] chain,
                                 String authType) throws CertificateException {
                         }
 
                         @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return null;
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[0];
                         }
                     }
             };
 
             // Install the all-trusting trust manager
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
             // Create an ssl socket factory with our all-trusting manager
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+            SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-            //Enable Logging
+            //Enable Full Body Logging
             HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
-            logger.setLevel(HttpLoggingInterceptor.Level.BODY);
+            logger.setLevel(Level.BODY);
 
-            //Set SSL certificate
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            //Set SSL certificate to OkHttpClient Builder
+
             builder.sslSocketFactory(sslSocketFactory);
 
             builder.hostnameVerifier(new HostnameVerifier() {
@@ -61,11 +67,19 @@ public class MifosOkHttpClient {
                     return true;
                 }
             });
-            builder.addInterceptor(logger);
-            builder.addInterceptor(new ApiRequestInterceptor());
-            return builder.build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        //Enable Full Body Logging
+        HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
+        logger.setLevel(Level.BODY);
+
+        //Interceptor :> Full Body Logger and ApiRequest Header
+        builder.addInterceptor(logger);
+        builder.addInterceptor(new MifosInterceptor());
+
+        return builder.build();
+
     }
 }

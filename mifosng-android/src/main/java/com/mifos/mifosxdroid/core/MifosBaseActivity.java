@@ -27,7 +27,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mifos.App;
-import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.MifosInterceptor;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
@@ -288,9 +288,9 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                                     + userId
                                     + "/images?maxHeight=120&maxWidth=120";
                             GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                                    .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager
+                                    .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager
                                             .getTenant())
-                                    .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager
+                                    .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager
                                             .getToken())
                                     .addHeader("Accept", "application/octet-stream")
                                     .build());
