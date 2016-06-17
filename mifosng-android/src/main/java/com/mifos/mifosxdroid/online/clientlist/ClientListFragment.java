@@ -39,6 +39,7 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 09/02/14.
  */
+//TODO : Add ProgressBar
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView {
 
