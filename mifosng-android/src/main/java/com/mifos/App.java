@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
-import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
@@ -26,8 +25,6 @@ import java.util.Map;
 public class App extends SugarApp {
 
     public static final Map<Integer, Typeface> typefaceManager = new HashMap<>();
-
-    public static BaseApiManager baseApiManager;
 
     private static App instance;
 
@@ -51,7 +48,6 @@ public class App extends SugarApp {
         instance = this;
         Crashlytics.start(this);
 
-        baseApiManager = new BaseApiManager();
         Iconify.with(new MaterialModule());
     }
 

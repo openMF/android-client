@@ -3,7 +3,6 @@ package com.mifos.mifosxdroid.injection.component;
 import android.app.Application;
 import android.content.Context;
 
-import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
@@ -26,8 +25,6 @@ public interface ApplicationComponent {
     Context context();
 
     Application application();
-
-    BaseApiManager baseApiManager();
 
     DataManager dataManager();
 

@@ -26,6 +26,7 @@ import com.mifos.api.services.SearchService;
 import com.mifos.api.services.StaffService;
 import com.mifos.api.services.SurveyService;
 import com.mifos.utils.JsonDateSerializer;
+import com.mifos.utils.PrefManager;
 
 import java.util.Date;
 
@@ -39,78 +40,67 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BaseApiManager {
 
 
-    private BaseUrl baseUrl = new BaseUrl();
-    private final String BASE_URL = baseUrl.getUrl();
-
-    private AuthService authApi;
-    private CenterService centerApi;
-    private ClientAccountsService accountsApi;
-    private ClientService clientsApi;
-    private DataTableService dataTableApi;
-    private LoanService loanApi;
-    private SavingsAccountService savingsApi;
-    private ChargeService chargeApi;
-    private CreateSavingsAccountService createSavingsAccountService;
-    private SearchService searchApi;
-    private GpsCoordinatesService gpsApi;
-    private GroupService groupApi;
-    private DocumentService documentApi;
-    private IdentifierService identifierApi;
-    private OfficeService officeApi;
-    private StaffService staffApi;
-    private SurveyService surveyApi;
-    private GroupAccountService groupAccountsServiceApi;
+    private static Retrofit mRetrofit;
+    private static AuthService authApi;
+    private static CenterService centerApi;
+    private static ClientAccountsService accountsApi;
+    private static ClientService clientsApi;
+    private static DataTableService dataTableApi;
+    private static LoanService loanApi;
+    private static SavingsAccountService savingsApi;
+    private static ChargeService chargeApi;
+    private static CreateSavingsAccountService createSavingsAccountService;
+    private static SearchService searchApi;
+    private static GpsCoordinatesService gpsApi;
+    private static GroupService groupApi;
+    private static DocumentService documentApi;
+    private static IdentifierService identifierApi;
+    private static OfficeService officeApi;
+    private static StaffService staffApi;
+    private static SurveyService surveyApi;
+    private static GroupAccountService groupAccountsServiceApi;
 
     public BaseApiManager() {
-        createAuthApi();
-
-        centerApi = createApi(CenterService.class, BASE_URL);
-        accountsApi = createApi(ClientAccountsService.class, BASE_URL);
-        clientsApi = createApi(ClientService.class, BASE_URL);
-        dataTableApi = createApi(DataTableService.class, BASE_URL);
-        loanApi = createApi(LoanService.class, BASE_URL);
-        savingsApi = createApi(SavingsAccountService.class, BASE_URL);
-        searchApi = createApi(SearchService.class, BASE_URL);
-        gpsApi = createApi(GpsCoordinatesService.class, BASE_URL);
-        groupApi = createApi(GroupService.class, BASE_URL);
-        documentApi = createApi(DocumentService.class, BASE_URL);
-        identifierApi = createApi(IdentifierService.class, BASE_URL);
-        officeApi = createApi(OfficeService.class, BASE_URL);
-        staffApi = createApi(StaffService.class, BASE_URL);
-        surveyApi = createApi(SurveyService.class, BASE_URL);
-        chargeApi = createApi(ChargeService.class, BASE_URL);
-        createSavingsAccountService = createApi(CreateSavingsAccountService.class, BASE_URL);
-        groupAccountsServiceApi = createApi(GroupAccountService.class, BASE_URL);
-
+        createService();
     }
 
-    public void setupEndpoint(String instanceUrl) {
-        baseUrl.updateInstanceUrl(instanceUrl);
+    public static void init() {
+        authApi = createApi(AuthService.class);
+        centerApi = createApi(CenterService.class);
+        accountsApi = createApi(ClientAccountsService.class);
+        clientsApi = createApi(ClientService.class);
+        dataTableApi = createApi(DataTableService.class);
+        loanApi = createApi(LoanService.class);
+        savingsApi = createApi(SavingsAccountService.class);
+        searchApi = createApi(SearchService.class);
+        gpsApi = createApi(GpsCoordinatesService.class);
+        groupApi = createApi(GroupService.class);
+        documentApi = createApi(DocumentService.class);
+        identifierApi = createApi(IdentifierService.class);
+        officeApi = createApi(OfficeService.class);
+        staffApi = createApi(StaffService.class);
+        surveyApi = createApi(SurveyService.class);
+        chargeApi = createApi(ChargeService.class);
+        createSavingsAccountService = createApi(CreateSavingsAccountService.class);
+        groupAccountsServiceApi = createApi(GroupAccountService.class);
     }
 
-    private <T> T createApi(Class<T> clazz, String baseUrl) {
+    private static <T> T createApi(Class<T> clazz) {
+        return mRetrofit.create(clazz);
+    }
+
+    public static void createService() {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonDateSerializer()).create();
 
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
+        mRetrofit = new Retrofit.Builder()
+                .baseUrl(PrefManager.getInstanceUrl())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(new MifosOkHttpClient().getMifosOkHttpClient())
-                .build()
-                .create(clazz);
-    }
-
-    private void createAuthApi() {
-
-        authApi = new Retrofit.Builder()
-                .baseUrl(baseUrl.getUrl())
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(new MifosOkHttpClient().getMifosOkHttpClient())
-                .build()
-                .create(AuthService.class);
+                .build();
+        init();
     }
 
     protected AuthService getAuthApi() {

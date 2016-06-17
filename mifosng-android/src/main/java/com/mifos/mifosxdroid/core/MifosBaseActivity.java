@@ -27,9 +27,9 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mifos.App;
-import com.mifos.api.MifosInterceptor;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
+import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
@@ -138,7 +138,7 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
     @Override
     public void logout() {
-        PrefManager.clearToken();
+        PrefManager.clearPrefs();
         startActivity(new Intent(this, SplashScreenActivity.class));
         finish();
     }

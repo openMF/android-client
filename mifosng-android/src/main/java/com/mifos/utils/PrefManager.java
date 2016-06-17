@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.mifos.App;
+import com.mifos.api.BaseUrl;
 
 import java.util.Set;
 
@@ -128,7 +129,7 @@ public class PrefManager {
     }
 
     public static String getInstanceDomain() {
-        return getString(INSTANCE_DOMAIN, "demo.openmf.org");
+        return getString(INSTANCE_DOMAIN, BaseUrl.API_ENDPOINT);
     }
 
     public static void setInstanceDomain(String instanceDomain) {
@@ -136,7 +137,7 @@ public class PrefManager {
     }
 
     public static String getPort() {
-        return getString(PORT, "80");
+        return getString(PORT, BaseUrl.PORT);
     }
 
     public static void setPort(String port) {
