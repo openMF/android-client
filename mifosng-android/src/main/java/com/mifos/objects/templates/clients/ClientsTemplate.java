@@ -1,6 +1,6 @@
 package com.mifos.objects.templates.clients;
 
-import com.mifos.objects.InterestType;
+import com.mifos.objects.common.InterestType;
 
 import java.util.Arrays;
 import java.util.List;

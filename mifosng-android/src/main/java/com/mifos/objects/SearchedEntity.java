@@ -5,10 +5,16 @@
 
 package com.mifos.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+import com.mifos.objects.common.InterestType;
+
 /**
  * Created by ishankhanna on 14/02/14.
  */
-public class SearchedEntity {
+public class SearchedEntity implements Parcelable {
 
     private int entityId;
     private String entityAccountNo;
@@ -16,6 +22,17 @@ public class SearchedEntity {
     private String entityType;
     private int parentId;
     private String parentName;
+
+    @SerializedName("entityStatus")
+    private InterestType entityStatus;
+
+    public InterestType getEntityStatus() {
+        return this.entityStatus;
+    }
+
+    public void setEntityStatus(InterestType entityStatus) {
+        this.entityStatus = entityStatus;
+    }
 
     public int getEntityId() {
         return entityId;
@@ -99,4 +116,45 @@ public class SearchedEntity {
         return "#" + getEntityId() + " - " + getEntityName();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.entityId);
+        dest.writeString(this.entityAccountNo);
+        dest.writeString(this.entityName);
+        dest.writeString(this.entityType);
+        dest.writeInt(this.parentId);
+        dest.writeString(this.parentName);
+        dest.writeParcelable(this.entityStatus, flags);
+    }
+
+    public SearchedEntity() {
+    }
+
+    protected SearchedEntity(Parcel in) {
+        this.entityId = in.readInt();
+        this.entityAccountNo = in.readString();
+        this.entityName = in.readString();
+        this.entityType = in.readString();
+        this.parentId = in.readInt();
+        this.parentName = in.readString();
+        this.entityStatus = in.readParcelable(InterestType.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<SearchedEntity> CREATOR = new Parcelable
+            .Creator<SearchedEntity>() {
+        @Override
+        public SearchedEntity createFromParcel(Parcel source) {
+            return new SearchedEntity(source);
+        }
+
+        @Override
+        public SearchedEntity[] newArray(int size) {
+            return new SearchedEntity[size];
+        }
+    };
 }
