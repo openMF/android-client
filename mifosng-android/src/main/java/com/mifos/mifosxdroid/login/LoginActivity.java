@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mifos.api.BaseApiManager;
+import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -72,12 +74,14 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @BindView(R.id.ll_connectionSettings)
     LinearLayout ll_connectionSettings;
+
     @Inject
     LoginPresenter mLoginPresenter;
     private String username;
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
+
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -159,12 +163,6 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
                 + user.getUsername());
         // Saving userID
         PrefManager.setUserId(user.getUserId());
-        // Saving InstanceURL for next usages
-        PrefManager.setInstanceUrl(instanceURL);
-        // Saving domain name
-        PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
-        // Saving port
-        PrefManager.setPort(et_port.getEditableText().toString());
         // Saving user's token
         PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
 
@@ -236,6 +234,17 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     public void onLoginClick(Button button) {
         // Saving tenant
         PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
+        // Saving InstanceURL for next usages
+        PrefManager.setInstanceUrl(instanceURL);
+        // Saving domain name
+        PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
+        // Saving port
+        PrefManager.setPort(et_port.getEditableText().toString());
+        // Updating Services
+        if (!PrefManager.getInstanceDomain().equals(BaseUrl.API_ENDPOINT)) {
+            BaseApiManager.createService();
+        }
+
         login(false);
     }
 

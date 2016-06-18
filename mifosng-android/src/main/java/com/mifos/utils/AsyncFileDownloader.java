@@ -12,7 +12,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
-import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.MifosInterceptor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -69,8 +69,8 @@ public class AsyncFileDownloader extends AsyncTask<String, Integer, File> {
             HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
                     .openConnection();
             httpURLConnection.setRequestMethod("GET");
-            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_TENANT, "default");
-            httpURLConnection.setRequestProperty(ApiRequestInterceptor.HEADER_AUTH, PrefManager
+            httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_TENANT, "default");
+            httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_AUTH, PrefManager
                     .getToken());
             httpURLConnection.setDoInput(true);
             httpURLConnection.connect();

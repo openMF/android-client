@@ -17,12 +17,12 @@ import okhttp3.Response;
 /**
  * @author fomenkoo
  */
-public class ApiRequestInterceptor implements Interceptor {
+public class MifosInterceptor implements Interceptor {
 
     public static final String HEADER_TENANT = "Fineract-Platform-TenantId";
     public static final String HEADER_AUTH = "Authorization";
 
-    public ApiRequestInterceptor() {
+    public MifosInterceptor() {
     }
 
     @Override
