@@ -26,7 +26,6 @@ import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
-import com.mifos.utils.EspressoIdlingResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,7 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 09/02/14.
  */
+//TODO : Add ProgressBar
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView {
 
@@ -132,7 +132,6 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     public void fetchClientList() {
-        EspressoIdlingResource.increment(); // App is busy until further notice.
         totalFilteredRecords = 0;
         mClientListPresenter.loadClients();
     }
@@ -164,17 +163,11 @@ public class ClientListFragment extends MifosBaseFragment
         totalFilteredRecords = clientPage.getTotalFilteredRecords();
         clientList = clientPage.getPageItems();
         inflateClientList();
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-        EspressoIdlingResource.decrement(); // App is idle.
     }
 
     @Override
     public void showErrorFetchingClients(String s) {
         Toaster.show(rootView, s);
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-        EspressoIdlingResource.decrement(); // App is idle.
     }
 
     @Override
@@ -192,7 +185,7 @@ public class ClientListFragment extends MifosBaseFragment
 
     @Override
     public void showProgressbar(boolean b) {
-
+        swipeRefreshLayout.setRefreshing(b);
     }
 
     @Override

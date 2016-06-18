@@ -4,6 +4,7 @@ import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.Presenter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.utils.EspressoIdlingResource;
 
 import javax.inject.Inject;
 
@@ -40,6 +41,7 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
 
 
     public void loadClients() {
+        EspressoIdlingResource.increment(); // App is busy until further notice.
         mClientListMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getAllClients()
@@ -55,13 +57,16 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
                     public void onError(Throwable e) {
                         mClientListMvpView.showProgressbar(false);
                         mClientListMvpView.showErrorFetchingClients(
-                                "\"There was some error fetching list.\"");
+                                "There was some error fetching list");
+                        EspressoIdlingResource.decrement(); // App is idle.
+
                     }
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
                         mClientListMvpView.showProgressbar(false);
                         mClientListMvpView.showClientList(clientPage);
+                        EspressoIdlingResource.decrement(); // App is idle.
                     }
                 });
     }
@@ -82,7 +87,7 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
                     public void onError(Throwable e) {
                         mClientListMvpView.showProgressbar(false);
                         mClientListMvpView.showErrorFetchingClients(
-                                "\"There was some error fetching list.\"");
+                                "There was some error fetching list");
 
                     }
 
