@@ -185,7 +185,11 @@ public class ClientListFragment extends MifosBaseFragment
 
     @Override
     public void showProgressbar(boolean b) {
-        swipeRefreshLayout.setRefreshing(b);
+        if (b) {
+            showMifosProgressBar();
+        } else {
+            hideMifosProgressBar();
+        }
     }
 
     @Override

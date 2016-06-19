@@ -259,9 +259,9 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
     @Override
     public void showProgressbar(boolean b) {
         if (b) {
-            showProgress();
+            showMifosProgressDialog();
         } else {
-            hideProgress();
+            hideMifosProgressDialog();
         }
     }
 

@@ -262,9 +262,9 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     @Override
     public void showProgressbar(boolean b) {
         if (b) {
-            showProgress("Loading Charges");
+            showMifosProgressDialog("Loading Charges");
         } else {
-            hideProgress();
+            hideMifosProgressDialog();
         }
 
     }
