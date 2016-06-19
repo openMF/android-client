@@ -90,8 +90,8 @@ public class DataManager {
      * Center API
      */
     //Return Centers List according to offset and limit parameter
-    public Observable<Page<Center>> getMoreCenters(boolean b, int offset, int limit) {
-        return mBaseApiManager.getCenterApi().getMoreCenters(b, offset, limit);
+    public Observable<Page<Center>> getCenters(boolean b, int offset, int limit) {
+        return mBaseApiManager.getCenterApi().getCenters(b, offset, limit);
     }
 
     //Return Center With Association

@@ -50,13 +50,12 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getMoreCenters(paged, offset, limit)
+        mSubscription = mDataManager.getCenters(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Center>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
@@ -83,7 +82,6 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                 .subscribe(new Subscriber<CenterWithAssociations>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override

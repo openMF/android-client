@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online.collectionsheet;
 
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -134,7 +133,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         MenuItem mItemRefresh = menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R
                 .string.refresh));
         mItemRefresh.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_refresh)
-                .colorRes(Color.WHITE)
+                .colorRes(R.color.white)
                 .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemRefresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -143,7 +142,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         MenuItem mItemSave = menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string
                 .save));
         mItemSave.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_save)
-                .colorRes(Color.WHITE)
+                .colorRes(R.color.white)
                 .actionBarSize());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mItemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

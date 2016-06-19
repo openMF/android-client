@@ -32,11 +32,15 @@ public class ClientSearchPresenterTest {
     public static final String QUERY = "ab";
     @Rule
     public final RxSchedulersOverrideRule mOverrideSchedulersRule = new RxSchedulersOverrideRule();
+
     ClientSearchPresenter mClientSearchPresenter;
+
     @Mock
     DataManager mDataManager;
+
     @Mock
     ClientSearchMvpView mClientSearchMvpView;
+
     List<SearchedEntity> searchedEntities;
 
     @Before

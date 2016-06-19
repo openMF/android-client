@@ -33,9 +33,9 @@ public interface CenterService {
 
 
     @GET(APIEndPoint.CENTERS)
-    Observable<Page<Center>> getMoreCenters(@Query("paged") boolean b,
-                                            @Query("offset") int offset,
-                                            @Query("limit") int limit);
+    Observable<Page<Center>> getCenters(@Query("paged") boolean b,
+                                        @Query("offset") int offset,
+                                        @Query("limit") int limit);
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
     Observable<CenterWithAssociations> getCenterWithGroupMembersAndCollectionMeetingCalendar
