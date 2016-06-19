@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.group.Center;
 
 import java.util.List;
 
@@ -23,5 +24,10 @@ public class FakeRemoteDataSource {
         return mTestDataFactory.getListTypePojo(new TypeToken<List<SearchedEntity>>() {
         },
                 FakeJsonName.SEARCHED_ENTITY_JSON);
+    }
+
+    public static Page<Center> getCenters() {
+        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Center>>(){},
+                FakeJsonName.CENTERS_JSON);
     }
 }
