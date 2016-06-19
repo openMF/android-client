@@ -42,11 +42,16 @@ android {
     }
 
     sourceSets {
+        def commonTestDir = 'src/commonTest/java'
         main {
             java.srcDirs = ['src/main/java']
         }
         androidTest {
             java.srcDirs = ['src/instrumentTest/java/']
+            java.srcDir commonTestDir
+        }
+        test {
+            java.srcDir commonTestDir
         }
     }
 
@@ -74,6 +79,7 @@ android {
         abortOnError false
         disable 'InvalidPackage'
     }
+
 
     // Exclude duplicated Hamcrest LICENSE.txt from being packaged into the apk.
     // This is a workaround for https://code.google.com/p/android/issues/detail?id=65445.
