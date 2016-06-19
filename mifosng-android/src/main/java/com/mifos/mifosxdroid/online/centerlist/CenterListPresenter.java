@@ -40,6 +40,12 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
+    /**
+     *
+     * @param paged True Enabling the Pagination of the API
+     * @param offset Value give from which position Fetch CenterList
+     * @param limit Maximum size of the Center
+     */
     public void loadCenters(boolean paged, int offset, int limit) {
         checkViewAttached();
         getMvpView().showProgressbar(true);

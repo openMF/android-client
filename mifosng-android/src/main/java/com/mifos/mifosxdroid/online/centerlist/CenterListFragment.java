@@ -42,6 +42,10 @@ import butterknife.OnClick;
 
 /**
  * Created by ishankhanna on 11/03/14.
+ *
+ * CenterListFragment Fetching Showing CenterList in RecyclerView from
+ * </>demo.openmf.org/fineract-provider/api/v1/centers?paged=true&offset=0&limit=100</>
+ *
  */
 public class CenterListFragment extends MifosBaseFragment
         implements CenterListMvpView, OnItemClickListener{
@@ -108,6 +112,10 @@ public class CenterListFragment extends MifosBaseFragment
         mApiRestCounter = 1;
         mCenterListPresenter.loadCenters(true, 0, limit);
 
+
+        /**
+         * Setting mApiRestCounter to 1 and send Fresh Request to Server
+         */
         swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R
                 .color.orange_light, R.color.red_light);
         swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -123,6 +131,13 @@ public class CenterListFragment extends MifosBaseFragment
             }
         });
 
+
+        /**
+         * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
+         * is shown on the Screen.
+         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
+         * and offset(mCenterList.size()) and limit(100).
+         */
         rv_centers.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int current_page) {
@@ -134,6 +149,11 @@ public class CenterListFragment extends MifosBaseFragment
         return rootView;
     }
 
+
+    /**
+     * Shows When mApiRestValue is 1 and Server Response is Null.
+     * Onclick Send Fresh Request for Center list.
+     */
     @OnClick(R.id.noCentersIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
@@ -141,6 +161,13 @@ public class CenterListFragment extends MifosBaseFragment
     }
 
 
+    /**
+     * Setting Data in RecyclerView of the CenterListFragment if the mApiRestCounter value is 1,
+     * otherwise adding value in ArrayList and updating the CenterListAdapter.
+     * If the Response is have null then show Toast to User There is No Center Available.
+     * @param centerPage is the List<Center> and
+     *        TotalValue of center API Response by Server
+     */
     @Override
     public void showCenters(Page<Center> centerPage) {
 
@@ -189,6 +216,13 @@ public class CenterListFragment extends MifosBaseFragment
 
     }
 
+    /**
+     * Check the mApiRestCounter value is the value is 1,
+     * So there no data to show and setVisibility VISIBLE
+     * of Error ImageView and TextView layout and otherwise simple
+     * show the Toast Message of Error Message.
+     * @param s is the Error Message given by CenterListPresenter
+     */
     @Override
     public void showFetchingError(String s) {
 
@@ -200,6 +234,14 @@ public class CenterListFragment extends MifosBaseFragment
         Toaster.show(rootView, s);
     }
 
+
+    /**
+     * Check mApiRestCounter value, if the value is 1 then
+     * show MifosBaseActivity ProgressBar and if it is greater than 1,
+     * It means this Request is the second and so on than show SwipeRefreshLayout
+     * Check the the b is true or false
+     * @param b is the status of the progressbar
+     */
     @Override
     public void showProgressbar(boolean b) {
 
