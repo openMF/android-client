@@ -23,13 +23,12 @@ public class FakeRemoteDataSource {
 
     public static List<SearchedEntity> getSearchedEntity() {
         return mTestDataFactory.getListTypePojo(new TypeToken<List<SearchedEntity>>() {
-                                                },
-                FakeJsonName.SEARCHED_ENTITY_JSON);
+        }, FakeJsonName.SEARCHED_ENTITY_JSON);
     }
 
     public static Page<Center> getCenters() {
-        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Center>>(){},
-                FakeJsonName.CENTERS_JSON);
+        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Center>>() {
+        }, FakeJsonName.CENTERS_JSON);
     }
 
     public static CenterWithAssociations getCentersGroupAndMeeting() {

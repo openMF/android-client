@@ -68,7 +68,7 @@ public class CenterListPresenterTest {
     @Test
     public void testLoadCenters() throws Exception {
 
-        when(mDataManager.getCenters(true, offset, limit ))
+        when(mDataManager.getCenters(true, offset, limit))
                 .thenReturn(Observable.just(centerPage));
 
         centerListPresenter.loadCenters(true, offset, limit);

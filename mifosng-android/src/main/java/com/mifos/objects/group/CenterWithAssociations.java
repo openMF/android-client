@@ -192,7 +192,8 @@ public class CenterWithAssociations implements Parcelable {
                 .getClassLoader());
     }
 
-    public static final Parcelable.Creator<CenterWithAssociations> CREATOR = new Parcelable.Creator<CenterWithAssociations>() {
+    public static final Parcelable.Creator<CenterWithAssociations> CREATOR = new Parcelable
+            .Creator<CenterWithAssociations>() {
         @Override
         public CenterWithAssociations createFromParcel(Parcel source) {
             return new CenterWithAssociations(source);

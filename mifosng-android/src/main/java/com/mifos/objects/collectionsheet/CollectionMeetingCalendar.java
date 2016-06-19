@@ -315,7 +315,8 @@ public class CollectionMeetingCalendar implements Parcelable {
         this.lastUpdatedByUsername = in.readString();
     }
 
-    public static final Parcelable.Creator<CollectionMeetingCalendar> CREATOR = new Parcelable.Creator<CollectionMeetingCalendar>() {
+    public static final Parcelable.Creator<CollectionMeetingCalendar> CREATOR = new Parcelable
+            .Creator<CollectionMeetingCalendar>() {
         @Override
         public CollectionMeetingCalendar createFromParcel(Parcel source) {
             return new CollectionMeetingCalendar(source);

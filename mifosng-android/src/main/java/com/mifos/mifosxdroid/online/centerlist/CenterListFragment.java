@@ -42,13 +42,12 @@ import butterknife.OnClick;
 
 /**
  * Created by ishankhanna on 11/03/14.
- *
+ * <p/>
  * CenterListFragment Fetching Showing CenterList in RecyclerView from
  * </>demo.openmf.org/fineract-provider/api/v1/centers?paged=true&offset=0&limit=100</>
- *
  */
 public class CenterListFragment extends MifosBaseFragment
-        implements CenterListMvpView, OnItemClickListener{
+        implements CenterListMvpView, OnItemClickListener {
 
 
     @BindView(R.id.rv_center_list)
@@ -165,8 +164,9 @@ public class CenterListFragment extends MifosBaseFragment
      * Setting Data in RecyclerView of the CenterListFragment if the mApiRestCounter value is 1,
      * otherwise adding value in ArrayList and updating the CenterListAdapter.
      * If the Response is have null then show Toast to User There is No Center Available.
+     *
      * @param centerPage is the List<Center> and
-     *        TotalValue of center API Response by Server
+     *                   TotalValue of center API Response by Server
      */
     @Override
     public void showCenters(Page<Center> centerPage) {
@@ -221,6 +221,7 @@ public class CenterListFragment extends MifosBaseFragment
      * So there no data to show and setVisibility VISIBLE
      * of Error ImageView and TextView layout and otherwise simple
      * show the Toast Message of Error Message.
+     *
      * @param s is the Error Message given by CenterListPresenter
      */
     @Override
@@ -240,6 +241,7 @@ public class CenterListFragment extends MifosBaseFragment
      * show MifosBaseActivity ProgressBar and if it is greater than 1,
      * It means this Request is the second and so on than show SwipeRefreshLayout
      * Check the the b is true or false
+     *
      * @param b is the status of the progressbar
      */
     @Override
