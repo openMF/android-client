@@ -39,7 +39,6 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 09/02/14.
  */
-//TODO : Add ProgressBar
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView {
 
@@ -48,9 +47,12 @@ public class ClientListFragment extends MifosBaseFragment
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
     ClientNameListAdapter clientNameListAdapter;
+
     @Inject
     ClientListPresenter mClientListPresenter;
+
     private View rootView;
     private List<Client> clientList = new ArrayList<>();
     private LinearLayoutManager layoutManager;
@@ -163,24 +165,30 @@ public class ClientListFragment extends MifosBaseFragment
         totalFilteredRecords = clientPage.getTotalFilteredRecords();
         clientList = clientPage.getPageItems();
         inflateClientList();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showErrorFetchingClients(String s) {
         Toaster.show(rootView, s);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showMoreClientsList(Page<Client> clientPage) {
         clientList.addAll(clientPage.getPageItems());
         clientNameListAdapter.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(false);
 
         //checking the response size if size is zero then show toast No More
         // Clients Available for fetch
         if (clientPage.getPageItems().size() == 0 && (totalFilteredRecords ==
                 clientList.size()))
             Toaster.show(rootView, "No more clients Available");
+    }
+
+    @Override
+    public void showSwipeRefreshLayout(boolean b) {
+        swipeRefreshLayout.setRefreshing(b);
     }
 
     @Override

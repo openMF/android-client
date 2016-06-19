@@ -16,4 +16,6 @@ public interface ClientListMvpView extends MvpView {
 
     void showMoreClientsList(Page<Client> clientPage);
 
+    void showSwipeRefreshLayout(boolean b);
+
 }

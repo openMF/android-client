@@ -72,7 +72,7 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
     }
 
     public void loadMoreClients(int offset, int limit) {
-        mClientListMvpView.showProgressbar(true);
+        mClientListMvpView.showSwipeRefreshLayout(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getAllClients(offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -80,12 +80,12 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
                 .subscribe(new Subscriber<Page<Client>>() {
                     @Override
                     public void onCompleted() {
-                        mClientListMvpView.showProgressbar(false);
+                        mClientListMvpView.showSwipeRefreshLayout(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientListMvpView.showProgressbar(false);
+                        mClientListMvpView.showSwipeRefreshLayout(false);
                         mClientListMvpView.showErrorFetchingClients(
                                 "There was some error fetching list");
 
@@ -93,7 +93,7 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
-                        mClientListMvpView.showProgressbar(false);
+                        mClientListMvpView.showSwipeRefreshLayout(false);
                         mClientListMvpView.showMoreClientsList(clientPage);
                     }
                 });
