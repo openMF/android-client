@@ -5,10 +5,13 @@
 
 package com.mifos.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class Status {
+public class Status implements Parcelable {
 
     private static final String STATUS_ACTIVE = "Active";
 
@@ -53,4 +56,37 @@ public class Status {
                 ", value='" + value + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.code);
+        dest.writeString(this.value);
+    }
+
+    public Status() {
+    }
+
+    protected Status(Parcel in) {
+        this.id = in.readInt();
+        this.code = in.readString();
+        this.value = in.readString();
+    }
+
+    public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
+        @Override
+        public Status createFromParcel(Parcel source) {
+            return new Status(source);
+        }
+
+        @Override
+        public Status[] newArray(int size) {
+            return new Status[size];
+        }
+    };
 }

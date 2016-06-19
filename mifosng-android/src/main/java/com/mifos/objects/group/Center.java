@@ -5,20 +5,22 @@
 
 package com.mifos.objects.group;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.mifos.objects.Status;
 import com.mifos.objects.Timeline;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ishankhanna on 11/03/14.
  */
-public class Center {
+public class Center implements Parcelable {
 
     private Integer id;
+    private String accountNo;
     private String name;
     private String externalId;
     private Integer officeId;
@@ -30,7 +32,6 @@ public class Center {
     private Boolean active;
     private List<Integer> activationDate = new ArrayList<Integer>();
     private Timeline timeline;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -128,18 +129,11 @@ public class Center {
         this.timeline = timeline;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     @Override
     public String toString() {
         return "Center{" +
                 "id=" + id +
+                ", accountNo='" + accountNo + '\'' +
                 ", name='" + name + '\'' +
                 ", externalId='" + externalId + '\'' +
                 ", officeId=" + officeId +
@@ -151,7 +145,60 @@ public class Center {
                 ", active=" + active +
                 ", activationDate=" + activationDate +
                 ", timeline=" + timeline +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.accountNo);
+        dest.writeString(this.name);
+        dest.writeString(this.externalId);
+        dest.writeValue(this.officeId);
+        dest.writeString(this.officeName);
+        dest.writeValue(this.staffId);
+        dest.writeString(this.staffName);
+        dest.writeString(this.hierarchy);
+        dest.writeParcelable(this.status, flags);
+        dest.writeValue(this.active);
+        dest.writeList(this.activationDate);
+        dest.writeParcelable(this.timeline, flags);
+    }
+
+    public Center() {
+    }
+
+    protected Center(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.name = in.readString();
+        this.externalId = in.readString();
+        this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.officeName = in.readString();
+        this.staffId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.staffName = in.readString();
+        this.hierarchy = in.readString();
+        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.activationDate = new ArrayList<Integer>();
+        in.readList(this.activationDate, Integer.class.getClassLoader());
+        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Center> CREATOR = new Parcelable.Creator<Center>() {
+        @Override
+        public Center createFromParcel(Parcel source) {
+            return new Center(source);
+        }
+
+        @Override
+        public Center[] newArray(int size) {
+            return new Center[size];
+        }
+    };
 }
