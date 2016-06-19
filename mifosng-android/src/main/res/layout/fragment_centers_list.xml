@@ -9,22 +9,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ViewFlipper
-        android:id="@+id/view_flipper"
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:inAnimation="@android:anim/fade_in"
-        android:outAnimation="@android:anim/fade_out"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_center_list"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/noTasksIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_error_black_24dp" />
+
+        <TextView
+            android:id="@+id/noTasksMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
 
-        <ListView
-            android:id="@+id/lv_center_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </ViewFlipper>
+    </LinearLayout>
 </RelativeLayout>

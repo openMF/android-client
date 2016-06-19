@@ -7,19 +7,20 @@ package com.mifos.mifosxdroid.online.centerlist;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ListView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListner.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
@@ -38,16 +39,35 @@ import butterknife.ButterKnife;
  */
 
 //TODO Replace ListView to RecyclerView 
-public class CenterListFragment extends ProgressableFragment implements CenterListMvpView {
+public class CenterListFragment extends MifosBaseFragment
+        implements CenterListMvpView, OnItemClickListener{
 
-    @BindView(R.id.lv_center_list)
-    ListView lv_centers_list;
+
+    @BindView(R.id.rv_center_list)
+    RecyclerView rv_centers;
+
+    @BindView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Inject
     CenterListPresenter mCenterListPresenter;
+
     private View rootView;
     private CentersListAdapter centersListAdapter;
     private OnFragmentInteractionListener mListener;
     private List<Center> mCentersList;
+    private LinearLayoutManager layoutManager;
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        mListener.loadGroupsOfCenter(mCentersList.get(position).getId());
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+        mCenterListPresenter.loadCentersGroupAndMeeting(
+                mCentersList.get(position).getId());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,26 +87,14 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
         ButterKnife.bind(this, rootView);
         mCenterListPresenter.attachView(this);
 
+        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_centers.setLayoutManager(layoutManager);
+        rv_centers.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_centers.setHasFixedSize(true);
+
         mCenterListPresenter.loadCenters();
 
-        lv_centers_list.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mListener.loadGroupsOfCenter(mCentersList.get(position).getId());
-            }
-        });
-
-        lv_centers_list.setOnItemLongClickListener(new OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                           int position, long id) {
-
-                mCenterListPresenter.loadCentersGroupAndMeeting(
-                        mCentersList.get(position).getId());
-
-                return true;
-            }
-        });
         return rootView;
     }
 
@@ -96,7 +104,7 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
 
         mCentersList = centers;
         centersListAdapter = new CentersListAdapter(getActivity(), mCentersList);
-        lv_centers_list.setAdapter(centersListAdapter);
+        rv_centers.setAdapter(centersListAdapter);
     }
 
     @Override
@@ -128,7 +136,11 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
 
     @Override
     public void showProgressbar(boolean b) {
-        showProgress(b);
+        if (b) {
+            showMifosProgressBar();
+        } else {
+            hideMifosProgressBar();
+        }
     }
 
     @Override
@@ -148,6 +160,7 @@ public class CenterListFragment extends ProgressableFragment implements CenterLi
                     "OnFragmentInteractionListener");
         }
     }
+
 
     public interface OnFragmentInteractionListener {
         void loadGroupsOfCenter(int centerId);
