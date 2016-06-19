@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
@@ -36,6 +38,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by ishankhanna on 11/03/14.
@@ -49,6 +52,12 @@ public class CenterListFragment extends MifosBaseFragment
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.noCenterText)
+    TextView mNoCenterText;
+
+    @BindView(R.id.ll_error)
+    LinearLayout ll_error;
 
     @Inject
     CenterListPresenter mCenterListPresenter;
@@ -114,7 +123,7 @@ public class CenterListFragment extends MifosBaseFragment
             }
         });
 
-        rv_centers.setOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
+        rv_centers.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int current_page) {
                 mApiRestCounter = mApiRestCounter + 1;
@@ -124,6 +133,13 @@ public class CenterListFragment extends MifosBaseFragment
 
         return rootView;
     }
+
+    @OnClick(R.id.noCentersIcon)
+    public void reloadOnError() {
+        ll_error.setVisibility(View.GONE);
+        mCenterListPresenter.loadCenters(true, 0, limit);
+    }
+
 
     @Override
     public void showCenters(Page<Center> centerPage) {
@@ -136,6 +152,8 @@ public class CenterListFragment extends MifosBaseFragment
             mCentersList = centerPage.getPageItems();
             centersListAdapter = new CentersListAdapter(getActivity(), mCentersList);
             rv_centers.setAdapter(centersListAdapter);
+
+            ll_error.setVisibility(View.GONE);
         } else {
 
             mCentersList.addAll(centerPage.getPageItems());
@@ -173,6 +191,12 @@ public class CenterListFragment extends MifosBaseFragment
 
     @Override
     public void showFetchingError(String s) {
+
+        if (mApiRestCounter == 1) {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoCenterText.setText(s + "\n Click to Refresh ");
+        }
+
         Toaster.show(rootView, s);
     }
 
