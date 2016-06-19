@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.online.centerlist;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,12 +18,14 @@ import android.view.ViewGroup;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
+import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
+import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 
@@ -37,8 +40,6 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 11/03/14.
  */
-
-//TODO Replace ListView to RecyclerView 
 public class CenterListFragment extends MifosBaseFragment
         implements CenterListMvpView, OnItemClickListener{
 
@@ -57,6 +58,8 @@ public class CenterListFragment extends MifosBaseFragment
     private OnFragmentInteractionListener mListener;
     private List<Center> mCentersList;
     private LinearLayoutManager layoutManager;
+    private int mApiRestCounter;
+    private int limit = 100;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -93,18 +96,59 @@ public class CenterListFragment extends MifosBaseFragment
         rv_centers.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
         rv_centers.setHasFixedSize(true);
 
-        mCenterListPresenter.loadCenters();
+        mApiRestCounter = 1;
+        mCenterListPresenter.loadCenters(true, 0, limit);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R
+                .color.orange_light, R.color.red_light);
+        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mApiRestCounter = 1;
+
+                mCenterListPresenter.loadCenters(true, 0, limit);
+
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        rv_centers.setOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                mApiRestCounter = mApiRestCounter + 1;
+                mCenterListPresenter.loadCenters(true, mCentersList.size(), limit);
+            }
+        });
 
         return rootView;
     }
 
     @Override
-    public void showCenters(List<Center> centers) {
-        if (getActivity() == null) return;
+    public void showCenters(Page<Center> centerPage) {
 
-        mCentersList = centers;
-        centersListAdapter = new CentersListAdapter(getActivity(), mCentersList);
-        rv_centers.setAdapter(centersListAdapter);
+        /**
+         * if mApiRestCounter is 1, So this is the first Api Request.
+         * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
+         */
+        if (mApiRestCounter == 1) {
+            mCentersList = centerPage.getPageItems();
+            centersListAdapter = new CentersListAdapter(getActivity(), mCentersList);
+            rv_centers.setAdapter(centersListAdapter);
+        } else {
+
+            mCentersList.addAll(centerPage.getPageItems());
+            centersListAdapter.notifyDataSetChanged();
+
+            //checking the response size if size is zero then show toast No More
+            // Clients Available for fetch
+            if (centerPage.getPageItems().size() == 0 &&
+                    (centerPage.getTotalFilteredRecords() == mCentersList.size()))
+                Toaster.show(rootView, "No more Center Available");
+        }
+
+
     }
 
     @Override
@@ -128,19 +172,24 @@ public class CenterListFragment extends MifosBaseFragment
     }
 
     @Override
-    public void showCenterGroupFetchinError() {
-        Toaster.show(rootView, "Cannot Generate Collection Sheet," +
-                " There " +
-                "was some problem!");
+    public void showFetchingError(String s) {
+        Toaster.show(rootView, s);
     }
 
     @Override
     public void showProgressbar(boolean b) {
-        if (b) {
-            showMifosProgressBar();
+
+        if (mApiRestCounter == 1) {
+            if (b) {
+                showMifosProgressBar();
+            } else {
+                hideMifosProgressBar();
+            }
         } else {
-            hideMifosProgressBar();
+            swipeRefreshLayout.setRefreshing(b);
         }
+
+
     }
 
     @Override
@@ -161,6 +210,11 @@ public class CenterListFragment extends MifosBaseFragment
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mCenterListPresenter.detachView();
+    }
 
     public interface OnFragmentInteractionListener {
         void loadGroupsOfCenter(int centerId);
