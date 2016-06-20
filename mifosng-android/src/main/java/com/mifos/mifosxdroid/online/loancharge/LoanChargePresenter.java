@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,10 +52,7 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            getMvpView().showFetchingError("Failed to load Charges");
-                        }
+                        getMvpView().showFetchingError("Failed to load Charges");
                     }
 
                     @Override

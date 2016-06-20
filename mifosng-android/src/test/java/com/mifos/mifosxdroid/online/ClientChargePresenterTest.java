@@ -49,7 +49,7 @@ public class ClientChargePresenterTest {
         mClientChargePresenter = new ClientChargePresenter(mDataManager);
         mClientChargePresenter.attachView(mClientChargeMvpView);
 
-        chargesPage = FakeRemoteDataSource.getCharges();
+        chargesPage = FakeRemoteDataSource.getClientCharges();
     }
 
     @After

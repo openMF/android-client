@@ -36,9 +36,14 @@ public class FakeRemoteDataSource {
                 FakeJsonName.CENTER_WITH_ASSOCIATIONS_JSON);
     }
 
-    public static Page<Charges> getCharges() {
+    public static Page<Charges> getClientCharges() {
         return mTestDataFactory.getListTypePojo(new TypeToken<Page<Charges>>() {
         }, FakeJsonName.CHARGES_JSON);
+    }
+
+    public static List<Charges> getLoanCharges() {
+        return mTestDataFactory.getListTypePojo(new TypeToken<List<Charges>>() {
+        }, FakeJsonName.LOAN_CHARGES_JSON);
     }
 
 }
