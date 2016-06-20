@@ -14,6 +14,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -31,7 +32,9 @@ public interface ChargeService {
     Observable<ResponseBody> getAllChargev3(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges")
-    Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId);
+    Observable<Page<Charges>> getListOfCharges(@Path("clientId") int clientId,
+                                               @Query("offset") int offset,
+                                               @Query("limit") int limit);
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
     Observable<Charges> createCharges(@Path("clientId") int clientId,
