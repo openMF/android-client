@@ -7,7 +7,6 @@ import com.mifos.objects.client.Page;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -54,11 +53,8 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         mClientChargeMvpView.showProgressbar(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            mClientChargeMvpView
-                                    .showFetchingErrorCharges("Failed to Load Charges");
-                        }
+                        mClientChargeMvpView
+                                .showFetchingErrorCharges("Failed to Load Charges");
                     }
 
                     @Override

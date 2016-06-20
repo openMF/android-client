@@ -44,7 +44,7 @@ public class ClientSearchPresenterTest {
     List<SearchedEntity> searchedEntities;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         mClientSearchPresenter = new ClientSearchPresenter(mDataManager);
         mClientSearchPresenter.attachView(mClientSearchMvpView);
@@ -53,7 +53,7 @@ public class ClientSearchPresenterTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         mClientSearchPresenter.detachView();
     }
 

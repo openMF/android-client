@@ -45,7 +45,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-//TODO Replace ListView To RecyclerView and Implement offset in Service Class
 public class ClientChargeFragment extends MifosBaseFragment implements ClientChargeMvpView,
         RecyclerItemClickListner.OnItemClickListener {
 

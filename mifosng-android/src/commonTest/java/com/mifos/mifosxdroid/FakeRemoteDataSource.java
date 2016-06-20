@@ -2,7 +2,7 @@ package com.mifos.mifosxdroid;
 
 import com.google.gson.reflect.TypeToken;
 import com.mifos.objects.SearchedEntity;
-import com.mifos.objects.client.Client;
+import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -17,7 +17,7 @@ public class FakeRemoteDataSource {
     private static TestDataFactory mTestDataFactory = new TestDataFactory();
 
 
-    public static Page<Client> getClientList() {
+    public static Page getClientList() {
         return mTestDataFactory.getObjectTypePojo(Page.class, FakeJsonName.CLIENTS_JSON);
     }
 
@@ -35,4 +35,10 @@ public class FakeRemoteDataSource {
         return mTestDataFactory.getObjectTypePojo(CenterWithAssociations.class,
                 FakeJsonName.CENTER_WITH_ASSOCIATIONS_JSON);
     }
+
+    public static Page<Charges> getCharges() {
+        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Charges>>() {
+        }, FakeJsonName.CHARGES_JSON);
+    }
+
 }

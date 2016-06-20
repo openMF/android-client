@@ -66,7 +66,7 @@ public class CenterListPresenterTest {
     }
 
     @Test
-    public void testLoadCenters() throws Exception {
+    public void testLoadCenters() {
 
         when(mDataManager.getCenters(true, offset, limit))
                 .thenReturn(Observable.just(centerPage));
@@ -90,7 +90,7 @@ public class CenterListPresenterTest {
     }
 
     @Test
-    public void testLoadCentersGroupAndMeeting() throws Exception {
+    public void testLoadCentersGroupAndMeeting() {
 
         when(mDataManager.getCentersGroupAndMeeting(centerId))
                 .thenReturn(Observable.just(centerWithAssociations));
