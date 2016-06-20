@@ -9,26 +9,20 @@ package com.mifos.mifosxdroid.online.loancharge;
  */
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
@@ -38,9 +32,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
-import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
@@ -80,29 +72,14 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
     List<Charges> chargesList = new ArrayList<>();
 
     private ChargeNameListAdapter mChargesNameListAdapter;
-
     private View rootView;
     private Context context;
-    private SharedPreferences sharedPreferences;
     private int loanAccountNumber;
-    private LinearLayoutManager layoutManager;
-
-
-    @Override
-    public void onItemClick(View childView, int position) {
-
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
-    }
 
 
     public LoanChargeFragment() {
 
     }
-
 
     public static LoanChargeFragment newInstance(int loanAccountNumber,
                                                  List<Charges> chargesList) {
@@ -126,6 +103,16 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
     }
 
     @Override
+    public void onItemClick(View childView, int position) {
+
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
@@ -143,7 +130,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
         ButterKnife.bind(this, rootView);
         mLoanChargePresenter.attachView(this);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_charges.setLayoutManager(layoutManager);
         rv_charges.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
@@ -181,7 +168,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
             @Override
             public void onLoadMore(int current_page) {
 
-               //Future Implementation
+                //Future Implementation
             }
         });
 

@@ -3,7 +3,6 @@ package com.mifos.mifosxdroid.online.loancharge;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Page;
 
 import java.util.List;
 

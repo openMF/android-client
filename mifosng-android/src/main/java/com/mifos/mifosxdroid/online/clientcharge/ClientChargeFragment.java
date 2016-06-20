@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.online.clientcharge;
  * Created by nellyk on 1/22/2016.
  */
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -16,19 +15,15 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -68,7 +63,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     @BindView(R.id.ll_error)
     LinearLayout ll_error;
 
-    List<Charges> chargesList = new ArrayList<Charges>();
+    List<Charges> chargesList = new ArrayList<>();
 
     @Inject
     ClientChargePresenter mClientChargePresenter;
@@ -76,27 +71,13 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     ChargeNameListAdapter mChargesNameListAdapter;
 
     private View rootView;
-    private Context context;
     private int clientId;
-    private boolean isInfiniteScrollEnabled = false;
-    private LinearLayoutManager layoutManager;
     private int mApiRestCounter;
     private int limit = 10;
-
-    @Override
-    public void onItemClick(View childView, int position) {
-
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
-    }
 
     public ClientChargeFragment() {
 
     }
-
 
     public static ClientChargeFragment newInstance(int clientId, List<Charges> chargesList) {
         ClientChargeFragment fragment = new ClientChargeFragment();
@@ -115,10 +96,17 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
         args.putInt(Constants.CLIENT_ID, clientId);
         fragment.setArguments(args);
         fragment.setChargesList(chargesList);
-        if (isParentFragmentAGroupFragment) {
-            fragment.setInfiniteScrollEnabled(false);
-        }
         return fragment;
+    }
+
+    @Override
+    public void onItemClick(View childView, int position) {
+
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
     }
 
     @Override
@@ -134,12 +122,12 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_charge_list, container, false);
         setHasOptionsMenu(true);
-        context = getActivity().getApplicationContext();
+
 
         ButterKnife.bind(this, rootView);
         mClientChargePresenter.attachView(this);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_charges.setLayoutManager(layoutManager);
         rv_charges.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
@@ -200,11 +188,6 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
     public void setChargesList(List<Charges> chargesList) {
         this.chargesList = chargesList;
-    }
-
-
-    public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
-        this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
     }
 
 
