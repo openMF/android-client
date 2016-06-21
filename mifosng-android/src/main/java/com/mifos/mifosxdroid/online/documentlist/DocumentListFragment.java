@@ -12,26 +12,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
@@ -49,7 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView,
-        RecyclerItemClickListner.OnItemClickListener{
+        RecyclerItemClickListner.OnItemClickListener {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
