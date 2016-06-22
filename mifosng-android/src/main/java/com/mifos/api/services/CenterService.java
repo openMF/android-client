@@ -8,6 +8,7 @@ import com.mifos.api.model.APIEndPoint;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
+import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Center;
@@ -32,7 +33,9 @@ public interface CenterService {
 
 
     @GET(APIEndPoint.CENTERS)
-    Observable<List<Center>> getAllCenters();
+    Observable<Page<Center>> getCenters(@Query("paged") boolean b,
+                                        @Query("offset") int offset,
+                                        @Query("limit") int limit);
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
     Observable<CenterWithAssociations> getCenterWithGroupMembersAndCollectionMeetingCalendar

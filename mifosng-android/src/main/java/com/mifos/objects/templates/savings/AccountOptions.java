@@ -1,6 +1,6 @@
 package com.mifos.objects.templates.savings;
 
-import com.mifos.objects.InterestType;
+import com.mifos.objects.common.InterestType;
 
 /*
  * This project is licensed under the open source MPL V2.

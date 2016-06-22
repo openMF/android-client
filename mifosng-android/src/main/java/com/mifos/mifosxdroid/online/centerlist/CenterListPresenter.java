@@ -1,11 +1,10 @@
 package com.mifos.mifosxdroid.online.centerlist;
 
 import com.mifos.api.DataManager;
-import com.mifos.mifosxdroid.base.Presenter;
+import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -17,11 +16,11 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 5/6/16.
  */
-public class CenterListPresenter implements Presenter<CenterListMvpView> {
+public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
 
     private final DataManager mDataManager;
     private Subscription mSubscription;
-    private CenterListMvpView mCenterListMvpView;
+
 
     @Inject
     public CenterListPresenter(DataManager dataManager) {
@@ -31,44 +30,50 @@ public class CenterListPresenter implements Presenter<CenterListMvpView> {
 
     @Override
     public void attachView(CenterListMvpView mvpView) {
-        mCenterListMvpView = mvpView;
+        super.attachView(mvpView);
     }
+
 
     @Override
     public void detachView() {
-        mCenterListMvpView = null;
+        super.detachView();
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadCenters() {
-        mCenterListMvpView.showProgressbar(true);
+    /**
+     * @param paged  True Enabling the Pagination of the API
+     * @param offset Value give from which position Fetch CenterList
+     * @param limit  Maximum size of the Center
+     */
+    public void loadCenters(boolean paged, int offset, int limit) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getCenters()
+        mSubscription = mDataManager.getCenters(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Center>>() {
+                .subscribe(new Subscriber<Page<Center>>() {
                     @Override
                     public void onCompleted() {
-                        mCenterListMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mCenterListMvpView.showProgressbar(false);
-                        mCenterListMvpView.showCenterGroupFetchinError();
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError("Failed to load Centers");
                     }
 
                     @Override
-                    public void onNext(List<Center> centers) {
-                        mCenterListMvpView.showProgressbar(false);
-                        mCenterListMvpView.showCenters(centers);
+                    public void onNext(Page<Center> centerPage) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showCenters(centerPage);
                     }
                 });
-
     }
 
+
     public void loadCentersGroupAndMeeting(final int id) {
-        mCenterListMvpView.showProgressbar(true);
+        getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getCentersGroupAndMeeting(id)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -76,18 +81,18 @@ public class CenterListPresenter implements Presenter<CenterListMvpView> {
                 .subscribe(new Subscriber<CenterWithAssociations>() {
                     @Override
                     public void onCompleted() {
-                        mCenterListMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mCenterListMvpView.showProgressbar(false);
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError("Failed to load Center Groups and Meeting");
                     }
 
                     @Override
                     public void onNext(CenterWithAssociations centerWithAssociations) {
-                        mCenterListMvpView.showProgressbar(false);
-                        mCenterListMvpView.showCentersGroupAndMeeting(
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showCentersGroupAndMeeting(
                                 centerWithAssociations, id);
                     }
                 });

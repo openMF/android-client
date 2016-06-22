@@ -5,10 +5,13 @@
 
 package com.mifos.objects.noncore;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by ishankhanna on 02/07/14.
  */
-public class Document {
+public class Document implements Parcelable {
 
     private int id;
     private String parentEntityType;
@@ -82,4 +85,47 @@ public class Document {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.parentEntityType);
+        dest.writeInt(this.parentEntityId);
+        dest.writeString(this.name);
+        dest.writeString(this.fileName);
+        dest.writeLong(this.size);
+        dest.writeString(this.type);
+        dest.writeString(this.description);
+    }
+
+    public Document() {
+    }
+
+    protected Document(Parcel in) {
+        this.id = in.readInt();
+        this.parentEntityType = in.readString();
+        this.parentEntityId = in.readInt();
+        this.name = in.readString();
+        this.fileName = in.readString();
+        this.size = in.readLong();
+        this.type = in.readString();
+        this.description = in.readString();
+    }
+
+    public static final Parcelable.Creator<Document> CREATOR = new Parcelable.Creator<Document>() {
+        @Override
+        public Document createFromParcel(Parcel source) {
+            return new Document(source);
+        }
+
+        @Override
+        public Document[] newArray(int size) {
+            return new Document[size];
+        }
+    };
 }

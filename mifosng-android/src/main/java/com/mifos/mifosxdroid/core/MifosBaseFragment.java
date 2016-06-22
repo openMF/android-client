@@ -23,6 +23,7 @@ public class MifosBaseFragment extends Fragment {
     private BaseActivityCallback callback;
     private Activity activity;
     private InputMethodManager inputManager;
+    private MifosProgressBarHandler mMifosProgressBarHandler;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -42,6 +43,7 @@ public class MifosBaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         inputManager = (InputMethodManager) getActivity().getSystemService(Context
                 .INPUT_METHOD_SERVICE);
+        mMifosProgressBarHandler = new MifosProgressBarHandler(getActivity());
     }
 
     public void showAlertDialog(String title, String message) {
@@ -59,16 +61,16 @@ public class MifosBaseFragment extends Fragment {
         return ((MifosBaseActivity) getActivity()).getToolbar();
     }
 
-    protected void showProgress() {
-        showProgress("Working...");
+    protected void showMifosProgressDialog() {
+        showMifosProgressDialog("Working...");
     }
 
-    protected void showProgress(String message) {
+    protected void showMifosProgressDialog(String message) {
         if (callback != null)
             callback.showProgress(message);
     }
 
-    protected void hideProgress() {
+    protected void hideMifosProgressDialog() {
         if (callback != null)
             callback.hideProgress();
     }
@@ -84,6 +86,14 @@ public class MifosBaseFragment extends Fragment {
     public void hideKeyboard(View view) {
         inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager
                 .HIDE_IMPLICIT_ONLY);
+    }
+
+    protected void showMifosProgressBar() {
+        mMifosProgressBarHandler.show();
+    }
+
+    protected void hideMifosProgressBar() {
+        mMifosProgressBarHandler.hide();
     }
 
 }

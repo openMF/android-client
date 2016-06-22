@@ -1,7 +1,7 @@
 package com.mifos.objects.templates.savings;
 
 import com.mifos.objects.Currency;
-import com.mifos.objects.InterestType;
+import com.mifos.objects.common.InterestType;
 import com.mifos.objects.PaymentTypeOption;
 
 import java.util.List;

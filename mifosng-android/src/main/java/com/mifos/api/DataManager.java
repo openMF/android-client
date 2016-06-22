@@ -89,9 +89,9 @@ public class DataManager {
     /**
      * Center API
      */
-    //Return Centers List
-    public Observable<List<Center>> getCenters() {
-        return mBaseApiManager.getCenterApi().getAllCenters();
+    //Return Centers List according to offset and limit parameter
+    public Observable<Page<Center>> getCenters(boolean b, int offset, int limit) {
+        return mBaseApiManager.getCenterApi().getCenters(b, offset, limit);
     }
 
     //Return Center With Association
@@ -137,8 +137,8 @@ public class DataManager {
     /**
      * Charges API
      */
-    public Observable<Page<Charges>> getClientCharges(int id) {
-        return mBaseApiManager.getChargeApi().getListOfCharges(id);
+    public Observable<Page<Charges>> getClientCharges(int clientId, int offset, int limit) {
+        return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit);
     }
 
     public Observable<ResponseBody> getAllChargesV2(int clientId) {
@@ -359,7 +359,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().disburseLoan(loanId, loanDisbursement);
     }
 
-    public Observable<Page<Charges>> getListOfLoanCharges(int loanId) {
+    public Observable<List<Charges>> getListOfLoanCharges(int loanId) {
         return mBaseApiManager.getLoanApi().getListOfLoanCharges(loanId);
     }
 

@@ -175,10 +175,10 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         // ignore the current selected item
-        if (item.isChecked()) {
+        /*if (item.isChecked()) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             return false;
-        }
+        }*/
 
         // select which activity to open
         final Intent intent = new Intent();

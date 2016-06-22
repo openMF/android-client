@@ -3,11 +3,11 @@ package com.mifos.mifosxdroid.online.loancharge;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Page;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -44,57 +44,24 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
         mSubscription = mDataManager.getListOfLoanCharges(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Charges>>() {
+                .subscribe(new Subscriber<List<Charges>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            getMvpView().showFetchingError(response.code());
-                        }
+                        getMvpView().showFetchingError("Failed to load Charges");
                     }
 
                     @Override
-                    public void onNext(Page<Charges> chargesPage) {
+                    public void onNext(List<Charges> chargesPage) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanChargesList(chargesPage);
                     }
                 });
     }
 
-    public void loadChargesList(int clientId) {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getListOfCharges(clientId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Charges>>() {
-                    @Override
-                    public void onCompleted() {
-                        getMvpView().showProgressbar(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            getMvpView().showFetchingError(response.code());
-                        }
-                    }
-
-                    @Override
-                    public void onNext(Page<Charges> chargesPage) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showChargesList(chargesPage);
-                    }
-                });
-    }
 
 }

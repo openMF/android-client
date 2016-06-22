@@ -84,9 +84,9 @@ public class LoanTransactionsFragment extends MifosBaseFragment
     @Override
     public void showProgressbar(boolean b) {
         if (b) {
-            showProgress();
+            showMifosProgressDialog();
         } else {
-            hideProgress();
+            hideMifosProgressDialog();
         }
     }
 
