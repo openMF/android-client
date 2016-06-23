@@ -6,7 +6,7 @@
 package com.mifos.objects.client;
 
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.MifosBaseModel;
+import com.mifos.api.local.MifosBaseModel;
 import com.mifos.objects.Timeline;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
