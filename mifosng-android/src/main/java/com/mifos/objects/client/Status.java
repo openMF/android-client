@@ -8,8 +8,8 @@ package com.mifos.objects.client;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mifos.api.local.MifosDatabase;
 import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -20,16 +20,33 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @Table(database = MifosDatabase.class)
 public class Status extends MifosBaseModel implements Parcelable {
 
-    private static final String STATUS_ACTIVE = "Active";
+    public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
+        @Override
+        public Status createFromParcel(Parcel source) {
+            return new Status(source);
+        }
 
+        @Override
+        public Status[] newArray(int size) {
+            return new Status[size];
+        }
+    };
+    private static final String STATUS_ACTIVE = "Active";
     @PrimaryKey(autoincrement = true)
     int id;
-
     @Column
     String code;
-
     @Column
     String value;
+
+    public Status() {
+    }
+
+    protected Status(Parcel in) {
+        this.id = in.readInt();
+        this.code = in.readString();
+        this.value = in.readString();
+    }
 
     // Helper method to check if status is Active
     public static boolean isActive(String value) {
@@ -80,25 +97,4 @@ public class Status extends MifosBaseModel implements Parcelable {
         dest.writeString(this.code);
         dest.writeString(this.value);
     }
-
-    public Status() {
-    }
-
-    protected Status(Parcel in) {
-        this.id = in.readInt();
-        this.code = in.readString();
-        this.value = in.readString();
-    }
-
-    public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
-        @Override
-        public Status createFromParcel(Parcel source) {
-            return new Status(source);
-        }
-
-        @Override
-        public Status[] newArray(int size) {
-            return new Status[size];
-        }
-    };
 }
