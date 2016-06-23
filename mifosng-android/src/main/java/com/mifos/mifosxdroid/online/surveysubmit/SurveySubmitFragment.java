@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.online.Communicator;
 import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
 import com.mifos.objects.survey.Scorecard;
@@ -33,7 +33,7 @@ import butterknife.OnClick;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveySubmitFragment extends ProgressableFragment implements Communicator,
+public class SurveySubmitFragment extends MifosBaseFragment implements Communicator,
         SurveySubmitMvpView {
 
     public Context context;
@@ -130,7 +130,11 @@ public class SurveySubmitFragment extends ProgressableFragment implements Commun
 
     @Override
     public void showProgressbar(boolean b) {
-        showProgress(b);
+        if (b) {
+            showMifosProgressBar();
+        } else {
+            hideMifosProgressBar();
+        }
     }
 
     @Override
