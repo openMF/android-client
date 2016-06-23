@@ -5,8 +5,15 @@
 
 package com.mifos.objects.client;
 
-import com.mifos.objects.Status;
+import com.mifos.api.local.MifosDatabase;
+import com.mifos.objects.MifosBaseModel;
 import com.mifos.objects.Timeline;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,26 +21,63 @@ import java.util.List;
 /**
  * Created by ishankhanna on 08/02/14.
  */
-public class Client {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Client extends MifosBaseModel {
 
-    private int id;
-    private String accountNo;
+    @PrimaryKey(autoincrement = true)
+    int id;
+
+    @Column
+    @Unique
+    String accountNo;
+
+    @ForeignKey
     private Status status;
+
+    @Column
     private boolean active;
+
     private List<Integer> activationDate = new ArrayList<Integer>();
+
     private List<Integer> dobDate = new ArrayList<Integer>();
+
+    @Column
     private String firstname;
+
+    @Column
     private String middlename;
+
+    @Column
     private String lastname;
+
+    @Column
     private String displayName;
+
+    @Column
     private int officeId;
+
+    @Column
     private String officeName;
+
+    @Column
     private int staffId;
+
+    @Column
     private String staffName;
+
     private Timeline timeline;
+
+    @Column
     private String fullname;
+
+    @Column
     private int imageId;
+
+    @Column
     private boolean imagePresent;
+
+    @Column
     private String externalId;
 
     public List<Integer> getDobDate() {

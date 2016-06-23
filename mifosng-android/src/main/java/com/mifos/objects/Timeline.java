@@ -8,25 +8,40 @@ package com.mifos.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class Timeline implements Parcelable {
+public class Timeline extends BaseModel implements Parcelable {
 
     private List<Integer> submittedOnDate = new ArrayList<Integer>();
+
     private String submittedByUsername;
+
     private String submittedByFirstname;
+
     private String submittedByLastname;
+
     private List<Integer> activatedOnDate = new ArrayList<Integer>();
+
     private String activatedByUsername;
+
     private String activatedByFirstname;
+
     private String activatedByLastname;
+
     private List<Integer> closedOnDate = new ArrayList<Integer>();
+
     private String closedByUsername;
+
     private String closedByFirstname;
+
     private String closedByLastname;
 
     public String getSubmittedByUsername() {

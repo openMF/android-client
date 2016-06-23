@@ -5,7 +5,7 @@
 
 package com.mifos.objects.group;
 
-import com.mifos.objects.Status;
+import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
 import com.mifos.objects.client.Client;
 

@@ -3,21 +3,34 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.objects;
+package com.mifos.objects.client;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosDatabase;
+import com.mifos.objects.MifosBaseModel;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class Status implements Parcelable {
+@Table(database = MifosDatabase.class)
+public class Status extends MifosBaseModel implements Parcelable {
 
     private static final String STATUS_ACTIVE = "Active";
 
-    private int id;
-    private String code;
-    private String value;
+    @PrimaryKey(autoincrement = true)
+    int id;
+
+    @Column
+    String code;
+
+    @Column
+    String value;
 
     // Helper method to check if status is Active
     public static boolean isActive(String value) {

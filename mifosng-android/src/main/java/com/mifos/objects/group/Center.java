@@ -8,7 +8,7 @@ package com.mifos.objects.group;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mifos.objects.Status;
+import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
 
 import java.util.ArrayList;

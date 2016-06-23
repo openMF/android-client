@@ -15,6 +15,8 @@ import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.orm.SugarApp;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +51,7 @@ public class App extends SugarApp {
         Crashlytics.start(this);
 
         Iconify.with(new MaterialModule());
+        FlowManager.init(new FlowConfig.Builder(this).build());
     }
 
     public ApplicationComponent getComponent() {
