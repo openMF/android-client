@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.local.DatabaseHelper;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.squareup.otto.Bus;
@@ -25,7 +26,7 @@ public interface ApplicationComponent {
     Context context();
 
     Application application();
-
+    DatabaseHelper databaseHelper();
     DataManager dataManager();
 
     Bus eventBus();
