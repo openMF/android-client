@@ -1,4 +1,6 @@
-package com.mifos.api;
+package com.mifos.api.datamanageronline;
+
+import com.mifos.api.BaseApiManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

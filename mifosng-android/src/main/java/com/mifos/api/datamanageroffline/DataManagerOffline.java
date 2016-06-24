@@ -1,4 +1,4 @@
-package com.mifos.api;
+package com.mifos.api.datamanageroffline;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
