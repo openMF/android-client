@@ -1,5 +1,7 @@
 package com.mifos.api;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
@@ -61,6 +63,7 @@ import javax.inject.Singleton;
 import okhttp3.MultipartBody.Part;
 import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by Rajan Maurya on 4/6/16.
@@ -70,6 +73,7 @@ import rx.Observable;
 public class DataManager {
 
     public final BaseApiManager mBaseApiManager;
+
 
     @Inject
     public DataManager(BaseApiManager baseApiManager) {

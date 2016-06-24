@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.DataManagerOffline;
+import com.mifos.api.DataManagerOnline;
 import com.mifos.api.local.DatabaseHelper;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
@@ -28,7 +30,8 @@ public interface ApplicationComponent {
     Application application();
     DatabaseHelper databaseHelper();
     DataManager dataManager();
-
+    DataManagerOnline dataManagerOnline();
+    DataManagerOffline dataManagerOffline();
     Bus eventBus();
 
 }
