@@ -20,6 +20,7 @@ public class PrefManager {
     private static final String INSTANCE_URL = "preferences_instance";
     private static final String INSTANCE_DOMAIN = "preferences_domain";
     private static final String PORT = "preferences_port";
+    private static final String USER_STATUS = "user_status";
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(App.getInstance()
@@ -143,6 +144,23 @@ public class PrefManager {
     public static void setPort(String port) {
         if (!TextUtils.isEmpty(port))
             putString(PORT, port);
+    }
+
+    /**
+     * Set User Status,
+     * If True then user is Online
+     * If False then User is offline
+     */
+    public static void setUserStatus(boolean status) {
+        putBoolean(USER_STATUS, status);
+    }
+
+    /**
+     * @return the Pref value of User status.
+     * default is True(User is online)
+     */
+    public static boolean getUserStatus() {
+        return getBoolean(USER_STATUS, true);
     }
 }
 
