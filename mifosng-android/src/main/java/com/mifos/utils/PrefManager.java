@@ -148,19 +148,19 @@ public class PrefManager {
 
     /**
      * Set User Status,
-     * If True then user is Online
-     * If False then User is offline
+     * If O then user is Online
+     * If 1 then User is offline
      */
-    public static void setUserStatus(boolean status) {
-        putBoolean(USER_STATUS, status);
+    public static void setUserStatus(int statusCode) {
+        putInt(USER_STATUS, statusCode);
     }
 
     /**
      * @return the Pref value of User status.
-     * default is True(User is online)
+     * default is 0(User is online)
      */
-    public static boolean getUserStatus() {
-        return getBoolean(USER_STATUS, true);
+    public static int getUserStatus() {
+        return getInt(USER_STATUS, 0);
     }
 }
 

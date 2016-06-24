@@ -1,8 +1,9 @@
 package com.mifos.api;
 
-import android.util.Log;
+import android.support.annotation.Nullable;
 
 import com.google.gson.JsonArray;
+import com.mifos.api.datamanageronline.DataManagerClientApiOnline;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
@@ -52,6 +53,7 @@ import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.services.data.SavingsPayload;
+import com.mifos.utils.PrefManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +65,6 @@ import javax.inject.Singleton;
 import okhttp3.MultipartBody.Part;
 import okhttp3.ResponseBody;
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by Rajan Maurya on 4/6/16.
@@ -72,13 +73,20 @@ import rx.functions.Func1;
 @Singleton
 public class DataManager {
 
-    public final BaseApiManager mBaseApiManager;
+    private final BaseApiManager mBaseApiManager;
+    private DataManagerClientApiOnline mDataManagerClientApiOnline;
 
+
+    //TODO : This Constructor is temp after splitting the Datamanager layer into offline and online
+    public DataManager(BaseApiManager baseApiManager) {
+        mBaseApiManager = baseApiManager;
+    }
 
     @Inject
-    public DataManager(BaseApiManager baseApiManager) {
-
+    public DataManager(BaseApiManager baseApiManager,
+                       DataManagerClientApiOnline dataManagerClientApiOnline) {
         mBaseApiManager = baseApiManager;
+        mDataManagerClientApiOnline = dataManagerClientApiOnline;
     }
 
     /**
@@ -165,8 +173,20 @@ public class DataManager {
     /**
      * Client API
      */
+    @Nullable
     public Observable<Page<Client>> getAllClients() {
-        return mBaseApiManager.getClientsApi().getAllClients();
+
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mDataManagerClientApiOnline.getAllClients();
+
+            case 1:
+                //Return the offline Datamanager
+                return null;
+
+            default:
+                return mDataManagerClientApiOnline.getAllClients();
+        }
     }
 
     public Observable<Page<Client>> getAllClients(int offset, int limit) {
