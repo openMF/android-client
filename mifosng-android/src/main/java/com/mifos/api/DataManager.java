@@ -1,9 +1,7 @@
 package com.mifos.api;
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.JsonArray;
-import com.mifos.api.datamanageronline.DataManagerClientApiOnline;
+import com.mifos.api.datamanager.DataManagerClientApi;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
@@ -74,19 +72,19 @@ import rx.Observable;
 public class DataManager {
 
     private final BaseApiManager mBaseApiManager;
-    private DataManagerClientApiOnline mDataManagerClientApiOnline;
+    private DataManagerClientApi mDataManagerClientApi;
 
 
-    //TODO : This Constructor is temp after splitting the Datamanager layer into offline and online
+    //TODO : This Constructor is temp after splitting the Datamanager layer into Sub DataManager
     public DataManager(BaseApiManager baseApiManager) {
         mBaseApiManager = baseApiManager;
     }
 
     @Inject
     public DataManager(BaseApiManager baseApiManager,
-                       DataManagerClientApiOnline dataManagerClientApiOnline) {
+                       DataManagerClientApi dataManagerClientApi) {
         mBaseApiManager = baseApiManager;
-        mDataManagerClientApiOnline = dataManagerClientApiOnline;
+        mDataManagerClientApi = dataManagerClientApi;
     }
 
     /**
@@ -173,19 +171,18 @@ public class DataManager {
     /**
      * Client API
      */
-    @Nullable
     public Observable<Page<Client>> getAllClients() {
 
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mDataManagerClientApiOnline.getAllClients();
+                return mDataManagerClientApi.getAllClients();
 
             case 1:
                 //Return the offline Datamanager
                 return null;
 
             default:
-                return mDataManagerClientApiOnline.getAllClients();
+                return mDataManagerClientApi.getAllClients();
         }
     }
 

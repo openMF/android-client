@@ -1,4 +1,4 @@
-package com.mifos.api.datamanageronline;
+package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.objects.client.Client;
@@ -16,12 +16,12 @@ import rx.functions.Func1;
  * Created by Rajan Maurya on 24/06/16.
  */
 @Singleton
-public class DataManagerClientApiOnline {
+public class DataManagerClientApi {
 
     public final BaseApiManager mBaseApiManager;
 
     @Inject
-    public DataManagerClientApiOnline(BaseApiManager baseApiManager) {
+    public DataManagerClientApi(BaseApiManager baseApiManager) {
         mBaseApiManager = baseApiManager;
     }
 
