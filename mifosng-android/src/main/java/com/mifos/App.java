@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.stetho.Stetho;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
@@ -52,6 +53,7 @@ public class App extends SugarApp {
 
         Iconify.with(new MaterialModule());
         FlowManager.init(new FlowConfig.Builder(this).build());
+        Stetho.initializeWithDefaults(this);
     }
 
     public ApplicationComponent getComponent() {

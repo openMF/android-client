@@ -1,6 +1,7 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.local.DatabaseHelper;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 
@@ -19,24 +20,26 @@ import rx.functions.Func1;
 public class DataManagerClientApi {
 
     public final BaseApiManager mBaseApiManager;
+    public final DatabaseHelper mDatabaseHelper;
 
     @Inject
-    public DataManagerClientApi(BaseApiManager baseApiManager) {
+    public DataManagerClientApi(BaseApiManager baseApiManager,
+                                DatabaseHelper databaseHelper) {
+
         mBaseApiManager = baseApiManager;
+        mDatabaseHelper = databaseHelper;
     }
 
 
-    public Observable<Page<Client>> getAllClients() {
-        return mBaseApiManager
-                .getClientsApi()
-                .getAllClients()
-                .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
+    public Observable<Void> getAllClients() {
+        return mBaseApiManager.getClientsApi().getAllClients()
+                .concatMap(new Func1<Page<Client>, Observable<? extends Void>>() {
                     @Override
-                    public Observable<? extends Page<Client>> call(Page<Client> clientPage) {
-                        //Call Offline datamanager to save response in Database using DBHelper
-                        return Observable.just(clientPage);
+                    public Observable<? extends Void> call(Page<Client> clientPage) {
+                        return mDatabaseHelper.saveAllClients(clientPage);
                     }
                 });
+                //.doOnCompleted()
     }
 
 }
