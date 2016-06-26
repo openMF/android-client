@@ -2,6 +2,7 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.DatabaseHelper;
+import com.mifos.api.local.databasehelper.DatabaseHelperClientApi;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Func1;
 
 /**
@@ -21,25 +23,29 @@ public class DataManagerClientApi {
 
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelper mDatabaseHelper;
+    public static DatabaseHelperClientApi mDatabaseHelperClientApi;
+    private Subscription mSubscription;
 
     @Inject
     public DataManagerClientApi(BaseApiManager baseApiManager,
-                                DatabaseHelper databaseHelper) {
+                                DatabaseHelper databaseHelper,
+                                DatabaseHelperClientApi databaseHelperClientApi) {
 
         mBaseApiManager = baseApiManager;
         mDatabaseHelper = databaseHelper;
+        mDatabaseHelperClientApi = databaseHelperClientApi;
     }
 
 
-    public Observable<Void> getAllClients() {
+    public Observable<Page<Client>> getAllClients() {
         return mBaseApiManager.getClientsApi().getAllClients()
-                .concatMap(new Func1<Page<Client>, Observable<? extends Void>>() {
+                .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
                     @Override
-                    public Observable<? extends Void> call(Page<Client> clientPage) {
+                    public Observable<? extends Page<Client>> call(Page<Client> clientPage) {
                         return mDatabaseHelper.saveAllClients(clientPage);
                     }
                 });
-                //.doOnCompleted()
+
     }
 
 }

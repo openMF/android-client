@@ -1,5 +1,7 @@
 package com.mifos.api.local.databasehelper;
 
+import android.os.AsyncTask;
+
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 
@@ -7,7 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by Rajan Maurya on 24/06/16.
@@ -22,19 +23,17 @@ public class DatabaseHelperClientApi {
 
 
 
-    public Observable<Void> saveAllClients(final Page<Client> clientPage) {
-        return Observable.create(new Observable.OnSubscribe<Void>() {
+    public Observable<Page<Client>> saveAllClients(final Page<Client> clientPage) {
+        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
             @Override
-            public void call(Subscriber<? super Void> subscriber) {
+            public void run() {
 
                 for (Client client : clientPage.getPageItems()) {
-                    Client dbClient = new Client();
-                    dbClient.setId(client.getId());
-                    dbClient.setAccountNo(client.getAccountNo());
-                    dbClient.setActive(client.isActive());
-                    dbClient.save();
+                    client.save();
                 }
             }
         });
+        return Observable.just(clientPage);
+
     }
 }

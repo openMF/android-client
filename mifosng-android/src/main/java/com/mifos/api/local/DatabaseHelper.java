@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by Rajan Maurya on 23/06/16.
@@ -24,18 +23,13 @@ public class DatabaseHelper {
     }
 
 
-
     /**
      * Saving List of Clients in Database
+     *
      * @param clientPage Client List for saving in Database
      */
-    public Observable<Void> saveAllClients(final Page<Client> clientPage) {
-        return Observable.create(new Observable.OnSubscribe<Void>() {
-            @Override
-            public void call(Subscriber<? super Void> subscriber) {
-                mDatabaseHelperClientApi.saveAllClients(clientPage);
-            }
-        });
+    public Observable<Page<Client>> saveAllClients(final Page<Client> clientPage) {
+        return mDatabaseHelperClientApi.saveAllClients(clientPage);
 
     }
 
