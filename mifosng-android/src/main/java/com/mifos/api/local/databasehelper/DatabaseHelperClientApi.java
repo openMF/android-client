@@ -1,6 +1,7 @@
 package com.mifos.api.local.databasehelper;
 
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -23,7 +24,8 @@ public class DatabaseHelperClientApi {
 
 
 
-    public Observable<Page<Client>> saveAllClients(final Page<Client> clientPage) {
+    @Nullable
+    public Observable<Void> saveAllClients(final Page<Client> clientPage) {
         AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
@@ -33,7 +35,6 @@ public class DatabaseHelperClientApi {
                 }
             }
         });
-        return Observable.just(clientPage);
-
+        return null;
     }
 }

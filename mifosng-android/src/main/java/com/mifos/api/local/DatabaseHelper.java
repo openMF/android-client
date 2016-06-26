@@ -28,7 +28,7 @@ public class DatabaseHelper {
      *
      * @param clientPage Client List for saving in Database
      */
-    public Observable<Page<Client>> saveAllClients(final Page<Client> clientPage) {
+    public Observable<Void> saveAllClients(final Page<Client> clientPage) {
         return mDatabaseHelperClientApi.saveAllClients(clientPage);
 
     }

@@ -40,7 +40,9 @@ public class DataManagerClientApi {
                 .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
                     @Override
                     public Observable<? extends Page<Client>> call(Page<Client> clientPage) {
-                        return mDatabaseHelper.saveAllClients(clientPage);
+                        //Saving Clients in Database
+                        mDatabaseHelper.saveAllClients(clientPage);
+                        return Observable.just(clientPage);
                     }
                 });
 
