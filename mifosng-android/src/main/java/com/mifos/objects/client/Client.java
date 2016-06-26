@@ -23,7 +23,7 @@ import java.util.List;
 @ModelContainer
 public class Client extends MifosBaseModel {
 
-    @PrimaryKey(autoincrement = true)
+    @PrimaryKey
     int id;
 
     @Column

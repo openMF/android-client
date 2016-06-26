@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.Subscription;
 import rx.functions.Func1;
 
 /**
@@ -24,7 +23,6 @@ public class DataManagerClientApi {
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelper mDatabaseHelper;
     public static DatabaseHelperClientApi mDatabaseHelperClientApi;
-    private Subscription mSubscription;
 
     @Inject
     public DataManagerClientApi(BaseApiManager baseApiManager,
