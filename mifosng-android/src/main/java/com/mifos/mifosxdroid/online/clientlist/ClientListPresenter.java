@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.clientlist;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.base.Presenter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
@@ -19,13 +19,13 @@ import rx.schedulers.Schedulers;
 public class ClientListPresenter implements Presenter<ClientListMvpView> {
 
 
-    private final DataManager mDataManager;
+    private final DataManagerClient mDataManagerClient;
     private Subscription mSubscription;
     private ClientListMvpView mClientListMvpView;
 
     @Inject
-    public ClientListPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public ClientListPresenter(DataManagerClient dataManagerClient) {
+        mDataManagerClient = dataManagerClient;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
         EspressoIdlingResource.increment(); // App is busy until further notice.
         mClientListMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getAllClients()
+        mSubscription = mDataManagerClient.getAllClients()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Client>>() {
@@ -74,7 +74,7 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
     public void loadMoreClients(int offset, int limit) {
         mClientListMvpView.showSwipeRefreshLayout(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getAllClients(offset, limit)
+        mSubscription = mDataManagerClient.getAllClients(offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Client>>() {

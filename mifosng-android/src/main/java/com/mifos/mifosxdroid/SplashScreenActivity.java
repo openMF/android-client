@@ -29,6 +29,7 @@ public class SplashScreenActivity extends MifosBaseActivity {
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {
+            PrefManager.setUserStatus(0);
             startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
         }
         finish();

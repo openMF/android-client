@@ -1,7 +1,7 @@
 package com.mifos.api;
 
 import com.google.gson.JsonArray;
-import com.mifos.api.datamanager.DataManagerClientApi;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
@@ -72,7 +72,7 @@ import rx.Observable;
 public class DataManager {
 
     private final BaseApiManager mBaseApiManager;
-    private DataManagerClientApi mDataManagerClientApi;
+    private DataManagerClient mDataManagerClient;
 
 
     //TODO : This Constructor is temp after splitting the Datamanager layer into Sub DataManager
@@ -82,9 +82,9 @@ public class DataManager {
 
     @Inject
     public DataManager(BaseApiManager baseApiManager,
-                       DataManagerClientApi dataManagerClientApi) {
+                       DataManagerClient dataManagerClient) {
         mBaseApiManager = baseApiManager;
-        mDataManagerClientApi = dataManagerClientApi;
+        mDataManagerClient = dataManagerClient;
     }
 
     /**
@@ -175,14 +175,14 @@ public class DataManager {
 
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mDataManagerClientApi.getAllClients();
+                return mDataManagerClient.getAllClients();
 
             case 1:
                 //Return the offline Datamanager
                 return null;
 
             default:
-                return mDataManagerClientApi.getAllClients();
+                return mDataManagerClient.getAllClients();
         }
     }
 

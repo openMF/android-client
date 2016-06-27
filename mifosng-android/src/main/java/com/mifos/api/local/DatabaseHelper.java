@@ -1,6 +1,6 @@
 package com.mifos.api.local;
 
-import com.mifos.api.local.databasehelper.DatabaseHelperClientApi;
+import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 
@@ -15,11 +15,11 @@ import rx.Observable;
 @Singleton
 public class DatabaseHelper {
 
-    public final DatabaseHelperClientApi mDatabaseHelperClientApi;
+    public final DatabaseHelperClient mDatabaseHelperClient;
 
     @Inject
-    public DatabaseHelper(DatabaseHelperClientApi databaseHelperClientApi) {
-        mDatabaseHelperClientApi = databaseHelperClientApi;
+    public DatabaseHelper(DatabaseHelperClient databaseHelperClient) {
+        mDatabaseHelperClient = databaseHelperClient;
     }
 
 
@@ -29,7 +29,7 @@ public class DatabaseHelper {
      * @param clientPage Client List for saving in Database
      */
     public Observable<Void> saveAllClients(final Page<Client> clientPage) {
-        return mDatabaseHelperClientApi.saveAllClients(clientPage);
+        return mDatabaseHelperClient.saveAllClients(clientPage);
 
     }
 

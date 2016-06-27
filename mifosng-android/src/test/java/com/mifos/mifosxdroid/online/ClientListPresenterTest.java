@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.online.clientlist.ClientListMvpView;
 import com.mifos.mifosxdroid.online.clientlist.ClientListPresenter;
@@ -35,7 +35,7 @@ public class ClientListPresenterTest {
     ClientListPresenter mClientListPresenter;
 
     @Mock
-    DataManager mDataManager;
+    DataManagerClient mDataManagerClient;
 
     @Mock
     ClientListMvpView mClientListMvpView;
@@ -45,7 +45,7 @@ public class ClientListPresenterTest {
     @Before
     public void setUp() throws Exception {
 
-        mClientListPresenter = new ClientListPresenter(mDataManager);
+        mClientListPresenter = new ClientListPresenter(mDataManagerClient);
         mClientListPresenter.attachView(mClientListMvpView);
 
 
@@ -63,7 +63,7 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClients() {
 
-        when(mDataManager.getAllClients()).thenReturn(Observable.just(clientPage));
+        when(mDataManagerClient.getAllClients()).thenReturn(Observable.just(clientPage));
 
         mClientListPresenter.loadClients();
 
@@ -76,7 +76,7 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClientFails() {
 
-        when(mDataManager.getAllClients())
+        when(mDataManagerClient.getAllClients())
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
         mClientListPresenter.loadClients();
@@ -87,7 +87,7 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadMoreClients() {
 
-        when(mDataManager.getAllClients(0, clientPage.getPageItems().size()))
+        when(mDataManagerClient.getAllClients(0, clientPage.getPageItems().size()))
                 .thenReturn(Observable.just(clientPage));
 
         mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
@@ -100,7 +100,7 @@ public class ClientListPresenterTest {
 
     @Test
     public void testLoadMoreClientFails() {
-        when(mDataManager.getAllClients(0, clientPage.getPageItems().size()))
+        when(mDataManagerClient.getAllClients(0, clientPage.getPageItems().size()))
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
         mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
