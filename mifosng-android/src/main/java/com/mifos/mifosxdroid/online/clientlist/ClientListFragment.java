@@ -41,6 +41,10 @@ import butterknife.OnClick;
 
 /**
  * Created by ishankhanna on 09/02/14.
+ * <p/>
+ * ClientListFragment Fetching Showing ClientList in RecyclerView from
+ * </>demo.openmf.org/fineract-provider/api/v1/clients?paged=true&offset=offset_value&limit
+ * =limit_value</>
  */
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView {
@@ -68,18 +72,6 @@ public class ClientListFragment extends MifosBaseFragment
     private int limit = 100;
     private int mApiRestCounter;
 
-    @Override
-    public void onItemClick(View childView, int position) {
-        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
-        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
-        startActivity(clientActivityIntent);
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
-    }
-
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
         if (clientList != null)
@@ -92,6 +84,18 @@ public class ClientListFragment extends MifosBaseFragment
         ClientListFragment clientListFragment = new ClientListFragment();
         clientListFragment.setClientList(clientList);
         return clientListFragment;
+    }
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
+        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
+        startActivity(clientActivityIntent);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
     }
 
     @Override

@@ -15,6 +15,8 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 6/6/16.
+ * This Presenter Holds the All Logic to request to DataManagerClient and DataManagerClient Take
+ * care of that From Where Data will come Database or REST API.
  */
 public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 

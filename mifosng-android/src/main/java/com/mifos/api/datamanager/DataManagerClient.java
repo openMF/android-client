@@ -33,7 +33,7 @@ public class DataManagerClient {
 
 
     /**
-     * This Method sending the Request to REST API is UserStatus is 0 and
+     * This Method sending the Request to REST API if UserStatus is 0 and
      * get list of the clients. The response is pass to the DatabaseHelperClient
      * that save the response in Database different thread and next pass the response to
      * Presenter to show in the view
