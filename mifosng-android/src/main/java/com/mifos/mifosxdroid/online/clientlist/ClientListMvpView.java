@@ -14,8 +14,4 @@ public interface ClientListMvpView extends MvpView {
 
     void showErrorFetchingClients(String s);
 
-    void showMoreClientsList(Page<Client> clientPage);
-
-    void showSwipeRefreshLayout(boolean b);
-
 }

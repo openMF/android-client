@@ -42,6 +42,9 @@ public class ClientListPresenterTest {
 
     private Page<Client> clientPage;
 
+    int offset = 0;
+    int limit = 100;
+
     @Before
     public void setUp() throws Exception {
 
@@ -63,9 +66,10 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClients() {
 
-        when(mDataManagerClient.getAllClients()).thenReturn(Observable.just(clientPage));
+        when(mDataManagerClient.getAllClients(true, offset, limit)).thenReturn(Observable.just
+                (clientPage));
 
-        mClientListPresenter.loadClients();
+        mClientListPresenter.loadClients(true, offset, limit);
 
         verify(mClientListMvpView).showClientList(clientPage);
         verify(mClientListMvpView, never())
@@ -76,38 +80,12 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClientFails() {
 
-        when(mDataManagerClient.getAllClients())
+        when(mDataManagerClient.getAllClients(true, offset, limit))
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
-        mClientListPresenter.loadClients();
+        mClientListPresenter.loadClients(true, offset, limit);
         verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
         verify(mClientListMvpView, never()).showClientList(clientPage);
     }
-
-    @Test
-    public void testLoadMoreClients() {
-
-        when(mDataManagerClient.getAllClients(0, clientPage.getPageItems().size()))
-                .thenReturn(Observable.just(clientPage));
-
-        mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
-
-        verify(mClientListMvpView).showMoreClientsList(clientPage);
-        verify(mClientListMvpView, never())
-                .showErrorFetchingClients("There was some error fetching list");
-
-    }
-
-    @Test
-    public void testLoadMoreClientFails() {
-        when(mDataManagerClient.getAllClients(0, clientPage.getPageItems().size()))
-                .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
-
-        mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
-
-        verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
-        verify(mClientListMvpView, never()).showMoreClientsList(clientPage);
-    }
-
 
 }

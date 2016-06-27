@@ -32,11 +32,25 @@ public class DataManagerClient {
     }
 
 
-    public Observable<Page<Client>> getAllClients() {
-
+    /**
+     * This Method sending the Request to REST API is UserStatus is 0 and
+     * get list of the clients. The response is pass to the DatabaseHelperClient
+     * that save the response in Database different thread and next pass the response to
+     * Presenter to show in the view
+     * <p/>
+     * If the offset is zero and UserStatus is 1 then fetch all clients list and show on the view.
+     * else if offset is not zero and UserStatus is 1 then return default empty response to
+     * presenter
+     *
+     * @param paged  True Enable the Pagination of the client list REST API
+     * @param offset Value give from which position Fetch ClientList
+     * @param limit  Maximum Number of clients will come in response
+     * @return Client List from offset to max Limit
+     */
+    public Observable<Page<Client>> getAllClients(boolean paged, int offset, int limit) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().getAllClients()
+                return mBaseApiManager.getClientsApi().getAllClients(paged, offset, limit)
                         .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
                             @Override
                             public Observable<? extends Page<Client>> call(Page<Client>
@@ -46,31 +60,18 @@ public class DataManagerClient {
                                 return Observable.just(clientPage);
                             }
                         });
-
             case 1:
-                //Return DatabaseHelper saved clients
-                return mDatabaseHelperClient.readAllClients();
+                /**
+                 * Return All Clients List from DatabaseHelperClient only one time.
+                 * If offset is zero this means this is first request and
+                 * return all clients from DatabaseHelperClient
+                 */
+                if (offset == 0)
+                    return mDatabaseHelperClient.readAllClients();
 
             default:
-                return null;
+                return Observable.just(new Page<Client>());
         }
-
-    }
-
-
-    public Observable<Page<Client>> getAllClients(int offset, int limit) {
-        return mBaseApiManager.getClientsApi().getAllClients(offset, limit)
-                .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
-                    @Override
-                    public Observable<? extends Page<Client>> call(Page<Client>
-                                                                           clientPage) {
-                        //Saving Clients in Database
-                        mDatabaseHelperClient.saveAllClients(clientPage);
-                        return Observable.just(clientPage);
-                    }
-                });
-
-
     }
 
 }

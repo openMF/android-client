@@ -51,7 +51,6 @@ import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.GroupPayload;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.services.data.SavingsPayload;
-import com.mifos.utils.PrefManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -172,18 +171,7 @@ public class DataManager {
      * Client API
      */
     public Observable<Page<Client>> getAllClients() {
-
-        switch (PrefManager.getUserStatus()) {
-            case 0:
-                return mDataManagerClient.getAllClients();
-
-            case 1:
-                //Return the offline Datamanager
-                return null;
-
-            default:
-                return mDataManagerClient.getAllClients();
-        }
+        return mBaseApiManager.getClientsApi().getAllClients();
     }
 
     public Observable<Page<Client>> getAllClients(int offset, int limit) {

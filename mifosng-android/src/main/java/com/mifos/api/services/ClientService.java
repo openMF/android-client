@@ -27,10 +27,23 @@ import rx.Observable;
  */
 public interface ClientService {
 
-    //This is a default call and Loads client from 0 to 200
+    /**
+     *
+     * @param b  True Enabling the Pagination of the API
+     * @param offset Value give from which position Fetch ClientList
+     * @param limit  Maximum size of the Client
+     * @return List of Clients
+     */
+    @GET(APIEndPoint.CLIENTS)
+    Observable<Page<Client>> getAllClients(@Query("paged") boolean b,
+                                           @Query("offset") int offset,
+                                           @Query("limit") int limit);
+
+    //TODO Remove this method and above method for fetching Client list
     @GET(APIEndPoint.CLIENTS)
     Observable<Page<Client>> getAllClients();
 
+    //TODO Remove this method and above method for fetching Client list
     @GET(APIEndPoint.CLIENTS)
     Observable<Page<Client>> getAllClients(@Query("offset") int offset,
                                            @Query("limit") int limit);
