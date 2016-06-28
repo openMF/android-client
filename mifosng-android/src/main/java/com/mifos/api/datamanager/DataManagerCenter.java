@@ -13,6 +13,9 @@ import rx.Observable;
 import rx.functions.Func1;
 
 /**
+ * This DataManager is for Managing Center API, In which Request is going to Server
+ * and In Response, We are getting Center API Observable Response using Retrofit2.
+ * DataManagerCenter saving response in Database and response to Presenter as accordingly.
  * Created by Rajan Maurya on 28/6/16.
  */
 @Singleton
@@ -29,6 +32,21 @@ public class DataManagerCenter {
     }
 
 
+    /**
+     * This Method sending the Request to REST API if UserStatus is 0 and
+     * get list of the centers. The response is pass to the DatabaseHelperCenter
+     * that save the response in Database in different thread and next pass the response to
+     * Presenter to show in the view
+     * <p/>
+     * If the offset is zero and UserStatus is 1 then fetch all Center list and show on the view.
+     * else if offset is not zero and UserStatus is 1 then return default empty response to
+     * presenter
+     *
+     * @param paged  True Enable the Pagination of the center list REST API
+     * @param offset Value give from which position Fetch CentersList
+     * @param limit  Maximum Number of centers will come in response
+     * @return Centers List page from offset to max Limit
+     */
     public Observable<Page<Center>> getCenters(boolean paged, int offset, int limit) {
         switch (PrefManager.getUserStatus()) {
             case 0:
@@ -44,9 +62,9 @@ public class DataManagerCenter {
                         });
             case 1:
                 /**
-                 * Return All Clients List from DatabaseHelperClient only one time.
+                 * Return All Centers List from DatabaseHelperCenter only one time.
                  * If offset is zero this means this is first request and
-                 * return all clients from DatabaseHelperClient
+                 * return all clients from DatabaseHelperCenter
                  */
                 if (offset == 0)
                     return mDatabaseHelperCenter.readAllCenters();
