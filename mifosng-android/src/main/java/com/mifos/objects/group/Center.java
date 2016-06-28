@@ -8,30 +8,72 @@ package com.mifos.objects.group;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This is Center Model Table
  * Created by ishankhanna on 11/03/14.
  */
-public class Center implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Center extends MifosBaseModel implements Parcelable {
 
+    @PrimaryKey
     private Integer id;
+
+    @Column
     private String accountNo;
+
+    @Column
     private String name;
-    private String externalId;
+
+    @Column
     private Integer officeId;
+
+    @Column
     private String officeName;
+
+    @Column
     private Integer staffId;
+
+    @Column
     private String staffName;
+
+    @Column
     private String hierarchy;
+
     private Status status;
+
+    @Column
     private Boolean active;
+
     private List<Integer> activationDate = new ArrayList<Integer>();
+
     private Timeline timeline;
+
+    private String externalId;
+
+    public Boolean getActive() {
+        return this.active;
+    }
+
+    public String getAccountNo() {
+        return this.accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 
     public Integer getId() {
         return id;
@@ -105,7 +147,7 @@ public class Center implements Parcelable {
         this.status = status;
     }
 
-    public Boolean getActive() {
+    public Boolean isActive() {
         return active;
     }
 
