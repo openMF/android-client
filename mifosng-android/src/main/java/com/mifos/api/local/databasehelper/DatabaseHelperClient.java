@@ -21,10 +21,16 @@ public class DatabaseHelperClient {
 
     @Inject
     public DatabaseHelperClient() {
-
     }
 
 
+    /**
+     * Saving Clients in Database using DBFlow.
+     * save() method save the value reference to primary key if its exist the update if not the
+     * insert.
+     * @param clientPage
+     * @return null
+     */
     @Nullable
     public Observable<Void> saveAllClients(final Page<Client> clientPage) {
         AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
@@ -39,6 +45,10 @@ public class DatabaseHelperClient {
         return null;
     }
 
+    /**
+     * Reading All Clients from table of Client and return the ClientList
+     * @return List Of Client
+     */
     //TODO Implement Observable Transaction to load Client List
     public Observable<Page<Client>> readAllClients() {
 

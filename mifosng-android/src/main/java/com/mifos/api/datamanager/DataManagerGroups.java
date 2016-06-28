@@ -53,7 +53,7 @@ public class DataManagerGroups {
                         .concatMap(new Func1<Page<Group>, Observable<? extends Page<Group>>>() {
                             @Override
                             public Observable<? extends Page<Group>> call(Page<Group> groupPage) {
-
+                                mDatabaseHelperGroups.saveGroups(groupPage);
                                 return Observable.just(groupPage);
                             }
                         });
@@ -65,8 +65,8 @@ public class DataManagerGroups {
                  * If offset is zero this means this is first request and
                  * return all clients from DatabaseHelperClient
                  */
-                /*if (offset == 0)
-                    return mDatabaseHelperClient.readAllClients();*/
+                if (offset == 0)
+                    return mDatabaseHelperGroups.readAllGroups();
 
             default:
                 return Observable.just(new Page<Group>());

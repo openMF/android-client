@@ -124,7 +124,7 @@ public class Group extends MifosBaseModel implements Parcelable {
         this.externalId = externalId;
     }
 
-    public Boolean getActive() {
+    public Boolean isActive() {
         return active;
     }
 
@@ -231,7 +231,7 @@ public class Group extends MifosBaseModel implements Parcelable {
     }
 
     protected Group(Parcel in) {
-        this.activationDate = new ArrayList<Integer>();
+        this.activationDate = new ArrayList<>();
         in.readList(this.activationDate, Integer.class.getClassLoader());
         this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.hierarchy = in.readString();

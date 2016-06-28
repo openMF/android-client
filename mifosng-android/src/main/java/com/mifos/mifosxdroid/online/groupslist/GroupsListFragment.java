@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -41,8 +40,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- *
  * Created by nellyk on 2/27/2016.
+ * GroupsListFragment Fetching Showing GroupsList in RecyclerView from
+ * </>demo.openmf.org/fineract-provider/api/v1/groups?paged=true&offset=offset_value&limit
+ * =limit_value</>
  */
 public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
         RecyclerItemClickListner.OnItemClickListener {
@@ -184,7 +185,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      * If the Response is have null then show Toast to User There is No Center Available.
      *
      * @param groupPage is the List<Group> and
-     *                   TotalValue of center API Response by Server
+     *                  TotalValue of center API Response by Server
      */
     @Override
     public void showGroups(Page<Group> groupPage) {
