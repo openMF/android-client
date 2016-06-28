@@ -251,14 +251,6 @@ public class DataManager {
         return mBaseApiManager.getGroupApi().getGroup(groupId);
     }
 
-    public Observable<Page<Group>> getAllGroup() {
-        return mBaseApiManager.getGroupApi().getAllGroup();
-    }
-
-    public Observable<Page<Group>> listAllGroups(int offset, int limit) {
-        return mBaseApiManager.getGroupApi().listAllGroups(offset, limit);
-    }
-
     /**
      * Offices API
      */
