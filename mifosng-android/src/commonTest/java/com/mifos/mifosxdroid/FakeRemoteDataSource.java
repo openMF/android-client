@@ -6,6 +6,7 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.Group;
 import com.mifos.objects.noncore.Document;
 
 import java.util.List;
@@ -47,9 +48,14 @@ public class FakeRemoteDataSource {
         }, FakeJsonName.LOAN_CHARGES_JSON);
     }
 
-    public static List<Document> getDouments() {
+    public static List<Document> getDocuments() {
         return mTestDataFactory.getListTypePojo(new TypeToken<List<Document>>() {
         }, FakeJsonName.DOCUMENTS_JSON);
+    }
+
+    public static Page<Group> getGroups() {
+        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Group>>() {
+        }, FakeJsonName.GROUPS_JSON);
     }
 
 }

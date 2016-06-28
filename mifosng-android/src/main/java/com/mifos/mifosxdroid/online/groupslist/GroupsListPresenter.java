@@ -7,7 +7,6 @@ import com.mifos.objects.group.Group;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,7 +37,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadAllGroup(boolean paged, int offset, int limit) {
+    public void loadGroups(boolean paged, int offset, int limit) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
@@ -53,11 +52,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = ((HttpException) e);
-                            getMvpView().showFetchingError("Failed to load Groups",
-                                    response.code());
-                        }
+                        getMvpView().showFetchingError("Failed to load Groups");
 
                     }
 

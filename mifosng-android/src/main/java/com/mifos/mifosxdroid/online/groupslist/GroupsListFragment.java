@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
@@ -24,7 +22,6 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
@@ -63,26 +60,12 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
-
-    private GroupNameListAdapter mGroupListAdapter;
-
     List<Group> mGroupList = new ArrayList<>();
+    private GroupNameListAdapter mGroupListAdapter;
     private View rootView;
     private int limit = 100;
     private int mApiRestCounter;
 
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
-        groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
-        startActivity(groupActivityIntent);
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
-    }
 
     //TODO Remove this default constructor
     public GroupsListFragment() {
@@ -101,6 +84,18 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         GroupsListFragment groupListFragment = new GroupsListFragment();
         groupListFragment.setGroupList(groupList);
         return groupListFragment;
+    }
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+        groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
+        startActivity(groupActivityIntent);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
     }
 
     @Override
@@ -129,7 +124,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         rv_groups.setHasFixedSize(true);
 
         mApiRestCounter = 1;
-        mGroupsListPresenter.loadAllGroup(true, 0, limit);
+        mGroupsListPresenter.loadGroups(true, 0, limit);
 
         /**
          * Setting mApiRestCounter to 1 and send Fresh Request to Server
@@ -140,7 +135,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
                 mApiRestCounter = 1;
 
-                mGroupsListPresenter.loadAllGroup(true, 0, limit);
+                mGroupsListPresenter.loadGroups(true, 0, limit);
 
                 if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
@@ -158,7 +153,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
             public void onLoadMore(int current_page) {
 
                 mApiRestCounter = mApiRestCounter + 1;
-                mGroupsListPresenter.loadAllGroup(true, mGroupList.size(), limit);
+                mGroupsListPresenter.loadGroups(true, mGroupList.size(), limit);
             }
         });
 
@@ -172,7 +167,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @OnClick(R.id.noGroupsIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
-        mGroupsListPresenter.loadAllGroup(true, 0, limit);
+        mGroupsListPresenter.loadGroups(true, 0, limit);
     }
 
     public void setGroupList(List<Group> groupList) {
@@ -221,32 +216,13 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      * @param s is the Error Message given by GroupsListPresenter
      */
     @Override
-    public void showFetchingError(String s, int response) {
+    public void showFetchingError(String s) {
         if (mApiRestCounter == 1) {
             ll_error.setVisibility(View.VISIBLE);
             mNoGroupsText.setText(s + "\n Click to Refresh ");
         }
 
         Toaster.show(rootView, s);
-
-        if (getActivity() != null) {
-            try {
-                Log.i("Error", "" + response);
-                if (response == 401) {
-                    Toast.makeText(getActivity(), "Authorization Expired - Please " +
-                            "Login Again", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                    getActivity().finish();
-
-                } else {
-                    Toast.makeText(getActivity(), "There was some error fetching list" +
-                            ".", Toast.LENGTH_SHORT).show();
-                }
-            } catch (NullPointerException npe) {
-                Toast.makeText(getActivity(), "There is some problem with your " +
-                        "internet connection.", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     /**

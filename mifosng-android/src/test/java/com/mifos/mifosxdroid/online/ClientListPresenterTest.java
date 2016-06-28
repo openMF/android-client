@@ -39,11 +39,9 @@ public class ClientListPresenterTest {
 
     @Mock
     ClientListMvpView mClientListMvpView;
-
-    private Page<Client> clientPage;
-
     int offset = 0;
     int limit = 100;
+    private Page<Client> clientPage;
 
     @Before
     public void setUp() throws Exception {
