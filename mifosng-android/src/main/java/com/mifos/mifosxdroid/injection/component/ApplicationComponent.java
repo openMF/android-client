@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
@@ -28,8 +29,12 @@ public interface ApplicationComponent {
 
     Application application();
     DataManager dataManager();
+
     DataManagerClient dataManagerClient();
+    DataManagerGroups dataManagerGroups();
+
     DatabaseHelperClient databaseHelperClient();
+
     Bus eventBus();
 
 }

@@ -68,9 +68,20 @@ public class ClientListFragment extends MifosBaseFragment
 
     private View rootView;
     private List<Client> clientList = new ArrayList<>();
-    private LinearLayoutManager layoutManager;
     private int limit = 100;
     private int mApiRestCounter;
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
+        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
+        startActivity(clientActivityIntent);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
+    }
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
@@ -84,18 +95,6 @@ public class ClientListFragment extends MifosBaseFragment
         ClientListFragment clientListFragment = new ClientListFragment();
         clientListFragment.setClientList(clientList);
         return clientListFragment;
-    }
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
-        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
-        startActivity(clientActivityIntent);
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
     }
 
     @Override
@@ -114,9 +113,9 @@ public class ClientListFragment extends MifosBaseFragment
         ButterKnife.bind(this, rootView);
         mClientListPresenter.attachView(this);
 
-        layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_clients.setLayoutManager(layoutManager);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_clients.setLayoutManager(mLayoutManager);
         rv_clients.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
         rv_clients.setHasFixedSize(true);
 
@@ -147,7 +146,7 @@ public class ClientListFragment extends MifosBaseFragment
          * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
          * and offset(mCenterList.size()) and limit(100).
          */
-        rv_clients.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
+        rv_clients.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int current_page) {
                 mApiRestCounter = mApiRestCounter + 1;
@@ -175,7 +174,7 @@ public class ClientListFragment extends MifosBaseFragment
 
     /**
      * Setting Data in RecyclerView of the ClientListFragment if the mApiRestCounter value is 1,
-     * otherwise adding value in ArrayList and updating the CenterListAdapter.
+     * otherwise adding value in ArrayList and updating the ClientListAdapter.
      * If the Response is have null then show Toast to User There is No Center Available.
      *
      * @param clientPage is the List<Client> and
@@ -245,8 +244,6 @@ public class ClientListFragment extends MifosBaseFragment
         } else {
             swipeRefreshLayout.setRefreshing(b);
         }
-
-
     }
 
     @Override
