@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ *
  * Created by nellyk on 2/27/2016.
  */
 public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
@@ -66,11 +67,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     List<Group> mGroupList = new ArrayList<>();
     private View rootView;
-    private LinearLayoutManager mLayoutManager;
-    private int totalFilteredRecords = 0;
     private int limit = 100;
-    private boolean isInfiniteScrollEnabled = true;
-
     private int mApiRestCounter;
 
 
@@ -124,7 +121,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         ButterKnife.bind(this, rootView);
         mGroupsListPresenter.attachView(this);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_groups.setLayoutManager(mLayoutManager);
         rv_groups.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
