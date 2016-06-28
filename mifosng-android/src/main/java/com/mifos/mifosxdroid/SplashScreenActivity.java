@@ -12,6 +12,7 @@ import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.DashboardActivity;
+import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
 
 
@@ -29,7 +30,7 @@ public class SplashScreenActivity extends MifosBaseActivity {
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {
-            PrefManager.setUserStatus(0);
+            PrefManager.setUserStatus(Constants.USER_ONLINE);
             startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
         }
         finish();

@@ -3,7 +3,6 @@ package com.mifos.api.local.databasehelper;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
-import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.raizlabs.android.dbflow.sql.language.SQLite;

@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.online.groupslist;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Page;
