@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.online.centerlist;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Page;

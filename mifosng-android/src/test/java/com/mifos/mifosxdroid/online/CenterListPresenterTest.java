@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.online;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.online.centerlist.CenterListMvpView;
