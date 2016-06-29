@@ -1,6 +1,7 @@
 package com.mifos.api;
 
 import com.google.gson.JsonArray;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
@@ -69,12 +70,20 @@ import rx.Observable;
 @Singleton
 public class DataManager {
 
-    public final BaseApiManager mBaseApiManager;
+    private final BaseApiManager mBaseApiManager;
+    private DataManagerClient mDataManagerClient;
+
+
+    //TODO : This Constructor is temp after splitting the Datamanager layer into Sub DataManager
+    public DataManager(BaseApiManager baseApiManager) {
+        mBaseApiManager = baseApiManager;
+    }
 
     @Inject
-    public DataManager(BaseApiManager baseApiManager) {
-
+    public DataManager(BaseApiManager baseApiManager,
+                       DataManagerClient dataManagerClient) {
         mBaseApiManager = baseApiManager;
+        mDataManagerClient = dataManagerClient;
     }
 
     /**
@@ -240,14 +249,6 @@ public class DataManager {
 
     public Observable<Group> getGroup(int groupId) {
         return mBaseApiManager.getGroupApi().getGroup(groupId);
-    }
-
-    public Observable<Page<Group>> getAllGroup() {
-        return mBaseApiManager.getGroupApi().getAllGroup();
-    }
-
-    public Observable<Page<Group>> listAllGroups(int offset, int limit) {
-        return mBaseApiManager.getGroupApi().listAllGroups(offset, limit);
     }
 
     /**

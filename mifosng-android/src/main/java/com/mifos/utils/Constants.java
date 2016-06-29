@@ -90,4 +90,10 @@ public class Constants {
     public static final String DATA_TABLE_SAVINGS_ACCOUNTS_NAME = "More Savings Account Info";
 
 
+    /**
+     * User Logged In Status
+     * 0 for Online and 1 for Offline
+     */
+    public static final int USER_ONLINE = 0;
+    public static final int USER_OFFLINE = 1;
 }

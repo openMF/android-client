@@ -8,31 +8,89 @@ package com.mifos.objects.group;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mifos.objects.Status;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This is the Groups Model Table
  * Created by ishankhanna on 28/06/14.
  */
-public class Group implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Group extends MifosBaseModel implements Parcelable {
 
-    private List<Integer> activationDate = new ArrayList<Integer>();
-    private Boolean active;
-    private String hierarchy;
+    @PrimaryKey
     private Integer id;
+
+    @Column
     private String accountNo;
-    private int groupLevel;
+
+    @Column
     private String name;
-    private Integer officeId;
-    private String officeName;
-    private String externalId;
-    private Integer staffId;
-    private String staffName;
+
     private Status status;
+
+    @Column
+    private Boolean active;
+
+    private List<Integer> activationDate = new ArrayList<>();
+
+    @Column
+    private Integer officeId;
+
+    @Column
+    private String officeName;
+
+    @Column
+    private int centerId;
+
+    @Column
+    private String centerName;
+
+    @Column
+    private Integer staffId;
+
+    @Column
+    private String staffName;
+
+    @Column
+    private String hierarchy;
+
+    @Column
+    private int groupLevel;
+
     private Timeline timeline;
+
+    private String externalId;
+
+    public int getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(int centerId) {
+        this.centerId = centerId;
+    }
+
+    public String getCenterName() {
+        return centerName;
+    }
+
+    public void setCenterName(String centerName) {
+        this.centerName = centerName;
+    }
+
+    public static Creator<Group> getCREATOR() {
+        return CREATOR;
+    }
 
     public String getAccountNo() {
         return this.accountNo;
@@ -66,7 +124,7 @@ public class Group implements Parcelable {
         this.externalId = externalId;
     }
 
-    public Boolean getActive() {
+    public Boolean isActive() {
         return active;
     }
 
@@ -173,7 +231,7 @@ public class Group implements Parcelable {
     }
 
     protected Group(Parcel in) {
-        this.activationDate = new ArrayList<Integer>();
+        this.activationDate = new ArrayList<>();
         in.readList(this.activationDate, Integer.class.getClassLoader());
         this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.hierarchy = in.readString();

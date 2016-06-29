@@ -103,67 +103,67 @@ public class BaseApiManager {
         init();
     }
 
-    protected AuthService getAuthApi() {
+    public AuthService getAuthApi() {
         return authApi;
     }
 
-    protected CenterService getCenterApi() {
+    public CenterService getCenterApi() {
         return centerApi;
     }
 
-    protected ClientAccountsService getAccountsApi() {
+    public ClientAccountsService getAccountsApi() {
         return accountsApi;
     }
 
-    protected ClientService getClientsApi() {
+    public ClientService getClientsApi() {
         return clientsApi;
     }
 
-    protected DataTableService getDataTableApi() {
+    public DataTableService getDataTableApi() {
         return dataTableApi;
     }
 
-    protected LoanService getLoanApi() {
+    public LoanService getLoanApi() {
         return loanApi;
     }
 
-    protected SavingsAccountService getSavingsApi() {
+    public SavingsAccountService getSavingsApi() {
         return savingsApi;
     }
 
-    protected SearchService getSearchApi() {
+    public SearchService getSearchApi() {
         return searchApi;
     }
 
-    protected GpsCoordinatesService getGpsApi() {
+    public GpsCoordinatesService getGpsApi() {
         return gpsApi;
     }
 
-    protected GroupService getGroupApi() {
+    public GroupService getGroupApi() {
         return groupApi;
     }
 
-    protected GroupAccountService getGroupAccountsServiceApi() {
+    public GroupAccountService getGroupAccountsServiceApi() {
         return groupAccountsServiceApi;
     }
 
-    protected DocumentService getDocumentApi() {
+    public DocumentService getDocumentApi() {
         return documentApi;
     }
 
-    protected IdentifierService getIdentifierApi() {
+    public IdentifierService getIdentifierApi() {
         return identifierApi;
     }
 
-    protected OfficeService getOfficeApi() {
+    public OfficeService getOfficeApi() {
         return officeApi;
     }
 
-    protected StaffService getStaffApi() {
+    public StaffService getStaffApi() {
         return staffApi;
     }
 
-    protected SurveyService getSurveyApi() {
+    public SurveyService getSurveyApi() {
         return surveyApi;
     }
 

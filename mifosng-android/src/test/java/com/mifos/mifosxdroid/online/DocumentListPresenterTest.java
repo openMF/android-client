@@ -50,7 +50,7 @@ public class DocumentListPresenterTest {
         mDocumentListPresenter = new DocumentListPresenter(mDataManager);
         mDocumentListPresenter.attachView(mDocumentListMvpView);
 
-        documentList = FakeRemoteDataSource.getDouments();
+        documentList = FakeRemoteDataSource.getDocuments();
     }
 
     @After

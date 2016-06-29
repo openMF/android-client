@@ -1,5 +1,7 @@
 package com.mifos.api;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -78,6 +80,7 @@ public class MifosOkHttpClient {
         //Interceptor :> Full Body Logger and ApiRequest Header
         builder.addInterceptor(logger);
         builder.addInterceptor(new MifosInterceptor());
+        builder.addNetworkInterceptor(new StethoInterceptor());
 
         return builder.build();
 

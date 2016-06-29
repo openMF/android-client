@@ -8,14 +8,27 @@ package com.mifos.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-public class Timeline implements Parcelable {
+public class Timeline extends BaseModel implements Parcelable {
 
+    public static final Parcelable.Creator<Timeline> CREATOR = new Parcelable.Creator<Timeline>() {
+        @Override
+        public Timeline createFromParcel(Parcel source) {
+            return new Timeline(source);
+        }
+
+        @Override
+        public Timeline[] newArray(int size) {
+            return new Timeline[size];
+        }
+    };
     private List<Integer> submittedOnDate = new ArrayList<Integer>();
     private String submittedByUsername;
     private String submittedByFirstname;
@@ -28,6 +41,27 @@ public class Timeline implements Parcelable {
     private String closedByUsername;
     private String closedByFirstname;
     private String closedByLastname;
+
+    public Timeline() {
+    }
+
+    protected Timeline(Parcel in) {
+        this.submittedOnDate = new ArrayList<Integer>();
+        in.readList(this.submittedOnDate, Integer.class.getClassLoader());
+        this.submittedByUsername = in.readString();
+        this.submittedByFirstname = in.readString();
+        this.submittedByLastname = in.readString();
+        this.activatedOnDate = new ArrayList<Integer>();
+        in.readList(this.activatedOnDate, Integer.class.getClassLoader());
+        this.activatedByUsername = in.readString();
+        this.activatedByFirstname = in.readString();
+        this.activatedByLastname = in.readString();
+        this.closedOnDate = new ArrayList<Integer>();
+        in.readList(this.closedOnDate, Integer.class.getClassLoader());
+        this.closedByUsername = in.readString();
+        this.closedByFirstname = in.readString();
+        this.closedByLastname = in.readString();
+    }
 
     public String getSubmittedByUsername() {
         return this.submittedByUsername;
@@ -145,37 +179,4 @@ public class Timeline implements Parcelable {
         dest.writeString(this.closedByFirstname);
         dest.writeString(this.closedByLastname);
     }
-
-    public Timeline() {
-    }
-
-    protected Timeline(Parcel in) {
-        this.submittedOnDate = new ArrayList<Integer>();
-        in.readList(this.submittedOnDate, Integer.class.getClassLoader());
-        this.submittedByUsername = in.readString();
-        this.submittedByFirstname = in.readString();
-        this.submittedByLastname = in.readString();
-        this.activatedOnDate = new ArrayList<Integer>();
-        in.readList(this.activatedOnDate, Integer.class.getClassLoader());
-        this.activatedByUsername = in.readString();
-        this.activatedByFirstname = in.readString();
-        this.activatedByLastname = in.readString();
-        this.closedOnDate = new ArrayList<Integer>();
-        in.readList(this.closedOnDate, Integer.class.getClassLoader());
-        this.closedByUsername = in.readString();
-        this.closedByFirstname = in.readString();
-        this.closedByLastname = in.readString();
-    }
-
-    public static final Parcelable.Creator<Timeline> CREATOR = new Parcelable.Creator<Timeline>() {
-        @Override
-        public Timeline createFromParcel(Parcel source) {
-            return new Timeline(source);
-        }
-
-        @Override
-        public Timeline[] newArray(int size) {
-            return new Timeline[size];
-        }
-    };
 }

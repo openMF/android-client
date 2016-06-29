@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.online.clientlist.ClientListMvpView;
 import com.mifos.mifosxdroid.online.clientlist.ClientListPresenter;
@@ -35,17 +35,18 @@ public class ClientListPresenterTest {
     ClientListPresenter mClientListPresenter;
 
     @Mock
-    DataManager mDataManager;
+    DataManagerClient mDataManagerClient;
 
     @Mock
     ClientListMvpView mClientListMvpView;
-
+    int offset = 0;
+    int limit = 100;
     private Page<Client> clientPage;
 
     @Before
     public void setUp() throws Exception {
 
-        mClientListPresenter = new ClientListPresenter(mDataManager);
+        mClientListPresenter = new ClientListPresenter(mDataManagerClient);
         mClientListPresenter.attachView(mClientListMvpView);
 
 
@@ -63,9 +64,10 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClients() {
 
-        when(mDataManager.getAllClients()).thenReturn(Observable.just(clientPage));
+        when(mDataManagerClient.getAllClients(true, offset, limit)).thenReturn(Observable.just
+                (clientPage));
 
-        mClientListPresenter.loadClients();
+        mClientListPresenter.loadClients(true, offset, limit);
 
         verify(mClientListMvpView).showClientList(clientPage);
         verify(mClientListMvpView, never())
@@ -76,38 +78,12 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClientFails() {
 
-        when(mDataManager.getAllClients())
+        when(mDataManagerClient.getAllClients(true, offset, limit))
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
-        mClientListPresenter.loadClients();
+        mClientListPresenter.loadClients(true, offset, limit);
         verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
         verify(mClientListMvpView, never()).showClientList(clientPage);
     }
-
-    @Test
-    public void testLoadMoreClients() {
-
-        when(mDataManager.getAllClients(0, clientPage.getPageItems().size()))
-                .thenReturn(Observable.just(clientPage));
-
-        mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
-
-        verify(mClientListMvpView).showMoreClientsList(clientPage);
-        verify(mClientListMvpView, never())
-                .showErrorFetchingClients("There was some error fetching list");
-
-    }
-
-    @Test
-    public void testLoadMoreClientFails() {
-        when(mDataManager.getAllClients(0, clientPage.getPageItems().size()))
-                .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
-
-        mClientListPresenter.loadMoreClients(0, clientPage.getPageItems().size());
-
-        verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
-        verify(mClientListMvpView, never()).showMoreClientsList(clientPage);
-    }
-
 
 }

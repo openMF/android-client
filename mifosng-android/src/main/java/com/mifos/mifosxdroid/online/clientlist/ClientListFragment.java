@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
@@ -34,10 +36,15 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
  * Created by ishankhanna on 09/02/14.
+ * <p/>
+ * ClientListFragment Fetching Showing ClientList in RecyclerView from
+ * </>demo.openmf.org/fineract-provider/api/v1/clients?paged=true&offset=offset_value&limit
+ * =limit_value</>
  */
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView {
@@ -48,6 +55,12 @@ public class ClientListFragment extends MifosBaseFragment
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.noClientText)
+    TextView mNoClientText;
+
+    @BindView(R.id.ll_error)
+    LinearLayout ll_error;
+
     ClientNameListAdapter clientNameListAdapter;
 
     @Inject
@@ -55,10 +68,20 @@ public class ClientListFragment extends MifosBaseFragment
 
     private View rootView;
     private List<Client> clientList = new ArrayList<>();
-    private LinearLayoutManager layoutManager;
-    private int totalFilteredRecords = 0;
     private int limit = 100;
-    private boolean isInfiniteScrollEnabled = true;
+    private int mApiRestCounter;
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
+        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
+        startActivity(clientActivityIntent);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
+    }
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
@@ -71,21 +94,7 @@ public class ClientListFragment extends MifosBaseFragment
             isParentFragmentAGroupFragment) {
         ClientListFragment clientListFragment = new ClientListFragment();
         clientListFragment.setClientList(clientList);
-        if (isParentFragmentAGroupFragment)
-            clientListFragment.setInfiniteScrollEnabled(false);
         return clientListFragment;
-    }
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
-        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
-        startActivity(clientActivityIntent);
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
     }
 
     @Override
@@ -100,109 +109,147 @@ public class ClientListFragment extends MifosBaseFragment
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
         setHasOptionsMenu(true);
         setToolbarTitle(getResources().getString(R.string.clients));
-        ButterKnife.bind(this, rootView);
 
+        ButterKnife.bind(this, rootView);
         mClientListPresenter.attachView(this);
 
-        layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_clients.setLayoutManager(layoutManager);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_clients.setLayoutManager(mLayoutManager);
         rv_clients.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
         rv_clients.setHasFixedSize(true);
 
+        mApiRestCounter = 1;
+        mClientListPresenter.loadClients(true, 0, limit);
+
+        /**
+         * Setting mApiRestCounter to 1 and send Fresh Request to Server
+         */
         swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R
                 .color.orange_light, R.color.red_light);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchClientList();
+
+                mApiRestCounter = 1;
+
+                mClientListPresenter.loadClients(true, 0, limit);
+
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-        fetchClientList();
+        /**
+         * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
+         * is shown on the Screen.
+         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
+         * and offset(mCenterList.size()) and limit(100).
+         */
+        rv_clients.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                mApiRestCounter = mApiRestCounter + 1;
+                mClientListPresenter.loadClients(true, clientList.size(), limit);
+            }
+        });
 
         return rootView;
     }
 
-    public void inflateClientList() {
-        clientNameListAdapter = new ClientNameListAdapter(getContext(), clientList);
-        rv_clients.setAdapter(clientNameListAdapter);
-
-        // initialize OnScroll Listener
-        if (isInfiniteScrollEnabled)
-            setInfiniteScrollListener(clientNameListAdapter);
-    }
-
-    public void fetchClientList() {
-        totalFilteredRecords = 0;
-        mClientListPresenter.loadClients();
+    /**
+     * Shows When mApiRestValue is 1 and Server Response is Null.
+     * Onclick Send Fresh Request for Client list.
+     */
+    @OnClick(R.id.noClientIcon)
+    public void reloadOnError() {
+        ll_error.setVisibility(View.GONE);
+        mClientListPresenter.loadClients(true, 0, limit);
     }
 
     public void setClientList(List<Client> clientList) {
         this.clientList = clientList;
     }
 
-    @SuppressWarnings("deprecation")
-    public void setInfiniteScrollListener(final ClientNameListAdapter clientNameListAdapter) {
 
-        rv_clients.setOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                Toaster.show(rootView, "Loading More Clients");
-                mClientListPresenter.loadMoreClients(clientList.size(), limit);
-
-            }
-        });
-
-    }
-
-    public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
-        this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
-    }
-
+    /**
+     * Setting Data in RecyclerView of the ClientListFragment if the mApiRestCounter value is 1,
+     * otherwise adding value in ArrayList and updating the ClientListAdapter.
+     * If the Response is have null then show Toast to User There is No Center Available.
+     *
+     * @param clientPage is the List<Client> and
+     *                   TotalValue of center API Response by Server
+     */
     @Override
     public void showClientList(Page<Client> clientPage) {
-        totalFilteredRecords = clientPage.getTotalFilteredRecords();
-        clientList = clientPage.getPageItems();
-        inflateClientList();
-        swipeRefreshLayout.setRefreshing(false);
+        /**
+         * if mApiRestCounter is 1, So this is the first Api Request.
+         * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
+         */
+        if (mApiRestCounter == 1) {
+            clientList = clientPage.getPageItems();
+            clientNameListAdapter = new ClientNameListAdapter(getActivity(), clientList);
+            rv_clients.setAdapter(clientNameListAdapter);
+
+            ll_error.setVisibility(View.GONE);
+        } else {
+
+            clientList.addAll(clientPage.getPageItems());
+            clientNameListAdapter.notifyDataSetChanged();
+
+            //checking the response size if size is zero then show toast No More
+            // Clients Available for fetch
+            if (clientPage.getPageItems().size() == 0 &&
+                    (clientPage.getTotalFilteredRecords() == clientList.size()))
+                Toaster.show(rootView, "No more Center Available");
+        }
     }
 
+    /**
+     * Check the mApiRestCounter value is the value is 1,
+     * So there no data to show and setVisibility VISIBLE
+     * of Error ImageView and TextView layout and otherwise simple
+     * show the Toast Message of Error Message.
+     *
+     * @param s is the Error Message given by ClientListPresenter
+     */
     @Override
     public void showErrorFetchingClients(String s) {
+        if (mApiRestCounter == 1) {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoClientText.setText(s + "\n Click to Refresh ");
+        }
+
         Toaster.show(rootView, s);
-        swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void showMoreClientsList(Page<Client> clientPage) {
-        clientList.addAll(clientPage.getPageItems());
-        clientNameListAdapter.notifyDataSetChanged();
 
-        //checking the response size if size is zero then show toast No More
-        // Clients Available for fetch
-        if (clientPage.getPageItems().size() == 0 && (totalFilteredRecords ==
-                clientList.size()))
-            Toaster.show(rootView, "No more clients Available");
-    }
-
-    @Override
-    public void showSwipeRefreshLayout(boolean b) {
-        swipeRefreshLayout.setRefreshing(b);
-    }
-
+    /**
+     * Check mApiRestCounter value, if the value is 1 then
+     * show MifosBaseActivity ProgressBar and if it is greater than 1,
+     * It means this Request is the second and so on than show SwipeRefreshLayout
+     * Check the the b is true or false
+     *
+     * @param b is the status of the progressbar
+     */
     @Override
     public void showProgressbar(boolean b) {
-        if (b) {
-            showMifosProgressBar();
+
+        if (mApiRestCounter == 1) {
+            if (b) {
+                showMifosProgressBar();
+            } else {
+                hideMifosProgressBar();
+            }
         } else {
-            hideMifosProgressBar();
+            swipeRefreshLayout.setRefreshing(b);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        hideMifosProgressBar();
         mClientListPresenter.detachView();
     }
 }

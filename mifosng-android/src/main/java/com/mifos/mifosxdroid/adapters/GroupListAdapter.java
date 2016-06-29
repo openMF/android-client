@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.Status;
+import com.mifos.objects.client.Status;
 import com.mifos.objects.group.Group;
 
 import java.util.ArrayList;

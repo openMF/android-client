@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.centerlist;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
@@ -19,12 +20,15 @@ import rx.schedulers.Schedulers;
 public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
 
     private final DataManager mDataManager;
+    private final DataManagerCenter mDataManagerCenter;
     private Subscription mSubscription;
 
 
     @Inject
-    public CenterListPresenter(DataManager dataManager) {
+    public CenterListPresenter(DataManager dataManager,
+                               DataManagerCenter dataManagerCenter) {
         mDataManager = dataManager;
+        mDataManagerCenter = dataManagerCenter;
     }
 
 
@@ -49,7 +53,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getCenters(paged, offset, limit)
+        mSubscription = mDataManagerCenter.getCenters(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Center>>() {

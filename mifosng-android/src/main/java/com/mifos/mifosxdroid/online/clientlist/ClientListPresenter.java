@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.clientlist;
 
-import com.mifos.api.DataManager;
-import com.mifos.mifosxdroid.base.Presenter;
+import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.EspressoIdlingResource;
@@ -15,48 +15,54 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 6/6/16.
+ * This Presenter Holds the All Logic to request to DataManagerClient and DataManagerClient Take
+ * care of that From Where Data will come Database or REST API.
  */
-public class ClientListPresenter implements Presenter<ClientListMvpView> {
+public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
 
-    private final DataManager mDataManager;
+    private final DataManagerClient mDataManagerClient;
     private Subscription mSubscription;
-    private ClientListMvpView mClientListMvpView;
 
     @Inject
-    public ClientListPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public ClientListPresenter(DataManagerClient dataManagerClient) {
+        mDataManagerClient = dataManagerClient;
     }
 
     @Override
     public void attachView(ClientListMvpView mvpView) {
-        mClientListMvpView = mvpView;
+        super.attachView(mvpView);
     }
 
     @Override
     public void detachView() {
-        mClientListMvpView = null;
+        super.detachView();
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
 
-    public void loadClients() {
+    /**
+     * @param paged  True Enabling the Pagination of the API
+     * @param offset Value give from which position Fetch ClientList
+     * @param limit  Maximum size of the Center
+     */
+    public void loadClients(boolean paged, int offset, int limit) {
         EspressoIdlingResource.increment(); // App is busy until further notice.
-        mClientListMvpView.showProgressbar(true);
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getAllClients()
+        mSubscription = mDataManagerClient.getAllClients(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Client>>() {
                     @Override
                     public void onCompleted() {
-                        mClientListMvpView.showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientListMvpView.showProgressbar(false);
-                        mClientListMvpView.showErrorFetchingClients(
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showErrorFetchingClients(
                                 "There was some error fetching list");
                         EspressoIdlingResource.decrement(); // App is idle.
 
@@ -64,38 +70,11 @@ public class ClientListPresenter implements Presenter<ClientListMvpView> {
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
-                        mClientListMvpView.showProgressbar(false);
-                        mClientListMvpView.showClientList(clientPage);
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showClientList(clientPage);
                         EspressoIdlingResource.decrement(); // App is idle.
                     }
                 });
     }
 
-    public void loadMoreClients(int offset, int limit) {
-        mClientListMvpView.showSwipeRefreshLayout(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getAllClients(offset, limit)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Client>>() {
-                    @Override
-                    public void onCompleted() {
-                        mClientListMvpView.showSwipeRefreshLayout(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mClientListMvpView.showSwipeRefreshLayout(false);
-                        mClientListMvpView.showErrorFetchingClients(
-                                "There was some error fetching list");
-
-                    }
-
-                    @Override
-                    public void onNext(Page<Client> clientPage) {
-                        mClientListMvpView.showSwipeRefreshLayout(false);
-                        mClientListMvpView.showMoreClientsList(clientPage);
-                    }
-                });
-    }
 }

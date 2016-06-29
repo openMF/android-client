@@ -11,7 +11,5 @@ public interface GroupsListMvpView extends MvpView {
 
     void showGroups(Page<Group> groupPage);
 
-    void showMoreGroups(Page<Group> groupPage);
-
-    void showFetchingError(String s, int response);
+    void showFetchingError(String s);
 }
