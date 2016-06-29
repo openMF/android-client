@@ -28,6 +28,7 @@ public class DatabaseHelperClient {
      * Saving Clients in Database using DBFlow.
      * save() method save the value reference to primary key if its exist the update if not the
      * insert.
+     *
      * @param clientPage
      * @return null
      */
@@ -47,6 +48,7 @@ public class DatabaseHelperClient {
 
     /**
      * Reading All Clients from table of Client and return the ClientList
+     *
      * @return List Of Client
      */
     //TODO Implement Observable Transaction to load Client List

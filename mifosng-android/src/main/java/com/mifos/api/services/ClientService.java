@@ -28,8 +28,7 @@ import rx.Observable;
 public interface ClientService {
 
     /**
-     *
-     * @param b  True Enabling the Pagination of the API
+     * @param b      True Enabling the Pagination of the API
      * @param offset Value give from which position Fetch ClientList
      * @param limit  Maximum size of the Client
      * @return List of Clients

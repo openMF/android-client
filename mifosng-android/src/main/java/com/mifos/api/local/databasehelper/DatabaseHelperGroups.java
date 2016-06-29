@@ -31,6 +31,7 @@ public class DatabaseHelperGroups {
      * Saving Groups in Database using DBFlow.
      * save() method save the value reference to primary key if its exist the update if not the
      * insert.
+     *
      * @param groupPage
      * @return null
      */
@@ -51,6 +52,7 @@ public class DatabaseHelperGroups {
 
     /**
      * Reading All groups from table of Group and return the GroupList
+     *
      * @return List Of Groups
      */
     //TODO Implement Observable Transaction to load Client List

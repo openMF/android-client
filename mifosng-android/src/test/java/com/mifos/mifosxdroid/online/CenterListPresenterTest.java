@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.online.centerlist.CenterListMvpView;
 import com.mifos.mifosxdroid.online.centerlist.CenterListPresenter;
@@ -39,6 +40,9 @@ public class CenterListPresenterTest {
     DataManager mDataManager;
 
     @Mock
+    DataManagerCenter mDataManagerCenter;
+
+    @Mock
     CenterListMvpView mCenterListMvpView;
 
     Page<Center> centerPage;
@@ -52,7 +56,7 @@ public class CenterListPresenterTest {
     @Before
     public void setUp() throws Exception {
 
-        centerListPresenter = new CenterListPresenter(mDataManager);
+        centerListPresenter = new CenterListPresenter(mDataManager, mDataManagerCenter);
         centerListPresenter.attachView(mCenterListMvpView);
 
         centerPage = FakeRemoteDataSource.getCenters();
@@ -68,7 +72,7 @@ public class CenterListPresenterTest {
     @Test
     public void testLoadCenters() {
 
-        when(mDataManager.getCenters(true, offset, limit))
+        when(mDataManagerCenter.getCenters(true, offset, limit))
                 .thenReturn(Observable.just(centerPage));
 
         centerListPresenter.loadCenters(true, offset, limit);
@@ -80,7 +84,7 @@ public class CenterListPresenterTest {
     @Test
     public void testLoadCentersFails() {
 
-        when(mDataManager.getCenters(true, offset, limit))
+        when(mDataManagerCenter.getCenters(true, offset, limit))
                 .thenReturn(Observable.<Page<Center>>error(new RuntimeException()));
 
         centerListPresenter.loadCenters(true, offset, limit);

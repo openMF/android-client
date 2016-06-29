@@ -26,7 +26,7 @@ public class DataManagerGroups {
 
     @Inject
     public DataManagerGroups(BaseApiManager baseApiManager,
-                                DatabaseHelperGroups databaseHelperGroups) {
+                             DatabaseHelperGroups databaseHelperGroups) {
         mBaseApiManager = baseApiManager;
         mDatabaseHelperGroups = databaseHelperGroups;
     }
