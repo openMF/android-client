@@ -11,8 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_margin="30dp">
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp">
 
         <com.mifos.mifosxdroid.views.CircularImageView
             android:id="@+id/iv_user_picture"
@@ -37,6 +37,24 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"/>
 
+    </RelativeLayout>
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom">
+
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Offline Mode"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentStart="true"/>
     </RelativeLayout>
 
 
