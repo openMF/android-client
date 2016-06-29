@@ -37,9 +37,6 @@ public class CenterListPresenterTest {
     CenterListPresenter centerListPresenter;
 
     @Mock
-    DataManager mDataManager;
-
-    @Mock
     DataManagerCenter mDataManagerCenter;
 
     @Mock
@@ -56,7 +53,7 @@ public class CenterListPresenterTest {
     @Before
     public void setUp() throws Exception {
 
-        centerListPresenter = new CenterListPresenter(mDataManager, mDataManagerCenter);
+        centerListPresenter = new CenterListPresenter(mDataManagerCenter);
         centerListPresenter.attachView(mCenterListMvpView);
 
         centerPage = FakeRemoteDataSource.getCenters();
@@ -96,7 +93,7 @@ public class CenterListPresenterTest {
     @Test
     public void testLoadCentersGroupAndMeeting() {
 
-        when(mDataManager.getCentersGroupAndMeeting(centerId))
+        when(mDataManagerCenter.getCentersGroupAndMeeting(centerId))
                 .thenReturn(Observable.just(centerWithAssociations));
 
         centerListPresenter.loadCentersGroupAndMeeting(centerId);
@@ -108,7 +105,7 @@ public class CenterListPresenterTest {
 
     @Test
     public void testLoadCenterGroupAndMeetingFails() {
-        when(mDataManager.getCentersGroupAndMeeting(centerId))
+        when(mDataManagerCenter.getCentersGroupAndMeeting(centerId))
                 .thenReturn(Observable.<CenterWithAssociations>error(new RuntimeException()));
 
         centerListPresenter.loadCentersGroupAndMeeting(centerId);
