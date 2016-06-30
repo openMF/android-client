@@ -14,12 +14,15 @@ import android.support.test.espresso.IdlingResource;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -40,6 +43,7 @@ import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.objects.client.Client;
+import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
 
@@ -65,6 +69,9 @@ public class DashboardActivity extends MifosBaseActivity
     @BindView(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
+    View mNavigationHeader;
+    SwitchCompat userStatusToggle;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +83,7 @@ public class DashboardActivity extends MifosBaseActivity
 
         // setup navigation drawer and Navigation Toggle click
         setupNavigationBar();
+        setupUserStatusToggle();
 
     }
 
@@ -84,6 +92,7 @@ public class DashboardActivity extends MifosBaseActivity
      */
     protected void setupNavigationBar() {
 
+        mNavigationHeader = mNavigationView.getHeaderView(0);
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // setup drawer layout and sync to toolbar
@@ -153,6 +162,27 @@ public class DashboardActivity extends MifosBaseActivity
         return true;
     }
 
+
+    public void setupUserStatusToggle () {
+        userStatusToggle
+                = (SwitchCompat) mNavigationHeader.findViewById(R.id.user_status_toggle);
+        if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+            userStatusToggle.setChecked(true);
+        }
+
+        userStatusToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+                    PrefManager.setUserStatus(Constants.USER_ONLINE);
+                    //userStatusToggle.setChecked(false);
+                } else {
+                    PrefManager.setUserStatus(Constants.USER_OFFLINE);
+                    //userStatusToggle.setChecked(true);
+                }
+            }
+        });
+    }
 
     public void startNavigationClickActivity(final Intent intent) {
         android.os.Handler handler = new android.os.Handler();
@@ -293,7 +323,6 @@ public class DashboardActivity extends MifosBaseActivity
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
     }
-
 }
 
 

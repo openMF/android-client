@@ -45,7 +45,7 @@
         android:layout_gravity="bottom">
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/offline_switch_compat"
+            android:id="@+id/user_status_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Offline Mode"
