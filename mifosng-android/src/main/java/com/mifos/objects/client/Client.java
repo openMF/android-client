@@ -101,7 +101,7 @@ public class Client extends MifosBaseModel implements Parcelable {
     public void setActivationTimeStamp(long activationTimeStamp) {
         this.activationTimeStamp = activationTimeStamp;
         Date date = new Date(activationTimeStamp);
-        this.activationDate = Arrays.asList(date.getYear(), date.getMonth(), date.getDate());
+        this.activationDate = Arrays.asList(date.getYear()+1, date.getMonth()+1, date.getDate()+1);
 
     }
 
