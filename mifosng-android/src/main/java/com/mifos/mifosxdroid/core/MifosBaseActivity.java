@@ -15,10 +15,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,6 +45,7 @@ import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.objects.client.Client;
+import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
 
 import rx.Observable;
@@ -55,7 +58,7 @@ import rx.schedulers.Schedulers;
  * @author fomenkoo
  */
 public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     protected Toolbar toolbar;
     private ActivityComponent mActivityComponent;
@@ -63,6 +66,7 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private DataManager mDataManager;
+    private SwitchCompat offline_toggle;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -246,6 +250,25 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
         // make an API call to fetch logged in client's details
         loadClientDetails();
+        setupOfflineSwitchCompat();
+    }
+
+    public void setupOfflineSwitchCompat() {
+        android.support.v7.widget.SwitchCompat offline_toggle
+                = (android.support.v7.widget.SwitchCompat) findViewById(R.id.offline_switch_compat);
+        /*if (PrefManager.getUserStatus() == Constants.USER_OFFLINE)
+            offline_toggle.setChecked(true);*/
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+            PrefManager.setUserStatus(Constants.USER_ONLINE);
+            //offline_toggle.setChecked(false);
+        } else {
+            PrefManager.setUserStatus(Constants.USER_OFFLINE);
+            //offline_toggle.setChecked(true);
+        }
     }
 
     /**
@@ -330,5 +353,4 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
             }
         }, 500);
     }
-
 }

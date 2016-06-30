@@ -45,6 +45,7 @@
         android:layout_gravity="bottom">
 
         <android.support.v7.widget.SwitchCompat
+            android:id="@+id/offline_switch_compat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Offline Mode"
@@ -54,6 +55,9 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="10dp"
+            app:showText="false"
+            android:textOn="On"
+            android:textOff="Off"
             android:layout_alignParentStart="true"/>
     </RelativeLayout>
 

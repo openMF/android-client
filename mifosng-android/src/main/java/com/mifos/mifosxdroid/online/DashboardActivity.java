@@ -19,6 +19,8 @@ import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.utils.EspressoIdlingResource;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by ishankhanna on 09/02/14.
  */
@@ -26,14 +28,25 @@ public class DashboardActivity extends MifosBaseActivity {
 
     public static final String TAG = DashboardActivity.class.getSimpleName();
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        ButterKnife.bind(this);
+
+        /*offline_toggle = (SwitchCompat)findViewById(R.id.offline_switch_compat);
+
+        if (PrefManager.getUserStatus() == Constants.USER_OFFLINE)
+            offline_toggle.setChecked(true);*/
+
         replaceFragment(new ClientSearchFragment(), false, R.id.container);
 
         // setup navigation drawer
         setupNavigationBar();
+
     }
 
     @Override
@@ -80,6 +93,7 @@ public class DashboardActivity extends MifosBaseActivity {
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
     }
+
 }
 
 
