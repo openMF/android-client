@@ -163,6 +163,10 @@ public class DashboardActivity extends MifosBaseActivity
     }
 
 
+    /**
+     * This SwitchCompat Toggle Handling the User Status.
+     * Setting the User Status to Offline or Online
+     */
     public void setupUserStatusToggle () {
         userStatusToggle
                 = (SwitchCompat) mNavigationHeader.findViewById(R.id.user_status_toggle);
