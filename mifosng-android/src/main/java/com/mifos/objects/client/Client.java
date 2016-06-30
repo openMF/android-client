@@ -17,6 +17,8 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +38,9 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     @Column
     private boolean active;
+
+    @Column
+    private long activationTimeStamp;
 
     private List<Integer> activationDate = new ArrayList<Integer>();
 
@@ -78,6 +83,27 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     @Column
     private String externalId;
+
+    public long getActivationTimeStamp() {
+
+        Date date = new Date();
+        date.setYear(activationDate.get(0)-1);
+        date.setMonth(activationDate.get(1)-1);
+        date.setDate(activationDate.get(2)-1);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+
+        return date.getTime();
+
+    }
+
+    public void setActivationTimeStamp(long activationTimeStamp) {
+        this.activationTimeStamp = activationTimeStamp;
+        Date date = new Date(activationTimeStamp);
+        this.activationDate = Arrays.asList(date.getYear(), date.getMonth(), date.getDate());
+
+    }
 
     public List<Integer> getDobDate() {
         return dobDate;

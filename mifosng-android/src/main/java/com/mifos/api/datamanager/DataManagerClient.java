@@ -74,4 +74,31 @@ public class DataManagerClient {
         }
     }
 
+
+    /**
+     * This Method
+     * @param clientId for Query in database or REST API request.
+     * @return The Client Details
+     */
+    public Observable<Client> getClient(int clientId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getClientsApi().getClient(clientId)
+                        .concatMap(new Func1<Client, Observable<? extends Client>>() {
+                            @Override
+                            public Observable<? extends Client> call(Client client) {
+                                return Observable.just(client);
+                            }
+                        });
+            case 1:
+                /**
+                 * Return Clients from DatabaseHelperClient only one time.
+                 */
+                return mDatabaseHelperClient.getClient(clientId);
+
+            default:
+                return Observable.just(new Client());
+        }
+    }
+
 }

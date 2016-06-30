@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.Client_Table;
 import com.mifos.objects.client.Page;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -67,5 +68,26 @@ public class DatabaseHelperClient {
             }
         });
 
+    }
+
+    /**
+     * This Method select query with clientId, In return the Client Details will be come.
+     * @param clientId of the client
+     * @return Client
+     */
+    public Observable<Client> getClient(final int clientId) {
+        return Observable.create(new Observable.OnSubscribe<Client>() {
+            @Override
+            public void call(Subscriber<? super Client> subscriber) {
+
+                Client client = SQLite.select()
+                        .from(Client.class)
+                        .where(Client_Table.id.eq(clientId))
+                        .querySingle();
+
+                subscriber.onNext(client);
+
+            }
+        });
     }
 }
