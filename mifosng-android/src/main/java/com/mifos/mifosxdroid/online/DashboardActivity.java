@@ -43,6 +43,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
@@ -58,8 +59,11 @@ public class DashboardActivity extends MifosBaseActivity
 
     public static final String TAG = DashboardActivity.class.getSimpleName();
 
+    @BindView(R.id.navigation_view)
     NavigationView mNavigationView;
-    private DrawerLayout mDrawerLayout;
+
+    @BindView(R.id.drawer)
+    DrawerLayout mDrawerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +74,7 @@ public class DashboardActivity extends MifosBaseActivity
 
         replaceFragment(new ClientSearchFragment(), false, R.id.container);
 
-        // setup navigation drawer
+        // setup navigation drawer and Navigation Toggle click
         setupNavigationBar();
 
     }
@@ -80,12 +84,9 @@ public class DashboardActivity extends MifosBaseActivity
      */
     protected void setupNavigationBar() {
 
-        // setup navigation view
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // setup drawer layout and sync to toolbar
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
 
