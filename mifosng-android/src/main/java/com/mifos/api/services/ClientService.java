@@ -6,6 +6,7 @@ package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.api.model.ClientPayload;
+import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -67,4 +68,7 @@ public interface ClientService {
 
     @GET(APIEndPoint.CLIENTS + "/template")
     Observable<ClientsTemplate> getClientTemplate();
+
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
+    Observable<ClientAccounts> getClientAccounts(@Path("clientId") int clientId);
 }

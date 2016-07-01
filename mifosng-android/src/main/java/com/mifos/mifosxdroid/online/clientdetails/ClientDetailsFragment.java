@@ -209,6 +209,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         return rootView;
     }
 
+    public void inflateClientInformation() {
+        mClientDetailsPresenter.loadClientDetailsAndClientAccounts(clientId);
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -259,10 +263,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         return super.onOptionsItemSelected(item);
     }
 
-    public void inflateClientInformation() {
-        mClientDetailsPresenter.loadClientInformation(clientId);
-    }
-
     public void captureClientImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(capturedClientImageFile));
@@ -278,14 +278,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         mClientDetailsPresenter.uploadImage(clientId, pngFile);
     }
 
-
-    /**
-     * Use this method to fetch and inflate all loan and savings accounts
-     * of the client and inflate them in the fragment
-     */
-    public void inflateClientsAccounts() {
-        mClientDetailsPresenter.loadClientAccount(clientId);
-    }
 
     /**
      * Use this method to fetch all datatables for client and inflate them as
@@ -517,7 +509,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                     menu.show();
                 }
             });
-            inflateClientsAccounts();
+            //inflateClientsAccounts();
         }
     }
 

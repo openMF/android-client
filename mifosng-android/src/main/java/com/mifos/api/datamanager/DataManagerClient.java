@@ -2,6 +2,7 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
+import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.PrefManager;
@@ -77,6 +78,7 @@ public class DataManagerClient {
 
     /**
      * This Method
+     *
      * @param clientId for Query in database or REST API request.
      * @return The Client Details
      */
@@ -98,6 +100,43 @@ public class DataManagerClient {
 
             default:
                 return Observable.just(new Client());
+        }
+    }
+
+
+    /**
+     * This Method Checks the User Status and as accordingly call to Database Helper or Client
+     * Retrofit Service.
+     * If User is Online then this Client DataManager Request to Client Retrofit to make REST API
+     * Request for Client Account and after service request completion DataManager call to
+     * DatabaseHelper to save in to Database.
+     * If User if Offline Client DataManager request to Client DatabaseHelper to make Transaction
+     * for retrieving the Clients Account.
+     *
+     * @param clientId Client Id
+     * @return All Clients Account, Like Savings, Loan etc Accounts.
+     */
+    public Observable<ClientAccounts> getClientAccounts(int clientId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
+                        .concatMap(new Func1<ClientAccounts, Observable<? extends
+                                ClientAccounts>>() {
+                            @Override
+                            public Observable<? extends ClientAccounts> call(
+                                    ClientAccounts clientAccounts) {
+
+                                return Observable.just(clientAccounts);
+                            }
+                        });
+            case 1:
+                /**
+                 * Return Clients from DatabaseHelperClient only one time.
+                 */
+                //return mDatabaseHelperClient.getClient(clientId);
+
+            default:
+                return Observable.just(new ClientAccounts());
         }
     }
 
