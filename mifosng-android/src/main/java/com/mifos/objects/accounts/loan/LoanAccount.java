@@ -12,7 +12,6 @@ import android.os.Parcelable;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -21,10 +20,10 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class LoanAccount extends MifosBaseModel implements Parcelable {
 
-    @PrimaryKey
+    @Column
     Integer clientId;
 
-    @Column
+    @PrimaryKey
     Integer id;
 
     @Column
@@ -40,7 +39,7 @@ public class LoanAccount extends MifosBaseModel implements Parcelable {
     String productName;
 
 
-    @ForeignKey(saveForeignKeyModel = false)
+
     Status status;
 
     private LoanType loanType;

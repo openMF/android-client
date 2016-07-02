@@ -116,7 +116,7 @@ public class DataManagerClient {
      * @param clientId Client Id
      * @return All Clients Account, Like Savings, Loan etc Accounts.
      */
-    public Observable<ClientAccounts> getClientAccounts(int clientId) {
+    public Observable<ClientAccounts> getClientAccounts(final int clientId) {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
@@ -125,7 +125,7 @@ public class DataManagerClient {
                             @Override
                             public Observable<? extends ClientAccounts> call(
                                     ClientAccounts clientAccounts) {
-
+                                mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId);
                                 return Observable.just(clientAccounts);
                             }
                         });
@@ -133,7 +133,7 @@ public class DataManagerClient {
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
                  */
-                //return mDatabaseHelperClient.getClient(clientId);
+                return mDatabaseHelperClient.realClientAccounts(clientId);
 
             default:
                 return Observable.just(new ClientAccounts());
