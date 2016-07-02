@@ -3,13 +3,40 @@ package com.mifos.objects.accounts.savings;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.mifos.api.model.APIEndPoint;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 /*
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-public class DepositType implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class DepositType extends MifosBaseModel implements Parcelable {
+
+
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String code;
+
+    @Column
+    String value;
+
+    public DepositType() {
+    }
+
+    private DepositType(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+    }
 
     public static final Parcelable.Creator<DepositType> CREATOR = new Parcelable
             .Creator<DepositType>() {
@@ -21,18 +48,6 @@ public class DepositType implements Parcelable {
             return new DepositType[size];
         }
     };
-    private Integer id;
-    private String code;
-    private String value;
-
-    public DepositType() {
-    }
-
-    private DepositType(Parcel in) {
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.code = in.readString();
-        this.value = in.readString();
-    }
 
     public Integer getId() {
         return id;

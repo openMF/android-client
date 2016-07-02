@@ -3,10 +3,17 @@ package com.mifos.api.local.databasehelper;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
+import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.loan.LoanAccount;
+import com.mifos.objects.accounts.loan.LoanAccount_Table;
+import com.mifos.objects.accounts.savings.SavingsAccount;
+import com.mifos.objects.accounts.savings.SavingsAccount_Table;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Client_Table;
 import com.mifos.objects.client.Page;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -86,6 +93,55 @@ public class DatabaseHelperClient {
                         .querySingle();
 
                 subscriber.onNext(client);
+
+            }
+        });
+    }
+
+    public Observable<Void> saveClientAccounts(final ClientAccounts clientAccounts,
+                                               final int clientId) {
+        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                List<LoanAccount> loanAccounts = clientAccounts.getLoanAccounts();
+                List<SavingsAccount> savingsAccounts = clientAccounts.getSavingsAccounts();
+
+                for (LoanAccount loanAccount : loanAccounts) {
+                    loanAccount.setClientId(clientId);
+                    loanAccount.save();
+                }
+
+                for (SavingsAccount savingsAccount : savingsAccounts) {
+                    savingsAccount.setClientId(clientId);
+                    savingsAccount.save();
+                }
+            }
+        });
+        return null;
+    }
+
+
+    public Observable<ClientAccounts> realClientAccounts(final int clientIs) {
+        return Observable.create(new Observable.OnSubscribe<ClientAccounts>() {
+            @Override
+            public void call(Subscriber<? super ClientAccounts> subscriber) {
+
+                List<LoanAccount> loanAccounts = SQLite.select()
+                        .from(LoanAccount.class)
+                        .where(LoanAccount_Table.clientId.eq(clientIs))
+                        .queryList();
+
+                List<SavingsAccount> savingsAccounts = SQLite.select()
+                        .from(SavingsAccount.class)
+                        .where(SavingsAccount_Table.clientId.eq(clientIs))
+                        .queryList();
+
+                ClientAccounts clientAccounts = new ClientAccounts();
+                clientAccounts.setLoanAccounts(loanAccounts);
+                clientAccounts.setSavingsAccounts(savingsAccounts);
+
+                subscriber.onNext(clientAccounts);
 
             }
         });

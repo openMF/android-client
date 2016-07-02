@@ -5,22 +5,58 @@
 
 package com.mifos.objects.accounts.savings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.Currency;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-import java.util.HashMap;
-import java.util.Map;
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
-public class SavingsAccount {
+    @PrimaryKey
+    Integer clientId;
 
-    private Integer id;
-    private String accountNo;
-    private Integer productId;
-    private String productName;
-    private Status status;
-    private Currency currency;
-    private Double accountBalance;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private DepositType depositType;
+    @Column
+    Integer id;
+
+    @Column
+    String accountNo;
+
+    @Column
+    Integer productId;
+
+    @Column
+    String productName;
+
+    @ForeignKey(saveForeignKeyModel = false)
+    Status status;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = false)
+    Currency currency;
+
+    @Column
+    Double accountBalance;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = false)
+    DepositType depositType;
+
+    public Integer getClientId() {
+        return this.clientId;
+    }
+
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
+    }
 
     public Integer getId() {
         return id;
@@ -135,17 +171,53 @@ public class SavingsAccount {
                 ", productName='" + productName + '\'' +
                 ", status=" + status +
                 ", currency=" + currency +
-                ", additionalProperties=" + additionalProperties +
                 ", depositType=" + depositType +
                 '}';
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperties(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.clientId);
+        dest.writeValue(this.id);
+        dest.writeString(this.accountNo);
+        dest.writeValue(this.productId);
+        dest.writeString(this.productName);
+        dest.writeParcelable(this.status, flags);
+        dest.writeParcelable(this.currency, flags);
+        dest.writeValue(this.accountBalance);
+        dest.writeParcelable(this.depositType, flags);
     }
 
+    public SavingsAccount() {
+    }
+
+    protected SavingsAccount(Parcel in) {
+        this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.productId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.productName = in.readString();
+        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.currency = in.readParcelable(Currency.class.getClassLoader());
+        this.accountBalance = (Double) in.readValue(Double.class.getClassLoader());
+        this.depositType = in.readParcelable(DepositType.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<SavingsAccount> CREATOR = new Parcelable.Creator<SavingsAccount>() {
+        @Override
+        public SavingsAccount createFromParcel(Parcel source) {
+            return new SavingsAccount(source);
+        }
+
+        @Override
+        public SavingsAccount[] newArray(int size) {
+            return new SavingsAccount[size];
+        }
+    };
 }
