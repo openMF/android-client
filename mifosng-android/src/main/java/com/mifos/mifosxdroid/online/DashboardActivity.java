@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -59,7 +58,7 @@ import rx.schedulers.Schedulers;
  * Created by ishankhanna on 09/02/14.
  */
 public class DashboardActivity extends MifosBaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = DashboardActivity.class.getSimpleName();
 
@@ -167,7 +166,7 @@ public class DashboardActivity extends MifosBaseActivity
      * This SwitchCompat Toggle Handling the User Status.
      * Setting the User Status to Offline or Online
      */
-    public void setupUserStatusToggle () {
+    public void setupUserStatusToggle() {
         userStatusToggle
                 = (SwitchCompat) mNavigationHeader.findViewById(R.id.user_status_toggle);
         if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {

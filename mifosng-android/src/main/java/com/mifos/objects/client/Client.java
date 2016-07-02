@@ -28,68 +28,87 @@ import java.util.List;
 @ModelContainer
 public class Client extends MifosBaseModel implements Parcelable {
 
+    public static final Parcelable.Creator<Client> CREATOR = new Parcelable.Creator<Client>() {
+        @Override
+        public Client createFromParcel(Parcel source) {
+            return new Client(source);
+        }
+
+        @Override
+        public Client[] newArray(int size) {
+            return new Client[size];
+        }
+    };
     @PrimaryKey
     int id;
-
     @Column
     String accountNo;
-
     private Status status;
-
     @Column
     private boolean active;
-
     @Column
     private long activationTimeStamp;
-
     private List<Integer> activationDate = new ArrayList<Integer>();
-
     private List<Integer> dobDate = new ArrayList<Integer>();
-
     @Column
     private String firstname;
-
     @Column
     private String middlename;
-
     @Column
     private String lastname;
-
     @Column
     private String displayName;
-
     @Column
     private int officeId;
-
     @Column
     private String officeName;
-
     @Column
     private int staffId;
-
     @Column
     private String staffName;
-
     private Timeline timeline;
-
     @Column
     private String fullname;
-
     @Column
     private int imageId;
-
     @Column
     private boolean imagePresent;
-
     @Column
     private String externalId;
+
+    public Client() {
+    }
+
+    protected Client(Parcel in) {
+        this.id = in.readInt();
+        this.accountNo = in.readString();
+        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.active = in.readByte() != 0;
+        this.activationDate = new ArrayList<Integer>();
+        in.readList(this.activationDate, Integer.class.getClassLoader());
+        this.dobDate = new ArrayList<Integer>();
+        in.readList(this.dobDate, Integer.class.getClassLoader());
+        this.firstname = in.readString();
+        this.middlename = in.readString();
+        this.lastname = in.readString();
+        this.displayName = in.readString();
+        this.officeId = in.readInt();
+        this.officeName = in.readString();
+        this.staffId = in.readInt();
+        this.staffName = in.readString();
+        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
+        this.fullname = in.readString();
+        this.imageId = in.readInt();
+        this.imagePresent = in.readByte() != 0;
+        this.externalId = in.readString();
+    }
 
     public long getActivationTimeStamp() {
 
         Date date = new Date();
-        date.setYear(activationDate.get(0)-1);
-        date.setMonth(activationDate.get(1)-1);
-        date.setDate(activationDate.get(2)-1);
+        date.setYear(activationDate.get(0) - 1);
+        date.setMonth(activationDate.get(1) - 1);
+        date.setDate(activationDate.get(2) - 1);
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
@@ -101,7 +120,8 @@ public class Client extends MifosBaseModel implements Parcelable {
     public void setActivationTimeStamp(long activationTimeStamp) {
         this.activationTimeStamp = activationTimeStamp;
         Date date = new Date(activationTimeStamp);
-        this.activationDate = Arrays.asList(date.getYear()+1, date.getMonth()+1, date.getDate()+1);
+        this.activationDate = Arrays.asList(date.getYear() + 1, date.getMonth() + 1, date.getDate
+                () + 1);
 
     }
 
@@ -308,43 +328,4 @@ public class Client extends MifosBaseModel implements Parcelable {
         dest.writeByte(this.imagePresent ? (byte) 1 : (byte) 0);
         dest.writeString(this.externalId);
     }
-
-    public Client() {
-    }
-
-    protected Client(Parcel in) {
-        this.id = in.readInt();
-        this.accountNo = in.readString();
-        this.status = in.readParcelable(Status.class.getClassLoader());
-        this.active = in.readByte() != 0;
-        this.activationDate = new ArrayList<Integer>();
-        in.readList(this.activationDate, Integer.class.getClassLoader());
-        this.dobDate = new ArrayList<Integer>();
-        in.readList(this.dobDate, Integer.class.getClassLoader());
-        this.firstname = in.readString();
-        this.middlename = in.readString();
-        this.lastname = in.readString();
-        this.displayName = in.readString();
-        this.officeId = in.readInt();
-        this.officeName = in.readString();
-        this.staffId = in.readInt();
-        this.staffName = in.readString();
-        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
-        this.fullname = in.readString();
-        this.imageId = in.readInt();
-        this.imagePresent = in.readByte() != 0;
-        this.externalId = in.readString();
-    }
-
-    public static final Parcelable.Creator<Client> CREATOR = new Parcelable.Creator<Client>() {
-        @Override
-        public Client createFromParcel(Parcel source) {
-            return new Client(source);
-        }
-
-        @Override
-        public Client[] newArray(int size) {
-            return new Client[size];
-        }
-    };
 }

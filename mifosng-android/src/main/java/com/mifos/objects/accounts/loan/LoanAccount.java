@@ -21,38 +21,56 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class LoanAccount extends MifosBaseModel implements Parcelable {
 
+    public static final Parcelable.Creator<LoanAccount> CREATOR = new Parcelable
+            .Creator<LoanAccount>() {
+        @Override
+        public LoanAccount createFromParcel(Parcel source) {
+            return new LoanAccount(source);
+        }
+
+        @Override
+        public LoanAccount[] newArray(int size) {
+            return new LoanAccount[size];
+        }
+    };
     @Column
     Integer clientId;
-
     @PrimaryKey
     Integer id;
-
     @Column
     String accountNo;
-
     @Column
     String externalId;
-
     @Column
     Integer productId;
-
     @Column
     String productName;
-
-
     @Column
     @ForeignKey(saveForeignKeyModel = true)
     Status status;
-
     @Column
     @ForeignKey(saveForeignKeyModel = true)
     LoanType loanType;
-
     @Column
     Integer loanCycle;
-
     @Column
     Boolean inArrears;
+
+    public LoanAccount() {
+    }
+
+    protected LoanAccount(Parcel in) {
+        this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.externalId = in.readString();
+        this.productId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.productName = in.readString();
+        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.loanType = in.readParcelable(LoanType.class.getClassLoader());
+        this.loanCycle = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.inArrears = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    }
 
     public Integer getClientId() {
         return this.clientId;
@@ -183,7 +201,6 @@ public class LoanAccount extends MifosBaseModel implements Parcelable {
                 '}';
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -202,32 +219,4 @@ public class LoanAccount extends MifosBaseModel implements Parcelable {
         dest.writeValue(this.loanCycle);
         dest.writeValue(this.inArrears);
     }
-
-    public LoanAccount() {
-    }
-
-    protected LoanAccount(Parcel in) {
-        this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.accountNo = in.readString();
-        this.externalId = in.readString();
-        this.productId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.productName = in.readString();
-        this.status = in.readParcelable(Status.class.getClassLoader());
-        this.loanType = in.readParcelable(LoanType.class.getClassLoader());
-        this.loanCycle = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.inArrears = (Boolean) in.readValue(Boolean.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<LoanAccount> CREATOR = new Parcelable.Creator<LoanAccount>() {
-        @Override
-        public LoanAccount createFromParcel(Parcel source) {
-            return new LoanAccount(source);
-        }
-
-        @Override
-        public LoanAccount[] newArray(int size) {
-            return new LoanAccount[size];
-        }
-    };
 }

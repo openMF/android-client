@@ -16,8 +16,29 @@ import java.util.List;
 
 public class ClientAccounts implements Parcelable {
 
+    public static final Parcelable.Creator<ClientAccounts> CREATOR = new Parcelable
+            .Creator<ClientAccounts>() {
+        @Override
+        public ClientAccounts createFromParcel(Parcel source) {
+            return new ClientAccounts(source);
+        }
+
+        @Override
+        public ClientAccounts[] newArray(int size) {
+            return new ClientAccounts[size];
+        }
+    };
     private List<LoanAccount> loanAccounts = new ArrayList<LoanAccount>();
     private List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
+
+    public ClientAccounts() {
+    }
+
+    protected ClientAccounts(Parcel in) {
+        this.loanAccounts = in.createTypedArrayList(LoanAccount.CREATOR);
+        this.savingsAccounts = new ArrayList<SavingsAccount>();
+        in.readList(this.savingsAccounts, SavingsAccount.class.getClassLoader());
+    }
 
     public List<LoanAccount> getLoanAccounts() {
         return loanAccounts;
@@ -83,26 +104,4 @@ public class ClientAccounts implements Parcelable {
         dest.writeTypedList(loanAccounts);
         dest.writeList(this.savingsAccounts);
     }
-
-    public ClientAccounts() {
-    }
-
-    protected ClientAccounts(Parcel in) {
-        this.loanAccounts = in.createTypedArrayList(LoanAccount.CREATOR);
-        this.savingsAccounts = new ArrayList<SavingsAccount>();
-        in.readList(this.savingsAccounts, SavingsAccount.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<ClientAccounts> CREATOR = new Parcelable
-            .Creator<ClientAccounts>() {
-        @Override
-        public ClientAccounts createFromParcel(Parcel source) {
-            return new ClientAccounts(source);
-        }
-
-        @Override
-        public ClientAccounts[] newArray(int size) {
-            return new ClientAccounts[size];
-        }
-    };
 }

@@ -79,6 +79,7 @@ public class DatabaseHelperClient {
 
     /**
      * This Method select query with clientId, In return the Client Details will be come.
+     *
      * @param clientId of the client
      * @return Client
      */
