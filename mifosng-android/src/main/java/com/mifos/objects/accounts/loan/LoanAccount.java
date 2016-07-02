@@ -21,38 +21,36 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class LoanAccount extends MifosBaseModel implements Parcelable {
 
-    public static final Parcelable.Creator<LoanAccount> CREATOR = new Parcelable
-            .Creator<LoanAccount>() {
-        @Override
-        public LoanAccount createFromParcel(Parcel source) {
-            return new LoanAccount(source);
-        }
 
-        @Override
-        public LoanAccount[] newArray(int size) {
-            return new LoanAccount[size];
-        }
-    };
     @Column
     Integer clientId;
+
     @PrimaryKey
     Integer id;
+
     @Column
     String accountNo;
+
     @Column
     String externalId;
+
     @Column
     Integer productId;
+
     @Column
     String productName;
+
     @Column
     @ForeignKey(saveForeignKeyModel = true)
     Status status;
+
     @Column
     @ForeignKey(saveForeignKeyModel = true)
     LoanType loanType;
+
     @Column
     Integer loanCycle;
+
     @Column
     Boolean inArrears;
 
@@ -219,4 +217,17 @@ public class LoanAccount extends MifosBaseModel implements Parcelable {
         dest.writeValue(this.loanCycle);
         dest.writeValue(this.inArrears);
     }
+
+    public static final Parcelable.Creator<LoanAccount> CREATOR = new Parcelable
+            .Creator<LoanAccount>() {
+        @Override
+        public LoanAccount createFromParcel(Parcel source) {
+            return new LoanAccount(source);
+        }
+
+        @Override
+        public LoanAccount[] newArray(int size) {
+            return new LoanAccount[size];
+        }
+    };
 }
