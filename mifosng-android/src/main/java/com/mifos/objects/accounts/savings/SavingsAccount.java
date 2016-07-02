@@ -12,6 +12,7 @@ import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.Currency;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -35,16 +36,20 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
     @Column
     String productName;
 
-
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Status status;
 
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Currency currency;
 
     @Column
     Double accountBalance;
 
-
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     DepositType depositType;
 
     public Integer getClientId() {

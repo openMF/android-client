@@ -15,7 +15,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-@Table(database = MifosDatabase.class)
+@Table(database = MifosDatabase.class, name = "SavingAccountDepositType")
 @ModelContainer
 public class DepositType extends MifosBaseModel implements Parcelable {
 
