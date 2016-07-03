@@ -1,0 +1,771 @@
+{
+  "totalFilteredRecords": 199,
+  "pageItems": [
+    {
+      "id": 3,
+      "accountNo": "000000003",
+      "name": "Santa Maria Group 1",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2010,
+        1,
+        4
+      ],
+      "officeId": 2,
+      "officeName": "Manila",
+      "centerId": 2,
+      "centerName": "Santa Maria",
+      "staffId": 2,
+      "staffName": "M, Mary",
+      "hierarchy": ".2.3.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2010,
+          1,
+          4
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2010,
+          1,
+          4
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 4,
+      "accountNo": "000000004",
+      "name": "Santa Maria Group 2",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2010,
+        1,
+        4
+      ],
+      "officeId": 2,
+      "officeName": "Manila",
+      "centerId": 2,
+      "centerName": "Santa Maria",
+      "staffId": 2,
+      "staffName": "M, Mary",
+      "hierarchy": ".2.4.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2010,
+          1,
+          4
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2010,
+          1,
+          4
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 5,
+      "accountNo": "000000005",
+      "name": "MALAM COMPUTER GROUP",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        18
+      ],
+      "officeId": 1,
+      "officeName": "Head Office",
+      "staffId": 1,
+      "staffName": "Armah, Samuel",
+      "hierarchy": ".5.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          18
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          18
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 6,
+      "accountNo": "000000006",
+      "name": "Group_Afsha1",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        19
+      ],
+      "officeId": 4,
+      "officeName": "Afsha_EDI_2015",
+      "hierarchy": ".6.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          19
+        ],
+        "submittedByUsername": "8_DELETED_afsha017",
+        "submittedByFirstname": "Afsha",
+        "submittedByLastname": "Amber",
+        "activatedOnDate": [
+          2015,
+          12,
+          19
+        ],
+        "activatedByUsername": "8_DELETED_afsha017",
+        "activatedByFirstname": "Afsha",
+        "activatedByLastname": "Amber"
+      }
+    },
+    {
+      "id": 7,
+      "accountNo": "000000007",
+      "name": "SHG",
+      "externalId": "sagar17@ediindia.org",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        21
+      ],
+      "officeId": 5,
+      "officeName": "EDI_Ahmedabad_2015",
+      "hierarchy": ".7.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          21
+        ],
+        "submittedByUsername": "12_DELETED_SK",
+        "submittedByFirstname": "sagar",
+        "submittedByLastname": "karande",
+        "activatedOnDate": [
+          2015,
+          12,
+          21
+        ],
+        "activatedByUsername": "12_DELETED_SK",
+        "activatedByFirstname": "sagar",
+        "activatedByLastname": "karande"
+      }
+    },
+    {
+      "id": 8,
+      "accountNo": "000000008",
+      "name": "Joy&Joy",
+      "externalId": "joydeep17@ediindia.org",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        21
+      ],
+      "officeId": 6,
+      "officeName": "Agartala",
+      "hierarchy": ".8.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          21
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          21
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 9,
+      "accountNo": "000000009",
+      "name": "Office_Preeti_2016",
+      "externalId": "preetiverma2888@gmail.com",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        22
+      ],
+      "officeId": 7,
+      "officeName": "preeti_EDI_2016",
+      "hierarchy": ".9.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          22
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          22
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 10,
+      "accountNo": "000000010",
+      "name": "Group_preeti2016",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        22
+      ],
+      "officeId": 7,
+      "officeName": "preeti_EDI_2016",
+      "hierarchy": ".10.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          22
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          22
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 11,
+      "accountNo": "000000011",
+      "name": "ashaka",
+      "externalId": "ashka17@ediindia.org",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2016,
+        1,
+        3
+      ],
+      "officeId": 8,
+      "officeName": "ashaka_2015",
+      "hierarchy": ".11.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          23
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2016,
+          1,
+          3
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 12,
+      "accountNo": "000000012",
+      "name": "sapna",
+      "externalId": "sapna17@ediindia.org",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        23
+      ],
+      "officeId": 10,
+      "officeName": "sapna_2016",
+      "hierarchy": ".12.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          23
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          23
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 14,
+      "accountNo": "000000014",
+      "name": "Afsha_Group1",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2016,
+        1,
+        1
+      ],
+      "officeId": 4,
+      "officeName": "Afsha_EDI_2015",
+      "hierarchy": ".14.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          23
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2016,
+          1,
+          1
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 15,
+      "accountNo": "000000015",
+      "name": "Group1_Afsha",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        23
+      ],
+      "officeId": 4,
+      "officeName": "Afsha_EDI_2015",
+      "hierarchy": ".15.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          23
+        ],
+        "submittedByUsername": "19_DELETED_17afsha",
+        "submittedByFirstname": "Afsha",
+        "submittedByLastname": "Amber",
+        "activatedOnDate": [
+          2015,
+          12,
+          23
+        ],
+        "activatedByUsername": "19_DELETED_17afsha",
+        "activatedByFirstname": "Afsha",
+        "activatedByLastname": "Amber"
+      }
+    },
+    {
+      "id": 16,
+      "accountNo": "000000016",
+      "name": "Group_Pooja",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        24
+      ],
+      "officeId": 11,
+      "officeName": "Pooja_EDI_2015",
+      "hierarchy": ".16.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          24
+        ],
+        "submittedByUsername": "20_DELETED_17pooja",
+        "submittedByFirstname": "Pooja",
+        "submittedByLastname": "Gupta",
+        "activatedOnDate": [
+          2015,
+          12,
+          24
+        ],
+        "activatedByUsername": "20_DELETED_17pooja",
+        "activatedByFirstname": "Pooja",
+        "activatedByLastname": "Gupta"
+      }
+    },
+    {
+      "id": 17,
+      "accountNo": "000000017",
+      "name": "Group 2016_ Babu",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        28
+      ],
+      "officeId": 12,
+      "officeName": "Kinley microfinance 2016",
+      "hierarchy": ".17.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          28
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 18,
+      "accountNo": "000000018",
+      "name": "apple_2016",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        28
+      ],
+      "officeId": 13,
+      "officeName": "Anirudh_2016",
+      "hierarchy": ".18.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          28
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 19,
+      "accountNo": "000000019",
+      "name": "iphone5s",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        29
+      ],
+      "officeId": 14,
+      "officeName": "Urvi2016",
+      "hierarchy": ".19.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          29
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          29
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 20,
+      "accountNo": "000000020",
+      "name": "Ahmedabadgroup1",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        30
+      ],
+      "officeId": 15,
+      "officeName": "pavan_2016",
+      "hierarchy": ".20.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          30
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          30
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 21,
+      "accountNo": "000000021",
+      "name": "Rajnikant",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        12,
+        30
+      ],
+      "officeId": 16,
+      "officeName": "darshan_2016",
+      "hierarchy": ".21.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          12,
+          30
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          12,
+          30
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 22,
+      "accountNo": "000000022",
+      "name": "JeuneEntre",
+      "status": {
+        "id": 100,
+        "code": "clientStatusType.pending",
+        "value": "Pending"
+      },
+      "active": false,
+      "officeId": 1,
+      "officeName": "Head Office",
+      "staffId": 1,
+      "staffName": "Armah, Samuel",
+      "hierarchy": ".22.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          1,
+          4
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator"
+      }
+    },
+    {
+      "id": 25,
+      "accountNo": "000000025",
+      "name": "Group2",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "active": true,
+      "activationDate": [
+        2015,
+        1,
+        5
+      ],
+      "officeId": 1,
+      "officeName": "Head Office",
+      "centerId": 24,
+      "centerName": "subbu",
+      "hierarchy": ".24.25.",
+      "groupLevel": "2",
+      "timeline": {
+        "submittedOnDate": [
+          2015,
+          1,
+          5
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [
+          2015,
+          1,
+          5
+        ],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      }
+    }
+  ]
+}

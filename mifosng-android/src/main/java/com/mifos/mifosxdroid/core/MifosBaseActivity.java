@@ -27,9 +27,9 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mifos.App;
-import com.mifos.api.ApiRequestInterceptor;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
+import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
@@ -138,7 +138,7 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
     @Override
     public void logout() {
-        PrefManager.clearToken();
+        PrefManager.clearPrefs();
         startActivity(new Intent(this, SplashScreenActivity.class));
         finish();
     }
@@ -175,10 +175,10 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         // ignore the current selected item
-        if (item.isChecked()) {
+        /*if (item.isChecked()) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             return false;
-        }
+        }*/
 
         // select which activity to open
         final Intent intent = new Intent();
@@ -288,9 +288,9 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
                                     + userId
                                     + "/images?maxHeight=120&maxWidth=120";
                             GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                                    .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager
+                                    .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager
                                             .getTenant())
-                                    .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager
+                                    .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager
                                             .getToken())
                                     .addHeader("Accept", "application/octet-stream")
                                     .build());

@@ -5,21 +5,23 @@
 
 package com.mifos.objects.group;
 
-import com.mifos.objects.Status;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
 import com.mifos.objects.collectionsheet.CollectionMeetingCalendar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ishankhanna on 28/06/14.
  */
-public class CenterWithAssociations {
+public class CenterWithAssociations implements Parcelable {
 
     private Integer id;
+    private String accountNo;
     private String name;
     private String externalId;
     private Integer officeId;
@@ -33,7 +35,7 @@ public class CenterWithAssociations {
     private Timeline timeline;
     private List<Group> groupMembers = new ArrayList<Group>();
     private CollectionMeetingCalendar collectionMeetingCalendar = new CollectionMeetingCalendar();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
 
     public Integer getId() {
         return id;
@@ -131,14 +133,6 @@ public class CenterWithAssociations {
         this.timeline = timeline;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
-
     public List<Group> getGroupMembers() {
         return groupMembers;
     }
@@ -150,4 +144,64 @@ public class CenterWithAssociations {
     public CollectionMeetingCalendar getCollectionMeetingCalendar() {
         return collectionMeetingCalendar;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.accountNo);
+        dest.writeString(this.name);
+        dest.writeString(this.externalId);
+        dest.writeValue(this.officeId);
+        dest.writeString(this.officeName);
+        dest.writeValue(this.staffId);
+        dest.writeString(this.staffName);
+        dest.writeString(this.hierarchy);
+        dest.writeParcelable(this.status, flags);
+        dest.writeValue(this.active);
+        dest.writeList(this.activationDate);
+        dest.writeParcelable(this.timeline, flags);
+        dest.writeTypedList(groupMembers);
+        dest.writeParcelable(this.collectionMeetingCalendar, flags);
+    }
+
+    public CenterWithAssociations() {
+    }
+
+    protected CenterWithAssociations(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.name = in.readString();
+        this.externalId = in.readString();
+        this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.officeName = in.readString();
+        this.staffId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.staffName = in.readString();
+        this.hierarchy = in.readString();
+        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.activationDate = new ArrayList<Integer>();
+        in.readList(this.activationDate, Integer.class.getClassLoader());
+        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
+        this.groupMembers = in.createTypedArrayList(Group.CREATOR);
+        this.collectionMeetingCalendar = in.readParcelable(CollectionMeetingCalendar.class
+                .getClassLoader());
+    }
+
+    public static final Parcelable.Creator<CenterWithAssociations> CREATOR = new Parcelable
+            .Creator<CenterWithAssociations>() {
+        @Override
+        public CenterWithAssociations createFromParcel(Parcel source) {
+            return new CenterWithAssociations(source);
+        }
+
+        @Override
+        public CenterWithAssociations[] newArray(int size) {
+            return new CenterWithAssociations[size];
+        }
+    };
 }

@@ -7,7 +7,6 @@ import com.mifos.objects.client.Page;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,10 +38,10 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void loadCharges(int id) {
+    public void loadCharges(int clientId, int offset, int limit) {
         mClientChargeMvpView.showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientCharges(id)
+        mSubscription = mDataManager.getClientCharges(clientId, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Charges>>() {
@@ -54,10 +53,8 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         mClientChargeMvpView.showProgressbar(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            mClientChargeMvpView.showFetchingErrorCharges(response.code());
-                        }
+                        mClientChargeMvpView
+                                .showFetchingErrorCharges("Failed to Load Charges");
                     }
 
                     @Override
@@ -68,33 +65,5 @@ public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
                 });
     }
 
-    public void loadMoreClientCharges(int clientId) {
-        mClientChargeMvpView.showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientCharges(clientId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Charges>>() {
-                    @Override
-                    public void onCompleted() {
-                        mClientChargeMvpView.showProgressbar(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mClientChargeMvpView.showProgressbar(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            mClientChargeMvpView.showFetchingErrorCharges(response.code());
-                        }
-                    }
-
-                    @Override
-                    public void onNext(Page<Charges> chargesPage) {
-                        mClientChargeMvpView.showProgressbar(false);
-                        mClientChargeMvpView.showMoreClientCharges(chargesPage);
-                    }
-                });
-    }
 
 }

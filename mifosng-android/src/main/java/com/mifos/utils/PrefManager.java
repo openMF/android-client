@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.mifos.App;
+import com.mifos.api.BaseUrl;
 
 import java.util.Set;
 
@@ -19,6 +20,7 @@ public class PrefManager {
     private static final String INSTANCE_URL = "preferences_instance";
     private static final String INSTANCE_DOMAIN = "preferences_domain";
     private static final String PORT = "preferences_port";
+    private static final String USER_STATUS = "user_status";
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(App.getInstance()
@@ -128,7 +130,7 @@ public class PrefManager {
     }
 
     public static String getInstanceDomain() {
-        return getString(INSTANCE_DOMAIN, "demo.openmf.org");
+        return getString(INSTANCE_DOMAIN, BaseUrl.API_ENDPOINT);
     }
 
     public static void setInstanceDomain(String instanceDomain) {
@@ -136,12 +138,29 @@ public class PrefManager {
     }
 
     public static String getPort() {
-        return getString(PORT, "80");
+        return getString(PORT, BaseUrl.PORT);
     }
 
     public static void setPort(String port) {
         if (!TextUtils.isEmpty(port))
             putString(PORT, port);
+    }
+
+    /**
+     * Set User Status,
+     * If O then user is Online
+     * If 1 then User is offline
+     */
+    public static void setUserStatus(int statusCode) {
+        putInt(USER_STATUS, statusCode);
+    }
+
+    /**
+     * @return the Pref value of User status.
+     * default is 0(User is online)
+     */
+    public static int getUserStatus() {
+        return getInt(USER_STATUS, 0);
     }
 }
 

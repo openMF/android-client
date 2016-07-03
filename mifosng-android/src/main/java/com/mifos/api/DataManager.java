@@ -1,6 +1,7 @@
 package com.mifos.api;
 
 import com.google.gson.JsonArray;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
@@ -69,12 +70,20 @@ import rx.Observable;
 @Singleton
 public class DataManager {
 
-    public final BaseApiManager mBaseApiManager;
+    private final BaseApiManager mBaseApiManager;
+    private DataManagerClient mDataManagerClient;
+
+
+    //TODO : This Constructor is temp after splitting the Datamanager layer into Sub DataManager
+    public DataManager(BaseApiManager baseApiManager) {
+        mBaseApiManager = baseApiManager;
+    }
 
     @Inject
-    public DataManager(BaseApiManager baseApiManager) {
-
+    public DataManager(BaseApiManager baseApiManager,
+                       DataManagerClient dataManagerClient) {
         mBaseApiManager = baseApiManager;
+        mDataManagerClient = dataManagerClient;
     }
 
     /**
@@ -89,9 +98,9 @@ public class DataManager {
     /**
      * Center API
      */
-    //Return Centers List
-    public Observable<List<Center>> getCenters() {
-        return mBaseApiManager.getCenterApi().getAllCenters();
+    //Return Centers List according to offset and limit parameter
+    public Observable<Page<Center>> getCenters(boolean b, int offset, int limit) {
+        return mBaseApiManager.getCenterApi().getCenters(b, offset, limit);
     }
 
     //Return Center With Association
@@ -137,8 +146,8 @@ public class DataManager {
     /**
      * Charges API
      */
-    public Observable<Page<Charges>> getClientCharges(int id) {
-        return mBaseApiManager.getChargeApi().getListOfCharges(id);
+    public Observable<Page<Charges>> getClientCharges(int clientId, int offset, int limit) {
+        return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit);
     }
 
     public Observable<ResponseBody> getAllChargesV2(int clientId) {
@@ -240,14 +249,6 @@ public class DataManager {
 
     public Observable<Group> getGroup(int groupId) {
         return mBaseApiManager.getGroupApi().getGroup(groupId);
-    }
-
-    public Observable<Page<Group>> getAllGroup() {
-        return mBaseApiManager.getGroupApi().getAllGroup();
-    }
-
-    public Observable<Page<Group>> listAllGroups(int offset, int limit) {
-        return mBaseApiManager.getGroupApi().listAllGroups(offset, limit);
     }
 
     /**
@@ -359,7 +360,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().disburseLoan(loanId, loanDisbursement);
     }
 
-    public Observable<Page<Charges>> getListOfLoanCharges(int loanId) {
+    public Observable<List<Charges>> getListOfLoanCharges(int loanId) {
         return mBaseApiManager.getLoanApi().getListOfLoanCharges(loanId);
     }
 

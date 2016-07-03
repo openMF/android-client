@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.utils.Constants;
+import com.mifos.utils.PrefManager;
 
 import java.util.Calendar;
 
@@ -48,6 +50,9 @@ public class OfflineCenterInputActivity extends MifosBaseActivity implements Dat
         }
         setContentView(R.layout.activity_center_details);
         ButterKnife.bind(this);
+
+        PrefManager.setUserStatus(Constants.USER_OFFLINE);
+
         showBackButton();
     }
 

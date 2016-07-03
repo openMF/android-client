@@ -9,13 +9,15 @@ import android.content.Context;
 import android.graphics.Typeface;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.stetho.Stetho;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
-import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.orm.SugarApp;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +28,6 @@ import java.util.Map;
 public class App extends SugarApp {
 
     public static final Map<Integer, Typeface> typefaceManager = new HashMap<>();
-
-    public static BaseApiManager baseApiManager;
 
     private static App instance;
 
@@ -51,8 +51,9 @@ public class App extends SugarApp {
         instance = this;
         Crashlytics.start(this);
 
-        baseApiManager = new BaseApiManager();
         Iconify.with(new MaterialModule());
+        FlowManager.init(new FlowConfig.Builder(this).build());
+        Stetho.initializeWithDefaults(this);
     }
 
     public ApplicationComponent getComponent() {

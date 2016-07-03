@@ -4,26 +4,25 @@
  */
 package com.mifos.mifosxdroid.online.groupslist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
+import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.GroupsActivity;
-import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
@@ -35,33 +34,40 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by nellyk on 2/27/2016.
+ * GroupsListFragment Fetching Showing GroupsList in RecyclerView from
+ * </>demo.openmf.org/fineract-provider/api/v1/groups?paged=true&offset=offset_value&limit
+ * =limit_value</>
  */
-public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView {
+public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
+        RecyclerItemClickListner.OnItemClickListener {
 
 
-    @BindView(R.id.lv_groups)
-    ListView lv_groups;
+    @BindView(R.id.rv_groups)
+    RecyclerView rv_groups;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.noGroupsText)
+    TextView mNoGroupsText;
+
+    @BindView(R.id.ll_error)
+    LinearLayout ll_error;
+
     @Inject
     GroupsListPresenter mGroupsListPresenter;
-    List<Group> groupList = new ArrayList<Group>();
+    List<Group> mGroupList = new ArrayList<>();
     private GroupNameListAdapter mGroupListAdapter;
-    private GroupListFragment.OnFragmentInteractionListener mListener;
     private View rootView;
-    private Context context;
-    private int offset = 0;
-    private int limit = 200;
-    private int index = 0;
-    private int top = 0;
+    private int limit = 100;
+    private int mApiRestCounter;
 
-    private boolean isInfiniteScrollEnabled = true;
 
+    //TODO Remove this default constructor
     public GroupsListFragment() {
 
     }
@@ -77,10 +83,19 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
             isParentFragmentAGroupFragment) {
         GroupsListFragment groupListFragment = new GroupsListFragment();
         groupListFragment.setGroupList(groupList);
-        if (isParentFragmentAGroupFragment) {
-            groupListFragment.setInfiniteScrollEnabled(false);
-        }
         return groupListFragment;
+    }
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+        groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
+        startActivity(groupActivityIntent);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
     }
 
     @Override
@@ -97,135 +112,145 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         rootView = inflater.inflate(R.layout.fragment_groups, container, false);
         setToolbarTitle(getResources().getString(R.string.groups));
         setHasOptionsMenu(true);
-        context = getActivity().getApplicationContext();
+
 
         ButterKnife.bind(this, rootView);
         mGroupsListPresenter.attachView(this);
 
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_groups.setLayoutManager(mLayoutManager);
+        rv_groups.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_groups.setHasFixedSize(true);
+
+        mApiRestCounter = 1;
+        mGroupsListPresenter.loadGroups(true, 0, limit);
+
+        /**
+         * Setting mApiRestCounter to 1 and send Fresh Request to Server
+         */
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Do Nothing For Now
-                swipeRefreshLayout.setRefreshing(false);
+
+                mApiRestCounter = 1;
+
+                mGroupsListPresenter.loadGroups(true, 0, limit);
+
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
             }
         });
-        fetchGroupList();
+
+        /**
+         * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
+         * is shown on the Screen.
+         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
+         * and offset(mGroupsList.size()) and limit(100).
+         */
+        rv_groups.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+
+                mApiRestCounter = mApiRestCounter + 1;
+                mGroupsListPresenter.loadGroups(true, mGroupList.size(), limit);
+            }
+        });
 
         return rootView;
     }
 
-    public void inflateGroupList() {
-
-        mGroupListAdapter = new GroupNameListAdapter(context, groupList);
-        lv_groups.setAdapter(mGroupListAdapter);
-        lv_groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
-                groupActivityIntent.putExtra(Constants.GROUP_ID, groupList.get(i).getId());
-                startActivity(groupActivityIntent);
-
-            }
-        });
-
-
-        if (isInfiniteScrollEnabled) {
-            setInfiniteScrollListener(mGroupListAdapter);
-        }
-
-
-    }
-
-    public void fetchGroupList() {
-        if (groupList.size() > 0) {
-            inflateGroupList();
-        } else {
-            mGroupsListPresenter.loadAllGroup();
-        }
-    }
-
-    public List<Group> getGroupList() {
-        return groupList;
+    /**
+     * Shows When mApiRestValue is 1 and Server Response is Null.
+     * Onclick Send Fresh Request for Client list.
+     */
+    @OnClick(R.id.noGroupsIcon)
+    public void reloadOnError() {
+        ll_error.setVisibility(View.GONE);
+        mGroupsListPresenter.loadGroups(true, 0, limit);
     }
 
     public void setGroupList(List<Group> groupList) {
-        this.groupList = groupList;
+        this.mGroupList = groupList;
     }
 
-    public void setInfiniteScrollListener(final GroupNameListAdapter groupListAdapter) {
-
-        lv_groups.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int
-                    visibleItemCount, int totalItemCount) {
-
-                if (firstVisibleItem + visibleItemCount >= totalItemCount) {
-
-                    offset += limit + 1;
-                    //Load More Groups
-                    mGroupsListPresenter.loadMoreGroups(offset, limit);
-                }
-            }
-        });
-
-    }
-
-    public void setInfiniteScrollEnabled(boolean isInfiniteScrollEnabled) {
-        this.isInfiniteScrollEnabled = isInfiniteScrollEnabled;
-    }
-
+    /**
+     * Setting Data in RecyclerView of the GroupsListFragment if the mApiRestCounter value is 1,
+     * otherwise adding value in ArrayList and updating the GroupListAdapter.
+     * If the Response is have null then show Toast to User There is No Center Available.
+     *
+     * @param groupPage is the List<Group> and
+     *                  TotalValue of center API Response by Server
+     */
     @Override
     public void showGroups(Page<Group> groupPage) {
-        groupList = groupPage.getPageItems();
-        inflateGroupList();
-    }
+        /**
+         * if mApiRestCounter is 1, So this is the first Api Request.
+         * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
+         */
+        if (mApiRestCounter == 1) {
+            mGroupList = groupPage.getPageItems();
+            mGroupListAdapter = new GroupNameListAdapter(getActivity(), mGroupList);
+            rv_groups.setAdapter(mGroupListAdapter);
 
-    @Override
-    public void showMoreGroups(Page<Group> groupPage) {
-        groupList.addAll(groupPage.getPageItems());
-        mGroupListAdapter.notifyDataSetChanged();
-        index = lv_groups.getFirstVisiblePosition();
-        View v = lv_groups.getChildAt(0);
-        top = (v == null) ? 0 : v.getTop();
-        lv_groups.setSelectionFromTop(index, top);
-    }
+            ll_error.setVisibility(View.GONE);
+        } else {
 
-    @Override
-    public void showFetchingError(String s, int response) {
-        if (getActivity() != null) {
-            try {
-                Log.i("Error", "" + response);
-                if (response == 401) {
-                    Toast.makeText(getActivity(), "Authorization Expired - Please " +
-                            "Login Again", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                    getActivity().finish();
+            mGroupList.addAll(groupPage.getPageItems());
+            mGroupListAdapter.notifyDataSetChanged();
 
-                } else {
-                    Toast.makeText(getActivity(), "There was some error fetching list" +
-                            ".", Toast.LENGTH_SHORT).show();
-                }
-            } catch (NullPointerException npe) {
-                Toast.makeText(getActivity(), "There is some problem with your " +
-                        "internet connection.", Toast.LENGTH_SHORT).show();
-            }
+            //checking the response size if size is zero then show toast No More
+            // Clients Available for fetch
+            if (groupPage.getPageItems().size() == 0 &&
+                    (groupPage.getTotalFilteredRecords() == mGroupList.size()))
+                Toaster.show(rootView, "No more Groups Available");
         }
     }
 
+    /**
+     * Check the mApiRestCounter value is the value is 1,
+     * So there no data to show and setVisibility VISIBLE
+     * of Error ImageView and TextView layout and otherwise simple
+     * show the Toast Message of Error Message.
+     *
+     * @param s is the Error Message given by GroupsListPresenter
+     */
+    @Override
+    public void showFetchingError(String s) {
+        if (mApiRestCounter == 1) {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoGroupsText.setText(s + "\n Click to Refresh ");
+        }
+
+        Toaster.show(rootView, s);
+    }
+
+    /**
+     * Check mApiRestCounter value, if the value is 1 then
+     * show MifosBaseActivity ProgressBar and if it is greater than 1,
+     * It means this Request is the second and so on than show SwipeRefreshLayout
+     * Check the the b is true or false
+     *
+     * @param b is the status of the progressbar
+     */
     @Override
     public void showProgressbar(boolean b) {
-        swipeRefreshLayout.setRefreshing(b);
+
+        if (mApiRestCounter == 1) {
+            if (b) {
+                showMifosProgressBar();
+            } else {
+                hideMifosProgressBar();
+            }
+        } else {
+            swipeRefreshLayout.setRefreshing(b);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        hideMifosProgressBar();
         mGroupsListPresenter.detachView();
     }
 }

@@ -2,16 +2,15 @@ package com.mifos.mifosxdroid.online.loancharge;
 
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Page;
+
+import java.util.List;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
 public interface LoanChargeMvpView extends MvpView {
 
-    void showLoanChargesList(Page<Charges> chargesPage);
+    void showLoanChargesList(List<Charges> charges);
 
-    void showChargesList(Page<Charges> chargesPage);
-
-    void showFetchingError(int response);
+    void showFetchingError(String s);
 }

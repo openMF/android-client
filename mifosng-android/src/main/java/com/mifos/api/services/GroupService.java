@@ -26,6 +26,11 @@ import rx.Observable;
  */
 public interface GroupService {
 
+    @GET(APIEndPoint.GROUPS)
+    Observable<Page<Group>> getGroups(@Query("paged") boolean b,
+                                      @Query("offset") int offset,
+                                      @Query("limit") int limit);
+
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
     Observable<GroupWithAssociations> getGroupWithAssociations(@Path("groupId") int groupId);
 

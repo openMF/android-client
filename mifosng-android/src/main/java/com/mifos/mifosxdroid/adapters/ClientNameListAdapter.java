@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.mifos.api.ApiRequestInterceptor;
+import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.PrefManager;
@@ -76,8 +76,8 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         + client.getId()
                         + "/images?maxHeight=120&maxWidth=120";
                 GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                        .addHeader(ApiRequestInterceptor.HEADER_TENANT, PrefManager.getTenant())
-                        .addHeader(ApiRequestInterceptor.HEADER_AUTH, PrefManager.getToken())
+                        .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager.getTenant())
+                        .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
                         .addHeader("Accept", "application/octet-stream")
                         .build());
 

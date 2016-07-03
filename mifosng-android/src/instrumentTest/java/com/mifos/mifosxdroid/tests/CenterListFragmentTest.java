@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.tests;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ViewAsserts;
-import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.test.suitebuilder.annotation.Suppress;
 import android.util.Log;
@@ -10,17 +9,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 
-import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.CentersActivity;
-
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by Gabriel Esteban on 12/12/14.
  */
-@Suppress // TODO: Fix NPE
+@Suppress // TODO: Fix NPE and Rewrite Test with new Documentation
 public class CenterListFragmentTest extends ActivityInstrumentationTestCase2<CentersActivity> {
 
     public final String LOG_TAG = getClass().getSimpleName();
@@ -40,7 +34,7 @@ public class CenterListFragmentTest extends ActivityInstrumentationTestCase2<Cen
         //API wait for charging all centers
         Thread.sleep(6000);
         //instantiating view objects
-        lv_centers_list = (ListView) centersActivity.findViewById(R.id.lv_center_list);
+        //lv_centers_list = (ListView) centersActivity.findViewById(R.id.lv_center_list);
     }
 
     @SmallTest
@@ -87,7 +81,7 @@ public class CenterListFragmentTest extends ActivityInstrumentationTestCase2<Cen
      * - press back and check title is "Groups"
      * - press back and check title is "Centers"
      */
-    @MediumTest
+    /*@MediumTest
     public void testCorrectTitles() throws InterruptedException {
         assertEquals(getActivity().getTitle().toString(), "Centers");
 
@@ -123,5 +117,5 @@ public class CenterListFragmentTest extends ActivityInstrumentationTestCase2<Cen
         assertEquals(getActivity().getTitle().toString(), "Centers");
 
 
-    }
+    }*/
 }

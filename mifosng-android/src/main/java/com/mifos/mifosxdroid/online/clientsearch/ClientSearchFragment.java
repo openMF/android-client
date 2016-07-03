@@ -38,7 +38,7 @@ import butterknife.OnClick;
 public class ClientSearchFragment extends MifosBaseFragment
         implements AdapterView.OnItemClickListener, ClientSearchMvpView {
 
-    private static final String TAG = ClientSearchFragment.class.getSimpleName();
+    private static final String LOG_TAG = ClientSearchFragment.class.getSimpleName();
 
     @BindView(R.id.et_search_by_id)
     EditText et_searchById;
@@ -112,7 +112,7 @@ public class ClientSearchFragment extends MifosBaseFragment
         try {
             String queryString = et_searchById.getEditableText().toString();
             if (queryString != null && !(queryString.equals(""))) {
-                outState.putString(TAG + et_searchById.getId(), queryString);
+                outState.putString(LOG_TAG + et_searchById.getId(), queryString);
             }
         } catch (NullPointerException npe) {
             //Looks like edit text didn't get initialized properly
@@ -123,7 +123,7 @@ public class ClientSearchFragment extends MifosBaseFragment
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            String queryString = savedInstanceState.getString(TAG + et_searchById.getId());
+            String queryString = savedInstanceState.getString(LOG_TAG + et_searchById.getId());
             if (!TextUtils.isEmpty(queryString)) {
                 et_searchById.setText(queryString);
             }
@@ -158,9 +158,9 @@ public class ClientSearchFragment extends MifosBaseFragment
     @Override
     public void showProgressbar(boolean b) {
         if (b) {
-            showProgress();
+            showMifosProgressDialog();
         } else {
-            hideProgress();
+            hideMifosProgressDialog();
         }
     }
 

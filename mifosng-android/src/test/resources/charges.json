@@ -1,0 +1,571 @@
+{
+  "totalFilteredRecords": 15,
+  "pageItems": [
+    {
+      "id": 58,
+      "clientId": 1,
+      "chargeId": 70,
+      "name": "garama ya usajili",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        6,
+        5
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "TZS",
+        "name": "Tanzanian Shilling",
+        "decimalPlaces": 2,
+        "nameCode": "currency.TZS",
+        "displayLabel": "Tanzanian Shilling [TZS]"
+      },
+      "amount": 10000,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 10000,
+      "penalty": true,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 57,
+      "clientId": 1,
+      "chargeId": 70,
+      "name": "garama ya usajili",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        6,
+        5
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "TZS",
+        "name": "Tanzanian Shilling",
+        "decimalPlaces": 2,
+        "nameCode": "currency.TZS",
+        "displayLabel": "Tanzanian Shilling [TZS]"
+      },
+      "amount": 10000,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 10000,
+      "penalty": true,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 56,
+      "clientId": 1,
+      "chargeId": 70,
+      "name": "garama ya usajili",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        6,
+        5
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "TZS",
+        "name": "Tanzanian Shilling",
+        "decimalPlaces": 2,
+        "nameCode": "currency.TZS",
+        "displayLabel": "Tanzanian Shilling [TZS]"
+      },
+      "amount": 10000,
+      "amountPaid": 0,
+      "amountWaived": 10000,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 0,
+      "penalty": true,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": true
+    },
+    {
+      "id": 55,
+      "clientId": 1,
+      "chargeId": 70,
+      "name": "garama ya usajili",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        6,
+        4
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "TZS",
+        "name": "Tanzanian Shilling",
+        "decimalPlaces": 2,
+        "nameCode": "currency.TZS",
+        "displayLabel": "Tanzanian Shilling [TZS]"
+      },
+      "amount": 12,
+      "amountPaid": 0,
+      "amountWaived": 12,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 0,
+      "penalty": true,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": true
+    },
+    {
+      "id": 45,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        12
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 111,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 111,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 46,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        12
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 111,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 111,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 44,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        10
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 12,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 12,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 43,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        10
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 12,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 12,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 42,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        10
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 12,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 12,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 41,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        10
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 12,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 12,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 40,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        9
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 55,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 55,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 39,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        4,
+        9
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 5,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 5,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 17,
+      "clientId": 1,
+      "chargeId": 34,
+      "name": "test",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2016,
+        2,
+        27
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "EUR",
+        "name": "Euro",
+        "decimalPlaces": 2,
+        "displaySymbol": "â‚¬",
+        "nameCode": "currency.EUR",
+        "displayLabel": "Euro (â‚¬)"
+      },
+      "amount": 20,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 20,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 2,
+      "clientId": 1,
+      "chargeId": 3,
+      "name": "3_clientCharge1",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2015,
+        12,
+        19
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 12,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 12,
+      "penalty": true,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 1,
+      "clientId": 1,
+      "chargeId": 3,
+      "name": "3_clientCharge1",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [
+        2015,
+        12,
+        18
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 12,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 12,
+      "penalty": true,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    }
+  ]
+}

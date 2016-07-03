@@ -89,7 +89,7 @@ public interface LoanService {
                                                           @Query("productId") int productId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)
-    Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
+    Observable<List<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)

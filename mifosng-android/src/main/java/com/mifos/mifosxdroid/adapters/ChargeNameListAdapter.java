@@ -6,10 +6,10 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -23,7 +23,8 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 03/07/14.
  */
-public class ChargeNameListAdapter extends BaseAdapter {
+public class ChargeNameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+
     Context context;
     LayoutInflater layoutInflater;
     List<Charges> pageItems;
@@ -36,14 +37,30 @@ public class ChargeNameListAdapter extends BaseAdapter {
         this.clientId = clientId;
     }
 
-    @Override
-    public int getCount() {
-        return pageItems.size();
+    public Charges getItem(int position) {
+        return pageItems.get(position);
     }
 
     @Override
-    public Charges getItem(int position) {
-        return pageItems.get(position);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder vh;
+        View v = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.row_charge_name, parent, false);
+        vh = new ViewHolder(v);
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ViewHolder) {
+            ((ViewHolder) holder).tv_charger_id
+                    .setText(pageItems.get(position).getChargeId().toString());
+            ((ViewHolder) holder).tv_charge_Name.setText(pageItems.get(position).getName());
+            ((ViewHolder) holder).tv_charge_amount
+                    .setText(pageItems.get(position).getAmount().toString());
+            ((ViewHolder) holder).tv_charge_duedate
+                    .setText(pageItems.get(position).getDueDate().toString());
+        }
     }
 
     @Override
@@ -52,44 +69,29 @@ public class ChargeNameListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-
-        ReusableChargeViewHolder reusableChargeViewHolder;
-        if (view == null) {
-
-            view = layoutInflater.inflate(R.layout.row_charge_name, null);
-            reusableChargeViewHolder = new ReusableChargeViewHolder(view);
-            view.setTag(reusableChargeViewHolder);
-
-        } else {
-            reusableChargeViewHolder = (ReusableChargeViewHolder) view.getTag();
-        }
-        reusableChargeViewHolder.tv_charger_id.setText(pageItems.get(i).getChargeId().toString());
-        reusableChargeViewHolder.tv_charge_Name.setText(pageItems.get(i).getName());
-        reusableChargeViewHolder.tv_charge_amount.setText(pageItems.get(i).getAmount().toString());
-        reusableChargeViewHolder.tv_charge_duedate.setText(pageItems.get(i).getDueDate().toString
-                ());
-
-        return view;
-
-
+    public int getItemCount() {
+        return pageItems.size();
     }
 
-    public static class ReusableChargeViewHolder {
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_charger_id)
         TextView tv_charger_id;
+
         @BindView(R.id.tv_chargeName)
         TextView tv_charge_Name;
+
         @BindView(R.id.tv_charge_amount)
         TextView tv_charge_amount;
+
         @BindView(R.id.tv_charge_duedate)
         TextView tv_charge_duedate;
 
-        public ReusableChargeViewHolder(View view) {
-            ButterKnife.bind(this, view);
+        public ViewHolder(View v) {
+            super(v);
+            ButterKnife.bind(this, v);
         }
-
-
     }
+
 }

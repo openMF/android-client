@@ -5,42 +5,54 @@
 
 package com.mifos.objects.collectionsheet;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ishankhanna on 16/07/14.
  */
-public class CollectionMeetingCalendar {
+public class CollectionMeetingCalendar implements Parcelable {
 
+    private Integer id;
     private Integer calendarInstanceId;
-    private Integer createdByUserId;
-    private String createdByUsername;
-    private List<Integer> createdDate = new ArrayList<Integer>();
-    private Integer duration;
     private Integer entityId;
     private EntityType entityType;
-    private Integer firstReminder;
-    private CollectionFrequency frequency;
-    private String humanReadable;
-    private Integer id;
+    private String title;
+    private List<Integer> startDate = new ArrayList<Integer>();
+    private Integer duration;
+    private EntityType type;
+    private Boolean repeating;
+    private String recurrence;
+
+    @SerializedName("frequency")
+    private EntityType frequency;
+
     private Integer interval;
+
+    @SerializedName("repeatsOnNthDayOfMonth")
+    private EntityType repeatsOnDay;
+
+    private Integer firstReminder;
+    private Integer secondReminder;
+    private List<List<Integer>> recurringDates = new ArrayList<>();
+    private List<List<Integer>> nextTenRecurringDates = new ArrayList<>();
+    private String humanReadable;
+    private List<Integer> recentEligibleMeetingDate = new ArrayList<Integer>();
+    private List<Integer> createdDate = new ArrayList<Integer>();
+    private List<Integer> lastUpdatedDate = new ArrayList<Integer>();
+    private Integer createdByUserId;
+    private String createdByUsername;
     private Integer lastUpdatedByUserId;
     private String lastUpdatedByUsername;
-    private List<Integer> lastUpdatedDate = new ArrayList<Integer>();
-    private List<List<Integer>> nextTenRecurringDates = new ArrayList<List<Integer>>();
-    private List<Integer> recentEligibleMeetingDate = new ArrayList<Integer>();
-    private String recurrence;
-    private List<List<Integer>> recurringDates = new ArrayList<List<Integer>>();
-    private Boolean repeating;
-    private EntityType repeatsOnDay;
-    private Integer secondReminder;
-    private List<Integer> startDate = new ArrayList<Integer>();
-    private String title;
-    private EntityType type;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    public void setFrequency(EntityType frequency) {
+        this.frequency = frequency;
+    }
 
     public Integer getCalendarInstanceId() {
         return calendarInstanceId;
@@ -104,14 +116,6 @@ public class CollectionMeetingCalendar {
 
     public void setFirstReminder(Integer firstReminder) {
         this.firstReminder = firstReminder;
-    }
-
-    public CollectionFrequency getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(CollectionFrequency frequency) {
-        this.frequency = frequency;
     }
 
     public String getHumanReadable() {
@@ -242,11 +246,85 @@ public class CollectionMeetingCalendar {
         this.type = type;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeValue(this.calendarInstanceId);
+        dest.writeValue(this.entityId);
+        dest.writeParcelable(this.entityType, flags);
+        dest.writeString(this.title);
+        dest.writeList(this.startDate);
+        dest.writeValue(this.duration);
+        dest.writeParcelable(this.type, flags);
+        dest.writeValue(this.repeating);
+        dest.writeString(this.recurrence);
+        dest.writeParcelable(this.frequency, flags);
+        dest.writeValue(this.interval);
+        dest.writeParcelable(this.repeatsOnDay, flags);
+        dest.writeValue(this.firstReminder);
+        dest.writeValue(this.secondReminder);
+        dest.writeList(this.recurringDates);
+        dest.writeList(this.nextTenRecurringDates);
+        dest.writeString(this.humanReadable);
+        dest.writeList(this.recentEligibleMeetingDate);
+        dest.writeList(this.createdDate);
+        dest.writeList(this.lastUpdatedDate);
+        dest.writeValue(this.createdByUserId);
+        dest.writeString(this.createdByUsername);
+        dest.writeValue(this.lastUpdatedByUserId);
+        dest.writeString(this.lastUpdatedByUsername);
     }
+
+    public CollectionMeetingCalendar() {
+    }
+
+    protected CollectionMeetingCalendar(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.calendarInstanceId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.entityId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.entityType = in.readParcelable(EntityType.class.getClassLoader());
+        this.title = in.readString();
+        this.startDate = new ArrayList<Integer>();
+        in.readList(this.startDate, Integer.class.getClassLoader());
+        this.duration = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.type = in.readParcelable(EntityType.class.getClassLoader());
+        this.repeating = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.recurrence = in.readString();
+        this.frequency = in.readParcelable(EntityType.class.getClassLoader());
+        this.interval = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.repeatsOnDay = in.readParcelable(EntityType.class.getClassLoader());
+        this.firstReminder = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.secondReminder = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.recurringDates = new ArrayList<List<Integer>>();
+        this.nextTenRecurringDates = new ArrayList<List<Integer>>();
+        this.humanReadable = in.readString();
+        this.recentEligibleMeetingDate = new ArrayList<Integer>();
+        in.readList(this.recentEligibleMeetingDate, Integer.class.getClassLoader());
+        this.createdDate = new ArrayList<Integer>();
+        in.readList(this.createdDate, Integer.class.getClassLoader());
+        this.lastUpdatedDate = new ArrayList<Integer>();
+        in.readList(this.lastUpdatedDate, Integer.class.getClassLoader());
+        this.createdByUserId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.createdByUsername = in.readString();
+        this.lastUpdatedByUserId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.lastUpdatedByUsername = in.readString();
+    }
+
+    public static final Parcelable.Creator<CollectionMeetingCalendar> CREATOR = new Parcelable
+            .Creator<CollectionMeetingCalendar>() {
+        @Override
+        public CollectionMeetingCalendar createFromParcel(Parcel source) {
+            return new CollectionMeetingCalendar(source);
+        }
+
+        @Override
+        public CollectionMeetingCalendar[] newArray(int size) {
+            return new CollectionMeetingCalendar[size];
+        }
+    };
 }
