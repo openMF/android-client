@@ -6,9 +6,11 @@ import android.content.Context;
 import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
+import com.mifos.api.local.databasehelper.DatabaseHelperDataTable;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
@@ -36,11 +38,13 @@ public interface ApplicationComponent {
     DataManagerClient dataManagerClient();
     DataManagerGroups dataManagerGroups();
     DataManagerCenter dataManagerCenters();
+    DataManagerDataTable dataManagerDataTable();
 
 
     DatabaseHelperClient databaseHelperClient();
     DatabaseHelperCenter databaseHelperCenter();
     DatabaseHelperGroups databaseHelperGroup();
+    DatabaseHelperDataTable databaseHelperDataTable();
 
     Bus eventBus();
 
