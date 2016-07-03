@@ -99,6 +99,13 @@ public class DatabaseHelperClient {
         });
     }
 
+
+    /**
+     * This Method  write the ClientAccount in tho DB. According to Schema Defined in Model
+     * @param clientAccounts Model of List of LoanAccount and SavingAccount
+     * @param clientId Client Id
+     * @return null
+     */
     public Observable<Void> saveClientAccounts(final ClientAccounts clientAccounts,
                                                final int clientId) {
         AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
@@ -123,19 +130,25 @@ public class DatabaseHelperClient {
     }
 
 
-    public Observable<ClientAccounts> realClientAccounts(final int clientIs) {
+    /**
+     * This Method Read the Table of LoanAccount and SavingAccount and return the List of
+     * LoanAccount and SavingAccount according to clientId
+     * @param clientId Client Id
+     * @return Return the ClientAccount according to client Id
+     */
+    public Observable<ClientAccounts> realClientAccounts(final int clientId) {
         return Observable.create(new Observable.OnSubscribe<ClientAccounts>() {
             @Override
             public void call(Subscriber<? super ClientAccounts> subscriber) {
 
                 List<LoanAccount> loanAccounts = SQLite.select()
                         .from(LoanAccount.class)
-                        .where(LoanAccount_Table.clientId.eq(clientIs))
+                        .where(LoanAccount_Table.clientId.eq(clientId))
                         .queryList();
 
                 List<SavingsAccount> savingsAccounts = SQLite.select()
                         .from(SavingsAccount.class)
-                        .where(SavingsAccount_Table.clientId.eq(clientIs))
+                        .where(SavingsAccount_Table.clientId.eq(clientId))
                         .queryList();
 
                 ClientAccounts clientAccounts = new ClientAccounts();

@@ -23,7 +23,10 @@ public class LoanAccount extends MifosBaseModel implements Parcelable {
 
 
     @Column
-    Integer clientId;
+    long clientId;
+
+    @Column
+    long groupId;
 
     @PrimaryKey
     Integer id;
@@ -70,11 +73,11 @@ public class LoanAccount extends MifosBaseModel implements Parcelable {
         this.inArrears = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
-    public Integer getClientId() {
+    public long getClientId() {
         return this.clientId;
     }
 
-    public void setClientId(Integer clientId) {
+    public void setClientId(long clientId) {
         this.clientId = clientId;
     }
 

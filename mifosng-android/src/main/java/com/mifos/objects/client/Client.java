@@ -12,6 +12,7 @@ import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.Timeline;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -28,51 +29,61 @@ import java.util.List;
 @ModelContainer
 public class Client extends MifosBaseModel implements Parcelable {
 
-    public static final Parcelable.Creator<Client> CREATOR = new Parcelable.Creator<Client>() {
-        @Override
-        public Client createFromParcel(Parcel source) {
-            return new Client(source);
-        }
-
-        @Override
-        public Client[] newArray(int size) {
-            return new Client[size];
-        }
-    };
     @PrimaryKey
     int id;
+
     @Column
     String accountNo;
-    private Status status;
+
     @Column
-    private boolean active;
+    @ForeignKey(saveForeignKeyModel = true)
+    Status status;
+
     @Column
-    private long activationTimeStamp;
-    private List<Integer> activationDate = new ArrayList<Integer>();
-    private List<Integer> dobDate = new ArrayList<Integer>();
+    boolean active;
+
     @Column
-    private String firstname;
+    long activationTimeStamp;
+
+    List<Integer> activationDate = new ArrayList<Integer>();
+
+    List<Integer> dobDate = new ArrayList<Integer>();
+
     @Column
-    private String middlename;
+    String firstname;
+
     @Column
-    private String lastname;
+    String middlename;
+
     @Column
-    private String displayName;
+    String lastname;
+
     @Column
-    private int officeId;
+    String displayName;
+
     @Column
-    private String officeName;
+    int officeId;
+
     @Column
-    private int staffId;
+    String officeName;
+
     @Column
-    private String staffName;
-    private Timeline timeline;
+    int staffId;
+
     @Column
-    private String fullname;
+    String staffName;
+
+    Timeline timeline;
+
     @Column
-    private int imageId;
+    String fullname;
+
     @Column
-    private boolean imagePresent;
+    int imageId;
+
+    @Column
+    boolean imagePresent;
+
     @Column
     private String externalId;
 
@@ -328,4 +339,16 @@ public class Client extends MifosBaseModel implements Parcelable {
         dest.writeByte(this.imagePresent ? (byte) 1 : (byte) 0);
         dest.writeString(this.externalId);
     }
+
+    public static final Parcelable.Creator<Client> CREATOR = new Parcelable.Creator<Client>() {
+        @Override
+        public Client createFromParcel(Parcel source) {
+            return new Client(source);
+        }
+
+        @Override
+        public Client[] newArray(int size) {
+            return new Client[size];
+        }
+    };
 }
