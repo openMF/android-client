@@ -202,7 +202,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
         // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
+        SubMenu dataTableSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
         if (dataTableSubMenu != null && savingsAccountDataTables != null &&
                 savingsAccountDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = savingsAccountDataTables.iterator();
