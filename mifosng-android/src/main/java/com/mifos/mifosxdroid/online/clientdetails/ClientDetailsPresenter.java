@@ -91,7 +91,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
 
         getMvpView().showUploadImageProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.uploadClientImage(id, body)
+        mSubscription = mDataManagerClient.uploadClientImage(id, body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<ResponseBody>() {
@@ -116,7 +116,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
     public void deleteClientImage(int clientId) {
         checkViewAttached();
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.deleteClientImage(clientId)
+        mSubscription = mDataManagerClient.deleteClientImage(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<ResponseBody>() {

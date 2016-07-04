@@ -179,14 +179,6 @@ public class DataManager {
         return mBaseApiManager.getClientsApi().getClient(id);
     }
 
-    public Observable<ResponseBody> uploadClientImage(int id, Part file) {
-        return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
-    }
-
-    public Observable<ResponseBody> deleteClientImage(int clientId) {
-        return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
-    }
-
 
     /**
      * Identifiers API

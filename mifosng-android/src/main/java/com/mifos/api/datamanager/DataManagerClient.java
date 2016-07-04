@@ -10,6 +10,8 @@ import com.mifos.utils.PrefManager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -138,6 +140,34 @@ public class DataManagerClient {
             default:
                 return Observable.just(new ClientAccounts());
         }
+    }
+
+
+    /**
+     * This Method for removing the Client Image from his profile on server
+     * if its response is true the client does not have any profile Image and if
+     * response is false then failed to update the client image from server profile.
+     * There can any problem during updating the client image like Network error.
+     *
+     * @param clientId Client ID
+     * @return ResposeBody is the Retrofit 2 response
+     */
+    public Observable<ResponseBody> deleteClientImage(int clientId) {
+        return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
+    }
+
+
+    /**
+     * This Method will be called when ever user want to update the client profile image.
+     * The response of the updating the client image can be true or false its depends upon the
+     * network and right choice image file.
+     *
+     * @param id  Client Id
+     * @param file MultipartBody of the Image file
+     * @return ResposeBody is the Retrofit 2 response
+     */
+    public Observable<ResponseBody> uploadClientImage(int id, MultipartBody.Part file) {
+        return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
     }
 
 }
