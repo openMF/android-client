@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.clientdetails;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
@@ -29,14 +29,15 @@ import rx.schedulers.Schedulers;
  */
 public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerDataTable  mDataManagerDataTable;
     private final DataManagerClient mDataManagerClient;
     private Subscription mSubscription;
+    private static final String CLIENT_DATA_TABLE_NAME = "m_client";
 
     @Inject
-    public ClientDetailsPresenter(DataManager dataManager,
+    public ClientDetailsPresenter(DataManagerDataTable dataManagerDataTable,
                                   DataManagerClient dataManagerClient) {
-        mDataManager = dataManager;
+        mDataManagerDataTable = dataManagerDataTable;
         mDataManagerClient = dataManagerClient;
     }
 
@@ -51,11 +52,16 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
+    /**
+     * This method load the Client Datatable and Table name is the "m_client"
+     * In Response List of DataTable is came and displayed on click more info client
+     *
+     */
     public void loadClientDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientDataTable()
+        mSubscription = mDataManagerDataTable.getDataTable(CLIENT_DATA_TABLE_NAME)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
