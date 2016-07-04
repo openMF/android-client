@@ -135,6 +135,7 @@ public class DataManager {
     /**
      * Charges API
      */
+    //TODO Remove this Method After fixing the Charge Test
     public Observable<Page<Charges>> getClientCharges(int clientId, int offset, int limit) {
         return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit);
     }
