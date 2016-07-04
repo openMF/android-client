@@ -9,10 +9,12 @@ import com.mifos.objects.accounts.loan.LoanAccount_Table;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount_Table;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientDate;
 import com.mifos.objects.client.Client_Table;
 import com.mifos.objects.client.Page;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,6 +49,12 @@ public class DatabaseHelperClient {
             public void run() {
 
                 for (Client client : clientPage.getPageItems()) {
+
+                    ClientDate clientDate = new ClientDate(client.getId(),
+                            client.getActivationDate().get(0),
+                            client.getActivationDate().get(1),
+                            client.getActivationDate().get(2));
+                    client.setClientDate(clientDate);
                     client.save();
                 }
             }
@@ -92,6 +100,9 @@ public class DatabaseHelperClient {
                         .from(Client.class)
                         .where(Client_Table.id.eq(clientId))
                         .querySingle();
+
+                client.setActivationDate(Arrays.asList(client.getClientDate().getDay(),
+                        client.getClientDate().getMonth(), client.getClientDate().getYear()));
 
                 subscriber.onNext(client);
 

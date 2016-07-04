@@ -43,7 +43,8 @@ public class Client extends MifosBaseModel implements Parcelable {
     boolean active;
 
     @Column
-    long activationTimeStamp;
+    @ForeignKey(saveForeignKeyModel = true)
+    ClientDate clientDate;
 
     List<Integer> activationDate = new ArrayList<Integer>();
 
@@ -90,6 +91,14 @@ public class Client extends MifosBaseModel implements Parcelable {
     public Client() {
     }
 
+    public ClientDate getClientDate() {
+        return clientDate;
+    }
+
+    public void setClientDate(ClientDate clientDate) {
+        this.clientDate = clientDate;
+    }
+
     protected Client(Parcel in) {
         this.id = in.readInt();
         this.accountNo = in.readString();
@@ -112,28 +121,6 @@ public class Client extends MifosBaseModel implements Parcelable {
         this.imageId = in.readInt();
         this.imagePresent = in.readByte() != 0;
         this.externalId = in.readString();
-    }
-
-    public long getActivationTimeStamp() {
-
-        Date date = new Date();
-        date.setYear(activationDate.get(0) - 1);
-        date.setMonth(activationDate.get(1) - 1);
-        date.setDate(activationDate.get(2) - 1);
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-
-        return date.getTime();
-
-    }
-
-    public void setActivationTimeStamp(long activationTimeStamp) {
-        this.activationTimeStamp = activationTimeStamp;
-        Date date = new Date(activationTimeStamp);
-        this.activationDate = Arrays.asList(date.getYear() + 1, date.getMonth() + 1, date.getDate
-                () + 1);
-
     }
 
     public List<Integer> getDobDate() {
