@@ -112,8 +112,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public static final int MENU_ITEM_DOCUMENTS = 1006;
     public static final int MENU_ITEM_IDENTIFIERS = 1007;
 
-
-
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
     public int clientId;
