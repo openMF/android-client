@@ -5,21 +5,47 @@
 
 package com.mifos.objects.accounts.savings;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Status {
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-    private Integer id;
-    private String code;
-    private String value;
-    private Boolean submittedAndPendingApproval;
-    private Boolean approved;
-    private Boolean rejected;
-    private Boolean withdrawnByApplicant;
-    private Boolean active;
-    private Boolean closed;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+@Table(database = MifosDatabase.class, name = "SavingsAccountStatus")
+@ModelContainer
+public class Status extends MifosBaseModel implements Parcelable {
+
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String code;
+
+    @Column
+    String value;
+
+    @Column
+    Boolean submittedAndPendingApproval;
+
+    @Column
+    Boolean approved;
+
+    @Column
+    Boolean rejected;
+
+    @Column
+    Boolean withdrawnByApplicant;
+
+    @Column
+    Boolean active;
+
+    @Column
+    Boolean closed;
+
 
     public Integer getId() {
         return id;
@@ -150,16 +176,52 @@ public class Status {
                 ", withdrawnByApplicant=" + withdrawnByApplicant +
                 ", active=" + active +
                 ", closed=" + closed +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperties(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.code);
+        dest.writeString(this.value);
+        dest.writeValue(this.submittedAndPendingApproval);
+        dest.writeValue(this.approved);
+        dest.writeValue(this.rejected);
+        dest.writeValue(this.withdrawnByApplicant);
+        dest.writeValue(this.active);
+        dest.writeValue(this.closed);
     }
 
+    public Status() {
+    }
+
+    protected Status(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+        this.submittedAndPendingApproval = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.approved = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.rejected = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.withdrawnByApplicant = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.closed = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
+        @Override
+        public Status createFromParcel(Parcel source) {
+            return new Status(source);
+        }
+
+        @Override
+        public Status[] newArray(int size) {
+            return new Status[size];
+        }
+    };
 }

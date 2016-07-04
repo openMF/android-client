@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -52,6 +53,7 @@ import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
+import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
@@ -101,6 +103,15 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+
+    public static final int MENU_ITEM_DATA_TABLES = 1000;
+    public static final int MENU_PIN_PONIT = 1001;
+    public static final int MENU_ITEM_CLIENT_CHARGES = 1003;
+    public static final int MENU_ITEM_ADD_SAVINGS_ACCOUNT = 1004;
+    public static final int MENU_ITEM_ADD_LOAN_ACCOUNT = 1005;
+    public static final int MENU_ITEM_DOCUMENTS = 1006;
+    public static final int MENU_ITEM_IDENTIFIERS = 1007;
+
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
     public int clientId;
@@ -209,6 +220,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         return rootView;
     }
 
+    public void inflateClientInformation() {
+        mClientDetailsPresenter.loadClientDetailsAndClientAccounts(clientId);
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -228,39 +243,85 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.client, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+
+        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+                .DATA_TABLE_CLIENTS_NAME);
+
+        //menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.action_save_location));
+        menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.pinpoint));
+        menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges));
+        menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string
+                .savings_account));
+        menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE, getString(R.string.add_loan));
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
+        menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
+
+
+        SubMenu more_info_subSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
+
+        int SUBMENU_ITEM_ID = 0;
+
+        // Create a Sub Menu that holds a link to all data tables
+        if (more_info_subSubMenu != null && clientDataTables != null && clientDataTables.size() >
+                0) {
+            Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
+            while (dataTableIterator.hasNext()) {
+                more_info_subSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator
+                        .next()
+                        .getRegisteredTableName());
+                SUBMENU_ITEM_ID++;
+            }
+        }
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id >= 0 && id < clientDataTables.size()) {
+
+            DataTableDataFragment dataTableDataFragment
+                    = DataTableDataFragment.newInstance(clientDataTables.get(id), clientId);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+            fragmentTransaction.replace(R.id.container, dataTableDataFragment, FragmentConstants
+                    .FRAG_DATA_TABLE);
+
+            fragmentTransaction.commit();
+        }
+
         switch (item.getItemId()) {
-            case R.id.documents:
+            case MENU_ITEM_DOCUMENTS:
                 loadDocuments();
                 break;
-            case R.id.charges:
+            case MENU_ITEM_CLIENT_CHARGES:
                 loadClientCharges();
                 break;
-            case R.id.add_savings:
+            case MENU_ITEM_ADD_SAVINGS_ACCOUNT:
                 addsavingsaccount();
                 break;
-            case R.id.add_loan:
+            case MENU_ITEM_ADD_LOAN_ACCOUNT:
                 addloanaccount();
                 break;
-            case R.id.identifiers:
+            case MENU_ITEM_IDENTIFIERS:
                 loadIdentifiers();
                 break;
-            case R.id.pinpoint:
+            case MENU_PIN_PONIT:
                 Intent i = new Intent(getActivity(), PinpointClientActivity.class);
                 i.putExtra(PinpointClientActivity.EXTRA_CLIENT_ID, clientId);
                 startActivity(i);
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void inflateClientInformation() {
-        mClientDetailsPresenter.loadClientInformation(clientId);
     }
 
     public void captureClientImage() {
@@ -278,14 +339,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         mClientDetailsPresenter.uploadImage(clientId, pngFile);
     }
 
-
-    /**
-     * Use this method to fetch and inflate all loan and savings accounts
-     * of the client and inflate them in the fragment
-     */
-    public void inflateClientsAccounts() {
-        mClientDetailsPresenter.loadClientAccount(clientId);
-    }
 
     /**
      * Use this method to fetch all datatables for client and inflate them as
@@ -517,7 +570,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                     menu.show();
                 }
             });
-            inflateClientsAccounts();
+            //inflateClientsAccounts();
         }
     }
 

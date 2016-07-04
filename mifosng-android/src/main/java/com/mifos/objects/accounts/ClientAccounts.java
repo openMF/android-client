@@ -5,19 +5,40 @@
 
 package com.mifos.objects.accounts;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class ClientAccounts {
+public class ClientAccounts implements Parcelable {
 
+    public static final Parcelable.Creator<ClientAccounts> CREATOR = new Parcelable
+            .Creator<ClientAccounts>() {
+        @Override
+        public ClientAccounts createFromParcel(Parcel source) {
+            return new ClientAccounts(source);
+        }
+
+        @Override
+        public ClientAccounts[] newArray(int size) {
+            return new ClientAccounts[size];
+        }
+    };
     private List<LoanAccount> loanAccounts = new ArrayList<LoanAccount>();
     private List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    public ClientAccounts() {
+    }
+
+    protected ClientAccounts(Parcel in) {
+        this.loanAccounts = in.createTypedArrayList(LoanAccount.CREATOR);
+        this.savingsAccounts = new ArrayList<SavingsAccount>();
+        in.readList(this.savingsAccounts, SavingsAccount.class.getClassLoader());
+    }
 
     public List<LoanAccount> getLoanAccounts() {
         return loanAccounts;
@@ -70,16 +91,17 @@ public class ClientAccounts {
         return "ClientAccounts{" +
                 "loanAccounts=" + loanAccounts +
                 ", savingsAccounts=" + savingsAccounts +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperties(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(loanAccounts);
+        dest.writeList(this.savingsAccounts);
     }
-
 }

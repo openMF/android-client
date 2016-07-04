@@ -5,19 +5,41 @@
 
 package com.mifos.objects;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Currency {
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-    private String code;
-    private String name;
-    private Integer decimalPlaces;
-    private Integer inMultiplesOf;
-    private String displaySymbol;
-    private String nameCode;
-    private String displayLabel;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+@Table(database = MifosDatabase.class, name = "SavingAccountCurrency")
+@ModelContainer
+public class Currency extends MifosBaseModel implements Parcelable {
+
+    @PrimaryKey
+    String code;
+
+    @Column
+    String name;
+
+    @Column
+    Integer decimalPlaces;
+
+    @Column
+    Integer inMultiplesOf;
+
+    @Column
+    String displaySymbol;
+
+    @Column
+    String nameCode;
+
+    @Column
+    String displayLabel;
+
 
     public String getCode() {
         return code;
@@ -75,14 +97,6 @@ public class Currency {
         this.displayLabel = displayLabel;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     @Override
     public String toString() {
         return "Currency{" +
@@ -93,7 +107,47 @@ public class Currency {
                 ", displaySymbol='" + displaySymbol + '\'' +
                 ", nameCode='" + nameCode + '\'' +
                 ", displayLabel='" + displayLabel + '\'' +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.code);
+        dest.writeString(this.name);
+        dest.writeValue(this.decimalPlaces);
+        dest.writeValue(this.inMultiplesOf);
+        dest.writeString(this.displaySymbol);
+        dest.writeString(this.nameCode);
+        dest.writeString(this.displayLabel);
+    }
+
+    public Currency() {
+    }
+
+    protected Currency(Parcel in) {
+        this.code = in.readString();
+        this.name = in.readString();
+        this.decimalPlaces = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.inMultiplesOf = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.displaySymbol = in.readString();
+        this.nameCode = in.readString();
+        this.displayLabel = in.readString();
+    }
+
+    public static final Parcelable.Creator<Currency> CREATOR = new Parcelable.Creator<Currency>() {
+        @Override
+        public Currency createFromParcel(Parcel source) {
+            return new Currency(source);
+        }
+
+        @Override
+        public Currency[] newArray(int size) {
+            return new Currency[size];
+        }
+    };
 }

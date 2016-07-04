@@ -98,17 +98,6 @@ public class DataManager {
     /**
      * Center API
      */
-    //Return Centers List according to offset and limit parameter
-    public Observable<Page<Center>> getCenters(boolean b, int offset, int limit) {
-        return mBaseApiManager.getCenterApi().getCenters(b, offset, limit);
-    }
-
-    //Return Center With Association
-    public Observable<CenterWithAssociations> getCentersGroupAndMeeting(int id) {
-        return mBaseApiManager
-                .getCenterApi()
-                .getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
-    }
 
     public Observable<CenterWithAssociations> getGroupsByCenter(int id) {
         return mBaseApiManager.getCenterApi().getAllGroupsForCenter(id);

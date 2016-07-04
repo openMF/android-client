@@ -1,10 +1,12 @@
 package com.mifos.mifosxdroid.online.clientdetails;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.zipmodels.ClientAndClientAccounts;
 
 import java.io.File;
 import java.util.List;
@@ -15,9 +17,11 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody.Part;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -26,11 +30,14 @@ import rx.schedulers.Schedulers;
 public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> {
 
     private final DataManager mDataManager;
+    private final DataManagerClient mDataManagerClient;
     private Subscription mSubscription;
 
     @Inject
-    public ClientDetailsPresenter(DataManager dataManager) {
+    public ClientDetailsPresenter(DataManager dataManager,
+                                  DataManagerClient dataManagerClient) {
         mDataManager = dataManager;
+        mDataManagerClient = dataManagerClient;
     }
 
     @Override
@@ -67,33 +74,6 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     public void onNext(List<DataTable> dataTables) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showClientDataTable(dataTables);
-                    }
-                });
-    }
-
-    public void loadClientInformation(int id) {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClient(id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Client>() {
-                    @Override
-                    public void onCompleted() {
-                        getMvpView().showProgressbar(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Client not found.");
-                    }
-
-                    @Override
-                    public void onNext(Client client) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showClientInformation(client);
                     }
                 });
     }
@@ -157,29 +137,43 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                 });
     }
 
-    public void loadClientAccount(int clientId) {
+    public void loadClientDetailsAndClientAccounts(int clientId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientAccounts(clientId)
+        mSubscription = Observable.zip(
+                mDataManagerClient.getClientAccounts(clientId),
+                mDataManagerClient.getClient(clientId),
+                new Func2<ClientAccounts, Client, ClientAndClientAccounts>() {
+                    @Override
+                    public ClientAndClientAccounts call(ClientAccounts clientAccounts, Client
+                            client) {
+                        ClientAndClientAccounts clientAndClientAccounts
+                                = new ClientAndClientAccounts();
+                        clientAndClientAccounts.setClient(client);
+                        clientAndClientAccounts.setClientAccounts(clientAccounts);
+                        return clientAndClientAccounts;
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ClientAccounts>() {
+                .subscribe(new Subscriber<ClientAndClientAccounts>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Accounts not found.");
+                        getMvpView().showFetchingError("Client not found.");
                     }
 
                     @Override
-                    public void onNext(ClientAccounts clientAccounts) {
+                    public void onNext(ClientAndClientAccounts clientAndClientAccounts) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientAccount(clientAccounts);
+                        getMvpView().showClientAccount(clientAndClientAccounts.getClientAccounts());
+                        getMvpView().showClientInformation(clientAndClientAccounts.getClient());
                     }
                 });
     }

@@ -4,6 +4,7 @@ import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
+import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.utils.PrefManager;
 
 import javax.inject.Inject;
@@ -72,6 +73,20 @@ public class DataManagerCenter {
             default:
                 return Observable.just(new Page<Center>());
         }
+    }
+
+    /**
+     * Method Fetching CollectionSheet of the Center from :
+     * demo.openmf.org/fineract-provider/api/v1/centers/{centerId}
+     * ?associations=groupMembers,collectionMeetingCalendar
+     *
+     * @param id of the center
+     * @return Collection Sheet
+     */
+    public Observable<CenterWithAssociations> getCentersGroupAndMeeting(int id) {
+        return mBaseApiManager
+                .getCenterApi()
+                .getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
     }
 
 }
