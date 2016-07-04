@@ -251,16 +251,17 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
         menu.clear();
 
-        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_CLIENTS_NAME);
+        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+                .DATA_TABLE_CLIENTS_NAME);
 
         //menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.action_save_location));
         menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.pinpoint));
         menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges));
-        menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string.savings_account));
+        menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string
+                .savings_account));
         menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE, getString(R.string.add_loan));
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
         menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
-
 
 
         SubMenu more_info_subSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
@@ -272,7 +273,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 0) {
             Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
             while (dataTableIterator.hasNext()) {
-                more_info_subSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator.next()
+                more_info_subSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator
+                        .next()
                         .getRegisteredTableName());
                 SUBMENU_ITEM_ID++;
             }
@@ -288,7 +290,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
             DataTableDataFragment dataTableDataFragment
                     = DataTableDataFragment.newInstance(clientDataTables.get(id), clientId);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
             fragmentTransaction.replace(R.id.container, dataTableDataFragment, FragmentConstants
                     .FRAG_DATA_TABLE);
