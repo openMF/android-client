@@ -15,12 +15,14 @@ import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
-@Table(database = MifosDatabase.class, name = "SavingAccountCurrency")
+@Table(database = MifosDatabase.class)
 @ModelContainer
 public class Currency extends MifosBaseModel implements Parcelable {
 
+    public static final String CODE = "code";
+
     @PrimaryKey
-    String code;
+    public String code;
 
     @Column
     String name;
