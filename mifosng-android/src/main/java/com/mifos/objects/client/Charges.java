@@ -2,10 +2,8 @@ package com.mifos.objects.client;
 
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.accounts.savings.Currency;
-import com.mifos.objects.accounts.savings.ChargeCalculationType;
-import com.mifos.objects.accounts.savings.ChargeTimeType;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -40,12 +38,22 @@ public class Charges extends MifosBaseModel {
     @Column
     String name;
 
-    private ChargeTimeType chargeTimeType;
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    ChargeTimeType chargeTimeType;
 
-    private List<Integer> dueDate = new ArrayList<Integer>();
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    ClientDate chargeDueDate;
 
-    private ChargeCalculationType chargeCalculationType;
+    List<Integer> dueDate = new ArrayList<Integer>();
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    ChargeCalculationType chargeCalculationType;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Currency currency;
 
     @Column
@@ -75,6 +83,13 @@ public class Charges extends MifosBaseModel {
     @Column
     Boolean isWaived;
 
+    public ClientDate getChargeDueDate() {
+        return chargeDueDate;
+    }
+
+    public void setChargeDueDate(ClientDate chargeDueDate) {
+        this.chargeDueDate = chargeDueDate;
+    }
 
     public Integer getId() {
         return id;

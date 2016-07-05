@@ -50,7 +50,7 @@ public class DatabaseHelperClient {
 
                 for (Client client : clientPage.getPageItems()) {
 
-                    ClientDate clientDate = new ClientDate(client.getId(),
+                    ClientDate clientDate = new ClientDate(client.getId(),0,
                             client.getActivationDate().get(0),
                             client.getActivationDate().get(1),
                             client.getActivationDate().get(2));

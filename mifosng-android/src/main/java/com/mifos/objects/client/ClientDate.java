@@ -20,6 +20,9 @@ public class ClientDate extends MifosBaseModel implements Parcelable {
     @PrimaryKey
     long clientId;
 
+    @PrimaryKey
+    long chargeId;
+
     @Column
     int day;
 
@@ -29,8 +32,9 @@ public class ClientDate extends MifosBaseModel implements Parcelable {
     @Column
     int year;
 
-    public ClientDate(long clientId, int day, int month, int year) {
+    public ClientDate(long clientId, long chargeId, int day, int month, int year) {
         this.clientId = clientId;
+        this.chargeId = chargeId;
         this.day = day;
         this.month = month;
         this.year = year;

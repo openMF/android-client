@@ -61,7 +61,8 @@ public class DataManagerCharge {
                 /**
                  * Return Client Charges from DatabaseHelperClient only one time.
                  */
-                //return mDatabaseHelperCharge.realClientAccounts(clientId);
+                if (offset == 0)
+                    return mDatabaseHelperCharge.readClientCharges(clientId);
 
             default:
                 return Observable.just(new Page<Charges>());
