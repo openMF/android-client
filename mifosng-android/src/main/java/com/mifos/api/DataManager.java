@@ -135,6 +135,7 @@ public class DataManager {
     /**
      * Charges API
      */
+    //TODO Remove this Method After fixing the Charge Test
     public Observable<Page<Charges>> getClientCharges(int clientId, int offset, int limit) {
         return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit);
     }
@@ -177,14 +178,6 @@ public class DataManager {
 
     public Observable<Client> getClient(int id) {
         return mBaseApiManager.getClientsApi().getClient(id);
-    }
-
-    public Observable<ResponseBody> uploadClientImage(int id, Part file) {
-        return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
-    }
-
-    public Observable<ResponseBody> deleteClientImage(int clientId) {
-        return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
     }
 
 
@@ -276,6 +269,7 @@ public class DataManager {
         return mBaseApiManager.getDataTableApi().getTableOf("m_savings_account");
     }
 
+    //TODO Remove this method after removing its usage
     public Observable<List<DataTable>> getClientDataTable() {
         return mBaseApiManager.getDataTableApi().getTableOf("m_client");
     }

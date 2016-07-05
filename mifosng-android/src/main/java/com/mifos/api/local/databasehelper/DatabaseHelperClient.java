@@ -24,6 +24,10 @@ import rx.Observable;
 import rx.Subscriber;
 
 /**
+ * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
+ * Whenever DataManager send response to save or request to read from Database then this class
+ * save the response or read the all values from database and return as accordingly.
+ * <p/>
  * Created by Rajan Maurya on 24/06/16.
  */
 @Singleton
@@ -50,7 +54,7 @@ public class DatabaseHelperClient {
 
                 for (Client client : clientPage.getPageItems()) {
 
-                    ClientDate clientDate = new ClientDate(client.getId(),
+                    ClientDate clientDate = new ClientDate(client.getId(), 0,
                             client.getActivationDate().get(0),
                             client.getActivationDate().get(1),
                             client.getActivationDate().get(2));
@@ -113,8 +117,9 @@ public class DatabaseHelperClient {
 
     /**
      * This Method  write the ClientAccount in tho DB. According to Schema Defined in Model
+     *
      * @param clientAccounts Model of List of LoanAccount and SavingAccount
-     * @param clientId Client Id
+     * @param clientId       Client Id
      * @return null
      */
     public Observable<Void> saveClientAccounts(final ClientAccounts clientAccounts,
@@ -144,6 +149,7 @@ public class DatabaseHelperClient {
     /**
      * This Method Read the Table of LoanAccount and SavingAccount and return the List of
      * LoanAccount and SavingAccount according to clientId
+     *
      * @param clientId Client Id
      * @return Return the ClientAccount according to client Id
      */

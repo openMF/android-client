@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeMvpView;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargePresenter;
@@ -34,7 +34,7 @@ public class ClientChargePresenterTest {
     ClientChargePresenter mClientChargePresenter;
 
     @Mock
-    DataManager mDataManager;
+    DataManagerCharge mDataManagerCharge;
 
     @Mock
     ClientChargeMvpView mClientChargeMvpView;
@@ -46,7 +46,7 @@ public class ClientChargePresenterTest {
 
     @Before
     public void setUp() {
-        mClientChargePresenter = new ClientChargePresenter(mDataManager);
+        mClientChargePresenter = new ClientChargePresenter(mDataManagerCharge);
         mClientChargePresenter.attachView(mClientChargeMvpView);
 
         chargesPage = FakeRemoteDataSource.getClientCharges();
@@ -59,7 +59,7 @@ public class ClientChargePresenterTest {
 
     @Test
     public void testLoadCharges() {
-        when(mDataManager.getClientCharges(clientId, offset, limit))
+        when(mDataManagerCharge.getClientCharges(clientId, offset, limit))
                 .thenReturn(Observable.just(chargesPage));
 
         mClientChargePresenter.loadCharges(clientId, offset, limit);
@@ -71,7 +71,7 @@ public class ClientChargePresenterTest {
     @Test
     public void testLoadChargesFails() {
 
-        when(mDataManager.getClientCharges(clientId, offset, limit))
+        when(mDataManagerCharge.getClientCharges(clientId, offset, limit))
                 .thenReturn(Observable.<Page<Charges>>error(new RuntimeException()));
 
         mClientChargePresenter.loadCharges(clientId, offset, limit);

@@ -1,13 +1,15 @@
 package com.mifos.objects.client;
 
-import com.mifos.objects.Currency;
-import com.mifos.objects.accounts.savings.ChargeCalculationType;
-import com.mifos.objects.accounts.savings.ChargeTimeType;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nellyk on 2/15/2016.
@@ -17,27 +19,77 @@ import java.util.Map;
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Charges extends MifosBaseModel {
 
-public class Charges {
-    private Integer id;
-    private Integer clientId;
-    private Integer loanId;
-    private Integer chargeId;
-    private String name;
-    private ChargeTimeType chargeTimeType;
-    private List<Integer> dueDate = new ArrayList<Integer>();
-    private ChargeCalculationType chargeCalculationType;
-    private Currency currency;
-    private Double amount;
-    private Double amountPaid;
-    private Double amountWaived;
-    private Double amountWrittenOff;
-    private Double amountOutstanding;
-    private Boolean penalty;
-    private Boolean isActive;
-    private Boolean isPaid;
-    private Boolean isWaived;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    Integer clientId;
+
+    @Column
+    Integer loanId;
+
+    @Column
+    Integer chargeId;
+
+    @Column
+    String name;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    ChargeTimeType chargeTimeType;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    ClientDate chargeDueDate;
+
+    List<Integer> dueDate = new ArrayList<Integer>();
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    ChargeCalculationType chargeCalculationType;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    Currency currency;
+
+    @Column
+    Double amount;
+
+    @Column
+    Double amountPaid;
+
+    @Column
+    Double amountWaived;
+
+    @Column
+    Double amountWrittenOff;
+
+    @Column
+    Double amountOutstanding;
+
+    @Column
+    Boolean penalty;
+
+    @Column
+    Boolean isActive;
+
+    @Column
+    Boolean isPaid;
+
+    @Column
+    Boolean isWaived;
+
+    public ClientDate getChargeDueDate() {
+        return chargeDueDate;
+    }
+
+    public void setChargeDueDate(ClientDate chargeDueDate) {
+        this.chargeDueDate = chargeDueDate;
+    }
 
     public Integer getId() {
         return id;
@@ -183,12 +235,5 @@ public class Charges {
         this.isWaived = isWaived;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
-    }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
 }
 

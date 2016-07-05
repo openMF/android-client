@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.objects;
+package com.mifos.objects.accounts.savings;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -19,8 +19,9 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class Currency extends MifosBaseModel implements Parcelable {
 
+
     @PrimaryKey
-    String code;
+    public String code;
 
     @Column
     String name;
