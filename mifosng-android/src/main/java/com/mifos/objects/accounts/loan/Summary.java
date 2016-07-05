@@ -5,7 +5,7 @@
 
 package com.mifos.objects.accounts.loan;
 
-import com.mifos.objects.Currency;
+import com.mifos.objects.accounts.savings.Currency;
 
 import java.util.ArrayList;
 import java.util.HashMap;

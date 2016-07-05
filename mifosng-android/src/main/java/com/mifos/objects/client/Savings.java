@@ -1,6 +1,6 @@
 package com.mifos.objects.client;
 
-import com.mifos.objects.Currency;
+import com.mifos.objects.accounts.savings.Currency;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.Status;
 

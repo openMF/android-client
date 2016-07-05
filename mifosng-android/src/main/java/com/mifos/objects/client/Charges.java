@@ -2,12 +2,10 @@ package com.mifos.objects.client;
 
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.Currency;
+import com.mifos.objects.accounts.savings.Currency;
 import com.mifos.objects.accounts.savings.ChargeCalculationType;
 import com.mifos.objects.accounts.savings.ChargeTimeType;
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -25,7 +23,7 @@ import java.util.List;
  */
 @Table(database = MifosDatabase.class)
 @ModelContainer
-public class Charges extends MifosBaseModel{
+public class Charges extends MifosBaseModel {
 
     @PrimaryKey
     Integer id;
@@ -48,12 +46,6 @@ public class Charges extends MifosBaseModel{
 
     private ChargeCalculationType chargeCalculationType;
 
-    @Column
-    @ForeignKey(references = {@ForeignKeyReference(
-            columnName = "currency",
-            columnType = String.class,
-            foreignKeyColumnName = Currency.CODE)},
-            saveForeignKeyModel = true)
     Currency currency;
 
     @Column

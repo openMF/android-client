@@ -1,6 +1,6 @@
 package com.mifos.objects.templates.savings;
 
-import com.mifos.objects.Currency;
+import com.mifos.objects.accounts.savings.Currency;
 import com.mifos.objects.common.InterestType;
 import com.mifos.objects.PaymentTypeOption;
 
