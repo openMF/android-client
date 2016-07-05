@@ -10,9 +10,6 @@ import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Rajan Maurya on 05/07/16.
  */
