@@ -23,14 +23,14 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class Options  extends MifosBaseModel implements Parcelable {
 
-    @PrimaryKey(autoincrement = false)
-    int genderOptions;
+    @PrimaryKey
+    String genderOptions;
 
-    @PrimaryKey(autoincrement = false)
-    int clientTypeOptions;
+    @PrimaryKey
+    String clientTypeOptions;
 
-    @PrimaryKey(autoincrement = false)
-    int clientClassificationOptions;
+    @PrimaryKey
+    String clientClassificationOptions;
 
     @Column
     int id;
@@ -88,28 +88,28 @@ public class Options  extends MifosBaseModel implements Parcelable {
         this.is_Active = is_Active;
     }
 
-    public int getClientClassificationOptions() {
-        return this.clientClassificationOptions;
-    }
-
-    public void setClientClassificationOptions(int clientClassificationOptions) {
-        this.clientClassificationOptions = clientClassificationOptions;
-    }
-
-    public int getClientTypeOptions() {
-        return this.clientTypeOptions;
-    }
-
-    public void setClientTypeOptions(int clientTypeOptions) {
-        this.clientTypeOptions = clientTypeOptions;
-    }
-
-    public int getGenderOptions() {
+    public String getGenderOptions() {
         return this.genderOptions;
     }
 
-    public void setGenderOptions(int genderOptions) {
+    public void setGenderOptions(String genderOptions) {
         this.genderOptions = genderOptions;
+    }
+
+    public String getClientTypeOptions() {
+        return this.clientTypeOptions;
+    }
+
+    public void setClientTypeOptions(String clientTypeOptions) {
+        this.clientTypeOptions = clientTypeOptions;
+    }
+
+    public String getClientClassificationOptions() {
+        return this.clientClassificationOptions;
+    }
+
+    public void setClientClassificationOptions(String clientClassificationOptions) {
+        this.clientClassificationOptions = clientClassificationOptions;
     }
 
     @Override
@@ -123,6 +123,7 @@ public class Options  extends MifosBaseModel implements Parcelable {
                 '}';
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -130,9 +131,9 @@ public class Options  extends MifosBaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.genderOptions);
-        dest.writeInt(this.clientTypeOptions);
-        dest.writeInt(this.clientClassificationOptions);
+        dest.writeString(this.genderOptions);
+        dest.writeString(this.clientTypeOptions);
+        dest.writeString(this.clientClassificationOptions);
         dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeInt(this.position);
@@ -144,9 +145,9 @@ public class Options  extends MifosBaseModel implements Parcelable {
     }
 
     protected Options(Parcel in) {
-        this.genderOptions = in.readInt();
-        this.clientTypeOptions = in.readInt();
-        this.clientClassificationOptions = in.readInt();
+        this.genderOptions = in.readString();
+        this.clientTypeOptions = in.readString();
+        this.clientClassificationOptions = in.readString();
         this.id = in.readInt();
         this.name = in.readString();
         this.position = in.readInt();

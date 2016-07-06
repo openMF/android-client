@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.client.InterestType;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;

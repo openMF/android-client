@@ -1,4 +1,4 @@
-package com.mifos.objects.client;
+package com.mifos.objects.templates.clients;
 
 import android.os.Parcel;
 import android.os.Parcelable;

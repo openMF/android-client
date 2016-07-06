@@ -196,7 +196,7 @@ public class DataManagerClient {
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
                  */
-                //return mDatabaseHelperClient.realClientAccounts(clientId);
+                return mDatabaseHelperClient.realClientTemplate();
 
             default:
                 return Observable.just(new ClientsTemplate());

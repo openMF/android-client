@@ -11,11 +11,12 @@ import com.mifos.objects.accounts.savings.SavingsAccount_Table;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientDate;
 import com.mifos.objects.client.Client_Table;
-import com.mifos.objects.client.InterestType;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.objects.templates.clients.InterestType;
 import com.mifos.objects.templates.clients.OfficeOptions;
 import com.mifos.objects.templates.clients.Options;
+import com.mifos.objects.templates.clients.Options_Table;
 import com.mifos.objects.templates.clients.SavingProductOptions;
 import com.mifos.objects.templates.clients.StaffOptions;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -38,6 +39,10 @@ import rx.Subscriber;
  */
 @Singleton
 public class DatabaseHelperClient {
+
+    public static final String GENDER_OPTIONS = "genderOptions";
+    public static final String CLIENT_TYPE_OPTIONS = "clientTypeOptions";
+    public static final String CLIENT_CLASSIFICATION_OPTIONS = "clientClassificationOptions";
 
     @Inject
     public DatabaseHelperClient() {
@@ -206,17 +211,17 @@ public class DatabaseHelperClient {
                 }
 
                 for (Options options : clientsTemplate.getGenderOptions()) {
-                    options.setGenderOptions(1);
+                    options.setGenderOptions(GENDER_OPTIONS);
                     options.save();
                 }
 
                 for (Options options : clientsTemplate.getClientTypeOptions()) {
-                    options.setClientTypeOptions(1);
+                    options.setClientTypeOptions(CLIENT_TYPE_OPTIONS);
                     options.save();
                 }
 
                 for (Options options : clientsTemplate.getClientClassificationOptions()) {
-                    options.setClientClassificationOptions(1);
+                    options.setClientClassificationOptions(CLIENT_CLASSIFICATION_OPTIONS);
                     options.save();
                 }
 
@@ -228,5 +233,60 @@ public class DatabaseHelperClient {
         });
 
         return null;
+    }
+
+    public Observable<ClientsTemplate> realClientTemplate() {
+        return Observable.create(new Observable.OnSubscribe<ClientsTemplate>() {
+            @Override
+            public void call(Subscriber<? super ClientsTemplate> subscriber) {
+
+                ClientsTemplate clientsTemplate = SQLite.select()
+                        .from(ClientsTemplate.class)
+                        .querySingle();
+
+                List<OfficeOptions> officeOptionses = SQLite.select()
+                        .from(OfficeOptions.class)
+                        .queryList();
+
+                List<StaffOptions> staffOptionses = SQLite.select()
+                        .from(StaffOptions.class)
+                        .queryList();
+
+                List<SavingProductOptions> savingProductOptionses = SQLite.select()
+                        .from(SavingProductOptions.class)
+                        .queryList();
+
+                List<Options> genderOptions = SQLite.select()
+                        .from(Options.class)
+                        .where(Options_Table.genderOptions.eq(GENDER_OPTIONS))
+                        .queryList();
+
+                List<Options> clientTypeOptions = SQLite.select()
+                        .from(Options.class)
+                        .where(Options_Table.clientTypeOptions.eq(CLIENT_TYPE_OPTIONS))
+                        .queryList();
+
+                List<Options> clientClassificationOptions = SQLite.select()
+                        .from(Options.class)
+                        .where(Options_Table
+                                .clientClassificationOptions.eq(CLIENT_CLASSIFICATION_OPTIONS))
+                        .queryList();
+
+                List<InterestType> clientLegalFormOptions = SQLite.select()
+                        .from(InterestType.class)
+                        .queryList();
+
+                clientsTemplate.setOfficeOptions(officeOptionses);
+                clientsTemplate.setStaffOptions(staffOptionses);
+                clientsTemplate.setSavingProductOptions(savingProductOptionses);
+                clientsTemplate.setGenderOptions(genderOptions);
+                clientsTemplate.setClientTypeOptions(clientTypeOptions);
+                clientsTemplate.setClientClassificationOptions(clientClassificationOptions);
+                clientsTemplate.setClientLegalFormOptions(clientLegalFormOptions);
+
+                subscriber.onNext(clientsTemplate);
+
+            }
+        });
     }
 }
