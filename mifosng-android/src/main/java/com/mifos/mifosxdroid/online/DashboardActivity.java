@@ -30,11 +30,11 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
 import com.mifos.api.MifosInterceptor;
-import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
@@ -149,8 +149,7 @@ public class DashboardActivity extends MifosBaseActivity
                 startNavigationClickActivity(intent);
                 break;
             case R.id.item_offline:
-                intent.setClass(getApplicationContext(), OfflineCenterInputActivity.class);
-                startNavigationClickActivity(intent);
+                replaceFragment(new SyncClientPayloadsFragment(), false, R.id.container);
                 break;
 
         }
