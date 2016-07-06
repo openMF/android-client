@@ -206,17 +206,17 @@ public class DatabaseHelperClient {
                 }
 
                 for (Options options : clientsTemplate.getGenderOptions()) {
-                    options.setGenderOptions(true);
+                    options.setGenderOptions(1);
                     options.save();
                 }
 
                 for (Options options : clientsTemplate.getClientTypeOptions()) {
-                    options.setClientTypeOptions(true);
+                    options.setClientTypeOptions(1);
                     options.save();
                 }
 
                 for (Options options : clientsTemplate.getClientClassificationOptions()) {
-                    options.setClientClassificationOptions(true);
+                    options.setClientClassificationOptions(1);
                     options.save();
                 }
 

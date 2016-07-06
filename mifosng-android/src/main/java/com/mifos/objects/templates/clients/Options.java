@@ -23,17 +23,14 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class Options  extends MifosBaseModel implements Parcelable {
 
-    @PrimaryKey
-    boolean genderOptions;
+    @PrimaryKey(autoincrement = false)
+    int genderOptions;
 
-    @PrimaryKey
-    boolean clientTypeOptions;
+    @PrimaryKey(autoincrement = false)
+    int clientTypeOptions;
 
-    @PrimaryKey
-    boolean clientClassificationOptions;
-
-    @PrimaryKey
-    boolean clientLegalFormOptions;
+    @PrimaryKey(autoincrement = false)
+    int clientClassificationOptions;
 
     @Column
     int id;
@@ -49,47 +46,7 @@ public class Options  extends MifosBaseModel implements Parcelable {
 
     @SerializedName("isActive")
     @Column
-    private boolean is_Active;
-
-    public boolean isClientLegalFormOptions() {
-        return clientLegalFormOptions;
-    }
-
-    public void setClientLegalFormOptions(boolean clientLegalFormOptions) {
-        this.clientLegalFormOptions = clientLegalFormOptions;
-    }
-
-    public boolean isGenderOptions() {
-        return genderOptions;
-    }
-
-    public void setGenderOptions(boolean genderOptions) {
-        this.genderOptions = genderOptions;
-    }
-
-    public boolean isClientTypeOptions() {
-        return clientTypeOptions;
-    }
-
-    public void setClientTypeOptions(boolean clientTypeOptions) {
-        this.clientTypeOptions = clientTypeOptions;
-    }
-
-    public boolean isClientClassificationOptions() {
-        return clientClassificationOptions;
-    }
-
-    public void setClientClassificationOptions(boolean clientClassificationOptions) {
-        this.clientClassificationOptions = clientClassificationOptions;
-    }
-
-    public boolean is_Active() {
-        return is_Active;
-    }
-
-    public void setIs_Active(boolean is_Active) {
-        this.is_Active = is_Active;
-    }
+    boolean is_Active;
 
     public int getId() {
         return id;
@@ -123,12 +80,36 @@ public class Options  extends MifosBaseModel implements Parcelable {
         this.description = description;
     }
 
-    public boolean isActive() {
-        return is_Active;
+    public boolean is_Active() {
+        return this.is_Active;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.is_Active = isActive;
+    public void setIs_Active(boolean is_Active) {
+        this.is_Active = is_Active;
+    }
+
+    public int getClientClassificationOptions() {
+        return this.clientClassificationOptions;
+    }
+
+    public void setClientClassificationOptions(int clientClassificationOptions) {
+        this.clientClassificationOptions = clientClassificationOptions;
+    }
+
+    public int getClientTypeOptions() {
+        return this.clientTypeOptions;
+    }
+
+    public void setClientTypeOptions(int clientTypeOptions) {
+        this.clientTypeOptions = clientTypeOptions;
+    }
+
+    public int getGenderOptions() {
+        return this.genderOptions;
+    }
+
+    public void setGenderOptions(int genderOptions) {
+        this.genderOptions = genderOptions;
     }
 
     @Override
@@ -149,25 +130,23 @@ public class Options  extends MifosBaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.genderOptions ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.clientTypeOptions ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.clientClassificationOptions ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.clientLegalFormOptions ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.genderOptions);
+        dest.writeInt(this.clientTypeOptions);
+        dest.writeInt(this.clientClassificationOptions);
         dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeInt(this.position);
         dest.writeString(this.description);
-        dest.writeByte(this.is_Active ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_Active ? (byte) 1 : (byte) 0);
     }
 
     public Options() {
     }
 
     protected Options(Parcel in) {
-        this.genderOptions = in.readByte() != 0;
-        this.clientTypeOptions = in.readByte() != 0;
-        this.clientClassificationOptions = in.readByte() != 0;
-        this.clientLegalFormOptions = in.readByte() != 0;
+        this.genderOptions = in.readInt();
+        this.clientTypeOptions = in.readInt();
+        this.clientClassificationOptions = in.readInt();
         this.id = in.readInt();
         this.name = in.readString();
         this.position = in.readInt();

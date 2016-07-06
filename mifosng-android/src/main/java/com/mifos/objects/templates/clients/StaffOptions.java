@@ -44,11 +44,11 @@ public class StaffOptions extends MifosBaseModel implements Parcelable {
 
     @SerializedName("isLoanOfficer")
     @Column
-    private boolean isLoan_officer;
+    boolean isLoan_officer;
 
     @SerializedName("isActive")
     @Column
-    private boolean is_Active;
+    boolean is_Active;
 
     public int getId() {
         return id;
