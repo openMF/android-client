@@ -20,7 +20,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 /**
  * Created by rajan on 13/3/16.
  */
-@Table(database = MifosDatabase.class)
+@Table(database = MifosDatabase.class, name = "ClientTemplateStaffOptions")
 @ModelContainer
 public class StaffOptions extends MifosBaseModel implements Parcelable {
 
