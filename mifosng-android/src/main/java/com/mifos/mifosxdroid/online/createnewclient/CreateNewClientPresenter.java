@@ -20,6 +20,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 6/6/16.
  */
+//TODO Use CompositeSubscription in place Subscription for better handling Observable Subscription
 public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpView> {
 
 
