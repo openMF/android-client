@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.createnewclient;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
@@ -25,11 +26,14 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
 
 
     private final DataManager mDataManager;
+    private final DataManagerClient mDataManagerClient;
     private Subscription mSubscription;
 
     @Inject
-    public CreateNewClientPresenter(DataManager dataManager) {
+    public CreateNewClientPresenter(DataManager dataManager,
+                                    DataManagerClient dataManagerClient) {
         mDataManager = dataManager;
+        mDataManagerClient = dataManagerClient;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
     public void loadClientTemplate() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription = mDataManager.getClientTemplate()
+        mSubscription = mDataManagerClient.getClientTemplate()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<ClientsTemplate>() {

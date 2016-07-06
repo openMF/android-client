@@ -2,9 +2,11 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
+import com.mifos.api.model.ClientPayload;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.utils.PrefManager;
 
 import javax.inject.Inject;
@@ -170,4 +172,45 @@ public class DataManagerClient {
         return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
     }
 
+
+    /**
+     *
+     *
+     * @return
+     */
+    public Observable<ClientsTemplate> getClientTemplate() {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getClientsApi().getClientTemplate()
+                        .concatMap(new Func1<ClientsTemplate, Observable<? extends
+                                ClientsTemplate>>() {
+                            @Override
+                            public Observable<? extends
+                                    ClientsTemplate> call(ClientsTemplate clientsTemplate) {
+
+                                return Observable.just(clientsTemplate);
+                            }
+                        });
+
+            case 1:
+                /**
+                 * Return Clients from DatabaseHelperClient only one time.
+                 */
+                //return mDatabaseHelperClient.realClientAccounts(clientId);
+
+            default:
+                return Observable.just(new ClientsTemplate());
+        }
+
+    }
+
+
+    /**
+     *
+     * @param clientPayload
+     * @return
+     */
+    public Observable<Client> createClient(ClientPayload clientPayload) {
+        return mBaseApiManager.getClientsApi().createClient(clientPayload);
+    }
 }

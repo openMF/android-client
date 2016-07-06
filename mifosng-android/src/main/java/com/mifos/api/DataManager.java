@@ -168,10 +168,6 @@ public class DataManager {
         return mBaseApiManager.getClientsApi().getAllClients(offset, limit);
     }
 
-    public Observable<ClientsTemplate> getClientTemplate() {
-        return mBaseApiManager.getClientsApi().getClientTemplate();
-    }
-
     public Observable<Client> createClient(ClientPayload clientPayload) {
         return mBaseApiManager.getClientsApi().createClient(clientPayload);
     }
