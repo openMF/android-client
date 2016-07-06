@@ -5,15 +5,34 @@ package com.mifos.objects.templates.clients;
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 /**
  * Created by rajan on 13/3/16.
  */
-public class SavingProductOptions {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class SavingProductOptions extends MifosBaseModel implements Parcelable {
 
-    private int id;
-    private String name;
-    private boolean withdrawalFeeForTransfers;
-    private boolean allowOverdraft;
+    @PrimaryKey
+    int id;
+
+    @Column
+    String name;
+
+    @Column
+    boolean withdrawalFeeForTransfers;
+
+    @Column
+    boolean allowOverdraft;
 
     public int getId() {
         return id;
@@ -56,4 +75,40 @@ public class SavingProductOptions {
                 ", allowOverdraft=" + allowOverdraft +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+        dest.writeByte(this.withdrawalFeeForTransfers ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.allowOverdraft ? (byte) 1 : (byte) 0);
+    }
+
+    public SavingProductOptions() {
+    }
+
+    protected SavingProductOptions(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.withdrawalFeeForTransfers = in.readByte() != 0;
+        this.allowOverdraft = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<SavingProductOptions> CREATOR = new Parcelable
+            .Creator<SavingProductOptions>() {
+        @Override
+        public SavingProductOptions createFromParcel(Parcel source) {
+            return new SavingProductOptions(source);
+        }
+
+        @Override
+        public SavingProductOptions[] newArray(int size) {
+            return new SavingProductOptions[size];
+        }
+    };
 }

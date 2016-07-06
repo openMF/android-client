@@ -1,6 +1,12 @@
 package com.mifos.objects.templates.clients;
 
-import com.mifos.objects.common.InterestType;
+import com.mifos.api.local.MifosDatabase;
+
+import com.mifos.objects.client.InterestType;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,12 +17,21 @@ import java.util.List;
  */
 
 /**
+ *
  * Created by rajan on 13/3/16.
  */
+@Table(database = MifosDatabase.class)
+@ModelContainer
 public class ClientsTemplate {
 
+    @PrimaryKey(autoincrement = true)
+    int id;
+
     private int[] activationDate;
-    private int officeId;
+
+    @Column
+    int officeId;
+
     private List<OfficeOptions> officeOptions;
     private List<StaffOptions> staffOptions;
     private List<SavingProductOptions> savingProductOptions;
