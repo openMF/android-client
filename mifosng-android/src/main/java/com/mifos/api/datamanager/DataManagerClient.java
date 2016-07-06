@@ -187,7 +187,7 @@ public class DataManagerClient {
                             @Override
                             public Observable<? extends
                                     ClientsTemplate> call(ClientsTemplate clientsTemplate) {
-
+                                mDatabaseHelperClient.saveClientTemplate(clientsTemplate);
                                 return Observable.just(clientsTemplate);
                             }
                         });

@@ -11,7 +11,13 @@ import com.mifos.objects.accounts.savings.SavingsAccount_Table;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientDate;
 import com.mifos.objects.client.Client_Table;
+import com.mifos.objects.client.InterestType;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.objects.templates.clients.OfficeOptions;
+import com.mifos.objects.templates.clients.Options;
+import com.mifos.objects.templates.clients.SavingProductOptions;
+import com.mifos.objects.templates.clients.StaffOptions;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
@@ -176,5 +182,51 @@ public class DatabaseHelperClient {
 
             }
         });
+    }
+
+
+    public Observable<Void> saveClientTemplate(final ClientsTemplate clientsTemplate) {
+        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                //saving clientTemplate into DB;
+                clientsTemplate.save();
+
+                for (OfficeOptions officeOptions : clientsTemplate.getOfficeOptions()) {
+                    officeOptions.save();
+                }
+
+                for (StaffOptions staffOptions : clientsTemplate.getStaffOptions()) {
+                    staffOptions.save();
+                }
+
+                for (SavingProductOptions savingProductOptions : clientsTemplate
+                        .getSavingProductOptions()) {
+                    savingProductOptions.save();
+                }
+
+                for (Options options : clientsTemplate.getGenderOptions()) {
+                    options.setGenderOptions(true);
+                    options.save();
+                }
+
+                for (Options options : clientsTemplate.getClientTypeOptions()) {
+                    options.setClientTypeOptions(true);
+                    options.save();
+                }
+
+                for (Options options : clientsTemplate.getClientClassificationOptions()) {
+                    options.setClientClassificationOptions(true);
+                    options.save();
+                }
+
+                for (InterestType interestType : clientsTemplate.getClientLegalFormOptions()) {
+                    interestType.save();
+                }
+
+            }
+        });
+
+        return null;
     }
 }
