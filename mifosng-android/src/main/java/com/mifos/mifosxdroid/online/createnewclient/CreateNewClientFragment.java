@@ -115,10 +115,6 @@ public class CreateNewClientFragment extends ProgressableFragment
     String dateofbirthstring;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String,
-            Integer>();
     private ClientsTemplate clientstemplate = new ClientsTemplate();
     private View mCurrentDateView;    // the view whose click opened the date picker
 
