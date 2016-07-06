@@ -45,7 +45,6 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
     public void loadClientTemplate() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getClientTemplate()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -72,7 +71,6 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -99,7 +97,6 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
 
     public void loadStaffInOffices(int officeId) {
         checkViewAttached();
-        if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManager.getStaffInOffice(officeId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

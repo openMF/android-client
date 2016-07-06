@@ -502,8 +502,6 @@ public class CreateNewClientFragment extends ProgressableFragment
 
             }
         });
-
-        Toaster.show(rootView, "office");
     }
 
     @Override
@@ -538,8 +536,6 @@ public class CreateNewClientFragment extends ProgressableFragment
             }
 
         });
-
-        Toaster.show(rootView, "staffin office");
     }
 
     @Override
@@ -549,11 +545,17 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @Override
     public void showFetchingError(String s) {
-
+        Toaster.show(rootView, s);
     }
 
     @Override
     public void showProgressbar(boolean b) {
         showProgress(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mCreateNewClientPresenter.detachView();
     }
 }
