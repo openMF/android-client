@@ -5,21 +5,44 @@
 
 package com.mifos.objects.organisation;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by ishankhanna on 14/07/14.
  */
-public class Office {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Office extends MifosBaseModel implements Parcelable {
 
-    private Integer id;
-    private String externalId;
-    private String name;
-    private String nameDecorated;
-    private List<Integer> openingDate = new ArrayList<Integer>();
-    private HashMap<String, Object> additionalProperties = new HashMap<String, Object>();
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String externalId;
+
+    @Column
+    String name;
+
+    @Column
+    String nameDecorated;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    OfficeOpeningDate officeOpeningDate;
+
+    List<Integer> openingDate = new ArrayList<Integer>();
 
     public Integer getId() {
         return id;
@@ -61,23 +84,63 @@ public class Office {
         this.openingDate = openingDate;
     }
 
-    public HashMap<String, Object> getAdditionalProperties() {
-        return additionalProperties;
+    public OfficeOpeningDate getOfficeOpeningDate() {
+        return this.officeOpeningDate;
     }
 
-    public void setAdditionalProperties(HashMap<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
+    public void setOfficeOpeningDate(OfficeOpeningDate officeOpeningDate) {
+        this.officeOpeningDate = officeOpeningDate;
     }
 
     @Override
     public String toString() {
         return "Office{" +
                 "id=" + id +
-                ", externalId=" + externalId +
+                ", externalId='" + externalId + '\'' +
                 ", name='" + name + '\'' +
                 ", nameDecorated='" + nameDecorated + '\'' +
+                ", officeOpeningDate=" + officeOpeningDate +
                 ", openingDate=" + openingDate +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
+
+    public Office() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.externalId);
+        dest.writeString(this.name);
+        dest.writeString(this.nameDecorated);
+        dest.writeParcelable(this.officeOpeningDate, flags);
+        dest.writeList(this.openingDate);
+    }
+
+    protected Office(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.externalId = in.readString();
+        this.name = in.readString();
+        this.nameDecorated = in.readString();
+        this.officeOpeningDate = in.readParcelable(OfficeOpeningDate.class.getClassLoader());
+        this.openingDate = new ArrayList<Integer>();
+        in.readList(this.openingDate, Integer.class.getClassLoader());
+    }
+
+    public static final Creator<Office> CREATOR = new Creator<Office>() {
+        @Override
+        public Office createFromParcel(Parcel source) {
+            return new Office(source);
+        }
+
+        @Override
+        public Office[] newArray(int size) {
+            return new Office[size];
+        }
+    };
 }
