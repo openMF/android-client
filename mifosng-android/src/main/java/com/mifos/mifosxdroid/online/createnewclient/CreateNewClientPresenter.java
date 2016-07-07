@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.online.createnewclient;
 import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerOffices;
+import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
@@ -29,15 +30,18 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
     private final DataManager mDataManager;
     private final DataManagerClient mDataManagerClient;
     private final DataManagerOffices mDataManagerOffices;
+    private final DataManagerStaff mDataManagerStaff;
     private Subscription mSubscription;
 
     @Inject
     public CreateNewClientPresenter(DataManager dataManager,
                                     DataManagerClient dataManagerClient,
-                                    DataManagerOffices dataManagerOffices) {
+                                    DataManagerOffices dataManagerOffices,
+                                    DataManagerStaff dataManagerStaff) {
         mDataManager = dataManager;
         mDataManagerClient = dataManagerClient;
         mDataManagerOffices = dataManagerOffices;
+        mDataManagerStaff = dataManagerStaff;
     }
 
     @Override
@@ -106,7 +110,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
 
     public void loadStaffInOffices(int officeId) {
         checkViewAttached();
-        mSubscription = mDataManager.getStaffInOffice(officeId)
+        mSubscription = mDataManagerStaff.getStaffInOffice(officeId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Staff>>() {
