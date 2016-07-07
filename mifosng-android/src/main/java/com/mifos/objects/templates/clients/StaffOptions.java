@@ -160,8 +160,8 @@ public class StaffOptions extends MifosBaseModel implements Parcelable {
         this.is_Active = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<StaffOptions> CREATOR
-            = new Parcelable.Creator<StaffOptions>() {
+    public static final Parcelable.Creator<StaffOptions> CREATOR = new Parcelable
+            .Creator<StaffOptions>() {
         @Override
         public StaffOptions createFromParcel(Parcel source) {
             return new StaffOptions(source);

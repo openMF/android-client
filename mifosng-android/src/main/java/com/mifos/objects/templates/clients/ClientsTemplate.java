@@ -18,7 +18,6 @@ import java.util.List;
  */
 
 /**
- *
  * Created by rajan on 13/3/16.
  */
 @Table(database = MifosDatabase.class)
@@ -159,8 +158,8 @@ public class ClientsTemplate extends MifosBaseModel implements Parcelable {
         this.clientLegalFormOptions = in.createTypedArrayList(InterestType.CREATOR);
     }
 
-    public static final Parcelable.Creator<ClientsTemplate> CREATOR
-            = new Parcelable.Creator<ClientsTemplate>() {
+    public static final Parcelable.Creator<ClientsTemplate> CREATOR = new Parcelable
+            .Creator<ClientsTemplate>() {
         @Override
         public ClientsTemplate createFromParcel(Parcel source) {
             return new ClientsTemplate(source);

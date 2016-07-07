@@ -60,7 +60,7 @@ public class DatabaseHelperOffices {
                         .from(Office.class)
                         .queryList();
 
-                for (int i=0 ; i < offices.size(); i++ ) {
+                for (int i = 0; i < offices.size(); i++) {
                     offices.get(i).setOpeningDate(Arrays.asList(
                             offices.get(i).getOfficeOpeningDate().getYear(),
                             offices.get(i).getOfficeOpeningDate().getMonth(),

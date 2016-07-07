@@ -46,7 +46,7 @@ public class Options  extends MifosBaseModel implements Parcelable {
 
     @SerializedName("isActive")
     @Column
-    boolean is_Active;
+    boolean activeStatus;
 
     public int getId() {
         return id;
@@ -80,14 +80,6 @@ public class Options  extends MifosBaseModel implements Parcelable {
         this.description = description;
     }
 
-    public boolean is_Active() {
-        return this.is_Active;
-    }
-
-    public void setIs_Active(boolean is_Active) {
-        this.is_Active = is_Active;
-    }
-
     public String getGenderOptions() {
         return this.genderOptions;
     }
@@ -112,17 +104,31 @@ public class Options  extends MifosBaseModel implements Parcelable {
         this.clientClassificationOptions = clientClassificationOptions;
     }
 
+    public boolean isActiveStatus() {
+        return this.activeStatus;
+    }
+
+    public void setActiveStatus(boolean activeStatus) {
+        this.activeStatus = activeStatus;
+    }
+
     @Override
     public String toString() {
         return "Options{" +
-                "id=" + id +
+                "genderOptions='" + genderOptions + '\'' +
+                ", clientTypeOptions='" + clientTypeOptions + '\'' +
+                ", clientClassificationOptions='" + clientClassificationOptions + '\'' +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", position=" + position +
                 ", description='" + description + '\'' +
-                ", isActive=" + is_Active +
+                ", activeStatus=" + activeStatus +
                 '}';
     }
 
+
+    public Options() {
+    }
 
     @Override
     public int describeContents() {
@@ -138,10 +144,7 @@ public class Options  extends MifosBaseModel implements Parcelable {
         dest.writeString(this.name);
         dest.writeInt(this.position);
         dest.writeString(this.description);
-        dest.writeByte(is_Active ? (byte) 1 : (byte) 0);
-    }
-
-    public Options() {
+        dest.writeByte(activeStatus ? (byte) 1 : (byte) 0);
     }
 
     protected Options(Parcel in) {
@@ -152,10 +155,10 @@ public class Options  extends MifosBaseModel implements Parcelable {
         this.name = in.readString();
         this.position = in.readInt();
         this.description = in.readString();
-        this.is_Active = in.readByte() != 0;
+        this.activeStatus = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<Options> CREATOR = new Parcelable.Creator<Options>() {
+    public static final Creator<Options> CREATOR = new Creator<Options>() {
         @Override
         public Options createFromParcel(Parcel source) {
             return new Options(source);
