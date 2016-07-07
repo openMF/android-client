@@ -41,7 +41,6 @@ import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
@@ -166,10 +165,6 @@ public class DataManager {
 
     public Observable<Page<Client>> getAllClients(int offset, int limit) {
         return mBaseApiManager.getClientsApi().getAllClients(offset, limit);
-    }
-
-    public Observable<ClientsTemplate> getClientTemplate() {
-        return mBaseApiManager.getClientsApi().getClientTemplate();
     }
 
     public Observable<Client> createClient(ClientPayload clientPayload) {

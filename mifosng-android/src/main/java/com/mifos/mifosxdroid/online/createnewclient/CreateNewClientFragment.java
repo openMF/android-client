@@ -115,10 +115,6 @@ public class CreateNewClientFragment extends ProgressableFragment
     String dateofbirthstring;
     private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
     private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> genderNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> clientTypeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> clientClassificationNameIdHashMap = new HashMap<String,
-            Integer>();
     private ClientsTemplate clientstemplate = new ClientsTemplate();
     private View mCurrentDateView;    // the view whose click opened the date picker
 
@@ -502,8 +498,6 @@ public class CreateNewClientFragment extends ProgressableFragment
 
             }
         });
-
-        Toaster.show(rootView, "office");
     }
 
     @Override
@@ -538,8 +532,6 @@ public class CreateNewClientFragment extends ProgressableFragment
             }
 
         });
-
-        Toaster.show(rootView, "staffin office");
     }
 
     @Override
@@ -549,11 +541,17 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @Override
     public void showFetchingError(String s) {
-
+        Toaster.show(rootView, s);
     }
 
     @Override
     public void showProgressbar(boolean b) {
         showProgress(b);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mCreateNewClientPresenter.detachView();
     }
 }

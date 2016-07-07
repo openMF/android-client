@@ -1,6 +1,9 @@
 package com.mifos.mifosxdroid.online.createnewclient;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerOffices;
+import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.api.model.ClientPayload;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
@@ -20,15 +23,25 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 6/6/16.
  */
+//TODO Use CompositeSubscription in place Subscription for better handling Observable Subscription
 public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpView> {
 
 
     private final DataManager mDataManager;
+    private final DataManagerClient mDataManagerClient;
+    private final DataManagerOffices mDataManagerOffices;
+    private final DataManagerStaff mDataManagerStaff;
     private Subscription mSubscription;
 
     @Inject
-    public CreateNewClientPresenter(DataManager dataManager) {
+    public CreateNewClientPresenter(DataManager dataManager,
+                                    DataManagerClient dataManagerClient,
+                                    DataManagerOffices dataManagerOffices,
+                                    DataManagerStaff dataManagerStaff) {
         mDataManager = dataManager;
+        mDataManagerClient = dataManagerClient;
+        mDataManagerOffices = dataManagerOffices;
+        mDataManagerStaff = dataManagerStaff;
     }
 
     @Override
@@ -45,8 +58,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
     public void loadClientTemplate() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientTemplate()
+        mSubscription = mDataManagerClient.getClientTemplate()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<ClientsTemplate>() {
@@ -72,8 +84,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getOffices()
+        mSubscription = mDataManagerOffices.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Office>>() {
@@ -99,8 +110,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
 
     public void loadStaffInOffices(int officeId) {
         checkViewAttached();
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getStaffInOffice(officeId)
+        mSubscription = mDataManagerStaff.getStaffInOffice(officeId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Staff>>() {
