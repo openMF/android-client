@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func0;
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
@@ -46,11 +47,10 @@ public class DatabaseHelperClient {
      * @param clientPage
      * @return null
      */
-    @Nullable
-    public Observable<Void> saveAllClients(final Page<Client> clientPage) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+    public Observable<Page<Client>> saveAllClients(final Page<Client> clientPage) {
+        return Observable.defer(new Func0<Observable<Page<Client>>>() {
             @Override
-            public void run() {
+            public Observable<Page<Client>> call() {
 
                 for (Client client : clientPage.getPageItems()) {
 
@@ -63,9 +63,9 @@ public class DatabaseHelperClient {
                     }
                     client.save();
                 }
+                return Observable.just(clientPage);
             }
         });
-        return null;
     }
 
     /**
