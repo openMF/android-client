@@ -54,11 +54,13 @@ public class DatabaseHelperClient {
 
                 for (Client client : clientPage.getPageItems()) {
 
-                    ClientDate clientDate = new ClientDate(client.getId(), 0,
-                            client.getActivationDate().get(0),
-                            client.getActivationDate().get(1),
-                            client.getActivationDate().get(2));
-                    client.setClientDate(clientDate);
+                    if (client.getActivationDate().size() != 0) {
+                        ClientDate clientDate = new ClientDate(client.getId(), 0,
+                                client.getActivationDate().get(0),
+                                client.getActivationDate().get(1),
+                                client.getActivationDate().get(2));
+                        client.setClientDate(clientDate);
+                    }
                     client.save();
                 }
             }
