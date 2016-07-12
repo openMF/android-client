@@ -797,6 +797,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         }
     }
 
+    //TODO Replace This Async Task with Glide Image Loading
     public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
         Bitmap bmp;
 
