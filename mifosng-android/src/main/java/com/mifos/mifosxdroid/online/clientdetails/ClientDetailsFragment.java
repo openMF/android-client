@@ -809,7 +809,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         @Override
         protected Void doInBackground(Integer... integers) {
             String url = PrefManager.getInstanceUrl()
-                    + "/"
                     + "clients/"
                     + integers[0]
                     + "/images?maxHeight=120&maxWidth=120";
