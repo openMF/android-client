@@ -93,7 +93,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                 RequestBody.create(MediaType.parse("multipart/form-data"), pngFile);
 
         // MultipartBody.Part is used to send also the actual file name
-        Part body = Part.createFormData("picture", pngFile.getName(), requestFile);
+        Part body = Part.createFormData("client_image", pngFile.getName(), requestFile);
 
         getMvpView().showUploadImageProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();

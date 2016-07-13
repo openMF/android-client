@@ -4,6 +4,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -81,6 +82,9 @@ public class MifosOkHttpClient {
         builder.addInterceptor(logger);
         builder.addInterceptor(new MifosInterceptor());
         builder.addNetworkInterceptor(new StethoInterceptor());
+
+        builder.connectTimeout(10, TimeUnit.SECONDS);
+        builder.readTimeout(30, TimeUnit.SECONDS);
 
         return builder.build();
 
