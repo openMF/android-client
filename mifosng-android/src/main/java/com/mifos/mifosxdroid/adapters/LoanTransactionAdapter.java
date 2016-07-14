@@ -109,9 +109,11 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         MaterialIcons contractedIconValue = MaterialIcons.md_add_circle_outline;
         MaterialIcons expandedIconValue = MaterialIcons.md_remove_circle_outline;
         if (!isExpanded) {
-            reusableParentViewHolder.tv_arrow.setText(contractedIconValue.character());
+            reusableParentViewHolder.tv_arrow.setText(String.valueOf(contractedIconValue
+                    .character()));
         } else {
-            reusableParentViewHolder.tv_arrow.setText(expandedIconValue.character());
+            reusableParentViewHolder.tv_arrow.setText(String.valueOf(expandedIconValue.character
+                    ()));
         }
 
         Iconify.addIcons(reusableParentViewHolder.tv_arrow);
