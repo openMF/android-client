@@ -14,8 +14,9 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
-import com.mifos.objects.organisation.ProductLoans;
+import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.templates.loans.LoanTemplate;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
 
@@ -65,7 +66,7 @@ public interface LoanService {
     Observable<LoanWithAssociations> getLoanWithTransactions(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.CREATELOANSPRODUCTS)
-    Observable<List<ProductLoans>> getAllLoans();
+    Observable<List<LoanProducts>> getAllLoans();
 
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
@@ -73,7 +74,7 @@ public interface LoanService {
 
 
     @GET(APIEndPoint.CREATELOANSACCOUNTS + "/template?templateType=individual")
-    Observable<ResponseBody> getLoansAccountTemplate(@Query("clientId") int clientId,
+    Observable<LoanTemplate> getLoansAccountTemplate(@Query("clientId") int clientId,
                                                      @Query("productId") int productId);
 
 

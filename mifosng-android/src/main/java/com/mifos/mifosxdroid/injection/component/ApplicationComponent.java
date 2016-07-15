@@ -9,6 +9,7 @@ import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.api.datamanager.DataManagerGroups;
+import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
@@ -16,6 +17,7 @@ import com.mifos.api.local.databasehelper.DatabaseHelperCharge;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.api.local.databasehelper.DatabaseHelperDataTable;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
+import com.mifos.api.local.databasehelper.DatabaseHelperLoan;
 import com.mifos.api.local.databasehelper.DatabaseHelperOffices;
 import com.mifos.api.local.databasehelper.DatabaseHelperStaff;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
@@ -48,6 +50,7 @@ public interface ApplicationComponent {
     DataManagerCharge dataManagerCharge();
     DataManagerOffices dataManagerOffices();
     DataManagerStaff dataManagerStaff();
+    DataManagerLoan dataManagerLoan();
 
 
     DatabaseHelperClient databaseHelperClient();
@@ -57,6 +60,7 @@ public interface ApplicationComponent {
     DatabaseHelperCharge databaseHelperCharge();
     DatabaseHelperOffices databaseHelperOffices();
     DatabaseHelperStaff databaseHelperStaff();
+    DatabaseHelperLoan databaseHelperLoan();
 
     Bus eventBus();
 

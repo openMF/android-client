@@ -2,7 +2,6 @@ package com.mifos.api;
 
 import com.google.gson.JsonArray;
 import com.mifos.api.datamanager.DataManagerClient;
-import com.mifos.objects.client.ClientPayload;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
@@ -24,6 +23,7 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
@@ -35,8 +35,8 @@ import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
-import com.mifos.objects.organisation.ProductLoans;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
@@ -48,7 +48,6 @@ import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.GroupPayload;
-import com.mifos.services.data.LoansPayload;
 import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;
@@ -305,7 +304,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().getLoanWithTransactions(loan);
     }
 
-    public Observable<List<ProductLoans>> getAllLoans() {
+    public Observable<List<LoanProducts>> getAllLoans() {
         return mBaseApiManager.getLoanApi().getAllLoans();
     }
 
@@ -317,9 +316,6 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().createGroupLoansAccount(loansPayload);
     }
 
-    public Observable<ResponseBody> getLoansAccountTemplate(int clientId, int productId) {
-        return mBaseApiManager.getLoanApi().getLoansAccountTemplate(clientId, productId);
-    }
 
     public Observable<LoanWithAssociations> getLoanRepaySchedule(int loanId) {
         return mBaseApiManager.getLoanApi().getLoanRepaymentSchedule(loanId);
@@ -355,9 +351,6 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().submitPayment(loanId, request);
     }
 
-    public Observable<Loans> createLoansAccount(LoansPayload loansPayload) {
-        return mBaseApiManager.getLoanApi().createLoansAccount(loansPayload);
-    }
 
 
     /**

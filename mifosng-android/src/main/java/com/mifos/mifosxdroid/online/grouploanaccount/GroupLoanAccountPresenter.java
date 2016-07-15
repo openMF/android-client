@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.online.grouploanaccount;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.organisation.ProductLoans;
+import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.services.data.GroupLoanPayload;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
         mSubscription = mDataManager.getAllLoans()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<ProductLoans>>() {
+                .subscribe(new Subscriber<List<LoanProducts>>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -61,7 +61,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
                     }
 
                     @Override
-                    public void onNext(List<ProductLoans> productLoans) {
+                    public void onNext(List<LoanProducts> productLoans) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showAllLoans(productLoans);
                     }
