@@ -6,14 +6,31 @@ package com.mifos.objects.templates.clients;
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 /**
  * Created by rajan on 13/3/16.
  */
+@Table(database = MifosDatabase.class, name = "ClientTemplateOfficeOptions")
+@ModelContainer
+public class OfficeOptions extends MifosBaseModel implements Parcelable {
 
-public class OfficeOptions {
-    private int id;
-    private String name;
-    private String nameDecorated;
+    @PrimaryKey
+    int id;
+
+    @Column
+    String name;
+
+    @Column
+    String nameDecorated;
 
     public int getId() {
         return id;
@@ -47,4 +64,38 @@ public class OfficeOptions {
                 ", nameDecorated='" + nameDecorated + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.nameDecorated);
+    }
+
+    public OfficeOptions() {
+    }
+
+    protected OfficeOptions(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.nameDecorated = in.readString();
+    }
+
+    public static final Parcelable.Creator<OfficeOptions> CREATOR = new Parcelable
+            .Creator<OfficeOptions>() {
+        @Override
+        public OfficeOptions createFromParcel(Parcel source) {
+            return new OfficeOptions(source);
+        }
+
+        @Override
+        public OfficeOptions[] newArray(int size) {
+            return new OfficeOptions[size];
+        }
+    };
 }

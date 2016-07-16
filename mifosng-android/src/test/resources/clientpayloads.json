@@ -1,0 +1,36 @@
+[
+  {
+    "activationDate": "11 Jul 2016",
+    "active": true,
+    "clientClassificationId": 34,
+    "clientTypeId": 101,
+    "dateFormat": "dd MMMM YYYY",
+    "dateOfBirth": "11 Jul 2016",
+    "externalId": "3537",
+    "firstname": "Robert",
+    "genderId": 22,
+    "lastname": "agzhjz",
+    "locale": "en",
+    "middlename": "zhhzj",
+    "mobileNo": "9855466645",
+    "officeId": 1,
+    "staffId": 1
+  },
+  {
+    "activationDate": "11 Jul 2016",
+    "active": true,
+    "clientClassificationId": 34,
+    "clientTypeId": 101,
+    "dateFormat": "dd MMMM YYYY",
+    "dateOfBirth": "11 Jul 2016",
+    "externalId": "4263",
+    "firstname": "Yippee",
+    "genderId": 22,
+    "lastname": "hshjsjs",
+    "locale": "en",
+    "middlename": "Ghhzjz",
+    "mobileNo": "9809466485",
+    "officeId": 1,
+    "staffId": 1
+  }
+]

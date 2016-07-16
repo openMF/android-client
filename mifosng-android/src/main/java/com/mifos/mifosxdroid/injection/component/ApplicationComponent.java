@@ -9,11 +9,15 @@ import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.api.datamanager.DataManagerGroups;
+import com.mifos.api.datamanager.DataManagerOffices;
+import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
 import com.mifos.api.local.databasehelper.DatabaseHelperCharge;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.api.local.databasehelper.DatabaseHelperDataTable;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
+import com.mifos.api.local.databasehelper.DatabaseHelperOffices;
+import com.mifos.api.local.databasehelper.DatabaseHelperStaff;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.squareup.otto.Bus;
@@ -42,6 +46,8 @@ public interface ApplicationComponent {
     DataManagerCenter dataManagerCenters();
     DataManagerDataTable dataManagerDataTable();
     DataManagerCharge dataManagerCharge();
+    DataManagerOffices dataManagerOffices();
+    DataManagerStaff dataManagerStaff();
 
 
     DatabaseHelperClient databaseHelperClient();
@@ -49,6 +55,8 @@ public interface ApplicationComponent {
     DatabaseHelperGroups databaseHelperGroup();
     DatabaseHelperDataTable databaseHelperDataTable();
     DatabaseHelperCharge databaseHelperCharge();
+    DatabaseHelperOffices databaseHelperOffices();
+    DatabaseHelperStaff databaseHelperStaff();
 
     Bus eventBus();
 

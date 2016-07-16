@@ -19,7 +19,7 @@ public interface CreateNewClientMvpView extends MvpView {
 
     void showStaffInOffices(List<Staff> staffs);
 
-    void showClientCreatedSuccessfully(Client client);
+    void showClientCreatedSuccessfully(Client client, String s);
 
     void showFetchingError(String s);
 }

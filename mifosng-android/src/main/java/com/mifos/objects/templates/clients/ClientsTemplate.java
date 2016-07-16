@@ -1,6 +1,13 @@
 package com.mifos.objects.templates.clients;
 
-import com.mifos.objects.common.InterestType;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,10 +20,15 @@ import java.util.List;
 /**
  * Created by rajan on 13/3/16.
  */
-public class ClientsTemplate {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class ClientsTemplate extends MifosBaseModel implements Parcelable {
 
     private int[] activationDate;
-    private int officeId;
+
+    @PrimaryKey
+    int officeId;
+
     private List<OfficeOptions> officeOptions;
     private List<StaffOptions> staffOptions;
     private List<SavingProductOptions> savingProductOptions;
@@ -111,4 +123,51 @@ public class ClientsTemplate {
                 ", clientLegalFormOptions=" + clientLegalFormOptions +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeIntArray(this.activationDate);
+        dest.writeInt(this.officeId);
+        dest.writeTypedList(this.officeOptions);
+        dest.writeTypedList(this.staffOptions);
+        dest.writeTypedList(this.savingProductOptions);
+        dest.writeTypedList(this.genderOptions);
+        dest.writeTypedList(this.clientTypeOptions);
+        dest.writeTypedList(this.clientClassificationOptions);
+        dest.writeTypedList(this.clientLegalFormOptions);
+    }
+
+    public ClientsTemplate() {
+    }
+
+    protected ClientsTemplate(Parcel in) {
+        this.activationDate = in.createIntArray();
+        this.officeId = in.readInt();
+        this.officeOptions = in.createTypedArrayList(OfficeOptions.CREATOR);
+        this.staffOptions = in.createTypedArrayList(StaffOptions.CREATOR);
+        this.savingProductOptions = in.createTypedArrayList(SavingProductOptions.CREATOR);
+        this.genderOptions = in.createTypedArrayList(Options.CREATOR);
+        this.clientTypeOptions = in.createTypedArrayList(Options.CREATOR);
+        this.clientClassificationOptions = in.createTypedArrayList(Options.CREATOR);
+        this.clientLegalFormOptions = in.createTypedArrayList(InterestType.CREATOR);
+    }
+
+    public static final Parcelable.Creator<ClientsTemplate> CREATOR = new Parcelable
+            .Creator<ClientsTemplate>() {
+        @Override
+        public ClientsTemplate createFromParcel(Parcel source) {
+            return new ClientsTemplate(source);
+        }
+
+        @Override
+        public ClientsTemplate[] newArray(int size) {
+            return new ClientsTemplate[size];
+        }
+    };
 }

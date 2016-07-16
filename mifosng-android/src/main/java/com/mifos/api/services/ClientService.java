@@ -5,7 +5,7 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
-import com.mifos.api.model.ClientPayload;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;

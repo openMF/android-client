@@ -98,7 +98,7 @@
     <string name="repayment">Reembolso</string>
     <string name="port">Puerto</string>
     <string name="overdue">Vencido</string>
-    <string name="offline">Fuera de línea *</string>
+    <string name="offline"> Sin conexión de sincronización *</string>
     <string name="office_id">ID de la oficina</string>
     <string name="mifos_instance_domain">Domino de la instancia Mifos</string>
     <string name="message_no_identifiers_available">No hay identificadores disponibles para este cliente.</string>

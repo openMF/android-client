@@ -92,7 +92,7 @@
     <string name="name">Nom</string>
     <string name="office">Oficina</string>
     <string name="office_id">ID de l\'oficina</string>
-    <string name="offline">Fora de línia *</string>
+    <string name="offline">Sense connexió de sincronització *</string>
     <string name="overdue">Vençut</string>
     <string name="password">Contrasenya</string>
     <string name="payment_type">Forma de pagament</string>

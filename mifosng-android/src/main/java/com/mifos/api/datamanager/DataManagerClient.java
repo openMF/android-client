@@ -2,10 +2,14 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.utils.PrefManager;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -170,4 +174,89 @@ public class DataManagerClient {
         return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
     }
 
+
+    /**
+     * This Method will be called when ever user create the client. if user is in online mode
+     * then request goes to the server to get the client template and in response client template
+     * saves in table in background and return the Observable.just(clientTemplate) to the presenter
+     * and if user in offline mode then we load the client Template from Database.
+     *
+     * @return ClientTemplate
+     */
+    public Observable<ClientsTemplate> getClientTemplate() {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getClientsApi().getClientTemplate()
+                        .concatMap(new Func1<ClientsTemplate, Observable<? extends
+                                ClientsTemplate>>() {
+                            @Override
+                            public Observable<? extends
+                                    ClientsTemplate> call(ClientsTemplate clientsTemplate) {
+                                mDatabaseHelperClient.saveClientTemplate(clientsTemplate);
+                                return Observable.just(clientsTemplate);
+                            }
+                        });
+
+            case 1:
+                /**
+                 * Return Clients from DatabaseHelperClient only one time.
+                 */
+                return mDatabaseHelperClient.readClientTemplate();
+
+            default:
+                return Observable.just(new ClientsTemplate());
+        }
+
+    }
+
+
+    /**
+     * This Method create the client by making directly request to server when User is Online
+     * and give response client type is created otherwise give error string.
+     * if user if offline mode then client details failed by user is saved into Database directly.
+     *
+     * @param clientPayload Client details filled by user
+     * @return Client
+     */
+    public Observable<Client> createClient(final ClientPayload clientPayload) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getClientsApi().createClient(clientPayload)
+                        .concatMap(new Func1<Client, Observable<? extends Client>>() {
+                            @Override
+                            public Observable<? extends Client> call(Client client) {
+                                return Observable.just(client);
+                            }
+                        });
+            case 1:
+                /**
+                 * If user is in offline mode and he is making client. client payload will be saved
+                 * in Database for future synchronization to sever.
+                 */
+                return mDatabaseHelperClient.saveClientPayloadToDB(clientPayload);
+
+            default:
+                return null;
+        }
+    }
+
+
+    /**
+     * Loading All Client payload from database to sync to the server
+     * @return List<ClientPayload></>
+     */
+    public Observable<List<ClientPayload>> getAllDatabaseClientPayload() {
+        return mDatabaseHelperClient.readAllClientPayload();
+    }
+
+    /**
+     * This method will called when user is syncing the client created from Database.
+     * whenever a client is synced then request goes to Database to delete that client form
+     * Database and reload the list from Database and update the list in UI
+     * @param id of the clientPayload in Database
+     * @return List<ClientPayload></>
+     */
+    public Observable<List<ClientPayload>> deleteAndUpdatePayloads(int id) {
+        return mDatabaseHelperClient.deleteAndUpdatePayloads(id);
+    }
 }
