@@ -4,6 +4,7 @@ import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
+import com.mifos.services.data.GroupPayload;
 import com.mifos.utils.PrefManager;
 
 import javax.inject.Inject;
@@ -71,6 +72,10 @@ public class DataManagerGroups {
             default:
                 return Observable.just(new Page<Group>());
         }
+    }
+
+    public Observable<Group> createGroup(GroupPayload groupPayload) {
+        return mBaseApiManager.getGroupApi().createGroup(groupPayload);
     }
 
 }
