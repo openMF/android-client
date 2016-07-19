@@ -33,7 +33,7 @@ import com.mifos.objects.accounts.loan.LoanPurposeOptions;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.TermFrequencyTypeOptions;
 import com.mifos.objects.accounts.loan.TransactionProcessingStrategy;
-import com.mifos.objects.organisation.ProductLoans;
+import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
@@ -563,12 +563,12 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
     @Override
-    public void showAllLoans(List<ProductLoans> loans) {
+    public void showAllLoans(List<LoanProducts> loans) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
         final List<String> loansList = new ArrayList<String>();
-        for (ProductLoans loansname : loans) {
+        for (LoanProducts loansname : loans) {
             loansList.add(loansname.getName());
             loansNameIdHashMap.put(loansname.getName(), loansname.getId());
         }

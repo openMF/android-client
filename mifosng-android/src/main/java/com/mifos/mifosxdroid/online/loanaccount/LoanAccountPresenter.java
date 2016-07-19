@@ -1,32 +1,33 @@
 package com.mifos.mifosxdroid.online.loanaccount;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.organisation.ProductLoans;
+import com.mifos.objects.organisation.LoanProducts;
+import com.mifos.objects.templates.loans.LoanTemplate;
 import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import okhttp3.ResponseBody;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 08/06/16.
  */
 public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerLoan mDataManagerLoan;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
-    public LoanAccountPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public LoanAccountPresenter(DataManagerLoan dataManagerLoan) {
+        mDataManagerLoan = dataManagerLoan;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -37,17 +38,16 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadAllLoans() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getAllLoans()
+        mSubscriptions.add(mDataManagerLoan.getAllLoans()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<ProductLoans>>() {
+                .subscribe(new Subscriber<List<LoanProducts>>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -56,25 +56,24 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to loans");
+                        getMvpView().showFetchingError("Failed to load LoanProducts");
                     }
 
                     @Override
-                    public void onNext(List<ProductLoans> productLoanses) {
+                    public void onNext(List<LoanProducts> productLoanses) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showAllLoan(productLoanses);
                     }
-                });
+                }));
     }
 
     public void loadLoanAccountTemplate(int clientId, int productId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoansAccountTemplate(clientId, productId)
+        mSubscriptions.add(mDataManagerLoan.getLoansAccountTemplate(clientId, productId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribe(new Subscriber<LoanTemplate>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -87,18 +86,17 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                     }
 
                     @Override
-                    public void onNext(ResponseBody response) {
+                    public void onNext(LoanTemplate loanTemplate) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showLoanAccountTemplate(response);
+                        getMvpView().showLoanAccountTemplate(loanTemplate);
                     }
-                });
+                }));
     }
 
     public void createLoansAccount(LoansPayload loansPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.createLoansAccount(loansPayload)
+        mSubscriptions.add(mDataManagerLoan.createLoansAccount(loansPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Loans>() {
@@ -119,6 +117,6 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                         getMvpView().showLoanAccountCreatedSuccessfully(loans);
 
                     }
-                });
+                }));
     }
 }

@@ -2,7 +2,7 @@ package com.mifos.mifosxdroid.online.grouploanaccount;
 
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.organisation.ProductLoans;
+import com.mifos.objects.organisation.LoanProducts;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import okhttp3.ResponseBody;
  */
 public interface GroupLoanAccountMvpView extends MvpView {
 
-    void showAllLoans(List<ProductLoans> productLoans);
+    void showAllLoans(List<LoanProducts> productLoans);
 
     void showLoanPurposeSpinner(ResponseBody response);
 
