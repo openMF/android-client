@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.createnewgroup;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
@@ -21,11 +22,14 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView> {
 
     private final DataManager mDataManager;
+    private final DataManagerOffices mDataManagerOffices;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public CreateNewGroupPresenter(DataManager dataManager) {
+    public CreateNewGroupPresenter(DataManager dataManager,
+                                   DataManagerOffices dataManagerOffices) {
         mDataManager = dataManager;
+        mDataManagerOffices = dataManagerOffices;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -43,7 +47,7 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getOffices()
+        mSubscriptions.add(mDataManagerOffices.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Office>>() {
