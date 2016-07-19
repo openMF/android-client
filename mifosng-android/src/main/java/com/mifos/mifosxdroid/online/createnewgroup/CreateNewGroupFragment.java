@@ -35,9 +35,10 @@ import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
-import com.mifos.services.data.GroupPayload;
+import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.sp_offices) {
+        if (parent.getId() == R.id.sp_group_offices) {
             officeId = officeList.get(position).getId();
         }
     }
@@ -274,8 +275,8 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     @Override
     public void showGroupCreatedSuccessfully(Group group) {
-        Toast.makeText(getActivity(), "Group created successfully", Toast.LENGTH_LONG)
-                .show();
+        Toast.makeText(getActivity(), "Group" + MifosResponseHandler.getResponse(),
+                Toast.LENGTH_LONG).show();
     }
 
     @Override

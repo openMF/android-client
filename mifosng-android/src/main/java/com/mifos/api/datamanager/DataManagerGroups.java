@@ -4,7 +4,7 @@ import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
-import com.mifos.services.data.GroupPayload;
+import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.PrefManager;
 
 import javax.inject.Inject;
@@ -74,8 +74,31 @@ public class DataManagerGroups {
         }
     }
 
+
+
     public Observable<Group> createGroup(GroupPayload groupPayload) {
-        return mBaseApiManager.getGroupApi().createGroup(groupPayload);
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getGroupApi().createGroup(groupPayload)
+                        .concatMap(new Func1<Group, Observable<? extends Group>>() {
+                            @Override
+                            public Observable<? extends Group> call(Group group) {
+                                return Observable.just(group);
+                            }
+                        });
+            case 1:
+                /**
+                 * offset : is the value from which position we want to fetch the list, It means
+                 * if offset is 0 and User is in the Offline Mode So fetch all groups
+                 * Return All Groups List from DatabaseHelperGroups only one time.
+                 * If offset is zero this means this is first request and
+                 * return all clients from DatabaseHelperClient
+                 */
+                 return mDatabaseHelperGroups.saveGroupPayload(groupPayload);
+
+            default:
+                return Observable.just(new Group());
+        }
     }
 
 }

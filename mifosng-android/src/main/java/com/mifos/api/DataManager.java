@@ -47,7 +47,7 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
-import com.mifos.services.data.GroupPayload;
+import com.mifos.objects.group.GroupPayload;
 import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;

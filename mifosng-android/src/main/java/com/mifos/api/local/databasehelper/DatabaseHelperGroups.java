@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
+import com.mifos.objects.group.GroupPayload;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import javax.inject.Inject;
@@ -12,6 +13,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func0;
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
@@ -70,6 +72,17 @@ public class DatabaseHelperGroups {
             }
         });
 
+    }
+
+
+    public Observable<Group> saveGroupPayload(final GroupPayload groupPayload) {
+        return Observable.defer(new Func0<Observable<Group>>() {
+            @Override
+            public Observable<Group> call() {
+                groupPayload.save();
+                return Observable.just(new Group());
+            }
+        });
     }
 
 }

@@ -5,7 +5,7 @@ import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
-import com.mifos.services.data.GroupPayload;
+import com.mifos.objects.group.GroupPayload;
 
 import java.util.List;
 
