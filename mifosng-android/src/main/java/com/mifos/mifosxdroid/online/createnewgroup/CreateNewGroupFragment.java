@@ -48,7 +48,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+//TODO Show Image and Text after successful or Failed during creation of Group and
+//TODO A button to Continue or Finish the GroupCreation.
 public class CreateNewGroupFragment extends ProgressableFragment
         implements MFDatePicker.OnDatePickListener, CreateNewGroupMvpView,
         AdapterView.OnItemSelectedListener {
