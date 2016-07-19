@@ -11,9 +11,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -21,11 +21,12 @@ import rx.schedulers.Schedulers;
 public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
     public CreateNewGroupPresenter(DataManager dataManager) {
         mDataManager = dataManager;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -36,14 +37,13 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getOffices()
+        mSubscriptions.add(mDataManager.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Office>>() {
@@ -63,14 +63,13 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
                         getMvpView().showProgressbar(false);
                         getMvpView().showOffices(offices);
                     }
-                });
+                }));
     }
 
     public void createGroup(GroupPayload groupPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.createGroup(groupPayload)
+        mSubscriptions.add(mDataManager.createGroup(groupPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Group>() {
@@ -90,7 +89,7 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
                         getMvpView().showProgressbar(false);
                         getMvpView().showGroupCreatedSuccessfully(group);
                     }
-                });
+                }));
     }
 
 }
