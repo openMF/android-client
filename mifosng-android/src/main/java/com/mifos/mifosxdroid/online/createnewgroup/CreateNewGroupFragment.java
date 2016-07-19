@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,7 +49,8 @@ import butterknife.ButterKnife;
 
 
 public class CreateNewGroupFragment extends ProgressableFragment
-        implements MFDatePicker.OnDatePickListener, CreateNewGroupMvpView {
+        implements MFDatePicker.OnDatePickListener, CreateNewGroupMvpView,
+        AdapterView.OnItemSelectedListener {
 
 
     private final String LOG_TAG = getClass().getSimpleName();
@@ -87,8 +86,22 @@ public class CreateNewGroupFragment extends ProgressableFragment
     String dateofsubmissionstring;
     private DialogFragment mfDatePicker;
     private DialogFragment newDatePicker;
-    private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
 
+    private List<String> mListOffices = new ArrayList<>();
+    private List<Office> officeList;
+    private ArrayAdapter<String> mOfficesAdapter;
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.sp_offices) {
+            officeId = officeList.get(position).getId();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 
     public CreateNewGroupFragment() {
         // Required empty public constructor
@@ -113,10 +126,11 @@ public class CreateNewGroupFragment extends ProgressableFragment
         ButterKnife.bind(this, rootView);
         mCreateNewGroupPresenter.attachView(this);
 
-        inflateOfficeSpinner();
+        inflateOfficesSpinner();
         inflateSubmissionDate();
         inflateActivationDate();
 
+        mCreateNewGroupPresenter.loadOffices();
 
         //client active checkbox onCheckedListener
         cb_groupActiveStatus.setOnCheckedChangeListener(new CompoundButton
@@ -162,11 +176,6 @@ public class CreateNewGroupFragment extends ProgressableFragment
         return rootView;
     }
 
-    //inflating office list spinner
-    private void inflateOfficeSpinner() {
-        mCreateNewGroupPresenter.loadOffices();
-    }
-
     private void initiateGroupCreation(GroupPayload groupPayload) {
         //TextField validations
         if (!isValidGroupName()) {
@@ -176,6 +185,14 @@ public class CreateNewGroupFragment extends ProgressableFragment
         mCreateNewGroupPresenter.createGroup(groupPayload);
     }
 
+
+    private void inflateOfficesSpinner() {
+        mOfficesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item,
+                mListOffices);
+        mOfficesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_offices.setAdapter(mOfficesAdapter);
+        sp_offices.setOnItemSelectedListener(this);
+    }
 
     public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
@@ -248,40 +265,11 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     @Override
     public void showOffices(List<Office> offices) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
-
-        final ArrayList<String> officeList = new ArrayList<String>();
-
+        officeList = offices;
         for (Office office : offices) {
-            officeList.add(office.getName());
-            officeNameIdHashMap.put(office.getName(), office.getId());
+            mListOffices.add(office.getName());
         }
-        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, officeList);
-        officeAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
-        sp_offices.setAdapter(officeAdapter);
-        sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                    l) {
-                officeId = officeNameIdHashMap.get(officeList.get(i));
-                Log.d("officeId " + officeList.get(i), String.valueOf(officeId));
-                if (officeId != -1) {
-
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.error_select_office)
-                            , Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        mOfficesAdapter.notifyDataSetChanged();
     }
 
     @Override
