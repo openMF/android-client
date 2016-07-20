@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
-import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
 
@@ -33,12 +32,6 @@ public class ApplicationModule {
     @ApplicationContext
     Context provideContext() {
         return mApplication;
-    }
-
-    @Provides
-    @Singleton
-    Bus provideEventBus() {
-        return new Bus();
     }
 
     @Provides
