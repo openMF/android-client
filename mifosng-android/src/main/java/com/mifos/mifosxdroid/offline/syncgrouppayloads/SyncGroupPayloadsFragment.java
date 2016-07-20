@@ -12,8 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.adapters.SyncGroupPayloadAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.group.GroupPayload;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         SyncGroupPayloadsMvpView {
 
     @BindView(R.id.rv_sync_payload)
-    RecyclerView rv_payload_clients;
+    RecyclerView rv_payload_group;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -48,6 +50,9 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
     @Inject
     SyncGroupPayloadsPresenter mSyncGroupPayloadsPresenter;
+
+    @Inject
+    SyncGroupPayloadAdapter mSyncGroupPayloadAdapter;
 
     View rootView;
 
@@ -67,13 +72,14 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         rootView = inflater.inflate(R.layout.fragment_syncpayload, container, false);
 
         ButterKnife.bind(this, rootView);
+        mSyncGroupPayloadsPresenter.attachView(this);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_payload_clients.setLayoutManager(mLayoutManager);
-        rv_payload_clients.setHasFixedSize(true);
+        rv_payload_group.setLayoutManager(mLayoutManager);
+        rv_payload_group.setHasFixedSize(true);
+        rv_payload_group.setAdapter(mSyncGroupPayloadAdapter);
 
-        mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
 
         /**
          * Loading All Client Payloads from Database
@@ -94,6 +100,11 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
+    }
 
     /**
      * Show when Database response is null or failed to fetch the client payload
@@ -107,16 +118,28 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
     @Override
     public void showGroupSyncResponse(List<GroupPayload> groupPayloads) {
-
+        mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
     }
 
     @Override
     public void showGroupSyncFailed(String s) {
-
+        Toaster.show(rootView, s);
     }
 
     @Override
-    public void showProgressbar(boolean b) {
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(show);
+        if (show && mSyncGroupPayloadAdapter.getItemCount() == 0) {
+            showMifosProgressBar();
+            swipeRefreshLayout.setRefreshing(false);
+        } else {
+            hideMifosProgressBar();
+        }
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSyncGroupPayloadsPresenter.detachView();
     }
 }
