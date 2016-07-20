@@ -58,9 +58,12 @@
     @retrofit2.http.* <methods>;
 }
 
-# OkHttp rules
--dontwarn okio.**
--dontwarn com.squareup.okhttp.**
+# OkHttp 3
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
 
 # RxJava rules
 # RxAndroid will soon ship with rules so this may not be needed in the future
