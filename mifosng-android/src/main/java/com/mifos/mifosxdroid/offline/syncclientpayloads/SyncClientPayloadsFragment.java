@@ -41,7 +41,7 @@ import butterknife.OnClick;
 public class SyncClientPayloadsFragment extends MifosBaseFragment
         implements SyncClientPayloadsMvpView {
 
-    @BindView(R.id.rv_sync_clients)
+    @BindView(R.id.rv_sync_payload)
     RecyclerView rv_payload_clients;
 
     @BindView(R.id.swipe_container)
