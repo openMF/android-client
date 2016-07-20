@@ -7,6 +7,8 @@ import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.PrefManager;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -99,6 +101,10 @@ public class DataManagerGroups {
             default:
                 return Observable.just(new Group());
         }
+    }
+
+    public Observable<List<GroupPayload>> getAllDatabaseGroupPayload() {
+        return mDatabaseHelperGroups.realAllGroupPayload();
     }
 
 }

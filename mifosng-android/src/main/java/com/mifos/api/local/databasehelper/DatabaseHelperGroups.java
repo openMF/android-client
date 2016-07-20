@@ -8,6 +8,8 @@ import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -81,6 +83,21 @@ public class DatabaseHelperGroups {
             public Observable<Group> call() {
                 groupPayload.save();
                 return Observable.just(new Group());
+            }
+        });
+    }
+
+
+    public Observable<List<GroupPayload>> realAllGroupPayload() {
+        return Observable.defer(new Func0<Observable<List<GroupPayload>>>() {
+            @Override
+            public Observable<List<GroupPayload>> call() {
+
+                List<GroupPayload> groupPayloads = SQLite.select()
+                        .from(GroupPayload.class)
+                        .queryList();
+
+                return Observable.just(groupPayloads);
             }
         });
     }

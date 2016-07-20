@@ -106,12 +106,12 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     @Override
-    public void showGroupSyncResponse() {
+    public void showGroupSyncResponse(List<GroupPayload> groupPayloads) {
 
     }
 
     @Override
-    public void showGroupSyncFailed() {
+    public void showGroupSyncFailed(String s) {
 
     }
 
