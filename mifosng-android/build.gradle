@@ -45,7 +45,6 @@ android {
         def commonTestDir = 'src/commonTest/java'
         main {
             java.srcDirs = ['src/main/java']
-            jniLibs.srcDir 'libs'
         }
         androidTest {
             java.srcDirs = ['src/instrumentTest/java/']
@@ -127,12 +126,6 @@ tasks.withType(JavaCompile) {
 }
 
 clean.dependsOn('cleanCopyNativeLibs')
-
-/*tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
-    pkgTask ->
-        pkgTask.jniFolders = new HashSet<File>()
-        pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
-}*/
 
 tasks.withType(JavaCompile) {
     configure(options) {
