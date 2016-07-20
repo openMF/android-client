@@ -75,7 +75,7 @@ android {
             // TODO http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
             useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            /*testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'*/
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
         release {
@@ -83,7 +83,7 @@ android {
             useProguard true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            /*testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'*/
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
     }
