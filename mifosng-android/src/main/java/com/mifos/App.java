@@ -5,6 +5,7 @@
 
 package com.mifos;
 
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
 
@@ -15,7 +16,6 @@ import com.joanzapata.iconify.fonts.MaterialModule;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
-import com.orm.SugarApp;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by ishankhanna on 13/03/15.
  */
-public class App extends SugarApp {
+public class App extends Application {
 
     public static final Map<Integer, Typeface> typefaceManager = new HashMap<>();
 
