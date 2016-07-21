@@ -121,12 +121,6 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
     public void showClients(List<ClientPayload> clientPayloads) {
         if (clientPayloads.size() != 0) {
             mOfflineDashboardAdapter.showClientCard("Payload : " +
