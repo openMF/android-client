@@ -107,4 +107,15 @@ public class DataManagerGroups {
         return mDatabaseHelperGroups.realAllGroupPayload();
     }
 
+    /**
+     * This method will called when user is syncing the group created from Database.
+     * whenever a group is synced then request goes to Database to delete that group form
+     * Database and reload the list from Database and update the list in UI
+     * @param id of the groupPayload in Database
+     * @return List<GroupPayload></>
+     */
+    public Observable<List<GroupPayload>> deleteAndUpdateGroupPayloads(int id) {
+        return mDatabaseHelperGroups.deleteAndUpdateGroupPayloads(id);
+    }
+
 }

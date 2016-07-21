@@ -157,7 +157,6 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     public void showError(String s) {
         ll_error.setVisibility(View.VISIBLE);
         mNoPayloadText.setText(s + "\n Click to Refresh ");
-        mSyncPayloadsPresenter.loadDatabaseClientPayload();
         Toaster.show(rootView, s);
     }
 

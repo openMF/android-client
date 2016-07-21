@@ -55,6 +55,7 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
 
                     @Override
                     public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
                         getMvpView().showError("Failed to load ClientPayload");
                     }
 

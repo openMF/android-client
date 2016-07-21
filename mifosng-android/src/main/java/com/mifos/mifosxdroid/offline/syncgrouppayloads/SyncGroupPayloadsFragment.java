@@ -16,7 +16,6 @@ import com.mifos.mifosxdroid.adapters.SyncGroupPayloadAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
 import com.mifos.objects.group.GroupPayload;
 
 import java.util.ArrayList;
@@ -104,13 +103,9 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
             }
         });
 
-        return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
+
+        return rootView;
     }
 
     /**
@@ -123,13 +118,31 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
     }
 
+    /**
+     * This method is showing the group payload in the recyclerView.
+     * If Database Table have no entry then showing make recyclerView visibility gone and
+     * visible to the noPayloadIcon and noPayloadText to alert the user there is nothing
+     * to show.
+     *
+     * @param groupPayload
+     */
     @Override
-    public void showGroupSyncResponse(List<GroupPayload> groupPayloads) {
-        mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
+    public void showGroupSyncResponse(List<GroupPayload> groupPayload) {
+        groupPayloads = groupPayload;
+        if (groupPayload.size() == 0) {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoPayloadText.setText("There is No Client Payload to Sync");
+            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+        } else {
+            mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
+        }
+
     }
 
     @Override
     public void showGroupSyncFailed(String s) {
+        ll_error.setVisibility(View.VISIBLE);
+        mNoPayloadText.setText(s + "\n Click to Refresh ");
         Toaster.show(rootView, s);
     }
 
