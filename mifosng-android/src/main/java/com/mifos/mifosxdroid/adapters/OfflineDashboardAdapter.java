@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -29,26 +30,33 @@ public class OfflineDashboardAdapter  extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_sync_payload, parent, false);
+                .inflate(R.layout.item_offline_dashboard, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
+        holder.tv_payload_name.setText("Client");
+        holder.tv_item_count.setText("3");
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 5;
     }
 
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_sync_payload)
-        TextView tv_payload;
+        @BindView(R.id.tv_payload_count)
+        TextView tv_item_count;
+
+        @BindView(R.id.tv_payload_name)
+        TextView tv_payload_name;
+
+        @BindView(R.id.iv_payload_image)
+        ImageView iv_payload_image;
 
         public ViewHolder(View v) {
             super(v);

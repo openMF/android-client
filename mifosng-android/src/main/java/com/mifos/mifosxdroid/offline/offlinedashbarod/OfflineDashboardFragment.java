@@ -2,17 +2,21 @@ package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.utils.ItemOffsetDecoration;
 
 import javax.inject.Inject;
@@ -26,6 +30,8 @@ import butterknife.ButterKnife;
 public class OfflineDashboardFragment extends MifosBaseFragment implements
         OfflineDashboardMvpView, RecyclerItemClickListner.OnItemClickListener {
 
+    public final String LOG_TAG = getClass().getSimpleName();
+
     @BindView(R.id.rv_offline_dashboard)
     RecyclerView rv_offline_dashboard;
 
@@ -37,9 +43,12 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Inject
     OfflineDashboardPresenter mOfflineDashboardPresenter;
 
+    @Inject
+    OfflineDashboardAdapter mOfflineDashboardAdapter;
+
     @Override
     public void onItemClick(View childView, int position) {
-
+        Toaster.show(rootView, "Click");
     }
 
     @Override
@@ -56,12 +65,12 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_syncpayload, container, false);
+        rootView = inflater.inflate(R.layout.fragment_offline_dashboard, container, false);
 
         ButterKnife.bind(this, rootView);
         mOfflineDashboardPresenter.attachView(this);
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_offline_dashboard.setLayoutManager(mLayoutManager);
         rv_offline_dashboard.setHasFixedSize(true);
@@ -70,8 +79,12 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         rv_offline_dashboard.setItemAnimator(new DefaultItemAnimator());
         rv_offline_dashboard.addItemDecoration(new ItemOffsetDecoration(getActivity(),
                 R.dimen.item_offset));
+        rv_offline_dashboard.setAdapter(mOfflineDashboardAdapter);
+        pb_offline_dashboard.setVisibility(View.GONE);
+        rv_offline_dashboard.setVisibility(View.VISIBLE);
 
-        //rv_offline_dashboard.setAdapter(mSyncGroupPayloadAdapter);
+        Log.d(LOG_TAG, mOfflineDashboardAdapter.getItemCount() + "");
+
 
 
 

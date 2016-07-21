@@ -34,7 +34,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
+import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
@@ -149,7 +149,7 @@ public class DashboardActivity extends MifosBaseActivity
                 startNavigationClickActivity(intent);
                 break;
             case R.id.item_offline:
-                replaceFragment(new SyncClientPayloadsFragment(), false, R.id.container);
+                replaceFragment(new OfflineDashboardFragment(), false, R.id.container);
                 break;
 
         }
