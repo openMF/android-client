@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,7 +17,7 @@ import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
-import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivity;
 import com.mifos.utils.ItemOffsetDecoration;
 
 import javax.inject.Inject;
@@ -46,14 +47,22 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Inject
     OfflineDashboardAdapter mOfflineDashboardAdapter;
 
+
     @Override
     public void onItemClick(View childView, int position) {
-        Toaster.show(rootView, "Click");
+        showPayloadActivity(position);
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
 
+    }
+
+    public static OfflineDashboardFragment newInstance() {
+        OfflineDashboardFragment fragment = new OfflineDashboardFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -109,6 +118,29 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Override
     public void showProgressbar(boolean b) {
 
+    }
+
+    public void showPayloadActivity(int position) {
+        switch (position) {
+            case 0 : startPayloadActivity(SyncClientPayloadActivity.class);
+                break;
+            case 1 : startPayloadActivity(SyncClientPayloadActivity.class);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public <T> void startPayloadActivity(Class<T> t) {
+        Intent intent = new Intent(getActivity(), t);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mOfflineDashboardPresenter.detachView();
     }
 
 }

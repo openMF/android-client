@@ -149,7 +149,7 @@ public class DashboardActivity extends MifosBaseActivity
                 startNavigationClickActivity(intent);
                 break;
             case R.id.item_offline:
-                replaceFragment(new OfflineDashboardFragment(), false, R.id.container);
+                replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container);
                 break;
 
         }

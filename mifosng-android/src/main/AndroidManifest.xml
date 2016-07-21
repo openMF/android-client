@@ -121,6 +121,9 @@
             android:label="@string/track_path"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".offline.syncclientpayloads.SyncClientPayloadActivity"
+                  android:label="Sync Client"
+                  android:screenOrientation="portrait" />
 
         <service android:name=".LocationService" />
 

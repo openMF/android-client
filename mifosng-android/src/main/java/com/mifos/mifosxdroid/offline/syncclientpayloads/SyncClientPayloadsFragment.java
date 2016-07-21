@@ -67,6 +67,13 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
 
     int mClientSyncIndex = 0;
 
+    public static SyncClientPayloadsFragment newInstance() {
+        Bundle arguments = new Bundle();
+        SyncClientPayloadsFragment fragment = new SyncClientPayloadsFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
