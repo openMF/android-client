@@ -125,6 +125,10 @@
                   android:label="Sync Client"
                   android:screenOrientation="portrait" />
 
+        <activity android:name=".offline.syncgrouppayloads.SyncGroupPayloadsActivity"
+                  android:label="Sync Groups"
+                  android:screenOrientation="portrait" />
+
         <service android:name=".LocationService" />
 
         <meta-data

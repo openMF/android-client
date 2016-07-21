@@ -14,8 +14,7 @@
         android:id="@+id/rv_offline_dashboard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"/>
+        android:layout_centerHorizontal="true"/>
 
     <ProgressBar
         android:id="@+id/pb_offline_dashboard"

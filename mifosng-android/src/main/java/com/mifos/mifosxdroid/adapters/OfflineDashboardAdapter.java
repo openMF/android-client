@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.objects.client.ClientPayload;
-import com.mifos.objects.group.GroupPayload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +23,14 @@ import butterknife.ButterKnife;
 public class OfflineDashboardAdapter  extends
         RecyclerView.Adapter<OfflineDashboardAdapter.ViewHolder> {
 
-    private List<ClientPayload> clientPayloads = new ArrayList<>();
-    private List<GroupPayload> groupPayloads = new ArrayList<>();
-
-    private String [] payloadNames = {"Sync Clients", "Sync Groups"};
-    private String [] payloadCounts = {"Total Payload : " + String.valueOf(clientPayloads.size()),
-                                       "Total Payload : " + String.valueOf(groupPayloads.size())};
+    private List<String> payloadNames;
+    private List<String> payloadCounts;
 
 
     @Inject
     public OfflineDashboardAdapter() {
+        payloadNames = new ArrayList<>();
+        payloadCounts = new ArrayList<>();
     }
 
     @Override
@@ -46,21 +42,25 @@ public class OfflineDashboardAdapter  extends
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tv_payload_name.setText(payloadNames[position]);
-        holder.tv_item_count.setText(payloadCounts[position]);
+        holder.tv_payload_name.setText(payloadNames.get(position));
+        holder.tv_item_count.setText(payloadCounts.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return payloadNames.length;
+        return payloadNames.size();
     }
 
-    public void setClientPayloads(List<ClientPayload> clientPayload) {
-        clientPayloads = clientPayload;
+    public void showClientCard(String clientPayloadCount) {
+        payloadCounts.add(clientPayloadCount);
+        payloadNames.add("Sync Clients");
+        notifyDataSetChanged();
     }
 
-    public void setGroupPayloads(List<GroupPayload> groupPayload) {
-        groupPayloads = groupPayload;
+    public void showGroupCard(String groupPayloadCount) {
+        payloadCounts.add(groupPayloadCount);
+        payloadNames.add("Sync Groups");
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
