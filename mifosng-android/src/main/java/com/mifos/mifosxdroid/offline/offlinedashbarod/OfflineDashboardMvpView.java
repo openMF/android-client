@@ -15,5 +15,7 @@ public interface OfflineDashboardMvpView extends MvpView {
 
     void showGroups(List<GroupPayload> groupPayloads);
 
+    void showNoPayloadToShow();
+
     void showError(String s);
 }

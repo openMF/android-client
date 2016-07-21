@@ -24,4 +24,27 @@
         android:layout_centerVertical="true"
         android:visibility="visible"/>
 
+    <LinearLayout
+        android:id="@+id/ll_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/noPayloadIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_error_black_24dp"/>
+
+        <TextView
+            android:id="@+id/noPayloadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

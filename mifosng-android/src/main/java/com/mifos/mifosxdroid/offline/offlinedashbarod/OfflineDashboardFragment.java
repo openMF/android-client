@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter;
@@ -44,6 +47,15 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @BindView(R.id.pb_offline_dashboard)
     ProgressBar pb_offline_dashboard;
 
+    @BindView(R.id.noPayloadText)
+    TextView mNoPayloadText;
+
+    @BindView(R.id.noPayloadIcon)
+    ImageView mNoPayloadIcon;
+
+    @BindView(R.id.ll_error)
+    LinearLayout ll_error;
+
     View rootView;
 
     @Inject
@@ -51,6 +63,9 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
 
     @Inject
     OfflineDashboardAdapter mOfflineDashboardAdapter;
+
+    // update mPayloadIndex to number of request is going to fetch data in Presenter;
+    private int mPayloadIndex = 2;
 
     private static final int GRID_COUNT = 2;
 
@@ -83,6 +98,8 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_offline_dashboard, container, false);
 
+        setToolbarTitle("Offline Sync");
+
         ButterKnife.bind(this, rootView);
         mOfflineDashboardPresenter.attachView(this);
 
@@ -104,18 +121,40 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     public void showClients(List<ClientPayload> clientPayloads) {
         if (clientPayloads.size() != 0) {
-            mOfflineDashboardAdapter.showClientCard("Total Payload" +
+            mOfflineDashboardAdapter.showClientCard("Payload : " +
                     String.valueOf(clientPayloads.size()));
+        } else {
+            mPayloadIndex = mPayloadIndex -1;
+            showNoPayloadToShow();
         }
     }
 
     @Override
     public void showGroups(List<GroupPayload> groupPayloads) {
         if (groupPayloads.size() != 0) {
-            mOfflineDashboardAdapter.showGroupCard("Total Payload : " +
+            mOfflineDashboardAdapter.showGroupCard("Payload : " +
                     String.valueOf(groupPayloads.size()));
+        } else {
+            mPayloadIndex = mPayloadIndex -1;
+            showNoPayloadToShow();
+        }
+    }
+
+    @Override
+    public void showNoPayloadToShow() {
+        if (mPayloadIndex == 0) {
+            rv_offline_dashboard.setVisibility(View.GONE);
+            ll_error.setVisibility(View.VISIBLE);
+            mNoPayloadText.setText("Nothing To Sync :)");
+            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         }
     }
 
