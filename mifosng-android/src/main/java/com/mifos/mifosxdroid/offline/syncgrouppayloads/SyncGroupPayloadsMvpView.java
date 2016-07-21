@@ -12,5 +12,7 @@ public interface SyncGroupPayloadsMvpView extends MvpView {
 
     void showGroupSyncResponse(List<GroupPayload> groupPayloads);
 
+    void showOfflineModeDialog();
+
     void showGroupSyncFailed(String s);
 }

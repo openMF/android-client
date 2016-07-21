@@ -2,9 +2,13 @@ package com.mifos.mifosxdroid.offline.syncgrouppayloads;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +21,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.group.GroupPayload;
+import com.mifos.utils.PrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +75,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         groupPayloads = new ArrayList<>();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -140,6 +146,18 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     @Override
+    public void showOfflineModeDialog() {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(getActivity(), R.style.MaterialAlertDialogStyle);
+        builder.setTitle("Offline Mode");
+        builder.setMessage("You are in offline mode, Please go to Navigation drawer " +
+                "and switch to online mode. \n\n If you are trying to sync Groups" +
+                " Please make sure your internet connection is working well");
+        builder.setPositiveButton("OK", null);
+        builder.show();
+    }
+
+    @Override
     public void showGroupSyncFailed(String s) {
         ll_error.setVisibility(View.VISIBLE);
         mNoPayloadText.setText(s + "\n Click to Refresh ");
@@ -155,6 +173,32 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         } else {
             hideMifosProgressBar();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_sync, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_sync) {
+            switch (PrefManager.getUserStatus()) {
+                case 0:
+                    if (groupPayloads.size() != 0) {
+                        /*mSyncPayloadsPresenter.syncClientPayload(clientPayloads
+                                .get(mClientSyncIndex));*/
+                    }
+                    break;
+                case 1:
+                    showOfflineModeDialog();
+                    break;
+                default:
+                    break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
