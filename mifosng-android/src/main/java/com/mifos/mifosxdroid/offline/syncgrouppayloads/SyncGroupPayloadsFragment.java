@@ -16,6 +16,7 @@ import com.mifos.mifosxdroid.adapters.SyncGroupPayloadAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
 import com.mifos.objects.group.GroupPayload;
 
 import java.util.ArrayList;
@@ -58,6 +59,12 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
     List<GroupPayload> groupPayloads;
 
+    public static SyncGroupPayloadsFragment newInstance() {
+        Bundle arguments = new Bundle();
+        SyncGroupPayloadsFragment fragment = new SyncGroupPayloadsFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
