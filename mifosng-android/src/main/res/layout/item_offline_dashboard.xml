@@ -17,20 +17,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Name Of payload"
         android:id="@+id/tv_payload_name"
+        android:textColor="@color/white"
         android:layout_gravity="center_horizontal|center_vertical"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="No of Payloads"
         android:id="@+id/tv_payload_count"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_below="@+id/tv_payload_name"
         android:layout_alignLeft="@+id/tv_payload_name"
         android:layout_alignStart="@+id/tv_payload_name"
+        android:textColor="@color/white"
         android:layout_marginTop="22dp"/>
 
 </android.support.v7.widget.CardView>
