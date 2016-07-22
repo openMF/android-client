@@ -26,6 +26,9 @@ public class GroupPayload extends MifosBaseModel implements Parcelable {
     transient int id;
 
     @Column
+    transient String errorMessage;
+
+    @Column
     int officeId;
 
     @Column
@@ -48,6 +51,22 @@ public class GroupPayload extends MifosBaseModel implements Parcelable {
 
     @Column
     String dateFormat;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     public String getDateFormat() {
         return dateFormat;

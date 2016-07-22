@@ -41,6 +41,11 @@ public class SyncGroupPayloadAdapter extends
     public void onBindViewHolder(ViewHolder holder, int position) {
         GroupPayload groupPayload = mGroupPayloads.get(position);
         holder.tv_payload.setText(groupPayload.getName());
+
+        if (mGroupPayloads.get(position).getErrorMessage() != null) {
+            holder.tv_error_message.setText(groupPayload.getErrorMessage());
+            holder.tv_error_message.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -58,6 +63,9 @@ public class SyncGroupPayloadAdapter extends
 
         @BindView(R.id.tv_sync_payload)
         TextView tv_payload;
+
+        @BindView(R.id.tv_payload_error_message)
+        TextView tv_error_message;
 
         public ViewHolder(View v) {
             super(v);

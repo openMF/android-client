@@ -46,7 +46,7 @@
                     android:gravity="bottom|start"
                     android:text="Error Message"
                     android:textColor="@color/black"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
