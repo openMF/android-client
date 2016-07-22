@@ -188,7 +188,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         this.groupPayloads = groups;
         mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
         if (groupPayloads.size() != 0) {
-            mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(mClientSyncIndex));
+            syncGroupPayload(mClientSyncIndex);
         } else {
             ll_error.setVisibility(View.VISIBLE);
             mNoPayloadText.setText("All Groups have been Sync");
@@ -203,7 +203,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
         mClientSyncIndex = mClientSyncIndex + 1;
         if (groupPayloads.size() != mClientSyncIndex) {
-            mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(mClientSyncIndex));
+            syncGroupPayload(mClientSyncIndex);
         }
     }
 
@@ -231,8 +231,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
                 case 0:
                     if (groupPayloads.size() != 0) {
                         mClientSyncIndex = 0;
-                        mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads
-                                .get(mClientSyncIndex));
+                        syncGroupPayload(mClientSyncIndex);
                     } else {
                         Toaster.show(rootView, "Nothing to Sync");
                     }
@@ -245,6 +244,12 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void syncGroupPayload(int index) {
+        if (groupPayloads.get(index).getErrorMessage() != null) {
+            mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(index));
+        }
     }
 
     @Override
