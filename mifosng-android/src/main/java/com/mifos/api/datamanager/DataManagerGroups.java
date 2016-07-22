@@ -118,4 +118,8 @@ public class DataManagerGroups {
         return mDatabaseHelperGroups.deleteAndUpdateGroupPayloads(id);
     }
 
+
+    public Observable<GroupPayload> updateGroupPayload(GroupPayload groupPayload) {
+        return mDatabaseHelperGroups.updateDatabaseGroupPayload(groupPayload);
+    }
 }

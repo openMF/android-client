@@ -10,9 +10,17 @@ import java.util.List;
  */
 public interface SyncGroupPayloadsMvpView extends MvpView {
 
-    void showGroupSyncResponse(List<GroupPayload> groupPayloads);
-
     void showOfflineModeDialog();
 
+    void showGroups(List<GroupPayload> groupPayloads);
+
+    void showGroupSyncResponse();
+
     void showGroupSyncFailed(String s);
+
+    void showPayloadDeletedAndUpdatePayloads(List<GroupPayload> groupPayloads);
+
+    void showGroupPayloadUpdated(GroupPayload groupPayload);
+
+    void showError(String s);
 }

@@ -63,6 +63,8 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
     List<GroupPayload> groupPayloads;
 
+    int mClientSyncIndex = 0;
+
     public static SyncGroupPayloadsFragment newInstance() {
         Bundle arguments = new Bundle();
         SyncGroupPayloadsFragment fragment = new SyncGroupPayloadsFragment();
@@ -124,25 +126,11 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
     }
 
-    /**
-     * This method is showing the group payload in the recyclerView.
-     * If Database Table have no entry then showing make recyclerView visibility gone and
-     * visible to the noPayloadIcon and noPayloadText to alert the user there is nothing
-     * to show.
-     *
-     * @param groupPayload
-     */
-    @Override
-    public void showGroupSyncResponse(List<GroupPayload> groupPayload) {
-        groupPayloads = groupPayload;
-        if (groupPayload.size() == 0) {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText("There is No Client Payload to Sync");
-            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
-        } else {
-            mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
-        }
 
+    @Override
+    public void showGroupSyncResponse() {
+        mSyncGroupPayloadsPresenter.deleteAndUpdateGroupPayload(groupPayloads
+                .get(mClientSyncIndex).getId());
     }
 
     @Override
@@ -158,10 +146,65 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     @Override
-    public void showGroupSyncFailed(String s) {
+    public void showError(String s) {
         ll_error.setVisibility(View.VISIBLE);
         mNoPayloadText.setText(s + "\n Click to Refresh ");
         Toaster.show(rootView, s);
+    }
+
+    /**
+     * This method is showing the group payload in the recyclerView.
+     * If Database Table have no entry then showing make recyclerView visibility gone and
+     * visible to the noPayloadIcon and noPayloadText to alert the user there is nothing
+     * to show.
+     *
+     * @param groupPayload
+     */
+    @Override
+    public void showGroups(List<GroupPayload> groupPayload) {
+        groupPayloads = groupPayload;
+        if (groupPayload.size() == 0) {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoPayloadText.setText("There is No Group Payload to Sync");
+            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+        } else {
+            mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
+        }
+
+    }
+
+    @Override
+    public void showGroupSyncFailed(String error) {
+        GroupPayload groupPayload = groupPayloads.get(mClientSyncIndex);
+        groupPayload.setErrorMessage(error);
+        mSyncGroupPayloadsPresenter.updateGroupPayload(groupPayload);
+
+    }
+
+    @Override
+    public void showPayloadDeletedAndUpdatePayloads(List<GroupPayload>  groups) {
+        mClientSyncIndex = 0;
+        groupPayloads.clear();
+        this.groupPayloads = groups;
+        mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
+        if (groupPayloads.size() != 0) {
+            mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(mClientSyncIndex));
+        } else {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoPayloadText.setText("All Groups have been Sync");
+            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+        }
+    }
+
+    @Override
+    public void showGroupPayloadUpdated(GroupPayload groupPayload) {
+        groupPayloads.set(mClientSyncIndex,groupPayload);
+        mSyncGroupPayloadAdapter.notifyDataSetChanged();
+
+        mClientSyncIndex = mClientSyncIndex + 1;
+        if (groupPayloads.size() != mClientSyncIndex) {
+            mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(mClientSyncIndex));
+        }
     }
 
     @Override
@@ -187,8 +230,11 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
             switch (PrefManager.getUserStatus()) {
                 case 0:
                     if (groupPayloads.size() != 0) {
-                        /*mSyncPayloadsPresenter.syncClientPayload(clientPayloads
-                                .get(mClientSyncIndex));*/
+                        mClientSyncIndex = 0;
+                        mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads
+                                .get(mClientSyncIndex));
+                    } else {
+                        Toaster.show(rootView, "Nothing to Sync");
                     }
                     break;
                 case 1:

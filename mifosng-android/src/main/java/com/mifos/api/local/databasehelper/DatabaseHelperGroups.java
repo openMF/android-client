@@ -126,4 +126,15 @@ public class DatabaseHelperGroups {
         });
     }
 
+
+    public Observable<GroupPayload> updateDatabaseGroupPayload(final GroupPayload groupPayload) {
+        return Observable.defer(new Func0<Observable<GroupPayload>>() {
+            @Override
+            public Observable<GroupPayload> call() {
+                groupPayload.update();
+                return Observable.just(groupPayload);
+            }
+        });
+    }
+
 }
