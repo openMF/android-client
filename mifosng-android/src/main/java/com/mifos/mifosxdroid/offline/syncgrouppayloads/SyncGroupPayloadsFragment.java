@@ -247,7 +247,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     public void syncGroupPayload(int index) {
-        if (groupPayloads.get(index).getErrorMessage() != null) {
+        if (groupPayloads.get(index).getErrorMessage() == null) {
             mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(index));
         }
     }
