@@ -16,9 +16,11 @@ public interface SyncClientPayloadsMvpView extends MvpView {
 
     void showSyncResponse();
 
-    void showClientSyncFailed();
+    void showClientSyncFailed(String error);
 
     void showOfflineModeDialog();
+
+    void showClientPayloadUpdated(ClientPayload clientPayload);
 
     void showPayloadDeletedAndUpdatePayloads(List<ClientPayload> clientPayloads);
 }

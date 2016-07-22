@@ -179,9 +179,12 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      * the mClientSyncIndex by one and sync the next client payload
      */
     @Override
-    public void showClientSyncFailed() {
-        mClientSyncIndex = mClientSyncIndex + 1;
-        mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(mClientSyncIndex));
+    public void showClientSyncFailed(String error) {
+
+        ClientPayload clientPayload = clientPayloads.get(mClientSyncIndex);
+        clientPayload.setErrorMessage(error);
+        mSyncPayloadsPresenter.updateClientPayload(clientPayload);
+
     }
 
     /**
@@ -200,6 +203,23 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         builder.show();
     }
 
+
+    /**
+     * This method will update client Payload in List<ClientPayload> after adding Error message in
+     * database
+     *
+     * @param clientPayload
+     */
+    @Override
+    public void showClientPayloadUpdated(ClientPayload clientPayload) {
+        clientPayloads.set(mClientSyncIndex,clientPayload);
+        mSyncPayloadsAdapter.notifyDataSetChanged();
+
+        mClientSyncIndex = mClientSyncIndex + 1;
+        if (clientPayloads.size() != mClientSyncIndex) {
+            mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(mClientSyncIndex));
+        }
+    }
 
 
     /**
@@ -243,6 +263,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
             switch (PrefManager.getUserStatus()) {
                 case 0:
                     if (clientPayloads.size() != 0) {
+                        mClientSyncIndex = 0;
                         mSyncPayloadsPresenter.syncClientPayload(clientPayloads
                                 .get(mClientSyncIndex));
                     }

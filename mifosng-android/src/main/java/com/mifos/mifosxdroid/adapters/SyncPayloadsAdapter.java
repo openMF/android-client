@@ -49,6 +49,15 @@ public class SyncPayloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).tv_payload
                     .setText(clientPayloads.get(position).getFirstname() + " " +
                     clientPayloads.get(position).getLastname());
+
+            if (clientPayloads.get(position).getErrorMessage() != null) {
+                ((ViewHolder) holder).tv_payload_error_message.setText(
+
+                        "\n Server Error Response : \n" +
+                        clientPayloads.get(position).getErrorMessage());
+                ((ViewHolder) holder).tv_payload_error_message.setVisibility(View.VISIBLE);
+            }
+
         }
     }
 
@@ -67,6 +76,9 @@ public class SyncPayloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @BindView(R.id.tv_sync_payload)
         TextView tv_payload;
+
+        @BindView(R.id.tv_payload_error_message)
+        TextView tv_payload_error_message;
 
         public ViewHolder(View v) {
             super(v);

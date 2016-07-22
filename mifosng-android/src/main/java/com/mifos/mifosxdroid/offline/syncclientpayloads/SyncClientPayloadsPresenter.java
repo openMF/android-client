@@ -9,9 +9,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -81,8 +83,16 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showClientSyncFailed();
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showProgressbar(false);
+                                getMvpView().showClientSyncFailed(errorMessage);
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
                     }
 
                     @Override
@@ -118,6 +128,33 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                         getMvpView().showPayloadDeletedAndUpdatePayloads(clientPayloads);
                     }
                 }));
+    }
+
+    public void updateClientPayload(ClientPayload clientPayload) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerClient.updateClientPayload(clientPayload)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<ClientPayload>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showError("Failed to update client");
+                    }
+
+                    @Override
+                    public void onNext(ClientPayload clientPayload) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showClientPayloadUpdated(clientPayload);
+                    }
+                })
+        );
     }
 
 }

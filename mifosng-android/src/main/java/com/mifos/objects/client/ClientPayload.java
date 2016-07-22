@@ -26,6 +26,9 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
     transient int id;
 
     @Column
+    transient String errorMessage;
+
+    @Column
     String firstname;
 
     @Column
@@ -73,6 +76,13 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
     @Column
     String locale = "en";
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     public int getClientClassificationId() {
         return clientClassificationId;
