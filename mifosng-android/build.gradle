@@ -6,11 +6,11 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://download.crashlytics.com/maven' }
+        //maven { url 'http://download.crashlytics.com/maven' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+        //classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
     }
@@ -18,14 +18,14 @@ buildscript {
 
 repositories {
     mavenCentral()
-    maven { url 'http://download.crashlytics.com/maven' }
+    //maven { url 'http://download.crashlytics.com/maven' }
     maven { url "https://jitpack.io" }
     maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'crashlytics'
+//apply plugin: 'crashlytics'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.triplet.play'
@@ -192,7 +192,7 @@ dependencies {
 
 
     compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
-    compile 'com.crashlytics.android:crashlytics:1.+'
+    //compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
