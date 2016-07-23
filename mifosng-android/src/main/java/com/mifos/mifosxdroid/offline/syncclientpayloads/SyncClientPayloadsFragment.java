@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +41,8 @@ import butterknife.OnClick;
  */
 public class SyncClientPayloadsFragment extends MifosBaseFragment
         implements SyncClientPayloadsMvpView {
+
+    public final String LOG_TAG = getClass().getSimpleName();
 
     @BindView(R.id.rv_sync_payload)
     RecyclerView rv_payload_clients;
@@ -217,7 +220,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
 
         mClientSyncIndex = mClientSyncIndex + 1;
         if (clientPayloads.size() != mClientSyncIndex) {
-            mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(mClientSyncIndex));
+            syncClientPayload();
         }
     }
 
@@ -234,7 +237,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         this.clientPayloads = clients;
         mSyncPayloadsAdapter.notifyDataSetChanged();
         if (clientPayloads.size() != 0) {
-            mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(mClientSyncIndex));
+            syncClientPayload();
         } else {
             ll_error.setVisibility(View.VISIBLE);
             mNoPayloadText.setText("All Clients have been Sync");
@@ -264,8 +267,9 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
                 case 0:
                     if (clientPayloads.size() != 0) {
                         mClientSyncIndex = 0;
-                        mSyncPayloadsPresenter.syncClientPayload(clientPayloads
-                                .get(mClientSyncIndex));
+                        syncClientPayload();
+                    } else {
+                        Toaster.show(rootView, "Nothing To Sync");
                     }
                     break;
                 case 1:
@@ -276,6 +280,19 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void syncClientPayload() {
+        for (int i=0; i<clientPayloads.size(); ++i) {
+            if (clientPayloads.get(i).getErrorMessage() == null) {
+                mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(i));
+                mClientSyncIndex = i;
+                break;
+            } else {
+                Log.d(LOG_TAG, "Please Fix the Error before sync" +
+                        clientPayloads.get(i).getErrorMessage());
+            }
+        }
     }
 
     @Override
