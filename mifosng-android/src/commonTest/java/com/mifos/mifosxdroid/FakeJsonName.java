@@ -14,4 +14,5 @@ public class FakeJsonName {
     public static final String DOCUMENTS_JSON = "documents.json";
     public static final String GROUPS_JSON = "groups.json";
     public static final String CLIENT_PAYLOADS = "clientpayloads.json";
+    public static final String FAILURE_SERVER_RESPONSE = "failureServerResponse.json";
 }

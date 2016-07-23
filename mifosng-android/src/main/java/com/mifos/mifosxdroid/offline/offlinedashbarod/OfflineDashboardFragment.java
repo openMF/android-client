@@ -127,8 +127,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Override
     public void showClients(List<ClientPayload> clientPayloads) {
         if (clientPayloads.size() != 0) {
-            mOfflineDashboardAdapter.showClientCard("Payload : " +
-                    String.valueOf(clientPayloads.size()));
+            mOfflineDashboardAdapter.showClientCard("Payload : " + clientPayloads.size());
             mPayloadClasses.add(SyncClientPayloadActivity.class);
         } else {
             mPayloadIndex = mPayloadIndex - 1;
@@ -139,8 +138,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Override
     public void showGroups(List<GroupPayload> groupPayloads) {
         if (groupPayloads.size() != 0) {
-            mOfflineDashboardAdapter.showGroupCard("Payload : " +
-                    String.valueOf(groupPayloads.size()));
+            mOfflineDashboardAdapter.showGroupCard("Payload : " + groupPayloads.size());
             mPayloadClasses.add(SyncGroupPayloadsActivity.class);
         } else {
             mPayloadIndex = mPayloadIndex - 1;

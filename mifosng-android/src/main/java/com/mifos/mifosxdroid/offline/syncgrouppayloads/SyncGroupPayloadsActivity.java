@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
 
 /**
  * Created by Rajan Maurya on 21/07/16.

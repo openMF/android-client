@@ -1,7 +1,9 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
+import com.google.gson.Gson;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
 
@@ -87,8 +89,11 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                             if (e instanceof HttpException) {
                                 String errorMessage = ((HttpException) e).response().errorBody()
                                         .string();
+                                Gson gson = new Gson();
+                                ErrorSyncServerMessage syncErrorMessage = gson.
+                                        fromJson(errorMessage, ErrorSyncServerMessage.class);
                                 getMvpView().showProgressbar(false);
-                                getMvpView().showClientSyncFailed(errorMessage);
+                                getMvpView().showClientSyncFailed(syncErrorMessage);
                             }
                         } catch (Throwable throwable) {
                             RxJavaPlugins.getInstance().getErrorHandler().handleError(e);

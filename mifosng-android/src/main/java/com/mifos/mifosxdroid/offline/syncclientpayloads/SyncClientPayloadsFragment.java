@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -185,12 +184,9 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      * the mClientSyncIndex by one and sync the next client payload
      */
     @Override
-    public void showClientSyncFailed(String error) {
-        Gson gson = new Gson();
-        ErrorSyncServerMessage syncErrorMessage = gson.fromJson(error,
-                ErrorSyncServerMessage.class);
+    public void showClientSyncFailed(ErrorSyncServerMessage error) {
         ClientPayload clientPayload = clientPayloads.get(mClientSyncIndex);
-        clientPayload.setErrorMessage(syncErrorMessage.getDefaultUserMessage());
+        clientPayload.setErrorMessage(error.getDefaultUserMessage());
         mSyncPayloadsPresenter.updateClientPayload(clientPayload);
 
     }

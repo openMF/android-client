@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid;
 
 import com.google.gson.reflect.TypeToken;
+import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.ClientPayload;
@@ -64,5 +65,9 @@ public class FakeRemoteDataSource {
         }, FakeJsonName.CLIENT_PAYLOADS);
     }
 
+    public static ErrorSyncServerMessage getFailureServerResponse() {
+        return mTestDataFactory.getObjectTypePojo(ErrorSyncServerMessage.class,
+                FakeJsonName.FAILURE_SERVER_RESPONSE);
+    }
 
 }
