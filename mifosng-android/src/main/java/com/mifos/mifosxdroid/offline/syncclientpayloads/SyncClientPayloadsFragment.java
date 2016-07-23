@@ -38,7 +38,7 @@ import butterknife.OnClick;
 /**
  * This Class for Syncing the clients that is created in offline mode.
  * For syncing the clients user make sure that he/she is in the online mode.
- *
+ * <p/>
  * Created by Rajan Maurya on 08/07/16.
  */
 public class SyncClientPayloadsFragment extends MifosBaseFragment
@@ -156,6 +156,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
 
     /**
      * Showing Error when failed to fetch client payload from Database
+     *
      * @param s Error String
      */
     @Override
@@ -219,7 +220,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      */
     @Override
     public void showClientPayloadUpdated(ClientPayload clientPayload) {
-        clientPayloads.set(mClientSyncIndex,clientPayload);
+        clientPayloads.set(mClientSyncIndex, clientPayload);
         mSyncPayloadsAdapter.notifyDataSetChanged();
 
         mClientSyncIndex = mClientSyncIndex + 1;
@@ -232,6 +233,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     /**
      * This is called whenever a client  payload is synced and synced client payload is
      * deleted from the Database and update UI
+     *
      * @param clients
      */
     @Override
@@ -287,7 +289,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     }
 
     public void syncClientPayload() {
-        for (int i=0; i<clientPayloads.size(); ++i) {
+        for (int i = 0; i < clientPayloads.size(); ++i) {
             if (clientPayloads.get(i).getErrorMessage() == null) {
                 mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(i));
                 mClientSyncIndex = i;

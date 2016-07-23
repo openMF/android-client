@@ -77,7 +77,6 @@ public class DataManagerGroups {
     }
 
 
-
     public Observable<Group> createGroup(GroupPayload groupPayload) {
         switch (PrefManager.getUserStatus()) {
             case 0:
@@ -96,7 +95,7 @@ public class DataManagerGroups {
                  * If offset is zero this means this is first request and
                  * return all clients from DatabaseHelperClient
                  */
-                 return mDatabaseHelperGroups.saveGroupPayload(groupPayload);
+                return mDatabaseHelperGroups.saveGroupPayload(groupPayload);
 
             default:
                 return Observable.just(new Group());
@@ -111,6 +110,7 @@ public class DataManagerGroups {
      * This method will called when user is syncing the group created from Database.
      * whenever a group is synced then request goes to Database to delete that group form
      * Database and reload the list from Database and update the list in UI
+     *
      * @param id of the groupPayload in Database
      * @return List<GroupPayload></>
      */

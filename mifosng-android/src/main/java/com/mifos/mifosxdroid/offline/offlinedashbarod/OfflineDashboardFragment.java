@@ -107,7 +107,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         ButterKnife.bind(this, rootView);
         mOfflineDashboardPresenter.attachView(this);
 
-        LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),GRID_COUNT);
+        LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), GRID_COUNT);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_offline_dashboard.setLayoutManager(mLayoutManager);
         rv_offline_dashboard.setHasFixedSize(true);
@@ -131,7 +131,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
                     String.valueOf(clientPayloads.size()));
             mPayloadClasses.add(SyncClientPayloadActivity.class);
         } else {
-            mPayloadIndex = mPayloadIndex -1;
+            mPayloadIndex = mPayloadIndex - 1;
             showNoPayloadToShow();
         }
     }
@@ -143,7 +143,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
                     String.valueOf(groupPayloads.size()));
             mPayloadClasses.add(SyncGroupPayloadsActivity.class);
         } else {
-            mPayloadIndex = mPayloadIndex -1;
+            mPayloadIndex = mPayloadIndex - 1;
             showNoPayloadToShow();
         }
     }
@@ -174,9 +174,11 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
 
     public void showPayloadActivity(int position) {
         switch (position) {
-            case 0 : startPayloadActivity(mPayloadClasses.get(position));
+            case 0:
+                startPayloadActivity(mPayloadClasses.get(position));
                 break;
-            case 1 : startPayloadActivity(mPayloadClasses.get(position));
+            case 1:
+                startPayloadActivity(mPayloadClasses.get(position));
                 break;
             default:
                 break;

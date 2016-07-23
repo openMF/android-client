@@ -190,7 +190,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     @Override
-    public void showPayloadDeletedAndUpdatePayloads(List<GroupPayload>  groups) {
+    public void showPayloadDeletedAndUpdatePayloads(List<GroupPayload> groups) {
         mClientSyncIndex = 0;
         this.groupPayloads = groups;
         mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
@@ -205,7 +205,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
     @Override
     public void showGroupPayloadUpdated(GroupPayload groupPayload) {
-        groupPayloads.set(mClientSyncIndex,groupPayload);
+        groupPayloads.set(mClientSyncIndex, groupPayload);
         mSyncGroupPayloadAdapter.notifyDataSetChanged();
 
         mClientSyncIndex = mClientSyncIndex + 1;
@@ -254,7 +254,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     public void syncGroupPayload() {
-        for (int i=0; i<groupPayloads.size(); ++i) {
+        for (int i = 0; i < groupPayloads.size(); ++i) {
             if (groupPayloads.get(i).getErrorMessage() == null) {
                 mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(i));
                 mClientSyncIndex = i;
