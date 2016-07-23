@@ -16,11 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.utils.PrefManager;
 
@@ -183,9 +185,11 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      */
     @Override
     public void showClientSyncFailed(String error) {
-
+        Gson gson = new Gson();
+        ErrorSyncServerMessage syncErrorMessage = gson.fromJson(error,
+                ErrorSyncServerMessage.class);
         ClientPayload clientPayload = clientPayloads.get(mClientSyncIndex);
-        clientPayload.setErrorMessage(error);
+        clientPayload.setErrorMessage(syncErrorMessage.getDefaultUserMessage());
         mSyncPayloadsPresenter.updateClientPayload(clientPayload);
 
     }
@@ -235,7 +239,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         mClientSyncIndex = 0;
         clientPayloads.clear();
         this.clientPayloads = clients;
-        mSyncPayloadsAdapter.notifyDataSetChanged();
+        mSyncPayloadsAdapter.setClientPayload(clientPayloads);
         if (clientPayloads.size() != 0) {
             syncClientPayload();
         } else {

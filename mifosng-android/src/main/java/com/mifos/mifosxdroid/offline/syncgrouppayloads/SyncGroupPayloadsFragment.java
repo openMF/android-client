@@ -192,7 +192,6 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     @Override
     public void showPayloadDeletedAndUpdatePayloads(List<GroupPayload>  groups) {
         mClientSyncIndex = 0;
-        groupPayloads.clear();
         this.groupPayloads = groups;
         mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
         if (groupPayloads.size() != 0) {
