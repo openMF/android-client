@@ -312,6 +312,9 @@
     <string name="error_select_officer">Select Officer</string>
     <string name="error_select_client">Select Client</string>
 
+    <!--Offline sync Terms-->
+    <string name="submit_date">Submit Date</string>
+    <string name="error_message">Server Sync Error</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>
