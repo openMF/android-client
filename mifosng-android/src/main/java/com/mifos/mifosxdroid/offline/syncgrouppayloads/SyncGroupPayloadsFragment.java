@@ -16,11 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SyncGroupPayloadAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.PrefManager;
 
@@ -178,8 +180,11 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
     @Override
     public void showGroupSyncFailed(String error) {
+        Gson gson = new Gson();
+        ErrorSyncServerMessage syncErrorMessage = gson.fromJson(error,
+                ErrorSyncServerMessage.class);
         GroupPayload groupPayload = groupPayloads.get(mClientSyncIndex);
-        groupPayload.setErrorMessage(error);
+        groupPayload.setErrorMessage(syncErrorMessage.getDefaultUserMessage());
         mSyncGroupPayloadsPresenter.updateGroupPayload(groupPayload);
 
     }

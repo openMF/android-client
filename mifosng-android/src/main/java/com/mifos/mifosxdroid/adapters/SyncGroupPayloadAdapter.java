@@ -33,14 +33,25 @@ public class SyncGroupPayloadAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_sync_payload, parent, false);
+                .inflate(R.layout.item_sync_group, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         GroupPayload groupPayload = mGroupPayloads.get(position);
-        holder.tv_payload.setText(groupPayload.getName());
+
+        holder.tv_name.setText(groupPayload.getName());
+        holder.tv_external_id.setText(groupPayload.getExternalId());
+        holder.tv_office_id.setText(String.valueOf(groupPayload.getOfficeId()));
+        holder.tv_submit_date.setText(groupPayload.getSubmittedOnDate());
+        holder.tv_activation_date.setText(groupPayload.getActivationDate());
+        if (groupPayload.isActive()) {
+            holder.tv_active_status.setText(String.valueOf(true));
+        } else {
+            holder.tv_active_status.setText(String.valueOf(false));
+        }
 
         if (mGroupPayloads.get(position).getErrorMessage() != null) {
             holder.tv_error_message.setText(groupPayload.getErrorMessage());
@@ -61,10 +72,25 @@ public class SyncGroupPayloadAdapter extends
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_sync_payload)
-        TextView tv_payload;
+        @BindView(R.id.tv_db_name)
+        TextView tv_name;
 
-        @BindView(R.id.tv_payload_error_message)
+        @BindView(R.id.tv_db_externalId)
+        TextView tv_external_id;
+
+        @BindView(R.id.tv_db_office_id)
+        TextView tv_office_id;
+
+        @BindView(R.id.tv_db_submit_date)
+        TextView tv_submit_date;
+
+        @BindView(R.id.tv_db_activation_date)
+        TextView tv_activation_date;
+
+        @BindView(R.id.tv_db_active_status)
+        TextView tv_active_status;
+
+        @BindView(R.id.tv_error_message)
         TextView tv_error_message;
 
         public ViewHolder(View v) {
