@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +38,8 @@ import butterknife.OnClick;
  */
 public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         SyncGroupPayloadsMvpView {
+
+    public final String LOG_TAG = getClass().getSimpleName();
 
     @BindView(R.id.rv_sync_payload)
     RecyclerView rv_payload_group;
@@ -188,7 +191,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         this.groupPayloads = groups;
         mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
         if (groupPayloads.size() != 0) {
-            syncGroupPayload(mClientSyncIndex);
+            syncGroupPayload();
         } else {
             ll_error.setVisibility(View.VISIBLE);
             mNoPayloadText.setText("All Groups have been Sync");
@@ -203,7 +206,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
 
         mClientSyncIndex = mClientSyncIndex + 1;
         if (groupPayloads.size() != mClientSyncIndex) {
-            syncGroupPayload(mClientSyncIndex);
+            syncGroupPayload();
         }
     }
 
@@ -231,7 +234,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
                 case 0:
                     if (groupPayloads.size() != 0) {
                         mClientSyncIndex = 0;
-                        syncGroupPayload(mClientSyncIndex);
+                        syncGroupPayload();
                     } else {
                         Toaster.show(rootView, "Nothing to Sync");
                     }
@@ -246,9 +249,16 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void syncGroupPayload(int index) {
-        if (groupPayloads.get(index).getErrorMessage() == null) {
-            mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(index));
+    public void syncGroupPayload() {
+        for (int i=0; i<groupPayloads.size(); ++i) {
+            if (groupPayloads.get(i).getErrorMessage() == null) {
+                mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(i));
+                mClientSyncIndex = i;
+                break;
+            } else {
+                Log.d(LOG_TAG, "Please Fix the Error before sync" +
+                        groupPayloads.get(i).getErrorMessage());
+            }
         }
     }
 
