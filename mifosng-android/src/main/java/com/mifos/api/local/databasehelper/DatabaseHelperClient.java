@@ -199,10 +199,10 @@ public class DatabaseHelperClient {
      * @param clientsTemplate fetched from Server
      * @return void
      */
-    public Observable<Void> saveClientTemplate(final ClientsTemplate clientsTemplate) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+    public Observable<ClientsTemplate> saveClientTemplate(final ClientsTemplate clientsTemplate) {
+        return Observable.defer(new Func0<Observable<ClientsTemplate>>() {
             @Override
-            public void run() {
+            public Observable<ClientsTemplate> call() {
                 //saving clientTemplate into DB;
                 clientsTemplate.save();
 
@@ -238,10 +238,9 @@ public class DatabaseHelperClient {
                     interestType.save();
                 }
 
+                return Observable.just(clientsTemplate);
             }
         });
-
-        return null;
     }
 
 
