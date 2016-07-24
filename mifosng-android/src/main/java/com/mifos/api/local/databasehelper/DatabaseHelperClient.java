@@ -249,9 +249,9 @@ public class DatabaseHelperClient {
      * @return ClientTemplate
      */
     public Observable<ClientsTemplate> readClientTemplate() {
-        return Observable.create(new Observable.OnSubscribe<ClientsTemplate>() {
+        return Observable.defer(new Func0<Observable<ClientsTemplate>>() {
             @Override
-            public void call(Subscriber<? super ClientsTemplate> subscriber) {
+            public Observable<ClientsTemplate> call() {
 
                 ClientsTemplate clientsTemplate = SQLite.select()
                         .from(ClientsTemplate.class)
@@ -298,8 +298,7 @@ public class DatabaseHelperClient {
                 clientsTemplate.setClientClassificationOptions(clientClassificationOptions);
                 clientsTemplate.setClientLegalFormOptions(clientLegalFormOptions);
 
-                subscriber.onNext(clientsTemplate);
-
+                return Observable.just(clientsTemplate);
             }
         });
     }
