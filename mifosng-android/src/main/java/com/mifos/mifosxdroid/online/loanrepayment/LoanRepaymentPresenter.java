@@ -9,9 +9,9 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 8/6/16.
@@ -19,11 +19,12 @@ import rx.schedulers.Schedulers;
 public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
     public LoanRepaymentPresenter(DataManager dataManager) {
         mDataManager = dataManager;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -34,14 +35,13 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loanLoanRepaymentTemplate(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanRepayTemplate(loanId)
+        mSubscriptions.add(mDataManager.getLoanRepayTemplate(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentTemplate>() {
@@ -61,14 +61,13 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanRepayTemplate(loanRepaymentTemplate);
                     }
-                });
+                }));
     }
 
     public void submitPayment(int loanId, LoanRepaymentRequest request) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.submitPayment(loanId, request)
+        mSubscriptions.add(mDataManager.submitPayment(loanId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentResponse>() {
@@ -88,7 +87,7 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                         getMvpView().showProgressbar(false);
                         getMvpView().showPaymentSubmittedSuccessfully(loanRepaymentResponse);
                     }
-                });
+                }));
     }
 
 
