@@ -23,16 +23,16 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class Options  extends MifosBaseModel implements Parcelable {
 
-    @PrimaryKey
+    @Column
     String genderOptions;
 
-    @PrimaryKey
+    @Column
     String clientTypeOptions;
 
-    @PrimaryKey
+    @Column
     String clientClassificationOptions;
 
-    @Column
+    @PrimaryKey
     int id;
 
     @Column
