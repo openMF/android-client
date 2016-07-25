@@ -268,10 +268,6 @@ public class DataManager {
         return mBaseApiManager.getDataTableApi().getTableOf("m_client");
     }
 
-    public Observable<List<DataTable>> getLoanDataTable() {
-        return mBaseApiManager.getDataTableApi().getTableOf("m_loan");
-    }
-
     public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId) {
         return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
                 table, entity, rowId);
@@ -296,9 +292,6 @@ public class DataManager {
     /**
      * Loans API
      */
-    public Observable<LoanWithAssociations> getLoanById(int loanAccountNumber) {
-        return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanAccountNumber);
-    }
 
     public Observable<LoanWithAssociations> getLoanTransactions(int loan) {
         return mBaseApiManager.getLoanApi().getLoanWithTransactions(loan);

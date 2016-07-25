@@ -2,6 +2,7 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperLoan;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.LoanTemplate;
@@ -30,6 +31,9 @@ public class DataManagerLoan {
         mDatabaseHelperLoan = databaseHelperLoan;
     }
 
+    public Observable<LoanWithAssociations> getLoanById(int loanAccountNumber) {
+        return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanAccountNumber);
+    }
 
     public Observable<List<LoanProducts>> getAllLoans() {
         return mBaseApiManager.getLoanApi().getAllLoans();
