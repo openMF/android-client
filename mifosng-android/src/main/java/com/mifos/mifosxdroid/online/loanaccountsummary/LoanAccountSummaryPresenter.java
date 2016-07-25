@@ -10,9 +10,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -20,11 +20,12 @@ import rx.schedulers.Schedulers;
 public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummaryMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
     public LoanAccountSummaryPresenter(DataManager dataManager) {
         mDataManager = dataManager;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -35,14 +36,13 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadLoanDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanDataTable()
+        mSubscriptions.add(mDataManager.getLoanDataTable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
@@ -62,14 +62,13 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanDataTable(dataTables);
                     }
-                });
+                }));
     }
 
     public void loadLoanById(int loanAccountNumber) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanById(loanAccountNumber)
+        mSubscriptions.add(mDataManager.getLoanById(loanAccountNumber)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanWithAssociations>() {
@@ -89,7 +88,7 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanById(loanWithAssociations);
                     }
-                });
+                }));
     }
 
 }
