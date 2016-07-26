@@ -5,15 +5,14 @@
 
 package com.mifos.objects.accounts.loan;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class AmortizationType {
+public class AmortizationType implements Parcelable {
 
     private Integer id;
     private String code;
     private String value;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -39,12 +38,38 @@ public class AmortizationType {
         this.value = value;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.code);
+        dest.writeString(this.value);
     }
 
+    public AmortizationType() {
+    }
+
+    protected AmortizationType(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+    }
+
+    public static final Parcelable.Creator<AmortizationType> CREATOR = new Parcelable
+            .Creator<AmortizationType>() {
+        @Override
+        public AmortizationType createFromParcel(Parcel source) {
+            return new AmortizationType(source);
+        }
+
+        @Override
+        public AmortizationType[] newArray(int size) {
+            return new AmortizationType[size];
+        }
+    };
 }

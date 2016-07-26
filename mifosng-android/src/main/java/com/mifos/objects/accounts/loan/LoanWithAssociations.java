@@ -5,67 +5,128 @@
 
 package com.mifos.objects.accounts.loan;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.accounts.savings.Currency;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Generated;
-
-@Generated("org.jsonschema2pojo")
-public class LoanWithAssociations {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class LoanWithAssociations extends MifosBaseModel implements Parcelable {
     //TODO Fix OBJECT Typed Lists
-    private Integer id;
-    private String accountNo;
-    private Status status;
-    private Integer clientId;
-    private String clientName;
-    private Integer clientOfficeId;
-    private Integer loanProductId;
-    private String loanProductName;
-    private String loanProductDescription;
-    private Integer fundId;
-    private String fundName;
-    private Integer loanPurposeId;
-    private String loanPurposeName;
-    private Integer loanOfficerId;
-    private String loanOfficerName;
-    private LoanType loanType;
-    private Currency currency;
-    private Double principal;
-    private Double approvedPrincipal;
-    private Integer termFrequency;
-    private TermPeriodFrequencyType termPeriodFrequencyType;
-    private Integer numberOfRepayments;
-    private Integer repaymentEvery;
-    private RepaymentFrequencyType repaymentFrequencyType;
-    private Double interestRatePerPeriod;
-    private InterestRateFrequencyType interestRateFrequencyType;
-    private Double annualInterestRate;
-    private AmortizationType amortizationType;
-    private InterestType interestType;
-    private InterestCalculationPeriodType interestCalculationPeriodType;
-    private Integer transactionProcessingStrategyId;
-    private String transactionProcessingStrategyName;
-    private Boolean syncDisbursementWithMeeting;
-    private Timeline timeline;
-    private Summary summary;
-    private RepaymentSchedule repaymentSchedule;
-    private List<Transaction> transactions = new ArrayList<Transaction>();
-    private List<Object> disbursementDetails;
-    private Double feeChargesAtDisbursementCharged;
-    private Double totalOverpaid;
-    private Integer loanCounter;
-    private Integer loanProductCounter;
-    private Boolean multiDisburseLoan;
-    private Boolean canDisburse;
-    private List<Object> emiAmountVariations;
-    private Boolean inArrears;
-    private Boolean isNPA;
-    private List<Object> overdueCharges;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String accountNo;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    Status status;
+
+    Integer clientId;
+
+    @Column
+    String clientName;
+
+    Integer clientOfficeId;
+
+    Integer loanProductId;
+
+    @Column
+    String loanProductName;
+
+    String loanProductDescription;
+
+    Integer fundId;
+
+    String fundName;
+
+    Integer loanPurposeId;
+
+    String loanPurposeName;
+
+    Integer loanOfficerId;
+
+    @Column
+    String loanOfficerName;
+
+    LoanType loanType;
+
+    Currency currency;
+
+    Double principal;
+
+    Double approvedPrincipal;
+
+    Integer termFrequency;
+
+    TermPeriodFrequencyType termPeriodFrequencyType;
+
+    Integer numberOfRepayments;
+
+    Integer repaymentEvery;
+
+    RepaymentFrequencyType repaymentFrequencyType;
+
+    Double interestRatePerPeriod;
+
+    InterestRateFrequencyType interestRateFrequencyType;
+
+    Double annualInterestRate;
+
+    AmortizationType amortizationType;
+
+    InterestType interestType;
+
+    InterestCalculationPeriodType interestCalculationPeriodType;
+
+    Integer transactionProcessingStrategyId;
+
+    String transactionProcessingStrategyName;
+
+    Boolean syncDisbursementWithMeeting;
+
+    Timeline timeline;
+
+    Summary summary;
+
+    RepaymentSchedule repaymentSchedule;
+
+    List<Transaction> transactions = new ArrayList<Transaction>();
+
+    List<Object> disbursementDetails;
+
+    Double feeChargesAtDisbursementCharged;
+
+    Double totalOverpaid;
+
+    Integer loanCounter;
+
+    Integer loanProductCounter;
+
+    Boolean multiDisburseLoan;
+
+    Boolean canDisburse;
+
+    List<Object> emiAmountVariations;
+
+    Boolean inArrears;
+
+    Boolean isNPA;
+
+    List<Object> overdueCharges;
 
     public Integer getId() {
         return id;
@@ -452,12 +513,137 @@ public class LoanWithAssociations {
         this.overdueCharges = overdueCharges;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.accountNo);
+        dest.writeParcelable(this.status, flags);
+        dest.writeValue(this.clientId);
+        dest.writeString(this.clientName);
+        dest.writeValue(this.clientOfficeId);
+        dest.writeValue(this.loanProductId);
+        dest.writeString(this.loanProductName);
+        dest.writeString(this.loanProductDescription);
+        dest.writeValue(this.fundId);
+        dest.writeString(this.fundName);
+        dest.writeValue(this.loanPurposeId);
+        dest.writeString(this.loanPurposeName);
+        dest.writeValue(this.loanOfficerId);
+        dest.writeString(this.loanOfficerName);
+        dest.writeParcelable(this.loanType, flags);
+        dest.writeParcelable(this.currency, flags);
+        dest.writeValue(this.principal);
+        dest.writeValue(this.approvedPrincipal);
+        dest.writeValue(this.termFrequency);
+        dest.writeParcelable(this.termPeriodFrequencyType, flags);
+        dest.writeValue(this.numberOfRepayments);
+        dest.writeValue(this.repaymentEvery);
+        dest.writeParcelable(this.repaymentFrequencyType, flags);
+        dest.writeValue(this.interestRatePerPeriod);
+        dest.writeParcelable(this.interestRateFrequencyType, flags);
+        dest.writeValue(this.annualInterestRate);
+        dest.writeParcelable(this.amortizationType, flags);
+        dest.writeParcelable(this.interestType, flags);
+        dest.writeParcelable(this.interestCalculationPeriodType, flags);
+        dest.writeValue(this.transactionProcessingStrategyId);
+        dest.writeString(this.transactionProcessingStrategyName);
+        dest.writeValue(this.syncDisbursementWithMeeting);
+        dest.writeParcelable(this.timeline, flags);
+        dest.writeParcelable(this.summary, flags);
+        dest.writeParcelable(this.repaymentSchedule, flags);
+        dest.writeList(this.transactions);
+        dest.writeList(this.disbursementDetails);
+        dest.writeValue(this.feeChargesAtDisbursementCharged);
+        dest.writeValue(this.totalOverpaid);
+        dest.writeValue(this.loanCounter);
+        dest.writeValue(this.loanProductCounter);
+        dest.writeValue(this.multiDisburseLoan);
+        dest.writeValue(this.canDisburse);
+        dest.writeList(this.emiAmountVariations);
+        dest.writeValue(this.inArrears);
+        dest.writeValue(this.isNPA);
+        dest.writeList(this.overdueCharges);
     }
 
+    public LoanWithAssociations() {
+    }
+
+    protected LoanWithAssociations(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.clientName = in.readString();
+        this.clientOfficeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.loanProductId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.loanProductName = in.readString();
+        this.loanProductDescription = in.readString();
+        this.fundId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.fundName = in.readString();
+        this.loanPurposeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.loanPurposeName = in.readString();
+        this.loanOfficerId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.loanOfficerName = in.readString();
+        this.loanType = in.readParcelable(LoanType.class.getClassLoader());
+        this.currency = in.readParcelable(Currency.class.getClassLoader());
+        this.principal = (Double) in.readValue(Double.class.getClassLoader());
+        this.approvedPrincipal = (Double) in.readValue(Double.class.getClassLoader());
+        this.termFrequency = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.termPeriodFrequencyType = in.readParcelable(TermPeriodFrequencyType.class
+                .getClassLoader());
+        this.numberOfRepayments = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.repaymentEvery = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.repaymentFrequencyType = in.readParcelable(RepaymentFrequencyType.class
+                .getClassLoader());
+        this.interestRatePerPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestRateFrequencyType = in.readParcelable(InterestRateFrequencyType.class
+                .getClassLoader());
+        this.annualInterestRate = (Double) in.readValue(Double.class.getClassLoader());
+        this.amortizationType = in.readParcelable(AmortizationType.class.getClassLoader());
+        this.interestType = in.readParcelable(InterestType.class.getClassLoader());
+        this.interestCalculationPeriodType = in.readParcelable(InterestCalculationPeriodType
+                .class.getClassLoader());
+        this.transactionProcessingStrategyId = (Integer) in.readValue(Integer.class
+                .getClassLoader());
+        this.transactionProcessingStrategyName = in.readString();
+        this.syncDisbursementWithMeeting = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
+        this.summary = in.readParcelable(Summary.class.getClassLoader());
+        this.repaymentSchedule = in.readParcelable(RepaymentSchedule.class.getClassLoader());
+        this.transactions = new ArrayList<Transaction>();
+        in.readList(this.transactions, Transaction.class.getClassLoader());
+        this.disbursementDetails = new ArrayList<Object>();
+        in.readList(this.disbursementDetails, Object.class.getClassLoader());
+        this.feeChargesAtDisbursementCharged = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalOverpaid = (Double) in.readValue(Double.class.getClassLoader());
+        this.loanCounter = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.loanProductCounter = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.multiDisburseLoan = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.canDisburse = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.emiAmountVariations = new ArrayList<Object>();
+        in.readList(this.emiAmountVariations, Object.class.getClassLoader());
+        this.inArrears = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.isNPA = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.overdueCharges = new ArrayList<Object>();
+        in.readList(this.overdueCharges, Object.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<LoanWithAssociations> CREATOR =
+            new Parcelable.Creator<LoanWithAssociations>() {
+        @Override
+        public LoanWithAssociations createFromParcel(Parcel source) {
+            return new LoanWithAssociations(source);
+        }
+
+        @Override
+        public LoanWithAssociations[] newArray(int size) {
+            return new LoanWithAssociations[size];
+        }
+    };
 }
