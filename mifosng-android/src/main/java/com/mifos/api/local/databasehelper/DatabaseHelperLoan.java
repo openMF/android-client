@@ -27,6 +27,12 @@ public class DatabaseHelperLoan {
     }
 
 
+    /**
+     * This Method Saving the Loan In Database table according to Loan Id
+     *
+     * @param loanWithAssociations
+     * @return LoanWithAssociation
+     */
     public Observable<LoanWithAssociations> saveLoanById(final LoanWithAssociations
                                                                  loanWithAssociations) {
         return Observable.defer(new Func0<Observable<LoanWithAssociations>>() {
@@ -62,6 +68,12 @@ public class DatabaseHelperLoan {
     }
 
 
+    /**
+     * Retrieving LoanWithAssociation according to Loan Id from Database Table
+     *
+     * @param loanId
+     * @return LoanWithAssociation
+     */
     public Observable<LoanWithAssociations> getLoanById(final int loanId) {
         return Observable.defer(new Func0<Observable<LoanWithAssociations>>() {
             @Override
@@ -72,6 +84,7 @@ public class DatabaseHelperLoan {
                         .where(LoanWithAssociations_Table.id.eq(loanId))
                         .querySingle();
 
+                // Setting the actualDisbursementDate
                 if (loanWithAssociations != null) {
                     loanWithAssociations.getTimeline()
                             .setActualDisbursementDate(Arrays.asList(

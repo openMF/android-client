@@ -33,6 +33,20 @@ public class DataManagerLoan {
         mDatabaseHelperLoan = databaseHelperLoan;
     }
 
+
+    /**
+     * This Method sending the Request to REST API if UserStatus is 0 and
+     * get the LoanWithAssociation. The response is pass to the DatabaseHelperLoan
+     * that save the response in Database with Observable.defer and next pass the response to
+     * DataManager to pass to Presenter to show in the view.
+     * <p/>
+     * If UserStatus is 1 means User is in the Offline mode, SO it send request to
+     * DatabaseHelperLon to fetch Data from Database and give back to DataManager and DataManager
+     * gives to Presenter to show on the view.
+     *
+     * @param loanId Loan Id of the Loan
+     * @return
+     */
     public Observable<LoanWithAssociations> getLoanById(int loanId) {
         switch (PrefManager.getUserStatus()) {
             case 0:
@@ -49,7 +63,7 @@ public class DataManagerLoan {
                         });
             case 1:
                 /**
-                 * Return Clients from DatabaseHelperClient only one time.
+                 * Return LoanWithAssociation from DatabaseHelperLoan.
                  */
                 return mDatabaseHelperLoan.getLoanById(loanId);
 
