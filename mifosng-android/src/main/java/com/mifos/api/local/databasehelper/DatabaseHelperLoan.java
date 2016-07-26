@@ -2,7 +2,11 @@ package com.mifos.api.local.databasehelper;
 
 import com.mifos.objects.accounts.loan.ActualDisbursementDate;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.loan.LoanWithAssociations_Table;
 import com.mifos.objects.accounts.loan.Timeline;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import java.util.Arrays;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,4 +61,30 @@ public class DatabaseHelperLoan {
         });
     }
 
+
+    public Observable<LoanWithAssociations> getLoanById(final int loanId) {
+        return Observable.defer(new Func0<Observable<LoanWithAssociations>>() {
+            @Override
+            public Observable<LoanWithAssociations> call() {
+
+                LoanWithAssociations loanWithAssociations = SQLite.select()
+                        .from(LoanWithAssociations.class)
+                        .where(LoanWithAssociations_Table.id.eq(loanId))
+                        .querySingle();
+
+                if (loanWithAssociations != null) {
+                    loanWithAssociations.getTimeline()
+                            .setActualDisbursementDate(Arrays.asList(
+                                    loanWithAssociations.getTimeline().getActualDisburseDate()
+                                            .getYear(), loanWithAssociations.getTimeline()
+                                            .getActualDisburseDate().getMonth(),
+                                    loanWithAssociations
+                                            .getTimeline().getActualDisburseDate().getDate()));
+
+                }
+
+                return Observable.just(loanWithAssociations);
+            }
+        });
+    }
 }

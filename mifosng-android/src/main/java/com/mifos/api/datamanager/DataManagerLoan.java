@@ -33,11 +33,11 @@ public class DataManagerLoan {
         mDatabaseHelperLoan = databaseHelperLoan;
     }
 
-    public Observable<LoanWithAssociations> getLoanById(int loanAccountNumber) {
+    public Observable<LoanWithAssociations> getLoanById(int loanId) {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getLoanApi()
-                        .getLoanByIdWithAllAssociations(loanAccountNumber)
+                        .getLoanByIdWithAllAssociations(loanId)
                         .concatMap(new Func1<LoanWithAssociations,
                                 Observable<? extends LoanWithAssociations>>() {
 
@@ -51,7 +51,7 @@ public class DataManagerLoan {
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
                  */
-                //return mDatabaseHelperClient.realClientAccounts(clientId);
+                return mDatabaseHelperLoan.getLoanById(loanId);
 
             default:
                 return Observable.just(new LoanWithAssociations());
