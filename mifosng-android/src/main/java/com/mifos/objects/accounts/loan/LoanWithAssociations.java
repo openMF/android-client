@@ -98,8 +98,12 @@ public class LoanWithAssociations extends MifosBaseModel implements Parcelable {
 
     Boolean syncDisbursementWithMeeting;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Timeline timeline;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Summary summary;
 
     RepaymentSchedule repaymentSchedule;

@@ -24,7 +24,7 @@ import java.util.List;
  *
  * Here
  */
-@Table(database = MifosDatabase.class, name = "LoanWithAssociations_Timeline")
+@Table(database = MifosDatabase.class)
 @ModelContainer
 public class Timeline extends MifosBaseModel implements Parcelable {
 
@@ -49,9 +49,10 @@ public class Timeline extends MifosBaseModel implements Parcelable {
 
     List<Integer> expectedDisbursementDate = new ArrayList<Integer>();
 
+    //This Object for saving the actualDisbursementDate, Not belong to any POST and GET Request
     @Column
     @ForeignKey(saveForeignKeyModel = true)
-    ActualDisbursementDate actualDisburseDate;
+    transient ActualDisbursementDate actualDisburseDate;
 
     List<Integer> actualDisbursementDate = new ArrayList<Integer>();
 
