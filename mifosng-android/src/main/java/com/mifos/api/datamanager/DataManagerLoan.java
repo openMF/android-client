@@ -7,6 +7,7 @@ import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.LoanTemplate;
 import com.mifos.services.data.LoansPayload;
+import com.mifos.utils.PrefManager;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -32,7 +34,29 @@ public class DataManagerLoan {
     }
 
     public Observable<LoanWithAssociations> getLoanById(int loanAccountNumber) {
-        return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanAccountNumber);
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getLoanApi()
+                        .getLoanByIdWithAllAssociations(loanAccountNumber)
+                        .concatMap(new Func1<LoanWithAssociations,
+                                Observable<? extends LoanWithAssociations>>() {
+
+                            @Override
+                            public Observable<? extends LoanWithAssociations> call
+                                    (LoanWithAssociations loanWithAssociations) {
+                                return mDatabaseHelperLoan.saveLoanById(loanWithAssociations);
+                            }
+                        });
+            case 1:
+                /**
+                 * Return Clients from DatabaseHelperClient only one time.
+                 */
+                //return mDatabaseHelperClient.realClientAccounts(clientId);
+
+            default:
+                return Observable.just(new LoanWithAssociations());
+        }
+
     }
 
     public Observable<List<LoanProducts>> getAllLoans() {

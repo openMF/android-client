@@ -64,6 +64,13 @@ public class ActualDisbursementDate extends MifosBaseModel implements Parcelable
     }
 
 
+    public ActualDisbursementDate(Integer loanId, Integer year, Integer month, Integer date) {
+        this.date = date;
+        this.loanId = loanId;
+        this.year = year;
+        this.month = month;
+    }
+
     public ActualDisbursementDate() {
     }
 
