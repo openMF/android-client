@@ -45,7 +45,7 @@ public class DataManagerLoan {
      * gives to Presenter to show on the view.
      *
      * @param loanId Loan Id of the Loan
-     * @return
+     * @return LoanWithAssociation
      */
     public Observable<LoanWithAssociations> getLoanById(int loanId) {
         switch (PrefManager.getUserStatus()) {
