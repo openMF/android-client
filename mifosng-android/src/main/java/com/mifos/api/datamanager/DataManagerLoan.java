@@ -88,8 +88,47 @@ public class DataManagerLoan {
         return mBaseApiManager.getLoanApi().createLoansAccount(loansPayload);
     }
 
-    public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(int loanId) {
-        return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId);
+    /**
+     * This Method to request the LoanRepaymentTemplate according to Loan Id and get
+     * LoanRepaymentTemplate in Response. This method work in both mode Online and Offline.
+     * if PrefManager.getUserStatus() is 0, means user is in Online Mode the Request goes to the
+     * Server End Point directly. Here is End Point :
+     * {https://demo.openmf.org/fineract-provider/api/v1/loans/{loanId}/transactions/template
+     * ?command=repayment}
+     * and get LoanRepaymentTemplate in response and then call the
+     * mDatabaseHelperLoan.saveLoanRepaymentTemplate(loanId,loanRepaymentTemplate); to save the
+     * Template into Database for accessing in the Offline.
+     *
+     * if PrefManager.getUserStatus() is 1, It means user is Offline Mode, Request goes to the
+     * mDatabaseHelperLoan to load the LoanRepaymentTemplate according loanId and gives the
+     * LoanRepaymentTemplate in Response.
+     *
+     * @param loanId Loan Id of the LoanRepaymentTemplate
+     * @return LoanRepaymentTemplate
+     */
+    public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(final int loanId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId)
+                        .concatMap(new Func1<LoanRepaymentTemplate, Observable<? extends
+                                LoanRepaymentTemplate>>() {
+
+                            @Override
+                            public Observable<? extends LoanRepaymentTemplate> call
+                                    (LoanRepaymentTemplate loanRepaymentTemplate) {
+                                return mDatabaseHelperLoan.saveLoanRepaymentTemplate(loanId,
+                                        loanRepaymentTemplate);
+                            }
+                        });
+            case 1:
+                /**
+                 * Return LoanRepaymentTemplate from DatabaseHelperLoan.
+                 */
+                return mDatabaseHelperLoan.getLoanRepayTemplate(loanId);
+
+            default:
+                return Observable.just(new LoanRepaymentTemplate());
+        }
     }
 
 

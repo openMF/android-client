@@ -1,5 +1,7 @@
 package com.mifos.api.local.databasehelper;
 
+import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.PaymentTypeOption_Table;
 import com.mifos.objects.accounts.loan.ActualDisbursementDate;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest_Table;
@@ -7,6 +9,8 @@ import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.LoanWithAssociations_Table;
 import com.mifos.objects.accounts.loan.Timeline;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
@@ -23,6 +27,9 @@ import rx.functions.Func0;
  */
 @Singleton
 public class DatabaseHelperLoan {
+
+
+    public static final String LOAN_PAYMENTTYPE_OPTIONS = "LoanPaymentTypeOptions";
 
 
     @Inject
@@ -150,6 +157,70 @@ public class DatabaseHelperLoan {
                         .queryList();
 
                 return Observable.just(loanRepaymentRequests);
+            }
+        });
+    }
+
+
+    /**
+     * This method saves the LoanRepaymentTemplate in Database for making Transaction In offline
+     * and As the Template is saved in the Database, its return the same LoanRepaymentTemplate.
+     *
+     * @param loanId Loan Id of the LoanTemplate
+     * @param loanRepaymentTemplate LoanRepaymentTemplate for saving in Database
+     * @return LoanRepaymentTemplate
+     */
+    public Observable<LoanRepaymentTemplate> saveLoanRepaymentTemplate(
+            final int loanId, final LoanRepaymentTemplate loanRepaymentTemplate) {
+
+        return Observable.defer(new Func0<Observable<LoanRepaymentTemplate>>() {
+            @Override
+            public Observable<LoanRepaymentTemplate> call() {
+
+                loanRepaymentTemplate.setLoanId(loanId);
+
+                for (PaymentTypeOption paymentTypeOption : loanRepaymentTemplate
+                        .getPaymentTypeOptions()) {
+                    paymentTypeOption.setTemplateType(LOAN_PAYMENTTYPE_OPTIONS);
+                    paymentTypeOption.save();
+                }
+
+                loanRepaymentTemplate.save();
+
+                return null;
+            }
+        });
+    }
+
+
+    /**
+     * This Method retrieve the LoanRepaymentTemplate from Database LoanRepaymentTemplate_Table
+     * according to Loan Id and retrieve the PaymentTypeOptions according to templateType
+     * LoanRepaymentTemplate
+     *
+     * @param loanId Loan Id of the LoanRepaymentTemplate.
+     * @return LoanRepaymentTemplate from Database Query.
+     */
+    public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(final int loanId) {
+        return Observable.defer(new Func0<Observable<LoanRepaymentTemplate>>() {
+            @Override
+            public Observable<LoanRepaymentTemplate> call() {
+
+                LoanRepaymentTemplate loanRepaymentTemplate = SQLite.select()
+                        .from(LoanRepaymentTemplate.class)
+                        .where(LoanRepaymentTemplate_Table.loanId.eq(loanId))
+                        .querySingle();
+
+                List<PaymentTypeOption> paymentTypeOptions = SQLite.select()
+                        .from(PaymentTypeOption.class)
+                        .where(PaymentTypeOption_Table.templateType.eq(LOAN_PAYMENTTYPE_OPTIONS))
+                        .queryList();
+
+                if (loanRepaymentTemplate != null) {
+                    loanRepaymentTemplate.setPaymentTypeOptions(paymentTypeOptions);
+                }
+
+                return Observable.just(loanRepaymentTemplate);
             }
         });
     }
