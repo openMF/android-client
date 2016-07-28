@@ -105,7 +105,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
         if (loanWithAssociations != null) {
             args.putString(Constants.CLIENT_NAME, loanWithAssociations.getClientName());
             args.putString(Constants.LOAN_PRODUCT_NAME, loanWithAssociations.getLoanProductName());
-            args.putString(Constants.LOAN_ACCOUNT_NUMBER, "" +loanWithAssociations.getId());
+            args.putString(Constants.LOAN_ACCOUNT_NUMBER, "" + loanWithAssociations.getId());
             args.putDouble(Constants.AMOUNT_IN_ARREARS, loanWithAssociations.getSummary()
                     .getTotalOverdue());
             //args.putDouble(Constants.AMOUNT_DUE, loanWithAssociations.getSummary()

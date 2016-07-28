@@ -29,7 +29,7 @@ import rx.functions.Func0;
 public class DatabaseHelperLoan {
 
 
-    public static final String LOAN_PAYMENTTYPE_OPTIONS = "LoanPaymentTypeOptions";
+    public static final String LOAN_PAYMENT_TYPE_OPTIONS = "LoanPaymentTypeOptions";
 
 
     @Inject
@@ -114,15 +114,14 @@ public class DatabaseHelperLoan {
 
 
     /**
-     *
      * This Method Saving the Loan Transaction Offline in Database Table
      *
-     * @param loanId Loan Id
+     * @param loanId               Loan Id
      * @param loanRepaymentRequest Request Body of Loan Transaction
      * @return LoanRepaymentResponse
      */
     public Observable<LoanRepaymentResponse> saveLoanRepaymentTransaction(
-            final int  loanId, final LoanRepaymentRequest loanRepaymentRequest) {
+            final int loanId, final LoanRepaymentRequest loanRepaymentRequest) {
 
         return Observable.defer(new Func0<Observable<LoanRepaymentResponse>>() {
             @Override
@@ -130,7 +129,7 @@ public class DatabaseHelperLoan {
 
                 //Setting Loan Id and Time Stamp
                 loanRepaymentRequest.setLoanId(loanId);
-                loanRepaymentRequest.setTimeStamp((System.currentTimeMillis()/1000));
+                loanRepaymentRequest.setTimeStamp((System.currentTimeMillis() / 1000));
 
                 //Saving Transaction In Database Table
                 loanRepaymentRequest.save();
@@ -166,7 +165,7 @@ public class DatabaseHelperLoan {
      * This method saves the LoanRepaymentTemplate in Database for making Transaction In offline
      * and As the Template is saved in the Database, its return the same LoanRepaymentTemplate.
      *
-     * @param loanId Loan Id of the LoanTemplate
+     * @param loanId                Loan Id of the LoanTemplate
      * @param loanRepaymentTemplate LoanRepaymentTemplate for saving in Database
      * @return LoanRepaymentTemplate
      */
@@ -181,7 +180,7 @@ public class DatabaseHelperLoan {
 
                 for (PaymentTypeOption paymentTypeOption : loanRepaymentTemplate
                         .getPaymentTypeOptions()) {
-                    paymentTypeOption.setTemplateType(LOAN_PAYMENTTYPE_OPTIONS);
+                    paymentTypeOption.setTemplateType(LOAN_PAYMENT_TYPE_OPTIONS);
                     paymentTypeOption.save();
                 }
 
@@ -213,7 +212,7 @@ public class DatabaseHelperLoan {
 
                 List<PaymentTypeOption> paymentTypeOptions = SQLite.select()
                         .from(PaymentTypeOption.class)
-                        .where(PaymentTypeOption_Table.templateType.eq(LOAN_PAYMENTTYPE_OPTIONS))
+                        .where(PaymentTypeOption_Table.templateType.eq(LOAN_PAYMENT_TYPE_OPTIONS))
                         .queryList();
 
                 if (loanRepaymentTemplate != null) {
