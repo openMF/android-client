@@ -1,12 +1,16 @@
 package com.mifos.api.local.databasehelper;
 
 import com.mifos.objects.accounts.loan.ActualDisbursementDate;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest_Table;
+import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.LoanWithAssociations_Table;
 import com.mifos.objects.accounts.loan.Timeline;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -100,4 +104,54 @@ public class DatabaseHelperLoan {
             }
         });
     }
+
+
+    /**
+     *
+     * This Method Saving the Loan Transaction Offline in Database Table
+     *
+     * @param loanId Loan Id
+     * @param loanRepaymentRequest Request Body of Loan Transaction
+     * @return LoanRepaymentResponse
+     */
+    public Observable<LoanRepaymentResponse> saveLoanRepaymentTransaction(
+            final int  loanId, final LoanRepaymentRequest loanRepaymentRequest) {
+
+        return Observable.defer(new Func0<Observable<LoanRepaymentResponse>>() {
+            @Override
+            public Observable<LoanRepaymentResponse> call() {
+
+                //Setting Loan Id and Time Stamp
+                loanRepaymentRequest.setLoanId(loanId);
+                loanRepaymentRequest.setTimeStamp((System.currentTimeMillis()/1000));
+
+                //Saving Transaction In Database Table
+                loanRepaymentRequest.save();
+
+                return Observable.just(new LoanRepaymentResponse());
+            }
+        });
+    }
+
+
+    /**
+     * Read All LoanRepaymentRequest from Database ascending Order of TimeStamp
+     *
+     * @return List<LoanRepaymentRequest>
+     */
+    public Observable<List<LoanRepaymentRequest>> readAllLoanRepaymentTransaction() {
+        return Observable.defer(new Func0<Observable<List<LoanRepaymentRequest>>>() {
+            @Override
+            public Observable<List<LoanRepaymentRequest>> call() {
+
+                List<LoanRepaymentRequest> loanRepaymentRequests = SQLite.select()
+                        .from(LoanRepaymentRequest.class)
+                        .orderBy(LoanRepaymentRequest_Table.timeStamp, true)
+                        .queryList();
+
+                return Observable.just(loanRepaymentRequests);
+            }
+        });
+    }
+
 }

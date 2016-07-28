@@ -2,9 +2,12 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperLoan;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.LoanProducts;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.LoanTemplate;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.utils.PrefManager;
@@ -85,4 +88,46 @@ public class DataManagerLoan {
         return mBaseApiManager.getLoanApi().createLoansAccount(loansPayload);
     }
 
+    public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(int loanId) {
+        return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId);
+    }
+
+
+    /**
+     * This Method For submitting the Loan Payment. This Method have two mode, One if Online when
+     * PrefManager.getUserStatus() is 0, Whenever User Online the Post request going to Server
+     * Directly, here is the End Point
+     * {https://demo.openmf.org/fineract-provider/api/v1/loans/{loanId}/transactions?command
+     * =repayment}
+     * and get the LoanRepaymentResponse in response of Successful Transaction.
+     * And Whenever User in Offline Mode the Request goes to DatabaseHelperLoan and DatabaseHelper
+     * Save the Transaction on Database and in Response give the Empty LoanRepaymentResponse.
+     *
+     * @param loanId Loan id of The Loan
+     * @param request Request Body of POST Request
+     * @return LoanRepaymentResponse
+     */
+    public Observable<LoanRepaymentResponse> submitPayment(final int loanId,
+                                                           final LoanRepaymentRequest request) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getLoanApi().submitPayment(loanId, request)
+                        .concatMap(new Func1<LoanRepaymentResponse, Observable<? extends
+                                LoanRepaymentResponse>>() {
+                            @Override
+                            public Observable<? extends LoanRepaymentResponse> call
+                                    (LoanRepaymentResponse loanRepaymentResponse) {
+                                return Observable.just(loanRepaymentResponse);
+                            }
+                        });
+            case 1:
+                /**
+                 * Return LoanRepaymentResponse from DatabaseHelperLoan.
+                 */
+                return mDatabaseHelperLoan.saveLoanRepaymentTransaction(loanId, request);
+
+            default:
+                return Observable.just(new LoanRepaymentResponse());
+        }
+    }
 }

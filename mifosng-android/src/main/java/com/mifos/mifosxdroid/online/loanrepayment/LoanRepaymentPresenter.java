@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.loanrepayment;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
@@ -25,12 +25,12 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerLoan mDataManagerLoan;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public LoanRepaymentPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public LoanRepaymentPresenter(DataManagerLoan dataManagerLoan) {
+        mDataManagerLoan = dataManagerLoan;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -48,7 +48,7 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     public void loanLoanRepaymentTemplate(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getLoanRepayTemplate(loanId)
+        mSubscriptions.add(mDataManagerLoan.getLoanRepayTemplate(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentTemplate>() {
@@ -74,7 +74,7 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     public void submitPayment(int loanId, LoanRepaymentRequest request) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.submitPayment(loanId, request)
+        mSubscriptions.add(mDataManagerLoan.submitPayment(loanId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentResponse>() {
