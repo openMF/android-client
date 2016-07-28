@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online.loanaccountsummary;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -171,7 +172,6 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         //Necessary Call to add and update the Menu in a Fragment
@@ -182,6 +182,9 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false);
+
+        //Injecting Presenter
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
 
         ButterKnife.bind(this, rootView);
         mLoanAccountSummaryPresenter.attachView(this);
@@ -464,6 +467,25 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     public void onDestroyView() {
         super.onDestroyView();
         mLoanAccountSummaryPresenter.detachView();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelable("LoanWithAssociation", clientLoanWithAssociations);
+        savedInstanceState.putParcelableArrayList("LoanDataTable",
+                (ArrayList<? extends Parcelable>) loanDataTables);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            clientLoanWithAssociations = savedInstanceState.getParcelable("LoanWithAssociation");
+            loanDataTables = savedInstanceState.getParcelableArrayList("LoanDataTable");
+        }
+
     }
 
     public interface OnFragmentInteractionListener {

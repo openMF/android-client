@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -19,6 +20,7 @@ import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.injection.component.ActivityComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
+import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
 
 /**
@@ -95,6 +97,15 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     @Override
     public void setToolbarTitle(String title) {
         setActionBarTitle(title);
+    }
+
+    @Override
+    public void setUserStatus(SwitchCompat userStatus) {
+        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+            userStatus.setChecked(false);
+        } else if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+            userStatus.setChecked(true);
+        }
     }
 
     @Override

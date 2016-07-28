@@ -127,6 +127,7 @@
     <string name="loan_penalty">Penalty</string>
     <string name="loan_amount_due">Amount Due</string>
     <string name="loan_repayment_date">Repayment Date</string>
+    <string name="loan_transaction_date">Loan Transaction Date</string>
     <string name="additional_payment">Additional Payment</string>
     <string name="break_down">Break Down</string>
     <string name="loanAccounts">Loan Accounts</string>
@@ -256,6 +257,7 @@
     <string name="error_select_fund">Please Select Fund</string>
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
     <string name="error_select_transactionProcessingStrategy">Please Select Transaction Processing Strategy</string>
+    <string name="error_fix_before_sync">Please Fix the Error before sync</string>
 
     <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
     <string name="loan_purpose">Please Select a the Loan Purpose</string>
@@ -313,8 +315,50 @@
     <string name="error_select_client">Select Client</string>
 
     <!--Offline sync Terms-->
+    <string name="offline_mode">Offline Mode</string>
     <string name="submit_date">Submit Date</string>
     <string name="error_message">Server Sync Error</string>
+    <string name="sync_clients">Clients</string>
+    <string name="sync_groups">Groups</string>
+    <string name="sync_loanrepayments">LoanRepayments</string>
+    <string name="payloads_count">Payloads : </string>
+    <string name="transactions_count">Transaction : </string>
+    <string name="nothing_to_sync">Nothing To Sync :)</string>
+    <string name="no_repayment_to_sync">There is No LoanRepayment to Sync</string>
+    <string name="no_group_payload_to_sync">There is No Group Payload to Sync</string>
+    <string name="no_client_payload_to_sync">There is No Client Payload to Sync</string>
+    <string name="all_repayment_synced">All LoanRepayment have been Sync</string>
+    <string name="all_groups_synced">All Groups have been Sync</string>
+    <string name="all_clients_synced">All Clients have been Sync</string>
+    <string name="click_to_refresh">\n Click to Refresh</string>
+
+    <!--Material Dialog Titles-->
+    <string name="sync_previous_transaction">Sync Previous Transaction</string>
+
+    <!--Material Dialog Message-->
+    <string name="dialog_message_offline_sync_alert">You are in offline mode, for syncing, You
+        need to switch Online mode. \n\nIf you are trying to sync Please make sure
+        your internet connection is working well</string>
+    <string name="dialog_message_sync_transaction">"Please Sync Previous LoanRepayment with
+        This Loan Id First. Go to Navigation Menu 'Offline Sync *' and Sync transaction First.
+        \nBefore making new LoanRepayment Transaction with this LoanAccount"</string>
+
+    <!--Material Dialog-->
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_action_cancel">Cancel</string>
+    <string name="dialog_action_go_online">Go Online</string>
+    <string name="dialog_error_title">Sorry</string>
+    <string name="dialog_action_pay_now">Pay Now</string>
+    <string name="dialog_action_back">Back</string>
+
+
+    <!--OnError Message-->
+    <string name="failed_to_load_clientpayload">Failed to load ClientPayload</string>
+    <string name="failed_to_load_grouppayload">Failed to load GroupPayload</string>
+    <string name="failed_to_load_loanrepayment">Failed to load LoanRepayment</string>
+    <string name="failed_to_update_list">Failed Update List</string>
+    <string name="failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
+    <string name="failed_to_update_loanrepayment">Failed to Update LoanRepayment</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

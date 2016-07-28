@@ -23,5 +23,5 @@ public interface SyncGroupPayloadsMvpView extends MvpView {
 
     void showGroupPayloadUpdated(GroupPayload groupPayload);
 
-    void showError(String s);
+    void showError(int stringId);
 }

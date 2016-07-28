@@ -13,7 +13,7 @@ public interface SyncClientPayloadsMvpView extends MvpView {
 
     void showPayloads(List<ClientPayload> clientPayload);
 
-    void showError(String s);
+    void showError(int stringId);
 
     void showSyncResponse();
 

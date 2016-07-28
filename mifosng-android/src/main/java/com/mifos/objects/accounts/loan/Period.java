@@ -5,14 +5,18 @@
 
 package com.mifos.objects.accounts.loan;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ishankhanna on 19/06/14.
  */
-public class Period {
+public class Period implements Parcelable {
 
     Boolean complete;
     Integer daysInPeriod;
@@ -404,4 +408,110 @@ public class Period {
                 '}';
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.complete);
+        dest.writeValue(this.daysInPeriod);
+        dest.writeList(this.dueDate);
+        dest.writeValue(this.feeChargesDue);
+        dest.writeValue(this.feeChargesOutstanding);
+        dest.writeValue(this.feeChargesPaid);
+        dest.writeValue(this.feeChargesWaived);
+        dest.writeValue(this.feeChargesWrittenOff);
+        dest.writeList(this.fromDate);
+        dest.writeValue(this.interestDue);
+        dest.writeValue(this.interestOriginalDue);
+        dest.writeValue(this.interestOutstanding);
+        dest.writeValue(this.interestPaid);
+        dest.writeValue(this.interestWaived);
+        dest.writeValue(this.interestWrittenOff);
+        dest.writeList(this.obligationsMetOnDate);
+        dest.writeValue(this.penaltyChargesDue);
+        dest.writeValue(this.penaltyChargesOutstanding);
+        dest.writeValue(this.penaltyChargesPaid);
+        dest.writeValue(this.penaltyChargesWaived);
+        dest.writeValue(this.penaltyChargesWrittenOff);
+        dest.writeValue(this.periodValue);
+        dest.writeValue(this.principalDue);
+        dest.writeValue(this.principalLoanBalanceOutstanding);
+        dest.writeValue(this.principalOriginalDue);
+        dest.writeValue(this.principalOutstanding);
+        dest.writeValue(this.principalPaid);
+        dest.writeValue(this.principalWrittenOff);
+        dest.writeValue(this.totalActualCostOfLoanForPeriod);
+        dest.writeValue(this.totalDueForPeriod);
+        dest.writeValue(this.totalOriginalDueForPeriod);
+        dest.writeValue(this.totalOutstandingForPeriod);
+        dest.writeValue(this.totalOverdue);
+        dest.writeValue(this.totalPaidForPeriod);
+        dest.writeValue(this.totalPaidInAdvanceForPeriod);
+        dest.writeValue(this.totalPaidLateForPeriod);
+        dest.writeValue(this.totalWaivedForPeriod);
+        dest.writeValue(this.totalWrittenOffForPeriod);
+    }
+
+    public Period() {
+    }
+
+    protected Period(Parcel in) {
+        this.complete = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.daysInPeriod = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.dueDate = new ArrayList<Integer>();
+        in.readList(this.dueDate, Integer.class.getClassLoader());
+        this.feeChargesDue = (Double) in.readValue(Double.class.getClassLoader());
+        this.feeChargesOutstanding = (Double) in.readValue(Double.class.getClassLoader());
+        this.feeChargesPaid = (Double) in.readValue(Double.class.getClassLoader());
+        this.feeChargesWaived = (Double) in.readValue(Double.class.getClassLoader());
+        this.feeChargesWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
+        this.fromDate = new ArrayList<Integer>();
+        in.readList(this.fromDate, Integer.class.getClassLoader());
+        this.interestDue = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestOriginalDue = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestOutstanding = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestPaid = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestWaived = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
+        this.obligationsMetOnDate = new ArrayList<Integer>();
+        in.readList(this.obligationsMetOnDate, Integer.class.getClassLoader());
+        this.penaltyChargesDue = (Double) in.readValue(Double.class.getClassLoader());
+        this.penaltyChargesOutstanding = (Double) in.readValue(Double.class.getClassLoader());
+        this.penaltyChargesPaid = (Double) in.readValue(Double.class.getClassLoader());
+        this.penaltyChargesWaived = (Double) in.readValue(Double.class.getClassLoader());
+        this.penaltyChargesWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
+        this.periodValue = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.principalDue = (Double) in.readValue(Double.class.getClassLoader());
+        this.principalLoanBalanceOutstanding = (Double) in.readValue(Double.class.getClassLoader());
+        this.principalOriginalDue = (Double) in.readValue(Double.class.getClassLoader());
+        this.principalOutstanding = (Double) in.readValue(Double.class.getClassLoader());
+        this.principalPaid = (Double) in.readValue(Double.class.getClassLoader());
+        this.principalWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalActualCostOfLoanForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalDueForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalOriginalDueForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalOutstandingForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalOverdue = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPaidForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPaidInAdvanceForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPaidLateForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalWaivedForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalWrittenOffForPeriod = (Double) in.readValue(Double.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Period> CREATOR = new Parcelable.Creator<Period>() {
+        @Override
+        public Period createFromParcel(Parcel source) {
+            return new Period(source);
+        }
+
+        @Override
+        public Period[] newArray(int size) {
+            return new Period[size];
+        }
+    };
 }

@@ -5,13 +5,10 @@
 
 package com.mifos.objects.accounts.loan;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import javax.annotation.Generated;
-
-@Generated("org.jsonschema2pojo")
-public class Type {
+public class Type implements Parcelable {
 
     private Integer id;
     private String code;
@@ -31,7 +28,6 @@ public class Type {
     private Boolean rejectTransfer;
     private Boolean chargePayment;
     private Boolean refund;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -177,12 +173,67 @@ public class Type {
         this.refund = refund;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.code);
+        dest.writeString(this.value);
+        dest.writeValue(this.disbursement);
+        dest.writeValue(this.repaymentAtDisbursement);
+        dest.writeValue(this.repayment);
+        dest.writeValue(this.contra);
+        dest.writeValue(this.waiveInterest);
+        dest.writeValue(this.waiveCharges);
+        dest.writeValue(this.accrual);
+        dest.writeValue(this.writeOff);
+        dest.writeValue(this.recoveryRepayment);
+        dest.writeValue(this.initiateTransfer);
+        dest.writeValue(this.approveTransfer);
+        dest.writeValue(this.withdrawTransfer);
+        dest.writeValue(this.rejectTransfer);
+        dest.writeValue(this.chargePayment);
+        dest.writeValue(this.refund);
     }
 
+    public Type() {
+    }
+
+    protected Type(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+        this.disbursement = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.repaymentAtDisbursement = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.repayment = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.contra = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.waiveInterest = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.waiveCharges = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.accrual = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.writeOff = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.recoveryRepayment = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.initiateTransfer = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.approveTransfer = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.withdrawTransfer = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.rejectTransfer = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.chargePayment = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.refund = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Type> CREATOR = new Parcelable.Creator<Type>() {
+        @Override
+        public Type createFromParcel(Parcel source) {
+            return new Type(source);
+        }
+
+        @Override
+        public Type[] newArray(int size) {
+            return new Type[size];
+        }
+    };
 }

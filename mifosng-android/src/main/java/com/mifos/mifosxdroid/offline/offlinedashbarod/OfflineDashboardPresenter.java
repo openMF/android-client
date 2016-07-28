@@ -2,7 +2,10 @@ package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerGroups;
+import com.mifos.api.datamanager.DataManagerLoan;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
 
@@ -21,16 +24,19 @@ import rx.subscriptions.CompositeSubscription;
 public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvpView> {
 
 
-    private final CompositeSubscription mSubscriptions;
+    private CompositeSubscription mSubscriptions;
     private final DataManagerClient mDataManagerClient;
     private final DataManagerGroups mDataManagerGroups;
+    private final DataManagerLoan mDataManagerLoan;
 
     @Inject
     public OfflineDashboardPresenter(DataManagerClient dataManagerClient,
-                                     DataManagerGroups dataManagerGroups) {
+                                     DataManagerGroups dataManagerGroups,
+                                     DataManagerLoan dataManagerLoan) {
         mSubscriptions = new CompositeSubscription();
         mDataManagerClient = dataManagerClient;
         mDataManagerGroups = dataManagerGroups;
+        mDataManagerLoan = dataManagerLoan;
     }
 
     @Override
@@ -59,7 +65,7 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to load ClientPayload");
+                        getMvpView().showError(R.string.failed_to_load_clientpayload);
                     }
 
                     @Override
@@ -70,7 +76,7 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                 }));
     }
 
-    public void loanDatabaseGroupPayload() {
+    public void loadDatabaseGroupPayload() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerGroups.getAllDatabaseGroupPayload()
@@ -85,13 +91,39 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to load GroupPayload");
+                        getMvpView().showError(R.string.failed_to_load_grouppayload);
                     }
 
                     @Override
                     public void onNext(List<GroupPayload> groupPayloads) {
                         getMvpView().showGroups(groupPayloads);
                         getMvpView().showProgressbar(false);
+                    }
+                }));
+    }
+
+    public void loadDatabaseLoanRepaymentTransactions() {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerLoan.getDatabaseLoanRepayments()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<List<LoanRepaymentRequest>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showError(R.string.failed_to_load_loanrepayment);
+                    }
+
+                    @Override
+                    public void onNext(List<LoanRepaymentRequest> loanRepaymentRequests) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showLoanRepaymentTransactions(loanRepaymentRequests);
                     }
                 }));
     }

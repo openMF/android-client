@@ -5,17 +5,16 @@
 
 package com.mifos.objects.accounts.loan;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.mifos.objects.accounts.savings.Currency;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Generated;
 
-@Generated("org.jsonschema2pojo")
-public class Transaction {
+public class Transaction implements Parcelable {
 
     private Integer id;
     private Integer officeId;
@@ -30,7 +29,6 @@ public class Transaction {
     private Double feeChargesPortion;
     private Double penaltyChargesPortion;
     private Double overpaymentPortion;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -136,14 +134,6 @@ public class Transaction {
         this.overpaymentPortion = overpaymentPortion;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     @Override
     public String toString() {
         return "Transaction{" +
@@ -160,7 +150,62 @@ public class Transaction {
                 ", feeChargesPortion=" + feeChargesPortion +
                 ", penaltyChargesPortion=" + penaltyChargesPortion +
                 ", overpaymentPortion=" + overpaymentPortion +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeValue(this.officeId);
+        dest.writeString(this.officeName);
+        dest.writeParcelable(this.type, flags);
+        dest.writeList(this.date);
+        dest.writeParcelable(this.currency, flags);
+        dest.writeParcelable(this.paymentDetailData, flags);
+        dest.writeValue(this.amount);
+        dest.writeValue(this.principalPortion);
+        dest.writeValue(this.interestPortion);
+        dest.writeValue(this.feeChargesPortion);
+        dest.writeValue(this.penaltyChargesPortion);
+        dest.writeValue(this.overpaymentPortion);
+    }
+
+    public Transaction() {
+    }
+
+    protected Transaction(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.officeName = in.readString();
+        this.type = in.readParcelable(Type.class.getClassLoader());
+        this.date = new ArrayList<Integer>();
+        in.readList(this.date, Integer.class.getClassLoader());
+        this.currency = in.readParcelable(Currency.class.getClassLoader());
+        this.paymentDetailData = in.readParcelable(PaymentDetailData.class.getClassLoader());
+        this.amount = (Double) in.readValue(Double.class.getClassLoader());
+        this.principalPortion = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestPortion = (Double) in.readValue(Double.class.getClassLoader());
+        this.feeChargesPortion = (Double) in.readValue(Double.class.getClassLoader());
+        this.penaltyChargesPortion = (Double) in.readValue(Double.class.getClassLoader());
+        this.overpaymentPortion = (Double) in.readValue(Double.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Transaction> CREATOR =
+            new Parcelable.Creator<Transaction>() {
+        @Override
+        public Transaction createFromParcel(Parcel source) {
+            return new Transaction(source);
+        }
+
+        @Override
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
 }

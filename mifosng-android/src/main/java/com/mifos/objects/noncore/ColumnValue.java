@@ -5,10 +5,13 @@
 
 package com.mifos.objects.noncore;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by ishankhanna on 16/06/14.
  */
-public class ColumnValue {
+public class ColumnValue implements Parcelable {
 
     Integer id;
     String value;
@@ -46,4 +49,39 @@ public class ColumnValue {
                 ", score=" + score +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.value);
+        dest.writeValue(this.score);
+    }
+
+    public ColumnValue() {
+    }
+
+    protected ColumnValue(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.value = in.readString();
+        this.score = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<ColumnValue> CREATOR = new Parcelable
+            .Creator<ColumnValue>() {
+        @Override
+        public ColumnValue createFromParcel(Parcel source) {
+            return new ColumnValue(source);
+        }
+
+        @Override
+        public ColumnValue[] newArray(int size) {
+            return new ColumnValue[size];
+        }
+    };
 }

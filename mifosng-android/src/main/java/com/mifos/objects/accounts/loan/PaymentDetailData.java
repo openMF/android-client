@@ -5,13 +5,10 @@
 
 package com.mifos.objects.accounts.loan;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import javax.annotation.Generated;
-
-@Generated("org.jsonschema2pojo")
-public class PaymentDetailData {
+public class PaymentDetailData implements Parcelable {
 
     private Integer id;
     private PaymentType paymentType;
@@ -20,7 +17,6 @@ public class PaymentDetailData {
     private String routingCode;
     private String receiptNumber;
     private String bankNumber;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -78,12 +74,46 @@ public class PaymentDetailData {
         this.bankNumber = bankNumber;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeParcelable(this.paymentType, flags);
+        dest.writeString(this.accountNumber);
+        dest.writeString(this.checkNumber);
+        dest.writeString(this.routingCode);
+        dest.writeString(this.receiptNumber);
+        dest.writeString(this.bankNumber);
     }
 
+    public PaymentDetailData() {
+    }
+
+    protected PaymentDetailData(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.paymentType = in.readParcelable(PaymentType.class.getClassLoader());
+        this.accountNumber = in.readString();
+        this.checkNumber = in.readString();
+        this.routingCode = in.readString();
+        this.receiptNumber = in.readString();
+        this.bankNumber = in.readString();
+    }
+
+    public static final Parcelable.Creator<PaymentDetailData> CREATOR = new Parcelable
+            .Creator<PaymentDetailData>() {
+        @Override
+        public PaymentDetailData createFromParcel(Parcel source) {
+            return new PaymentDetailData(source);
+        }
+
+        @Override
+        public PaymentDetailData[] newArray(int size) {
+            return new PaymentDetailData[size];
+        }
+    };
 }

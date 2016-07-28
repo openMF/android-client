@@ -22,6 +22,8 @@ import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivity;
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsActivity;
+import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.ItemOffsetDecoration;
@@ -35,6 +37,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * This Fragment is the Dashboard of the Offline sync of Clients, Groups, LoanRepayment etc.
+ * In which presenter request the DataManager to get the offline created clients or groups or
+ * LoanRepayment from DatabaseHelper and get the List of Groups, clients and LoanRepayment etc.
+ *
+ * if DataManager Response List is not equal to zero then add the Card Name and List Count in
+ * OfflineDashboardAdapter.showCard(String cardName, String cardCount) and add the Class in
+ * List<Class> mPayloadClasses, which will open onclick the card.
+ *
+ * mPayloadIndex, this is the counter value of the number of request we are making to the
+ * DataManager to load the Clients, Groups, LoanRepayment etc list from DatabaseHelper
+ *
+ * SYNC_CARD_UI_NAMES is array of the card UI names, which contains the all possible name of cards.
+ * due to this array we have maintain the single method in
+ * OfflineDashboardAdapter.showCard(String cardName, String cardCount) and update the list.
+ *
+ * if DatabaseHelper returns the List size zero for all Clients, Groups, LoanRepayment etc
+ * then showNoPayloadToShow() and Nothing to Sync.
+ *
  * Created by Rajan Maurya on 20/07/16.
  */
 public class OfflineDashboardFragment extends MifosBaseFragment implements
@@ -66,16 +86,19 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     OfflineDashboardAdapter mOfflineDashboardAdapter;
 
     // update mPayloadIndex to number of request is going to fetch data in Presenter;
-    private int mPayloadIndex = 2;
+    private int mPayloadIndex = 3;
 
     private static final int GRID_COUNT = 2;
 
     private List<Class> mPayloadClasses;
 
+    public static final int[] SYNC_CARD_UI_NAMES = {R.string.sync_clients,
+            R.string.sync_groups, R.string.sync_loanrepayments};
+
 
     @Override
     public void onItemClick(View childView, int position) {
-        showPayloadActivity(position);
+        startPayloadActivity(mPayloadClasses.get(position));
     }
 
     @Override
@@ -93,7 +116,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        setRetainInstance(true);
         mPayloadClasses = new ArrayList<>();
     }
 
@@ -102,10 +125,11 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_offline_dashboard, container, false);
 
-        setToolbarTitle("Offline Sync");
+        setToolbarTitle(getActivity().getResources().getString(R.string.offline));
 
-        ButterKnife.bind(this, rootView);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         mOfflineDashboardPresenter.attachView(this);
+        ButterKnife.bind(this, rootView);
 
         LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), GRID_COUNT);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -118,16 +142,34 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
                 R.dimen.item_offset));
         rv_offline_dashboard.setAdapter(mOfflineDashboardAdapter);
 
-        mOfflineDashboardPresenter.loadDatabaseClientPayload();
-        mOfflineDashboardPresenter.loanDatabaseGroupPayload();
-
         return rootView;
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mOfflineDashboardAdapter.removeAllCards();
+        mPayloadClasses.clear();
+        mPayloadIndex = 3;
+
+        mOfflineDashboardPresenter.loadDatabaseClientPayload();
+        mOfflineDashboardPresenter.loadDatabaseGroupPayload();
+        mOfflineDashboardPresenter.loadDatabaseLoanRepaymentTransactions();
+    }
+
+    /**
+     * This method set the response of DataManager from DatabaseHelper that if List<ClientPayload>
+     * Size is zero the decrease the value of mPayloadIndex by 1 and if size is not equal to zero
+     * the update the adapter and add the Card UI name and size() of the List to sync.
+     *
+     * @param clientPayloads List<ClientPayload> from DatabaseHelperClient
+     */
+    @Override
     public void showClients(List<ClientPayload> clientPayloads) {
         if (clientPayloads.size() != 0) {
-            mOfflineDashboardAdapter.showClientCard("Payload : " + clientPayloads.size());
+            mOfflineDashboardAdapter.showCard(getActivity()
+                    .getResources().getString(R.string.payloads_count) +
+                    clientPayloads.size(), SYNC_CARD_UI_NAMES[0]);
             mPayloadClasses.add(SyncClientPayloadActivity.class);
         } else {
             mPayloadIndex = mPayloadIndex - 1;
@@ -135,10 +177,19 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         }
     }
 
+    /**
+     * This method set the response of DataManager from DatabaseHelper that if List<GroupsPayload>
+     * Size is zero, then decrease the value of mPayloadIndex by 1 and if size is not equal to zero
+     * the update the adapter and add the Card UI name and size() of the List to sync.
+     *
+     * @param groupPayloads List<GroupPayload> from DatabaseHelperGroup
+     */
     @Override
     public void showGroups(List<GroupPayload> groupPayloads) {
         if (groupPayloads.size() != 0) {
-            mOfflineDashboardAdapter.showGroupCard("Payload : " + groupPayloads.size());
+            mOfflineDashboardAdapter.showCard(getActivity()
+                    .getResources().getString(R.string.payloads_count) +
+                    groupPayloads.size(), SYNC_CARD_UI_NAMES[1]);
             mPayloadClasses.add(SyncGroupPayloadsActivity.class);
         } else {
             mPayloadIndex = mPayloadIndex - 1;
@@ -146,19 +197,48 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         }
     }
 
+
+    /**
+     * This method set the response of DataManager from DatabaseHelper that if
+     * List<LoanRepaymentRequest> Size is zero, then decrease the value of mPayloadIndex by 1 and
+     * if size is not equal to zero the update the adapter and add the Card UI name and size() of
+     * the List to sync.
+     *
+     * @param loanRepaymentRequests List<LoanRepaymentRequest> from DatabaseHelperLoan
+     */
+    @Override
+    public void showLoanRepaymentTransactions(List<LoanRepaymentRequest> loanRepaymentRequests) {
+        if (loanRepaymentRequests.size() != 0) {
+            mOfflineDashboardAdapter.showCard(getActivity().getResources()
+                    .getString(R.string.transactions_count) +
+                    loanRepaymentRequests.size(), SYNC_CARD_UI_NAMES[2]);
+            mPayloadClasses.add(SyncLoanRepaymentTransactionActivity.class);
+        } else {
+            mPayloadIndex = mPayloadIndex - 1;
+            showNoPayloadToShow();
+        }
+    }
+
+
+    /**
+     * This Method setting the main UI RecyclerView.setVisibility(View.GONE) and Set text TO
+     * TextView that Nothing to Sync when mPayloadIndex = 0. It means there is nothing in the
+     * Database to sync to the Server.
+     */
     @Override
     public void showNoPayloadToShow() {
         if (mPayloadIndex == 0) {
             rv_offline_dashboard.setVisibility(View.GONE);
             ll_error.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText("Nothing To Sync :)");
+            mNoPayloadText.setText(getActivity()
+                    .getResources().getString(R.string.nothing_to_sync));
             mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         }
     }
 
     @Override
-    public void showError(String s) {
-        Toaster.show(rootView, s);
+    public void showError(int stringId) {
+        Toaster.show(rootView, getResources().getString(stringId));
     }
 
     @Override
@@ -170,19 +250,12 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         }
     }
 
-    public void showPayloadActivity(int position) {
-        switch (position) {
-            case 0:
-                startPayloadActivity(mPayloadClasses.get(position));
-                break;
-            case 1:
-                startPayloadActivity(mPayloadClasses.get(position));
-                break;
-            default:
-                break;
-        }
-    }
 
+    /**
+     * This is the Generic Type method for starting the activity.
+     * @param t Activity Class that is user wants to start
+     * @param <T>
+     */
     public <T> void startPayloadActivity(Class<T> t) {
         Intent intent = new Intent(getActivity(), t);
         startActivity(intent);

@@ -5,17 +5,13 @@
 
 package com.mifos.objects.accounts.loan;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import javax.annotation.Generated;
-
-@Generated("org.jsonschema2pojo")
-public class PaymentType {
+public class PaymentType implements Parcelable {
 
     private Integer id;
     private String name;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -33,12 +29,45 @@ public class PaymentType {
         this.name = name;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public String toString() {
+        return "PaymentType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.name);
+    }
+
+    public PaymentType() {
+    }
+
+    protected PaymentType(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.name = in.readString();
+    }
+
+    public static final Parcelable.Creator<PaymentType> CREATOR = new Parcelable
+            .Creator<PaymentType>() {
+        @Override
+        public PaymentType createFromParcel(Parcel source) {
+            return new PaymentType(source);
+        }
+
+        @Override
+        public PaymentType[] newArray(int size) {
+            return new PaymentType[size];
+        }
+    };
 }

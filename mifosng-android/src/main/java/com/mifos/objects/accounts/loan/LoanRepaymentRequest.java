@@ -30,6 +30,9 @@ public class LoanRepaymentRequest extends MifosBaseModel implements Parcelable {
     transient Integer loanId;
 
     @Column
+    transient String errorMessage;
+
+    @Column
     String dateFormat;
 
     @Column
@@ -61,6 +64,14 @@ public class LoanRepaymentRequest extends MifosBaseModel implements Parcelable {
 
     @Column
     String bankNumber;
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     public Integer getLoanId() {
         return loanId;

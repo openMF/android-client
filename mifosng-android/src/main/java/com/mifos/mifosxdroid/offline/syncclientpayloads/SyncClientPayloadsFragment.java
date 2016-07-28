@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,11 +18,13 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter;
+import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.ClientPayload;
+import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
 
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ import butterknife.OnClick;
  * Created by Rajan Maurya on 08/07/16.
  */
 public class SyncClientPayloadsFragment extends MifosBaseFragment
-        implements SyncClientPayloadsMvpView {
+        implements SyncClientPayloadsMvpView, DialogInterface.OnClickListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
@@ -105,8 +107,8 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         /**
          * Loading All Client Payloads from Database
          */
-        swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R
-                .color.orange_light, R.color.red_light);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -145,7 +147,8 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         clientPayloads = clientPayload;
         if (clientPayload.size() == 0) {
             ll_error.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText("There is No Client Payload to Sync");
+            mNoPayloadText.setText(getActivity()
+                    .getResources().getString(R.string.no_client_payload_to_sync));
             mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         } else {
             mSyncPayloadsAdapter = new SyncPayloadsAdapter(getActivity(), clientPayload);
@@ -159,10 +162,12 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      * @param s Error String
      */
     @Override
-    public void showError(String s) {
+    public void showError(int stringId) {
         ll_error.setVisibility(View.VISIBLE);
-        mNoPayloadText.setText(s + "\n Click to Refresh ");
-        Toaster.show(rootView, s);
+        String message =
+                stringId + getActivity().getResources().getString(R.string.click_to_refresh);
+        mNoPayloadText.setText(message);
+        Toaster.show(rootView, getResources().getString(stringId));
     }
 
 
@@ -197,16 +202,35 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      */
     @Override
     public void showOfflineModeDialog() {
-        AlertDialog.Builder builder =
-                new AlertDialog.Builder(getActivity(), R.style.MaterialAlertDialogStyle);
-        builder.setTitle("Offline Mode");
-        builder.setMessage("You are in offline mode, Please go to Navigation drawer " +
-                "and switch to online mode. \n\n If you are trying to sync clients" +
-                " Please make sure your internet connection is working well");
-        builder.setPositiveButton("OK", null);
-        builder.show();
+        new MaterialDialog.Builder().init(getActivity())
+                .setTitle(R.string.offline_mode)
+                .setMessage(R.string.dialog_message_offline_sync_alert)
+                .setPositiveButton(R.string.dialog_action_go_online, this)
+                .setNegativeButton(R.string.dialog_action_cancel, this)
+                .createMaterialDialog()
+                .show();
     }
 
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+            case DialogInterface.BUTTON_NEGATIVE:
+                //TODO Write Negative Button Click Event Logic
+                break;
+            case DialogInterface.BUTTON_POSITIVE:
+                PrefManager.setUserStatus(Constants.USER_ONLINE);
+                if (clientPayloads.size() != 0) {
+                    mClientSyncIndex = 0;
+                    syncClientPayload();
+                } else {
+                    Toaster.show(rootView,
+                            getActivity().getResources().getString(R.string.nothing_to_sync));
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     /**
      * This method will update client Payload in List<ClientPayload> after adding Error message in
@@ -242,7 +266,8 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
             syncClientPayload();
         } else {
             ll_error.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText("All Clients have been Sync");
+            mNoPayloadText.setText(getActivity()
+                    .getResources().getString(R.string.all_clients_synced));
             mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         }
     }
@@ -271,7 +296,8 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
                         mClientSyncIndex = 0;
                         syncClientPayload();
                     } else {
-                        Toaster.show(rootView, "Nothing To Sync");
+                        Toaster.show(rootView,
+                                getActivity().getResources().getString(R.string.nothing_to_sync));
                     }
                     break;
                 case 1:
@@ -291,7 +317,8 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
                 mClientSyncIndex = i;
                 break;
             } else {
-                Log.d(LOG_TAG, "Please Fix the Error before sync" +
+                Log.d(LOG_TAG,
+                        getActivity().getResources().getString(R.string.error_fix_before_sync) +
                         clientPayloads.get(i).getErrorMessage());
             }
         }
@@ -303,4 +330,5 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         hideMifosProgressBar();
         mSyncPayloadsPresenter.detachView();
     }
+
 }

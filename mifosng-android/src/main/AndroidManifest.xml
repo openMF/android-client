@@ -122,11 +122,15 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".offline.syncclientpayloads.SyncClientPayloadActivity"
-                  android:label="Sync Client"
+                  android:label="@string/sync_clients"
                   android:screenOrientation="portrait" />
 
         <activity android:name=".offline.syncgrouppayloads.SyncGroupPayloadsActivity"
-                  android:label="Sync Groups"
+                  android:label="@string/sync_groups"
+                  android:screenOrientation="portrait" />
+
+        <activity android:name=".offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity"
+                  android:label="@string/sync_loanrepayments"
                   android:screenOrientation="portrait" />
 
         <service android:name=".LocationService" />

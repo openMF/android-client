@@ -25,6 +25,8 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> {
 
+    public final String LOG_TAG = getClass().getSimpleName();
+
     private final DataManagerLoan mDataManagerLoan;
     private CompositeSubscription mSubscriptions;
 
@@ -97,6 +99,37 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                 }));
     }
 
+    public void checkDatabaseLoanRepaymentByLoanId(int loanId) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<LoanRepaymentRequest>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError("Failed to Fetch LoanRepayment");
+                    }
+
+                    @Override
+                    public void onNext(LoanRepaymentRequest loanRepaymentRequest) {
+                        getMvpView().showProgressbar(false);
+                        if (loanRepaymentRequest != null) {
+                            getMvpView().showLoanRepaymentExistInDatabase("LoanRepayment Already " +
+                                    "Made, Please Sync First ");
+                        } else {
+                            getMvpView().showLoanRepaymentDoesNotExistInDatabase();
+                        }
+                    }
+                })
+        );
+    }
 
     public List<String> getPaymentTypeOptions(List<PaymentTypeOption> paymentTypeOptions) {
         final List<String> paymentOptions = new ArrayList<>();
