@@ -1,10 +1,9 @@
-package com.mifos.mifosxdroid.online.createnewgroup;
+package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerGroups;
-import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.group.Group;
-import com.mifos.objects.organisation.Office;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
 
 import java.util.List;
@@ -17,24 +16,25 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by Rajan Maurya on 06/06/16.
+ * Created by Rajan Maurya on 20/07/16.
  */
-public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView> {
+public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvpView> {
 
-    private final DataManagerOffices mDataManagerOffices;
+
+    private final CompositeSubscription mSubscriptions;
+    private final DataManagerClient mDataManagerClient;
     private final DataManagerGroups mDataManagerGroups;
-    private CompositeSubscription mSubscriptions;
 
     @Inject
-    public CreateNewGroupPresenter(DataManagerOffices dataManagerOffices,
-                                   DataManagerGroups dataManagerGroups) {
-        mDataManagerOffices = dataManagerOffices;
-        mDataManagerGroups = dataManagerGroups;
+    public OfflineDashboardPresenter(DataManagerClient dataManagerClient,
+                                     DataManagerGroups dataManagerGroups) {
         mSubscriptions = new CompositeSubscription();
+        mDataManagerClient = dataManagerClient;
+        mDataManagerGroups = dataManagerGroups;
     }
 
     @Override
-    public void attachView(CreateNewGroupMvpView mvpView) {
+    public void attachView(OfflineDashboardMvpView mvpView) {
         super.attachView(mvpView);
     }
 
@@ -44,54 +44,54 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
         mSubscriptions.unsubscribe();
     }
 
-    public void loadOffices() {
+    public void loadDatabaseClientPayload() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerOffices.getOffices()
+        mSubscriptions.add(mDataManagerClient.getAllDatabaseClientPayload()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Office>>() {
+                .subscribe(new Subscriber<List<ClientPayload>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch office list");
+                        getMvpView().showError("Failed to load ClientPayload");
                     }
 
                     @Override
-                    public void onNext(List<Office> offices) {
+                    public void onNext(List<ClientPayload> clientPayloads) {
+                        getMvpView().showClients(clientPayloads);
                         getMvpView().showProgressbar(false);
-                        getMvpView().showOffices(offices);
                     }
                 }));
     }
 
-    public void createGroup(GroupPayload groupPayload) {
+    public void loanDatabaseGroupPayload() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerGroups.createGroup(groupPayload)
+        mSubscriptions.add(mDataManagerGroups.getAllDatabaseGroupPayload()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Group>() {
+                .subscribe(new Subscriber<List<GroupPayload>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Try Again");
+                        getMvpView().showError("Failed to load GroupPayload");
                     }
 
                     @Override
-                    public void onNext(Group group) {
+                    public void onNext(List<GroupPayload> groupPayloads) {
+                        getMvpView().showGroups(groupPayloads);
                         getMvpView().showProgressbar(false);
-                        getMvpView().showGroupCreatedSuccessfully(group);
                     }
                 }));
     }

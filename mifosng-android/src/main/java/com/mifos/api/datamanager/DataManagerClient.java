@@ -259,4 +259,8 @@ public class DataManagerClient {
     public Observable<List<ClientPayload>> deleteAndUpdatePayloads(int id) {
         return mDatabaseHelperClient.deleteAndUpdatePayloads(id);
     }
+
+    public Observable<ClientPayload> updateClientPayload(ClientPayload clientPayload) {
+        return mDatabaseHelperClient.updateDatabaseClientPayload(clientPayload);
+    }
 }

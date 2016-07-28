@@ -22,7 +22,6 @@ import com.mifos.api.local.databasehelper.DatabaseHelperOffices;
 import com.mifos.api.local.databasehelper.DatabaseHelperStaff;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
-import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
 
@@ -61,7 +60,5 @@ public interface ApplicationComponent {
     DatabaseHelperOffices databaseHelperOffices();
     DatabaseHelperStaff databaseHelperStaff();
     DatabaseHelperLoan databaseHelperLoan();
-
-    Bus eventBus();
 
 }

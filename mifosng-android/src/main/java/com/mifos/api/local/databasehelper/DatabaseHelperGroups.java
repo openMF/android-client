@@ -5,13 +5,19 @@ import android.support.annotation.Nullable;
 
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
+import com.mifos.objects.group.GroupPayload;
+import com.mifos.objects.group.GroupPayload_Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func0;
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
@@ -70,6 +76,65 @@ public class DatabaseHelperGroups {
             }
         });
 
+    }
+
+
+    public Observable<Group> saveGroupPayload(final GroupPayload groupPayload) {
+        return Observable.defer(new Func0<Observable<Group>>() {
+            @Override
+            public Observable<Group> call() {
+                groupPayload.save();
+                return Observable.just(new Group());
+            }
+        });
+    }
+
+
+    public Observable<List<GroupPayload>> realAllGroupPayload() {
+        return Observable.defer(new Func0<Observable<List<GroupPayload>>>() {
+            @Override
+            public Observable<List<GroupPayload>> call() {
+
+                List<GroupPayload> groupPayloads = SQLite.select()
+                        .from(GroupPayload.class)
+                        .queryList();
+
+                return Observable.just(groupPayloads);
+            }
+        });
+    }
+
+    /**
+     * This Method for deleting the group payload from the Database according to Id and
+     * again fetch the group List from the Database GroupPayload_Table
+     * @param id is Id of the Client Payload in which reference client was saved into Database
+     * @return List<ClientPayload></>
+     */
+    public Observable<List<GroupPayload>> deleteAndUpdateGroupPayloads(final int id) {
+        return Observable.defer(new Func0<Observable<List<GroupPayload>>>() {
+            @Override
+            public Observable<List<GroupPayload>> call() {
+
+                Delete.table(GroupPayload.class, GroupPayload_Table.id.eq(id));
+
+                List<GroupPayload> groupPayloads = SQLite.select()
+                        .from(GroupPayload.class)
+                        .queryList();
+
+                return Observable.just(groupPayloads);
+            }
+        });
+    }
+
+
+    public Observable<GroupPayload> updateDatabaseGroupPayload(final GroupPayload groupPayload) {
+        return Observable.defer(new Func0<Observable<GroupPayload>>() {
+            @Override
+            public Observable<GroupPayload> call() {
+                groupPayload.update();
+                return Observable.just(groupPayload);
+            }
+        });
     }
 
 }

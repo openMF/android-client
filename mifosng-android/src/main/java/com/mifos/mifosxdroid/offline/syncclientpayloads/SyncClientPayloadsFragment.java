@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,7 @@ import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.utils.PrefManager;
 
@@ -35,13 +37,15 @@ import butterknife.OnClick;
 /**
  * This Class for Syncing the clients that is created in offline mode.
  * For syncing the clients user make sure that he/she is in the online mode.
- *
+ * <p/>
  * Created by Rajan Maurya on 08/07/16.
  */
 public class SyncClientPayloadsFragment extends MifosBaseFragment
         implements SyncClientPayloadsMvpView {
 
-    @BindView(R.id.rv_sync_clients)
+    public final String LOG_TAG = getClass().getSimpleName();
+
+    @BindView(R.id.rv_sync_payload)
     RecyclerView rv_payload_clients;
 
     @BindView(R.id.swipe_container)
@@ -66,6 +70,13 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     SyncPayloadsAdapter mSyncPayloadsAdapter;
 
     int mClientSyncIndex = 0;
+
+    public static SyncClientPayloadsFragment newInstance() {
+        Bundle arguments = new Bundle();
+        SyncClientPayloadsFragment fragment = new SyncClientPayloadsFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,13 +155,13 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
 
     /**
      * Showing Error when failed to fetch client payload from Database
+     *
      * @param s Error String
      */
     @Override
     public void showError(String s) {
         ll_error.setVisibility(View.VISIBLE);
         mNoPayloadText.setText(s + "\n Click to Refresh ");
-        mSyncPayloadsPresenter.loadDatabaseClientPayload();
         Toaster.show(rootView, s);
     }
 
@@ -173,9 +184,11 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      * the mClientSyncIndex by one and sync the next client payload
      */
     @Override
-    public void showClientSyncFailed() {
-        mClientSyncIndex = mClientSyncIndex + 1;
-        mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(mClientSyncIndex));
+    public void showClientSyncFailed(ErrorSyncServerMessage error) {
+        ClientPayload clientPayload = clientPayloads.get(mClientSyncIndex);
+        clientPayload.setErrorMessage(error.getDefaultUserMessage());
+        mSyncPayloadsPresenter.updateClientPayload(clientPayload);
+
     }
 
     /**
@@ -195,10 +208,28 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     }
 
 
+    /**
+     * This method will update client Payload in List<ClientPayload> after adding Error message in
+     * database
+     *
+     * @param clientPayload
+     */
+    @Override
+    public void showClientPayloadUpdated(ClientPayload clientPayload) {
+        clientPayloads.set(mClientSyncIndex, clientPayload);
+        mSyncPayloadsAdapter.notifyDataSetChanged();
+
+        mClientSyncIndex = mClientSyncIndex + 1;
+        if (clientPayloads.size() != mClientSyncIndex) {
+            syncClientPayload();
+        }
+    }
+
 
     /**
      * This is called whenever a client  payload is synced and synced client payload is
      * deleted from the Database and update UI
+     *
      * @param clients
      */
     @Override
@@ -206,9 +237,9 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         mClientSyncIndex = 0;
         clientPayloads.clear();
         this.clientPayloads = clients;
-        mSyncPayloadsAdapter.notifyDataSetChanged();
+        mSyncPayloadsAdapter.setClientPayload(clientPayloads);
         if (clientPayloads.size() != 0) {
-            mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(mClientSyncIndex));
+            syncClientPayload();
         } else {
             ll_error.setVisibility(View.VISIBLE);
             mNoPayloadText.setText("All Clients have been Sync");
@@ -237,8 +268,10 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
             switch (PrefManager.getUserStatus()) {
                 case 0:
                     if (clientPayloads.size() != 0) {
-                        mSyncPayloadsPresenter.syncClientPayload(clientPayloads
-                                .get(mClientSyncIndex));
+                        mClientSyncIndex = 0;
+                        syncClientPayload();
+                    } else {
+                        Toaster.show(rootView, "Nothing To Sync");
                     }
                     break;
                 case 1:
@@ -249,6 +282,19 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void syncClientPayload() {
+        for (int i = 0; i < clientPayloads.size(); ++i) {
+            if (clientPayloads.get(i).getErrorMessage() == null) {
+                mSyncPayloadsPresenter.syncClientPayload(clientPayloads.get(i));
+                mClientSyncIndex = i;
+                break;
+            } else {
+                Log.d(LOG_TAG, "Please Fix the Error before sync" +
+                        clientPayloads.get(i).getErrorMessage());
+            }
+        }
     }
 
     @Override

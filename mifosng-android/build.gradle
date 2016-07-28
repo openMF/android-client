@@ -6,11 +6,11 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://download.crashlytics.com/maven' }
+        //maven { url 'http://download.crashlytics.com/maven' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.0'
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+        classpath 'com.android.tools.build:gradle:2.1.2'
+        //classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
     }
@@ -18,14 +18,14 @@ buildscript {
 
 repositories {
     mavenCentral()
-    maven { url 'http://download.crashlytics.com/maven' }
+    //maven { url 'http://download.crashlytics.com/maven' }
     maven { url "https://jitpack.io" }
     maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'crashlytics'
+//apply plugin: 'crashlytics'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.triplet.play'
@@ -55,6 +55,10 @@ android {
         }
     }
 
+    dexOptions {
+        incremental true
+    }
+
     signingConfigs {
         release {
             storeFile file("../default_key_store.jks")
@@ -69,9 +73,21 @@ android {
 
     buildTypes {
 
+        debug {
+            minifyEnabled false
+            // TODO  Uses new built-in shrinker, To Enable update buils tools to 2.2
+            // TODO http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+        }
+
         release {
+            minifyEnabled false
+            useProguard false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
     }
@@ -115,12 +131,6 @@ tasks.withType(JavaCompile) {
 
 clean.dependsOn('cleanCopyNativeLibs')
 
-tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
-    pkgTask ->
-        pkgTask.jniFolders = new HashSet<File>()
-        pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
-}
-
 tasks.withType(JavaCompile) {
     configure(options) {
         // TODO
@@ -145,6 +155,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     compile "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
@@ -161,16 +172,17 @@ dependencies {
 
 
     //Square dependencies
-    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    compile ('com.squareup.retrofit2:retrofit:$rootProject.retrofitVersionLatest') {
+        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
+        exclude module: 'okhttp'
+    }
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersionLatest"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersionLatest"
-    compile "com.squareup.okhttp:okhttp:$rootProject.okHttpVersion"
-    compile "com.squareup.okhttp:okhttp-urlconnection:$rootProject.okHttpVersion"
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
-    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
 
     compile 'javax.annotation:jsr250-api:1.0@jar'
-    compile 'com.squareup:otto:1.3.8'
 
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.4'
@@ -180,7 +192,7 @@ dependencies {
 
 
     compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
-    compile 'com.crashlytics.android:crashlytics:1.+'
+    //compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
@@ -190,7 +202,12 @@ dependencies {
 
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:2.2.2"
-    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion") {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+        exclude group: 'com.android.support', module: 'design'
+    }
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
 
     testCompile 'junit:junit:4.12'

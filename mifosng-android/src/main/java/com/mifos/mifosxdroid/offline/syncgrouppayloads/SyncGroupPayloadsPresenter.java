@@ -1,18 +1,17 @@
-package com.mifos.mifosxdroid.offline.syncclientpayloads;
+package com.mifos.mifosxdroid.offline.syncgrouppayloads;
 
 import com.google.gson.Gson;
-import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.ErrorSyncServerMessage;
-import com.mifos.objects.client.Client;
-import com.mifos.objects.client.ClientPayload;
+import com.mifos.objects.group.Group;
+import com.mifos.objects.group.GroupPayload;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import retrofit2.adapter.rxjava.HttpException;
-import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.plugins.RxJavaPlugins;
@@ -20,22 +19,21 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by Rajan Maurya on 08/07/16.
+ * Created by Rajan Maurya on 19/07/16.
  */
-public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayloadsMvpView> {
+public class SyncGroupPayloadsPresenter extends BasePresenter<SyncGroupPayloadsMvpView> {
 
-
-    private final DataManagerClient mDataManagerClient;
-    private CompositeSubscription mSubscriptions;
+    public final DataManagerGroups mDataManagerGroups;
+    public CompositeSubscription mSubscriptions;
 
     @Inject
-    public SyncClientPayloadsPresenter(DataManagerClient dataManagerClient) {
-        mDataManagerClient = dataManagerClient;
+    public SyncGroupPayloadsPresenter(DataManagerGroups dataManagerGroups) {
+        mDataManagerGroups = dataManagerGroups;
         mSubscriptions = new CompositeSubscription();
     }
 
     @Override
-    public void attachView(SyncClientPayloadsMvpView mvpView) {
+    public void attachView(SyncGroupPayloadsMvpView mvpView) {
         super.attachView(mvpView);
     }
 
@@ -45,13 +43,13 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
         mSubscriptions.unsubscribe();
     }
 
-    public void loadDatabaseClientPayload() {
+    public void loanDatabaseGroupPayload() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.getAllDatabaseClientPayload()
+        mSubscriptions.add(mDataManagerGroups.getAllDatabaseGroupPayload()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<ClientPayload>>() {
+                .subscribe(new Subscriber<List<GroupPayload>>() {
                     @Override
                     public void onCompleted() {
 
@@ -60,24 +58,24 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to load ClientPayload");
+                        getMvpView().showError("Failed to load GroupPayload");
                     }
 
                     @Override
-                    public void onNext(List<ClientPayload> clientPayloads) {
+                    public void onNext(List<GroupPayload> groupPayloads) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showPayloads(clientPayloads);
+                        getMvpView().showGroups(groupPayloads);
                     }
                 }));
     }
 
-    public void syncClientPayload(ClientPayload clientPayload) {
+    public void syncGroupPayload(GroupPayload groupPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.createClient(clientPayload)
+        mSubscriptions.add(mDataManagerGroups.createGroup(groupPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Client>() {
+                .subscribe(new Subscriber<Group>() {
                     @Override
                     public void onCompleted() {
 
@@ -93,29 +91,28 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                                 ErrorSyncServerMessage syncErrorMessage = gson.
                                         fromJson(errorMessage, ErrorSyncServerMessage.class);
                                 getMvpView().showProgressbar(false);
-                                getMvpView().showClientSyncFailed(syncErrorMessage);
+                                getMvpView().showGroupSyncFailed(syncErrorMessage);
                             }
                         } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
                         }
                     }
 
                     @Override
-                    public void onNext(Client client) {
+                    public void onNext(Group group) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showSyncResponse();
+                        getMvpView().showGroupSyncResponse();
                     }
                 }));
     }
 
-
-    public void deleteAndUpdateClientPayload(int id) {
+    public void deleteAndUpdateGroupPayload(int id) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.deleteAndUpdatePayloads(id)
+        mSubscriptions.add(mDataManagerGroups.deleteAndUpdateGroupPayloads(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<List<ClientPayload>>() {
+                .subscribe(new Subscriber<List<GroupPayload>>() {
                     @Override
                     public void onCompleted() {
 
@@ -124,24 +121,24 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed Update List");
+                        getMvpView().showError("Failed to update list");
                     }
 
                     @Override
-                    public void onNext(List<ClientPayload> clientPayloads) {
+                    public void onNext(List<GroupPayload> groupPayloads) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showPayloadDeletedAndUpdatePayloads(clientPayloads);
+                        getMvpView().showPayloadDeletedAndUpdatePayloads(groupPayloads);
                     }
                 }));
     }
 
-    public void updateClientPayload(ClientPayload clientPayload) {
+    public void updateGroupPayload(GroupPayload groupPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.updateClientPayload(clientPayload)
+        mSubscriptions.add(mDataManagerGroups.updateGroupPayload(groupPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ClientPayload>() {
+                .subscribe(new Subscriber<GroupPayload>() {
                     @Override
                     public void onCompleted() {
 
@@ -150,16 +147,16 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to update client");
+                        getMvpView().showError("Failed to update GroupPayload");
                     }
 
                     @Override
-                    public void onNext(ClientPayload clientPayload) {
+                    public void onNext(GroupPayload groupPayload) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientPayloadUpdated(clientPayload);
+                        getMvpView().showGroupPayloadUpdated(groupPayload);
                     }
                 })
         );
-    }
 
+    }
 }

@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.ClientPayload;
 
 import java.util.List;
@@ -16,9 +17,11 @@ public interface SyncClientPayloadsMvpView extends MvpView {
 
     void showSyncResponse();
 
-    void showClientSyncFailed();
+    void showClientSyncFailed(ErrorSyncServerMessage error);
 
     void showOfflineModeDialog();
+
+    void showClientPayloadUpdated(ClientPayload clientPayload);
 
     void showPayloadDeletedAndUpdatePayloads(List<ClientPayload> clientPayloads);
 }

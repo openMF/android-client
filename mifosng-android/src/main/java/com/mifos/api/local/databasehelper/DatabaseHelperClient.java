@@ -32,6 +32,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func0;
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
@@ -362,5 +363,16 @@ public class DatabaseHelperClient {
             }
         });
 
+    }
+
+    public Observable<ClientPayload> updateDatabaseClientPayload(final ClientPayload
+                                                                         clientPayload) {
+        return Observable.defer(new Func0<Observable<ClientPayload>>() {
+            @Override
+            public Observable<ClientPayload> call() {
+                clientPayload.update();
+                return Observable.just(clientPayload);
+            }
+        });
     }
 }
