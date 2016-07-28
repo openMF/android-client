@@ -5,37 +5,78 @@
 
 package com.mifos.objects.accounts.loan;
 
-import com.google.gson.annotations.Expose;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
  * Created by ishankhanna on 22/05/14.
  */
-public class LoanRepaymentRequest {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class LoanRepaymentRequest extends MifosBaseModel implements Parcelable {
 
 
-    @Expose
-    private String dateFormat;
-    @Expose
-    private String locale;
-    @Expose
-    private String transactionDate;
-    @Expose
-    private String transactionAmount;
-    @Expose
-    private String paymentTypeId;
-    @Expose
-    private String note;
-    @Expose
-    private String accountNumber;
-    @Expose
-    private String checkNumber;
-    @Expose
-    private String routingCode;
-    @Expose
-    private String receiptNumber;
-    @Expose
-    private String bankNumber;
+    @PrimaryKey
+    transient long timeStamp;
 
+    @Column
+    transient Integer loanId;
+
+    @Column
+    String dateFormat;
+
+    @Column
+    String locale;
+
+    @Column
+    String transactionDate;
+
+    @Column
+    String transactionAmount;
+
+    @Column
+    String paymentTypeId;
+
+    @Column
+    String note;
+
+    @Column
+    String accountNumber;
+
+    @Column
+    String checkNumber;
+
+    @Column
+    String routingCode;
+
+    @Column
+    String receiptNumber;
+
+    @Column
+    String bankNumber;
+
+    public Integer getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(Integer loanId) {
+        this.loanId = loanId;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public String getDateFormat() {
         return dateFormat;
@@ -126,4 +167,53 @@ public class LoanRepaymentRequest {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.dateFormat);
+        dest.writeString(this.locale);
+        dest.writeString(this.transactionDate);
+        dest.writeString(this.transactionAmount);
+        dest.writeString(this.paymentTypeId);
+        dest.writeString(this.note);
+        dest.writeString(this.accountNumber);
+        dest.writeString(this.checkNumber);
+        dest.writeString(this.routingCode);
+        dest.writeString(this.receiptNumber);
+        dest.writeString(this.bankNumber);
+    }
+
+    public LoanRepaymentRequest() {
+    }
+
+    protected LoanRepaymentRequest(Parcel in) {
+        this.dateFormat = in.readString();
+        this.locale = in.readString();
+        this.transactionDate = in.readString();
+        this.transactionAmount = in.readString();
+        this.paymentTypeId = in.readString();
+        this.note = in.readString();
+        this.accountNumber = in.readString();
+        this.checkNumber = in.readString();
+        this.routingCode = in.readString();
+        this.receiptNumber = in.readString();
+        this.bankNumber = in.readString();
+    }
+
+    public static final Parcelable.Creator<LoanRepaymentRequest> CREATOR =
+            new Parcelable.Creator<LoanRepaymentRequest>() {
+        @Override
+        public LoanRepaymentRequest createFromParcel(Parcel source) {
+            return new LoanRepaymentRequest(source);
+        }
+
+        @Override
+        public LoanRepaymentRequest[] newArray(int size) {
+            return new LoanRepaymentRequest[size];
+        }
+    };
 }

@@ -1,29 +1,37 @@
 package com.mifos.mifosxdroid.online.loanrepayment;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 8/6/16.
  */
 public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerLoan mDataManagerLoan;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
-    public LoanRepaymentPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public LoanRepaymentPresenter(DataManagerLoan dataManagerLoan) {
+        mDataManagerLoan = dataManagerLoan;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -34,14 +42,13 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loanLoanRepaymentTemplate(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanRepayTemplate(loanId)
+        mSubscriptions.add(mDataManagerLoan.getLoanRepayTemplate(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentTemplate>() {
@@ -61,14 +68,13 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanRepayTemplate(loanRepaymentTemplate);
                     }
-                });
+                }));
     }
 
     public void submitPayment(int loanId, LoanRepaymentRequest request) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.submitPayment(loanId, request)
+        mSubscriptions.add(mDataManagerLoan.submitPayment(loanId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentResponse>() {
@@ -88,8 +94,26 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                         getMvpView().showProgressbar(false);
                         getMvpView().showPaymentSubmittedSuccessfully(loanRepaymentResponse);
                     }
-                });
+                }));
     }
 
+
+    public List<String> getPaymentTypeOptions(List<PaymentTypeOption> paymentTypeOptions) {
+        final List<String> paymentOptions = new ArrayList<>();
+        Observable.from(paymentTypeOptions)
+                .flatMap(new Func1<PaymentTypeOption, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(PaymentTypeOption paymentTypeOption) {
+                        return Observable.just(paymentTypeOption.getName());
+                    }
+                })
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        paymentOptions.add(s);
+                    }
+                });
+        return paymentOptions;
+    }
 
 }

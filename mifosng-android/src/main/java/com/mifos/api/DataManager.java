@@ -13,8 +13,6 @@ import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
@@ -31,6 +29,7 @@ import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
+import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
@@ -41,13 +40,11 @@ import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
-import com.mifos.objects.group.GroupPayload;
 import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;
@@ -268,10 +265,6 @@ public class DataManager {
         return mBaseApiManager.getDataTableApi().getTableOf("m_client");
     }
 
-    public Observable<List<DataTable>> getLoanDataTable() {
-        return mBaseApiManager.getDataTableApi().getTableOf("m_loan");
-    }
-
     public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId) {
         return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
                 table, entity, rowId);
@@ -296,9 +289,6 @@ public class DataManager {
     /**
      * Loans API
      */
-    public Observable<LoanWithAssociations> getLoanById(int loanAccountNumber) {
-        return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanAccountNumber);
-    }
 
     public Observable<LoanWithAssociations> getLoanTransactions(int loan) {
         return mBaseApiManager.getLoanApi().getLoanWithTransactions(loan);
@@ -341,16 +331,6 @@ public class DataManager {
     public Observable<Page<Charges>> getListOfCharges(int clientId) {
         return mBaseApiManager.getLoanApi().getListOfCharges(clientId);
     }
-
-    public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(int loanId) {
-        return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId);
-    }
-
-    public Observable<LoanRepaymentResponse> submitPayment(
-            int loanId, LoanRepaymentRequest request) {
-        return mBaseApiManager.getLoanApi().submitPayment(loanId, request);
-    }
-
 
 
     /**

@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.loanaccountsummary;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerDataTable;
+import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.noncore.DataTable;
@@ -10,21 +11,26 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
 public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummaryMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerLoan mDataManagerLoan;
+    private final DataManagerDataTable mDataManagerDataTable;
+    private CompositeSubscription mSubscriptions;
+    private static final String LOAN_DATA_TABLE_NAME = "m_loan";
 
     @Inject
-    public LoanAccountSummaryPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public LoanAccountSummaryPresenter(DataManagerLoan dataManagerLoan,
+                                       DataManagerDataTable dataManagerDataTable) {
+        mDataManagerLoan = dataManagerLoan;
+        mDataManagerDataTable = dataManagerDataTable;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -35,20 +41,18 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadLoanDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanDataTable()
+        mSubscriptions.add(mDataManagerDataTable.getDataTable(LOAN_DATA_TABLE_NAME)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
@@ -62,20 +66,18 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanDataTable(dataTables);
                     }
-                });
+                }));
     }
 
     public void loadLoanById(int loanAccountNumber) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanById(loanAccountNumber)
+        mSubscriptions.add(mDataManagerLoan.getLoanById(loanAccountNumber)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanWithAssociations>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
@@ -89,7 +91,7 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
                         getMvpView().showProgressbar(false);
                         getMvpView().showLoanById(loanWithAssociations);
                     }
-                });
+                }));
     }
 
 }

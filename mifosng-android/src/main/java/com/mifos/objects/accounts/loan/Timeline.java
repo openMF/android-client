@@ -5,32 +5,82 @@
 
 package com.mifos.objects.accounts.loan;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Generated;
+/**
+ * This Model Time Object of LoanWithAssociations.
+ *
+ * Here
+ */
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Timeline extends MifosBaseModel implements Parcelable {
 
-@Generated("org.jsonschema2pojo")
-public class Timeline {
+    @PrimaryKey
+    transient Integer loanId;
 
-    private List<Integer> submittedOnDate = new ArrayList<Integer>();
-    private String submittedByUsername;
-    private String submittedByFirstname;
-    private String submittedByLastname;
-    private List<Integer> approvedOnDate = new ArrayList<Integer>();
-    private String approvedByUsername;
-    private String approvedByFirstname;
-    private String approvedByLastname;
-    private List<Integer> expectedDisbursementDate = new ArrayList<Integer>();
-    private List<Integer> actualDisbursementDate = new ArrayList<Integer>();
-    private String disbursedByUsername;
-    private String disbursedByFirstname;
-    private String disbursedByLastname;
-    private List<Integer> closedOnDate = new ArrayList<Integer>();
-    private List<Integer> expectedMaturityDate = new ArrayList<Integer>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    List<Integer> submittedOnDate = new ArrayList<Integer>();
+
+    String submittedByUsername;
+
+    String submittedByFirstname;
+
+    String submittedByLastname;
+
+    List<Integer> approvedOnDate = new ArrayList<Integer>();
+
+    String approvedByUsername;
+
+    String approvedByFirstname;
+
+    String approvedByLastname;
+
+    List<Integer> expectedDisbursementDate = new ArrayList<Integer>();
+
+    //This Object for saving the actualDisbursementDate, Not belong to any POST and GET Request
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    transient ActualDisbursementDate actualDisburseDate;
+
+    List<Integer> actualDisbursementDate = new ArrayList<Integer>();
+
+    String disbursedByUsername;
+
+    String disbursedByFirstname;
+
+    String disbursedByLastname;
+
+    List<Integer> closedOnDate = new ArrayList<Integer>();
+
+    List<Integer> expectedMaturityDate = new ArrayList<Integer>();
+
+    public ActualDisbursementDate getActualDisburseDate() {
+        return actualDisburseDate;
+    }
+
+    public void setActualDisburseDate(ActualDisbursementDate actualDisburseDate) {
+        this.actualDisburseDate = actualDisburseDate;
+    }
+
+    public Integer getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(Integer loanId) {
+        this.loanId = loanId;
+    }
 
     public List<Integer> getSubmittedOnDate() {
         return submittedOnDate;
@@ -152,12 +202,69 @@ public class Timeline {
         this.expectedMaturityDate = expectedMaturityDate;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.submittedOnDate);
+        dest.writeString(this.submittedByUsername);
+        dest.writeString(this.submittedByFirstname);
+        dest.writeString(this.submittedByLastname);
+        dest.writeList(this.approvedOnDate);
+        dest.writeString(this.approvedByUsername);
+        dest.writeString(this.approvedByFirstname);
+        dest.writeString(this.approvedByLastname);
+        dest.writeList(this.expectedDisbursementDate);
+        dest.writeParcelable(this.actualDisburseDate, flags);
+        dest.writeList(this.actualDisbursementDate);
+        dest.writeString(this.disbursedByUsername);
+        dest.writeString(this.disbursedByFirstname);
+        dest.writeString(this.disbursedByLastname);
+        dest.writeList(this.closedOnDate);
+        dest.writeList(this.expectedMaturityDate);
     }
 
+    public Timeline() {
+    }
+
+    protected Timeline(Parcel in) {
+        this.submittedOnDate = new ArrayList<Integer>();
+        in.readList(this.submittedOnDate, Integer.class.getClassLoader());
+        this.submittedByUsername = in.readString();
+        this.submittedByFirstname = in.readString();
+        this.submittedByLastname = in.readString();
+        this.approvedOnDate = new ArrayList<Integer>();
+        in.readList(this.approvedOnDate, Integer.class.getClassLoader());
+        this.approvedByUsername = in.readString();
+        this.approvedByFirstname = in.readString();
+        this.approvedByLastname = in.readString();
+        this.expectedDisbursementDate = new ArrayList<Integer>();
+        in.readList(this.expectedDisbursementDate, Integer.class.getClassLoader());
+        this.actualDisburseDate = in.readParcelable(ActualDisbursementDate.class.getClassLoader());
+        this.actualDisbursementDate = new ArrayList<Integer>();
+        in.readList(this.actualDisbursementDate, Integer.class.getClassLoader());
+        this.disbursedByUsername = in.readString();
+        this.disbursedByFirstname = in.readString();
+        this.disbursedByLastname = in.readString();
+        this.closedOnDate = new ArrayList<Integer>();
+        in.readList(this.closedOnDate, Integer.class.getClassLoader());
+        this.expectedMaturityDate = new ArrayList<Integer>();
+        in.readList(this.expectedMaturityDate, Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Timeline> CREATOR = new Parcelable.Creator<Timeline>() {
+        @Override
+        public Timeline createFromParcel(Parcel source) {
+            return new Timeline(source);
+        }
+
+        @Override
+        public Timeline[] newArray(int size) {
+            return new Timeline[size];
+        }
+    };
 }

@@ -15,7 +15,7 @@ import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
-@Table(database = MifosDatabase.class, name = "LoanAccountStatus")
+@Table(database = MifosDatabase.class, name = "LoanStatus")
 @ModelContainer
 public class Status extends MifosBaseModel implements Parcelable {
 
