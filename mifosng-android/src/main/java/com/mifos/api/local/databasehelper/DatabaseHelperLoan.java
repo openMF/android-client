@@ -187,7 +187,7 @@ public class DatabaseHelperLoan {
 
                 loanRepaymentTemplate.save();
 
-                return null;
+                return Observable.just(loanRepaymentTemplate);
             }
         });
     }
