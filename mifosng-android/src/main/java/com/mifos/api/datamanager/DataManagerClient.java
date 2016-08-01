@@ -42,7 +42,7 @@ public class DataManagerClient {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
      * get list of the clients. The response is pass to the DatabaseHelperClient
-     * that save the response in Database different thread and next pass the response to
+     * that save the response in Database and next pass the response DataManager for passing to
      * Presenter to show in the view
      * <p/>
      * If the offset is zero and UserStatus is 1 then fetch all clients list and show on the view.
@@ -63,8 +63,7 @@ public class DataManagerClient {
                             public Observable<? extends Page<Client>> call(Page<Client>
                                                                                    clientPage) {
                                 //Saving Clients in Database
-                                mDatabaseHelperClient.saveAllClients(clientPage);
-                                return Observable.just(clientPage);
+                                return mDatabaseHelperClient.saveAllClients(clientPage);
                             }
                         });
             case 1:

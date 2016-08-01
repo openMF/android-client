@@ -71,7 +71,6 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 // make the image url
                 String url = PrefManager.getInstanceUrl()
-                        + "/"
                         + "clients/"
                         + client.getId()
                         + "/images?maxHeight=120&maxWidth=120";

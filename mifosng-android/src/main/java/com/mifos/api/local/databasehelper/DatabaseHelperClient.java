@@ -61,24 +61,25 @@ public class DatabaseHelperClient {
      * @param clientPage
      * @return null
      */
-    @Nullable
-    public Observable<Void> saveAllClients(final Page<Client> clientPage) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+    public Observable<Page<Client>> saveAllClients(final Page<Client> clientPage) {
+        return Observable.defer(new Func0<Observable<Page<Client>>>() {
             @Override
-            public void run() {
+            public Observable<Page<Client>> call() {
 
                 for (Client client : clientPage.getPageItems()) {
 
-                    ClientDate clientDate = new ClientDate(client.getId(), 0,
-                            client.getActivationDate().get(0),
-                            client.getActivationDate().get(1),
-                            client.getActivationDate().get(2));
-                    client.setClientDate(clientDate);
+                    if (client.getActivationDate().size() != 0) {
+                        ClientDate clientDate = new ClientDate(client.getId(), 0,
+                                client.getActivationDate().get(0),
+                                client.getActivationDate().get(1),
+                                client.getActivationDate().get(2));
+                        client.setClientDate(clientDate);
+                    }
                     client.save();
                 }
+                return Observable.just(clientPage);
             }
         });
-        return null;
     }
 
     /**

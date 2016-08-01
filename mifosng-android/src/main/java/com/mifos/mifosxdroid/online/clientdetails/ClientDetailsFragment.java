@@ -797,6 +797,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         }
     }
 
+    //TODO Replace This Async Task with Glide Image Loading
     public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
         Bitmap bmp;
 
@@ -809,7 +810,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         @Override
         protected Void doInBackground(Integer... integers) {
             String url = PrefManager.getInstanceUrl()
-                    + "/"
                     + "clients/"
                     + integers[0]
                     + "/images?maxHeight=120&maxWidth=120";
