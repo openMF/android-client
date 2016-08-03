@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +30,6 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -37,9 +37,6 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -99,9 +96,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
     private String loanAccountNumber;
     private String loanProductName;
     private Double amountInArrears;
-    // Values fetched from Loan Repayment Template
-    private List<PaymentTypeOption> paymentTypeOptionList;
-    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<>();
+    private int paymentTypeOptionId;
     private DialogFragment mfDatePicker;
 
     public static LoanRepaymentFragment newInstance(LoanWithAssociations loanWithAssociations) {
@@ -110,7 +105,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
         if (loanWithAssociations != null) {
             args.putString(Constants.CLIENT_NAME, loanWithAssociations.getClientName());
             args.putString(Constants.LOAN_PRODUCT_NAME, loanWithAssociations.getLoanProductName());
-            args.putString(Constants.LOAN_ACCOUNT_NUMBER, loanWithAssociations.getAccountNo());
+            args.putString(Constants.LOAN_ACCOUNT_NUMBER, "" + loanWithAssociations.getId());
             args.putDouble(Constants.AMOUNT_IN_ARREARS, loanWithAssociations.getSummary()
                     .getTotalOverdue());
             //args.putDouble(Constants.AMOUNT_DUE, loanWithAssociations.getSummary()
@@ -329,8 +324,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
         //TODO Implement a proper builder method here
         String dateString = tv_repaymentDate.getText().toString().replace("-", " ");
         final LoanRepaymentRequest request = new LoanRepaymentRequest();
-        request.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get(sp_paymentType
-                .getSelectedItem().toString())));
+        request.setPaymentTypeId(String.valueOf(paymentTypeOptionId));
         request.setLocale("en");
         request.setTransactionAmount(String.valueOf(calculateTotal()));
         request.setDateFormat("dd MM yyyy");
@@ -342,34 +336,35 @@ public class LoanRepaymentFragment extends ProgressableFragment
     }
 
     @Override
-    public void showLoanRepayTemplate(LoanRepaymentTemplate loanRepaymentTemplate) {
+    public void showLoanRepayTemplate(final LoanRepaymentTemplate loanRepaymentTemplate) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
         if (loanRepaymentTemplate != null) {
             tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
             inflateRepaymentDate();
-            List<String> listOfPaymentTypes = new ArrayList<String>();
-            paymentTypeOptionList = loanRepaymentTemplate.getPaymentTypeOptions();
-            // Sorting has to be done on the basis of
-            // PaymentTypeOption.position because it is specified
-            // by the users on Mifos X Platform.
-            Collections.sort(paymentTypeOptionList);
+            List<String> listOfPaymentTypes = mLoanRepaymentPresenter.getPaymentTypeOptions
+                    (loanRepaymentTemplate.getPaymentTypeOptions());
 
-            for (PaymentTypeOption paymentTypeOption : paymentTypeOptionList) {
-                listOfPaymentTypes.add(paymentTypeOption.getName());
-                paymentTypeHashMap.put(paymentTypeOption.getName(),
-                        paymentTypeOption
-                                .getId());
-            }
-
-            ArrayAdapter<String> paymentTypeAdapter =
-                    new ArrayAdapter<>(getActivity(),
-                            layout.simple_spinner_item, listOfPaymentTypes);
+            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(),
+                    layout.simple_spinner_item, listOfPaymentTypes);
 
             paymentTypeAdapter.setDropDownViewResource(
                     layout.simple_spinner_dropdown_item);
             sp_paymentType.setAdapter(paymentTypeAdapter);
+            sp_paymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long
+                        id) {
+                    paymentTypeOptionId = loanRepaymentTemplate
+                            .getPaymentTypeOptions().get(position).getId();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
 
             et_amount.setText(String.valueOf(loanRepaymentTemplate
                     .getPrincipalPortion()

@@ -5,24 +5,50 @@
 
 package com.mifos.objects.organisation;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
  * Created by ishankhanna on 14/07/14.
  */
-public class Staff {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Staff extends MifosBaseModel implements Parcelable {
 
-    private Integer id;
-    private String firstname;
-    private String lastname;
-    private String mobileNo;
-    private String displayName;
-    private Integer officeId;
-    private String officeName;
-    private Boolean isLoanOfficer;
-    private Boolean isActive;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String firstname;
+
+    @Column
+    String lastname;
+
+    @Column
+    String mobileNo;
+
+    @Column
+    String displayName;
+
+    @Column
+    Integer officeId;
+
+    @Column
+    String officeName;
+
+    @Column
+    Boolean isLoanOfficer;
+
+    @Column
+    Boolean isActive;
+
 
     public Integer getId() {
         return id;
@@ -96,11 +122,49 @@ public class Staff {
         this.mobileNo = mobileNo;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.firstname);
+        dest.writeString(this.lastname);
+        dest.writeString(this.mobileNo);
+        dest.writeString(this.displayName);
+        dest.writeValue(this.officeId);
+        dest.writeString(this.officeName);
+        dest.writeValue(this.isLoanOfficer);
+        dest.writeValue(this.isActive);
     }
+
+    public Staff() {
+    }
+
+    protected Staff(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.firstname = in.readString();
+        this.lastname = in.readString();
+        this.mobileNo = in.readString();
+        this.displayName = in.readString();
+        this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.officeName = in.readString();
+        this.isLoanOfficer = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.isActive = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Staff> CREATOR = new Parcelable.Creator<Staff>() {
+        @Override
+        public Staff createFromParcel(Parcel source) {
+            return new Staff(source);
+        }
+
+        @Override
+        public Staff[] newArray(int size) {
+            return new Staff[size];
+        }
+    };
 }

@@ -11,6 +11,9 @@ import com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval.SavingsAccou
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
+import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
+import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsFragment;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
@@ -131,4 +134,10 @@ public interface ActivityComponent {
     void inject(SavingsAccountApproval savingsAccountApproval);
 
     void inject(com.mifos.mifosxdroid.fragments.centerlist.CenterListFragment centerListFragment);
+
+    void inject(SyncClientPayloadsFragment syncPayloadsFragment);
+
+    void inject(SyncGroupPayloadsFragment syncGroupPayloadsFragment);
+
+    void inject(OfflineDashboardFragment offlineDashboardFragment);
 }

@@ -15,27 +15,22 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
+ * This Model is the common for Client and Group. So we can use it in both client and group
+ * database.
  * Created by ishankhanna on 09/02/14.
  */
 @Table(database = MifosDatabase.class)
 public class Status extends MifosBaseModel implements Parcelable {
 
-    public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
-        @Override
-        public Status createFromParcel(Parcel source) {
-            return new Status(source);
-        }
 
-        @Override
-        public Status[] newArray(int size) {
-            return new Status[size];
-        }
-    };
     private static final String STATUS_ACTIVE = "Active";
-    @PrimaryKey(autoincrement = true)
+
+    @PrimaryKey
     int id;
+
     @Column
     String code;
+
     @Column
     String value;
 
@@ -97,4 +92,16 @@ public class Status extends MifosBaseModel implements Parcelable {
         dest.writeString(this.code);
         dest.writeString(this.value);
     }
+
+    public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
+        @Override
+        public Status createFromParcel(Parcel source) {
+            return new Status(source);
+        }
+
+        @Override
+        public Status[] newArray(int size) {
+            return new Status[size];
+        }
+    };
 }

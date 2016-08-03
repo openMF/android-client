@@ -5,14 +5,18 @@
 
 package com.mifos.objects.accounts.loan;
 
-import com.mifos.objects.Currency;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import com.mifos.objects.accounts.savings.Currency;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ishankhanna on 19/06/14.
  */
-public class RepaymentSchedule {
+public class RepaymentSchedule implements Parcelable {
 
     Currency currency;
     Integer loanTermInDays;
@@ -231,4 +235,65 @@ public class RepaymentSchedule {
                 '}';
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.currency, flags);
+        dest.writeValue(this.loanTermInDays);
+        dest.writeList(this.periods);
+        dest.writeValue(this.totalFeeChargesCharged);
+        dest.writeValue(this.totalInterestCharged);
+        dest.writeValue(this.totalOutstanding);
+        dest.writeValue(this.totalPaidInAdvance);
+        dest.writeValue(this.totalPaidLate);
+        dest.writeValue(this.totalPenaltyChargesCharged);
+        dest.writeValue(this.totalPrincipalDisbursed);
+        dest.writeValue(this.totalPrincipalExpected);
+        dest.writeValue(this.totalPrincipalPaid);
+        dest.writeValue(this.totalRepayment);
+        dest.writeValue(this.totalRepaymentExpected);
+        dest.writeValue(this.totalWaived);
+        dest.writeValue(this.totalWrittenOff);
+    }
+
+    public RepaymentSchedule() {
+    }
+
+    protected RepaymentSchedule(Parcel in) {
+        this.currency = in.readParcelable(Currency.class.getClassLoader());
+        this.loanTermInDays = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.periods = new ArrayList<Period>();
+        in.readList(this.periods, Period.class.getClassLoader());
+        this.totalFeeChargesCharged = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalInterestCharged = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalOutstanding = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPaidInAdvance = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPaidLate = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPenaltyChargesCharged = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPrincipalDisbursed = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPrincipalExpected = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalPrincipalPaid = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalRepayment = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalRepaymentExpected = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalWaived = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<RepaymentSchedule> CREATOR =
+            new Parcelable.Creator<RepaymentSchedule>() {
+        @Override
+        public RepaymentSchedule createFromParcel(Parcel source) {
+            return new RepaymentSchedule(source);
+        }
+
+        @Override
+        public RepaymentSchedule[] newArray(int size) {
+            return new RepaymentSchedule[size];
+        }
+    };
 }

@@ -241,7 +241,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         int SUBMENU_ITEM_ID = 0;
 
         // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.getItem(1).getSubMenu();
+        SubMenu dataTableSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
         if (dataTableSubMenu != null && loanDataTables != null && loanDataTables.size() > 0) {
             Iterator<DataTable> dataTableIterator = loanDataTables.iterator();
             while (dataTableIterator.hasNext()) {
@@ -261,13 +261,15 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         if (item.getItemId() == MENU_ITEM_LOAN_TRANSACTIONS)
             mListener.loadLoanTransactions(loanAccountNumber);
 
-        if (item.getItemId() >= 0 && item.getItemId() < loanDataTables.size()) {
+        int id = item.getItemId();
+
+        if (id >= 0 && id < loanDataTables.size()) {
             DataTableDataFragment dataTableDataFragment = DataTableDataFragment.newInstance
                     (loanDataTables.get(item.getItemId()), loanAccountNumber);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                     .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
-            fragmentTransaction.replace(R.id.global_container, dataTableDataFragment);
+            fragmentTransaction.replace(R.id.container, dataTableDataFragment);
             fragmentTransaction.commit();
         }
 

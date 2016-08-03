@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/iv_payload_image"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:src="@color/primary"
+        android:layout_height="200dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/tv_payload_name"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal|center_vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/tv_payload_count"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_below="@+id/tv_payload_name"
+        android:layout_alignLeft="@+id/tv_payload_name"
+        android:layout_alignStart="@+id/tv_payload_name"
+        android:textColor="@color/white"
+        android:layout_marginTop="22dp"/>
+
+</android.support.v7.widget.CardView>

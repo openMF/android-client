@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.clientcharge;
 
-import com.mifos.api.DataManager;
-import com.mifos.mifosxdroid.base.Presenter;
+import com.mifos.api.datamanager.DataManagerCharge;
+import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 
@@ -15,52 +15,53 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 5/6/16.
  */
-public class ClientChargePresenter implements Presenter<ClientChargeMvpView> {
+public class ClientChargePresenter extends BasePresenter<ClientChargeMvpView> {
 
 
-    private final DataManager mDataManager;
+    private final DataManagerCharge mDataManagerCharge;
     private Subscription mSubscription;
-    private ClientChargeMvpView mClientChargeMvpView;
 
     @Inject
-    public ClientChargePresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public ClientChargePresenter(DataManagerCharge dataManagerCharge) {
+        mDataManagerCharge = dataManagerCharge;
     }
+
 
     @Override
     public void attachView(ClientChargeMvpView mvpView) {
-        mClientChargeMvpView = mvpView;
+        super.attachView(mvpView);
     }
+
 
     @Override
     public void detachView() {
-        mClientChargeMvpView = null;
+        super.detachView();
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
     public void loadCharges(int clientId, int offset, int limit) {
-        mClientChargeMvpView.showProgressbar(true);
+        getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientCharges(clientId, offset, limit)
+        mSubscription = mDataManagerCharge.getClientCharges(clientId, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Charges>>() {
                     @Override
                     public void onCompleted() {
-                        mClientChargeMvpView.showProgressbar(false);
+                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mClientChargeMvpView.showProgressbar(false);
-                        mClientChargeMvpView
+                        getMvpView().showProgressbar(false);
+                        getMvpView()
                                 .showFetchingErrorCharges("Failed to Load Charges");
                     }
 
                     @Override
                     public void onNext(Page<Charges> chargesPage) {
-                        mClientChargeMvpView.showProgressbar(false);
-                        mClientChargeMvpView.showChargesList(chargesPage);
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showChargesList(chargesPage);
                     }
                 });
     }

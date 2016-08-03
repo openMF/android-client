@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.mifos.mifosxdroid.GroupActivity;
 import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
@@ -232,7 +231,7 @@ public class CenterListFragment extends MifosBaseFragment implements
             Toast.makeText(getActivity(), getString(R.string
                     .error_login_again), Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
-            Crashlytics.logException(ex);
+            //Crashlytics.logException(ex);
         } finally {
             getActivity().finish();
             Intent intent = new Intent(getActivity(), LoginActivity.class);

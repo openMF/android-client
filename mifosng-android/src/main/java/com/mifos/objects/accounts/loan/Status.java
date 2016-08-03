@@ -5,23 +5,52 @@
 
 package com.mifos.objects.accounts.loan;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Status {
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-    private Integer id;
-    private String code;
-    private String value;
-    private Boolean pendingApproval;
-    private Boolean waitingForDisbursal;
-    private Boolean active;
-    private Boolean closedObligationsMet;
-    private Boolean closedWrittenOff;
-    private Boolean closedRescheduled;
-    private Boolean closed;
-    private Boolean overpaid;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+@Table(database = MifosDatabase.class, name = "LoanStatus")
+@ModelContainer
+public class Status extends MifosBaseModel implements Parcelable {
+
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String code;
+
+    @Column
+    String value;
+
+    @Column
+    Boolean pendingApproval;
+
+    @Column
+    Boolean waitingForDisbursal;
+
+    @Column
+    Boolean active;
+
+    @Column
+    Boolean closedObligationsMet;
+
+    @Column
+    Boolean closedWrittenOff;
+
+    @Column
+    Boolean closedRescheduled;
+
+    @Column
+    Boolean closed;
+
+    @Column
+    Boolean overpaid;
 
     public Integer getId() {
         return id;
@@ -180,16 +209,56 @@ public class Status {
                 ", closedRescheduled=" + closedRescheduled +
                 ", closed=" + closed +
                 ", overpaid=" + overpaid +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperties(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.code);
+        dest.writeString(this.value);
+        dest.writeValue(this.pendingApproval);
+        dest.writeValue(this.waitingForDisbursal);
+        dest.writeValue(this.active);
+        dest.writeValue(this.closedObligationsMet);
+        dest.writeValue(this.closedWrittenOff);
+        dest.writeValue(this.closedRescheduled);
+        dest.writeValue(this.closed);
+        dest.writeValue(this.overpaid);
     }
 
+    public Status() {
+    }
+
+    protected Status(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+        this.pendingApproval = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.waitingForDisbursal = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.closedObligationsMet = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.closedWrittenOff = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.closedRescheduled = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.closed = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.overpaid = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
+        @Override
+        public Status createFromParcel(Parcel source) {
+            return new Status(source);
+        }
+
+        @Override
+        public Status[] newArray(int size) {
+            return new Status[size];
+        }
+    };
 }

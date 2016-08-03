@@ -5,15 +5,28 @@
 
 package com.mifos.objects.accounts.loan;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class LoanType {
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-    private Integer id;
-    private String code;
-    private String value;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+@Table(database = MifosDatabase.class, name = "LoanAccountLoanType")
+@ModelContainer
+public class LoanType extends MifosBaseModel implements Parcelable {
+
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String code;
+
+    @Column
+    String value;
 
     public Integer getId() {
         return id;
@@ -60,16 +73,39 @@ public class LoanType {
                 "id=" + id +
                 ", code='" + code + '\'' +
                 ", value='" + value + '\'' +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperties(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.code);
+        dest.writeString(this.value);
     }
 
+    public LoanType() {
+    }
+
+    protected LoanType(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+    }
+
+    public static final Parcelable.Creator<LoanType> CREATOR = new Parcelable.Creator<LoanType>() {
+        @Override
+        public LoanType createFromParcel(Parcel source) {
+            return new LoanType(source);
+        }
+
+        @Override
+        public LoanType[] newArray(int size) {
+            return new LoanType[size];
+        }
+    };
 }

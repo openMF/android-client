@@ -1,0 +1,20 @@
+{
+  "developerMessage": "The request caused a data integrity issue to be fired by the database.",
+  "httpStatusCode": "403",
+  "defaultUserMessage": "Client with externalId `2525` already exists",
+  "userMessageGlobalisationCode": "error.msg.client.duplicate.externalId",
+  "errors": [
+    {
+      "developerMessage": "Client with externalId `2525` already exists",
+      "defaultUserMessage": "Client with externalId `2525` already exists",
+      "userMessageGlobalisationCode": "error.msg.client.duplicate.externalId",
+      "parameterName": "externalId",
+      "value": null,
+      "args": [
+        {
+          "value": "2525"
+        }
+      ]
+    }
+  ]
+}

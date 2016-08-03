@@ -8,7 +8,7 @@ import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
-import com.mifos.services.data.GroupPayload;
+import com.mifos.objects.group.GroupPayload;
 
 import java.util.List;
 import java.util.Map;

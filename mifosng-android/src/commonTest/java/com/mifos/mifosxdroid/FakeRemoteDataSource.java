@@ -1,8 +1,10 @@
 package com.mifos.mifosxdroid;
 
 import com.google.gson.reflect.TypeToken;
+import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -56,6 +58,16 @@ public class FakeRemoteDataSource {
     public static Page<Group> getGroups() {
         return mTestDataFactory.getListTypePojo(new TypeToken<Page<Group>>() {
         }, FakeJsonName.GROUPS_JSON);
+    }
+
+    public static List<ClientPayload> getClientPayloads() {
+        return mTestDataFactory.getListTypePojo(new TypeToken<List<ClientPayload>>() {
+        }, FakeJsonName.CLIENT_PAYLOADS);
+    }
+
+    public static ErrorSyncServerMessage getFailureServerResponse() {
+        return mTestDataFactory.getObjectTypePojo(ErrorSyncServerMessage.class,
+                FakeJsonName.FAILURE_SERVER_RESPONSE);
     }
 
 }
