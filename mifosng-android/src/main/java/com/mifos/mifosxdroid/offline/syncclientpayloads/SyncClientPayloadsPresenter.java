@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
 import com.google.gson.Gson;
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.Client;
@@ -60,7 +61,7 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to load ClientPayload");
+                        getMvpView().showError(R.string.failed_to_load_clientpayload);
                     }
 
                     @Override
@@ -124,7 +125,7 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed Update List");
+                        getMvpView().showError(R.string.failed_to_update_list);
                     }
 
                     @Override
@@ -150,7 +151,7 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to update client");
+                        getMvpView().showError(R.string.failed_to_update_list);
                     }
 
                     @Override

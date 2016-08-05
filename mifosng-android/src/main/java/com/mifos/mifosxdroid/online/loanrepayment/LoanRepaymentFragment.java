@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online.loanrepayment;
 
 import android.R.layout;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -20,14 +19,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
@@ -46,10 +47,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class LoanRepaymentFragment extends ProgressableFragment
-        implements MFDatePicker.OnDatePickListener, LoanRepaymentMvpView {
+public class LoanRepaymentFragment extends MifosBaseFragment
+        implements MFDatePicker.OnDatePickListener, LoanRepaymentMvpView,
+        DialogInterface.OnClickListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
+
+    @BindView(R.id.rl_loan_repayment)
+    RelativeLayout rl_loan_repayment;
 
     @BindView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -93,6 +98,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
     private View rootView;
     // Arguments Passed From the Loan Account Summary Fragment
     private String clientName;
+    private String loanId;
     private String loanAccountNumber;
     private String loanProductName;
     private Double amountInArrears;
@@ -103,15 +109,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
         LoanRepaymentFragment fragment = new LoanRepaymentFragment();
         Bundle args = new Bundle();
         if (loanWithAssociations != null) {
-            args.putString(Constants.CLIENT_NAME, loanWithAssociations.getClientName());
-            args.putString(Constants.LOAN_PRODUCT_NAME, loanWithAssociations.getLoanProductName());
-            args.putString(Constants.LOAN_ACCOUNT_NUMBER, "" + loanWithAssociations.getId());
-            args.putDouble(Constants.AMOUNT_IN_ARREARS, loanWithAssociations.getSummary()
-                    .getTotalOverdue());
-            //args.putDouble(Constants.AMOUNT_DUE, loanWithAssociations.getSummary()
-            // .getPrincipalDisbursed());
-            //args.putDouble(Constants.FEES_DUE, loanWithAssociations.getSummary()
-            // .getFeeChargesOutstanding());
+            args.putParcelable(Constants.LOAN_SUMMARY, loanWithAssociations);
             fragment.setArguments(args);
         }
         return fragment;
@@ -122,12 +120,15 @@ public class LoanRepaymentFragment extends ProgressableFragment
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
-            clientName = getArguments().getString(Constants.CLIENT_NAME);
-            loanAccountNumber = getArguments().getString(Constants.LOAN_ACCOUNT_NUMBER);
-            loanProductName = getArguments().getString(Constants.LOAN_PRODUCT_NAME);
-            amountInArrears = getArguments().getDouble(Constants.AMOUNT_IN_ARREARS);
-            //amountDue = getArguments().getDouble(Constants.AMOUNT_DUE);
-            //fees = getArguments().getDouble(Constants.FEES_DUE);
+            LoanWithAssociations mLoanWithAssociations = getArguments().getParcelable(Constants
+                    .LOAN_SUMMARY);
+            if (mLoanWithAssociations != null) {
+                clientName = mLoanWithAssociations.getClientName();
+                loanAccountNumber = mLoanWithAssociations.getAccountNo();
+                loanId = String.valueOf(mLoanWithAssociations.getId());
+                loanProductName = mLoanWithAssociations.getLoanProductName();
+                amountInArrears = mLoanWithAssociations.getSummary().getTotalOverdue();
+            }
         }
     }
 
@@ -141,15 +142,61 @@ public class LoanRepaymentFragment extends ProgressableFragment
         ButterKnife.bind(this, rootView);
         mLoanRepaymentPresenter.attachView(this);
 
-        inflateUI();
+        //This Method Checking LoanRepayment made before in Offline mode or not.
+        //If yes then User have to sync this first then he can able to make transaction.
+        //If not then User able to make LoanRepayment in Online or Offline.
+        checkLoanRepaymentStatusInDatabase();
+
         return rootView;
     }
 
+    @Override
+    public void checkLoanRepaymentStatusInDatabase() {
+        // Checking LoanRepayment Already made in Offline mode or Not.
+        mLoanRepaymentPresenter.checkDatabaseLoanRepaymentByLoanId(Integer
+                .parseInt(loanId));
+    }
 
+    @Override
+    public void showLoanRepaymentExistInDatabase(String s) {
+        //Visibility of ParentLayout GONE, If Repayment Already made in Offline Mode
+        rl_loan_repayment.setVisibility(View.GONE);
+
+        new MaterialDialog.Builder().init(getActivity())
+                .setTitle(R.string.sync_previous_transaction)
+                .setMessage(R.string.dialog_message_sync_transaction)
+                .setPositiveButton(R.string.dialog_action_ok, this)
+                .setCancelable(false)
+                .createMaterialDialog()
+                .show();
+
+        Toaster.show(rootView, s);
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (DialogInterface.BUTTON_POSITIVE == which) {
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
+        }
+    }
+
+    @Override
+    public void showLoanRepaymentDoesNotExistInDatabase() {
+        // This Method Inflating UI and Initializing the Loading LoadRepayment
+        // Template for transaction
+        inflateUI();
+
+        // Loading PaymentOptions.
+        mLoanRepaymentPresenter.loanLoanRepaymentTemplate(Integer.parseInt(loanId));
+    }
+
+    /**
+     * This Method Setting UI and Initializing the Object, TextView or EditText.
+     */
     public void inflateUI() {
         tv_clientName.setText(clientName);
         tv_loanProductShortName.setText(loanProductName);
-        tv_loanAccountNumber.setText(loanAccountNumber);
+        tv_loanAccountNumber.setText(loanId);
         tv_inArrears.setText(String.valueOf(amountInArrears));
 
         //Setup Form with Default Values
@@ -229,21 +276,24 @@ public class LoanRepaymentFragment extends ProgressableFragment
         });
 
         inflateRepaymentDate();
-        inflatePaymentOptions();
         tv_total.setText(String.valueOf(calculateTotal()));
     }
 
+
+    /**
+     * Calculating the Total of the  Amount, Additional Payment and Fee
+     *
+     * @return Total of the Amount + Additional Payment + Fee Amount
+     */
     public Double calculateTotal() {
         return Double.parseDouble(et_amount.getText().toString())
                 + Double.parseDouble(et_additionalPayment.getText().toString())
                 + Double.parseDouble(et_fees.getText().toString());
     }
 
-
-    public void inflatePaymentOptions() {
-        mLoanRepaymentPresenter.loanLoanRepaymentTemplate(Integer.parseInt(loanAccountNumber));
-    }
-
+    /**
+     * Setting the Repayment Date
+     */
     public void inflateRepaymentDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
         tv_repaymentDate.setText(MFDatePicker.getDatePickedAsString());
@@ -262,16 +312,27 @@ public class LoanRepaymentFragment extends ProgressableFragment
 
     }
 
+    /**
+     * Whenever user click on Date Picker and in Result, setting Date in TextView.
+     *
+     * @param date Selected Date by Date picker
+     */
     @Override
     public void onDatePicked(String date) {
         tv_repaymentDate.setText(date);
     }
 
+
+    /**
+     * Submitting the LoanRepayment after setting all arguments and Displaying the Dialog
+     * First, So that user make sure. He/She wanna make LoanRepayment
+     */
     @OnClick(R.id.bt_paynow)
     public void onPayNowButtonClicked() {
         try {
             String[] headers = {"Field", "Value"};
-            String[][] data = {
+            final String[][] data = {
+                    {"Account Number", loanAccountNumber},
                     {"Repayment Date", tv_repaymentDate.getText().toString()},
                     {"Payment Type", sp_paymentType.getSelectedItem().toString()},
                     {"Amount", et_amount.getText().toString()},
@@ -291,39 +352,52 @@ public class LoanRepaymentFragment extends ProgressableFragment
                     .append("\n")
                     .append(data[4][0] + " : " + data[4][1])
                     .append("\n")
-                    .append(data[5][0] + " : " + data[5][1]).toString();
+                    .append(data[5][0] + " : " + data[5][1])
+                    .append("\n")
+                    .append(data[6][0] + " : " + data[6][1]).toString();
 
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("Review Payment Details")
+            new MaterialDialog.Builder().init(getActivity())
+                    .setTitle(R.string.review_payment)
                     .setMessage(formReviewString)
-                    .setPositiveButton("Pay Now", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            submitPayment();
-                        }
-                    })
-                    .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    })
+                    .setPositiveButton(R.string.dialog_action_pay_now,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    submitPayment();
+                                }
+                            })
+                    .setNegativeButton(R.string.dialog_action_back,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                    .createMaterialDialog()
                     .show();
+
         } catch (NullPointerException npe) {
             Toaster.show(rootView, "Please make sure every field has a value, before submitting " +
                     "repayment!");
         }
     }
 
+    /**
+     * Cancel button on Home UI
+     */
     @OnClick(R.id.bt_cancelPayment)
     public void onCancelPaymentButtonClicked() {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
+    /**
+     * Submit the Final LoanRepayment
+     */
     public void submitPayment() {
         //TODO Implement a proper builder method here
         String dateString = tv_repaymentDate.getText().toString().replace("-", " ");
         final LoanRepaymentRequest request = new LoanRepaymentRequest();
+        request.setAccountNumber(loanAccountNumber);
         request.setPaymentTypeId(String.valueOf(paymentTypeOptionId));
         request.setLocale("en");
         request.setTransactionAmount(String.valueOf(calculateTotal()));
@@ -332,7 +406,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
         String builtRequest = new Gson().toJson(request);
         Log.i("LOG_TAG", builtRequest);
 
-        mLoanRepaymentPresenter.submitPayment(Integer.parseInt(loanAccountNumber), request);
+        mLoanRepaymentPresenter.submitPayment(Integer.parseInt(loanId), request);
     }
 
     @Override
@@ -385,6 +459,7 @@ public class LoanRepaymentFragment extends ProgressableFragment
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
+
     @Override
     public void showFetchingError(String s) {
         Toaster.show(rootView, s);
@@ -392,7 +467,13 @@ public class LoanRepaymentFragment extends ProgressableFragment
 
     @Override
     public void showProgressbar(boolean b) {
-        showProgress(b);
+        if (b) {
+            rl_loan_repayment.setVisibility(View.GONE);
+            showMifosProgressBar();
+        } else {
+            rl_loan_repayment.setVisibility(View.VISIBLE);
+            hideMifosProgressBar();
+        }
     }
 
     @Override

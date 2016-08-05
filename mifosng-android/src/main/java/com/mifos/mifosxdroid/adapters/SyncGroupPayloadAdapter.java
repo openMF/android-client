@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class SyncGroupPayloadAdapter extends
         RecyclerView.Adapter<SyncGroupPayloadAdapter.ViewHolder> {
 
-    List<GroupPayload> mGroupPayloads;
+    private List<GroupPayload> mGroupPayloads;
 
     @Inject
     public SyncGroupPayloadAdapter() {

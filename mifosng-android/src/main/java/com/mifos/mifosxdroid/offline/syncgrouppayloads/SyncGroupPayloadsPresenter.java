@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.offline.syncgrouppayloads;
 
 import com.google.gson.Gson;
 import com.mifos.api.datamanager.DataManagerGroups;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.group.Group;
@@ -58,7 +59,7 @@ public class SyncGroupPayloadsPresenter extends BasePresenter<SyncGroupPayloadsM
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to load GroupPayload");
+                        getMvpView().showError(R.string.failed_to_load_grouppayload);
                     }
 
                     @Override
@@ -121,7 +122,7 @@ public class SyncGroupPayloadsPresenter extends BasePresenter<SyncGroupPayloadsM
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to update list");
+                        getMvpView().showError(R.string.failed_to_update_list);
                     }
 
                     @Override
@@ -147,7 +148,7 @@ public class SyncGroupPayloadsPresenter extends BasePresenter<SyncGroupPayloadsM
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to update GroupPayload");
+                        getMvpView().showError(R.string.failed_to_load_grouppayload);
                     }
 
                     @Override

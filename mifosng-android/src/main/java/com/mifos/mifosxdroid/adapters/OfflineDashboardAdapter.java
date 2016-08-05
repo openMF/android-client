@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class OfflineDashboardAdapter  extends
         RecyclerView.Adapter<OfflineDashboardAdapter.ViewHolder> {
 
-    private List<String> payloadNames;
+    private List<Integer> payloadNames;
     private List<String> payloadCounts;
 
 
@@ -51,15 +51,15 @@ public class OfflineDashboardAdapter  extends
         return payloadNames.size();
     }
 
-    public void showClientCard(String clientPayloadCount) {
+    public void showCard(String clientPayloadCount, int cardName) {
         payloadCounts.add(clientPayloadCount);
-        payloadNames.add("Sync Clients");
+        payloadNames.add(cardName);
         notifyDataSetChanged();
     }
 
-    public void showGroupCard(String groupPayloadCount) {
-        payloadCounts.add(groupPayloadCount);
-        payloadNames.add("Sync Groups");
+    public void removeAllCards() {
+        payloadNames.clear();
+        payloadCounts.clear();
         notifyDataSetChanged();
     }
 

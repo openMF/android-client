@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncgrouppayloads;
+package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,13 +17,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.adapters.SyncGroupPayloadAdapter;
+import com.mifos.mifosxdroid.adapters.SyncLoanRepaymentAdapter;
 import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.ErrorSyncServerMessage;
-import com.mifos.objects.group.GroupPayload;
+import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
 
@@ -37,15 +38,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Rajan Maurya on 19/07/16.
+ * Created by Rajan Maurya on 28/07/16.
  */
-public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
-        SyncGroupPayloadsMvpView, DialogInterface.OnClickListener {
+public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment implements
+        SyncLoanRepaymentTransactionMvpView, DialogInterface.OnClickListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
     @BindView(R.id.rv_sync_payload)
-    RecyclerView rv_payload_group;
+    RecyclerView rv_loan_repayment;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -60,22 +61,20 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     LinearLayout ll_error;
 
     @Inject
-    SyncGroupPayloadsPresenter mSyncGroupPayloadsPresenter;
+    SyncLoanRepaymentTransactionPresenter mSyncLoanRepaymentTransactionPresenter;
 
     @Inject
-    SyncGroupPayloadAdapter mSyncGroupPayloadAdapter;
+    SyncLoanRepaymentAdapter mSyncLoanRepaymentAdapter;
 
-    View rootView;
+    private View rootView;
 
-    List<GroupPayload> groupPayloads;
+    private List<LoanRepaymentRequest> mLoanRepaymentRequests;
 
-    DialogInterface.OnCancelListener onCancelListener;
+    private int mClientSyncIndex = 0;
 
-    int mClientSyncIndex = 0;
-
-    public static SyncGroupPayloadsFragment newInstance() {
+    public static SyncLoanRepaymentTransactionFragment newInstance() {
         Bundle arguments = new Bundle();
-        SyncGroupPayloadsFragment fragment = new SyncGroupPayloadsFragment();
+        SyncLoanRepaymentTransactionFragment fragment = new SyncLoanRepaymentTransactionFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -84,9 +83,10 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        groupPayloads = new ArrayList<>();
+        mLoanRepaymentRequests = new ArrayList<>();
         setHasOptionsMenu(true);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,51 +94,48 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         rootView = inflater.inflate(R.layout.fragment_syncpayload, container, false);
 
         ButterKnife.bind(this, rootView);
-        mSyncGroupPayloadsPresenter.attachView(this);
+        mSyncLoanRepaymentTransactionPresenter.attachView(this);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_payload_group.setLayoutManager(mLayoutManager);
-        rv_payload_group.setHasFixedSize(true);
-        rv_payload_group.setAdapter(mSyncGroupPayloadAdapter);
+        rv_loan_repayment.setLayoutManager(mLayoutManager);
+        rv_loan_repayment.setHasFixedSize(true);
+        rv_loan_repayment.setAdapter(mSyncLoanRepaymentAdapter);
 
 
         /**
-         * Loading All Client Payloads from Database
+         * Loading All Loan Repayment Offline Transaction from Database
          */
         swipeRefreshLayout.setColorSchemeColors(getActivity()
-                        .getResources().getIntArray(R.array.swipeRefreshColors));
+                .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
-                mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
+                //Loading LoanRepayment Transactions and PaymentTypeOptions From Database
+                mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions();
+                mSyncLoanRepaymentTransactionPresenter.loanPaymentTypeOption();
 
                 if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-        mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
+        //Loading LoanRepayment Transactions  and PaymentTypeOptions From Database
+        mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions();
+        mSyncLoanRepaymentTransactionPresenter.loanPaymentTypeOption();
 
         return rootView;
     }
 
     /**
-     * Show when Database response is null or failed to fetch the client payload
-     * Onclick Send Fresh Request for Client Payload.
+     * Show when Database response is null or failed to fetch the List<LoanRepayment>
+     * Onclick Send Fresh Request for List<LoanRepayment>.
      */
     @OnClick(R.id.noPayloadIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
-        mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
-    }
-
-
-    @Override
-    public void showGroupSyncResponse() {
-        mSyncGroupPayloadsPresenter.deleteAndUpdateGroupPayload(groupPayloads
-                .get(mClientSyncIndex).getId());
+        mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions();
     }
 
     @Override
@@ -160,7 +157,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
                 break;
             case DialogInterface.BUTTON_POSITIVE:
                 PrefManager.setUserStatus(Constants.USER_ONLINE);
-                if (groupPayloads.size() != 0) {
+                if (mLoanRepaymentRequests.size() != 0) {
                     mClientSyncIndex = 0;
                     syncGroupPayload();
                 } else {
@@ -174,73 +171,78 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     @Override
-    public void showError(int stringId) {
-        ll_error.setVisibility(View.VISIBLE);
-        String message = stringId + getResources().getString(R.string.click_to_refresh);
-        mNoPayloadText.setText(message);
-        Toaster.show(rootView, stringId);
-    }
-
-    /**
-     * This method is showing the group payload in the recyclerView.
-     * If Database Table have no entry then showing make recyclerView visibility gone and
-     * visible to the noPayloadIcon and noPayloadText to alert the user there is nothing
-     * to show.
-     *
-     * @param groupPayload
-     */
-    @Override
-    public void showGroups(List<GroupPayload> groupPayload) {
-        groupPayloads = groupPayload;
-        if (groupPayload.size() == 0) {
+    public void showLoanRepaymentTransactions(List<LoanRepaymentRequest> loanRepaymentRequests) {
+        mLoanRepaymentRequests = loanRepaymentRequests;
+        if (loanRepaymentRequests.size() == 0) {
             ll_error.setVisibility(View.VISIBLE);
             mNoPayloadText.setText(getActivity()
-                    .getResources().getString(R.string.no_group_payload_to_sync));
+                    .getResources().getString(R.string.no_repayment_to_sync));
             mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         } else {
-            mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
-        }
-
-    }
-
-    @Override
-    public void showGroupSyncFailed(ErrorSyncServerMessage error) {
-        GroupPayload groupPayload = groupPayloads.get(mClientSyncIndex);
-        groupPayload.setErrorMessage(error.getDefaultUserMessage());
-        mSyncGroupPayloadsPresenter.updateGroupPayload(groupPayload);
-
-    }
-
-    @Override
-    public void showPayloadDeletedAndUpdatePayloads(List<GroupPayload> groups) {
-        mClientSyncIndex = 0;
-        this.groupPayloads = groups;
-        mSyncGroupPayloadAdapter.setGroupPayload(groupPayloads);
-        if (groupPayloads.size() != 0) {
-            syncGroupPayload();
-        } else {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText(getActivity()
-                    .getResources().getString(R.string.all_groups_synced));
-            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+            mSyncLoanRepaymentAdapter.setLoanRepaymentRequests(loanRepaymentRequests);
         }
     }
 
     @Override
-    public void showGroupPayloadUpdated(GroupPayload groupPayload) {
-        groupPayloads.set(mClientSyncIndex, groupPayload);
-        mSyncGroupPayloadAdapter.notifyDataSetChanged();
+    public void showPaymentTypeOption(List<PaymentTypeOption> paymentTypeOptions) {
+        mSyncLoanRepaymentAdapter.setPaymentTypeOptions(paymentTypeOptions);
+    }
+
+    @Override
+    public void showPaymentSubmittedSuccessfully() {
+        mSyncLoanRepaymentTransactionPresenter
+                .deleteAndUpdateLoanRepayments(mLoanRepaymentRequests
+                        .get(mClientSyncIndex).getLoanId());
+    }
+
+    @Override
+    public void showPaymentFailed(ErrorSyncServerMessage error) {
+        LoanRepaymentRequest loanRepaymentRequest = mLoanRepaymentRequests.get(mClientSyncIndex);
+        loanRepaymentRequest.setErrorMessage(error.getDefaultUserMessage());
+        mSyncLoanRepaymentTransactionPresenter.updateLoanRepayment(loanRepaymentRequest);
+    }
+
+    @Override
+    public void showLoanRepaymentUpdated(LoanRepaymentRequest loanRepaymentRequest) {
+        mLoanRepaymentRequests.set(mClientSyncIndex, loanRepaymentRequest);
+        mSyncLoanRepaymentAdapter.notifyDataSetChanged();
 
         mClientSyncIndex = mClientSyncIndex + 1;
-        if (groupPayloads.size() != mClientSyncIndex) {
+        if (mLoanRepaymentRequests.size() != mClientSyncIndex) {
             syncGroupPayload();
         }
+    }
+
+    @Override
+    public void showLoanRepaymentDeletedAndUpdateLoanRepayment(List<LoanRepaymentRequest>
+                                                                       loanRepaymentRequests) {
+        mClientSyncIndex = 0;
+        this.mLoanRepaymentRequests = loanRepaymentRequests;
+        mSyncLoanRepaymentAdapter.setLoanRepaymentRequests(loanRepaymentRequests);
+        if (mLoanRepaymentRequests.size() != 0) {
+            syncGroupPayload();
+        } else {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoPayloadText.setText(getActivity()
+                    .getResources().getString(R.string.all_repayment_synced));
+            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+        }
+    }
+
+
+    @Override
+    public void showError(int stringId) {
+        ll_error.setVisibility(View.VISIBLE);
+        String message =
+                stringId + getActivity().getResources().getString(R.string.click_to_refresh);
+        mNoPayloadText.setText(message);
+        Toaster.show(rootView, stringId);
     }
 
     @Override
     public void showProgressbar(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
-        if (show && mSyncGroupPayloadAdapter.getItemCount() == 0) {
+        if (show && mSyncLoanRepaymentAdapter.getItemCount() == 0) {
             showMifosProgressBar();
             swipeRefreshLayout.setRefreshing(false);
         } else {
@@ -254,12 +256,13 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_sync) {
             switch (PrefManager.getUserStatus()) {
                 case 0:
-                    if (groupPayloads.size() != 0) {
+                    if (mLoanRepaymentRequests.size() != 0) {
                         mClientSyncIndex = 0;
                         syncGroupPayload();
                     } else {
@@ -278,15 +281,17 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     public void syncGroupPayload() {
-        for (int i = 0; i < groupPayloads.size(); ++i) {
-            if (groupPayloads.get(i).getErrorMessage() == null) {
-                mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads.get(i));
+        for (int i = 0; i < mLoanRepaymentRequests.size(); ++i) {
+            if (mLoanRepaymentRequests.get(i).getErrorMessage() == null) {
+                mSyncLoanRepaymentTransactionPresenter.syncLoanRepayment(mLoanRepaymentRequests
+                        .get(i)
+                        .getLoanId(), mLoanRepaymentRequests.get(i));
                 mClientSyncIndex = i;
                 break;
             } else {
                 Log.d(LOG_TAG,
                         getActivity().getResources().getString(R.string.error_fix_before_sync) +
-                        groupPayloads.get(i).getErrorMessage());
+                        mLoanRepaymentRequests.get(i).getErrorMessage());
             }
         }
     }
@@ -294,7 +299,6 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mSyncGroupPayloadsPresenter.detachView();
+        mSyncLoanRepaymentTransactionPresenter.detachView();
     }
-
 }

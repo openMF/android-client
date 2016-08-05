@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;
 import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.Client;
@@ -65,7 +66,8 @@ public class SyncClientPayloadsPresenterTest {
         syncClientPayloadsPresenter.loadDatabaseClientPayload();
 
         verify(mSyncClientPayloadsMvpView).showPayloads(clientPayloads);
-        verify(mSyncClientPayloadsMvpView, never()).showError("Failed to load ClientPayload");
+        verify(mSyncClientPayloadsMvpView, never())
+                .showError(R.string.failed_to_load_clientpayload);
     }
 
     @Test
@@ -75,7 +77,7 @@ public class SyncClientPayloadsPresenterTest {
 
         syncClientPayloadsPresenter.loadDatabaseClientPayload();
 
-        verify(mSyncClientPayloadsMvpView).showError("Failed to load ClientPayload");
+        verify(mSyncClientPayloadsMvpView).showError(R.string.failed_to_load_clientpayload);
         verify(mSyncClientPayloadsMvpView, never()).showPayloads(clientPayloads);
     }
 
@@ -116,7 +118,7 @@ public class SyncClientPayloadsPresenterTest {
         syncClientPayloadsPresenter.deleteAndUpdateClientPayload(1);
 
         verify(mSyncClientPayloadsMvpView).showPayloadDeletedAndUpdatePayloads(clientPayloads);
-        verify(mSyncClientPayloadsMvpView, never()).showError("Failed Update List");
+        verify(mSyncClientPayloadsMvpView, never()).showError(R.string.failed_to_update_list);
     }
 
     @Test
@@ -126,7 +128,7 @@ public class SyncClientPayloadsPresenterTest {
 
         syncClientPayloadsPresenter.deleteAndUpdateClientPayload(1);
 
-        verify(mSyncClientPayloadsMvpView).showError("Failed Update List");
+        verify(mSyncClientPayloadsMvpView).showError(R.string.failed_to_update_list);
         verify(mSyncClientPayloadsMvpView, never())
                 .showPayloadDeletedAndUpdatePayloads(clientPayloads);
     }

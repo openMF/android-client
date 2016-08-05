@@ -86,6 +86,12 @@ public class DashboardActivity extends MifosBaseActivity
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setUserStatus(userStatusToggle);
+    }
+
     /**
      * sets up the navigation mDrawer in the activity
      */

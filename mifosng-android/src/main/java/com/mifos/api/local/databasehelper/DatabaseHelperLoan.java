@@ -11,6 +11,8 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations_Table;
 import com.mifos.objects.accounts.loan.Timeline;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate_Table;
+import com.mifos.utils.Constants;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
@@ -27,9 +29,6 @@ import rx.functions.Func0;
  */
 @Singleton
 public class DatabaseHelperLoan {
-
-
-    public static final String LOAN_PAYMENT_TYPE_OPTIONS = "LoanPaymentTypeOptions";
 
 
     @Inject
@@ -162,6 +161,32 @@ public class DatabaseHelperLoan {
 
 
     /**
+     * This Method send a query to Sqlite Database and get the LoanRepaymentRequest Where
+     * Loan Id is Loan Id,
+     *
+     * This method used to check that LoanRepayment in offline mode,
+     * Is already done with this loanId or not, If Yes then new Transaction can be made if
+     * old one will be sync to server.
+     *
+     * @param loanId Loan Id
+     * @return LoanRepaymentRequest by Loan Id
+     */
+    public Observable<LoanRepaymentRequest> getDatabaseLoanRepaymentByLoanId(final int loanId) {
+        return Observable.defer(new Func0<Observable<LoanRepaymentRequest>>() {
+            @Override
+            public Observable<LoanRepaymentRequest> call() {
+
+                LoanRepaymentRequest loanRepaymentRequest = SQLite.select()
+                        .from(LoanRepaymentRequest.class)
+                        .where(LoanRepaymentRequest_Table.loanId.eq(loanId))
+                        .querySingle();
+
+                return Observable.just(loanRepaymentRequest);
+            }
+        });
+    }
+
+    /**
      * This method saves the LoanRepaymentTemplate in Database for making Transaction In offline
      * and As the Template is saved in the Database, its return the same LoanRepaymentTemplate.
      *
@@ -180,7 +205,7 @@ public class DatabaseHelperLoan {
 
                 for (PaymentTypeOption paymentTypeOption : loanRepaymentTemplate
                         .getPaymentTypeOptions()) {
-                    paymentTypeOption.setTemplateType(LOAN_PAYMENT_TYPE_OPTIONS);
+                    paymentTypeOption.setTemplateType(Constants.LOAN_PAYMENT_TYPE_OPTIONS);
                     paymentTypeOption.save();
                 }
 
@@ -212,7 +237,8 @@ public class DatabaseHelperLoan {
 
                 List<PaymentTypeOption> paymentTypeOptions = SQLite.select()
                         .from(PaymentTypeOption.class)
-                        .where(PaymentTypeOption_Table.templateType.eq(LOAN_PAYMENT_TYPE_OPTIONS))
+                        .where(PaymentTypeOption_Table.templateType
+                                .eq(Constants.LOAN_PAYMENT_TYPE_OPTIONS))
                         .queryList();
 
                 if (loanRepaymentTemplate != null) {
@@ -220,6 +246,74 @@ public class DatabaseHelperLoan {
                 }
 
                 return Observable.just(loanRepaymentTemplate);
+            }
+        });
+    }
+
+
+    /**
+     * This Method request a query to Database in PaymentTypeOption_Table with argument paymentType
+     * and return the list of PaymentTypeOption
+     *
+     * @param paymentType paymentType like LOAN, Savings, Reoccurring.
+     * @return List<PaymentTypeOption>
+     */
+    public Observable<List<PaymentTypeOption>> getPaymentTypeOption(final String paymentType) {
+        return Observable.defer(new Func0<Observable<List<PaymentTypeOption>>>() {
+            @Override
+            public Observable<List<PaymentTypeOption>> call() {
+
+                List<PaymentTypeOption> paymentTypeOptions = SQLite.select()
+                        .from(PaymentTypeOption.class)
+                        .where(PaymentTypeOption_Table.templateType.eq(paymentType))
+                        .queryList();
+
+                return Observable.just(paymentTypeOptions);
+            }
+        });
+    }
+
+    /**
+     * This Method Deleting the LoanRepayment with the loanId and loading the
+     * List<LoanRepaymentRequest> from Database and return the SyncLoanRepaymentTransactionPresenter
+     * that synced LoanRepayment is deleted from Database and updated Database Table entries is this
+     *
+     * @param loanId loan Id of the LoanRepayment
+     * @return List<LoanRepaymentRequest>
+     */
+    public Observable<List<LoanRepaymentRequest>> deleteAndUpdateLoanRepayments(final int loanId) {
+        return Observable.defer(new Func0<Observable<List<LoanRepaymentRequest>>>() {
+            @Override
+            public Observable<List<LoanRepaymentRequest>> call() {
+
+                Delete.table(LoanRepaymentRequest.class,
+                        LoanRepaymentRequest_Table.loanId.eq(loanId));
+
+                List<LoanRepaymentRequest> loanRepaymentRequests = SQLite.select()
+                        .from(LoanRepaymentRequest.class)
+                        .orderBy(LoanRepaymentRequest_Table.timeStamp, true)
+                        .queryList();
+
+                return Observable.just(loanRepaymentRequests);
+            }
+        });
+    }
+
+    /**
+     * This Method updating the LoanRepayment to Database Table. this method will be called
+     * whenever error will come during sync the LoanRepayment. This method saving the Error
+     * message to the Table entry.
+     *
+     * @param loanRepaymentRequest LoanRepayment for update
+     * @return LoanRepaymentRequest
+     */
+    public Observable<LoanRepaymentRequest> updateLoanRepaymentTransaction(
+            final LoanRepaymentRequest loanRepaymentRequest) {
+        return Observable.defer(new Func0<Observable<LoanRepaymentRequest>>() {
+            @Override
+            public Observable<LoanRepaymentRequest> call() {
+                loanRepaymentRequest.update();
+                return Observable.just(loanRepaymentRequest);
             }
         });
     }

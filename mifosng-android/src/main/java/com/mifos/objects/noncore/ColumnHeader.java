@@ -5,12 +5,15 @@
 
 package com.mifos.objects.noncore;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by ishankhanna on 16/06/14.
  */
-public class ColumnHeader {
+public class ColumnHeader implements Parcelable {
 
     /**
      * columnCode will only be returned if columnDisplayType = "CODELOOKUP"
@@ -108,4 +111,49 @@ public class ColumnHeader {
                 ", columnValues=" + columnValues +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.columnCode);
+        dest.writeString(this.columnDisplayType);
+        dest.writeValue(this.columnLength);
+        dest.writeString(this.columnName);
+        dest.writeString(this.columnType);
+        dest.writeValue(this.isColumnNullable);
+        dest.writeValue(this.isColumnPrimaryKey);
+        dest.writeTypedList(this.columnValues);
+    }
+
+    public ColumnHeader() {
+    }
+
+    protected ColumnHeader(Parcel in) {
+        this.columnCode = in.readString();
+        this.columnDisplayType = in.readString();
+        this.columnLength = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.columnName = in.readString();
+        this.columnType = in.readString();
+        this.isColumnNullable = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.isColumnPrimaryKey = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.columnValues = in.createTypedArrayList(ColumnValue.CREATOR);
+    }
+
+    public static final Parcelable.Creator<ColumnHeader> CREATOR =
+            new Parcelable.Creator<ColumnHeader>() {
+        @Override
+        public ColumnHeader createFromParcel(Parcel source) {
+            return new ColumnHeader(source);
+        }
+
+        @Override
+        public ColumnHeader[] newArray(int size) {
+            return new ColumnHeader[size];
+        }
+    };
 }

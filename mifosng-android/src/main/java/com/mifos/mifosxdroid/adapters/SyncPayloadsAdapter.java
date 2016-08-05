@@ -22,7 +22,7 @@ public class SyncPayloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     Context context;
     LayoutInflater layoutInflater;
-    List<ClientPayload> clientPayloads;
+    private List<ClientPayload> clientPayloads;
 
     public SyncPayloadsAdapter(Context context, List<ClientPayload> payloads) {
         this.context = context;

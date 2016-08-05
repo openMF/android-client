@@ -2,6 +2,7 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperLoan;
+import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -98,7 +99,7 @@ public class DataManagerLoan {
      * and get LoanRepaymentTemplate in response and then call the
      * mDatabaseHelperLoan.saveLoanRepaymentTemplate(loanId,loanRepaymentTemplate); to save the
      * Template into Database for accessing in the Offline.
-     *
+     * <p/>
      * if PrefManager.getUserStatus() is 1, It means user is Offline Mode, Request goes to the
      * mDatabaseHelperLoan to load the LoanRepaymentTemplate according loanId and gives the
      * LoanRepaymentTemplate in Response.
@@ -142,7 +143,7 @@ public class DataManagerLoan {
      * And Whenever User in Offline Mode the Request goes to DatabaseHelperLoan and DatabaseHelper
      * Save the Transaction on Database and in Response give the Empty LoanRepaymentResponse.
      *
-     * @param loanId Loan id of The Loan
+     * @param loanId  Loan id of The Loan
      * @param request Request Body of POST Request
      * @return LoanRepaymentResponse
      */
@@ -168,5 +169,70 @@ public class DataManagerLoan {
             default:
                 return Observable.just(new LoanRepaymentResponse());
         }
+    }
+
+
+    /**
+     * This Method send Query to DatabaseLoan and get the List<LoanRepayment> saved LoanRepayments.
+     * These LoanRepayment are those LoanRepayment that are saved during the Offline LoanRepayment.
+     *
+     * @return List<LoanRepaymentRequest>
+     */
+    public Observable<List<LoanRepaymentRequest>> getDatabaseLoanRepayments() {
+        return mDatabaseHelperLoan.readAllLoanRepaymentTransaction();
+    }
+
+
+    /**
+     * This method request a Observable to DatabaseHelperLoan and DatabaseHelper check in
+     * LoanRepayment Table that with this loan Id, any entry is available or not.
+     * <p/>
+     * If yes, It means with this loan id already a LoanRepayment had been done. and return the
+     * LoanRepayment, Now User cannot make new LoanRepayment till that He/She will not sync the
+     * previous LoanRepayment.
+     * <p/>
+     * If NO, this will return null that represent that there is no previous LoanRepayment In
+     * Database with this Loan Id, user is able to make new one.
+     *
+     * @param loanId
+     * @return LoanRepayment with this Loan Id reference.
+     */
+    public Observable<LoanRepaymentRequest> getDatabaseLoanRepaymentByLoanId(int loanId) {
+        return mDatabaseHelperLoan.getDatabaseLoanRepaymentByLoanId(loanId);
+    }
+
+
+    /**
+     * This Method Load the PaymentTypeOption of any Loan, Saving, Reoccurring from Database table
+     * PaymentTypeOption_Table.
+     *
+     * @param paymentType Type of PaymentOption like Loan, Saving, Reoccurring.
+     * @return List<PaymentTypeOption>
+     */
+    public Observable<List<PaymentTypeOption>> getPaymentTypeOption(String paymentType) {
+        return mDatabaseHelperLoan.getPaymentTypeOption(paymentType);
+    }
+
+    /**
+     * This method sending request DatabaseHelper and Deleting the LoanRepayment with loanId
+     * from LoanRepayment_Table and again loading list of LoanRepayment from Database.
+     *
+     * @param loanId Loan Id of the Loan
+     * @return List<LoanRepaymentRequest>
+     */
+    public Observable<List<LoanRepaymentRequest>> deleteAndUpdateLoanRepayments(int loanId) {
+        return mDatabaseHelperLoan.deleteAndUpdateLoanRepayments(loanId);
+    }
+
+
+    /**
+     * This Method updating LoanRepayment in to Database and return the same LoanRepayment
+     *
+     * @param loanRepaymentRequest Updating LoanRepaymentRequest in to Database
+     * @return LoanRepaymentRequest
+     */
+    public Observable<LoanRepaymentRequest> updateLoanRepaymentTransaction(
+            LoanRepaymentRequest loanRepaymentRequest) {
+        return mDatabaseHelperLoan.updateLoanRepaymentTransaction(loanRepaymentRequest);
     }
 }

@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
 
@@ -15,7 +16,9 @@ public interface OfflineDashboardMvpView extends MvpView {
 
     void showGroups(List<GroupPayload> groupPayloads);
 
+    void showLoanRepaymentTransactions(List<LoanRepaymentRequest> loanRepaymentRequests);
+
     void showNoPayloadToShow();
 
-    void showError(String s);
+    void showError(int s);
 }

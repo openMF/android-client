@@ -14,6 +14,8 @@ import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsFragment;
+import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
+        .SyncLoanRepaymentTransactionFragment;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
@@ -140,4 +142,6 @@ public interface ActivityComponent {
     void inject(SyncGroupPayloadsFragment syncGroupPayloadsFragment);
 
     void inject(OfflineDashboardFragment offlineDashboardFragment);
+
+    void inject(SyncLoanRepaymentTransactionFragment syncLoanRepaymentTransactionFragment);
 }
