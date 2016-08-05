@@ -35,6 +35,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
+
+        versionCode 20
+        versionName "2.0.0"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // A test runner provided by https://code.google.com/p/android-test-kit/
@@ -112,6 +115,12 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+}
+
+play {
+    track = 'production'
+    serviceAccountEmail = 'maintainer@api-9063376351678769485-408805.iam.gserviceaccount.com'
+    pk12File = file("../Mifos-playstore-52cb027b0539.p12")
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
