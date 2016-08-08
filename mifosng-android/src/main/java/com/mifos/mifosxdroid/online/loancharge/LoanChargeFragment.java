@@ -29,7 +29,7 @@ import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
 import com.mifos.objects.client.Charges;
@@ -47,7 +47,7 @@ import butterknife.OnClick;
 
 
 public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeMvpView,
-        RecyclerItemClickListner.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener {
 
     public static final int MENU_ITEM_ADD_NEW_LOAN_CHARGES = 3000;
 
@@ -133,7 +133,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_charges.setLayoutManager(layoutManager);
-        rv_charges.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_charges.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_charges.setHasFixedSize(true);
 
 

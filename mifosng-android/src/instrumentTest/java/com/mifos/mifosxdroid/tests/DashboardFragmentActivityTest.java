@@ -23,10 +23,10 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.ClientListActivity;
 import com.mifos.mifosxdroid.GroupListActivity;
-import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
+import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.DashboardActivity;
@@ -191,7 +191,7 @@ public class DashboardFragmentActivityTest extends
     @MediumTest
     public void testOfflineActivityStarted() throws InterruptedException {
         Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor
-                (OfflineCenterInputActivity.class.getName(), null, false);
+                (OfflineDashboardFragment.class.getName(), null, false);
 
         // select item from navigation drawer
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());

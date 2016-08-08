@@ -28,7 +28,7 @@ import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.objects.client.Charges;
@@ -46,7 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ClientChargeFragment extends MifosBaseFragment implements ClientChargeMvpView,
-        RecyclerItemClickListner.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener {
 
     public static final int MENU_ITEM_ADD_NEW_CHARGES = 2000;
 
@@ -129,7 +129,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_charges.setLayoutManager(layoutManager);
-        rv_charges.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_charges.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_charges.setHasFixedSize(true);
 
         setToolbarTitle(getString(R.string.charges));

@@ -7,22 +7,17 @@ package com.mifos.objects.db;
 
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
 
-public class OfflineCenter extends SugarRecord<OfflineCenter> {
+public class OfflineCenter {
     private int staffId;
     private String staffName;
-    @Ignore
+
     private MeetingCenter[] meetingFallCenters;
 
-
-    @Ignore
     public MeetingCenter[] getMeetingFallCenters() {
         return meetingFallCenters;
     }
 
-    @Ignore
     public void setMeetingFallCenters(MeetingCenter[] meetingFallCenters) {
         this.meetingFallCenters = meetingFallCenters;
     }

@@ -7,9 +7,8 @@ package com.mifos.objects.db;
 
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
 
-public class EntityType extends SugarRecord<EntityType> {
+public class EntityType {
     private String code;
     private String value;
 

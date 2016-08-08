@@ -1,7 +1,10 @@
 package com.mifos.mifosxdroid.online;
 
+import android.content.Context;
+
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
+import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.online.clientlist.ClientListMvpView;
 import com.mifos.mifosxdroid.online.clientlist.ClientListPresenter;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;
@@ -37,6 +40,9 @@ public class ClientListPresenterTest {
     @Mock
     DataManagerClient mDataManagerClient;
 
+    @ApplicationContext
+    Context context;
+
     @Mock
     ClientListMvpView mClientListMvpView;
     int offset = 0;
@@ -71,7 +77,7 @@ public class ClientListPresenterTest {
 
         verify(mClientListMvpView).showClientList(clientPage);
         verify(mClientListMvpView, never())
-                .showErrorFetchingClients("There was some error fetching list");
+                .showErrorFetchingClients();
 
     }
 
@@ -82,7 +88,7 @@ public class ClientListPresenterTest {
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
         mClientListPresenter.loadClients(true, offset, limit);
-        verify(mClientListMvpView).showErrorFetchingClients("There was some error fetching list");
+        verify(mClientListMvpView).showErrorFetchingClients();
         verify(mClientListMvpView, never()).showClientList(clientPage);
     }
 

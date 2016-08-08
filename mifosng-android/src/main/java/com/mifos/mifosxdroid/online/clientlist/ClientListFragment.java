@@ -7,10 +7,14 @@ package com.mifos.mifosxdroid.online.clientlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -21,13 +25,15 @@ import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner.OnItemClickListener;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,26 +73,38 @@ public class ClientListFragment extends MifosBaseFragment
     ClientListPresenter mClientListPresenter;
 
     private View rootView;
-    private List<Client> clientList = new ArrayList<>();
+    private List<Client> clientList;
+    private List<Client> selectedClients;
     private int limit = 100;
     private int mApiRestCounter;
+    private ActionModeCallback actionModeCallback;
+    private ActionMode actionMode;
 
     @Override
     public void onItemClick(View childView, int position) {
-        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
-        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
-        startActivity(clientActivityIntent);
+        if (actionMode != null) {
+            toggleSelection(position);
+        } else {
+            Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
+            clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
+            startActivity(clientActivityIntent);
+        }
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
-
+        if (actionMode == null) {
+            actionMode = ((MifosBaseActivity) getActivity()).startSupportActionMode
+                    (actionModeCallback);
+        }
+        toggleSelection(position);
     }
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
-        if (clientList != null)
+        if (clientList != null) {
             clientListFragment.setClientList(clientList);
+        }
         return clientListFragment;
     }
 
@@ -101,6 +119,9 @@ public class ClientListFragment extends MifosBaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        clientList = new ArrayList<>();
+        selectedClients = new ArrayList<>();
+        actionModeCallback = new ActionModeCallback();
     }
 
     @Override
@@ -116,17 +137,18 @@ public class ClientListFragment extends MifosBaseFragment
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_clients.setLayoutManager(mLayoutManager);
-        rv_clients.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_clients.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_clients.setHasFixedSize(true);
 
         mApiRestCounter = 1;
         mClientListPresenter.loadClients(true, 0, limit);
+        mClientListPresenter.loadDatabaseClients();
 
         /**
          * Setting mApiRestCounter to 1 and send Fresh Request to Server
          */
-        swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R
-                .color.orange_light, R.color.red_light);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -134,6 +156,9 @@ public class ClientListFragment extends MifosBaseFragment
                 mApiRestCounter = 1;
 
                 mClientListPresenter.loadClients(true, 0, limit);
+                mClientListPresenter.loadDatabaseClients();
+
+                if (actionMode != null) actionMode.finish();
 
                 if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
@@ -165,6 +190,7 @@ public class ClientListFragment extends MifosBaseFragment
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
         mClientListPresenter.loadClients(true, 0, limit);
+        mClientListPresenter.loadDatabaseClients();
     }
 
     public void setClientList(List<Client> clientList) {
@@ -201,7 +227,8 @@ public class ClientListFragment extends MifosBaseFragment
             // Clients Available for fetch
             if (clientPage.getPageItems().size() == 0 &&
                     (clientPage.getTotalFilteredRecords() == clientList.size()))
-                Toaster.show(rootView, "No more Center Available");
+                Toaster.show(rootView,
+                        getResources().getString(R.string.no_more_clients_available));
         }
     }
 
@@ -210,17 +237,18 @@ public class ClientListFragment extends MifosBaseFragment
      * So there no data to show and setVisibility VISIBLE
      * of Error ImageView and TextView layout and otherwise simple
      * show the Toast Message of Error Message.
-     *
-     * @param s is the Error Message given by ClientListPresenter
      */
     @Override
-    public void showErrorFetchingClients(String s) {
+    public void showErrorFetchingClients() {
         if (mApiRestCounter == 1) {
             ll_error.setVisibility(View.VISIBLE);
-            mNoClientText.setText(s + "\n Click to Refresh ");
+            String errorMessage = getResources().getString(R.string.failed_to_load_client)
+                    + getResources().getString(R.string.new_line) +
+                    getResources().getString(R.string.click_to_refresh);
+            mNoClientText.setText(errorMessage);
         }
 
-        Toaster.show(rootView, s);
+        Toaster.show(rootView, getResources().getString(R.string.failed_to_load_client) );
     }
 
 
@@ -251,5 +279,80 @@ public class ClientListFragment extends MifosBaseFragment
         super.onDestroyView();
         hideMifosProgressBar();
         mClientListPresenter.detachView();
+        //As the Fragment Detach Finish the ActionMode
+        if (actionMode != null) actionMode.finish();
+    }
+
+    /**
+     * Toggle the selection state of an item.
+     * <p/>
+     * If the item was the last one in the selection and is unselected, the selection is stopped.
+     * Note that the selection must already be started (actionMode must not be null).
+     *
+     * @param position Position of the item to toggle the selection state
+     */
+    private void toggleSelection(int position) {
+        clientNameListAdapter.toggleSelection(position);
+        int count = clientNameListAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+    /**
+     * This ActionModeCallBack Class handling the User Event after the Selection of Clients. Like
+     * Click of Menu Sync Button and finish the ActionMode
+     */
+    private class ActionModeCallback implements ActionMode.Callback {
+        @SuppressWarnings("unused")
+        private final String LOG_TAG = ActionModeCallback.class.getSimpleName();
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_sync, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_sync:
+
+                    selectedClients.clear();
+                    for (Integer position : clientNameListAdapter.getSelectedItems()) {
+                        selectedClients.add(clientList.get(position));
+                    }
+
+                    SyncClientsDialogFragment syncClientsDialogFragment =
+                            SyncClientsDialogFragment.newInstance(selectedClients);
+                    FragmentTransaction fragmentTransaction = getActivity()
+                            .getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);
+                    syncClientsDialogFragment.setCancelable(false);
+                    syncClientsDialogFragment.show(fragmentTransaction,
+                            getResources().getString(R.string.sync_clients));
+                    mode.finish();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            clientNameListAdapter.clearSelection();
+            actionMode = null;
+        }
     }
 }
+
