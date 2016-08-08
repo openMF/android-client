@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.ClientListActivity;
 import com.mifos.mifosxdroid.GroupListActivity;
-import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;

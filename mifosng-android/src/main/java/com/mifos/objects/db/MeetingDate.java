@@ -7,9 +7,8 @@ package com.mifos.objects.db;
 
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
 
-public class MeetingDate extends SugarRecord<MeetingDate> {
+public class MeetingDate {
     private int year;
     private int month;
     private int day;
