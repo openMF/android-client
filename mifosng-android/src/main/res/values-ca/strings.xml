@@ -56,7 +56,7 @@
     <string name="level_name">Nom del nivell</string>
     <string name="list_all_clients">Llistat de clients</string>
     <string name="loan">Crèdit</string>
-    <string name="loanAccountSummary">Resum dels comptes de crèdit</string>
+    <string name="loanAccountSummaryStatus">Resum dels comptes de crèdit</string>
     <string name="loanAccounts">Comptes de crèdit</string>
     <string name="loan_account_id">ID del compte</string>
     <string name="loan_account_status_id">ID del estat del compte</string>

@@ -84,7 +84,7 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void onItemLongPress(View childView, int position) {
         SyncClientsDialogFragment syncClientsDialogFragment =
-                SyncClientsDialogFragment.newInstance(clientList.get(position));
+                SyncClientsDialogFragment.newInstance(clientList);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);

@@ -5,16 +5,22 @@ import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.sync.SyncClientInformationStatus;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.zipmodels.ClientAndClientAccounts;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -110,13 +116,12 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     public void syncLoanRepaymentTemplate(int loanId) {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerLoan.getLoanRepayTemplate(loanId)
+        mSubscriptions.add(mDataManagerLoan.syncLoanRepaymentTemplate(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<LoanRepaymentTemplate>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
@@ -126,9 +131,33 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onNext(LoanRepaymentTemplate loanRepaymentTemplate) {
-                        getMvpView().showLoanRepayentSyncSuccessfully(loanRepaymentTemplate);
+                        getMvpView().showLoanRepaymentSyncSuccessfully(loanRepaymentTemplate);
                     }
                 }));
+    }
+
+
+    public void syncLoanAndLoanRepayment(List<LoanAccount> loanAccounts) {
+        Observable.from(loanAccounts)
+                .flatMap(new Func1<LoanAccount, Observable<Integer>>() {
+                    @Override
+                    public Observable<Integer> call(LoanAccount loanAccount) {
+                        return Observable.just(loanAccount.getId());
+                    }
+                })
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer loanId) {
+                        syncLoanById(loanId);
+                        syncLoanRepaymentTemplate(loanId);
+                    }
+                });
+    }
+
+
+    public Boolean isClientInformationSync(SyncClientInformationStatus
+                                                        syncClientInformationStatus) {
+        return syncClientInformationStatus.getSyncClientInformationStatus();
     }
 
 }

@@ -11,11 +11,13 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
  */
 public interface SyncClientsDialogMvpView extends MvpView {
 
+    void syncClientAndInformation();
+
     void showClientAndAccountsSyncedSuccessfully(Client client, ClientAccounts clientAccounts);
 
     void showLoanSyncSuccessfully(LoanWithAssociations loanWithAssociations);
 
-    void showLoanRepayentSyncSuccessfully(LoanRepaymentTemplate loanRepaymentTemplate);
+    void showLoanRepaymentSyncSuccessfully(LoanRepaymentTemplate loanRepaymentTemplate);
 
     void showError(int s);
 

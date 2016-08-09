@@ -91,7 +91,7 @@
     <string name="additional_payment">Additional Payment</string>
     <string name="break_down">Break Down</string>
     <string name="loanAccounts">Loan Accounts</string>
-    <string name="loanAccountSummary">Loan Account Summary</string>
+    <string name="loanAccountSummaryStatus">Loan Account Summary</string>
     <string name="loan_repayment_schedule">Loan Repayment Schedule</string>
     <string name="loan_rejected_message">Loan was Rejected</string>
     <string name="repayment">Repayment</string>
