@@ -88,6 +88,7 @@
     <string name="path_tracker">Path Tracker</string>
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
+    <string name="hide">Hide</string>
     <!-- General Terms End Here -->
 
 
@@ -331,6 +332,9 @@
     <string name="all_groups_synced">All Groups have been Sync</string>
     <string name="all_clients_synced">All Clients have been Sync</string>
     <string name="click_to_refresh">\n Click to Refresh</string>
+    <string name="syncing_client">Syncing Client</string>
+    <string name="total_sync_progress">Total Sync Progress</string>
+    <string name="sync_clients_full_information"> Sync Clients All Information </string>
 
     <!--Material Dialog Titles-->
     <string name="sync_previous_transaction">Sync Previous Transaction</string>
@@ -359,6 +363,7 @@
     <string name="failed_to_update_list">Failed Update List</string>
     <string name="failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
     <string name="failed_to_update_loanrepayment">Failed to Update LoanRepayment</string>
+    <string name="failed_sync">Sync Failed</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

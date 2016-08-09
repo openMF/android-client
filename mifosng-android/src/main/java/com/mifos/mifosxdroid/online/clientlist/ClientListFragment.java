@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online.clientlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,10 +25,12 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListner.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +83,13 @@ public class ClientListFragment extends MifosBaseFragment
 
     @Override
     public void onItemLongPress(View childView, int position) {
-
+        SyncClientsDialogFragment syncClientsDialogFragment =
+                SyncClientsDialogFragment.newInstance(clientList.get(position));
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);
+        syncClientsDialogFragment.show(fragmentTransaction,
+                getResources().getString(R.string.sync_clients));
     }
 
     public static ClientListFragment newInstance(List<Client> clientList) {
