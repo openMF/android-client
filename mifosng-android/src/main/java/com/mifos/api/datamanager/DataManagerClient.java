@@ -108,7 +108,7 @@ public class DataManagerClient {
     }
 
 
-    public Observable<Client> saveClientInDatabase(Client client) {
+    public Observable<Client> syncClientInDatabase(Client client) {
         return mDatabaseHelperClient.saveClient(client);
     }
 
@@ -116,8 +116,7 @@ public class DataManagerClient {
      * This Method Checks the User Status and as accordingly call to Database Helper or Client
      * Retrofit Service.
      * If User is Online then this Client DataManager Request to Client Retrofit to make REST API
-     * Request for Client Account and after service request completion DataManager call to
-     * DatabaseHelper to save in to Database.
+     * Request for Client Account.
      * If User if Offline Client DataManager request to Client DatabaseHelper to make Transaction
      * for retrieving the Clients Account.
      *
@@ -127,16 +126,7 @@ public class DataManagerClient {
     public Observable<ClientAccounts> getClientAccounts(final int clientId) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
-                        .concatMap(new Func1<ClientAccounts, Observable<? extends
-                                ClientAccounts>>() {
-                            @Override
-                            public Observable<? extends ClientAccounts> call(
-                                    ClientAccounts clientAccounts) {
-                                mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId);
-                                return Observable.just(clientAccounts);
-                            }
-                        });
+                return mBaseApiManager.getClientsApi().getClientAccounts(clientId);
             case 1:
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
@@ -148,6 +138,25 @@ public class DataManagerClient {
         }
     }
 
+
+    /**
+     * This Method Fetching the Client Accounts (Loan, saving, etc Accounts ) from REST API
+     * and get the ClientAccounts and then Saving all Accounts into the Database and give the
+     * ClientAccount in return.
+     *
+     * @param clientId Client Id
+     * @return ClientAccounts
+     */
+    public Observable<ClientAccounts> syncClientAccounts(final int clientId) {
+        return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
+                .concatMap(new Func1<ClientAccounts, Observable<? extends ClientAccounts>>() {
+                    @Override
+                    public Observable<? extends ClientAccounts> call(ClientAccounts
+                                                                             clientAccounts) {
+                        return mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId);
+                    }
+                });
+    }
 
     /**
      * This Method for removing the Client Image from his profile on server

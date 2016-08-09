@@ -154,11 +154,12 @@ public class DatabaseHelperClient {
      * @param clientId       Client Id
      * @return null
      */
-    public Observable<Void> saveClientAccounts(final ClientAccounts clientAccounts,
+    public Observable<ClientAccounts> saveClientAccounts(final ClientAccounts clientAccounts,
                                                final int clientId) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+
+        return Observable.defer(new Func0<Observable<ClientAccounts>>() {
             @Override
-            public void run() {
+            public Observable<ClientAccounts> call() {
 
                 List<LoanAccount> loanAccounts = clientAccounts.getLoanAccounts();
                 List<SavingsAccount> savingsAccounts = clientAccounts.getSavingsAccounts();
@@ -172,9 +173,10 @@ public class DatabaseHelperClient {
                     savingsAccount.setClientId(clientId);
                     savingsAccount.save();
                 }
+
+                return Observable.just(clientAccounts);
             }
         });
-        return null;
     }
 
 
