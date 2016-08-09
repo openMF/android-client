@@ -368,6 +368,7 @@
     <string name="failed_to_sync_client_and_accounts">Failed to load Client and their
         Accounts</string>
     <string name="failed_to_sync_clientaccounts">ClientAccounts Sync Failed</string>
+    <string name="failed_to_sync_loan">Failed to Sync Loan</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

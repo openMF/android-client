@@ -54,17 +54,8 @@ public class DataManagerLoan {
     public Observable<LoanWithAssociations> getLoanById(int loanId) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getLoanApi()
-                        .getLoanByIdWithAllAssociations(loanId)
-                        .concatMap(new Func1<LoanWithAssociations,
-                                Observable<? extends LoanWithAssociations>>() {
+                return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanId);
 
-                            @Override
-                            public Observable<? extends LoanWithAssociations> call
-                                    (LoanWithAssociations loanWithAssociations) {
-                                return mDatabaseHelperLoan.saveLoanById(loanWithAssociations);
-                            }
-                        });
             case 1:
                 /**
                  * Return LoanWithAssociation from DatabaseHelperLoan.
@@ -75,6 +66,29 @@ public class DataManagerLoan {
                 return Observable.just(new LoanWithAssociations());
         }
 
+    }
+
+
+    /**
+     * This Method sending the Request to REST API and
+     * get the LoanWithAssociation. The response is pass to the DatabaseHelperLoan
+     * that save the response in Database with Observable.defer and next pass the response to
+     * DataManager to pass to Presenter to show in the view.
+     *
+     * @param loanId Loan Id
+     * @return LoanWithAssociations
+     */
+    public Observable<LoanWithAssociations> syncLoanById(int loanId) {
+        return mBaseApiManager.getLoanApi()
+                .getLoanByIdWithAllAssociations(loanId)
+                .concatMap(new Func1<LoanWithAssociations, Observable<? extends
+                        LoanWithAssociations>>() {
+                    @Override
+                    public Observable<? extends LoanWithAssociations> call
+                            (LoanWithAssociations loanWithAssociations) {
+                        return mDatabaseHelperLoan.saveLoanById(loanWithAssociations);
+                    }
+                });
     }
 
     public Observable<List<LoanProducts>> getAllLoans() {

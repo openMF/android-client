@@ -1,9 +1,11 @@
 package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog;
 
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.zipmodels.ClientAndClientAccounts;
 
@@ -22,11 +24,14 @@ import rx.subscriptions.CompositeSubscription;
 public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogMvpView> {
 
     private final DataManagerClient mDataManagerClient;
+    private final DataManagerLoan mDataManagerLoan;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SyncClientsDialogPresenter(DataManagerClient dataManagerClient) {
+    public SyncClientsDialogPresenter(DataManagerClient dataManagerClient,
+                                      DataManagerLoan dataManagerLoan) {
         mDataManagerClient = dataManagerClient;
+        mDataManagerLoan = dataManagerLoan;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -81,7 +86,25 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     public void syncLoanById(int loanId) {
         checkViewAttached();
-        
+        mSubscriptions.add(mDataManagerLoan.syncLoanById(loanId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<LoanWithAssociations>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showError(R.string.failed_to_sync_loan);
+                    }
+
+                    @Override
+                    public void onNext(LoanWithAssociations loanWithAssociations) {
+                        getMvpView().showLoanSyncSuccessfully(loanWithAssociations);
+                    }
+                }));
+
     }
 
 }
