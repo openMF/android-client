@@ -7,6 +7,7 @@ import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.zipmodels.ClientAndClientAccounts;
 
 import javax.inject.Inject;
@@ -105,6 +106,29 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     }
                 }));
 
+    }
+
+    public void syncLoanRepaymentTemplate(int loanId) {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerLoan.getLoanRepayTemplate(loanId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<LoanRepaymentTemplate>() {
+                    @Override
+                    public void onCompleted() {
+                        getMvpView().showProgressbar(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showError(R.string.failed_to_load_loanrepayment);
+                    }
+
+                    @Override
+                    public void onNext(LoanRepaymentTemplate loanRepaymentTemplate) {
+                        getMvpView().showLoanRepayentSyncSuccessfully(loanRepaymentTemplate);
+                    }
+                }));
     }
 
 }

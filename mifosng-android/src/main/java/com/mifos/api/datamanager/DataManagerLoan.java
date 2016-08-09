@@ -124,17 +124,8 @@ public class DataManagerLoan {
     public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(final int loanId) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId)
-                        .concatMap(new Func1<LoanRepaymentTemplate, Observable<? extends
-                                LoanRepaymentTemplate>>() {
+                return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId);
 
-                            @Override
-                            public Observable<? extends LoanRepaymentTemplate> call
-                                    (LoanRepaymentTemplate loanRepaymentTemplate) {
-                                return mDatabaseHelperLoan.saveLoanRepaymentTemplate(loanId,
-                                        loanRepaymentTemplate);
-                            }
-                        });
             case 1:
                 /**
                  * Return LoanRepaymentTemplate from DatabaseHelperLoan.
@@ -146,6 +137,31 @@ public class DataManagerLoan {
         }
     }
 
+    /**
+     * This Method to request the LoanRepaymentTemplate according to Loan Id and get
+     * LoanRepaymentTemplate in Response. Request goes to the Server End Point directly.
+     * Here is End Point :
+     * {https://demo.openmf.org/fineract-provider/api/v1/loans/{loanId}/transactions/template
+     * ?command=repayment}
+     * and get LoanRepaymentTemplate in response and then call the
+     * mDatabaseHelperLoan.saveLoanRepaymentTemplate(loanId,loanRepaymentTemplate); to save the
+     * Template into Database for accessing in the Offline.
+     *
+     * @param loanId Loan Id
+     * @return LoanRepaymentTemplate
+     */
+    public Observable<LoanRepaymentTemplate> syncLoanRepaymentTemplate(final int loanId) {
+        return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId)
+                .concatMap(new Func1<LoanRepaymentTemplate, Observable<? extends
+                        LoanRepaymentTemplate>>() {
+                    @Override
+                    public Observable<? extends LoanRepaymentTemplate> call
+                            (LoanRepaymentTemplate loanRepaymentTemplate) {
+                        return mDatabaseHelperLoan.saveLoanRepaymentTemplate(loanId,
+                                loanRepaymentTemplate);
+                    }
+                });
+    }
 
     /**
      * This Method For submitting the Loan Payment. This Method have two mode, One if Online when
