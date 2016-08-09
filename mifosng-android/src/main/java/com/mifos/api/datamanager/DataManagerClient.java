@@ -62,8 +62,6 @@ public class DataManagerClient {
                             @Override
                             public Observable<? extends Page<Client>> call(Page<Client>
                                                                                    clientPage) {
-                                //Saving Clients in Database
-                                mDatabaseHelperClient.saveAllClients(clientPage);
                                 return Observable.just(clientPage);
                             }
                         });
@@ -109,6 +107,10 @@ public class DataManagerClient {
         }
     }
 
+
+    public Observable<Client> saveClientInDatabase(Client client) {
+        return mDatabaseHelperClient.saveClient(client);
+    }
 
     /**
      * This Method Checks the User Status and as accordingly call to Database Helper or Client

@@ -77,7 +77,7 @@ public class SyncClientsDialogFragment extends DialogFragment {
         rootView = inflater.inflate(R.layout.dialog_fragment_sync_clients, container, false);
         ButterKnife.bind(this, rootView);
 
-        
+
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 

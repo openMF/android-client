@@ -364,6 +364,7 @@
     <string name="failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
     <string name="failed_to_update_loanrepayment">Failed to Update LoanRepayment</string>
     <string name="failed_sync">Sync Failed</string>
+    <string name="failed_to_sync_client">Client Sync Failed</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

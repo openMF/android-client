@@ -82,6 +82,23 @@ public class DatabaseHelperClient {
     }
 
     /**
+     * This Method save the single Client in Database with ClientId as Primary Id
+     *
+     * @param client Client
+     * @return saved Client
+     */
+    public Observable<Client> saveClient(final Client client) {
+        return Observable.defer(new Func0<Observable<Client>>() {
+            @Override
+            public Observable<Client> call() {
+                //Saving Client in Database
+                client.save();
+                return Observable.just(client);
+            }
+        });
+    }
+
+    /**
      * Reading All Clients from table of Client and return the ClientList
      *
      * @return List Of Client
