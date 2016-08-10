@@ -38,6 +38,9 @@ public class Client extends MifosBaseModel implements Parcelable {
     Status status;
 
     @Column
+    transient boolean isSync;
+
+    @Column
     boolean active;
 
     @Column
@@ -85,6 +88,14 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     @Column
     private String externalId;
+
+    public boolean isSync() {
+        return isSync;
+    }
+
+    public void setSync(boolean sync) {
+        isSync = sync;
+    }
 
     public Client() {
     }

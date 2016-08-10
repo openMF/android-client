@@ -8,26 +8,37 @@ import android.os.Parcelable;
  */
 public class SyncClientInformationStatus implements Parcelable {
 
-    Boolean clientAndAccountsStatus;
+    Boolean clientAccountsStatus;
 
     Boolean loanAccountSummaryStatus;
 
     Boolean loanRepaymentTemplateStatus;
 
+    Boolean clientStatus;
+
     public Boolean getSyncClientInformationStatus() {
         Boolean status = false;
-        if (clientAndAccountsStatus && loanAccountSummaryStatus && loanRepaymentTemplateStatus) {
+        if (clientAccountsStatus && loanAccountSummaryStatus &&
+                loanRepaymentTemplateStatus && clientStatus) {
             status = true;
         }
         return status;
     }
 
-    public Boolean getClientAndAccountsStatus() {
-        return clientAndAccountsStatus;
+    public Boolean getClientStatus() {
+        return clientStatus;
     }
 
-    public void setClientAndAccountsStatus(Boolean clientAndAccountsStatus) {
-        this.clientAndAccountsStatus = clientAndAccountsStatus;
+    public void setClientStatus(Boolean clientStatus) {
+        this.clientStatus = clientStatus;
+    }
+
+    public Boolean getClientAccountsStatus() {
+        return clientAccountsStatus;
+    }
+
+    public void setClientAccountsStatus(Boolean clientAccountsStatus) {
+        this.clientAccountsStatus = clientAccountsStatus;
     }
 
     public Boolean getLoanAccountSummaryStatus() {
@@ -49,12 +60,15 @@ public class SyncClientInformationStatus implements Parcelable {
     @Override
     public String toString() {
         return "SyncClientInformationStatus{" +
-                "clientAndAccountsStatus=" + clientAndAccountsStatus +
+                "clientAccountsStatus=" + clientAccountsStatus +
                 ", loanAccountSummaryStatus=" + loanAccountSummaryStatus +
                 ", loanRepaymentTemplateStatus=" + loanRepaymentTemplateStatus +
                 '}';
     }
 
+
+    public SyncClientInformationStatus() {
+    }
 
     @Override
     public int describeContents() {
@@ -63,22 +77,21 @@ public class SyncClientInformationStatus implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.clientAndAccountsStatus);
+        dest.writeValue(this.clientAccountsStatus);
         dest.writeValue(this.loanAccountSummaryStatus);
         dest.writeValue(this.loanRepaymentTemplateStatus);
-    }
-
-    public SyncClientInformationStatus() {
+        dest.writeValue(this.clientStatus);
     }
 
     protected SyncClientInformationStatus(Parcel in) {
-        this.clientAndAccountsStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.clientAccountsStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.loanAccountSummaryStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.loanRepaymentTemplateStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.clientStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<SyncClientInformationStatus> CREATOR =
-            new Parcelable.Creator<SyncClientInformationStatus>() {
+    public static final Creator<SyncClientInformationStatus> CREATOR =
+            new Creator<SyncClientInformationStatus>() {
         @Override
         public SyncClientInformationStatus createFromParcel(Parcel source) {
             return new SyncClientInformationStatus(source);

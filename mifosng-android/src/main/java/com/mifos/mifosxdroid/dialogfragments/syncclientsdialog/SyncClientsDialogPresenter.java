@@ -10,8 +10,8 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.sync.SyncClientInformationStatus;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
-import com.mifos.objects.zipmodels.ClientAndClientAccounts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,7 +21,6 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -53,25 +52,12 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         mSubscriptions.unsubscribe();
     }
 
-    public void syncClientDetailsAndClientAccounts(Client client) {
+    public void syncClientAccounts(int clientId) {
         checkViewAttached();
-        mSubscriptions.add(Observable.zip(
-                mDataManagerClient.syncClientAccounts(client.getId()),
-                mDataManagerClient.syncClientInDatabase(client),
-                new Func2<ClientAccounts, Client, ClientAndClientAccounts>() {
-                    @Override
-                    public ClientAndClientAccounts call(ClientAccounts clientAccounts, Client
-                            client) {
-                        ClientAndClientAccounts clientAndClientAccounts
-                                = new ClientAndClientAccounts();
-                        clientAndClientAccounts.setClient(client);
-                        clientAndClientAccounts.setClientAccounts(clientAccounts);
-                        return clientAndClientAccounts;
-                    }
-                })
+        mSubscriptions.add(mDataManagerClient.syncClientAccounts(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ClientAndClientAccounts>() {
+                .subscribe(new Subscriber<ClientAccounts>() {
                     @Override
                     public void onCompleted() {
 
@@ -83,12 +69,12 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     }
 
                     @Override
-                    public void onNext(ClientAndClientAccounts clientAndClientAccounts) {
-                        getMvpView().showClientAndAccountsSyncedSuccessfully
-                                (clientAndClientAccounts.getClient(),
-                                        clientAndClientAccounts.getClientAccounts());
+                    public void onNext(ClientAccounts clientAccounts) {
+                        getMvpView().showClientAccountsSyncedSuccessfully(clientAccounts);
                     }
-                }));
+                })
+
+        );
     }
 
     public void syncLoanById(int loanId) {
@@ -108,7 +94,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onNext(LoanWithAssociations loanWithAssociations) {
-                        getMvpView().showLoanSyncSuccessfully(loanWithAssociations);
+                        getMvpView().showLoanSyncSuccessfully();
                     }
                 }));
 
@@ -131,11 +117,54 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onNext(LoanRepaymentTemplate loanRepaymentTemplate) {
-                        getMvpView().showLoanRepaymentSyncSuccessfully(loanRepaymentTemplate);
+                        getMvpView().showLoanRepaymentSyncSuccessfully();
                     }
                 }));
     }
 
+
+    public void syncClient(Client client) {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerClient.syncClientInDatabase(client)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<Client>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showError(R.string.failed_to_sync_client);
+                    }
+
+                    @Override
+                    public void onNext(Client client) {
+                        getMvpView().showClientSyncSuccessfully();
+                    }
+                })
+        );
+    }
+
+
+    public List<LoanAccount> getActiveLoanAccounts(List<LoanAccount> loanAccountList) {
+        final List<LoanAccount> loanAccounts = new ArrayList<>();
+        Observable.from(loanAccountList)
+                .filter(new Func1<LoanAccount, Boolean>() {
+                    @Override
+                    public Boolean call(LoanAccount loanAccount) {
+                        return loanAccount.getStatus().getActive();
+                    }
+                })
+                .subscribe(new Action1<LoanAccount>() {
+                    @Override
+                    public void call(LoanAccount loanAccount) {
+                        loanAccounts.add(loanAccount);
+                    }
+                });
+        return loanAccounts;
+    }
 
     public void syncLoanAndLoanRepayment(List<LoanAccount> loanAccounts) {
         Observable.from(loanAccounts)
@@ -156,7 +185,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
 
     public Boolean isClientInformationSync(SyncClientInformationStatus
-                                                        syncClientInformationStatus) {
+                                                   syncClientInformationStatus) {
         return syncClientInformationStatus.getSyncClientInformationStatus();
     }
 

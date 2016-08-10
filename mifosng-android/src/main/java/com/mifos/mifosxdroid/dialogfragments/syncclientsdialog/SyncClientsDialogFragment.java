@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,9 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.sync.SyncClientInformationStatus;
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.utils.Constants;
 
 import java.util.ArrayList;
@@ -34,6 +34,8 @@ import butterknife.OnClick;
  */
 public class SyncClientsDialogFragment extends DialogFragment implements SyncClientsDialogMvpView {
 
+
+    public static final String LOG_TAG = SyncClientsDialogFragment.class.getSimpleName();
 
     @BindView(R.id.tv_sync_title)
     TextView tv_sync_title;
@@ -96,8 +98,10 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         mSyncClientsDialogPresenter.attachView(this);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        mSyncClientsDialogPresenter
-                .syncClientDetailsAndClientAccounts(mClients.get(mClientSyncIndex));
+        //Sync Client Account
+        if (!mClients.isEmpty()) {
+            mSyncClientsDialogPresenter.syncClientAccounts(mClients.get(0).getId());
+        }
 
         return rootView;
     }
@@ -111,44 +115,58 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
      *
      */
     @Override
-    public void syncClientAndInformation() {
+    public void syncClientInformation() {
         mClientSyncIndex = mClientSyncIndex + 1;
         mLoanRepaymentSyncIndex = 0;
         mLoanSyncIndex = 0;
-        mSyncClientsDialogPresenter.syncClientDetailsAndClientAccounts(mClients
-                .get(mClientSyncIndex));
+        if (mClients.size() != mClientSyncIndex) {
+            mSyncClientsDialogPresenter.syncClientAccounts(mClients.get(mClientSyncIndex).getId());
+        } else {
+            Log.d(LOG_TAG, getActivity().getResources().getString(R.string.nothing_to_sync));
+        }
     }
 
     @Override
-    public void showClientAndAccountsSyncedSuccessfully(Client client,
-                                                        ClientAccounts clientAccounts) {
-        mSyncClientInformationStatus.setClientAndAccountsStatus(true);
-        mLoanSyncIndex = clientAccounts.getLoanAccounts().size();
-        mLoanRepaymentSyncIndex = clientAccounts.getLoanAccounts().size();
-        mSyncClientsDialogPresenter.syncLoanAndLoanRepayment(clientAccounts.getLoanAccounts());
+    public void showClientAccountsSyncedSuccessfully(ClientAccounts clientAccounts) {
+        mSyncClientInformationStatus.setClientAccountsStatus(true);
+        List<LoanAccount> loanAccounts = mSyncClientsDialogPresenter
+                .getActiveLoanAccounts(clientAccounts.getLoanAccounts());
+        mLoanSyncIndex = loanAccounts.size();
+        mLoanRepaymentSyncIndex = loanAccounts.size();
+        mSyncClientsDialogPresenter.syncLoanAndLoanRepayment(loanAccounts);
     }
 
     @Override
-    public void showLoanSyncSuccessfully(LoanWithAssociations loanWithAssociations) {
+    public void showLoanSyncSuccessfully() {
         mLoanSyncIndex = mLoanSyncIndex - 1;
         if (mLoanSyncIndex == 0) {
             mSyncClientInformationStatus.setLoanAccountSummaryStatus(true);
         }
 
-        if (mSyncClientsDialogPresenter.isClientInformationSync(mSyncClientInformationStatus)) {
-            syncClientAndInformation();
+        if (mLoanSyncIndex == 0 && mLoanRepaymentSyncIndex == 0) {
+            mClients.get(mClientSyncIndex).setSync(true);
+            mSyncClientsDialogPresenter.syncClient(mClients.get(mClientSyncIndex));
         }
     }
 
     @Override
-    public void showLoanRepaymentSyncSuccessfully(LoanRepaymentTemplate loanRepaymentTemplate) {
+    public void showLoanRepaymentSyncSuccessfully() {
         mLoanRepaymentSyncIndex = mLoanRepaymentSyncIndex - 1;
         if (mLoanRepaymentSyncIndex == 0) {
             mSyncClientInformationStatus.setLoanRepaymentTemplateStatus(true);
         }
 
+        if (mLoanSyncIndex == 0 && mLoanRepaymentSyncIndex == 0) {
+            mClients.get(mClientSyncIndex).setSync(true);
+            mSyncClientsDialogPresenter.syncClient(mClients.get(mClientSyncIndex));
+        }
+    }
+
+    @Override
+    public void showClientSyncSuccessfully() {
+        mSyncClientInformationStatus.setClientStatus(true);
         if (mSyncClientsDialogPresenter.isClientInformationSync(mSyncClientInformationStatus)) {
-            syncClientAndInformation();
+            //syncClientInformation();
         }
     }
 
