@@ -92,6 +92,11 @@ public class DatabaseHelperClient {
             @Override
             public Observable<Client> call() {
                 //Saving Client in Database
+                ClientDate clientDate = new ClientDate(client.getId(), 0,
+                        client.getActivationDate().get(0),
+                        client.getActivationDate().get(1),
+                        client.getActivationDate().get(2));
+                client.setClientDate(clientDate);
                 client.save();
                 return Observable.just(client);
             }
@@ -137,8 +142,10 @@ public class DatabaseHelperClient {
                         .where(Client_Table.id.eq(clientId))
                         .querySingle();
 
-                client.setActivationDate(Arrays.asList(client.getClientDate().getDay(),
-                        client.getClientDate().getMonth(), client.getClientDate().getYear()));
+                if (client != null) {
+                    client.setActivationDate(Arrays.asList(client.getClientDate().getDay(),
+                            client.getClientDate().getMonth(), client.getClientDate().getYear()));
+                }
 
                 subscriber.onNext(client);
 
