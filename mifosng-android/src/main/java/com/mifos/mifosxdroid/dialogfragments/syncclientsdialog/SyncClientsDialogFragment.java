@@ -66,7 +66,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     private View rootView;
 
-    private List<Client> mClients;
+    private List<Client> mClients, mFailedSyncClient;
 
     private SyncClientInformationStatus mSyncClientInformationStatus;
 
@@ -85,6 +85,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         mSyncClientInformationStatus = new SyncClientInformationStatus();
+        mFailedSyncClient = new ArrayList<>();
         if (getArguments() != null)
             mClients = getArguments().getParcelableArrayList(Constants.CLIENT);
         super.onCreate(savedInstanceState);
@@ -100,7 +101,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
         //Sync Client Account
         if (!mClients.isEmpty()) {
-            mSyncClientsDialogPresenter.syncClientAccounts(mClients.get(0).getId());
+            mSyncClientsDialogPresenter.syncClientAccounts(mClients.get(mClientSyncIndex).getId());
         }
 
         return rootView;
@@ -109,6 +110,11 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     @OnClick(R.id.btn_cancel)
     void OnClickCancelButton() {
         getDialog().dismiss();
+    }
+
+    @OnClick(R.id.btn_hide)
+    void OnClickHideButton() {
+        getDialog().hide();
     }
 
     /**
@@ -131,9 +137,11 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         mSyncClientInformationStatus.setClientAccountsStatus(true);
         List<LoanAccount> loanAccounts = mSyncClientsDialogPresenter
                 .getActiveLoanAccounts(clientAccounts.getLoanAccounts());
-        mLoanSyncIndex = loanAccounts.size();
-        mLoanRepaymentSyncIndex = loanAccounts.size();
-        mSyncClientsDialogPresenter.syncLoanAndLoanRepayment(loanAccounts);
+        if (!loanAccounts.isEmpty()) {
+            mLoanSyncIndex = loanAccounts.size();
+            mLoanRepaymentSyncIndex = loanAccounts.size();
+            mSyncClientsDialogPresenter.syncLoanAndLoanRepayment(loanAccounts);
+        }
     }
 
     @Override
@@ -166,7 +174,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     public void showClientSyncSuccessfully() {
         mSyncClientInformationStatus.setClientStatus(true);
         if (mSyncClientsDialogPresenter.isClientInformationSync(mSyncClientInformationStatus)) {
-            //syncClientInformation();
+            syncClientInformation();
         }
     }
 
