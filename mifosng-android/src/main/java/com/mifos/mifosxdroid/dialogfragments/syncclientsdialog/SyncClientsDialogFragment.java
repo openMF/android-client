@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ *
  * Created by Rajan Maurya on 08/08/16.
  */
 public class SyncClientsDialogFragment extends DialogFragment implements SyncClientsDialogMvpView {
@@ -66,7 +67,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     private View rootView;
 
-    private List<Client> mClients, mFailedSyncClient;
+    private List<Client> mClients;
 
     private SyncClientInformationStatus mSyncClientInformationStatus;
 
@@ -84,8 +85,6 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        mSyncClientInformationStatus = new SyncClientInformationStatus();
-        mFailedSyncClient = new ArrayList<>();
         if (getArguments() != null)
             mClients = getArguments().getParcelableArrayList(Constants.CLIENT);
         super.onCreate(savedInstanceState);

@@ -21,6 +21,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -33,12 +34,19 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     private final DataManagerLoan mDataManagerLoan;
     private CompositeSubscription mSubscriptions;
 
+    private List<Client> mClientList, mFailedSyncClient;
+
+    private SyncClientInformationStatus mSyncClientInformationStatus;
+
+    private int mClientSyncIndex, mLoanSyncIndex, mLoanRepaymentSyncIndex = 0;
+
     @Inject
     public SyncClientsDialogPresenter(DataManagerClient dataManagerClient,
                                       DataManagerLoan dataManagerLoan) {
         mDataManagerClient = dataManagerClient;
         mDataManagerLoan = dataManagerLoan;
         mSubscriptions = new CompositeSubscription();
+
     }
 
     @Override
@@ -77,51 +85,41 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         );
     }
 
-    public void syncLoanById(int loanId) {
+    public void syncLoanAndLoanRepayment(int loanId) {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerLoan.syncLoanById(loanId)
+        mSubscriptions.add(Observable.zip(
+                mDataManagerLoan.syncLoanById(loanId),
+                mDataManagerLoan.syncLoanRepaymentTemplate(loanId),
+                new Func2<LoanWithAssociations, LoanRepaymentTemplate, LoanAndLoanRepayment>() {
+                    @Override
+                    public LoanAndLoanRepayment call(LoanWithAssociations loanWithAssociations,
+                                                     LoanRepaymentTemplate loanRepaymentTemplate) {
+                        LoanAndLoanRepayment loanAndLoanRepayment = new LoanAndLoanRepayment();
+                        loanAndLoanRepayment.setLoanWithAssociations(loanWithAssociations);
+                        loanAndLoanRepayment.setLoanRepaymentTemplate(loanRepaymentTemplate);
+                        return loanAndLoanRepayment;
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanWithAssociations>() {
+                .subscribe(new Subscriber<LoanAndLoanRepayment>() {
                     @Override
                     public void onCompleted() {
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showError(R.string.failed_to_sync_loan);
+
                     }
 
                     @Override
-                    public void onNext(LoanWithAssociations loanWithAssociations) {
-                        getMvpView().showLoanSyncSuccessfully();
-                    }
-                }));
+                    public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
 
+                    }
+                })
+        );
     }
-
-    public void syncLoanRepaymentTemplate(int loanId) {
-        checkViewAttached();
-        mSubscriptions.add(mDataManagerLoan.syncLoanRepaymentTemplate(loanId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanRepaymentTemplate>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showError(R.string.failed_to_load_loanrepayment);
-                    }
-
-                    @Override
-                    public void onNext(LoanRepaymentTemplate loanRepaymentTemplate) {
-                        getMvpView().showLoanRepaymentSyncSuccessfully();
-                    }
-                }));
-    }
-
 
     public void syncClient(Client client) {
         checkViewAttached();
@@ -166,7 +164,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         return loanAccounts;
     }
 
-    public void syncLoanAndLoanRepayment(List<LoanAccount> loanAccounts) {
+    public void syncLoanAndLoanRepayment(final List<LoanAccount> loanAccounts) {
         Observable.from(loanAccounts)
                 .flatMap(new Func1<LoanAccount, Observable<Integer>>() {
                     @Override
@@ -177,8 +175,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                 .subscribe(new Action1<Integer>() {
                     @Override
                     public void call(Integer loanId) {
-                        syncLoanById(loanId);
-                        syncLoanRepaymentTemplate(loanId);
+                       syncLoanAndLoanRepayment(loanAccounts);
                     }
                 });
     }
@@ -189,4 +186,26 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         return syncClientInformationStatus.getSyncClientInformationStatus();
     }
 
+
+    public class LoanAndLoanRepayment {
+
+        LoanWithAssociations loanWithAssociations;
+        LoanRepaymentTemplate loanRepaymentTemplate;
+
+        public LoanWithAssociations getLoanWithAssociations() {
+            return loanWithAssociations;
+        }
+
+        public void setLoanWithAssociations(LoanWithAssociations loanWithAssociations) {
+            this.loanWithAssociations = loanWithAssociations;
+        }
+
+        public LoanRepaymentTemplate getLoanRepaymentTemplate() {
+            return loanRepaymentTemplate;
+        }
+
+        public void setLoanRepaymentTemplate(LoanRepaymentTemplate loanRepaymentTemplate) {
+            this.loanRepaymentTemplate = loanRepaymentTemplate;
+        }
+    }
 }
