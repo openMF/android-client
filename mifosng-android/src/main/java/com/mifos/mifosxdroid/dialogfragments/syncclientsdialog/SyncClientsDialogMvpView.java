@@ -1,22 +1,25 @@
 package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.accounts.ClientAccounts;
 
 /**
  * Created by Rajan Maurya on 08/08/16.
  */
 public interface SyncClientsDialogMvpView extends MvpView {
 
-    void syncClientInformation();
+    void showUI();
 
-    void showClientAccountsSyncedSuccessfully(ClientAccounts clientAccounts);
+    void showSyncingClient(String clientName);
 
-    void showLoanSyncSuccessfully();
+    void showSyncedFailedClients();
 
-    void showLoanRepaymentSyncSuccessfully();
+    void setMaxSingleSyncClientProgressBar(int total);
 
-    void showClientSyncSuccessfully();
+    void updateSingleSyncClientProgressBar(int i);
+
+    void updateTotalSyncClientProgressBarAndCount(int i);
+
+    int getMaxSingleSyncClientProgressBar();
 
     void showError(int s);
 

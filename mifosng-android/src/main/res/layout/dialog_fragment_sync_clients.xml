@@ -21,70 +21,146 @@
         android:text="@string/sync_clients_full_information"
         />
 
-    <TextView
-        android:id="@+id/tv_client_name"
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:padding="10dp"
-        android:text="@string/name"
-        />
+        android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tv_total_clients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:padding="10dp"
-        android:text="@string/total"
-        />
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent">
 
-    <TextView
-        android:id="@+id/tv_syncing_client"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:padding="10dp"
-        android:text="@string/syncing_client"
-        />
+            <TextView
+                android:id="@+id/client_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/name"
+                />
 
-    <ProgressBar
-        android:id="@+id/pb_sync_client"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="20"
-        android:layout_margin="5dip"/>
+            <TextView
+                android:id="@+id/tv_client_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/name"
+                />
+        </TableRow>
 
-    <TextView
-        android:id="@+id/tv_total_progress"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:padding="10dp"
-        android:text="@string/total_sync_progress"
-        />
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
 
-    <ProgressBar
-        android:id="@+id/pb_total_sync_client"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="20"
-        android:layout_margin="5dip"/>
+            <TextView
+                android:id="@+id/total_clients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total"
+                />
 
-    <TextView
-        android:id="@+id/tv_sync_failed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:padding="10dp"
-        android:text="@string/failed_sync"
-        />
+            <TextView
+                android:id="@+id/tv_total_clients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total"
+                />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/syncing_client"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/syncing_client"
+                />
+
+            <TextView
+                android:id="@+id/tv_syncing_client"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/syncing_client"
+                />
+
+        </TableRow>
+
+        <ProgressBar
+            android:id="@+id/pb_sync_client"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"/>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/total_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total_sync_progress"
+                />
+
+            <TextView
+                android:id="@+id/tv_total_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total_sync_progress"
+                />
+
+        </TableRow>
+
+        <ProgressBar
+            android:id="@+id/pb_total_sync_client"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:indeterminate="false"/>
+
+        <TableRow
+            android:id="@+id/tableRow5"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/sync_failed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/failed_sync"
+                />
+
+            <TextView
+                android:id="@+id/tv_sync_failed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/failed_sync"
+                />
+
+        </TableRow>
+
+    </TableLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

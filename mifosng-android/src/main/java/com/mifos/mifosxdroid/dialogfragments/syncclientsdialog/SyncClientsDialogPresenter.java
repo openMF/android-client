@@ -10,6 +10,7 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.sync.SyncClientInformationStatus;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
+ *
  * Created by Rajan Maurya on 08/08/16.
  */
 public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogMvpView> {
@@ -36,9 +38,11 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     private List<Client> mClientList, mFailedSyncClient;
 
+    private List<LoanAccount> mLoanAccountList;
+
     private SyncClientInformationStatus mSyncClientInformationStatus;
 
-    private int mClientSyncIndex, mLoanSyncIndex, mLoanRepaymentSyncIndex = 0;
+    private int mClientSyncIndex, mLoanAndRepaymentSyncIndex = 0;
 
     @Inject
     public SyncClientsDialogPresenter(DataManagerClient dataManagerClient,
@@ -46,6 +50,10 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         mDataManagerClient = dataManagerClient;
         mDataManagerLoan = dataManagerLoan;
         mSubscriptions = new CompositeSubscription();
+        mClientList = new ArrayList<>();
+        mFailedSyncClient = new ArrayList<>();
+        mLoanAccountList = new ArrayList<>();
+        mSyncClientInformationStatus = new SyncClientInformationStatus();
 
     }
 
@@ -60,6 +68,37 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         mSubscriptions.unsubscribe();
     }
 
+    /**
+     * This Method Start Syncing Clients. Start Syncing the Client Accounts.
+     *
+     * @param clients Selected Clients For Syncing
+     */
+    public void startSyncingClients(List<Client> clients) {
+        mClientList = clients;
+        syncClientAndUpdateUI();
+    }
+
+
+    public void syncClientAndUpdateUI() {
+        updateClientNameAndTotalSyncProgressBarAndCount();
+        //TODO Check the mClientList is not going Array Index bound;
+        if (mClientList.get(mClientSyncIndex) != null) {
+            syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
+        }
+
+    }
+
+    /**
+     * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
+     * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
+     * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
+     * <p/>
+     *
+     * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
+     * onError :
+     *
+     * @param clientId Client Id
+     */
     public void syncClientAccounts(int clientId) {
         checkViewAttached();
         mSubscriptions.add(mDataManagerClient.syncClientAccounts(clientId)
@@ -74,17 +113,51 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showError(R.string.failed_to_sync_client_and_accounts);
+
+                        //Updating UI
+                        mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
+                        mClientSyncIndex = mClientSyncIndex + 1;
+                        syncClientAndUpdateUI();
+                        
                     }
 
                     @Override
                     public void onNext(ClientAccounts clientAccounts) {
-                        getMvpView().showClientAccountsSyncedSuccessfully(clientAccounts);
+                        mSyncClientInformationStatus.setClientAccountsStatus(true);
+                        mLoanAccountList = getActiveLoanAccounts(clientAccounts.getLoanAccounts());
+                        mLoanAndRepaymentSyncIndex = mLoanAccountList.size();
+                        if (!mLoanAccountList.isEmpty()) {
+                            //Sync the Active Loan and LoanRepayment
+                            syncLoanAndLoanRepayment(mLoanAccountList
+                                    .get(mLoanAndRepaymentSyncIndex).getId());
+
+                            //Updating UI
+                            getMvpView().setMaxSingleSyncClientProgressBar
+                                    (mLoanAndRepaymentSyncIndex + 1);
+
+
+                        } else {
+                            // If LoanAccounts is null then sync Client to Database
+                            getMvpView().setMaxSingleSyncClientProgressBar(1);
+                            syncClient(mClientList.get(mClientSyncIndex));
+                        }
+
                     }
                 })
 
         );
     }
 
+
+    /**
+     * This Method Syncing the Client's Loans and their LoanRepayment. This is the Observable.zip
+     * In Which two request is going to server Loans and LoanRepayment and This request will not
+     * complete till that both request successfully got response (200 OK). In Which one will fail
+     * then response will come in onError. and If both request is 200 response then response will
+     * come in onNext.
+     *
+     * @param loanId Loan Id
+     */
     public void syncLoanAndLoanRepayment(int loanId) {
         checkViewAttached();
         mSubscriptions.add(Observable.zip(
@@ -121,6 +194,13 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         );
     }
 
+
+    /**
+     * This Method Saving the Clients to Database, If their Accounts, Loan and LoanRepayment
+     * saved successfully to Synced.
+     *
+     * @param client
+     */
     public void syncClient(Client client) {
         checkViewAttached();
         mSubscriptions.add(mDataManagerClient.syncClientInDatabase(client)
@@ -139,7 +219,9 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onNext(Client client) {
-                        getMvpView().showClientSyncSuccessfully();
+                        int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
+                        getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
+                        syncClientAndUpdateUI();
                     }
                 })
         );
@@ -164,48 +246,19 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         return loanAccounts;
     }
 
-    public void syncLoanAndLoanRepayment(final List<LoanAccount> loanAccounts) {
-        Observable.from(loanAccounts)
-                .flatMap(new Func1<LoanAccount, Observable<Integer>>() {
-                    @Override
-                    public Observable<Integer> call(LoanAccount loanAccount) {
-                        return Observable.just(loanAccount.getId());
-                    }
-                })
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer loanId) {
-                       syncLoanAndLoanRepayment(loanAccounts);
-                    }
-                });
-    }
-
 
     public Boolean isClientInformationSync(SyncClientInformationStatus
                                                    syncClientInformationStatus) {
         return syncClientInformationStatus.getSyncClientInformationStatus();
     }
 
-
-    public class LoanAndLoanRepayment {
-
-        LoanWithAssociations loanWithAssociations;
-        LoanRepaymentTemplate loanRepaymentTemplate;
-
-        public LoanWithAssociations getLoanWithAssociations() {
-            return loanWithAssociations;
-        }
-
-        public void setLoanWithAssociations(LoanWithAssociations loanWithAssociations) {
-            this.loanWithAssociations = loanWithAssociations;
-        }
-
-        public LoanRepaymentTemplate getLoanRepaymentTemplate() {
-            return loanRepaymentTemplate;
-        }
-
-        public void setLoanRepaymentTemplate(LoanRepaymentTemplate loanRepaymentTemplate) {
-            this.loanRepaymentTemplate = loanRepaymentTemplate;
-        }
+    public void updateClientNameAndTotalSyncProgressBarAndCount() {
+        String clientName = mClientList.get(mClientSyncIndex).getFirstname() +
+                mClientList.get(mClientSyncIndex).getLastname();
+        getMvpView().showSyncingClient(clientName);
+        getMvpView().updateTotalSyncClientProgressBarAndCount(mClientSyncIndex);
     }
+
+
+
 }

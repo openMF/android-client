@@ -89,6 +89,10 @@
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
     <string name="hide">Hide</string>
+    <string name="colon">" : "</string>
+    <string name="backspace_slash">\</string>
+    <string name="slash">/</string>
+    <string name="space">" "</string>
     <!-- General Terms End Here -->
 
 

@@ -4,20 +4,16 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.accounts.loan.LoanAccount;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.sync.SyncClientInformationStatus;
 import com.mifos.utils.Constants;
 
 import java.util.ArrayList;
@@ -67,11 +63,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     private View rootView;
 
-    private List<Client> mClients;
-
-    private SyncClientInformationStatus mSyncClientInformationStatus;
-
-    private int mClientSyncIndex, mLoanSyncIndex, mLoanRepaymentSyncIndex  = 0;
+    private List<Client> mClientList;
 
 
     public static SyncClientsDialogFragment newInstance(List<Client> client) {
@@ -86,7 +78,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
-            mClients = getArguments().getParcelableArrayList(Constants.CLIENT);
+            mClientList = getArguments().getParcelableArrayList(Constants.CLIENT);
         super.onCreate(savedInstanceState);
     }
 
@@ -96,11 +88,12 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         rootView = inflater.inflate(R.layout.dialog_fragment_sync_clients, container, false);
         ButterKnife.bind(this, rootView);
         mSyncClientsDialogPresenter.attachView(this);
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        //Sync Client Account
-        if (!mClients.isEmpty()) {
-            mSyncClientsDialogPresenter.syncClientAccounts(mClients.get(mClientSyncIndex).getId());
+        showUI();
+
+        //Start Syncing Clients
+        if (!mClientList.isEmpty()) {
+            mSyncClientsDialogPresenter.startSyncingClients(mClientList);
         }
 
         return rootView;
@@ -116,70 +109,52 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         getDialog().hide();
     }
 
-    /**
-     *
-     */
+
     @Override
-    public void syncClientInformation() {
-        mClientSyncIndex = mClientSyncIndex + 1;
-        mLoanRepaymentSyncIndex = 0;
-        mLoanSyncIndex = 0;
-        if (mClients.size() != mClientSyncIndex) {
-            mSyncClientsDialogPresenter.syncClientAccounts(mClients.get(mClientSyncIndex).getId());
-        } else {
-            Log.d(LOG_TAG, getActivity().getResources().getString(R.string.nothing_to_sync));
-        }
+    public void showUI() {
+        pb_total_sync_client.setMax(mClientList.size());
+        String total_clients = mClientList.size() + getResources().getString(R.string.space) +
+                getResources().getString(R.string.clients);
+        tv_total_clients.setText(total_clients);
     }
 
     @Override
-    public void showClientAccountsSyncedSuccessfully(ClientAccounts clientAccounts) {
-        mSyncClientInformationStatus.setClientAccountsStatus(true);
-        List<LoanAccount> loanAccounts = mSyncClientsDialogPresenter
-                .getActiveLoanAccounts(clientAccounts.getLoanAccounts());
-        if (!loanAccounts.isEmpty()) {
-            mLoanSyncIndex = loanAccounts.size();
-            mLoanRepaymentSyncIndex = loanAccounts.size();
-            mSyncClientsDialogPresenter.syncLoanAndLoanRepayment(loanAccounts);
-        }
+    public void showSyncingClient(String clientName) {
+        tv_syncing_client.setText(clientName);
+        tv_syncing_client_name.setText(clientName);
     }
 
     @Override
-    public void showLoanSyncSuccessfully() {
-        mLoanSyncIndex = mLoanSyncIndex - 1;
-        if (mLoanSyncIndex == 0) {
-            mSyncClientInformationStatus.setLoanAccountSummaryStatus(true);
-        }
+    public void showSyncedFailedClients() {
 
-        if (mLoanSyncIndex == 0 && mLoanRepaymentSyncIndex == 0) {
-            mClients.get(mClientSyncIndex).setSync(true);
-            mSyncClientsDialogPresenter.syncClient(mClients.get(mClientSyncIndex));
-        }
     }
 
     @Override
-    public void showLoanRepaymentSyncSuccessfully() {
-        mLoanRepaymentSyncIndex = mLoanRepaymentSyncIndex - 1;
-        if (mLoanRepaymentSyncIndex == 0) {
-            mSyncClientInformationStatus.setLoanRepaymentTemplateStatus(true);
-        }
-
-        if (mLoanSyncIndex == 0 && mLoanRepaymentSyncIndex == 0) {
-            mClients.get(mClientSyncIndex).setSync(true);
-            mSyncClientsDialogPresenter.syncClient(mClients.get(mClientSyncIndex));
-        }
+    public void setMaxSingleSyncClientProgressBar(int total) {
+        pb_syncing_client.setMax(total);
     }
 
     @Override
-    public void showClientSyncSuccessfully() {
-        mSyncClientInformationStatus.setClientStatus(true);
-        if (mSyncClientsDialogPresenter.isClientInformationSync(mSyncClientInformationStatus)) {
-            syncClientInformation();
-        }
+    public void updateSingleSyncClientProgressBar(int count) {
+        pb_syncing_client.setProgress(count);
+    }
+
+    @Override
+    public void updateTotalSyncClientProgressBarAndCount(int count) {
+        pb_total_sync_client.setProgress(count);
+        String total_sync_count = getResources().getString(R.string.space)+ count + getResources()
+                .getString(R.string.slash) + mClientList.size();
+        tv_total_progress.setText(total_sync_count);
+    }
+
+    @Override
+    public int getMaxSingleSyncClientProgressBar() {
+        return pb_syncing_client.getMax();
     }
 
     @Override
     public void showError(int s) {
-
+        Toaster.show(rootView, s);
     }
 
     @Override
