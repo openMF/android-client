@@ -154,6 +154,11 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     }
 
     @Override
+    public void showNetworkIsNotAvailable() {
+        Toaster.show(rootView, getResources().getString(R.string.error_network_not_available));
+    }
+
+    @Override
     public void showError(int s) {
         Toaster.show(rootView, s);
     }

@@ -1,15 +1,19 @@
 package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog;
 
+import android.content.Context;
+
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
+import com.mifos.utils.Network;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,23 +37,26 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     private final DataManagerClient mDataManagerClient;
     private final DataManagerLoan mDataManagerLoan;
+
     private CompositeSubscription mSubscriptions;
 
     private List<Client> mClientList, mFailedSyncClient;
-
     private List<LoanAccount> mLoanAccountList;
 
     private int mClientSyncIndex, mLoanAndRepaymentSyncIndex = 0;
 
+    private Context mContext;
     @Inject
     public SyncClientsDialogPresenter(DataManagerClient dataManagerClient,
-                                      DataManagerLoan dataManagerLoan) {
+                                      DataManagerLoan dataManagerLoan,
+                                      @ApplicationContext Context context) {
         mDataManagerClient = dataManagerClient;
         mDataManagerLoan = dataManagerLoan;
         mSubscriptions = new CompositeSubscription();
         mClientList = new ArrayList<>();
         mFailedSyncClient = new ArrayList<>();
         mLoanAccountList = new ArrayList<>();
+        mContext = context;
     }
 
     @Override
@@ -77,8 +84,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     public void syncClientAndUpdateUI() {
         mLoanAndRepaymentSyncIndex = 0;
         updateClientNameAndTotalSyncProgressBarAndCount();
-        if (mClientSyncIndex < mClientList.size()) {
-            syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
+        if (mClientSyncIndex < mClientList.size() && Network.isOnline(mContext)) {
+                syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
         }
 
     }

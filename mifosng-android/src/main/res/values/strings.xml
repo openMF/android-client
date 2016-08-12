@@ -264,6 +264,7 @@
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
     <string name="error_select_transactionProcessingStrategy">Please Select Transaction Processing Strategy</string>
     <string name="error_fix_before_sync">Please Fix the Error before sync</string>
+    <string name="error_network_not_available">Network Not Available</string>
 
     <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
     <string name="loan_purpose">Please Select a the Loan Purpose</string>

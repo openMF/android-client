@@ -21,6 +21,8 @@ public interface SyncClientsDialogMvpView extends MvpView {
 
     int getMaxSingleSyncClientProgressBar();
 
+    void showNetworkIsNotAvailable();
+
     void showError(int s);
 
 }
