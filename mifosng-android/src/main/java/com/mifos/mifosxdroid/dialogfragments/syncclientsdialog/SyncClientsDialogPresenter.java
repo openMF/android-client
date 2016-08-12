@@ -75,8 +75,9 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
 
     public void syncClientAndUpdateUI() {
+        mLoanAndRepaymentSyncIndex = 0;
         updateClientNameAndTotalSyncProgressBarAndCount();
-        if (mClientSyncIndex <= mClientList.size()) {
+        if (mClientSyncIndex < mClientList.size()) {
             syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
         }
 
@@ -181,7 +182,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
                         getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
                         mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
-                        if (mLoanAndRepaymentSyncIndex <=  mLoanAccountList.size()) {
+                        if (mLoanAndRepaymentSyncIndex <  mLoanAccountList.size()) {
                             syncLoanAndLoanRepayment(mLoanAccountList
                                     .get(mLoanAndRepaymentSyncIndex).getId());
                         } else {
