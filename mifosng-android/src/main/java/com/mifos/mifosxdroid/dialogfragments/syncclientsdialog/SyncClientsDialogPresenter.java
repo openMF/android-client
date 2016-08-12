@@ -8,7 +8,6 @@ import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.sync.SyncClientInformationStatus;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
 
@@ -40,8 +39,6 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     private List<LoanAccount> mLoanAccountList;
 
-    private SyncClientInformationStatus mSyncClientInformationStatus;
-
     private int mClientSyncIndex, mLoanAndRepaymentSyncIndex = 0;
 
     @Inject
@@ -53,8 +50,6 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         mClientList = new ArrayList<>();
         mFailedSyncClient = new ArrayList<>();
         mLoanAccountList = new ArrayList<>();
-        mSyncClientInformationStatus = new SyncClientInformationStatus();
-
     }
 
     @Override
@@ -111,7 +106,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showError(R.string.failed_to_sync_client_and_accounts);
+                        getMvpView().showError(R.string.failed_to_sync_clientaccounts);
 
                         //Updating UI
                         mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
@@ -122,9 +117,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onNext(ClientAccounts clientAccounts) {
-                        mSyncClientInformationStatus.setClientAccountsStatus(true);
                         mLoanAccountList = getActiveLoanAccounts(clientAccounts.getLoanAccounts());
-                        mLoanAndRepaymentSyncIndex = mLoanAccountList.size();
                         if (!mLoanAccountList.isEmpty()) {
                             //Sync the Active Loan and LoanRepayment
                             syncLoanAndLoanRepayment(mLoanAccountList
@@ -134,16 +127,13 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                             getMvpView().setMaxSingleSyncClientProgressBar
                                     (mLoanAndRepaymentSyncIndex + 1);
 
-
                         } else {
                             // If LoanAccounts is null then sync Client to Database
                             getMvpView().setMaxSingleSyncClientProgressBar(1);
                             syncClient(mClientList.get(mClientSyncIndex));
                         }
-
                     }
                 })
-
         );
     }
 
@@ -197,7 +187,6 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         } else {
                             syncClient(mClientList.get(mClientSyncIndex));
                         }
-
                     }
                 })
         );
@@ -231,6 +220,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public void onNext(Client client) {
                         int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
                         getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
+                        mClientSyncIndex = mClientSyncIndex + 1;
                         syncClientAndUpdateUI();
                     }
                 })
@@ -254,12 +244,6 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     }
                 });
         return loanAccounts;
-    }
-
-
-    public Boolean isClientInformationSync(SyncClientInformationStatus
-                                                   syncClientInformationStatus) {
-        return syncClientInformationStatus.getSyncClientInformationStatus();
     }
 
     public void updateClientNameAndTotalSyncProgressBarAndCount() {
