@@ -81,8 +81,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     public void syncClientAndUpdateUI() {
         updateClientNameAndTotalSyncProgressBarAndCount();
-        //TODO Check the mClientList is not going Array Index bound;
-        if (mClientList.get(mClientSyncIndex) != null) {
+        if (mClientSyncIndex <= mClientList.size()) {
             syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
         }
 
@@ -183,11 +182,21 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onError(Throwable e) {
-
+                        int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
+                        getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
+                        syncClientAndUpdateUI();
                     }
 
                     @Override
                     public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
+                        getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
+                        mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
+                        if (mLoanAndRepaymentSyncIndex <=  mLoanAccountList.size()) {
+                            syncLoanAndLoanRepayment(mLoanAccountList
+                                    .get(mLoanAndRepaymentSyncIndex).getId());
+                        } else {
+                            syncClient(mClientList.get(mClientSyncIndex));
+                        }
 
                     }
                 })
@@ -203,6 +212,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      */
     public void syncClient(Client client) {
         checkViewAttached();
+        client.setSync(true);
         mSubscriptions.add(mDataManagerClient.syncClientInDatabase(client)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -258,7 +268,5 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         getMvpView().showSyncingClient(clientName);
         getMvpView().updateTotalSyncClientProgressBarAndCount(mClientSyncIndex);
     }
-
-
 
 }
