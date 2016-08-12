@@ -11,7 +11,7 @@ public interface SyncClientsDialogMvpView extends MvpView {
 
     void showSyncingClient(String clientName);
 
-    void showSyncedFailedClients();
+    void showSyncedFailedClients(int failedCount);
 
     void setMaxSingleSyncClientProgressBar(int total);
 

@@ -116,6 +116,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         String total_clients = mClientList.size() + getResources().getString(R.string.space) +
                 getResources().getString(R.string.clients);
         tv_total_clients.setText(total_clients);
+        tv_sync_failed.setText(String.valueOf(0));
     }
 
     @Override
@@ -125,8 +126,8 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     }
 
     @Override
-    public void showSyncedFailedClients() {
-
+    public void showSyncedFailedClients(int failedCount) {
+        tv_sync_failed.setText(String.valueOf(failedCount));
     }
 
     @Override

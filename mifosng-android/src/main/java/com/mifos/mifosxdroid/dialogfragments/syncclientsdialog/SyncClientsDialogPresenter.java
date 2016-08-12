@@ -111,6 +111,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                         //Updating UI
                         mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
+                        getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
                         mClientSyncIndex = mClientSyncIndex + 1;
                         syncClientAndUpdateUI();
                         
@@ -175,6 +176,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
                         getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
                         mClientSyncIndex = mClientSyncIndex + 1;
+                        mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
+                        getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
                         syncClientAndUpdateUI();
                     }
 

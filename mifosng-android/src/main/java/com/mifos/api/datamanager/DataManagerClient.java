@@ -165,7 +165,7 @@ public class DataManagerClient {
      * There can any problem during updating the client image like Network error.
      *
      * @param clientId Client ID
-     * @return ResposeBody is the Retrofit 2 response
+     * @return ResponseBody is the Retrofit 2 response
      */
     public Observable<ResponseBody> deleteClientImage(int clientId) {
         return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
@@ -179,7 +179,7 @@ public class DataManagerClient {
      *
      * @param id  Client Id
      * @param file MultipartBody of the Image file
-     * @return ResposeBody is the Retrofit 2 response
+     * @return ResponseBody is the Retrofit 2 response
      */
     public Observable<ResponseBody> uploadClientImage(int id, MultipartBody.Part file) {
         return mBaseApiManager.getClientsApi().uploadClientImage(id, file);
