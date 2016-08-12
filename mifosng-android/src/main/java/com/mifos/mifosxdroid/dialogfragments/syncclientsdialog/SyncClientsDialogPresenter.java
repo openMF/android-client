@@ -125,8 +125,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                                     .get(mLoanAndRepaymentSyncIndex).getId());
 
                             //Updating UI
-                            getMvpView().setMaxSingleSyncClientProgressBar
-                                    (mLoanAndRepaymentSyncIndex + 1);
+                            getMvpView().setMaxSingleSyncClientProgressBar(mLoanAccountList.size());
 
                         } else {
                             // If LoanAccounts is null then sync Client to Database
@@ -175,13 +174,14 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public void onError(Throwable e) {
                         int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
                         getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
+                        mClientSyncIndex = mClientSyncIndex + 1;
                         syncClientAndUpdateUI();
                     }
 
                     @Override
                     public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
-                        getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
                         mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
+                        getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
                         if (mLoanAndRepaymentSyncIndex <  mLoanAccountList.size()) {
                             syncLoanAndLoanRepayment(mLoanAccountList
                                     .get(mLoanAndRepaymentSyncIndex).getId());
