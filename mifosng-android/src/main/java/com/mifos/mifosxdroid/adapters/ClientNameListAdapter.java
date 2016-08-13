@@ -63,9 +63,9 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         if (holder instanceof ViewHolder) {
 
             Client client = getItem(position);
-            ((ViewHolder) holder).tv_clientName.setText(client.getFirstname() + " " + client
-                    .getLastname());
-            ((ViewHolder) holder).tv_clientAccountNumber.setText(client.getAccountNo().toString());
+            String clientName = client.getFirstname() + " " + client.getLastname();
+            ((ViewHolder) holder).tv_clientName.setText(clientName);
+            ((ViewHolder) holder).tv_clientAccountNumber.setText(client.getAccountNo());
 
             // lazy the  load profile picture
             if (client.isImagePresent()) {
@@ -102,6 +102,7 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
                 ((ViewHolder) holder).iv_userPicture.setImageResource(R.drawable.ic_dp_placeholder);
             }
 
+            //Changing the Color of Selected Clients
             ((ViewHolder) holder).view_selectedOverlay
                     .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
         }

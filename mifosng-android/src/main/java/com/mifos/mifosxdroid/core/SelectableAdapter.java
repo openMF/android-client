@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 	@SuppressWarnings("unused")
-	private static final String TAG = SelectableAdapter.class.getSimpleName();
+	private static final String LOG_TAG = SelectableAdapter.class.getSimpleName();
 
 	private SparseBooleanArray selectedItems;
 

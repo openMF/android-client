@@ -9,9 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -71,25 +74,31 @@ public class ClientListFragment extends MifosBaseFragment
 
     private View rootView;
     private List<Client> clientList = new ArrayList<>();
+    private List<Client> selectedClients = new ArrayList<>();
     private int limit = 100;
     private int mApiRestCounter;
+    private ActionModeCallback actionModeCallback = new ActionModeCallback();
+    private ActionMode actionMode;
 
     @Override
     public void onItemClick(View childView, int position) {
-        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
-        clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
-        startActivity(clientActivityIntent);
+        if (actionMode != null) {
+            toggleSelection(position);
+        } else {
+            Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
+            clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
+            startActivity(clientActivityIntent);
+        }
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
-        SyncClientsDialogFragment syncClientsDialogFragment =
-                SyncClientsDialogFragment.newInstance(clientList);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                .beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);
-        syncClientsDialogFragment.show(fragmentTransaction,
-                getResources().getString(R.string.sync_clients));
+        if (actionMode == null) {
+            actionMode = ((MifosBaseActivity) getActivity()).startSupportActionMode
+                    (actionModeCallback);
+        }
+
+        toggleSelection(position);
     }
 
     public static ClientListFragment newInstance(List<Client> clientList) {
@@ -260,5 +269,67 @@ public class ClientListFragment extends MifosBaseFragment
         super.onDestroyView();
         hideMifosProgressBar();
         mClientListPresenter.detachView();
+    }
+
+    /**
+     * Toggle the selection state of an item.
+     *
+     * If the item was the last one in the selection and is unselected, the selection is stopped.
+     * Note that the selection must already be started (actionMode must not be null).
+     *
+     * @param position Position of the item to toggle the selection state
+     */
+    private void toggleSelection(int position) {
+        clientNameListAdapter.toggleSelection(position);
+        int count = clientNameListAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+    private class ActionModeCallback implements ActionMode.Callback {
+        @SuppressWarnings("unused")
+        private final String LOG_TAG = ActionModeCallback.class.getSimpleName();
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate (R.menu.menu_sync, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_sync:
+                    SyncClientsDialogFragment syncClientsDialogFragment =
+                            SyncClientsDialogFragment.newInstance(clientList);
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                            .beginTransaction();
+                    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);
+                    syncClientsDialogFragment.setCancelable(false);
+                    syncClientsDialogFragment.show(fragmentTransaction,
+                            getResources().getString(R.string.sync_clients));
+                    mode.finish();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            clientNameListAdapter.clearSelection();
+            actionMode = null;
+        }
     }
 }
