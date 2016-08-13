@@ -97,7 +97,6 @@ public class ClientListFragment extends MifosBaseFragment
             actionMode = ((MifosBaseActivity) getActivity()).startSupportActionMode
                     (actionModeCallback);
         }
-
         toggleSelection(position);
     }
 
@@ -310,8 +309,14 @@ public class ClientListFragment extends MifosBaseFragment
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_sync:
+
+                    selectedClients.clear();
+                    for (Integer position : clientNameListAdapter.getSelectedItems()) {
+                        selectedClients.add(clientList.get(position));
+                    }
+
                     SyncClientsDialogFragment syncClientsDialogFragment =
-                            SyncClientsDialogFragment.newInstance(clientList);
+                            SyncClientsDialogFragment.newInstance(selectedClients);
                     FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                             .beginTransaction();
                     fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);
