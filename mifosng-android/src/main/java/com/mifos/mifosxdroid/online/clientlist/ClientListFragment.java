@@ -22,8 +22,8 @@ import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner.OnItemClickListener;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
@@ -125,7 +125,7 @@ public class ClientListFragment extends MifosBaseFragment
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_clients.setLayoutManager(mLayoutManager);
-        rv_clients.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_clients.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_clients.setHasFixedSize(true);
 
         mApiRestCounter = 1;

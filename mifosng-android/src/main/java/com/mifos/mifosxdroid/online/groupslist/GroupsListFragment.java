@@ -20,7 +20,7 @@ import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.objects.client.Page;
@@ -43,7 +43,7 @@ import butterknife.OnClick;
  * =limit_value</>
  */
 public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
-        RecyclerItemClickListner.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener {
 
 
     @BindView(R.id.rv_groups)
@@ -120,7 +120,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_groups.setLayoutManager(mLayoutManager);
-        rv_groups.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_groups.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_groups.setHasFixedSize(true);
 
         mApiRestCounter = 1;

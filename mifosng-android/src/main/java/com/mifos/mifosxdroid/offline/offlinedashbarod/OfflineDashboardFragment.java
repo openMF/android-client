@@ -18,7 +18,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivity;
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsActivity;
@@ -58,7 +58,7 @@ import butterknife.ButterKnife;
  * Created by Rajan Maurya on 20/07/16.
  */
 public class OfflineDashboardFragment extends MifosBaseFragment implements
-        OfflineDashboardMvpView, RecyclerItemClickListner.OnItemClickListener {
+        OfflineDashboardMvpView, RecyclerItemClickListener.OnItemClickListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
@@ -135,7 +135,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_offline_dashboard.setLayoutManager(mLayoutManager);
         rv_offline_dashboard.setHasFixedSize(true);
-        rv_offline_dashboard.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(),
+        rv_offline_dashboard.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 this));
         rv_offline_dashboard.setItemAnimator(new DefaultItemAnimator());
         rv_offline_dashboard.addItemDecoration(new ItemOffsetDecoration(getActivity(),
