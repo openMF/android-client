@@ -20,6 +20,7 @@ import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.SelectableAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.PrefManager;
 
@@ -31,10 +32,10 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 27/02/14.
  */
-public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHolder> {
 
     LayoutInflater layoutInflater;
-    List<Client> pageItems;
+    private List<Client> pageItems;
     private Context mContext;
 
     public ClientNameListAdapter(Context context, List<Client> pageItems) {
@@ -71,7 +72,6 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 // make the image url
                 String url = PrefManager.getInstanceUrl()
-                        + "/"
                         + "clients/"
                         + client.getId()
                         + "/images?maxHeight=120&maxWidth=120";
@@ -101,6 +101,9 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             } else {
                 ((ViewHolder) holder).iv_userPicture.setImageResource(R.drawable.ic_dp_placeholder);
             }
+
+            ((ViewHolder) holder).view_selectedOverlay
+                    .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
@@ -116,12 +119,18 @@ public class ClientNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.tv_clientName)
         TextView tv_clientName;
+
         @BindView(R.id.tv_clientAccountNumber)
         TextView tv_clientAccountNumber;
+
         @BindView(R.id.iv_user_picture)
         ImageView iv_userPicture;
+
+        @BindView(R.id.selected_overlay)
+        View view_selectedOverlay;
 
         public ViewHolder(View v) {
             super(v);
