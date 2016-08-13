@@ -285,7 +285,8 @@ public class ClientListFragment extends MifosBaseFragment
         if (count == 0) {
             actionMode.finish();
         } else {
-            actionMode.setTitle(String.valueOf(count));
+            actionMode.setTitle(String.valueOf(count) + getResources().getString(R.string.space)
+                    + getResources().getString(R.string.clients));
             actionMode.invalidate();
         }
     }
