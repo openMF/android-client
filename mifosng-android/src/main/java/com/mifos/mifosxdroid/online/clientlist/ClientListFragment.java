@@ -73,11 +73,11 @@ public class ClientListFragment extends MifosBaseFragment
     ClientListPresenter mClientListPresenter;
 
     private View rootView;
-    private List<Client> clientList = new ArrayList<>();
-    private List<Client> selectedClients = new ArrayList<>();
+    private List<Client> clientList;
+    private List<Client> selectedClients;
     private int limit = 100;
     private int mApiRestCounter;
-    private ActionModeCallback actionModeCallback = new ActionModeCallback();
+    private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
 
     @Override
@@ -102,8 +102,9 @@ public class ClientListFragment extends MifosBaseFragment
 
     public static ClientListFragment newInstance(List<Client> clientList) {
         ClientListFragment clientListFragment = new ClientListFragment();
-        if (clientList != null)
+        if (clientList != null) {
             clientListFragment.setClientList(clientList);
+        }
         return clientListFragment;
     }
 
@@ -118,6 +119,9 @@ public class ClientListFragment extends MifosBaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        clientList = new ArrayList<>();
+        selectedClients = new ArrayList<>();
+        actionModeCallback = new ActionModeCallback();
     }
 
     @Override
@@ -151,6 +155,8 @@ public class ClientListFragment extends MifosBaseFragment
                 mApiRestCounter = 1;
 
                 mClientListPresenter.loadClients(true, 0, limit);
+                clientNameListAdapter.clearSelection();
+                actionMode = null;
 
                 if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
