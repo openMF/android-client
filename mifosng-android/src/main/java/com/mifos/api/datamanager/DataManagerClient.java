@@ -81,6 +81,17 @@ public class DataManagerClient {
 
 
     /**
+     * This Method Request to the DatabaseHelperClient and DatabaseHelperClient Read the All
+     * clients from Client_Table and give the response Page of List of Client
+     *
+     * @return Page of Client List
+     */
+    public Observable<Page<Client>> getAllDatabaseClients() {
+        return mDatabaseHelperClient.readAllClients();
+    }
+
+
+    /**
      * This Method
      *
      * @param clientId for Query in database or REST API request.

@@ -9,9 +9,9 @@ import com.mifos.utils.EspressoIdlingResource;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 6/6/16.
@@ -22,11 +22,15 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
 
     private final DataManagerClient mDataManagerClient;
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscriptions;
+
+    private Page<Client> databaseClientPage;
 
     @Inject
     public ClientListPresenter(DataManagerClient dataManagerClient) {
         mDataManagerClient = dataManagerClient;
+        mSubscriptions = new CompositeSubscription();
+        databaseClientPage = new Page<>();
     }
 
     @Override
@@ -37,7 +41,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
 
@@ -50,8 +54,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         EspressoIdlingResource.increment(); // App is busy until further notice.
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManagerClient.getAllClients(paged, offset, limit)
+        mSubscriptions.add(mDataManagerClient.getAllClients(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Client>>() {
@@ -71,10 +74,55 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                     @Override
                     public void onNext(Page<Client> clientPage) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientList(clientPage);
+                        getMvpView().showClientList(filterClientsAndShowClientsList(clientPage));
+
                         EspressoIdlingResource.decrement(); // App is idle.
                     }
-                });
+                }));
+    }
+
+
+    public void loadDatabaseClients() {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerClient.getAllDatabaseClients()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<Page<Client>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showErrorFetchingClients("Failed to Load Database Clients");
+                    }
+
+                    @Override
+                    public void onNext(Page<Client> clientPage) {
+                        databaseClientPage = clientPage;
+                    }
+                })
+        );
+    }
+
+
+    public Page<Client> filterClientsAndShowClientsList(final Page<Client> clientPage) {
+        if (databaseClientPage.getPageItems().size() != 0) {
+
+            for (int i = 0; i<databaseClientPage.getPageItems().size(); ++i) {
+                for (int j = 0; j<clientPage.getPageItems().size(); ++j) {
+                    if (databaseClientPage.getPageItems().get(i).getId() ==
+                            clientPage.getPageItems().get(j).getId()) {
+
+                        clientPage.getPageItems().get(j).setSync(true);
+                        databaseClientPage.getPageItems().remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+        return clientPage;
     }
 
 }

@@ -142,6 +142,7 @@ public class ClientListFragment extends MifosBaseFragment
 
         mApiRestCounter = 1;
         mClientListPresenter.loadClients(true, 0, limit);
+        mClientListPresenter.loadDatabaseClients();
 
         /**
          * Setting mApiRestCounter to 1 and send Fresh Request to Server
@@ -155,6 +156,7 @@ public class ClientListFragment extends MifosBaseFragment
                 mApiRestCounter = 1;
 
                 mClientListPresenter.loadClients(true, 0, limit);
+                mClientListPresenter.loadDatabaseClients();
                 clientNameListAdapter.clearSelection();
                 actionMode = null;
 
@@ -188,6 +190,7 @@ public class ClientListFragment extends MifosBaseFragment
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
         mClientListPresenter.loadClients(true, 0, limit);
+        mClientListPresenter.loadDatabaseClients();
     }
 
     public void setClientList(List<Client> clientList) {

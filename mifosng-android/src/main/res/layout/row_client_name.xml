@@ -66,10 +66,9 @@
 
         <com.mifos.mifosxdroid.views.CircularImageView
             android:id="@+id/iv_sync_status"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/primary_dark"
             android:gravity="center"
             android:src="@drawable/ic_assignment_turned_in_black_24dp"
             />

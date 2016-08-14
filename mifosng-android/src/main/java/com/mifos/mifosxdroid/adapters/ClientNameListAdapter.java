@@ -107,7 +107,7 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
                     .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
 
             ((ViewHolder) holder).iv_sync_status
-                    .setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+                    .setVisibility(client.isSync() ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
