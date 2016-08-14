@@ -157,8 +157,7 @@ public class ClientListFragment extends MifosBaseFragment
 
                 mClientListPresenter.loadClients(true, 0, limit);
                 mClientListPresenter.loadDatabaseClients();
-                clientNameListAdapter.clearSelection();
-                actionMode = null;
+                actionMode.finish();
 
                 if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
@@ -300,7 +299,8 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     /**
-     *
+     * This ActionModeCallBack Class handling the User Event after the Selection of Clients. Like
+     * Click of Menu Sync Button and finish the ActionMode
      */
     private class ActionModeCallback implements ActionMode.Callback {
         @SuppressWarnings("unused")
@@ -350,3 +350,4 @@ public class ClientListFragment extends MifosBaseFragment
         }
     }
 }
+

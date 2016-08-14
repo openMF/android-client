@@ -82,6 +82,12 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     }
 
 
+    /**
+     * This Method Loading the Client From Database. It request Observable to DataManagerClient
+     * and DataManagerClient Request to DatabaseHelperClient to load the Client List Page from the
+     * Client_Table and As the Client List Page is loaded DataManagerClient gives the Client List
+     * Page after getting response from DatabaseHelperClient
+     */
     public void loadDatabaseClients() {
         checkViewAttached();
         mSubscriptions.add(mDataManagerClient.getAllDatabaseClients()
@@ -107,11 +113,18 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     }
 
 
+    /**
+     * This Method Filtering the Clients Loaded from Server is already sync or not. If yes the
+     * put the client.setSync(true) and view will show those clients as sync already to user
+     *
+     * @param clientPage Client List Page
+     * @return Page<Client>
+     */
     public Page<Client> filterClientsAndShowClientsList(final Page<Client> clientPage) {
         if (databaseClientPage.getPageItems().size() != 0) {
 
-            for (int i = 0; i<databaseClientPage.getPageItems().size(); ++i) {
-                for (int j = 0; j<clientPage.getPageItems().size(); ++j) {
+            for (int i = 0; i < databaseClientPage.getPageItems().size(); ++i) {
+                for (int j = 0; j < clientPage.getPageItems().size(); ++j) {
                     if (databaseClientPage.getPageItems().get(i).getId() ==
                             clientPage.getPageItems().get(j).getId()) {
 
