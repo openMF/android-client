@@ -47,7 +47,7 @@ import butterknife.OnClick;
 
 /**
  * Created by ishankhanna on 09/02/14.
- * <p/>
+ * <p>
  * ClientListFragment Fetching Showing ClientList in RecyclerView from
  * </>demo.openmf.org/fineract-provider/api/v1/clients?paged=true&offset=offset_value&limit
  * =limit_value</>
@@ -286,7 +286,7 @@ public class ClientListFragment extends MifosBaseFragment
 
     /**
      * Toggle the selection state of an item.
-     *
+     * <p>
      * If the item was the last one in the selection and is unselected, the selection is stopped.
      * Note that the selection must already be started (actionMode must not be null).
      *
@@ -314,7 +314,7 @@ public class ClientListFragment extends MifosBaseFragment
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate (R.menu.menu_sync, menu);
+            mode.getMenuInflater().inflate(R.menu.menu_sync, menu);
             return true;
         }
 
@@ -335,8 +335,8 @@ public class ClientListFragment extends MifosBaseFragment
 
                     SyncClientsDialogFragment syncClientsDialogFragment =
                             SyncClientsDialogFragment.newInstance(selectedClients);
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                            .beginTransaction();
+                    FragmentTransaction fragmentTransaction = getActivity()
+                            .getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);
                     syncClientsDialogFragment.setCancelable(false);
                     syncClientsDialogFragment.show(fragmentTransaction,

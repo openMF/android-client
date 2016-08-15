@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- *
  * Created by Rajan Maurya on 08/08/16.
  */
 public class SyncClientsDialogFragment extends DialogFragment implements SyncClientsDialogMvpView {
@@ -160,7 +159,8 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     @Override
     public void updateTotalSyncClientProgressBarAndCount(int count) {
         pb_total_sync_client.setProgress(count);
-        String total_sync_count = getResources().getString(R.string.space)+ count + getResources()
+        String total_sync_count = getResources()
+                .getString(R.string.space) + count + getResources()
                 .getString(R.string.slash) + mClientList.size();
         tv_total_progress.setText(total_sync_count);
     }
