@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.clientidentifiers;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.noncore.Identifier;
 
@@ -60,6 +61,34 @@ public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersM
                     public void onNext(List<Identifier> identifiers) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showClientIdentifiers(identifiers);
+                    }
+                });
+    }
+
+    public void deleteIdentifier(final int clientId, int identifierId, final int position) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscription = mDataManager.deleteIdentifier(clientId, identifierId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<GenericResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        getMvpView().showProgressbar(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError("Failed to delete Identifier");
+                    }
+
+                    @Override
+                    public void onNext(GenericResponse genericResponse) {
+                        getMvpView().identifierDeletedSuccessfully("Successfully deleted"
+                                , position);
+                        getMvpView().showProgressbar(false);
                     }
                 });
     }

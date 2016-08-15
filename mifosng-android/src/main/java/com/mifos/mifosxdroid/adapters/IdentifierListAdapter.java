@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
-import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Identifier;
 
@@ -25,11 +23,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by ishankhanna on 03/07/14.
@@ -49,15 +42,21 @@ public class IdentifierListAdapter extends BaseAdapter {
     DataManager dataManager;
     BaseApiManager baseApiManager;
 
+    private DeleteIdentifierListener mDeleteIdentifierListener;
 
-    public IdentifierListAdapter(Context context, List<Identifier> identifierList, int clientId) {
+    public interface DeleteIdentifierListener {
+        void onClickRemoveIdentifier(int identifierId, int position);
+    }
 
+    public IdentifierListAdapter(Context context, List<Identifier> identifierList, int clientId
+            , DeleteIdentifierListener listener) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
         identifiers = identifierList;
         this.clientId = clientId;
         baseApiManager = new BaseApiManager();
         dataManager = new DataManager(baseApiManager);
+        mDeleteIdentifierListener = listener;
     }
 
     @Override
@@ -76,7 +75,7 @@ public class IdentifierListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
 
         ReusableIdentifierViewHolder reusableIdentifierViewHolder;
         if (view == null) {
@@ -100,28 +99,7 @@ public class IdentifierListAdapter extends BaseAdapter {
                 .OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Observable<GenericResponse> call = dataManager.deleteIdentifier(clientId,
-                        identifier.getId());
-                Subscription subscription = call.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<GenericResponse>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.d(getClass().getSimpleName(), e.getMessage());
-                            }
-
-                            @Override
-                            public void onNext(GenericResponse genericResponse) {
-                                Log.d(LOG_TAG, genericResponse.toString());
-                            }
-                        });
-
+                mDeleteIdentifierListener.onClickRemoveIdentifier(identifier.getId(), i);
             }
         });
 
