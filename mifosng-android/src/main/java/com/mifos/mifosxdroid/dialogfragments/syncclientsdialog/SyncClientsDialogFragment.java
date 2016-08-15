@@ -119,7 +119,11 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     @OnClick(R.id.btn_hide)
     void OnClickHideButton() {
-        hideDialog();
+        if (btn_hide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
+            dismissDialog();
+        } else {
+            hideDialog();
+        }
     }
 
 
