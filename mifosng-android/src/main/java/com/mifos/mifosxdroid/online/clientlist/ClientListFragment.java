@@ -147,8 +147,8 @@ public class ClientListFragment extends MifosBaseFragment
         /**
          * Setting mApiRestCounter to 1 and send Fresh Request to Server
          */
-        swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R
-                .color.orange_light, R.color.red_light);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -157,7 +157,8 @@ public class ClientListFragment extends MifosBaseFragment
 
                 mClientListPresenter.loadClients(true, 0, limit);
                 mClientListPresenter.loadDatabaseClients();
-                actionMode.finish();
+
+                if (actionMode != null) actionMode.finish();
 
                 if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
@@ -226,7 +227,8 @@ public class ClientListFragment extends MifosBaseFragment
             // Clients Available for fetch
             if (clientPage.getPageItems().size() == 0 &&
                     (clientPage.getTotalFilteredRecords() == clientList.size()))
-                Toaster.show(rootView, "No more Center Available");
+                Toaster.show(rootView,
+                        getResources().getString(R.string.no_more_clients_available));
         }
     }
 
@@ -242,7 +244,9 @@ public class ClientListFragment extends MifosBaseFragment
     public void showErrorFetchingClients(String s) {
         if (mApiRestCounter == 1) {
             ll_error.setVisibility(View.VISIBLE);
-            mNoClientText.setText(s + "\n Click to Refresh ");
+            String errorMessage = s + getResources().getString(R.string.new_line) +
+                    getResources().getString(R.string.click_to_refresh);
+            mNoClientText.setText(errorMessage);
         }
 
         Toaster.show(rootView, s);
@@ -276,6 +280,8 @@ public class ClientListFragment extends MifosBaseFragment
         super.onDestroyView();
         hideMifosProgressBar();
         mClientListPresenter.detachView();
+        //As the Fragment Detach Finish the ActionMode
+        if (actionMode != null) actionMode.finish();
     }
 
     /**

@@ -23,6 +23,12 @@ public interface SyncClientsDialogMvpView extends MvpView {
 
     void showNetworkIsNotAvailable();
 
+    void dismissDialog();
+
+    void showDialog();
+
+    void hideDialog();
+
     void showError(int s);
 
 }

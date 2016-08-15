@@ -93,6 +93,7 @@
     <string name="backspace_slash">\</string>
     <string name="slash">/</string>
     <string name="space">" "</string>
+    <string name="new_line">\n</string>
     <!-- General Terms End Here -->
 
 
@@ -203,6 +204,7 @@
     <string name="client_classification">Client Classification</string>
     <string name="interest_comp">Intrest Compounding Period</string>
     <string name="repaidevery">Repaid Every</string>
+    <string name="no_more_clients_available">No more Clients Available</string>
 
     <string name="numberofrepayments">Number of repayments</string>
 
@@ -264,7 +266,7 @@
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
     <string name="error_select_transactionProcessingStrategy">Please Select Transaction Processing Strategy</string>
     <string name="error_fix_before_sync">Please Fix the Error before sync</string>
-    <string name="error_network_not_available">Network Not Available</string>
+    <string name="error_network_not_available">Network is not Available</string>
 
     <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
     <string name="loan_purpose">Please Select a the Loan Purpose</string>
@@ -334,6 +336,7 @@
     <string name="no_repayment_to_sync">There is No LoanRepayment to Sync</string>
     <string name="no_group_payload_to_sync">There is No Group Payload to Sync</string>
     <string name="no_client_payload_to_sync">There is No Client Payload to Sync</string>
+    <string name="no_more_clients_to_sync">No More Clients To Sync</string>
     <string name="all_repayment_synced">All LoanRepayment have been Sync</string>
     <string name="all_groups_synced">All Groups have been Sync</string>
     <string name="all_clients_synced">All Clients have been Sync</string>

@@ -77,17 +77,39 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      */
     public void startSyncingClients(List<Client> clients) {
         mClientList = clients;
-        syncClientAndUpdateUI();
+        checkNetworkConnectionAndSyncClient();
     }
 
 
     public void syncClientAndUpdateUI() {
         mLoanAndRepaymentSyncIndex = 0;
         updateClientNameAndTotalSyncProgressBarAndCount();
-        if (mClientSyncIndex < mClientList.size() && Network.isOnline(mContext)) {
-                syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
+        if (mClientSyncIndex < mClientList.size()) {
+            syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
+        } else {
+            getMvpView().showError(R.string.no_more_clients_to_sync);
+            getMvpView().dismissDialog();
         }
 
+    }
+
+    public void checkNetworkConnectionAndSyncClient() {
+        if (Network.isOnline(mContext)) {
+            syncClientAndUpdateUI();
+        } else {
+            getMvpView().showNetworkIsNotAvailable();
+            getMvpView().dismissDialog();
+        }
+    }
+
+    public void checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
+        if (Network.isOnline(mContext)) {
+            syncLoanAndLoanRepayment(mLoanAccountList
+                    .get(mLoanAndRepaymentSyncIndex).getId());
+        } else {
+            getMvpView().showNetworkIsNotAvailable();
+            getMvpView().dismissDialog();
+        }
     }
 
     /**
@@ -120,7 +142,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
                         getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
                         mClientSyncIndex = mClientSyncIndex + 1;
-                        syncClientAndUpdateUI();
+                        checkNetworkConnectionAndSyncClient();
                         
                     }
 
@@ -129,8 +151,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         mLoanAccountList = getActiveLoanAccounts(clientAccounts.getLoanAccounts());
                         if (!mLoanAccountList.isEmpty()) {
                             //Sync the Active Loan and LoanRepayment
-                            syncLoanAndLoanRepayment(mLoanAccountList
-                                    .get(mLoanAndRepaymentSyncIndex).getId());
+                            checkNetworkConnectionAndSyncLoanAndLoanRepayment();
 
                             //Updating UI
                             getMvpView().setMaxSingleSyncClientProgressBar(mLoanAccountList.size());
@@ -185,7 +206,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         mClientSyncIndex = mClientSyncIndex + 1;
                         mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
                         getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
-                        syncClientAndUpdateUI();
+                        checkNetworkConnectionAndSyncClient();
                     }
 
                     @Override
@@ -193,8 +214,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
                         getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
                         if (mLoanAndRepaymentSyncIndex <  mLoanAccountList.size()) {
-                            syncLoanAndLoanRepayment(mLoanAccountList
-                                    .get(mLoanAndRepaymentSyncIndex).getId());
+                            checkNetworkConnectionAndSyncLoanAndLoanRepayment();
                         } else {
                             syncClient(mClientList.get(mClientSyncIndex));
                         }
@@ -232,7 +252,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
                         getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
                         mClientSyncIndex = mClientSyncIndex + 1;
-                        syncClientAndUpdateUI();
+                        checkNetworkConnectionAndSyncClient();
                     }
                 })
         );

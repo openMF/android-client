@@ -9,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
+import com.mifos.utils.Network;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     @Inject
     SyncClientsDialogPresenter mSyncClientsDialogPresenter;
 
-    private View rootView;
+    View rootView;
 
     private List<Client> mClientList;
 
@@ -77,8 +79,9 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             mClientList = getArguments().getParcelableArrayList(Constants.CLIENT);
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -92,8 +95,11 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         showUI();
 
         //Start Syncing Clients
-        if (!mClientList.isEmpty()) {
+        if (Network.isOnline(getActivity())) {
             mSyncClientsDialogPresenter.startSyncingClients(mClientList);
+        } else {
+            showNetworkIsNotAvailable();
+            dismissDialog();
         }
 
         return rootView;
@@ -101,12 +107,12 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     @OnClick(R.id.btn_cancel)
     void OnClickCancelButton() {
-        getDialog().dismiss();
+        dismissDialog();
     }
 
     @OnClick(R.id.btn_hide)
     void OnClickHideButton() {
-        getDialog().hide();
+        hideDialog();
     }
 
 
@@ -155,7 +161,23 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     @Override
     public void showNetworkIsNotAvailable() {
-        Toaster.show(rootView, getResources().getString(R.string.error_network_not_available));
+        Toast.makeText(getActivity(), getResources().getString(R.string
+                .error_network_not_available), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void dismissDialog() {
+        getDialog().dismiss();
+    }
+
+    @Override
+    public void showDialog() {
+        getDialog().show();
+    }
+
+    @Override
+    public void hideDialog() {
+        getDialog().hide();
     }
 
     @Override
