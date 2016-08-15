@@ -112,12 +112,12 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     }
 
     @OnClick(R.id.btn_cancel)
-    void OnClickCancelButton() {
+    void onClickCancelButton() {
         dismissDialog();
     }
 
     @OnClick(R.id.btn_hide)
-    void OnClickHideButton() {
+    void onClickHideButton() {
         if (btn_hide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
             dismissDialog();
         } else {
