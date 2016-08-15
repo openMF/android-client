@@ -26,7 +26,7 @@ import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.objects.noncore.Document;
@@ -43,7 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView,
-        RecyclerItemClickListner.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
@@ -117,7 +117,7 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_documents.setLayoutManager(layoutManager);
-        rv_documents.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_documents.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_documents.setHasFixedSize(true);
 
 

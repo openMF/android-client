@@ -6,9 +6,8 @@
 package com.mifos.objects.db;
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
 
-public class Loan extends SugarRecord<Loan> {
+public class Loan {
     public double disbursementAmount;
     public double interestDue;
     public double interestPaid;

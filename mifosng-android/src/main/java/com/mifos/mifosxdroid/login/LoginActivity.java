@@ -14,8 +14,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +22,6 @@ import android.widget.TextView;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.BaseUrl;
-import com.mifos.mifosxdroid.OfflineCenterInputActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
@@ -262,19 +259,6 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.offline_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.offline)
-            startActivity(new Intent(this, OfflineCenterInputActivity.class));
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -124,7 +124,7 @@
     <string name="loan_product_short_name">Nombre corto del producto</string>
     <string name="loan_id">ID del crédito</string>
     <string name="loan">Crédito</string>
-    <string name="loanAccountSummary">Resumen de las cuentas de crédito</string>
+    <string name="loanAccountSummaryStatus">Resumen de las cuentas de crédito</string>
     <string name="loanAccounts">Cuentas de crédito</string>
     <string name="loan_interest_paid">Intereses pagados</string>
     <string name="loan_interest_due">Intereses a pagar</string>

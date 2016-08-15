@@ -6,13 +6,11 @@
 package com.mifos.objects.db;
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
 
 import java.util.List;
 
 
-public class MeetingCenter extends SugarRecord<MeetingCenter> {
+public class MeetingCenter {
 
     private String name;
     private String externalId;
@@ -25,7 +23,7 @@ public class MeetingCenter extends SugarRecord<MeetingCenter> {
     private CollectionMeetingCalendar collectionMeetingCalendar;
     private int isSynced;
     private long centerId;
-    @Ignore
+
     private List<Integer> activationDate;
 
     public long getCenterId() {
@@ -44,12 +42,12 @@ public class MeetingCenter extends SugarRecord<MeetingCenter> {
         this.name = name;
     }
 
-    @Ignore
+
     public List<Integer> getActivationDate() {
         return activationDate;
     }
 
-    @Ignore
+
     public void setActivationDate(List<Integer> activationDate) {
         this.activationDate = activationDate;
     }

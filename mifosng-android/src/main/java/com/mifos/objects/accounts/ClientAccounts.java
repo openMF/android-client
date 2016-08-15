@@ -16,18 +16,6 @@ import java.util.List;
 
 public class ClientAccounts implements Parcelable {
 
-    public static final Parcelable.Creator<ClientAccounts> CREATOR = new Parcelable
-            .Creator<ClientAccounts>() {
-        @Override
-        public ClientAccounts createFromParcel(Parcel source) {
-            return new ClientAccounts(source);
-        }
-
-        @Override
-        public ClientAccounts[] newArray(int size) {
-            return new ClientAccounts[size];
-        }
-    };
     private List<LoanAccount> loanAccounts = new ArrayList<LoanAccount>();
     private List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
 
@@ -104,4 +92,17 @@ public class ClientAccounts implements Parcelable {
         dest.writeTypedList(loanAccounts);
         dest.writeList(this.savingsAccounts);
     }
+
+    public static final Parcelable.Creator<ClientAccounts> CREATOR = new Parcelable
+            .Creator<ClientAccounts>() {
+        @Override
+        public ClientAccounts createFromParcel(Parcel source) {
+            return new ClientAccounts(source);
+        }
+
+        @Override
+        public ClientAccounts[] newArray(int size) {
+            return new ClientAccounts[size];
+        }
+    };
 }

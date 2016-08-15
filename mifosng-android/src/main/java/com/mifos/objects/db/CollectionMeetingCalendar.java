@@ -7,15 +7,11 @@ package com.mifos.objects.db;
 
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionMeetingCalendar extends SugarRecord<CollectionMeetingCalendar> {
+public class CollectionMeetingCalendar {
     private int calendarInstanceId;
     private long calendarId;
     private int entityId;
@@ -26,14 +22,9 @@ public class CollectionMeetingCalendar extends SugarRecord<CollectionMeetingCale
     private MeetingDate meetingCalendarDate;
     private boolean repeating;
     private String recurrence;
-    @Ignore
+
     private List<Integer> startDate = new ArrayList<Integer>();
 
-    public boolean isNew() {
-        long count = Select.from(CollectionMeetingCalendar.class).where(Condition.prop("id").eq
-                (id)).count();
-        return count == 0;
-    }
 
     public long getCalendarId() {
         return calendarId;
@@ -64,12 +55,12 @@ public class CollectionMeetingCalendar extends SugarRecord<CollectionMeetingCale
         this.calendarInstanceId = calendarInstanceId;
     }
 
-    @Ignore
+
     public List<Integer> getStartDate() {
         return startDate;
     }
 
-    @Ignore
+
     public void setStartDate(List<Integer> startDate) {
         this.startDate = startDate;
     }
