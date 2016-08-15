@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,12 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     @BindView(R.id.tv_sync_failed)
     TextView tv_sync_failed;
+
+    @BindView(R.id.btn_hide)
+    Button btn_hide;
+
+    @BindView(R.id.btn_cancel)
+    Button btn_cancel;
 
     @Inject
     SyncClientsDialogPresenter mSyncClientsDialogPresenter;
@@ -163,6 +170,12 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     public void showNetworkIsNotAvailable() {
         Toast.makeText(getActivity(), getResources().getString(R.string
                 .error_network_not_available), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showClientsSyncSuccessfully() {
+        btn_cancel.setVisibility(View.INVISIBLE);
+        btn_hide.setText(getResources().getString(R.string.dialog_action_ok));
     }
 
     @Override

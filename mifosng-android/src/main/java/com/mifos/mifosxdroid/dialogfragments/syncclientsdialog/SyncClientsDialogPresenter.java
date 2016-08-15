@@ -83,12 +83,13 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     public void syncClientAndUpdateUI() {
         mLoanAndRepaymentSyncIndex = 0;
-        updateClientNameAndTotalSyncProgressBarAndCount();
-        if (mClientSyncIndex < mClientList.size()) {
+        updateTotalSyncProgressBarAndCount();
+        if (mClientSyncIndex != mClientList.size()) {
+            updateClientName();
             syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
         } else {
             getMvpView().showError(R.string.no_more_clients_to_sync);
-            getMvpView().dismissDialog();
+            getMvpView().showClientsSyncSuccessfully();
         }
 
     }
@@ -213,7 +214,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
                         mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
                         getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
-                        if (mLoanAndRepaymentSyncIndex <  mLoanAccountList.size()) {
+                        if (mLoanAndRepaymentSyncIndex !=  mLoanAccountList.size()) {
                             checkNetworkConnectionAndSyncLoanAndLoanRepayment();
                         } else {
                             syncClient(mClientList.get(mClientSyncIndex));
@@ -277,11 +278,13 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         return loanAccounts;
     }
 
-    public void updateClientNameAndTotalSyncProgressBarAndCount() {
-        String clientName = mClientList.get(mClientSyncIndex).getFirstname() +
-                mClientList.get(mClientSyncIndex).getLastname();
-        getMvpView().showSyncingClient(clientName);
+    public void updateTotalSyncProgressBarAndCount() {
         getMvpView().updateTotalSyncClientProgressBarAndCount(mClientSyncIndex);
     }
 
+    public void updateClientName() {
+        String clientName = mClientList.get(mClientSyncIndex).getFirstname() +
+                mClientList.get(mClientSyncIndex).getLastname();
+        getMvpView().showSyncingClient(clientName);
+    }
 }
