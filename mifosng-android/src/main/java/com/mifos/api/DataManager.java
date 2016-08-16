@@ -256,10 +256,6 @@ public class DataManager {
                 .createEntryInDataTable(table, entityId, payload);
     }
 
-    public Observable<List<DataTable>> getSavingsDataTable() {
-        return mBaseApiManager.getDataTableApi().getTableOf("m_savings_account");
-    }
-
     //TODO Remove this method after removing its usage
     public Observable<List<DataTable>> getClientDataTable() {
         return mBaseApiManager.getDataTableApi().getTableOf("m_client");
