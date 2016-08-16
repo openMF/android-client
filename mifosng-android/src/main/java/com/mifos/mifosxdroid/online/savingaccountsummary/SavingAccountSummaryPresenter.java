@@ -12,9 +12,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -22,11 +22,12 @@ import rx.schedulers.Schedulers;
 public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
     public SavingAccountSummaryPresenter(DataManager dataManager) {
         mDataManager = dataManager;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -37,14 +38,13 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadSavingDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsDataTable()
+        mSubscriptions.add(mDataManager.getSavingsDataTable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
@@ -64,14 +64,13 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                         getMvpView().showProgressbar(false);
                         getMvpView().showSavingDataTable(dataTables);
                     }
-                });
+                }));
     }
 
     public void loadSavingAccount(String type, int accountId, String association) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsAccount(type, accountId, association)
+        mSubscriptions.add(mDataManager.getSavingsAccount(type, accountId, association)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountWithAssociations>() {
@@ -92,14 +91,13 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                         getMvpView().showProgressbar(false);
                         getMvpView().showSavingAccount(savingsAccountWithAssociations);
                     }
-                });
+                }));
     }
 
 
     public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
         checkViewAttached();
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.activateSavings(savingsAccountId, request)
+        mSubscriptions.add(mDataManager.activateSavings(savingsAccountId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
@@ -117,6 +115,6 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                     public void onNext(GenericResponse genericResponse) {
                         getMvpView().showSavingsActivatedSuccessfully(genericResponse);
                     }
-                });
+                }));
     }
 }
