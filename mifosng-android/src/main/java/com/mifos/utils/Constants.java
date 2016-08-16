@@ -88,6 +88,10 @@ public class Constants {
     public static final String DATA_TABLE_SAVINGS_ACCOUNTS_NAME = "More Savings Account Info";
 
 
+    public static final String DATA_TABLE_NAME_CLIENT = "m_client";
+    public static final String DATA_TABLE_NAME_SAVINGS = "m_savings_account";
+    public static final String DATA_TABLE_NAME_LOANS = "m_loan";
+
     /**
      * User Logged In Status
      * 0 for Online and 1 for Offline

@@ -2,9 +2,11 @@ package com.mifos.mifosxdroid.online.savingaccountsummary;
 
 import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.utils.Constants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +24,14 @@ import rx.subscriptions.CompositeSubscription;
 public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
 
     private final DataManager mDataManager;
+    private final DataManagerDataTable mDataManagerDataTable;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingAccountSummaryPresenter(DataManager dataManager) {
+    public SavingAccountSummaryPresenter(DataManager dataManager,
+                                         DataManagerDataTable dataManagerDataTable) {
         mDataManager = dataManager;
+        mDataManagerDataTable = dataManagerDataTable;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -44,7 +49,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
     public void loadSavingDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getSavingsDataTable()
+        mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_SAVINGS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
