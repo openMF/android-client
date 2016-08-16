@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerDataTable;
+import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.noncore.DataTable;
@@ -23,15 +23,15 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
 
-    private final DataManager mDataManager;
     private final DataManagerDataTable mDataManagerDataTable;
+    private final DataManagerSavings mDataManagerSavings;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingAccountSummaryPresenter(DataManager dataManager,
-                                         DataManagerDataTable dataManagerDataTable) {
-        mDataManager = dataManager;
+    public SavingAccountSummaryPresenter(DataManagerDataTable dataManagerDataTable,
+                                         DataManagerSavings dataManagerSavings) {
         mDataManagerDataTable = dataManagerDataTable;
+        mDataManagerSavings = dataManagerSavings;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -75,7 +75,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
     public void loadSavingAccount(String type, int accountId, String association) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getSavingsAccount(type, accountId, association)
+        mSubscriptions.add(mDataManagerSavings.getSavingsAccount(type, accountId, association)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountWithAssociations>() {
@@ -102,7 +102,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
 
     public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
         checkViewAttached();
-        mSubscriptions.add(mDataManager.activateSavings(savingsAccountId, request)
+        mSubscriptions.add(mDataManagerSavings.activateSavings(savingsAccountId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
