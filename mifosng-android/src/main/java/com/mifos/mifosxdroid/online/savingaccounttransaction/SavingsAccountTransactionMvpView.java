@@ -7,7 +7,7 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public interface SavingAccountTransactionMvpView extends MvpView {
+public interface SavingsAccountTransactionMvpView extends MvpView {
 
     void showSavingAccountTemplate(SavingsAccountTransactionTemplate
                                            savingsAccountTransactionTemplate);

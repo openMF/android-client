@@ -9,40 +9,40 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public class SavingAccountTransactionPresenter
-        extends BasePresenter<SavingAccountTransactionMvpView> {
+public class SavingsAccountTransactionPresenter
+        extends BasePresenter<SavingsAccountTransactionMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingAccountTransactionPresenter(DataManager dataManager) {
+    public SavingsAccountTransactionPresenter(DataManager dataManager) {
         mDataManager = dataManager;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
-    public void attachView(SavingAccountTransactionMvpView mvpView) {
+    public void attachView(SavingsAccountTransactionMvpView mvpView) {
         super.attachView(mvpView);
     }
 
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadSavingAccountTemplate(String type, int accountId, String transactionType) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsAccountTemplate(type, accountId, transactionType)
+        mSubscriptions.add(mDataManager.getSavingsAccountTemplate(type, accountId, transactionType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountTransactionTemplate>() {
@@ -63,15 +63,15 @@ public class SavingAccountTransactionPresenter
                         getMvpView().showProgressbar(false);
                         getMvpView().showSavingAccountTemplate(savingsAccountTransactionTemplate);
                     }
-                });
+                }));
     }
 
     public void processTransaction(String type, int accountId, String transactionType,
                                    SavingsAccountTransactionRequest request) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.processTransaction(type, accountId, transactionType, request)
+        mSubscriptions.add(mDataManager.processTransaction(type, accountId, transactionType,
+                request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountTransactionResponse>() {
@@ -93,7 +93,7 @@ public class SavingAccountTransactionPresenter
                         getMvpView().
                                 showTransactionSuccessfullyDone(savingsAccountTransactionResponse);
                     }
-                });
+                }));
     }
 
 }

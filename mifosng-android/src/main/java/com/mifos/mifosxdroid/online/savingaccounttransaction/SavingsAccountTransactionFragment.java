@@ -51,7 +51,7 @@ import butterknife.OnClick;
 
 
 public class SavingsAccountTransactionFragment extends ProgressableFragment implements
-        MFDatePicker.OnDatePickListener, SavingAccountTransactionMvpView {
+        MFDatePicker.OnDatePickListener, SavingsAccountTransactionMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
@@ -71,7 +71,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     Spinner sp_paymentType;
 
     @Inject
-    SavingAccountTransactionPresenter mSavingAccountTransactionPresenter;
+    SavingsAccountTransactionPresenter mSavingAccountTransactionPresenter;
 
     private View rootView;
     private String savingsAccountNumber;
@@ -125,11 +125,11 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container,
                 false);
         if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
-            setToolbarTitle(getResources().getString(string.savingsAccount) + " " +
-                    getResources().getString(R.string.deposit));
+            setToolbarTitle(getResources().getString(string.savingsAccount) + getResources()
+                    .getString(string.space) + getResources().getString(R.string.deposit));
         } else {
-            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " +
-                    getResources().getString(R.string.withdrawal));
+            setToolbarTitle(getResources().getString(R.string.savingsAccount) + getResources()
+                    .getString(string.space) + getResources().getString(R.string.withdrawal));
         }
 
         ButterKnife.bind(this, rootView);
