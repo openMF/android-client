@@ -94,7 +94,7 @@ public class DataManagerSavings {
      *
      * @param type Savings Account Type Example : savingsaccounts
      * @param accountId SavingsAccount Id
-     * @param transactionType Transaction Type Example : 'transactions', 'all'.
+     * @param transactionType Transaction Type Example : 'Deposit', 'Withdrawal'
      * @return SavingsAccountTransactionTemplate
      */
     public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(

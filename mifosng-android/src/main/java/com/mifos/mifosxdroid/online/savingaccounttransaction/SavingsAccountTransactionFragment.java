@@ -75,6 +75,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
     private View rootView;
     private String savingsAccountNumber;
+    private int savingsAccountId;
     private DepositType savingsAccountType;
     private String transactionType;     //Defines if the Transaction is a Deposit to an Account
     // or a Withdrawal from an Account
@@ -100,6 +101,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         Bundle args = new Bundle();
         args.putString(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations
                 .getAccountNo());
+        args.putInt(Constants.SAVINGS_ACCOUNT_ID, savingsAccountWithAssociations.getId());
         args.putString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE, transactionType);
         args.putString(Constants.CLIENT_NAME, savingsAccountWithAssociations.getClientName());
         args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, accountType);
@@ -113,6 +115,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER);
+            savingsAccountId = getArguments().getInt(Constants.SAVINGS_ACCOUNT_ID);
             transactionType = getArguments().getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE);
             clientName = getArguments().getString(Constants.CLIENT_NAME);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
@@ -149,8 +152,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
     public void inflatePaymentOptions() {
         mSavingAccountTransactionPresenter.loadSavingAccountTemplate(
-                savingsAccountType.getEndpoint(),
-                Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType);
+                savingsAccountType.getEndpoint(), savingsAccountId, transactionType);
     }
 
     @OnClick(R.id.bt_reviewTransaction)
@@ -211,8 +213,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         Log.i("Transaction Body", builtTransactionRequestAsJson);
 
         mSavingAccountTransactionPresenter.processTransaction(savingsAccountType.getEndpoint(),
-                Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")),
-                transactionType, savingsAccountTransactionRequest);
+                savingsAccountId, transactionType, savingsAccountTransactionRequest);
     }
 
     @OnClick(R.id.bt_cancelTransaction)

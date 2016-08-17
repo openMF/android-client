@@ -53,7 +53,7 @@ public interface SavingsAccountService {
      *
      * @param savingsAccountType SavingsAccount Type Example : 'savingsaccounts'
      * @param savingsAccountId  SavingsAccount Id
-     * @param transactionType Transaction Type Example : 'transactions', 'all'
+     * @param transactionType Transaction Type Example : 'Deposit', 'Withdrawal'
      * @return SavingsAccountTransactionTemplate
      */
     @GET("{savingsAccountType}/{savingsAccountId}/transactions/template")
