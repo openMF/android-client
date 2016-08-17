@@ -3,7 +3,10 @@ package com.mifos.api.datamanager;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperSavings;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.PrefManager;
 
 import java.util.HashMap;
@@ -37,14 +40,13 @@ public class DataManagerSavings {
      * ?associations={all or transactions or charges}
      * and fetch savings application/account.
      *
-     * @param type Type of the SavingsAccount
+     * @param type             Type of the SavingsAccount
      * @param savingsAccountId Savings Account Id
-     * @param association {all or transactions or charges}
-     *                    'all': Gets data related to all associations e.g. ?associations=all.
-     *                    'transactions': Gets data related to transactions on the account e.g.
-     *                    ?associations=transactions
-     *                    'charges':Savings Account charges data.
-     *
+     * @param association      {all or transactions or charges}
+     *                         'all': Gets data related to all associations e.g. ?associations=all.
+     *                         'transactions': Gets data related to transactions on the account e.g.
+     *                         ?associations=transactions
+     *                         'charges':Savings Account charges data.
      * @return SavingsAccountWithAssociations
      */
     public Observable<SavingsAccountWithAssociations> getSavingsAccount(
@@ -78,5 +80,27 @@ public class DataManagerSavings {
     public Observable<GenericResponse> activateSavings(int savingsAccountId,
                                                        HashMap<String, Object> request) {
         return mBaseApiManager.getSavingsApi().activateSavings(savingsAccountId, request);
+    }
+
+
+    /**
+     *
+     * @param type
+     * @param accountId
+     * @param transactionType
+     * @return
+     */
+    public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
+            String type, int accountId, String transactionType) {
+        return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
+                accountId, transactionType);
+    }
+
+
+    public Observable<SavingsAccountTransactionResponse> processTransaction(
+            String type, int accountId, String transactionType,
+            SavingsAccountTransactionRequest request) {
+        return mBaseApiManager.getSavingsApi().processTransaction(type, accountId, transactionType,
+                request);
     }
 }

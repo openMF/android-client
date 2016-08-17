@@ -16,8 +16,6 @@ import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
@@ -40,7 +38,6 @@ import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
@@ -330,19 +327,6 @@ public class DataManager {
     /**
      * Savings API
      */
-    public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTemplate(
-            String type, int accountId, String transactionType) {
-        return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
-                accountId, transactionType);
-    }
-
-    public Observable<SavingsAccountTransactionResponse> processTransaction(
-            String type, int accountId, String transactionType,
-            SavingsAccountTransactionRequest request) {
-        return mBaseApiManager.getSavingsApi().processTransaction(type, accountId, transactionType,
-                request);
-    }
-
     public Observable<GenericResponse> approveSavingsApplication(int savingsAccountId,
                                                                  SavingsApproval savingsApproval) {
         return mBaseApiManager.getSavingsApi().approveSavingsApplication(

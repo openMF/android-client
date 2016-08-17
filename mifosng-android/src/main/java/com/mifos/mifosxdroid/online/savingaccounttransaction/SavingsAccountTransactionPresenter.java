@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.savingaccounttransaction;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
@@ -19,12 +19,12 @@ import rx.subscriptions.CompositeSubscription;
 public class SavingsAccountTransactionPresenter
         extends BasePresenter<SavingsAccountTransactionMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerSavings mDataManagerSavings;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingsAccountTransactionPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SavingsAccountTransactionPresenter(DataManagerSavings dataManagerSavings) {
+        mDataManagerSavings = dataManagerSavings;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -42,7 +42,8 @@ public class SavingsAccountTransactionPresenter
     public void loadSavingAccountTemplate(String type, int accountId, String transactionType) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getSavingsAccountTemplate(type, accountId, transactionType)
+        mSubscriptions.add(mDataManagerSavings
+                .getSavingsAccountTransactionTemplate(type, accountId, transactionType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountTransactionTemplate>() {
@@ -70,8 +71,8 @@ public class SavingsAccountTransactionPresenter
                                    SavingsAccountTransactionRequest request) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.processTransaction(type, accountId, transactionType,
-                request)
+        mSubscriptions.add(mDataManagerSavings
+                .processTransaction(type, accountId, transactionType, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountTransactionResponse>() {
