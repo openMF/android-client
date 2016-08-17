@@ -33,7 +33,7 @@ public class DataManagerSavings {
 
     /**
      * This Method Make the Request to the REST API
-     * https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/{savingsAccountIs}
+     * https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/{savingsAccountId}
      * ?associations={all or transactions or charges}
      * and fetch savings application/account.
      *
@@ -65,9 +65,9 @@ public class DataManagerSavings {
 
             case 1:
                 /**
-                 * Return LoanWithAssociation from DatabaseHelperLoan.
+                 * Return SavingsAccountWithAssociations from DatabaseHelperSavings.
                  */
-               // return mDatabaseHelperSavings.sa
+                return mDatabaseHelperSavings.readSavingsAccount(savingsAccountId);
 
             default:
                 return Observable.just(new SavingsAccountWithAssociations());

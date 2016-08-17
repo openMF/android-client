@@ -4,8 +4,10 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations_Table;
 import com.mifos.objects.accounts.savings.SavingsTransactionDate;
 import com.mifos.objects.accounts.savings.Transaction;
+import com.mifos.objects.accounts.savings.Transaction_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,7 +27,6 @@ public class DatabaseHelperSavings {
 
     @Inject
     public DatabaseHelperSavings() {
-
     }
 
 
@@ -82,21 +83,33 @@ public class DatabaseHelperSavings {
                         .querySingle();
 
 
+                List<Transaction> transactions = SQLite.select()
+                        .from(Transaction.class)
+                        .where(Transaction_Table.savingsAccountId.eq(savingsAccountId))
+                        .queryList();
+
+                Observable.from(transactions)
+                        .flatMap(new Func1<Transaction, Observable<Transaction>>() {
+                            @Override
+                            public Observable<Transaction> call(Transaction transaction) {
+                                return Observable.just(transaction);
+                            }
+                        })
+                        .subscribe(new Action1<Transaction>() {
+                            @Override
+                            public void call(Transaction transaction) {
+                                transaction.setDate(Arrays.asList(
+                                        transaction.getSavingsTransactionDate().getYear(),
+                                        transaction.getSavingsTransactionDate().getMonth(),
+                                        transaction.getSavingsTransactionDate().getDay()));
+                            }
+                        });
 
                 if (savingsAccountWithAssociations != null) {
-                    final List<Transaction> transactions = savingsAccountWithAssociations.getTransactions();
-                    Observable.from(transactions)
-                            .flatMap(new Func1<Transaction, Observable<?>>() {
-                                @Override
-                                public Observable<?> call(Transaction transaction) {
-                                   // transactions
-                                    return null;
-                                }
-                            });
+                    savingsAccountWithAssociations.setTransactions(transactions);
                 }
 
-
-                return null;
+                return Observable.just(savingsAccountWithAssociations);
             }
         });
     }
