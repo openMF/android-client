@@ -84,11 +84,18 @@ public class DataManagerSavings {
 
 
     /**
+     * This Method make the Request to REST API, if the User Status if Online at:
+     * https://demo.openmf.org/fineract-provider/api/v1/{savingsAccountType}/{savingsAccountId}
+     * /transactions/template.
+     * using retrofit 2 with SavingsAccountService and the SavingsAccountTransactionTemplate in
+     * response.
+     * If User Status is Offline then It make the request to the DatabaseHelperSavings and get
+     * the SavingAccount TransactionTemplate According to SavingAccount Id
      *
-     * @param type
-     * @param accountId
-     * @param transactionType
-     * @return
+     * @param type Savings Account Type Example : savingsaccounts
+     * @param accountId SavingsAccount Id
+     * @param transactionType Transaction Type Example : 'transactions', 'all'.
+     * @return SavingsAccountTransactionTemplate
      */
     public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
             String type, int accountId, String transactionType) {

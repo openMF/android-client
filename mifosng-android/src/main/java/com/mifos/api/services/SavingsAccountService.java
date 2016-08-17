@@ -47,13 +47,14 @@ public interface SavingsAccountService {
             @Query("associations") String association);
 
     /**
-     * @param savingsAccountId                          - savingsAccountId for which infgormation
-     *                                                  is requested
-     * @param savingsAccountTransactionTemplateCallback - Savings Account Transaction Template
-     *                                                  Callback
-     *                                                  <p/>
-     *                                                  Use this method to retrieve the Savings
-     *                                                  Account Transaction Template
+     * This Method for Retrieving Savings Account Transaction Template from REST API
+     * https://demo.openmf.org/fineract-provider/api/v1/{savingsAccountType}/{savingsAccountId}
+     * /transactions/template.
+     *
+     * @param savingsAccountType SavingsAccount Type Example : 'savingsaccounts'
+     * @param savingsAccountId  SavingsAccount Id
+     * @param transactionType Transaction Type Example : 'transactions', 'all'
+     * @return SavingsAccountTransactionTemplate
      */
     @GET("{savingsAccountType}/{savingsAccountId}/transactions/template")
     Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
