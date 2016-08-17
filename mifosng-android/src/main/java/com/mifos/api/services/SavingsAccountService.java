@@ -30,7 +30,7 @@ public interface SavingsAccountService {
      *                                               requested
      * @param association                            - Mention Type of Association Needed, Like
      *                                               :- all, transactions etc.
-     * @param savingsAccountWithAssociationsCallback - callback to receive the response
+     * @param_SavingsAccountWithAssociations - callback to receive the response
      *                                               <p/>
      *                                               Use this method to retrieve the Savings
      *                                               Account With Associations

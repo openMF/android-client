@@ -70,6 +70,9 @@
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
     <string name="approve_savings">Approve Savings</string>
+    <string name="activate_savings">Activate Savings</string>
+    <string name="savings_account_closed">Savings Account Closed</string>
+    <string name="savings_account_activated">Savings Account Activated</string>
     <string name="more_info">More client info</string>
     <string name="pinpoint">Pinpoint location</string>
     <string name="charges">Charges </string>
@@ -146,6 +149,7 @@
     <string name="pending">Pending</string>
     <string name="overdue">Overdue</string>
     <string name="process_loan_transaction">Process Loan Transaction</string>
+    <string name="transaction_action_not_set">TRANSACTION ACTION NOT SET</string>
 
     <!-- Loan Related Terminologies End Here -->
 

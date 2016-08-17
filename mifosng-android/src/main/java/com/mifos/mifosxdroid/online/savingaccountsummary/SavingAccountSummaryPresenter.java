@@ -72,10 +72,12 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                 }));
     }
 
-    public void loadSavingAccount(String type, int accountId, String association) {
+    //This Method will hit end point ?associations=transactions
+    public void loadSavingAccount(String type, int accountId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.getSavingsAccount(type, accountId, association)
+        mSubscriptions.add(mDataManagerSavings
+                .getSavingsAccount(type, accountId, Constants.TRANSACTIONS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountWithAssociations>() {

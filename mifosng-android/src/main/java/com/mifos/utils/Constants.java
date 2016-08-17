@@ -72,6 +72,8 @@ public class Constants {
 
     public static final String LOCALE = "locale";
 
+    public static final String TRANSACTIONS = "transactions";
+
 
     /**
      * Constants to identify which Data Tables have to be shown
