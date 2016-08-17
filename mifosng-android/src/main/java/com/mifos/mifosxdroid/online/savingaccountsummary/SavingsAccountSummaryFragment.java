@@ -456,7 +456,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     }
 
     @Override
-    public void showErrorFetchingSavingAccount(String s) {
+    public void showErrorFetchingSavingAccount(int s) {
         Toaster.show(rootView, s);
         getFragmentManager().popBackStackImmediate();
     }
@@ -468,7 +468,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     }
 
     @Override
-    public void showFetchingError(String s) {
+    public void showFetchingError(int s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 

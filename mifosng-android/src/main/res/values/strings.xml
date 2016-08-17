@@ -286,6 +286,7 @@
     <string name="error_select_center">Please Select a Center</string>
     <string name="error_client_inactive">Client Inactive</string>
     <string name="error_group_inactive">Group Inactive</string>
+    <string name="error_to_activate_savingsaccount">Error To Activate SavingsAccount</string>
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
@@ -384,6 +385,8 @@
     <string name="failed_to_sync_loan">Failed to Sync Loan</string>
     <string name="failed_to_sync_loanrepayment">Failed to Sync LoanRepayment</string>
     <string name="failed_to_load_client">Failed To Load Clients</string>
+    <string name="failed_to_fetch_savingsaccount">Failed To Fetch SavingsAccount</string>
+    <string name="failed_to_fetch_datatable">Failed To Fetch DataTable</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

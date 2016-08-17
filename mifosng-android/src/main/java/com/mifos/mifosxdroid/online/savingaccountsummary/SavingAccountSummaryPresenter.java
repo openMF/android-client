@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.online.savingaccountsummary;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.api.datamanager.DataManagerSavings;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.noncore.DataTable;
@@ -61,7 +62,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Saving DataTable not found");
+                        getMvpView().showFetchingError(R.string.failed_to_fetch_datatable);
                     }
 
                     @Override
@@ -89,7 +90,8 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showErrorFetchingSavingAccount("Internal Server Error");
+                        getMvpView().showErrorFetchingSavingAccount(
+                                R.string.failed_to_fetch_savingsaccount);
                     }
 
                     @Override
@@ -115,7 +117,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
 
                     @Override
                     public void onError(Throwable e) {
-
+                        getMvpView().showFetchingError(R.string.error_to_activate_savingsaccount);
                     }
 
                     @Override
