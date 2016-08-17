@@ -30,16 +30,25 @@ public class DataManagerSavings {
 
 
     /**
-     * This Method
-     * @param type
-     * @param accountId
-     * @param association
-     * @return
+     * This Method Make the Request to the REST API
+     * https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/{savingsAccountIs}
+     * ?associations={all or transactions or charges}
+     * and fetch savings application/account.
+     *
+     * @param type Type of the SavingsAccount
+     * @param savingsAccountId Savings Account Id
+     * @param association {all or transactions or charges}
+     *                    'all': Gets data related to all associations e.g. ?associations=all.
+     *                    'transactions': Gets data related to transactions on the account e.g.
+     *                    ?associations=transactions
+     *                    'charges':Savings Account charges data.
+     *
+     * @return SavingsAccountWithAssociations
      */
     public Observable<SavingsAccountWithAssociations> getSavingsAccount(
-            String type, int accountId, String association) {
+            String type, int savingsAccountId, String association) {
         return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
-                type, accountId, association);
+                type, savingsAccountId, association);
     }
 
 
