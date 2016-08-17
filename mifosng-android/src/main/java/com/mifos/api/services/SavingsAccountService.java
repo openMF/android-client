@@ -25,15 +25,20 @@ import rx.Observable;
  * @author fomenkoo
  */
 public interface SavingsAccountService {
+
     /**
-     * @param savingsAccountId                       - savingsAccountId for which information is
-     *                                               requested
-     * @param association                            - Mention Type of Association Needed, Like
-     *                                               :- all, transactions etc.
-     * @param_SavingsAccountWithAssociations - callback to receive the response
-     *                                               <p/>
-     *                                               Use this method to retrieve the Savings
-     *                                               Account With Associations
+     * This Service Retrieve a savings application/account. From the REST API :
+     * https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/{savingsAccountIs}
+     * ?associations={all or transactions or charges}
+     *
+     * @param savingsAccountType SavingsAccount Type of SavingsAccount
+     * @param savingsAccountId SavingsAccounts Id
+     * @param association {all or transactions or charges}
+     *                    'all': Gets data related to all associations e.g. ?associations=all.
+     *                    'transactions': Gets data related to transactions on the account e.g.
+     *                    ?associations=transactions
+     *                    'charges':Savings Account charges data.
+     * @return SavingsAccountWithAssociations
      */
     @GET("{savingsAccountType}/{savingsAccountId}")
     Observable<SavingsAccountWithAssociations> getSavingsAccountWithAssociations(
@@ -42,7 +47,7 @@ public interface SavingsAccountService {
             @Query("associations") String association);
 
     /**
-     * @param savingsAccountId                          - savingsAccountId for which information
+     * @param savingsAccountId                          - savingsAccountId for which infgormation
      *                                                  is requested
      * @param savingsAccountTransactionTemplateCallback - Savings Account Transaction Template
      *                                                  Callback
