@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +81,8 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
         reusableViewHolder.tv_transactionAmount.setText(transactionAmount);
 
         if (listOfTransactions.get(i).getTransactionType().getDeposit()) {
-            reusableViewHolder.tv_transactionAmount.setTextColor(Color.GREEN);
+            reusableViewHolder.tv_transactionAmount.setTextColor(
+                    ContextCompat.getColor(mContext, R.color.savings_account_status_active));
         } else if (listOfTransactions.get(i).getTransactionType().getWithdrawal()) {
             reusableViewHolder.tv_transactionAmount.setTextColor(Color.RED);
         } else {

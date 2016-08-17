@@ -16,7 +16,7 @@ import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
-@Table(database = MifosDatabase.class)
+@Table(database = MifosDatabase.class, name = "SavingsAccountSummary")
 @ModelContainer
 public class Summary extends MifosBaseModel implements Parcelable {
 
