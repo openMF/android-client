@@ -79,6 +79,13 @@ public class SavingsTransactionDate extends MifosBaseModel implements Parcelable
     public SavingsTransactionDate() {
     }
 
+    public SavingsTransactionDate(Integer transactionId, Integer year, Integer month, Integer day) {
+        this.transactionId = transactionId;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
     protected SavingsTransactionDate(Parcel in) {
         this.transactionId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.year = (Integer) in.readValue(Integer.class.getClassLoader());

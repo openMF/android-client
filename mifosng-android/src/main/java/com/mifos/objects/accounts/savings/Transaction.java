@@ -28,6 +28,10 @@ public class Transaction extends MifosBaseModel implements Parcelable {
     @PrimaryKey
     Integer id;
 
+    @SerializedName("savingsAccountId")
+    @Column
+    transient Integer savingsAccountId;
+
     @SerializedName("transactionType")
     @Column
     @ForeignKey(saveForeignKeyModel = true)
@@ -62,7 +66,13 @@ public class Transaction extends MifosBaseModel implements Parcelable {
     @SerializedName("reversed")
     Boolean reversed;
 
+    public Integer getSavingsAccountId() {
+        return savingsAccountId;
+    }
 
+    public void setSavingsAccountId(Integer savingsAccountId) {
+        this.savingsAccountId = savingsAccountId;
+    }
 
     public Integer getId() {
         return id;
@@ -144,6 +154,22 @@ public class Transaction extends MifosBaseModel implements Parcelable {
         this.savingsTransactionDate = savingsTransactionDate;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", savingsAccountId=" + savingsAccountId +
+                ", transactionType=" + transactionType +
+                ", accountId=" + accountId +
+                ", accountNo='" + accountNo + '\'' +
+                ", savingsTransactionDate=" + savingsTransactionDate +
+                ", date=" + date +
+                ", currency=" + currency +
+                ", amount=" + amount +
+                ", runningBalance=" + runningBalance +
+                ", reversed=" + reversed +
+                '}';
+    }
 
     @Override
     public int describeContents() {

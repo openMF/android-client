@@ -4,6 +4,7 @@ import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperSavings;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.utils.PrefManager;
 
 import java.util.HashMap;
 
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by Rajan Maurya on 17/08/16.
@@ -47,8 +49,29 @@ public class DataManagerSavings {
      */
     public Observable<SavingsAccountWithAssociations> getSavingsAccount(
             String type, int savingsAccountId, String association) {
-        return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
-                type, savingsAccountId, association);
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
+                        type, savingsAccountId, association)
+                        .concatMap(new Func1<SavingsAccountWithAssociations,
+                                Observable<? extends SavingsAccountWithAssociations>>() {
+                            @Override
+                            public Observable<? extends SavingsAccountWithAssociations> call(
+                                    SavingsAccountWithAssociations savingsAccountWithAssociations) {
+                                return mDatabaseHelperSavings.saveSavingsAccount
+                                        (savingsAccountWithAssociations);
+                            }
+                        });
+
+            case 1:
+                /**
+                 * Return LoanWithAssociation from DatabaseHelperLoan.
+                 */
+               // return mDatabaseHelperSavings.sa
+
+            default:
+                return Observable.just(new SavingsAccountWithAssociations());
+        }
     }
 
 
