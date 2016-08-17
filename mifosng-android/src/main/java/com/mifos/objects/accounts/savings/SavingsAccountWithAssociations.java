@@ -105,13 +105,15 @@ public class SavingsAccountWithAssociations extends MifosBaseModel implements Pa
     Integer overdraftLimit;
 
     @SerializedName("summary")
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Summary summary;
 
     @SerializedName("transactions")
-    List<Transaction> transactions = new ArrayList<Transaction>();
+    List<Transaction> transactions = new ArrayList<>();
 
     @SerializedName("charges")
-    List<Charge> charges = new ArrayList<Charge>();
+    List<Charge> charges = new ArrayList<>();
 
     public Integer getId() {
         return id;

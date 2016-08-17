@@ -53,14 +53,15 @@ public class DatabaseHelperSavings {
                                                     transaction.getDate().get(0),
                                                     transaction.getDate().get(1),
                                                     transaction.getDate().get(2));
-                                    savingsTransactionDate.save();
-                                    /*transaction.associateSavingsAccount(
-                                            savingsAccountWithAssociations);
-                                    transaction.save();*/
+                                    transaction.setSavingsAccountId
+                                            (savingsAccountWithAssociations.getId());
+                                    transaction.setSavingsTransactionDate(savingsTransactionDate);
+                                    transaction.save();
                                 }
                             });
                 }
-
+                savingsAccountWithAssociations.getSummary().setSavingsId
+                        (savingsAccountWithAssociations.getId());
                 savingsAccountWithAssociations.save();
 
                 return Observable.just(savingsAccountWithAssociations);
@@ -83,12 +84,12 @@ public class DatabaseHelperSavings {
 
 
                 if (savingsAccountWithAssociations != null) {
-                    List<Transaction> transactions = savingsAccountWithAssociations.getTransactions();
+                    final List<Transaction> transactions = savingsAccountWithAssociations.getTransactions();
                     Observable.from(transactions)
                             .flatMap(new Func1<Transaction, Observable<?>>() {
                                 @Override
                                 public Observable<?> call(Transaction transaction) {
-
+                                   // transactions
                                     return null;
                                 }
                             });
