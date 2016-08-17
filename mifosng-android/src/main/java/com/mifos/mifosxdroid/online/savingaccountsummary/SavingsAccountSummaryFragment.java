@@ -102,7 +102,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     Button bt_approve_saving;
 
     @Inject
-    SavingAccountSummaryPresenter mSavingAccountSummaryPresenter;
+    SavingsAccountSummaryPresenter mSavingAccountSummaryPresenter;
 
     // Cached List of all savings account transactions
     // that are used for inflation of rows in

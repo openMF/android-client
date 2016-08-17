@@ -22,15 +22,15 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
+public class SavingsAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
 
     private final DataManagerDataTable mDataManagerDataTable;
     private final DataManagerSavings mDataManagerSavings;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingAccountSummaryPresenter(DataManagerDataTable dataManagerDataTable,
-                                         DataManagerSavings dataManagerSavings) {
+    public SavingsAccountSummaryPresenter(DataManagerDataTable dataManagerDataTable,
+                                          DataManagerSavings dataManagerSavings) {
         mDataManagerDataTable = dataManagerDataTable;
         mDataManagerSavings = dataManagerSavings;
         mSubscriptions = new CompositeSubscription();
