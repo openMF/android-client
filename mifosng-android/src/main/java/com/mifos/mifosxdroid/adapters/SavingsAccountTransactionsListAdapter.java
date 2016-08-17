@@ -29,12 +29,14 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
 
     private List<Transaction> listOfTransactions;
     private LayoutInflater layoutInflater;
+    private Context mContext;
 
     public SavingsAccountTransactionsListAdapter(Context context, List<Transaction>
             listOfTransactions) {
 
         layoutInflater = LayoutInflater.from(context);
         this.listOfTransactions = listOfTransactions;
+        mContext = context;
 
     }
 
@@ -71,11 +73,14 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
                 (listOfTransactions.get(i).getDate()));
         reusableViewHolder.tv_transactionType.setText(listOfTransactions.get(i)
                 .getTransactionType().getValue());
-        reusableViewHolder.tv_transactionAmount.setText(listOfTransactions.get(i).getCurrency()
-                .getDisplaySymbol()
-                + " " + listOfTransactions.get(i).getAmount());
+
+        String transactionAmount = listOfTransactions.get(i).getCurrency().getDisplaySymbol() +
+                mContext.getResources().getString(R.string.space) +
+                listOfTransactions.get(i).getAmount();
+        reusableViewHolder.tv_transactionAmount.setText(transactionAmount);
+
         if (listOfTransactions.get(i).getTransactionType().getDeposit()) {
-            reusableViewHolder.tv_transactionAmount.setTextColor(Color.parseColor("#08860C"));
+            reusableViewHolder.tv_transactionAmount.setTextColor(Color.GREEN);
         } else if (listOfTransactions.get(i).getTransactionType().getWithdrawal()) {
             reusableViewHolder.tv_transactionAmount.setTextColor(Color.RED);
         } else {
@@ -88,16 +93,15 @@ public class SavingsAccountTransactionsListAdapter extends BaseAdapter {
 
         @BindView(R.id.tv_transaction_date)
         TextView tv_transactionDate;
+
         @BindView(R.id.tv_transaction_type)
         TextView tv_transactionType;
+
         @BindView(R.id.tv_transaction_amount)
         TextView tv_transactionAmount;
 
         public ReusableViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
-
-
     }
-
 }

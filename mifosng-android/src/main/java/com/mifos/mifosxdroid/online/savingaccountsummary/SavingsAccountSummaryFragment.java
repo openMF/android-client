@@ -150,7 +150,8 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         ButterKnife.bind(this, rootView);
         mSavingAccountSummaryPresenter.attachView(this);
 
-        inflateSavingsAccountSummary();
+        mSavingAccountSummaryPresenter
+                .loadSavingAccount(savingsAccountType.getEndpoint(), savingsAccountNumber);
         return rootView;
     }
 
@@ -167,8 +168,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                 setToolbarTitle(getResources().getString(R.string.savingsAccountSummary));
                 break;
         }
-        mSavingAccountSummaryPresenter
-                .loadSavingAccount(savingsAccountType.getEndpoint(), savingsAccountNumber);
     }
 
     @Override
@@ -366,8 +365,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
         if (savingsAccountWithAssociations != null) {
 
-            SavingsAccountSummaryFragment.this.savingsAccountWithAssociations =
-                    savingsAccountWithAssociations;
+            this.savingsAccountWithAssociations = savingsAccountWithAssociations;
 
             tv_clientName.setText(savingsAccountWithAssociations.getClientName());
             tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
@@ -428,8 +426,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                 }
             });
 
-            if (savingsAccountWithAssociations.getStatus()
-                    .getSubmittedAndPendingApproval()) {
+            if (savingsAccountWithAssociations.getStatus().getSubmittedAndPendingApproval()) {
                 bt_approve_saving.setEnabled(true);
                 bt_deposit.setVisibility(View.GONE);
                 bt_withdrawal.setVisibility(View.GONE);
