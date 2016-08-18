@@ -22,7 +22,6 @@ import javax.inject.Singleton;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func0;
-import rx.functions.Func1;
 
 /**
  * Created by Rajan Maurya on 17/08/16.
@@ -108,8 +107,8 @@ public class DatabaseHelperSavings {
         });
     }
 
-    public Observable<SavingsAccountTransactionTemplate> saveSavingsAccountTransactionTemplate
-            (final SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
+    public Observable<SavingsAccountTransactionTemplate> saveSavingsAccountTransactionTemplate(
+            final SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
         return Observable.defer(new Func0<Observable<SavingsAccountTransactionTemplate>>() {
             @Override
             public Observable<SavingsAccountTransactionTemplate> call() {
@@ -129,8 +128,8 @@ public class DatabaseHelperSavings {
         });
     }
 
-    public Observable<SavingsAccountTransactionTemplate> readSavingsAccountTransactionTemplate
-            (final int savingsAccountId) {
+    public Observable<SavingsAccountTransactionTemplate> readSavingsAccountTransactionTemplate(
+            final int savingsAccountId) {
         return Observable.defer(new Func0<Observable<SavingsAccountTransactionTemplate>>() {
             @Override
             public Observable<SavingsAccountTransactionTemplate> call() {

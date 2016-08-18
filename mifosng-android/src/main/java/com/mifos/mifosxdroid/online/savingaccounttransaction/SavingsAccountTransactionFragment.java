@@ -160,16 +160,16 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         //Visibility of ParentLayout GONE, If SavingAccountTransaction Already made in Offline Mode
         viewFlipper.setVisibility(View.GONE);
 
-        new MaterialDialog.Builder().init(getActivity())g
+        new MaterialDialog.Builder().init(getActivity())
                 .setTitle(R.string.sync_previous_transaction)
                 .setMessage(string.dialog_message_sync_savingaccounttransaction)
                 .setPositiveButton(R.string.dialog_action_ok,
                         new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getActivity().getSupportFragmentManager().popBackStackImmediate();
-                    }
-                })
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                            }
+                        })
                 .setCancelable(false)
                 .createMaterialDialog()
                 .show();
@@ -267,7 +267,6 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
 
-
     @OnClick(R.id.bt_cancelTransaction)
     public void onCancelTransactionButtonClicked() {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
@@ -301,7 +300,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
             List<String> listOfPaymentTypes = Utils.getPaymentTypeOptions(
                     savingsAccountTransactionTemplate.getPaymentTypeOptions());
             ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(),
-                            layout.simple_spinner_item, listOfPaymentTypes);
+                    layout.simple_spinner_item, listOfPaymentTypes);
 
             paymentTypeAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
             sp_paymentType.setAdapter(paymentTypeAdapter);
