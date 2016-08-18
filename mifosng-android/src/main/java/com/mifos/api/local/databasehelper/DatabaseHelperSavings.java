@@ -46,12 +46,6 @@ public class DatabaseHelperSavings {
 
                 if (transactions.size() != 0) {
                     Observable.from(transactions)
-                            .flatMap(new Func1<Transaction, Observable<Transaction>>() {
-                                @Override
-                                public Observable<Transaction> call(Transaction transaction) {
-                                    return Observable.just(transaction);
-                                }
-                            })
                             .subscribe(new Action1<Transaction>() {
                                 @Override
                                 public void call(Transaction transaction) {
@@ -95,12 +89,6 @@ public class DatabaseHelperSavings {
                         .queryList();
 
                 Observable.from(transactions)
-                        .flatMap(new Func1<Transaction, Observable<Transaction>>() {
-                            @Override
-                            public Observable<Transaction> call(Transaction transaction) {
-                                return Observable.just(transaction);
-                            }
-                        })
                         .subscribe(new Action1<Transaction>() {
                             @Override
                             public void call(Transaction transaction) {
