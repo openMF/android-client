@@ -25,6 +25,8 @@ public interface SyncClientsDialogMvpView extends MvpView {
 
     void showClientsSyncSuccessfully();
 
+    Boolean isOnline();
+
     void dismissDialog();
 
     void showDialog();

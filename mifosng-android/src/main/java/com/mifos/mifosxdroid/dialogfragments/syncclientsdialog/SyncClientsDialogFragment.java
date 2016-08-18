@@ -101,7 +101,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         showUI();
 
         //Start Syncing Clients
-        if (Network.isOnline(getActivity())) {
+        if (isOnline()) {
             mSyncClientsDialogPresenter.startSyncingClients(mClientList);
         } else {
             showNetworkIsNotAvailable();
@@ -180,6 +180,11 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     public void showClientsSyncSuccessfully() {
         btn_cancel.setVisibility(View.INVISIBLE);
         btn_hide.setText(getResources().getString(R.string.dialog_action_ok));
+    }
+
+    @Override
+    public Boolean isOnline() {
+        return Network.isOnline(getActivity());
     }
 
     @Override

@@ -1,19 +1,21 @@
 package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog;
 
-import android.content.Context;
-
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerLoan;
+import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
+import com.mifos.objects.accounts.savings.SavingsAccount;
+import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
-import com.mifos.utils.Network;
+import com.mifos.objects.zipmodels.SavingsAccountAndTransactionTemplate;
+import com.mifos.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,33 +32,37 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- *
  * Created by Rajan Maurya on 08/08/16.
  */
 public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogMvpView> {
 
     private final DataManagerClient mDataManagerClient;
     private final DataManagerLoan mDataManagerLoan;
+    private final DataManagerSavings mDataManagerSavings;
 
     private CompositeSubscription mSubscriptions;
 
     private List<Client> mClientList, mFailedSyncClient;
     private List<LoanAccount> mLoanAccountList;
+    private List<SavingsAccount> mSavingsAccountList;
 
-    private int mClientSyncIndex, mLoanAndRepaymentSyncIndex = 0;
+    private Boolean mLoanAccountSyncStatus = false;
 
-    private Context mContext;
+    private int mClientSyncIndex, mLoanAndRepaymentSyncIndex = 0,
+            mSavingsAndTransactionSyncIndex = 0;
+
     @Inject
     public SyncClientsDialogPresenter(DataManagerClient dataManagerClient,
                                       DataManagerLoan dataManagerLoan,
-                                      @ApplicationContext Context context) {
+                                      DataManagerSavings dataManagerSavings) {
         mDataManagerClient = dataManagerClient;
         mDataManagerLoan = dataManagerLoan;
+        mDataManagerSavings = dataManagerSavings;
         mSubscriptions = new CompositeSubscription();
         mClientList = new ArrayList<>();
         mFailedSyncClient = new ArrayList<>();
         mLoanAccountList = new ArrayList<>();
-        mContext = context;
+        mSavingsAccountList = new ArrayList<>();
     }
 
     @Override
@@ -83,6 +89,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
     public void syncClientAndUpdateUI() {
         mLoanAndRepaymentSyncIndex = 0;
+        mSavingsAndTransactionSyncIndex = 0;
         updateTotalSyncProgressBarAndCount();
         if (mClientSyncIndex != mClientList.size()) {
             updateClientName();
@@ -95,7 +102,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     }
 
     public void checkNetworkConnectionAndSyncClient() {
-        if (Network.isOnline(mContext)) {
+        if (getMvpView().isOnline()) {
             syncClientAndUpdateUI();
         } else {
             getMvpView().showNetworkIsNotAvailable();
@@ -104,7 +111,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     }
 
     public void checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
-        if (Network.isOnline(mContext)) {
+        if (getMvpView().isOnline()) {
             syncLoanAndLoanRepayment(mLoanAccountList
                     .get(mLoanAndRepaymentSyncIndex).getId());
         } else {
@@ -113,12 +120,54 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         }
     }
 
+    public void checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
+        if (getMvpView().isOnline()) {
+            syncSavingsAccountAndTemplate(mSavingsAccountList
+                            .get(mSavingsAndTransactionSyncIndex).getDepositType().getEndpoint(),
+                    mSavingsAccountList.get(mSavingsAndTransactionSyncIndex).getId());
+        } else {
+            getMvpView().showNetworkIsNotAvailable();
+            getMvpView().dismissDialog();
+        }
+    }
+
+    public void checkAccountsSyncStatusAndSyncAccounts() {
+        if (!mLoanAccountList.isEmpty() && !mLoanAccountSyncStatus) {
+            //Sync the Active Loan and LoanRepayment
+            checkNetworkConnectionAndSyncLoanAndLoanRepayment();
+        } else if (!mSavingsAccountList.isEmpty()) {
+            //Sync the Active Savings Account
+            checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate();
+        } else {
+            // If LoanAccounts and SavingsAccount are null then sync Client to Database
+            getMvpView().setMaxSingleSyncClientProgressBar(1);
+            syncClient(mClientList.get(mClientSyncIndex));
+        }
+    }
+
+    public void setLoanAccountSyncStatusTrue() {
+        if (mLoanAndRepaymentSyncIndex == mLoanAccountList.size()) {
+            mLoanAccountSyncStatus = true;
+        }
+    }
+
+    public void onAccountSyncFailed() {
+        int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
+        getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
+
+        mClientSyncIndex = mClientSyncIndex + 1;
+        mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
+
+        getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
+        checkNetworkConnectionAndSyncClient();
+    }
+
     /**
      * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
      * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
      * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
-     * <p/>
-     *
+     * <p>
+     * <p>
      * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
      * onError :
      *
@@ -144,24 +193,20 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
                         mClientSyncIndex = mClientSyncIndex + 1;
                         checkNetworkConnectionAndSyncClient();
-                        
+
                     }
 
                     @Override
                     public void onNext(ClientAccounts clientAccounts) {
                         mLoanAccountList = getActiveLoanAccounts(clientAccounts.getLoanAccounts());
-                        if (!mLoanAccountList.isEmpty()) {
-                            //Sync the Active Loan and LoanRepayment
-                            checkNetworkConnectionAndSyncLoanAndLoanRepayment();
+                        mSavingsAccountList =
+                                getActiveSavingsAccounts(clientAccounts.getSavingsAccounts());
 
-                            //Updating UI
-                            getMvpView().setMaxSingleSyncClientProgressBar(mLoanAccountList.size());
+                        //Updating UI
+                        getMvpView().setMaxSingleSyncClientProgressBar(mLoanAccountList.size() +
+                                mSavingsAccountList.size());
 
-                        } else {
-                            // If LoanAccounts is null then sync Client to Database
-                            getMvpView().setMaxSingleSyncClientProgressBar(1);
-                            syncClient(mClientList.get(mClientSyncIndex));
-                        }
+                        checkAccountsSyncStatusAndSyncAccounts();
                     }
                 })
         );
@@ -202,28 +247,87 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onError(Throwable e) {
-                        int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
-                        getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
-                        mClientSyncIndex = mClientSyncIndex + 1;
-                        mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
-                        getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
-                        checkNetworkConnectionAndSyncClient();
+                        onAccountSyncFailed();
                     }
 
                     @Override
                     public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
                         mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
                         getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
-                        if (mLoanAndRepaymentSyncIndex !=  mLoanAccountList.size()) {
+                        if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size()) {
                             checkNetworkConnectionAndSyncLoanAndLoanRepayment();
                         } else {
-                            syncClient(mClientList.get(mClientSyncIndex));
+                            setLoanAccountSyncStatusTrue();
+                            checkAccountsSyncStatusAndSyncAccounts();
                         }
                     }
                 })
         );
     }
 
+
+    /**
+     * This Method Fetch SavingsAccount and SavingsAccountTransactionTemplate and Sync them in
+     * Database table.
+     *
+     * @param savingsAccountType SavingsAccount Type Example : savingsaccounts
+     * @param savingsAccountId SavingsAccount Id
+     */
+    public void syncSavingsAccountAndTemplate(String savingsAccountType, int savingsAccountId) {
+        checkViewAttached();
+        mSubscriptions.add(Observable.zip(
+                mDataManagerSavings.syncSavingsAccount(savingsAccountType, savingsAccountId,
+                        Constants.TRANSACTIONS),
+                mDataManagerSavings.syncSavingsAccountTransactionTemplate(savingsAccountType,
+                        savingsAccountId, Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT),
+                new Func2<SavingsAccountWithAssociations, SavingsAccountTransactionTemplate,
+                        SavingsAccountAndTransactionTemplate>() {
+
+                    @Override
+                    public SavingsAccountAndTransactionTemplate call(
+                            SavingsAccountWithAssociations savingsAccountWithAssociations,
+                            SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
+
+                        SavingsAccountAndTransactionTemplate accountAndTransactionTemplate =
+                                new SavingsAccountAndTransactionTemplate();
+                        accountAndTransactionTemplate.setSavingsAccountTransactionTemplate(
+                                savingsAccountTransactionTemplate);
+                        accountAndTransactionTemplate.setSavingsAccountWithAssociations(
+                                savingsAccountWithAssociations);
+
+                        return accountAndTransactionTemplate;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<SavingsAccountAndTransactionTemplate>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onAccountSyncFailed();
+                    }
+
+                    @Override
+                    public void onNext(SavingsAccountAndTransactionTemplate
+                                               savingsAccountAndTransactionTemplate) {
+                        mSavingsAndTransactionSyncIndex = mSavingsAndTransactionSyncIndex + 1;
+                        getMvpView().updateSingleSyncClientProgressBar(
+                                mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex);
+
+                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size()) {
+                            checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate();
+                        } else {
+                            syncClient(mClientList.get(mClientSyncIndex));
+                        }
+                    }
+                })
+        );
+
+    }
 
     /**
      * This Method Saving the Clients to Database, If their Accounts, Loan and LoanRepayment
@@ -276,6 +380,25 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     }
                 });
         return loanAccounts;
+    }
+
+    public List<SavingsAccount> getActiveSavingsAccounts(List<SavingsAccount> savingsAccounts) {
+        final List<SavingsAccount> accounts = new ArrayList<>();
+        Observable.from(savingsAccounts)
+                .filter(new Func1<SavingsAccount, Boolean>() {
+                    @Override
+                    public Boolean call(SavingsAccount savingsAccount) {
+                        return savingsAccount.getStatus().getActive();
+                    }
+                })
+                .subscribe(new Action1<SavingsAccount>() {
+                    @Override
+                    public void call(SavingsAccount savingsAccount) {
+                        accounts.add(savingsAccount)
+                        ;
+                    }
+                });
+        return accounts;
     }
 
     public void updateTotalSyncProgressBarAndCount() {

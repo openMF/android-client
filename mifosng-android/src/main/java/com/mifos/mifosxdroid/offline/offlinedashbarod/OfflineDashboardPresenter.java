@@ -3,9 +3,11 @@ package com.mifos.mifosxdroid.offline.offlinedashbarod;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerLoan;
+import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
 
@@ -28,15 +30,18 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
     private final DataManagerClient mDataManagerClient;
     private final DataManagerGroups mDataManagerGroups;
     private final DataManagerLoan mDataManagerLoan;
+    private final DataManagerSavings mDataManagerSavings;
 
     @Inject
     public OfflineDashboardPresenter(DataManagerClient dataManagerClient,
                                      DataManagerGroups dataManagerGroups,
-                                     DataManagerLoan dataManagerLoan) {
+                                     DataManagerLoan dataManagerLoan,
+                                     DataManagerSavings dataManagerSavings) {
         mSubscriptions = new CompositeSubscription();
         mDataManagerClient = dataManagerClient;
         mDataManagerGroups = dataManagerGroups;
         mDataManagerLoan = dataManagerLoan;
+        mDataManagerSavings = dataManagerSavings;
     }
 
     @Override
@@ -126,6 +131,34 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                         getMvpView().showLoanRepaymentTransactions(loanRepaymentRequests);
                     }
                 }));
+    }
+
+    public void loadDatabaseSavingsAccountTransactions() {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerSavings.getAllSavingsAccountTransactions()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<List<SavingsAccountTransactionRequest>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showError(R.string.failed_to_load_savingaccounttransaction);
+                    }
+
+                    @Override
+                    public void onNext(List<SavingsAccountTransactionRequest>
+                                               transactionRequests) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showSavingsAccountTransaction(transactionRequests);
+                    }
+                })
+        );
     }
 
 }

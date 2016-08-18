@@ -23,7 +23,11 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivity;
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsActivity;
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity;
+
+import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
+        .SyncSavingsAccountTransactionActivity;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.ItemOffsetDecoration;
@@ -86,14 +90,15 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     OfflineDashboardAdapter mOfflineDashboardAdapter;
 
     // update mPayloadIndex to number of request is going to fetch data in Presenter;
-    private int mPayloadIndex = 3;
+    private int mPayloadIndex = 4;
 
     private static final int GRID_COUNT = 2;
 
     private List<Class> mPayloadClasses;
 
     public static final int[] SYNC_CARD_UI_NAMES = {R.string.sync_clients,
-            R.string.sync_groups, R.string.sync_loanrepayments};
+            R.string.sync_groups, R.string.sync_loanrepayments,
+            R.string.sync_savingsaccounttransactions};
 
 
     @Override
@@ -150,11 +155,12 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         super.onStart();
         mOfflineDashboardAdapter.removeAllCards();
         mPayloadClasses.clear();
-        mPayloadIndex = 3;
+        mPayloadIndex = 4;
 
         mOfflineDashboardPresenter.loadDatabaseClientPayload();
         mOfflineDashboardPresenter.loadDatabaseGroupPayload();
         mOfflineDashboardPresenter.loadDatabaseLoanRepaymentTransactions();
+        mOfflineDashboardPresenter.loadDatabaseSavingsAccountTransactions();
     }
 
     /**
@@ -213,6 +219,27 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
                     .getString(R.string.transactions_count) +
                     loanRepaymentRequests.size(), SYNC_CARD_UI_NAMES[2]);
             mPayloadClasses.add(SyncLoanRepaymentTransactionActivity.class);
+        } else {
+            mPayloadIndex = mPayloadIndex - 1;
+            showNoPayloadToShow();
+        }
+    }
+
+    /**
+     * This method set the response of DataManager from DatabaseHelper, if
+     * List<SavingsAccountTransactionRequest> Size is zero, then decrease the value of
+     * mPayloadIndex by 1 and if size is not equal to zero then update the adapter and add the
+     * Card UI name and size() of the List to sync.
+     *
+     * @param transactions List<SavingsAccountTransaction>
+     */
+    @Override
+    public void showSavingsAccountTransaction(List<SavingsAccountTransactionRequest> transactions) {
+        if (transactions.size() != 0) {
+            mOfflineDashboardAdapter.showCard(getActivity().getResources()
+                    .getString(R.string.transactions_count) +
+                    transactions.size(), SYNC_CARD_UI_NAMES[3]);
+            mPayloadClasses.add(SyncSavingsAccountTransactionActivity.class);
         } else {
             mPayloadIndex = mPayloadIndex - 1;
             showNoPayloadToShow();

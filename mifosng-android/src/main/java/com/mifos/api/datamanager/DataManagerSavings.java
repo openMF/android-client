@@ -10,6 +10,7 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.PrefManager;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,17 +55,7 @@ public class DataManagerSavings {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
-                        type, savingsAccountId, association)
-                        .concatMap(new Func1<SavingsAccountWithAssociations,
-                                Observable<? extends SavingsAccountWithAssociations>>() {
-                            @Override
-                            public Observable<? extends SavingsAccountWithAssociations> call(
-                                    SavingsAccountWithAssociations savingsAccountWithAssociations) {
-                                return mDatabaseHelperSavings.saveSavingsAccount
-                                        (savingsAccountWithAssociations);
-                            }
-                        });
-
+                        type, savingsAccountId, association);
             case 1:
                 /**
                  * Return SavingsAccountWithAssociations from DatabaseHelperSavings.
@@ -74,6 +65,39 @@ public class DataManagerSavings {
             default:
                 return Observable.just(new SavingsAccountWithAssociations());
         }
+    }
+
+
+    /**
+     * This Method Make the Request to the REST API
+     * https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/{savingsAccountId}
+     * ?associations={all or transactions or charges}
+     * and fetch savings application/account. and After Fetching SavingsAccount DataManager
+     * send Fetched SavingsAccount to DatabaseHelperSavings to save the SavingsAccount in Database
+     * for Offline use and DatabaseHelperSavings returns saved SavingsAccount.
+     *
+     * @param type             Type of the SavingsAccount
+     * @param savingsAccountId Savings Account Id
+     * @param association      {all or transactions or charges}
+     *                         'all': Gets data related to all associations e.g. ?associations=all.
+     *                         'transactions': Gets data related to transactions on the account e.g.
+     *                         ?associations=transactions
+     *                         'charges':Savings Account charges data.
+     * @return SavingsAccountWithAssociations
+     */
+    public Observable<SavingsAccountWithAssociations> syncSavingsAccount(
+            String type, int savingsAccountId, String association) {
+        return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(type,
+                savingsAccountId, association)
+                .concatMap(new Func1<SavingsAccountWithAssociations,
+                        Observable<? extends SavingsAccountWithAssociations>>() {
+                    @Override
+                    public Observable<? extends SavingsAccountWithAssociations> call
+                            (SavingsAccountWithAssociations savingsAccountWithAssociations) {
+                        return mDatabaseHelperSavings.saveSavingsAccount(
+                                savingsAccountWithAssociations);
+                    }
+                });
     }
 
 
@@ -102,17 +126,7 @@ public class DataManagerSavings {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
-                        savingsAccountId, transactionType)
-                        .concatMap(new Func1<SavingsAccountTransactionTemplate,
-                                Observable<? extends SavingsAccountTransactionTemplate>>() {
-                            @Override
-                            public Observable<? extends SavingsAccountTransactionTemplate> call
-                                    (SavingsAccountTransactionTemplate
-                                             savingsAccountTransactionTemplate) {
-                                return mDatabaseHelperSavings.saveSavingsAccountTransactionTemplate(
-                                        savingsAccountTransactionTemplate);
-                            }
-                        });
+                        savingsAccountId, transactionType);
             case 1:
                 /**
                  * Return SavingsAccountTransactionTemplate from DatabaseHelperSavings.
@@ -125,6 +139,34 @@ public class DataManagerSavings {
         }
     }
 
+    /**
+     * This Method make the Request to REST API, if the User Status is Online at:
+     * https://demo.openmf.org/fineract-provider/api/v1/{savingsAccountType}/{savingsAccountId}
+     * /transactions/template.
+     * using retrofit 2 with SavingsAccountService and get SavingsAccountTransactionTemplate in
+     * response. and then DataManager send fetched SavingsAccountTransactionTemplate to
+     * DatabaseHelperSavings to save in the SavingsAccountTransactionTemplate_Table for offline use
+     *
+     * @param savingsAccountType Savings Account Type Example : savingsaccounts
+     * @param savingsAccountId   SavingsAccount Id
+     * @param transactionType    Transaction Type Example : 'Deposit', 'Withdrawal'
+     * @return SavingsAccountTransactionTemplate
+     */
+    public Observable<SavingsAccountTransactionTemplate> syncSavingsAccountTransactionTemplate(
+            String savingsAccountType, int savingsAccountId, String transactionType) {
+        return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate
+                (savingsAccountType, savingsAccountId, transactionType)
+                .concatMap(new Func1<SavingsAccountTransactionTemplate,
+                        Observable<? extends SavingsAccountTransactionTemplate>>() {
+                    @Override
+                    public Observable<? extends SavingsAccountTransactionTemplate> call
+                            (SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
+                        return mDatabaseHelperSavings.saveSavingsAccountTransactionTemplate(
+                                savingsAccountTransactionTemplate);
+                    }
+                });
+    }
+
 
     /**
      * This Method makes the Transaction of SavingAccount. Here is two mode, one is Online.
@@ -132,18 +174,18 @@ public class DataManagerSavings {
      * server and if user is on offline mode then transaction will be saved in Database.
      * and User is able to sync that transaction when ever he have good internet connection
      *
-     * @param type             Type of Transaction
-     * @param savingsAccountId Savings Account Id
-     * @param transactionType  Transaction Type Example : 'Deposit', 'Withdrawal'
-     * @param request          SavingsAccountTransactionRequest
+     * @param savingsAccountType Type of Transaction
+     * @param savingsAccountId   Savings Account Id
+     * @param transactionType    Transaction Type Example : 'Deposit', 'Withdrawal'
+     * @param request            SavingsAccountTransactionRequest
      * @return SavingsAccountTransactionResponse
      */
     public Observable<SavingsAccountTransactionResponse> processTransaction(
-            String type, int savingsAccountId, String transactionType,
+            String savingsAccountType, int savingsAccountId, String transactionType,
             SavingsAccountTransactionRequest request) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getSavingsApi().processTransaction(type,
+                return mBaseApiManager.getSavingsApi().processTransaction(savingsAccountType,
                         savingsAccountId, transactionType, request);
 
             case 1:
@@ -151,7 +193,8 @@ public class DataManagerSavings {
                  * Return SavingsAccountTransactionResponse from DatabaseHelperSavings.
                  */
                 return mDatabaseHelperSavings
-                        .saveSavingsAccountTransaction(request, savingsAccountId);
+                        .saveSavingsAccountTransaction(savingsAccountType, savingsAccountId,
+                                transactionType, request);
 
             default:
                 return Observable.just(new SavingsAccountTransactionResponse());
@@ -167,9 +210,49 @@ public class DataManagerSavings {
      * @param savingAccountId SavingsAccount Id
      * @return SavingsAccountTransactionRequest
      */
-    public Observable<SavingsAccountTransactionRequest> getDatabaseSavingsAccountTransaction(
+    public Observable<SavingsAccountTransactionRequest> getSavingsAccountTransaction(
             int savingAccountId) {
-        return mDatabaseHelperSavings.getDatabaseSavingsAccountTransaction(savingAccountId);
+        return mDatabaseHelperSavings.getSavingsAccountTransaction(savingAccountId);
     }
 
+
+    /**
+     * This Method sent the request to DatabaseHelperSavings and DatabaseHelperSavings load the
+     * All SavingsAccountTransactions from the SavingsAccountTransactionRequest_Table.
+     * and returns the List<SavingsAccountTransactionRequest>
+     *
+     * @return List<SavingsAccountTransactionRequest></>
+     */
+    public Observable<List<SavingsAccountTransactionRequest>> getAllSavingsAccountTransactions() {
+        return mDatabaseHelperSavings.getAllSavingsAccountTransaction();
+    }
+
+
+    /**
+     * This method sending request DatabaseHelper and Deleting the SavingsAccountTransaction
+     * with savingsAccountId from SavingsAccountTransaction_Table and again loading list of
+     * SavingsAccountTransaction from Database.
+     *
+     * @param savingsAccountId Loan Id of the Loan
+     * @return List<SavingsAccountTransaction>
+     */
+    public Observable<List<SavingsAccountTransactionRequest>> deleteAndUpdateTransactions(
+            int savingsAccountId) {
+        return mDatabaseHelperSavings.deleteAndUpdateTransaction(savingsAccountId);
+    }
+
+
+    /**
+     * This Method updating SavingsAccountTransactionRequest in to Database and return the same
+     * SavingsAccountTransactionRequest to the Presenter
+     *
+     * @param savingsAccountTransactionRequest Updating SavingsAccountTransactionRequest
+     *                                         in to Database.
+     * @return LoanRepaymentRequest
+     */
+    public Observable<SavingsAccountTransactionRequest> updateLoanRepaymentTransaction(
+            SavingsAccountTransactionRequest savingsAccountTransactionRequest) {
+        return mDatabaseHelperSavings.updateSavingsAccountTransaction(
+                savingsAccountTransactionRequest);
+    }
 }
