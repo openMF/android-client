@@ -97,6 +97,8 @@
     <string name="slash">/</string>
     <string name="space">" "</string>
     <string name="new_line">\n</string>
+    <string name="field">Field</string>
+    <string name="value">Value</string>
     <!-- General Terms End Here -->
 
 
@@ -153,6 +155,7 @@
     <string name="review_transaction_details">Review Payment Details</string>
     <string name="process_transaction">Process Transaction</string>
     <string name="transaction_date">Transaction Date</string>
+    <string name="transaction_body">Transaction Body</string>
 
     <!-- Loan Related Terminologies End Here -->
 

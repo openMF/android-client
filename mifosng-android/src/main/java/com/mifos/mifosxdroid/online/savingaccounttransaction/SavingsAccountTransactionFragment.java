@@ -160,7 +160,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                     .message_field_required)).notifyUserWithToast(getActivity());
             return;
         }
-        String[] headers = {"Field", "Value"};
+        String[] headers = {getResources().getString(string.field),
+                getResources().getString(string.value)};
         String[][] data = {
                 {getResources().getString(string.transaction_date),
                         tv_transactionDate.getText().toString()},
@@ -212,7 +213,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeOptionId));
 
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
-        Log.i("Transaction Body", builtTransactionRequestAsJson);
+        Log.i(getResources().getString(string.transaction_body), builtTransactionRequestAsJson);
 
         mSavingAccountTransactionPresenter.processTransaction(savingsAccountType.getEndpoint(),
                 savingsAccountId, transactionType, savingsAccountTransactionRequest);
