@@ -157,6 +157,7 @@
     <string name="transaction_date">Transaction Date</string>
     <string name="transaction_body">Transaction Body</string>
     <string name="transaction_failed">Transaction Failed</string>
+    <string name="transaction_saved_in_db">Transaction Saved in DB</string>
 
     <!-- Loan Related Terminologies End Here -->
 

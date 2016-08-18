@@ -36,6 +36,8 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
+import com.mifos.utils.PrefManager;
 import com.mifos.utils.Utils;
 
 import java.util.List;
@@ -215,9 +217,15 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i(getResources().getString(string.transaction_body), builtTransactionRequestAsJson);
 
+        if (!Network.isOnline(getActivity())) {
+            PrefManager.setUserStatus(Constants.USER_OFFLINE);
+        }
+
         mSavingAccountTransactionPresenter.processTransaction(savingsAccountType.getEndpoint(),
                 savingsAccountId, transactionType, savingsAccountTransactionRequest);
     }
+
+
 
     @OnClick(R.id.bt_cancelTransaction)
     public void onCancelTransactionButtonClicked() {
@@ -275,22 +283,18 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     @Override
     public void showTransactionSuccessfullyDone(SavingsAccountTransactionResponse
                                                         savingsAccountTransactionResponse) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
-
-        if (savingsAccountTransactionResponse != null) {
-            if (transactionType.equals(Constants
-                    .SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
+        if (savingsAccountTransactionResponse.getResourceId() == null) {
+            Toaster.show(rootView, getResources().getString(string.transaction_saved_in_db));
+        } else {
+            if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
                 Toaster.show(rootView, "Deposit Successful, Transaction ID = " +
                         savingsAccountTransactionResponse.getResourceId());
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-            } else if (transactionType.equals(Constants
-                    .SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
+            } else if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
                 Toaster.show(rootView, "Withdrawal Successful, Transaction ID = "
                         + savingsAccountTransactionResponse.getResourceId());
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
             }
         }
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.mifos.api.local.databasehelper;
 
 import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest_Table;
+import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations_Table;
 import com.mifos.objects.accounts.savings.SavingsTransactionDate;
@@ -160,6 +163,39 @@ public class DatabaseHelperSavings {
                 }
 
                 return Observable.just(savingsAccountTransactionTemplate);
+            }
+        });
+    }
+
+    public Observable<SavingsAccountTransactionResponse> saveSavingsAccountTransaction(
+            final SavingsAccountTransactionRequest savingsAccountTransactionRequest,
+            final int savingsAccountId) {
+        return Observable.defer(new Func0<Observable<SavingsAccountTransactionResponse>>() {
+            @Override
+            public Observable<SavingsAccountTransactionResponse> call() {
+
+                savingsAccountTransactionRequest.setSavingAccountId(savingsAccountId);
+                savingsAccountTransactionRequest.save();
+
+                return Observable.just(new SavingsAccountTransactionResponse());
+            }
+        });
+    }
+
+    public Observable<SavingsAccountTransactionRequest> readSavingsAccountTransaction(
+            final int savingsAccountId) {
+        return Observable.defer(new Func0<Observable<SavingsAccountTransactionRequest>>() {
+            @Override
+            public Observable<SavingsAccountTransactionRequest> call() {
+
+                SavingsAccountTransactionRequest savingsAccountTransactionRequest =
+                        SQLite.select()
+                                .from(SavingsAccountTransactionRequest.class)
+                                .where(SavingsAccountTransactionRequest_Table
+                                        .savingAccountId.eq(savingsAccountId))
+                                .querySingle();
+
+                return Observable.just(savingsAccountTransactionRequest);
             }
         });
     }

@@ -92,17 +92,17 @@ public class DataManagerSavings {
      * If User Status is Offline then It make the request to the DatabaseHelperSavings and get
      * the SavingAccount TransactionTemplate According to SavingAccount Id
      *
-     * @param type            Savings Account Type Example : savingsaccounts
-     * @param accountId       SavingsAccount Id
-     * @param transactionType Transaction Type Example : 'Deposit', 'Withdrawal'
+     * @param type             Savings Account Type Example : savingsaccounts
+     * @param savingsAccountId SavingsAccount Id
+     * @param transactionType  Transaction Type Example : 'Deposit', 'Withdrawal'
      * @return SavingsAccountTransactionTemplate
      */
     public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
-            String type, final int accountId, String transactionType) {
+            String type, final int savingsAccountId, String transactionType) {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
-                        accountId, transactionType)
+                        savingsAccountId, transactionType)
                         .concatMap(new Func1<SavingsAccountTransactionTemplate,
                                 Observable<? extends SavingsAccountTransactionTemplate>>() {
                             @Override
@@ -117,7 +117,8 @@ public class DataManagerSavings {
                 /**
                  * Return SavingsAccountTransactionTemplate from DatabaseHelperSavings.
                  */
-                return mDatabaseHelperSavings.readSavingsAccountTransactionTemplate(accountId);
+                return mDatabaseHelperSavings.readSavingsAccountTransactionTemplate
+                        (savingsAccountId);
 
             default:
                 return Observable.just(new SavingsAccountTransactionTemplate());
@@ -125,10 +126,36 @@ public class DataManagerSavings {
     }
 
 
+    /**
+     * This Method makes the Transaction of SavingAccount. Here is two mode, one is Online.
+     * if the user is Online, then request will be made to server and transaction will be sync to
+     * server and if user is on offline mode then transaction will be saved in Database.
+     * and User is able to sync that transaction when ever he have good internet connection
+     *
+     * @param type             Type of Transaction
+     * @param savingsAccountId Savings Account Id
+     * @param transactionType  Transaction Type Example : 'Deposit', 'Withdrawal'
+     * @param request          SavingsAccountTransactionRequest
+     * @return SavingsAccountTransactionResponse
+     */
     public Observable<SavingsAccountTransactionResponse> processTransaction(
-            String type, int accountId, String transactionType,
+            String type, int savingsAccountId, String transactionType,
             SavingsAccountTransactionRequest request) {
-        return mBaseApiManager.getSavingsApi().processTransaction(type, accountId, transactionType,
-                request);
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getSavingsApi().processTransaction(type,
+                        savingsAccountId, transactionType, request);
+
+            case 1:
+                /**
+                 * Return SavingsAccountTransactionResponse from DatabaseHelperSavings.
+                 */
+                return mDatabaseHelperSavings
+                        .saveSavingsAccountTransaction(request, savingsAccountId);
+
+            default:
+                return Observable.just(new SavingsAccountTransactionResponse());
+        }
     }
+
 }

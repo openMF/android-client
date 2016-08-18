@@ -183,10 +183,10 @@ public class DashboardActivity extends MifosBaseActivity
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
                     PrefManager.setUserStatus(Constants.USER_ONLINE);
-                    //userStatusToggle.setChecked(false);
+                    userStatusToggle.setChecked(false);
                 } else {
                     PrefManager.setUserStatus(Constants.USER_OFFLINE);
-                    //userStatusToggle.setChecked(true);
+                    userStatusToggle.setChecked(true);
                 }
             }
         });
