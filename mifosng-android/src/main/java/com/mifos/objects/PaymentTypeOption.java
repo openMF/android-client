@@ -8,6 +8,7 @@ package com.mifos.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -21,26 +22,25 @@ public class PaymentTypeOption extends MifosBaseModel implements Comparable<Paym
         Parcelable {
 
 
+    @SerializedName("id")
     @PrimaryKey
     Integer id;
 
+    @SerializedName("name")
     @Column
     String name;
 
+    @SerializedName("description")
+    @Column
+    String description;
+
+    @SerializedName("isCashPayment")
+    @Column
+    Boolean isCashPayment;
+
+    @SerializedName("position")
     @Column
     Integer position;
-
-    //Payment Type Like Loan, Saving or Reoccurring
-    @Column
-    String templateType;
-
-    public String getTemplateType() {
-        return templateType;
-    }
-
-    public void setTemplateType(String templateType) {
-        this.templateType = templateType;
-    }
 
     public Integer getId() {
         return id;
@@ -64,6 +64,22 @@ public class PaymentTypeOption extends MifosBaseModel implements Comparable<Paym
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getCashPayment() {
+        return isCashPayment;
+    }
+
+    public void setCashPayment(Boolean cashPayment) {
+        isCashPayment = cashPayment;
     }
 
     /**
@@ -91,10 +107,14 @@ public class PaymentTypeOption extends MifosBaseModel implements Comparable<Paym
         return "PaymentTypeOption{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", isCashPayment=" + isCashPayment +
                 ", position=" + position +
                 '}';
     }
 
+    public PaymentTypeOption() {
+    }
 
     @Override
     public int describeContents() {
@@ -105,20 +125,20 @@ public class PaymentTypeOption extends MifosBaseModel implements Comparable<Paym
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
         dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeValue(this.isCashPayment);
         dest.writeValue(this.position);
-    }
-
-    public PaymentTypeOption() {
     }
 
     protected PaymentTypeOption(Parcel in) {
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.name = in.readString();
+        this.description = in.readString();
+        this.isCashPayment = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.position = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<PaymentTypeOption> CREATOR = new Parcelable
-            .Creator<PaymentTypeOption>() {
+    public static final Creator<PaymentTypeOption> CREATOR = new Creator<PaymentTypeOption>() {
         @Override
         public PaymentTypeOption createFromParcel(Parcel source) {
             return new PaymentTypeOption(source);

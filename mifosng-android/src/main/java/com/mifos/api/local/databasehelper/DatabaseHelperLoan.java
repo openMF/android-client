@@ -1,7 +1,6 @@
 package com.mifos.api.local.databasehelper;
 
 import com.mifos.objects.PaymentTypeOption;
-import com.mifos.objects.PaymentTypeOption_Table;
 import com.mifos.objects.accounts.loan.ActualDisbursementDate;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest_Table;
@@ -11,7 +10,6 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations_Table;
 import com.mifos.objects.accounts.loan.Timeline;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate_Table;
-import com.mifos.utils.Constants;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -205,7 +203,6 @@ public class DatabaseHelperLoan {
 
                 for (PaymentTypeOption paymentTypeOption : loanRepaymentTemplate
                         .getPaymentTypeOptions()) {
-                    paymentTypeOption.setTemplateType(Constants.LOAN_PAYMENT_TYPE_OPTIONS);
                     paymentTypeOption.save();
                 }
 
@@ -237,8 +234,6 @@ public class DatabaseHelperLoan {
 
                 List<PaymentTypeOption> paymentTypeOptions = SQLite.select()
                         .from(PaymentTypeOption.class)
-                        .where(PaymentTypeOption_Table.templateType
-                                .eq(Constants.LOAN_PAYMENT_TYPE_OPTIONS))
                         .queryList();
 
                 if (loanRepaymentTemplate != null) {
@@ -255,17 +250,15 @@ public class DatabaseHelperLoan {
      * This Method request a query to Database in PaymentTypeOption_Table with argument paymentType
      * and return the list of PaymentTypeOption
      *
-     * @param paymentType paymentType like LOAN, Savings, Reoccurring.
      * @return List<PaymentTypeOption>
      */
-    public Observable<List<PaymentTypeOption>> getPaymentTypeOption(final String paymentType) {
+    public Observable<List<PaymentTypeOption>> getPaymentTypeOption() {
         return Observable.defer(new Func0<Observable<List<PaymentTypeOption>>>() {
             @Override
             public Observable<List<PaymentTypeOption>> call() {
 
                 List<PaymentTypeOption> paymentTypeOptions = SQLite.select()
                         .from(PaymentTypeOption.class)
-                        .where(PaymentTypeOption_Table.templateType.eq(paymentType))
                         .queryList();
 
                 return Observable.just(paymentTypeOptions);

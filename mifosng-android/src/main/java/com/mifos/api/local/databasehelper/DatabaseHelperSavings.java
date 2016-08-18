@@ -1,10 +1,13 @@
 package com.mifos.api.local.databasehelper;
 
+import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations_Table;
 import com.mifos.objects.accounts.savings.SavingsTransactionDate;
 import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.accounts.savings.Transaction_Table;
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
+import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
@@ -110,6 +113,53 @@ public class DatabaseHelperSavings {
                 }
 
                 return Observable.just(savingsAccountWithAssociations);
+            }
+        });
+    }
+
+    public Observable<SavingsAccountTransactionTemplate> saveSavingsAccountTransactionTemplate
+            (final SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
+        return Observable.defer(new Func0<Observable<SavingsAccountTransactionTemplate>>() {
+            @Override
+            public Observable<SavingsAccountTransactionTemplate> call() {
+
+                Observable.from(savingsAccountTransactionTemplate.getPaymentTypeOptions())
+                        .subscribe(new Action1<PaymentTypeOption>() {
+                            @Override
+                            public void call(PaymentTypeOption paymentTypeOption) {
+                                paymentTypeOption.save();
+                            }
+                        });
+
+                savingsAccountTransactionTemplate.save();
+
+                return Observable.just(savingsAccountTransactionTemplate);
+            }
+        });
+    }
+
+    public Observable<SavingsAccountTransactionTemplate> readSavingsAccountTransactionTemplate
+            (final int savingsAccountId) {
+        return Observable.defer(new Func0<Observable<SavingsAccountTransactionTemplate>>() {
+            @Override
+            public Observable<SavingsAccountTransactionTemplate> call() {
+
+                SavingsAccountTransactionTemplate savingsAccountTransactionTemplate =
+                        SQLite.select()
+                                .from(SavingsAccountTransactionTemplate.class)
+                                .where(SavingsAccountTransactionTemplate_Table
+                                        .accountId.eq(savingsAccountId))
+                                .querySingle();
+
+                List<PaymentTypeOption> paymentTypeOptions = SQLite.select()
+                        .from(PaymentTypeOption.class)
+                        .queryList();
+
+                if (savingsAccountTransactionTemplate != null) {
+                    savingsAccountTransactionTemplate.setPaymentTypeOptions(paymentTypeOptions);
+                }
+
+                return Observable.just(savingsAccountTransactionTemplate);
             }
         });
     }

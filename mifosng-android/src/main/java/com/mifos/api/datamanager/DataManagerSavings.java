@@ -92,15 +92,36 @@ public class DataManagerSavings {
      * If User Status is Offline then It make the request to the DatabaseHelperSavings and get
      * the SavingAccount TransactionTemplate According to SavingAccount Id
      *
-     * @param type Savings Account Type Example : savingsaccounts
-     * @param accountId SavingsAccount Id
+     * @param type            Savings Account Type Example : savingsaccounts
+     * @param accountId       SavingsAccount Id
      * @param transactionType Transaction Type Example : 'Deposit', 'Withdrawal'
      * @return SavingsAccountTransactionTemplate
      */
     public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
-            String type, int accountId, String transactionType) {
-        return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
-                accountId, transactionType);
+            String type, final int accountId, String transactionType) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
+                        accountId, transactionType)
+                        .concatMap(new Func1<SavingsAccountTransactionTemplate,
+                                Observable<? extends SavingsAccountTransactionTemplate>>() {
+                            @Override
+                            public Observable<? extends SavingsAccountTransactionTemplate> call
+                                    (SavingsAccountTransactionTemplate
+                                             savingsAccountTransactionTemplate) {
+                                return mDatabaseHelperSavings.saveSavingsAccountTransactionTemplate(
+                                        savingsAccountTransactionTemplate);
+                            }
+                        });
+            case 1:
+                /**
+                 * Return SavingsAccountTransactionTemplate from DatabaseHelperSavings.
+                 */
+                return mDatabaseHelperSavings.readSavingsAccountTransactionTemplate(accountId);
+
+            default:
+                return Observable.just(new SavingsAccountTransactionTemplate());
+        }
     }
 
 

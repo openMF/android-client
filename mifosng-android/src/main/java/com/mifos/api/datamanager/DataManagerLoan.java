@@ -236,11 +236,10 @@ public class DataManagerLoan {
      * This Method Load the PaymentTypeOption of any Loan, Saving, Reoccurring from Database table
      * PaymentTypeOption_Table.
      *
-     * @param paymentType Type of PaymentOption like Loan, Saving, Reoccurring.
      * @return List<PaymentTypeOption>
      */
-    public Observable<List<PaymentTypeOption>> getPaymentTypeOption(String paymentType) {
-        return mDatabaseHelperLoan.getPaymentTypeOption(paymentType);
+    public Observable<List<PaymentTypeOption>> getPaymentTypeOption() {
+        return mDatabaseHelperLoan.getPaymentTypeOption();
     }
 
     /**

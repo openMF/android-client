@@ -8,7 +8,6 @@ import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
-import com.mifos.utils.Constants;
 
 import java.util.List;
 
@@ -78,7 +77,7 @@ public class SyncLoanRepaymentTransactionPresenter extends
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerLoan
-                .getPaymentTypeOption(Constants.LOAN_PAYMENT_TYPE_OPTIONS)
+                .getPaymentTypeOption()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<PaymentTypeOption>>() {
