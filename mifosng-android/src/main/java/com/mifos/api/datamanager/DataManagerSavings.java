@@ -158,4 +158,18 @@ public class DataManagerSavings {
         }
     }
 
+    /**
+     * This Method is making Transaction into Database SavingsAccountTransactionRequest_Table
+     * and returns the SavingsAccountTransactionRequest with SavingAccount Id {savingAccountId}.
+     * If Database does not contain any entry in SavingsAccountTransactionRequest_Table with
+     * SavingAccount Id then it return null.
+     *
+     * @param savingAccountId SavingsAccount Id
+     * @return SavingsAccountTransactionRequest
+     */
+    public Observable<SavingsAccountTransactionRequest> getDatabaseSavingsAccountTransaction(
+            int savingAccountId) {
+        return mDatabaseHelperSavings.getDatabaseSavingsAccountTransaction(savingAccountId);
+    }
+
 }

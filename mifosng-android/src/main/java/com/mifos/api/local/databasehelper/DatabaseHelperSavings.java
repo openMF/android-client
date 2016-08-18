@@ -170,7 +170,7 @@ public class DatabaseHelperSavings {
         });
     }
 
-    public Observable<SavingsAccountTransactionRequest> readSavingsAccountTransaction(
+    public Observable<SavingsAccountTransactionRequest> getDatabaseSavingsAccountTransaction(
             final int savingsAccountId) {
         return Observable.defer(new Func0<Observable<SavingsAccountTransactionRequest>>() {
             @Override

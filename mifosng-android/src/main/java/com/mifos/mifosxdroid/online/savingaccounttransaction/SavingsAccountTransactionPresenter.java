@@ -96,4 +96,36 @@ public class SavingsAccountTransactionPresenter
                 }));
     }
 
+    public void checkInDatabaseSavingAccountTransaction(int savingAccountId) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerSavings.getDatabaseSavingsAccountTransaction(savingAccountId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<SavingsAccountTransactionRequest>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showError(R.string.failed_to_load_savingaccounttransaction);
+                    }
+
+                    @Override
+                    public void onNext(SavingsAccountTransactionRequest
+                                               savingsAccountTransactionRequest) {
+                        getMvpView().showProgressbar(false);
+                        if (savingsAccountTransactionRequest != null) {
+                            getMvpView().showSavingAccountTransactionExistInDatabase();
+                        } else {
+                            getMvpView().showSavingAccountTransactionDoesNotExistInDatabase();
+                        }
+                    }
+                })
+        );
+    }
+
 }

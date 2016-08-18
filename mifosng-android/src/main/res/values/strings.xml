@@ -158,6 +158,7 @@
     <string name="transaction_body">Transaction Body</string>
     <string name="transaction_failed">Transaction Failed</string>
     <string name="transaction_saved_in_db">Transaction Saved in DB</string>
+    <string name="payment_failed">Payment Failed</string>
 
     <!-- Loan Related Terminologies End Here -->
 
@@ -365,9 +366,13 @@
     <string name="dialog_message_offline_sync_alert">You are in offline mode, for syncing, You
         need to switch Online mode. \n\nIf you are trying to sync Please make sure
         your internet connection is working well</string>
-    <string name="dialog_message_sync_transaction">"Please Sync Previous LoanRepayment with
-        This Loan Id First. Go to Navigation Menu 'Offline Sync *' and Sync transaction First.
-        \nBefore making new LoanRepayment Transaction with this LoanAccount"</string>
+    <string name="dialog_message_sync_transaction">Please Sync Previous LoanRepayment with
+        This Loan Id First. \n\nGo to Navigation Menu \'Offline Sync *\' and Sync transaction First.
+        \n\nBefore making new LoanRepayment Transaction with this LoanAccount</string>
+    <string name="dialog_message_sync_savingaccounttransaction">Please Sync Previous Transaction
+        with This Savings Account Id First. \n\nGo to Navigation Menu \'Offline Sync *\' and Sync
+        transaction First.
+        \n\nBefore making new SavingAccount Transaction with this SavingAccount</string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -396,6 +401,9 @@
     <string name="failed_to_fetch_savingsaccount">Failed To Fetch SavingsAccount</string>
     <string name="failed_to_fetch_datatable">Failed To Fetch DataTable</string>
     <string name="failed_to_fetch_savings_template">Failed to load Saving Template</string>
+    <string name="failed_to_load_savingaccounttransaction">Failed to load
+        SavingsAccountTransaction</string>
+
 
     <string-array name="office_ids">
         <item>Head Office</item>

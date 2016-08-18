@@ -159,7 +159,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment
     }
 
     @Override
-    public void showLoanRepaymentExistInDatabase(String s) {
+    public void showLoanRepaymentExistInDatabase() {
         //Visibility of ParentLayout GONE, If Repayment Already made in Offline Mode
         rl_loan_repayment.setVisibility(View.GONE);
 
@@ -170,8 +170,6 @@ public class LoanRepaymentFragment extends MifosBaseFragment
                 .setCancelable(false)
                 .createMaterialDialog()
                 .show();
-
-        Toaster.show(rootView, s);
     }
 
     @Override
@@ -462,8 +460,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment
 
 
     @Override
-    public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
+    public void showError(int errorMessage) {
+        Toaster.show(rootView, errorMessage);
     }
 
     @Override

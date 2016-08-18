@@ -295,7 +295,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/tb_repaymentForm"
                 android:layout_margin="8dp"
-                android:text="@string/cancel" />
+                android:text="@string/cancel"
+                android:layout_alignParentLeft="true"/>
 
             <Button
                 android:id="@+id/bt_paynow"
@@ -304,7 +305,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/tb_repaymentForm"
                 android:layout_margin="8dp"
-                android:text="@string/review_payment" />
+                android:text="@string/review_payment"
+                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
     </ScrollView>

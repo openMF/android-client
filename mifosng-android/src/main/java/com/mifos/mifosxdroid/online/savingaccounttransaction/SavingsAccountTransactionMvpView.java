@@ -15,5 +15,11 @@ public interface SavingsAccountTransactionMvpView extends MvpView {
     void showTransactionSuccessfullyDone(SavingsAccountTransactionResponse
                                                  savingsAccountTransactionResponse);
 
+    void checkSavingAccountTransactionStatusInDatabase();
+
+    void showSavingAccountTransactionExistInDatabase();
+
+    void showSavingAccountTransactionDoesNotExistInDatabase();
+
     void showError(int errorMessage);
 }

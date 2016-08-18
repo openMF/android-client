@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
@@ -53,6 +54,9 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         MFDatePicker.OnDatePickListener, SavingsAccountTransactionMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
+
+    @BindView(R.id.view_flipper)
+    ViewFlipper viewFlipper;
 
     @BindView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -136,19 +140,58 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         ButterKnife.bind(this, rootView);
         mSavingAccountTransactionPresenter.attachView(this);
 
-        inflateUI();
+        //This Method Checking SavingAccountTransaction made before in Offline mode or not.
+        //If yes then User have to sync that first then he will be able to make transaction.
+        //If not then User able to make SavingAccountTransaction in Online or Offline.
+        checkSavingAccountTransactionStatusInDatabase();
+
         return rootView;
     }
+
+    @Override
+    public void checkSavingAccountTransactionStatusInDatabase() {
+        // Checking SavingAccountTransaction Already made in Offline mode or Not.
+        mSavingAccountTransactionPresenter
+                .checkInDatabaseSavingAccountTransaction(savingsAccountId);
+    }
+
+    @Override
+    public void showSavingAccountTransactionExistInDatabase() {
+        //Visibility of ParentLayout GONE, If SavingAccountTransaction Already made in Offline Mode
+        viewFlipper.setVisibility(View.GONE);
+
+        new MaterialDialog.Builder().init(getActivity())g
+                .setTitle(R.string.sync_previous_transaction)
+                .setMessage(string.dialog_message_sync_savingaccounttransaction)
+                .setPositiveButton(R.string.dialog_action_ok,
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();
+                    }
+                })
+                .setCancelable(false)
+                .createMaterialDialog()
+                .show();
+    }
+
+    @Override
+    public void showSavingAccountTransactionDoesNotExistInDatabase() {
+        // This Method Inflating UI and Initializing the Loading SavingAccountTransaction
+        // Template for transaction.
+        inflateUI();
+    }
+
 
     public void inflateUI() {
         tv_clientName.setText(clientName);
         tv_accountNumber.setText(savingsAccountNumber);
         //TODO Implement QuickContactBadge here
         inflateRepaymentDate();
-        inflatePaymentOptions();
+        inflateSavingsAccountTemplate();
     }
 
-    public void inflatePaymentOptions() {
+    public void inflateSavingsAccountTemplate() {
         mSavingAccountTransactionPresenter.loadSavingAccountTemplate(
                 savingsAccountType.getEndpoint(), savingsAccountId, transactionType);
     }
@@ -294,6 +337,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         }
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
+
 
     @Override
     public void showError(int errorMessage) {
