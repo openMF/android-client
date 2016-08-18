@@ -217,9 +217,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i(getResources().getString(string.transaction_body), builtTransactionRequestAsJson);
 
-        if (!Network.isOnline(getActivity())) {
-            PrefManager.setUserStatus(Constants.USER_OFFLINE);
-        }
+        if (!Network.isOnline(getActivity())) PrefManager.setUserStatus(Constants.USER_OFFLINE);
 
         mSavingAccountTransactionPresenter.processTransaction(savingsAccountType.getEndpoint(),
                 savingsAccountId, transactionType, savingsAccountTransactionRequest);

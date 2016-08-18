@@ -33,7 +33,7 @@
             android:layout_marginLeft="15dp"
             android:ellipsize="end"
             android:lines="1"
-            android:text="Log In"
+            android:text="@string/login"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"/>
 
@@ -48,7 +48,7 @@
             android:id="@+id/user_status_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Offline Mode"
+            android:text="@string/offline_mode"
             android:textColor="@color/white"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
