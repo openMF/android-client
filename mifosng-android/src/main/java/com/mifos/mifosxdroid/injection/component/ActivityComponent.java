@@ -8,14 +8,14 @@ import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountAppr
 import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval.SavingsAccountApproval;
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsFragment;
-import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
-        .SyncLoanRepaymentTransactionFragment;
+import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionFragment;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientchoose.ClientChooseFragment;
@@ -45,7 +45,6 @@ import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTrans
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment;
-import com.mifos.utils.SaveOfflineDataHelper;
 
 import dagger.Component;
 
@@ -99,8 +98,6 @@ public interface ActivityComponent {
 
     void inject(CollectionSheetFragment collectionSheetFragment);
 
-    void inject(SaveOfflineDataHelper saveOfflineDataHelper);
-
     void inject(GroupsListFragment groupsListFragment);
 
     void inject(LoanTransactionsFragment loanTransactionsFragment);
@@ -135,8 +132,6 @@ public interface ActivityComponent {
 
     void inject(SavingsAccountApproval savingsAccountApproval);
 
-    void inject(com.mifos.mifosxdroid.fragments.centerlist.CenterListFragment centerListFragment);
-
     void inject(SyncClientPayloadsFragment syncPayloadsFragment);
 
     void inject(SyncGroupPayloadsFragment syncGroupPayloadsFragment);
@@ -144,4 +139,6 @@ public interface ActivityComponent {
     void inject(OfflineDashboardFragment offlineDashboardFragment);
 
     void inject(SyncLoanRepaymentTransactionFragment syncLoanRepaymentTransactionFragment);
+
+    void inject(SyncClientsDialogFragment syncClientsDialogFragment);
 }

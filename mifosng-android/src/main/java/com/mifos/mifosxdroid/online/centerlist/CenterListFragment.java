@@ -23,8 +23,8 @@ import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListner.OnItemClickListener;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
+import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Page;
@@ -105,7 +105,7 @@ public class CenterListFragment extends MifosBaseFragment
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_centers.setLayoutManager(layoutManager);
-        rv_centers.addOnItemTouchListener(new RecyclerItemClickListner(getActivity(), this));
+        rv_centers.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_centers.setHasFixedSize(true);
 
         mApiRestCounter = 1;

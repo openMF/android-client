@@ -88,6 +88,12 @@
     <string name="path_tracker">Path Tracker</string>
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
+    <string name="hide">Hide</string>
+    <string name="colon">" : "</string>
+    <string name="backspace_slash">\</string>
+    <string name="slash">/</string>
+    <string name="space">" "</string>
+    <string name="new_line">\n</string>
     <!-- General Terms End Here -->
 
 
@@ -132,6 +138,7 @@
     <string name="break_down">Break Down</string>
     <string name="loanAccounts">Loan Accounts</string>
     <string name="loanAccountSummary">Loan Account Summary</string>
+    <string name="loanAccountSummaryStatus">Loan Account Summary</string>
     <string name="loan_repayment_schedule">Loan Repayment Schedule</string>
     <string name="loan_rejected_message">Loan was Rejected</string>
     <string name="repayment">Repayment</string>
@@ -197,6 +204,7 @@
     <string name="client_classification">Client Classification</string>
     <string name="interest_comp">Intrest Compounding Period</string>
     <string name="repaidevery">Repaid Every</string>
+    <string name="no_more_clients_available">No more Clients Available</string>
 
     <string name="numberofrepayments">Number of repayments</string>
 
@@ -258,6 +266,7 @@
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
     <string name="error_select_transactionProcessingStrategy">Please Select Transaction Processing Strategy</string>
     <string name="error_fix_before_sync">Please Fix the Error before sync</string>
+    <string name="error_network_not_available">Network is not Available</string>
 
     <string name="interestPostingPeriodTypeId">Please Select a Posting Period</string>
     <string name="loan_purpose">Please Select a the Loan Purpose</string>
@@ -327,10 +336,14 @@
     <string name="no_repayment_to_sync">There is No LoanRepayment to Sync</string>
     <string name="no_group_payload_to_sync">There is No Group Payload to Sync</string>
     <string name="no_client_payload_to_sync">There is No Client Payload to Sync</string>
+    <string name="no_more_clients_to_sync">No More Clients To Sync</string>
     <string name="all_repayment_synced">All LoanRepayment have been Sync</string>
     <string name="all_groups_synced">All Groups have been Sync</string>
     <string name="all_clients_synced">All Clients have been Sync</string>
     <string name="click_to_refresh">\n Click to Refresh</string>
+    <string name="syncing_client">Syncing Client</string>
+    <string name="total_sync_progress">Total Sync Progress</string>
+    <string name="sync_clients_full_information"> Sync Clients All Information </string>
 
     <!--Material Dialog Titles-->
     <string name="sync_previous_transaction">Sync Previous Transaction</string>
@@ -359,6 +372,14 @@
     <string name="failed_to_update_list">Failed Update List</string>
     <string name="failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
     <string name="failed_to_update_loanrepayment">Failed to Update LoanRepayment</string>
+    <string name="failed_sync">Sync Failed</string>
+    <string name="failed_to_sync_client">Client Sync Failed</string>
+    <string name="failed_to_sync_client_and_accounts">Failed to load Client and their
+        Accounts</string>
+    <string name="failed_to_sync_clientaccounts">ClientAccounts Sync Failed</string>
+    <string name="failed_to_sync_loan">Failed to Sync Loan</string>
+    <string name="failed_to_sync_loanrepayment">Failed to Sync LoanRepayment</string>
+    <string name="failed_to_load_client">Failed To Load Clients</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

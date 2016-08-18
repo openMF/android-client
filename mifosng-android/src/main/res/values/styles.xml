@@ -18,11 +18,17 @@
         <item name="android:buttonStyle">@style/AppTheme.Button</item>
         <item name="buttonStyle">@style/AppTheme.Button</item>
         <item name="android:textViewStyle">@style/AppTheme.Text</item>
-
+        <item name="windowActionModeOverlay">true</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
     <style name="TraslucentActionBarTheme" parent="MaterialAppTheme">
+    </style>
+
+    <style name="Widget.ActionMode" parent="Widget.AppCompat.ActionMode">
+        <item name="background">@color/primary_dark</item>
+        <item name="titleTextStyle">@style/AppTheme.Text</item>
+
     </style>
 
     <style name="popupMenuStyle" parent="Widget.AppCompat.PopupMenu">

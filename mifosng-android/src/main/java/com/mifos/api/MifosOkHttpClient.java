@@ -4,6 +4,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -76,6 +77,10 @@ public class MifosOkHttpClient {
         //Enable Full Body Logging
         HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
         logger.setLevel(Level.BODY);
+
+        //Setting Timeout 30 Seconds
+        builder.connectTimeout(30, TimeUnit.SECONDS);
+        builder.readTimeout(30, TimeUnit.SECONDS);
 
         //Interceptor :> Full Body Logger and ApiRequest Header
         builder.addInterceptor(logger);

@@ -7,16 +7,12 @@ package com.mifos.objects.db;
 
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
 
-public class Status extends SugarRecord<Status> {
+public class Status {
+
     private String code;
     private String value;
 
-    /* public boolean isNew() {
-         long count = Select.from(Status.class).where(Condition.prop("id").eq(id)).count();
-         return count == 0;
-     }*/
     public String getCode() {
         return code;
     }

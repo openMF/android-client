@@ -82,6 +82,28 @@ public class DatabaseHelperClient {
     }
 
     /**
+     * This Method save the single Client in Database with ClientId as Primary Id
+     *
+     * @param client Client
+     * @return saved Client
+     */
+    public Observable<Client> saveClient(final Client client) {
+        return Observable.defer(new Func0<Observable<Client>>() {
+            @Override
+            public Observable<Client> call() {
+                //Saving Client in Database
+                ClientDate clientDate = new ClientDate(client.getId(), 0,
+                        client.getActivationDate().get(0),
+                        client.getActivationDate().get(1),
+                        client.getActivationDate().get(2));
+                client.setClientDate(clientDate);
+                client.save();
+                return Observable.just(client);
+            }
+        });
+    }
+
+    /**
      * Reading All Clients from table of Client and return the ClientList
      *
      * @return List Of Client
@@ -120,8 +142,10 @@ public class DatabaseHelperClient {
                         .where(Client_Table.id.eq(clientId))
                         .querySingle();
 
-                client.setActivationDate(Arrays.asList(client.getClientDate().getDay(),
-                        client.getClientDate().getMonth(), client.getClientDate().getYear()));
+                if (client != null) {
+                    client.setActivationDate(Arrays.asList(client.getClientDate().getDay(),
+                            client.getClientDate().getMonth(), client.getClientDate().getYear()));
+                }
 
                 subscriber.onNext(client);
 
@@ -137,11 +161,12 @@ public class DatabaseHelperClient {
      * @param clientId       Client Id
      * @return null
      */
-    public Observable<Void> saveClientAccounts(final ClientAccounts clientAccounts,
+    public Observable<ClientAccounts> saveClientAccounts(final ClientAccounts clientAccounts,
                                                final int clientId) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+
+        return Observable.defer(new Func0<Observable<ClientAccounts>>() {
             @Override
-            public void run() {
+            public Observable<ClientAccounts> call() {
 
                 List<LoanAccount> loanAccounts = clientAccounts.getLoanAccounts();
                 List<SavingsAccount> savingsAccounts = clientAccounts.getSavingsAccounts();
@@ -155,9 +180,10 @@ public class DatabaseHelperClient {
                     savingsAccount.setClientId(clientId);
                     savingsAccount.save();
                 }
+
+                return Observable.just(clientAccounts);
             }
         });
-        return null;
     }
 
 

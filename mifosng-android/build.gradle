@@ -21,7 +21,6 @@ repositories {
     //maven { url 'http://download.crashlytics.com/maven' }
     maven { url "https://jitpack.io" }
     maven { url 'http://dl.bintray.com/amulyakhare/maven' }
-
 }
 
 apply plugin: 'com.android.application'
@@ -119,18 +118,6 @@ task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed AP
 
 }
 
-task copyNativeLibs(type: Copy) {
-    from(new File(getProjectDir(), 'src/main/libs')) { include '**/*.so' }
-    into new File(buildDir, 'native-libs')
-}
-
-tasks.withType(JavaCompile) {
-    compileTask ->
-        compileTask.dependsOn(copyNativeLibs)
-}
-
-clean.dependsOn('cleanCopyNativeLibs')
-
 tasks.withType(JavaCompile) {
     configure(options) {
         // TODO
@@ -147,9 +134,9 @@ dependencies {
     compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
 
     //DBFlow dependencies
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
-    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:3.1.1"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:3.1.1"
+    compile "com.github.Raizlabs.DBFlow:dbflow:3.1.1"
 
     // App's Support dependencies, including test
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"

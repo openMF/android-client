@@ -48,33 +48,15 @@
             android:name=".online.SurveyQuestionViewPager"
             android:label="Survey"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".GroupActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-          <activity
-            android:name=".ClientActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".online.GroupsActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".LoanActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".online.ClientActivity"
             android:label="@string/title_activity_client"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".OfflineCenterInputActivity"
-            android:label="Offline Center Input"
-            android:parentActivityName=".online.DashboardActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -95,10 +77,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".online.DashboardActivity" />
         </activity>
-        <activity
-            android:name=".CenterListActivity"
-            android:label="@string/centers"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ClientListActivity"
             android:label="@string/clients"

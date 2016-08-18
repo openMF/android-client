@@ -62,8 +62,6 @@ public class DataManagerClient {
                             @Override
                             public Observable<? extends Page<Client>> call(Page<Client>
                                                                                    clientPage) {
-                                //Saving Clients in Database
-                                mDatabaseHelperClient.saveAllClients(clientPage);
                                 return Observable.just(clientPage);
                             }
                         });
@@ -79,6 +77,17 @@ public class DataManagerClient {
             default:
                 return Observable.just(new Page<Client>());
         }
+    }
+
+
+    /**
+     * This Method Request to the DatabaseHelperClient and DatabaseHelperClient Read the All
+     * clients from Client_Table and give the response Page of List of Client
+     *
+     * @return Page of Client List
+     */
+    public Observable<Page<Client>> getAllDatabaseClients() {
+        return mDatabaseHelperClient.readAllClients();
     }
 
 
@@ -110,12 +119,15 @@ public class DataManagerClient {
     }
 
 
+    public Observable<Client> syncClientInDatabase(Client client) {
+        return mDatabaseHelperClient.saveClient(client);
+    }
+
     /**
      * This Method Checks the User Status and as accordingly call to Database Helper or Client
      * Retrofit Service.
      * If User is Online then this Client DataManager Request to Client Retrofit to make REST API
-     * Request for Client Account and after service request completion DataManager call to
-     * DatabaseHelper to save in to Database.
+     * Request for Client Account.
      * If User if Offline Client DataManager request to Client DatabaseHelper to make Transaction
      * for retrieving the Clients Account.
      *
@@ -125,16 +137,7 @@ public class DataManagerClient {
     public Observable<ClientAccounts> getClientAccounts(final int clientId) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
-                        .concatMap(new Func1<ClientAccounts, Observable<? extends
-                                ClientAccounts>>() {
-                            @Override
-                            public Observable<? extends ClientAccounts> call(
-                                    ClientAccounts clientAccounts) {
-                                mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId);
-                                return Observable.just(clientAccounts);
-                            }
-                        });
+                return mBaseApiManager.getClientsApi().getClientAccounts(clientId);
             case 1:
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
@@ -148,13 +151,32 @@ public class DataManagerClient {
 
 
     /**
+     * This Method Fetching the Client Accounts (Loan, saving, etc Accounts ) from REST API
+     * and get the ClientAccounts and then Saving all Accounts into the Database and give the
+     * ClientAccount in return.
+     *
+     * @param clientId Client Id
+     * @return ClientAccounts
+     */
+    public Observable<ClientAccounts> syncClientAccounts(final int clientId) {
+        return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
+                .concatMap(new Func1<ClientAccounts, Observable<? extends ClientAccounts>>() {
+                    @Override
+                    public Observable<? extends ClientAccounts> call(ClientAccounts
+                                                                             clientAccounts) {
+                        return mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId);
+                    }
+                });
+    }
+
+    /**
      * This Method for removing the Client Image from his profile on server
      * if its response is true the client does not have any profile Image and if
      * response is false then failed to update the client image from server profile.
      * There can any problem during updating the client image like Network error.
      *
      * @param clientId Client ID
-     * @return ResposeBody is the Retrofit 2 response
+     * @return ResponseBody is the Retrofit 2 response
      */
     public Observable<ResponseBody> deleteClientImage(int clientId) {
         return mBaseApiManager.getClientsApi().deleteClientImage(clientId);
@@ -168,7 +190,7 @@ public class DataManagerClient {
      *
      * @param id  Client Id
      * @param file MultipartBody of the Image file
-     * @return ResposeBody is the Retrofit 2 response
+     * @return ResponseBody is the Retrofit 2 response
      */
     public Observable<ResponseBody> uploadClientImage(int id, MultipartBody.Part file) {
         return mBaseApiManager.getClientsApi().uploadClientImage(id, file);

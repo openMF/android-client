@@ -5,9 +5,7 @@
 
 package com.mifos.objects.db;
 
-import com.orm.SugarRecord;
-
-public class Account extends SugarRecord<Account> {
+public class Account  {
     private String accountId;
     private int accountStatusId;
     private int loanId;

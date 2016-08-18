@@ -6,9 +6,8 @@
 package com.mifos.objects.db;
 
 import com.google.gson.Gson;
-import com.orm.SugarRecord;
 
-public class Currency extends SugarRecord<Currency> {
+public class Currency {
     private String code;
     private String name;
     private int decimalPlaces;
