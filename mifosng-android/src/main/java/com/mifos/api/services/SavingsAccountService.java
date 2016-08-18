@@ -32,12 +32,14 @@ public interface SavingsAccountService {
      * ?associations={all or transactions or charges}
      *
      * @param savingsAccountType SavingsAccount Type of SavingsAccount
-     * @param savingsAccountId SavingsAccounts Id
-     * @param association {all or transactions or charges}
-     *                    'all': Gets data related to all associations e.g. ?associations=all.
-     *                    'transactions': Gets data related to transactions on the account e.g.
-     *                    ?associations=transactions
-     *                    'charges':Savings Account charges data.
+     * @param savingsAccountId   SavingsAccounts Id
+     * @param association        {all or transactions or charges}
+     *                           'all': Gets data related to all associations e.g.
+     *                           ?associations=all.
+     *                           'transactions': Gets data related to transactions on the account
+     *                           e.g.
+     *                           ?associations=transactions
+     *                           'charges':Savings Account charges data.
      * @return SavingsAccountWithAssociations
      */
     @GET("{savingsAccountType}/{savingsAccountId}")
@@ -52,8 +54,8 @@ public interface SavingsAccountService {
      * /transactions/template.
      *
      * @param savingsAccountType SavingsAccount Type Example : 'savingsaccounts'
-     * @param savingsAccountId  SavingsAccount Id
-     * @param transactionType Transaction Type Example : 'Deposit', 'Withdrawal'
+     * @param savingsAccountId   SavingsAccount Id
+     * @param transactionType    Transaction Type Example : 'Deposit', 'Withdrawal'
      * @return SavingsAccountTransactionTemplate
      */
     @GET("{savingsAccountType}/{savingsAccountId}/transactions/template")
@@ -63,6 +65,17 @@ public interface SavingsAccountService {
             @Query("command") String transactionType);
 
 
+    /**
+     * This Service making POST Request to the REST API :
+     * https://demo.openmf.org/fineract-provider/api/v1/{savingsAccountType}/
+     * {savingsAccountId}/transactions?command={transactionType}
+     *
+     * @param savingsAccountType               SavingsAccount Type Example : 'savingsaccounts'
+     * @param savingsAccountId                 SavingsAccount Id
+     * @param transactionType                  Transaction Type Example : 'Deposit', 'Withdrawal'
+     * @param savingsAccountTransactionRequest SavingsAccountTransactionRequest
+     * @return SavingsAccountTransactionResponse
+     */
     @POST("{savingsAccountType}/{savingsAccountId}/transactions")
     Observable<SavingsAccountTransactionResponse> processTransaction(
             @Path("savingsAccountType") String savingsAccountType,

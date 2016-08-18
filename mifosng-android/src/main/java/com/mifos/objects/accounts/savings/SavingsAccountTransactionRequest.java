@@ -5,36 +5,79 @@
 
 package com.mifos.objects.accounts.savings;
 
-import com.google.gson.annotations.Expose;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
  * Created by ishankhanna on 12/06/14.
  */
-public class SavingsAccountTransactionRequest {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class SavingsAccountTransactionRequest extends MifosBaseModel implements Parcelable {
 
-    @Expose
-    private String dateFormat;
-    @Expose
-    private String locale;
-    @Expose
-    private String transactionDate;
-    @Expose
-    private String transactionAmount;
-    @Expose
-    private String paymentTypeId;
-    @Expose
-    private String note;
-    @Expose
-    private String accountNumber;
-    @Expose
-    private String checkNumber;
-    @Expose
-    private String routingCode;
-    @Expose
-    private String receiptNumber;
-    @Expose
-    private String bankNumber;
+    @SerializedName("savingAccountId")
+    @PrimaryKey
+    transient Integer savingAccountId;
 
+    @SerializedName("dateFormat")
+    @Column
+    String dateFormat;
+
+    @SerializedName("locale")
+    @Column
+    String locale;
+
+    @SerializedName("transactionDate")
+    @Column
+    String transactionDate;
+
+    @SerializedName("transactionAmount")
+    @Column
+    String transactionAmount;
+
+    @SerializedName("paymentTypeId")
+    @Column
+    String paymentTypeId;
+
+    @SerializedName("note")
+    @Column
+    String note;
+
+    @SerializedName("accountNumber")
+    @Column
+    String accountNumber;
+
+    @SerializedName("checkNumber")
+    @Column
+    String checkNumber;
+
+    @SerializedName("routingCode")
+    @Column
+    String routingCode;
+
+    @SerializedName("receiptNumber")
+    @Column
+    String receiptNumber;
+
+    @SerializedName("bankNumber")
+    @Column
+    String bankNumber;
+
+    public Integer getSavingAccountId() {
+        return savingAccountId;
+    }
+
+    public void setSavingAccountId(Integer savingAccountId) {
+        this.savingAccountId = savingAccountId;
+    }
 
     public String getDateFormat() {
         return dateFormat;
@@ -124,4 +167,54 @@ public class SavingsAccountTransactionRequest {
         this.bankNumber = bankNumber;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.dateFormat);
+        dest.writeString(this.locale);
+        dest.writeString(this.transactionDate);
+        dest.writeString(this.transactionAmount);
+        dest.writeString(this.paymentTypeId);
+        dest.writeString(this.note);
+        dest.writeString(this.accountNumber);
+        dest.writeString(this.checkNumber);
+        dest.writeString(this.routingCode);
+        dest.writeString(this.receiptNumber);
+        dest.writeString(this.bankNumber);
+    }
+
+    public SavingsAccountTransactionRequest() {
+    }
+
+    protected SavingsAccountTransactionRequest(Parcel in) {
+        this.dateFormat = in.readString();
+        this.locale = in.readString();
+        this.transactionDate = in.readString();
+        this.transactionAmount = in.readString();
+        this.paymentTypeId = in.readString();
+        this.note = in.readString();
+        this.accountNumber = in.readString();
+        this.checkNumber = in.readString();
+        this.routingCode = in.readString();
+        this.receiptNumber = in.readString();
+        this.bankNumber = in.readString();
+    }
+
+    public static final Parcelable.Creator<SavingsAccountTransactionRequest> CREATOR =
+            new Parcelable.Creator<SavingsAccountTransactionRequest>() {
+        @Override
+        public SavingsAccountTransactionRequest createFromParcel(Parcel source) {
+            return new SavingsAccountTransactionRequest(source);
+        }
+
+        @Override
+        public SavingsAccountTransactionRequest[] newArray(int size) {
+            return new SavingsAccountTransactionRequest[size];
+        }
+    };
 }
