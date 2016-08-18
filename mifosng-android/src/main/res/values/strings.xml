@@ -156,6 +156,7 @@
     <string name="process_transaction">Process Transaction</string>
     <string name="transaction_date">Transaction Date</string>
     <string name="transaction_body">Transaction Body</string>
+    <string name="transaction_failed">Transaction Failed</string>
 
     <!-- Loan Related Terminologies End Here -->
 
@@ -393,6 +394,7 @@
     <string name="failed_to_load_client">Failed To Load Clients</string>
     <string name="failed_to_fetch_savingsaccount">Failed To Fetch SavingsAccount</string>
     <string name="failed_to_fetch_datatable">Failed To Fetch DataTable</string>
+    <string name="failed_to_fetch_savings_template">Failed to load Saving Template</string>
 
     <string-array name="office_ids">
         <item>Head Office</item>

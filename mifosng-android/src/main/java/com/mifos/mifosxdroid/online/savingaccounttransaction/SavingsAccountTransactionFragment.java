@@ -294,8 +294,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
     @Override
-    public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
+    public void showError(int errorMessage) {
+        Toaster.show(rootView, errorMessage);
     }
 
     @Override

@@ -15,5 +15,5 @@ public interface SavingsAccountTransactionMvpView extends MvpView {
     void showTransactionSuccessfullyDone(SavingsAccountTransactionResponse
                                                  savingsAccountTransactionResponse);
 
-    void showFetchingError(String s);
+    void showError(int errorMessage);
 }

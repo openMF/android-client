@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.savingaccounttransaction;
 
 import com.mifos.api.datamanager.DataManagerSavings;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
@@ -49,13 +50,12 @@ public class SavingsAccountTransactionPresenter
                 .subscribe(new Subscriber<SavingsAccountTransactionTemplate>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load Saving Template");
+                        getMvpView().showError(R.string.failed_to_fetch_savings_template);
                     }
 
                     @Override
@@ -78,13 +78,12 @@ public class SavingsAccountTransactionPresenter
                 .subscribe(new Subscriber<SavingsAccountTransactionResponse>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Transaction Failed");
+                        getMvpView().showError(R.string.transaction_failed);
                     }
 
                     @Override
