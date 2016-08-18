@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online.savingaccounttransaction;
 
 import android.R.layout;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,11 +24,11 @@ import com.jakewharton.fliptables.FlipTable;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.R.string;
+import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
@@ -36,11 +36,8 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -81,8 +78,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     // or a Withdrawal from an Account
     private String clientName;
     // Values to be fetched from Savings Account Template
-    private List<PaymentTypeOption> paymentTypeOptionList;
-    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
+    private int paymentTypeOptionId;
     private DialogFragment mfDatePicker;
 
     /**
@@ -166,9 +162,12 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         }
         String[] headers = {"Field", "Value"};
         String[][] data = {
-                {"Transaction Date", tv_transactionDate.getText().toString()},
-                {"Payment Type", sp_paymentType.getSelectedItem().toString()},
-                {"Amount", et_transactionAmount.getEditableText().toString()}
+                {getResources().getString(string.transaction_date),
+                        tv_transactionDate.getText().toString()},
+                {getResources().getString(string.payment_type),
+                        sp_paymentType.getSelectedItem().toString()},
+                {getResources().getString(string.amount),
+                        et_transactionAmount.getEditableText().toString()}
         };
         Log.d(LOG_TAG, FlipTable.of(headers, data));
         StringBuilder formReviewStringBuilder = new StringBuilder();
@@ -179,21 +178,25 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
             }
             formReviewStringBuilder.append('\n');
         }
-        new AlertDialog.Builder(getActivity())
-                .setTitle("Review Payment Details")
+
+        new MaterialDialog.Builder().init(getActivity())
+                .setTitle(getResources().getString(string.review_transaction_details))
                 .setMessage(formReviewStringBuilder.toString())
-                .setPositiveButton("Process Transaction", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        processTransaction();
-                    }
-                })
-                .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
+                .setPositiveButton(getResources().getString(string.process_transaction),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                processTransaction();
+                            }
+                        })
+                .setNegativeButton(getResources().getString(string.dialog_action_cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                .createMaterialDialog()
                 .show();
     }
 
@@ -206,8 +209,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         savingsAccountTransactionRequest.setTransactionDate(dateString);
         savingsAccountTransactionRequest.setTransactionAmount(et_transactionAmount
                 .getEditableText().toString());
-        savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get
-                (sp_paymentType.getSelectedItem().toString())));
+        savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeOptionId));
 
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
         Log.i("Transaction Body", builtTransactionRequestAsJson);
@@ -243,37 +245,29 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
 
     @Override
-    public void showSavingAccountTemplate(SavingsAccountTransactionTemplate
+    public void showSavingAccountTemplate(final SavingsAccountTransactionTemplate
                                                   savingsAccountTransactionTemplate) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
-
         if (savingsAccountTransactionTemplate != null) {
-            List<String> listOfPaymentTypes = new ArrayList<>();
-            paymentTypeOptionList = savingsAccountTransactionTemplate
-                    .getPaymentTypeOptions();
-            // Sorting has to be done on the basis of
-            // PaymentTypeOption.position because it is specified
-            // by the users on Mifos X Platform.
-            Collections.sort(paymentTypeOptionList);
-            Iterator<PaymentTypeOption> paymentTypeOptionIterator =
-                    paymentTypeOptionList
-                            .iterator();
-            while (paymentTypeOptionIterator.hasNext()) {
-                PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator
-                        .next();
-                listOfPaymentTypes.add(paymentTypeOption.getName());
-                paymentTypeHashMap.put(paymentTypeOption.getName(),
-                        paymentTypeOption
-                                .getId());
-            }
-            ArrayAdapter<String> paymentTypeAdapter =
-                    new ArrayAdapter<>(getActivity(),
+            List<String> listOfPaymentTypes = Utils.getPaymentTypeOptions(
+                    savingsAccountTransactionTemplate.getPaymentTypeOptions());
+            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(),
                             layout.simple_spinner_item, listOfPaymentTypes);
 
-            paymentTypeAdapter.setDropDownViewResource(
-                    layout.simple_spinner_dropdown_item);
+            paymentTypeAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
             sp_paymentType.setAdapter(paymentTypeAdapter);
+            sp_paymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long
+                        id) {
+                    paymentTypeOptionId = savingsAccountTransactionTemplate
+                            .getPaymentTypeOptions().get(position).getId();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
     }
 

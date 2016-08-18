@@ -150,6 +150,9 @@
     <string name="overdue">Overdue</string>
     <string name="process_loan_transaction">Process Loan Transaction</string>
     <string name="transaction_action_not_set">TRANSACTION ACTION NOT SET</string>
+    <string name="review_transaction_details">Review Payment Details</string>
+    <string name="process_transaction">Process Transaction</string>
+    <string name="transaction_date">Transaction Date</string>
 
     <!-- Loan Related Terminologies End Here -->
 

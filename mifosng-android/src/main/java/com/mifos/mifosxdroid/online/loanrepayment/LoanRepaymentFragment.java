@@ -37,6 +37,7 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Utils;
 
 import java.util.List;
 
@@ -417,8 +418,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment
         if (loanRepaymentTemplate != null) {
             tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
             inflateRepaymentDate();
-            List<String> listOfPaymentTypes = mLoanRepaymentPresenter.getPaymentTypeOptions
-                    (loanRepaymentTemplate.getPaymentTypeOptions());
+            List<String> listOfPaymentTypes =
+                    Utils.getPaymentTypeOptions(loanRepaymentTemplate.getPaymentTypeOptions());
 
             ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(),
                     layout.simple_spinner_item, listOfPaymentTypes);
