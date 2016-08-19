@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.online.clientidentifiers;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +27,22 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.mifos.mifosxdroid.adapters.IdentifierListAdapter.DeleteIdentifierListener;
+
 
 public class ClientIdentifiersFragment extends ProgressableFragment
-        implements ClientIdentifiersMvpView {
+        implements ClientIdentifiersMvpView, DeleteIdentifierListener {
 
     @BindView(R.id.lv_identifiers)
     ListView lv_identifiers;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @Inject
     ClientIdentifiersPresenter mClientIdentifiersPresenter;
     private View rootView;
     private int clientId;
+    List<Identifier> identifiers;
+    IdentifierListAdapter identifierListAdapter;
 
     public static ClientIdentifiersFragment newInstance(int clientId) {
         ClientIdentifiersFragment fragment = new ClientIdentifiersFragment();
@@ -64,31 +71,56 @@ public class ClientIdentifiersFragment extends ProgressableFragment
         setToolbarTitle(getString(R.string.identifiers));
         loadIdentifiers();
 
+        swipeToRefresh();
+
         return rootView;
     }
 
     public void loadIdentifiers() {
         mClientIdentifiersPresenter.loadIdentifiers(clientId);
+    }
 
+    public void swipeToRefresh() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadIdentifiers();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
     public void showClientIdentifiers(List<Identifier> identifiers) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
+        this.identifiers = identifiers;
 
         if (identifiers != null && identifiers.size() > 0) {
-            IdentifierListAdapter identifierListAdapter =
-                    new IdentifierListAdapter(getActivity(), identifiers, clientId);
+            identifierListAdapter = new IdentifierListAdapter(getActivity(),
+                    this.identifiers, clientId, this);
             lv_identifiers.setAdapter(identifierListAdapter);
         } else {
             Toast.makeText(getActivity(), getString(R.string
-                    .message_no_identifiers_available), Toast.LENGTH_SHORT).show();
+                            .message_no_identifiers_available),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void showFetchingError(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClickRemoveIdentifier(int identifierId, int position) {
+        mClientIdentifiersPresenter.deleteIdentifier(clientId, identifierId, position);
+    }
+
+    @Override
+    public void identifierDeletedSuccessfully(String s, int position) {
+        identifiers.remove(position);
+        identifierListAdapter.notifyDataSetChanged();
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
