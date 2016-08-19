@@ -37,6 +37,7 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Utils;
 
 import java.util.List;
 
@@ -158,7 +159,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment
     }
 
     @Override
-    public void showLoanRepaymentExistInDatabase(String s) {
+    public void showLoanRepaymentExistInDatabase() {
         //Visibility of ParentLayout GONE, If Repayment Already made in Offline Mode
         rl_loan_repayment.setVisibility(View.GONE);
 
@@ -169,8 +170,6 @@ public class LoanRepaymentFragment extends MifosBaseFragment
                 .setCancelable(false)
                 .createMaterialDialog()
                 .show();
-
-        Toaster.show(rootView, s);
     }
 
     @Override
@@ -417,8 +416,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment
         if (loanRepaymentTemplate != null) {
             tv_amountDue.setText(String.valueOf(loanRepaymentTemplate.getAmount()));
             inflateRepaymentDate();
-            List<String> listOfPaymentTypes = mLoanRepaymentPresenter.getPaymentTypeOptions
-                    (loanRepaymentTemplate.getPaymentTypeOptions());
+            List<String> listOfPaymentTypes =
+                    Utils.getPaymentTypeOptions(loanRepaymentTemplate.getPaymentTypeOptions());
 
             ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(),
                     layout.simple_spinner_item, listOfPaymentTypes);
@@ -461,8 +460,8 @@ public class LoanRepaymentFragment extends MifosBaseFragment
 
 
     @Override
-    public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
+    public void showError(int errorMessage) {
+        Toaster.show(rootView, errorMessage);
     }
 
     @Override

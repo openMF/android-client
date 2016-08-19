@@ -1,10 +1,13 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerDataTable;
+import com.mifos.api.datamanager.DataManagerSavings;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.utils.Constants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,21 +15,25 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
+public class SavingsAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerDataTable mDataManagerDataTable;
+    private final DataManagerSavings mDataManagerSavings;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingAccountSummaryPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SavingsAccountSummaryPresenter(DataManagerDataTable dataManagerDataTable,
+                                          DataManagerSavings dataManagerSavings) {
+        mDataManagerDataTable = dataManagerDataTable;
+        mDataManagerSavings = dataManagerSavings;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -37,14 +44,13 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadSavingDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsDataTable()
+        mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_SAVINGS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
@@ -56,7 +62,7 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Saving DataTable not found");
+                        getMvpView().showFetchingError(R.string.failed_to_fetch_datatable);
                     }
 
                     @Override
@@ -64,14 +70,15 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                         getMvpView().showProgressbar(false);
                         getMvpView().showSavingDataTable(dataTables);
                     }
-                });
+                }));
     }
 
-    public void loadSavingAccount(String type, int accountId, String association) {
+    //This Method will hit end point ?associations=transactions
+    public void loadSavingAccount(String type, int accountId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsAccount(type, accountId, association)
+        mSubscriptions.add(mDataManagerSavings
+                .getSavingsAccount(type, accountId, Constants.TRANSACTIONS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountWithAssociations>() {
@@ -83,7 +90,8 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showErrorFetchingSavingAccount("Internal Server Error");
+                        getMvpView().showErrorFetchingSavingAccount(
+                                R.string.failed_to_fetch_savingsaccount);
                     }
 
                     @Override
@@ -92,14 +100,13 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
                         getMvpView().showProgressbar(false);
                         getMvpView().showSavingAccount(savingsAccountWithAssociations);
                     }
-                });
+                }));
     }
 
 
     public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
         checkViewAttached();
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.activateSavings(savingsAccountId, request)
+        mSubscriptions.add(mDataManagerSavings.activateSavings(savingsAccountId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
@@ -110,13 +117,13 @@ public class SavingAccountSummaryPresenter extends BasePresenter<SavingsAccountS
 
                     @Override
                     public void onError(Throwable e) {
-
+                        getMvpView().showFetchingError(R.string.error_to_activate_savingsaccount);
                     }
 
                     @Override
                     public void onNext(GenericResponse genericResponse) {
                         getMvpView().showSavingsActivatedSuccessfully(genericResponse);
                     }
-                });
+                }));
     }
 }

@@ -5,41 +5,115 @@
 
 package com.mifos.objects.accounts.savings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Generated;
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class SavingsAccountWithAssociations extends MifosBaseModel implements Parcelable {
 
-@Generated("org.jsonschema2pojo")
-public class SavingsAccountWithAssociations {
+    @SerializedName("id")
+    @PrimaryKey
+    Integer id;
 
-    private Integer id;
-    private String accountNo;
-    private Integer clientId;
-    private String clientName;
-    private Integer savingsProductId;
-    private String savingsProductName;
-    private Integer fieldOfficerId;
-    private Status status;
-    private Timeline timeline;
-    private Currency currency;
-    private Double nominalAnnualInterestRate;
-    private InterestCompoundingPeriodType interestCompoundingPeriodType;
-    private InterestPostingPeriodType interestPostingPeriodType;
-    private InterestCalculationType interestCalculationType;
-    private InterestCalculationDaysInYearType interestCalculationDaysInYearType;
-    private Double minRequiredOpeningBalance;
-    private Integer lockinPeriodFrequency;
-    private LockinPeriodFrequencyType lockinPeriodFrequencyType;
-    private Boolean withdrawalFeeForTransfers;
-    private Boolean allowOverdraft;
-    private Integer overdraftLimit;
-    private Summary summary;
-    private List<Transaction> transactions = new ArrayList<Transaction>();
-    private List<Charge> charges = new ArrayList<Charge>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @SerializedName("accountNo")
+    @Column
+    String accountNo;
+
+    @SerializedName("clientId")
+    Integer clientId;
+
+    @SerializedName("clientName")
+    @Column
+    String clientName;
+
+    @SerializedName("savingsProductId")
+    Integer savingsProductId;
+
+    @SerializedName("savingsProductName")
+    @Column
+    String savingsProductName;
+
+    @SerializedName("fieldOfficerId")
+    Integer fieldOfficerId;
+
+    @SerializedName("status")
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    Status status;
+
+    @SerializedName("timeline")
+    Timeline timeline;
+
+    @SerializedName("currency")
+    Currency currency;
+
+    @SerializedName("nominalAnnualInterestRate")
+    Double nominalAnnualInterestRate;
+
+    @SerializedName("interestCompoundingPeriodType")
+    InterestCompoundingPeriodType interestCompoundingPeriodType;
+
+    @SerializedName("interestPostingPeriodType")
+    InterestPostingPeriodType interestPostingPeriodType;
+
+    @SerializedName("interestCalculationType")
+    InterestCalculationType interestCalculationType;
+
+    @SerializedName("interestCalculationDaysInYearType")
+    InterestCalculationDaysInYearType interestCalculationDaysInYearType;
+
+    @SerializedName("minRequiredOpeningBalance")
+    Double minRequiredOpeningBalance;
+
+    @SerializedName("lockinPeriodFrequency")
+    Integer lockinPeriodFrequency;
+
+    @SerializedName("lockinPeriodFrequencyType")
+    LockinPeriodFrequencyType lockinPeriodFrequencyType;
+
+    @SerializedName("withdrawalFeeForTransfers")
+    Boolean withdrawalFeeForTransfers;
+
+    @SerializedName("allowOverdraft")
+    Boolean allowOverdraft;
+
+    @SerializedName("enforceMinRequiredBalance")
+    Boolean enforceMinRequiredBalance;
+
+    @SerializedName("withHoldTax")
+    Boolean withHoldTax;
+
+    @SerializedName("lastActiveTransactionDate")
+    List<Integer> lastActiveTransactionDate = new ArrayList<>();
+
+    @SerializedName("isDormancyTrackingActive")
+    Boolean isDormancyTrackingActive;
+
+    Integer overdraftLimit;
+
+    @SerializedName("summary")
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    Summary summary;
+
+    @SerializedName("transactions")
+    List<Transaction> transactions = new ArrayList<>();
+
+    @SerializedName("charges")
+    List<Charge> charges = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -235,13 +309,162 @@ public class SavingsAccountWithAssociations {
         this.charges = charges;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    public Boolean getEnforceMinRequiredBalance() {
+        return enforceMinRequiredBalance;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    public void setEnforceMinRequiredBalance(Boolean enforceMinRequiredBalance) {
+        this.enforceMinRequiredBalance = enforceMinRequiredBalance;
+    }
+
+    public Boolean getWithHoldTax() {
+        return withHoldTax;
+    }
+
+    public void setWithHoldTax(Boolean withHoldTax) {
+        this.withHoldTax = withHoldTax;
+    }
+
+    public List<Integer> getLastActiveTransactionDate() {
+        return lastActiveTransactionDate;
+    }
+
+    public void setLastActiveTransactionDate(List<Integer> lastActiveTransactionDate) {
+        this.lastActiveTransactionDate = lastActiveTransactionDate;
+    }
+
+    public Boolean getDormancyTrackingActive() {
+        return isDormancyTrackingActive;
+    }
+
+    public void setDormancyTrackingActive(Boolean dormancyTrackingActive) {
+        isDormancyTrackingActive = dormancyTrackingActive;
+    }
+
+    @Override
+    public String toString() {
+        return "SavingsAccountWithAssociations{" +
+                "id=" + id +
+                ", accountNo='" + accountNo + '\'' +
+                ", clientId=" + clientId +
+                ", clientName='" + clientName + '\'' +
+                ", savingsProductId=" + savingsProductId +
+                ", savingsProductName='" + savingsProductName + '\'' +
+                ", fieldOfficerId=" + fieldOfficerId +
+                ", status=" + status +
+                ", timeline=" + timeline +
+                ", currency=" + currency +
+                ", nominalAnnualInterestRate=" + nominalAnnualInterestRate +
+                ", interestCompoundingPeriodType=" + interestCompoundingPeriodType +
+                ", interestPostingPeriodType=" + interestPostingPeriodType +
+                ", interestCalculationType=" + interestCalculationType +
+                ", interestCalculationDaysInYearType=" + interestCalculationDaysInYearType +
+                ", minRequiredOpeningBalance=" + minRequiredOpeningBalance +
+                ", lockinPeriodFrequency=" + lockinPeriodFrequency +
+                ", lockinPeriodFrequencyType=" + lockinPeriodFrequencyType +
+                ", withdrawalFeeForTransfers=" + withdrawalFeeForTransfers +
+                ", allowOverdraft=" + allowOverdraft +
+                ", enforceMinRequiredBalance=" + enforceMinRequiredBalance +
+                ", withHoldTax=" + withHoldTax +
+                ", lastActiveTransactionDate=" + lastActiveTransactionDate +
+                ", isDormancyTrackingActive=" + isDormancyTrackingActive +
+                ", overdraftLimit=" + overdraftLimit +
+                ", summary=" + summary +
+                ", transactions=" + transactions +
+                ", charges=" + charges +
+                '}';
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.accountNo);
+        dest.writeValue(this.clientId);
+        dest.writeString(this.clientName);
+        dest.writeValue(this.savingsProductId);
+        dest.writeString(this.savingsProductName);
+        dest.writeValue(this.fieldOfficerId);
+        dest.writeParcelable(this.status, flags);
+        dest.writeParcelable(this.timeline, flags);
+        dest.writeParcelable(this.currency, flags);
+        dest.writeValue(this.nominalAnnualInterestRate);
+        dest.writeParcelable(this.interestCompoundingPeriodType, flags);
+        dest.writeParcelable(this.interestPostingPeriodType, flags);
+        dest.writeParcelable(this.interestCalculationType, flags);
+        dest.writeParcelable(this.interestCalculationDaysInYearType, flags);
+        dest.writeValue(this.minRequiredOpeningBalance);
+        dest.writeValue(this.lockinPeriodFrequency);
+        dest.writeParcelable(this.lockinPeriodFrequencyType, flags);
+        dest.writeValue(this.withdrawalFeeForTransfers);
+        dest.writeValue(this.allowOverdraft);
+        dest.writeValue(this.enforceMinRequiredBalance);
+        dest.writeValue(this.withHoldTax);
+        dest.writeList(this.lastActiveTransactionDate);
+        dest.writeValue(this.isDormancyTrackingActive);
+        dest.writeValue(this.overdraftLimit);
+        dest.writeParcelable(this.summary, flags);
+        dest.writeList(this.transactions);
+        dest.writeList(this.charges);
+    }
+
+    public SavingsAccountWithAssociations() {
+    }
+
+    protected SavingsAccountWithAssociations(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.clientName = in.readString();
+        this.savingsProductId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.savingsProductName = in.readString();
+        this.fieldOfficerId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
+        this.currency = in.readParcelable(Currency.class.getClassLoader());
+        this.nominalAnnualInterestRate = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestCompoundingPeriodType = in.readParcelable(InterestCompoundingPeriodType
+                .class.getClassLoader());
+        this.interestPostingPeriodType = in.readParcelable(InterestPostingPeriodType.class
+                .getClassLoader());
+        this.interestCalculationType = in.readParcelable(InterestCalculationType.class
+                .getClassLoader());
+        this.interestCalculationDaysInYearType = in.readParcelable
+                (InterestCalculationDaysInYearType.class.getClassLoader());
+        this.minRequiredOpeningBalance = (Double) in.readValue(Double.class.getClassLoader());
+        this.lockinPeriodFrequency = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.lockinPeriodFrequencyType = in.readParcelable(LockinPeriodFrequencyType.class
+                .getClassLoader());
+        this.withdrawalFeeForTransfers = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.allowOverdraft = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.enforceMinRequiredBalance = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.withHoldTax = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.lastActiveTransactionDate = new ArrayList<Integer>();
+        in.readList(this.lastActiveTransactionDate, Integer.class.getClassLoader());
+        this.isDormancyTrackingActive = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.overdraftLimit = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.summary = in.readParcelable(Summary.class.getClassLoader());
+        this.transactions = new ArrayList<Transaction>();
+        in.readList(this.transactions, Transaction.class.getClassLoader());
+        this.charges = new ArrayList<Charge>();
+        in.readList(this.charges, Charge.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<SavingsAccountWithAssociations> CREATOR =
+            new Parcelable.Creator<SavingsAccountWithAssociations>() {
+        @Override
+        public SavingsAccountWithAssociations createFromParcel(Parcel source) {
+            return new SavingsAccountWithAssociations(source);
+        }
+
+        @Override
+        public SavingsAccountWithAssociations[] newArray(int size) {
+            return new SavingsAccountWithAssociations[size];
+        }
+    };
 }

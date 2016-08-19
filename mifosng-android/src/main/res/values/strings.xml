@@ -70,6 +70,9 @@
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
     <string name="approve_savings">Approve Savings</string>
+    <string name="activate_savings">Activate Savings</string>
+    <string name="savings_account_closed">Savings Account Closed</string>
+    <string name="savings_account_activated">Savings Account Activated</string>
     <string name="more_info">More client info</string>
     <string name="pinpoint">Pinpoint location</string>
     <string name="charges">Charges </string>
@@ -94,6 +97,8 @@
     <string name="slash">/</string>
     <string name="space">" "</string>
     <string name="new_line">\n</string>
+    <string name="field">Field</string>
+    <string name="value">Value</string>
     <!-- General Terms End Here -->
 
 
@@ -146,6 +151,14 @@
     <string name="pending">Pending</string>
     <string name="overdue">Overdue</string>
     <string name="process_loan_transaction">Process Loan Transaction</string>
+    <string name="transaction_action_not_set">TRANSACTION ACTION NOT SET</string>
+    <string name="review_transaction_details">Review Payment Details</string>
+    <string name="process_transaction">Process Transaction</string>
+    <string name="transaction_date">Transaction Date</string>
+    <string name="transaction_body">Transaction Body</string>
+    <string name="transaction_failed">Transaction Failed</string>
+    <string name="transaction_saved_in_db">Transaction Saved in DB</string>
+    <string name="payment_failed">Payment Failed</string>
 
     <!-- Loan Related Terminologies End Here -->
 
@@ -282,6 +295,7 @@
     <string name="error_select_center">Please Select a Center</string>
     <string name="error_client_inactive">Client Inactive</string>
     <string name="error_group_inactive">Group Inactive</string>
+    <string name="error_to_activate_savingsaccount">Error To Activate SavingsAccount</string>
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
@@ -352,9 +366,13 @@
     <string name="dialog_message_offline_sync_alert">You are in offline mode, for syncing, You
         need to switch Online mode. \n\nIf you are trying to sync Please make sure
         your internet connection is working well</string>
-    <string name="dialog_message_sync_transaction">"Please Sync Previous LoanRepayment with
-        This Loan Id First. Go to Navigation Menu 'Offline Sync *' and Sync transaction First.
-        \nBefore making new LoanRepayment Transaction with this LoanAccount"</string>
+    <string name="dialog_message_sync_transaction">Please Sync Previous LoanRepayment with
+        This Loan Id First. \n\nGo to Navigation Menu \'Offline Sync *\' and Sync transaction First.
+        \n\nBefore making new LoanRepayment Transaction with this LoanAccount</string>
+    <string name="dialog_message_sync_savingaccounttransaction">Please Sync Previous Transaction
+        with This Savings Account Id First. \n\nGo to Navigation Menu \'Offline Sync *\' and Sync
+        transaction First.
+        \n\nBefore making new SavingAccount Transaction with this SavingAccount</string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -380,6 +398,12 @@
     <string name="failed_to_sync_loan">Failed to Sync Loan</string>
     <string name="failed_to_sync_loanrepayment">Failed to Sync LoanRepayment</string>
     <string name="failed_to_load_client">Failed To Load Clients</string>
+    <string name="failed_to_fetch_savingsaccount">Failed To Fetch SavingsAccount</string>
+    <string name="failed_to_fetch_datatable">Failed To Fetch DataTable</string>
+    <string name="failed_to_fetch_savings_template">Failed to load Saving Template</string>
+    <string name="failed_to_load_savingaccounttransaction">Failed to load
+        SavingsAccountTransaction</string>
+
 
     <string-array name="office_ids">
         <item>Head Office</item>

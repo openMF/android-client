@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -80,17 +79,10 @@ public class DashboardActivity extends MifosBaseActivity
 
         replaceFragment(new ClientSearchFragment(), false, R.id.container);
 
-        // setup navigation drawer and Navigation Toggle click
+        // setup navigation drawer and Navigation Toggle click and Offline Mode SwitchButton
         setupNavigationBar();
-        setupUserStatusToggle();
-
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setUserStatus(userStatusToggle);
-    }
 
     /**
      * sets up the navigation mDrawer in the activity
@@ -98,6 +90,7 @@ public class DashboardActivity extends MifosBaseActivity
     protected void setupNavigationBar() {
 
         mNavigationHeader = mNavigationView.getHeaderView(0);
+        setupUserStatusToggle();
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // setup drawer layout and sync to toolbar
@@ -112,6 +105,7 @@ public class DashboardActivity extends MifosBaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                setUserStatus(userStatusToggle);
             }
         };
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
@@ -178,15 +172,15 @@ public class DashboardActivity extends MifosBaseActivity
             userStatusToggle.setChecked(true);
         }
 
-        userStatusToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        userStatusToggle.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
                 if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
                     PrefManager.setUserStatus(Constants.USER_ONLINE);
-                    //userStatusToggle.setChecked(false);
+                    userStatusToggle.setChecked(false);
                 } else {
                     PrefManager.setUserStatus(Constants.USER_OFFLINE);
-                    //userStatusToggle.setChecked(true);
+                    userStatusToggle.setChecked(true);
                 }
             }
         });

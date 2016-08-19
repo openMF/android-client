@@ -5,18 +5,17 @@
 
 package com.mifos.objects.accounts.savings;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import javax.annotation.Generated;
+public class InterestCalculationType implements Parcelable {
 
-@Generated("org.jsonschema2pojo")
-public class InterestCalculationType {
+    Integer id;
 
-    private Integer id;
-    private String code;
-    private String value;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    String code;
+
+    String value;
+
 
     public Integer getId() {
         return id;
@@ -42,12 +41,47 @@ public class InterestCalculationType {
         this.value = value;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public String toString() {
+        return "InterestCalculationType{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.code);
+        dest.writeString(this.value);
+    }
+
+    public InterestCalculationType() {
+    }
+
+    protected InterestCalculationType(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.code = in.readString();
+        this.value = in.readString();
+    }
+
+    public static final Parcelable.Creator<InterestCalculationType> CREATOR =
+            new Parcelable.Creator<InterestCalculationType>() {
+        @Override
+        public InterestCalculationType createFromParcel(Parcel source) {
+            return new InterestCalculationType(source);
+        }
+
+        @Override
+        public InterestCalculationType[] newArray(int size) {
+            return new InterestCalculationType[size];
+        }
+    };
 }

@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -103,16 +102,14 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     Button bt_approve_saving;
 
     @Inject
-    SavingAccountSummaryPresenter mSavingAccountSummaryPresenter;
+    SavingsAccountSummaryPresenter mSavingAccountSummaryPresenter;
 
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
     // Infinite Scroll View
     List<Transaction> listOfAllTransactions = new ArrayList<Transaction>();
-    int countOfTransactionsInListView = 0;
     SavingsAccountTransactionsListAdapter savingsAccountTransactionsListAdapter;
     private View rootView;
-    private SharedPreferences sharedPreferences;
     private int processSavingTransactionAction = -1;
     private SavingsAccountWithAssociations savingsAccountWithAssociations;
     private boolean loadmore; // variable to enable and disable loading of data into listview
@@ -124,8 +121,8 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     private int last = 5;
     private OnFragmentInteractionListener mListener;
 
-    public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber, DepositType
-            type) {
+    public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber,
+                                                            DepositType type) {
         SavingsAccountSummaryFragment fragment = new SavingsAccountSummaryFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber);
@@ -137,7 +134,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
@@ -150,13 +146,18 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false);
 
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         ButterKnife.bind(this, rootView);
         mSavingAccountSummaryPresenter.attachView(this);
 
-        inflateSavingsAccountSummary();
+        mSavingAccountSummaryPresenter
+                .loadSavingAccount(savingsAccountType.getEndpoint(), savingsAccountNumber);
         return rootView;
     }
 
+    /**
+     * This Method setting the ToolBar Title and Requesting the API for Saving Account
+     */
     public void inflateSavingsAccountSummary() {
         showProgress(true);
         switch (savingsAccountType.getServerType()) {
@@ -167,11 +168,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                 setToolbarTitle(getResources().getString(R.string.savingsAccountSummary));
                 break;
         }
-        /**
-         * This Method will hit end point ?associations=transactions
-         */
-        mSavingAccountSummaryPresenter.loadSavingAccount(
-                savingsAccountType.getEndpoint(), savingsAccountNumber, "transactions");
     }
 
     @Override
@@ -196,8 +192,8 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         menu.clear();
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
                 .DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
-        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getResources().getString(R.string
-                .documents));
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE,
+                getResources().getString(R.string.documents));
 
         // This is the ID of Each data table which will be used in onOptionsItemSelected Method
         int SUBMENU_ITEM_ID = 0;
@@ -236,32 +232,30 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
     @OnClick(R.id.bt_deposit)
     public void onDepositButtonClicked() {
-        mListener.doTransaction(savingsAccountWithAssociations, Constants
-                .SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT, savingsAccountType);
+        mListener.doTransaction(savingsAccountWithAssociations,
+                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT, savingsAccountType);
     }
 
     @OnClick(R.id.bt_withdrawal)
     public void onWithdrawalButtonClicked() {
-        mListener.doTransaction(savingsAccountWithAssociations, Constants
-                .SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType);
+        mListener.doTransaction(savingsAccountWithAssociations,
+                Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType);
     }
 
     @OnClick(R.id.bt_approve_saving)
     public void onProcessTransactionClicked() {
-
-
         if (processSavingTransactionAction == ACTION_APPROVE_SAVINGS) {
             approveSavings();
         } else if (processSavingTransactionAction == ACTION_ACTIVATE_SAVINGS) {
             activateSavings();
         } else {
-            Log.i(getActivity().getLocalClassName(), "TRANSACTION ACTION NOT SET");
+            Log.i(getActivity().getLocalClassName(),
+                    getResources().getString(R.string.transaction_action_not_set));
         }
-
     }
 
     /**
-     * Use this method to fetch all datatables for a savings account and inflate them as
+     * Use this method to fetch all dataTables for a savings account and inflate them as
      * menu options
      */
     public void inflateDataTablesList() {
@@ -327,7 +321,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     }
 
     public void approveSavings() {
-
         SavingsAccountApproval savingsAccountApproval = SavingsAccountApproval.newInstance
                 (savingsAccountNumber, savingsAccountType);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
@@ -335,11 +328,10 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(R.id.container, savingsAccountApproval);
         fragmentTransaction.commit();
-
     }
 
     public void activateSavings() {
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("dateFormat", "dd MMMM yyyy");
         hashMap.put("activatedOnDate", DateHelper.getCurrentDateAsNewDateFormat());
         hashMap.put("locale", "en");
@@ -373,62 +365,48 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
         if (savingsAccountWithAssociations != null) {
 
-            SavingsAccountSummaryFragment.this.savingsAccountWithAssociations =
-                    savingsAccountWithAssociations;
+            this.savingsAccountWithAssociations = savingsAccountWithAssociations;
 
             tv_clientName.setText(savingsAccountWithAssociations.getClientName());
-            tv_savingsProductName.setText(savingsAccountWithAssociations
-                    .getSavingsProductName());
-            tv_savingsAccountNumber.setText(savingsAccountWithAssociations
-                    .getAccountNo());
+            tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
+            tv_savingsAccountNumber.setText(savingsAccountWithAssociations.getAccountNo());
 
-            if (savingsAccountWithAssociations.getSummary()
-                    .getTotalInterestEarned() != null) {
-                tv_interestEarned.setText(String.valueOf
-                        (savingsAccountWithAssociations.getSummary()
-                                .getTotalInterestEarned()));
+            if (savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null) {
+                tv_interestEarned.setText(String.valueOf(savingsAccountWithAssociations
+                        .getSummary().getTotalInterestEarned()));
             } else {
                 tv_interestEarned.setText("0.0");
             }
 
-            tv_savingsAccountBalance.setText(String.valueOf
-                    (savingsAccountWithAssociations.getSummary()
-                            .getAccountBalance()));
+            tv_savingsAccountBalance.setText(String.valueOf(savingsAccountWithAssociations
+                    .getSummary().getAccountBalance()));
 
-            if (savingsAccountWithAssociations.getSummary().getTotalDeposits() !=
-                    null) {
-                tv_totalDeposits.setText(String.valueOf
-                        (savingsAccountWithAssociations.getSummary()
-                                .getTotalDeposits()));
+            if (savingsAccountWithAssociations.getSummary().getTotalDeposits() != null) {
+                tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations
+                        .getSummary().getTotalDeposits()));
             } else {
                 tv_totalDeposits.setText("0.0");
             }
 
-            if (savingsAccountWithAssociations.getSummary().getTotalWithdrawals()
-                    != null) {
-                tv_totalWithdrawals.setText(String.valueOf
-                        (savingsAccountWithAssociations.getSummary()
-                                .getTotalWithdrawals()));
+            if (savingsAccountWithAssociations.getSummary().getTotalWithdrawals() != null) {
+                tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations
+                        .getSummary().getTotalWithdrawals()));
             } else {
                 tv_totalWithdrawals.setText("0.0");
             }
 
             savingsAccountTransactionsListAdapter = new
                     SavingsAccountTransactionsListAdapter(getActivity(),
-                    savingsAccountWithAssociations.getTransactions().size() <
-                            last ?
+                    savingsAccountWithAssociations.getTransactions().size() < last ?
                             savingsAccountWithAssociations.getTransactions() :
-                            savingsAccountWithAssociations.getTransactions()
-                                    .subList(initial, last)
+                            savingsAccountWithAssociations.getTransactions().subList(initial, last)
             );
             lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
 
             // Cache transactions here
-            listOfAllTransactions.addAll(savingsAccountWithAssociations
-                    .getTransactions());
+            listOfAllTransactions.addAll(savingsAccountWithAssociations.getTransactions());
 
-            lv_Transactions.setOnItemClickListener(new AdapterView
-                    .OnItemClickListener() {
+            lv_Transactions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view,
                                         int i, long l) {
@@ -439,38 +417,33 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                                      2. get the account Balance after that transaction
                                     */
                     int transactionId = listOfAllTransactions.get(i).getId();
-                    double runningBalance = listOfAllTransactions.get(i)
-                            .getRunningBalance();
+                    double runningBalance = listOfAllTransactions.get(i).getRunningBalance();
 
                     //Display them as a Formatted string in a toast message
-                    Toast.makeText(getActivity(),
-                            String.format(getResources().getString(R.string
-                                            .savings_transaction_detail),
-                                    transactionId, runningBalance),
-                            Toast.LENGTH_LONG
-                    ).show();
-
+                    Toast.makeText(getActivity(), String.format(getResources()
+                            .getString(R.string.savings_transaction_detail), transactionId,
+                            runningBalance), Toast.LENGTH_LONG).show();
                 }
             });
 
-            if (savingsAccountWithAssociations.getStatus()
-                    .getSubmittedAndPendingApproval()) {
+            if (savingsAccountWithAssociations.getStatus().getSubmittedAndPendingApproval()) {
                 bt_approve_saving.setEnabled(true);
                 bt_deposit.setVisibility(View.GONE);
                 bt_withdrawal.setVisibility(View.GONE);
-                bt_approve_saving.setText("Approve Savings");
+                bt_approve_saving.setText(getResources().getString(R.string.approve_savings));
                 processSavingTransactionAction = ACTION_APPROVE_SAVINGS;
             } else if (!(savingsAccountWithAssociations.getStatus().getActive())) {
                 bt_approve_saving.setEnabled(true);
                 bt_deposit.setVisibility(View.GONE);
                 bt_withdrawal.setVisibility(View.GONE);
-                bt_approve_saving.setText("Activate Savings");
+                bt_approve_saving.setText(getResources().getString(R.string.activate_savings));
                 processSavingTransactionAction = ACTION_ACTIVATE_SAVINGS;
             } else if (savingsAccountWithAssociations.getStatus().getClosed()) {
                 bt_approve_saving.setEnabled(false);
                 bt_deposit.setVisibility(View.GONE);
                 bt_withdrawal.setVisibility(View.GONE);
-                bt_approve_saving.setText("Savings Account Closed");
+                bt_approve_saving
+                        .setText(getResources().getString(R.string.savings_account_closed));
             } else {
                 inflateSavingsAccountSummary();
                 bt_approve_saving.setVisibility(View.GONE);
@@ -483,19 +456,19 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     }
 
     @Override
-    public void showErrorFetchingSavingAccount(String s) {
+    public void showErrorFetchingSavingAccount(int s) {
         Toaster.show(rootView, s);
         getFragmentManager().popBackStackImmediate();
     }
 
     @Override
     public void showSavingsActivatedSuccessfully(GenericResponse genericResponse) {
-        Toast.makeText(getActivity(), "Savings Account Activated", Toast
-                .LENGTH_LONG).show();
+        Toast.makeText(getActivity(), getResources().getString(R.string.savings_account_activated),
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void showFetchingError(String s) {
+    public void showFetchingError(int s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 

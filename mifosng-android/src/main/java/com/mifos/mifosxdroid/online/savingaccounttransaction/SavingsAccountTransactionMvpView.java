@@ -7,7 +7,7 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-public interface SavingAccountTransactionMvpView extends MvpView {
+public interface SavingsAccountTransactionMvpView extends MvpView {
 
     void showSavingAccountTemplate(SavingsAccountTransactionTemplate
                                            savingsAccountTransactionTemplate);
@@ -15,5 +15,11 @@ public interface SavingAccountTransactionMvpView extends MvpView {
     void showTransactionSuccessfullyDone(SavingsAccountTransactionResponse
                                                  savingsAccountTransactionResponse);
 
-    void showFetchingError(String s);
+    void checkSavingAccountTransactionStatusInDatabase();
+
+    void showSavingAccountTransactionExistInDatabase();
+
+    void showSavingAccountTransactionDoesNotExistInDatabase();
+
+    void showError(int errorMessage);
 }

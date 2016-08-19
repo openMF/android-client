@@ -15,9 +15,9 @@ public interface LoanRepaymentMvpView extends MvpView {
 
     void checkLoanRepaymentStatusInDatabase();
 
-    void showLoanRepaymentExistInDatabase(String s);
+    void showLoanRepaymentExistInDatabase();
 
     void showLoanRepaymentDoesNotExistInDatabase();
 
-    void showFetchingError(String s);
+    void showError(int errorMessage);
 }

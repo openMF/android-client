@@ -5,26 +5,74 @@
 
 package com.mifos.objects.accounts.savings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Generated;
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class Transaction extends MifosBaseModel implements Parcelable {
 
-@Generated("org.jsonschema2pojo")
-public class Transaction {
+    @SerializedName("id")
+    @PrimaryKey
+    Integer id;
 
-    private Integer id;
-    private TransactionType transactionType;
-    private Integer accountId;
-    private String accountNo;
-    private List<Integer> date = new ArrayList<Integer>();
-    private Currency currency;
-    private Double amount;
-    private Double runningBalance;
-    private Boolean reversed;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @SerializedName("savingsAccountId")
+    @Column
+    transient Integer savingsAccountId;
+
+    @SerializedName("transactionType")
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    TransactionType transactionType;
+
+    @SerializedName("accountId")
+    Integer accountId;
+
+    @SerializedName("accountNo")
+    String accountNo;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    transient SavingsTransactionDate savingsTransactionDate;
+
+    @SerializedName("date")
+    List<Integer> date = new ArrayList<>();
+
+    @SerializedName("currency")
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    Currency currency;
+
+    @SerializedName("amount")
+    @Column
+    Double amount;
+
+    @SerializedName("runningBalance")
+    @Column
+    Double runningBalance;
+
+    @SerializedName("reversed")
+    Boolean reversed;
+
+    public Integer getSavingsAccountId() {
+        return savingsAccountId;
+    }
+
+    public void setSavingsAccountId(Integer savingsAccountId) {
+        this.savingsAccountId = savingsAccountId;
+    }
 
     public Integer getId() {
         return id;
@@ -98,12 +146,75 @@ public class Transaction {
         this.reversed = reversed;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    public SavingsTransactionDate getSavingsTransactionDate() {
+        return savingsTransactionDate;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    public void setSavingsTransactionDate(SavingsTransactionDate savingsTransactionDate) {
+        this.savingsTransactionDate = savingsTransactionDate;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", savingsAccountId=" + savingsAccountId +
+                ", transactionType=" + transactionType +
+                ", accountId=" + accountId +
+                ", accountNo='" + accountNo + '\'' +
+                ", savingsTransactionDate=" + savingsTransactionDate +
+                ", date=" + date +
+                ", currency=" + currency +
+                ", amount=" + amount +
+                ", runningBalance=" + runningBalance +
+                ", reversed=" + reversed +
+                '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeParcelable(this.transactionType, flags);
+        dest.writeValue(this.accountId);
+        dest.writeString(this.accountNo);
+        dest.writeList(this.date);
+        dest.writeParcelable(this.currency, flags);
+        dest.writeValue(this.amount);
+        dest.writeValue(this.runningBalance);
+        dest.writeValue(this.reversed);
+    }
+
+    public Transaction() {
+    }
+
+    protected Transaction(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.transactionType = in.readParcelable(TransactionType.class.getClassLoader());
+        this.accountId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.date = new ArrayList<Integer>();
+        in.readList(this.date, Integer.class.getClassLoader());
+        this.currency = in.readParcelable(Currency.class.getClassLoader());
+        this.amount = (Double) in.readValue(Double.class.getClassLoader());
+        this.runningBalance = (Double) in.readValue(Double.class.getClassLoader());
+        this.reversed = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Transaction> CREATOR =
+            new Parcelable.Creator<Transaction>() {
+        @Override
+        public Transaction createFromParcel(Parcel source) {
+            return new Transaction(source);
+        }
+
+        @Override
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
 }

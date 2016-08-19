@@ -16,9 +16,9 @@ public interface SavingsAccountSummaryMvpView extends MvpView {
 
     void showSavingAccount(SavingsAccountWithAssociations savingsAccountWithAssociations);
 
-    void showErrorFetchingSavingAccount(String s);
+    void showErrorFetchingSavingAccount(int message);
 
     void showSavingsActivatedSuccessfully(GenericResponse genericResponse);
 
-    void showFetchingError(String s);
+    void showFetchingError(int errorMessage);
 }

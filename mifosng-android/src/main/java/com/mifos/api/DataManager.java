@@ -16,9 +16,6 @@ import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
@@ -41,13 +38,11 @@ import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.SavingsPayload;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -256,10 +251,6 @@ public class DataManager {
                 .createEntryInDataTable(table, entityId, payload);
     }
 
-    public Observable<List<DataTable>> getSavingsDataTable() {
-        return mBaseApiManager.getDataTableApi().getTableOf("m_savings_account");
-    }
-
     //TODO Remove this method after removing its usage
     public Observable<List<DataTable>> getClientDataTable() {
         return mBaseApiManager.getDataTableApi().getTableOf("m_client");
@@ -336,30 +327,6 @@ public class DataManager {
     /**
      * Savings API
      */
-    public Observable<SavingsAccountWithAssociations> getSavingsAccount(
-            String type, int accountId, String association) {
-        return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
-                type, accountId, association);
-    }
-
-    public Observable<GenericResponse> activateSavings(int savingsAccountId,
-                                                       HashMap<String, Object> request) {
-        return mBaseApiManager.getSavingsApi().activateSavings(savingsAccountId, request);
-    }
-
-    public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTemplate(
-            String type, int accountId, String transactionType) {
-        return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
-                accountId, transactionType);
-    }
-
-    public Observable<SavingsAccountTransactionResponse> processTransaction(
-            String type, int accountId, String transactionType,
-            SavingsAccountTransactionRequest request) {
-        return mBaseApiManager.getSavingsApi().processTransaction(type, accountId, transactionType,
-                request);
-    }
-
     public Observable<GenericResponse> approveSavingsApplication(int savingsAccountId,
                                                                  SavingsApproval savingsApproval) {
         return mBaseApiManager.getSavingsApi().approveSavingsApplication(

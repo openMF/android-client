@@ -1,22 +1,16 @@
 package com.mifos.mifosxdroid.online.loanrepayment;
 
 import com.mifos.api.datamanager.DataManagerLoan;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -62,7 +56,7 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load LoanRepaymentTemplate");
+                        getMvpView().showError(R.string.failed_to_load_loanrepayment);
                     }
 
                     @Override
@@ -88,7 +82,7 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Payment Failed");
+                        getMvpView().showError(R.string.payment_failed);
                     }
 
                     @Override
@@ -114,15 +108,14 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to Fetch LoanRepayment");
+                        getMvpView().showError(R.string.failed_to_load_loanrepayment);
                     }
 
                     @Override
                     public void onNext(LoanRepaymentRequest loanRepaymentRequest) {
                         getMvpView().showProgressbar(false);
                         if (loanRepaymentRequest != null) {
-                            getMvpView().showLoanRepaymentExistInDatabase("LoanRepayment Already " +
-                                    "Made, Please Sync First ");
+                            getMvpView().showLoanRepaymentExistInDatabase();
                         } else {
                             getMvpView().showLoanRepaymentDoesNotExistInDatabase();
                         }
@@ -130,23 +123,4 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
                 })
         );
     }
-
-    public List<String> getPaymentTypeOptions(List<PaymentTypeOption> paymentTypeOptions) {
-        final List<String> paymentOptions = new ArrayList<>();
-        Observable.from(paymentTypeOptions)
-                .flatMap(new Func1<PaymentTypeOption, Observable<String>>() {
-                    @Override
-                    public Observable<String> call(PaymentTypeOption paymentTypeOption) {
-                        return Observable.just(paymentTypeOption.getName());
-                    }
-                })
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        paymentOptions.add(s);
-                    }
-                });
-        return paymentOptions;
-    }
-
 }

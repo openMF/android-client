@@ -5,26 +5,31 @@
 
 package com.mifos.objects.accounts.savings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Generated;
 
-@Generated("org.jsonschema2pojo")
-public class Timeline {
+public class Timeline implements Parcelable {
 
-    private List<Integer> submittedOnDate = new ArrayList<Integer>();
-    private String submittedByUsername;
-    private String submittedByFirstname;
-    private String submittedByLastname;
-    private List<Integer> approvedOnDate = new ArrayList<Integer>();
-    private String approvedByUsername;
-    private String approvedByFirstname;
-    private String approvedByLastname;
-    private List<Integer> activatedOnDate = new ArrayList<Integer>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    List<Integer> submittedOnDate = new ArrayList<Integer>();
+
+    String submittedByUsername;
+
+    String submittedByFirstname;
+
+    String submittedByLastname;
+    List<Integer> approvedOnDate = new ArrayList<Integer>();
+
+    String approvedByUsername;
+
+    String approvedByFirstname;
+
+    String approvedByLastname;
+
+    List<Integer> activatedOnDate = new ArrayList<Integer>();
 
     public List<Integer> getSubmittedOnDate() {
         return submittedOnDate;
@@ -98,12 +103,67 @@ public class Timeline {
         this.activatedOnDate = activatedOnDate;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public String toString() {
+        return "Timeline{" +
+                "submittedOnDate=" + submittedOnDate +
+                ", submittedByUsername='" + submittedByUsername + '\'' +
+                ", submittedByFirstname='" + submittedByFirstname + '\'' +
+                ", submittedByLastname='" + submittedByLastname + '\'' +
+                ", approvedOnDate=" + approvedOnDate +
+                ", approvedByUsername='" + approvedByUsername + '\'' +
+                ", approvedByFirstname='" + approvedByFirstname + '\'' +
+                ", approvedByLastname='" + approvedByLastname + '\'' +
+                ", activatedOnDate=" + activatedOnDate +
+                '}';
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.submittedOnDate);
+        dest.writeString(this.submittedByUsername);
+        dest.writeString(this.submittedByFirstname);
+        dest.writeString(this.submittedByLastname);
+        dest.writeList(this.approvedOnDate);
+        dest.writeString(this.approvedByUsername);
+        dest.writeString(this.approvedByFirstname);
+        dest.writeString(this.approvedByLastname);
+        dest.writeList(this.activatedOnDate);
+    }
+
+    public Timeline() {
+    }
+
+    protected Timeline(Parcel in) {
+        this.submittedOnDate = new ArrayList<Integer>();
+        in.readList(this.submittedOnDate, Integer.class.getClassLoader());
+        this.submittedByUsername = in.readString();
+        this.submittedByFirstname = in.readString();
+        this.submittedByLastname = in.readString();
+        this.approvedOnDate = new ArrayList<Integer>();
+        in.readList(this.approvedOnDate, Integer.class.getClassLoader());
+        this.approvedByUsername = in.readString();
+        this.approvedByFirstname = in.readString();
+        this.approvedByLastname = in.readString();
+        this.activatedOnDate = new ArrayList<Integer>();
+        in.readList(this.activatedOnDate, Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Timeline> CREATOR = new Parcelable.Creator<Timeline>() {
+        @Override
+        public Timeline createFromParcel(Parcel source) {
+            return new Timeline(source);
+        }
+
+        @Override
+        public Timeline[] newArray(int size) {
+            return new Timeline[size];
+        }
+    };
 }

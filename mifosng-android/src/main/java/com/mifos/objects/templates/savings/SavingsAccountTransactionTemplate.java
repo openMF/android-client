@@ -5,24 +5,45 @@
 
 package com.mifos.objects.templates.savings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.PaymentTypeOption;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ishankhanna on 12/06/14.
  */
-public class SavingsAccountTransactionTemplate {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class SavingsAccountTransactionTemplate extends MifosBaseModel implements Parcelable {
 
-    private Integer accountId;
-    private String accountNo;
-    private List<Integer> date = new ArrayList<Integer>();
-    private Boolean reversed;
-    private List<PaymentTypeOption> paymentTypeOptions = new ArrayList<PaymentTypeOption>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @SerializedName("accountId")
+    @PrimaryKey
+    Integer accountId;
+
+    @SerializedName("accountNo")
+    @Column
+    String accountNo;
+
+    @SerializedName("date")
+    List<Integer> date = new ArrayList<>();
+
+    @SerializedName("reversed")
+    @Column
+    Boolean reversed;
+
+    @SerializedName("paymentTypeOptions")
+    List<PaymentTypeOption> paymentTypeOptions = new ArrayList<>();
 
     public Integer getAccountId() {
         return accountId;
@@ -64,18 +85,6 @@ public class SavingsAccountTransactionTemplate {
         this.paymentTypeOptions = paymentTypeOptions;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     @Override
     public String toString() {
         return "SavingsAccountTransactionTemplate{" +
@@ -84,7 +93,46 @@ public class SavingsAccountTransactionTemplate {
                 ", date=" + date +
                 ", reversed=" + reversed +
                 ", paymentTypeOptions=" + paymentTypeOptions +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.accountId);
+        dest.writeString(this.accountNo);
+        dest.writeList(this.date);
+        dest.writeValue(this.reversed);
+        dest.writeTypedList(this.paymentTypeOptions);
+    }
+
+    public SavingsAccountTransactionTemplate() {
+    }
+
+    protected SavingsAccountTransactionTemplate(Parcel in) {
+        this.accountId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.accountNo = in.readString();
+        this.date = new ArrayList<Integer>();
+        in.readList(this.date, Integer.class.getClassLoader());
+        this.reversed = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.paymentTypeOptions = in.createTypedArrayList(PaymentTypeOption.CREATOR);
+    }
+
+    public static final Parcelable.Creator<SavingsAccountTransactionTemplate> CREATOR =
+            new Parcelable.Creator<SavingsAccountTransactionTemplate>() {
+        @Override
+        public SavingsAccountTransactionTemplate createFromParcel(Parcel source) {
+            return new SavingsAccountTransactionTemplate(source);
+        }
+
+        @Override
+        public SavingsAccountTransactionTemplate[] newArray(int size) {
+            return new SavingsAccountTransactionTemplate[size];
+        }
+    };
 }

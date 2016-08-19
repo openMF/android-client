@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online.savingaccounttransaction;
 
 import android.R.layout;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,21 +13,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.google.gson.Gson;
 import com.jakewharton.fliptables.FlipTable;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.R.string;
+import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
@@ -36,11 +37,10 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
+import com.mifos.utils.PrefManager;
+import com.mifos.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,9 +51,12 @@ import butterknife.OnClick;
 
 
 public class SavingsAccountTransactionFragment extends ProgressableFragment implements
-        MFDatePicker.OnDatePickListener, SavingAccountTransactionMvpView {
+        MFDatePicker.OnDatePickListener, SavingsAccountTransactionMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
+
+    @BindView(R.id.view_flipper)
+    ViewFlipper viewFlipper;
 
     @BindView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -71,17 +74,17 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     Spinner sp_paymentType;
 
     @Inject
-    SavingAccountTransactionPresenter mSavingAccountTransactionPresenter;
+    SavingsAccountTransactionPresenter mSavingAccountTransactionPresenter;
 
     private View rootView;
     private String savingsAccountNumber;
+    private int savingsAccountId;
     private DepositType savingsAccountType;
     private String transactionType;     //Defines if the Transaction is a Deposit to an Account
     // or a Withdrawal from an Account
     private String clientName;
     // Values to be fetched from Savings Account Template
-    private List<PaymentTypeOption> paymentTypeOptionList;
-    private HashMap<String, Integer> paymentTypeHashMap = new HashMap<String, Integer>();
+    private int paymentTypeOptionId;
     private DialogFragment mfDatePicker;
 
     /**
@@ -100,6 +103,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         Bundle args = new Bundle();
         args.putString(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations
                 .getAccountNo());
+        args.putInt(Constants.SAVINGS_ACCOUNT_ID, savingsAccountWithAssociations.getId());
         args.putString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE, transactionType);
         args.putString(Constants.CLIENT_NAME, savingsAccountWithAssociations.getClientName());
         args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, accountType);
@@ -113,6 +117,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER);
+            savingsAccountId = getArguments().getInt(Constants.SAVINGS_ACCOUNT_ID);
             transactionType = getArguments().getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE);
             clientName = getArguments().getString(Constants.CLIENT_NAME);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
@@ -125,32 +130,70 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container,
                 false);
         if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
-            setToolbarTitle(getResources().getString(string.savingsAccount) + " " +
-                    getResources().getString(R.string.deposit));
+            setToolbarTitle(getResources().getString(string.savingsAccount) + getResources()
+                    .getString(string.space) + getResources().getString(R.string.deposit));
         } else {
-            setToolbarTitle(getResources().getString(R.string.savingsAccount) + " " +
-                    getResources().getString(R.string.withdrawal));
+            setToolbarTitle(getResources().getString(R.string.savingsAccount) + getResources()
+                    .getString(string.space) + getResources().getString(R.string.withdrawal));
         }
 
         ButterKnife.bind(this, rootView);
         mSavingAccountTransactionPresenter.attachView(this);
 
-        inflateUI();
+        //This Method Checking SavingAccountTransaction made before in Offline mode or not.
+        //If yes then User have to sync that first then he will be able to make transaction.
+        //If not then User able to make SavingAccountTransaction in Online or Offline.
+        checkSavingAccountTransactionStatusInDatabase();
+
         return rootView;
     }
+
+    @Override
+    public void checkSavingAccountTransactionStatusInDatabase() {
+        // Checking SavingAccountTransaction Already made in Offline mode or Not.
+        mSavingAccountTransactionPresenter
+                .checkInDatabaseSavingAccountTransaction(savingsAccountId);
+    }
+
+    @Override
+    public void showSavingAccountTransactionExistInDatabase() {
+        //Visibility of ParentLayout GONE, If SavingAccountTransaction Already made in Offline Mode
+        viewFlipper.setVisibility(View.GONE);
+
+        new MaterialDialog.Builder().init(getActivity())
+                .setTitle(R.string.sync_previous_transaction)
+                .setMessage(string.dialog_message_sync_savingaccounttransaction)
+                .setPositiveButton(R.string.dialog_action_ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                            }
+                        })
+                .setCancelable(false)
+                .createMaterialDialog()
+                .show();
+    }
+
+    @Override
+    public void showSavingAccountTransactionDoesNotExistInDatabase() {
+        // This Method Inflating UI and Initializing the Loading SavingAccountTransaction
+        // Template for transaction.
+        inflateUI();
+    }
+
 
     public void inflateUI() {
         tv_clientName.setText(clientName);
         tv_accountNumber.setText(savingsAccountNumber);
         //TODO Implement QuickContactBadge here
         inflateRepaymentDate();
-        inflatePaymentOptions();
+        inflateSavingsAccountTemplate();
     }
 
-    public void inflatePaymentOptions() {
+    public void inflateSavingsAccountTemplate() {
         mSavingAccountTransactionPresenter.loadSavingAccountTemplate(
-                savingsAccountType.getEndpoint(),
-                Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")), transactionType);
+                savingsAccountType.getEndpoint(), savingsAccountId, transactionType);
     }
 
     @OnClick(R.id.bt_reviewTransaction)
@@ -162,11 +205,15 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                     .message_field_required)).notifyUserWithToast(getActivity());
             return;
         }
-        String[] headers = {"Field", "Value"};
+        String[] headers = {getResources().getString(string.field),
+                getResources().getString(string.value)};
         String[][] data = {
-                {"Transaction Date", tv_transactionDate.getText().toString()},
-                {"Payment Type", sp_paymentType.getSelectedItem().toString()},
-                {"Amount", et_transactionAmount.getEditableText().toString()}
+                {getResources().getString(string.transaction_date),
+                        tv_transactionDate.getText().toString()},
+                {getResources().getString(string.payment_type),
+                        sp_paymentType.getSelectedItem().toString()},
+                {getResources().getString(string.amount),
+                        et_transactionAmount.getEditableText().toString()}
         };
         Log.d(LOG_TAG, FlipTable.of(headers, data));
         StringBuilder formReviewStringBuilder = new StringBuilder();
@@ -177,21 +224,25 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
             }
             formReviewStringBuilder.append('\n');
         }
-        new AlertDialog.Builder(getActivity())
-                .setTitle("Review Payment Details")
+
+        new MaterialDialog.Builder().init(getActivity())
+                .setTitle(getResources().getString(string.review_transaction_details))
                 .setMessage(formReviewStringBuilder.toString())
-                .setPositiveButton("Process Transaction", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        processTransaction();
-                    }
-                })
-                .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
+                .setPositiveButton(getResources().getString(string.process_transaction),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                processTransaction();
+                            }
+                        })
+                .setNegativeButton(getResources().getString(string.dialog_action_cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                .createMaterialDialog()
                 .show();
     }
 
@@ -204,16 +255,17 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
         savingsAccountTransactionRequest.setTransactionDate(dateString);
         savingsAccountTransactionRequest.setTransactionAmount(et_transactionAmount
                 .getEditableText().toString());
-        savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeHashMap.get
-                (sp_paymentType.getSelectedItem().toString())));
+        savingsAccountTransactionRequest.setPaymentTypeId(String.valueOf(paymentTypeOptionId));
 
         String builtTransactionRequestAsJson = new Gson().toJson(savingsAccountTransactionRequest);
-        Log.i("Transaction Body", builtTransactionRequestAsJson);
+        Log.i(getResources().getString(string.transaction_body), builtTransactionRequestAsJson);
+
+        if (!Network.isOnline(getActivity())) PrefManager.setUserStatus(Constants.USER_OFFLINE);
 
         mSavingAccountTransactionPresenter.processTransaction(savingsAccountType.getEndpoint(),
-                Integer.parseInt(savingsAccountNumber.replaceAll("[^\\d-]", "")),
-                transactionType, savingsAccountTransactionRequest);
+                savingsAccountId, transactionType, savingsAccountTransactionRequest);
     }
+
 
     @OnClick(R.id.bt_cancelTransaction)
     public void onCancelTransactionButtonClicked() {
@@ -242,64 +294,53 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
 
     @Override
-    public void showSavingAccountTemplate(SavingsAccountTransactionTemplate
+    public void showSavingAccountTemplate(final SavingsAccountTransactionTemplate
                                                   savingsAccountTransactionTemplate) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
-
         if (savingsAccountTransactionTemplate != null) {
-            List<String> listOfPaymentTypes = new ArrayList<>();
-            paymentTypeOptionList = savingsAccountTransactionTemplate
-                    .getPaymentTypeOptions();
-            // Sorting has to be done on the basis of
-            // PaymentTypeOption.position because it is specified
-            // by the users on Mifos X Platform.
-            Collections.sort(paymentTypeOptionList);
-            Iterator<PaymentTypeOption> paymentTypeOptionIterator =
-                    paymentTypeOptionList
-                            .iterator();
-            while (paymentTypeOptionIterator.hasNext()) {
-                PaymentTypeOption paymentTypeOption = paymentTypeOptionIterator
-                        .next();
-                listOfPaymentTypes.add(paymentTypeOption.getName());
-                paymentTypeHashMap.put(paymentTypeOption.getName(),
-                        paymentTypeOption
-                                .getId());
-            }
-            ArrayAdapter<String> paymentTypeAdapter =
-                    new ArrayAdapter<>(getActivity(),
-                            layout.simple_spinner_item, listOfPaymentTypes);
+            List<String> listOfPaymentTypes = Utils.getPaymentTypeOptions(
+                    savingsAccountTransactionTemplate.getPaymentTypeOptions());
+            ArrayAdapter<String> paymentTypeAdapter = new ArrayAdapter<>(getActivity(),
+                    layout.simple_spinner_item, listOfPaymentTypes);
 
-            paymentTypeAdapter.setDropDownViewResource(
-                    layout.simple_spinner_dropdown_item);
+            paymentTypeAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
             sp_paymentType.setAdapter(paymentTypeAdapter);
+            sp_paymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long
+                        id) {
+                    paymentTypeOptionId = savingsAccountTransactionTemplate
+                            .getPaymentTypeOptions().get(position).getId();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
     }
 
     @Override
     public void showTransactionSuccessfullyDone(SavingsAccountTransactionResponse
                                                         savingsAccountTransactionResponse) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
-
-        if (savingsAccountTransactionResponse != null) {
-            if (transactionType.equals(Constants
-                    .SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
+        if (savingsAccountTransactionResponse.getResourceId() == null) {
+            Toaster.show(rootView, getResources().getString(string.transaction_saved_in_db));
+        } else {
+            if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
                 Toaster.show(rootView, "Deposit Successful, Transaction ID = " +
                         savingsAccountTransactionResponse.getResourceId());
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-            } else if (transactionType.equals(Constants
-                    .SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
+            } else if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
                 Toaster.show(rootView, "Withdrawal Successful, Transaction ID = "
                         + savingsAccountTransactionResponse.getResourceId());
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
             }
         }
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
+
     @Override
-    public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
+    public void showError(int errorMessage) {
+        Toaster.show(rootView, errorMessage);
     }
 
     @Override
