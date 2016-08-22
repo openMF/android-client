@@ -57,6 +57,7 @@ import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
+import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
@@ -111,6 +112,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public static final int MENU_ITEM_ADD_LOAN_ACCOUNT = 1005;
     public static final int MENU_ITEM_DOCUMENTS = 1006;
     public static final int MENU_ITEM_IDENTIFIERS = 1007;
+    public static final int MENU_ITEM_SURVEYS = 1008;
 
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
@@ -262,6 +264,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE, getString(R.string.add_loan));
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
         menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
+        menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
 
 
         SubMenu more_info_subSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
@@ -319,6 +322,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 Intent i = new Intent(getActivity(), PinpointClientActivity.class);
                 i.putExtra(PinpointClientActivity.EXTRA_CLIENT_ID, clientId);
                 startActivity(i);
+                break;
+            case MENU_ITEM_SURVEYS:
+                loadSurveys();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -454,6 +460,15 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, clientIdentifiersFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void loadSurveys() {
+        SurveyListFragment surveyListFragment = SurveyListFragment.newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, surveyListFragment);
         fragmentTransaction.commit();
     }
 

@@ -35,8 +35,6 @@ import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
-import com.mifos.objects.survey.Scorecard;
-import com.mifos.objects.survey.Survey;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
@@ -351,21 +349,6 @@ public class DataManager {
         return mBaseApiManager.getCreateSavingsAccountService().getSavingsAccountTemplate();
     }
 
-
-    /**
-     * Surveys API
-     */
-    public Observable<List<Survey>> getAllSurvey() {
-        return mBaseApiManager.getSurveyApi().getAllSurveys();
-    }
-
-    public Observable<Scorecard> submitScore(int survey, Scorecard scorecardPayload) {
-        return mBaseApiManager.getSurveyApi().submitScore(survey, scorecardPayload);
-    }
-
-    public Observable<Survey> getSurvey(int surveyId) {
-        return mBaseApiManager.getSurveyApi().getSurvey(surveyId);
-    }
 
     /**
      * GPS API

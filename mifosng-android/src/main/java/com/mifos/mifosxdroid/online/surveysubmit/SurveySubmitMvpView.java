@@ -10,6 +10,6 @@ public interface SurveySubmitMvpView extends MvpView {
 
     void showSurveySubmittedSuccessfully(Scorecard scorecard);
 
-    void showError(String s);
+    void showError(int errorMessage);
 }
 

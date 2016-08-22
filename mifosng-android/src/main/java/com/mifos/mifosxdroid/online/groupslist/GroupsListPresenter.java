@@ -8,9 +8,9 @@ import com.mifos.objects.group.Group;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 7/6/16.
@@ -19,11 +19,12 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
 
 
     private final DataManagerGroups mDataManagerGroups;
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
     public GroupsListPresenter(DataManagerGroups dataManagerGroups) {
         mDataManagerGroups = dataManagerGroups;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -34,14 +35,13 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
     public void loadGroups(boolean paged, int offset, int limit) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManagerGroups.getGroups(paged, offset, limit)
+        mSubscriptions.add(mDataManagerGroups.getGroups(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Page<Group>>() {
@@ -61,6 +61,6 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
                         getMvpView().showProgressbar(false);
                         getMvpView().showGroups(groupPage);
                     }
-                });
+                }));
     }
 }

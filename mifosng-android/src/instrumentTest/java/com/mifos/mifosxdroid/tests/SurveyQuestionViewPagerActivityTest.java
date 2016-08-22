@@ -10,7 +10,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
+import com.mifos.mifosxdroid.online.SurveyQuestionActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -26,7 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  * Created by ahmed fathy on 11/04/16.
  */
 public class SurveyQuestionViewPagerActivityTest extends
-        ActivityInstrumentationTestCase2<SurveyQuestionViewPager> {
+        ActivityInstrumentationTestCase2<SurveyQuestionActivity> {
 
     /* mock data */
     public static final int N_QUESTIONS = 3;
@@ -131,7 +131,7 @@ public class SurveyQuestionViewPagerActivityTest extends
 
 
     public SurveyQuestionViewPagerActivityTest() {
-        super(SurveyQuestionViewPager.class);
+        super(SurveyQuestionActivity.class);
     }
 
     /* tests */

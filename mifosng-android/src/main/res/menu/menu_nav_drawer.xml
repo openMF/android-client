@@ -33,28 +33,14 @@
             android:title="@string/centers"
             />
                 
-    </group>
-     
-       
-    <group android:checkableBehavior="single"
-        android:id="@+id/group2">
-         
-        <item
-            android:id="@+id/item_survey"
-            android:checked="false"
-            android:icon="@drawable/ic_survey"
-            android:title="@string/survey"
-            />
-
         <item
             android:id="@+id/item_path_tracker"
             android:checked="false"
             android:icon="@drawable/ic_path_tracker"
             android:title="@string/path_tracker"
             />
-         
+
     </group>
-     
        
     <group android:checkableBehavior="single"
         android:id="@+id/group3">

@@ -21,7 +21,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.online.Communicator;
-import com.mifos.mifosxdroid.online.SurveyQuestionViewPager;
+import com.mifos.mifosxdroid.online.SurveyQuestionActivity;
 import com.mifos.objects.survey.Scorecard;
 
 import javax.inject.Inject;
@@ -33,8 +33,8 @@ import butterknife.OnClick;
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-public class SurveySubmitFragment extends MifosBaseFragment implements Communicator,
-        SurveySubmitMvpView {
+public class SurveySubmitFragment extends MifosBaseFragment implements
+        Communicator, SurveySubmitMvpView {
 
     public Context context;
 
@@ -59,20 +59,6 @@ public class SurveySubmitFragment extends MifosBaseFragment implements Communica
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-        ((SurveyQuestionViewPager) context).fragmentCommunicator = this;
-        Activity activity = (Activity) context;
-        try {
-            mDetachFragment = (DisableSwipe) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnAnswerSelectedListener");
-        }
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
@@ -93,39 +79,39 @@ public class SurveySubmitFragment extends MifosBaseFragment implements Communica
     public void passScoreCardData(Scorecard scorecard, int surveyId) {
         mScorecard = scorecard;
         mSurveyId = surveyId;
-        tv_submit.setText("Attempt Questions : " + mScorecard.getScorecardValues().size());
-        btn_submit.setText("Submit Survey");
+        String submitText = getResources().getString(R.string.attempt_question) +
+                mScorecard.getScorecardValues().size();
+        tv_submit.setText(submitText);
+        btn_submit.setText(getResources().getString(R.string.submit_survey));
     }
 
     @OnClick(R.id.btn_submit)
-    public void submitScore(View v) {
+    void submitScore() {
         if (mScorecard.getScorecardValues().size() >= 1) {
             mDetachFragment.disableSwipe();
-            btn_submit.setText("Submitting Survey");
+            btn_submit.setText(getResources().getString(R.string.submitting_surveys));
             btn_submit.setEnabled(false);
             mSurveySubmitPresenter.submitSurvey(mSurveyId, mScorecard);
         } else {
-            Toast.makeText(context, "Please Attempt AtLeast One Question ", Toast.LENGTH_SHORT)
+            Toast.makeText(context, getResources()
+                    .getString(R.string.please_attempt_atleast_one_question), Toast.LENGTH_SHORT)
                     .show();
         }
-
     }
 
     @Override
     public void showSurveySubmittedSuccessfully(Scorecard scorecard) {
-        Toast.makeText(context, "Scorecard created successfully", Toast.LENGTH_LONG)
-                .show();
-        tv_submit.setText("Survey Successfully Submitted ! \n Thanks for taking " +
-                "Survey ");
+        Toast.makeText(context, getResources().getString(R.string.scorecard_created_successfully),
+                Toast.LENGTH_LONG).show();
+        tv_submit.setText(getResources().getString(R.string.survey_successfully_submitted));
         btn_submit.setVisibility(View.GONE);
     }
 
     @Override
-    public void showError(String s) {
-        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-        tv_submit.setText("Error While Submitting Survey. \n Please Try Again");
+    public void showError(int errorMessage) {
+        Toast.makeText(context, getResources().getString(errorMessage), Toast.LENGTH_LONG).show();
+        tv_submit.setText(getResources().getString(R.string.error_submitting_survey));
         btn_submit.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -143,10 +129,22 @@ public class SurveySubmitFragment extends MifosBaseFragment implements Communica
         mSurveySubmitPresenter.detachView();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        ((SurveyQuestionActivity) context).fragmentCommunicator = this;
+        Activity activity = (Activity) context;
+        try {
+            mDetachFragment = (DisableSwipe) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnAnswerSelectedListener");
+        }
+    }
+
     public interface DisableSwipe {
         void disableSwipe();
     }
-
-
 }
 

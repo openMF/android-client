@@ -30,7 +30,6 @@ import com.mifos.api.BaseApiManager;
 import com.mifos.api.DataManager;
 import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
@@ -138,10 +137,6 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
             case R.id.item_centers:
                 intent.setClass(getApplicationContext(), CentersActivity.class);
-                startNavigationClickActivity(intent);
-                break;
-            case R.id.item_survey:
-                intent.setClass(getApplicationContext(), SurveyActivity.class);
                 startNavigationClickActivity(intent);
                 break;
             case R.id.item_path_tracker:
