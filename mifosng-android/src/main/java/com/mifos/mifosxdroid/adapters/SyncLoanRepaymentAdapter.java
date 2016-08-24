@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
+import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by Rajan Maurya on 30/07/16.
@@ -48,7 +46,8 @@ public class SyncLoanRepaymentAdapter extends
 
         LoanRepaymentRequest loanRepaymentRequest = loanRepaymentRequests.get(position);
         String paymentTypeName =
-                getPaymentTypeName(Integer.parseInt(loanRepaymentRequest.getPaymentTypeId()));
+                Utils.getPaymentTypeName(Integer.parseInt(
+                        loanRepaymentRequest.getPaymentTypeId()), mPaymentTypeOptions);
 
         holder.tv_loan_id.setText(String.valueOf(loanRepaymentRequest.getLoanId()));
         holder.tv_account_number.setText(loanRepaymentRequest.getAccountNumber());
@@ -79,24 +78,6 @@ public class SyncLoanRepaymentAdapter extends
     public void setPaymentTypeOptions(List<PaymentTypeOption> paymentTypeOptions) {
         mPaymentTypeOptions = paymentTypeOptions;
         notifyDataSetChanged();
-    }
-
-    public String getPaymentTypeName(final int paymentId) {
-        final String[] paymentTypeName = new String[1];
-        Observable.from(mPaymentTypeOptions)
-                .filter(new Func1<PaymentTypeOption, Boolean>() {
-                    @Override
-                    public Boolean call(PaymentTypeOption paymentTypeOption) {
-                        return (paymentTypeOption.getId() == paymentId);
-                    }
-                })
-                .subscribe(new Action1<PaymentTypeOption>() {
-                    @Override
-                    public void call(PaymentTypeOption paymentTypeOption) {
-                        paymentTypeName[0] = paymentTypeOption.getName();
-                    }
-                });
-        return paymentTypeName[0];
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

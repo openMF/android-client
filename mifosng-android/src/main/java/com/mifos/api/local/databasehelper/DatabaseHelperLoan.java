@@ -268,8 +268,8 @@ public class DatabaseHelperLoan {
 
     /**
      * This Method Deleting the LoanRepayment with the loanId and loading the
-     * List<LoanRepaymentRequest> from Database and return the SyncLoanRepaymentTransactionPresenter
-     * that synced LoanRepayment is deleted from Database and updated Database Table entries is this
+     * List<LoanRepaymentRequest> from Database and return to the DataManagerLoan
+     * that synced LoanRepayment is deleted from Database and updated Database Table entries.
      *
      * @param loanId loan Id of the LoanRepayment
      * @return List<LoanRepaymentRequest>

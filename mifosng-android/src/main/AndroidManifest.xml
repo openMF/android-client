@@ -111,6 +111,12 @@
                   android:label="@string/sync_loanrepayments"
                   android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity"
+            android:label="@string/sync_savingsaccounttransactions"
+            android:screenOrientation="portrait"/>
+
+
         <service android:name=".LocationService" />
 
         <meta-data

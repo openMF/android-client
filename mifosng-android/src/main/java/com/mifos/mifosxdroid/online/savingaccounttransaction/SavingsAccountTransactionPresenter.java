@@ -99,7 +99,7 @@ public class SavingsAccountTransactionPresenter
     public void checkInDatabaseSavingAccountTransaction(int savingAccountId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.getDatabaseSavingsAccountTransaction(savingAccountId)
+        mSubscriptions.add(mDataManagerSavings.getSavingsAccountTransaction(savingAccountId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingsAccountTransactionRequest>() {
