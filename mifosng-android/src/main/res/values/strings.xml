@@ -100,6 +100,15 @@
     <string name="new_line">\n</string>
     <string name="field">Field</string>
     <string name="value">Value</string>
+    <string name="survey_subtitle">0/0</string>
+    <string name="submit_survey">Submit Survey</string>
+    <string name="question">Question</string>
+    <string name="submitting_surveys">Submitting Survey</string>
+    <string name="scorecard_created_successfully">Scorecard created successfully</string>
+    <string name="survey_successfully_submitted">Survey Successfully Submitted !
+        \n Thanks for taking Survey </string>
+    <string name="please_attempt_atleast_one_question">Please Attempt AtLeast One Question </string>
+    <string name="attempt_question">Attempt Questions : </string>
     <!-- General Terms End Here -->
 
 
@@ -298,6 +307,7 @@
     <string name="error_client_inactive">Client Inactive</string>
     <string name="error_group_inactive">Group Inactive</string>
     <string name="error_to_activate_savingsaccount">Error To Activate SavingsAccount</string>
+    <string name="error_submitting_survey">Error While Submitting Survey.\nPlease Try Again</string>
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
@@ -408,6 +418,8 @@
     <string name="failed_to_load_savingaccounttransaction">Failed to load
         SavingsAccountTransaction</string>
     <string name="failed_to_update_savingsaccount">Failed to update Savings Accounts</string>
+    <string name="failed_to_fetch_surveys_list">Failed to Fetch Surveys List</string>
+    <string name="failed_to_create_survey_scorecard">Failed to create Survey Score Card</string>
 
 
     <string-array name="office_ids">

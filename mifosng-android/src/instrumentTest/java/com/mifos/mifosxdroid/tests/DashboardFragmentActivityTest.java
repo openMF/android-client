@@ -24,12 +24,11 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.ClientListActivity;
 import com.mifos.mifosxdroid.GroupListActivity;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.SurveyActivity;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.CentersActivity;
-import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.mifosxdroid.online.DashboardActivity;
+import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 
@@ -142,24 +141,6 @@ public class DashboardFragmentActivityTest extends
         onView(withId(R.id.drawer)).perform(actionOpenDrawer());
         Thread.sleep(500);
         onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_centers));
-
-
-        Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);
-        assertNotNull(startedActivity);
-        assertEquals(true, getInstrumentation().checkMonitorHit(monitor, 1));
-
-        this.sendKeys(KeyEvent.KEYCODE_BACK);
-    }
-
-    @MediumTest
-    public void testSurveryActivityStarted() throws InterruptedException {
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SurveyActivity
-                .class.getName(), null, false);
-
-        // select item from navigation drawer
-        onView(withId(R.id.drawer)).perform(actionOpenDrawer());
-        Thread.sleep(500);
-        onView(withId(R.id.navigation_view)).perform(actionSelectNavItem(R.id.item_survey));
 
 
         Activity startedActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 6000);

@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.surveylist;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerSurveys;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.survey.Survey;
 
@@ -18,12 +19,12 @@ import rx.schedulers.Schedulers;
  */
 public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerSurveys mDataManagerSurveys;
     private Subscription mSubscription;
 
     @Inject
-    public SurveyListPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SurveyListPresenter(DataManagerSurveys dataManagerSurveys) {
+        mDataManagerSurveys = dataManagerSurveys;
     }
 
     @Override
@@ -41,19 +42,18 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getAllSurvey()
+        mSubscription = mDataManagerSurveys.getAllSurvey()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Survey>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Couldn't Fetch List of Surveys");
+                        getMvpView().showFetchingError(R.string.failed_to_fetch_surveys_list);
                     }
 
                     @Override

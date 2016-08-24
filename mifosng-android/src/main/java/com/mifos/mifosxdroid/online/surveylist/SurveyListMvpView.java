@@ -12,5 +12,5 @@ public interface SurveyListMvpView extends MvpView {
 
     void showAllSurvey(List<Survey> surveys);
 
-    void showFetchingError(String s);
+    void showFetchingError(int errorMessage);
 }

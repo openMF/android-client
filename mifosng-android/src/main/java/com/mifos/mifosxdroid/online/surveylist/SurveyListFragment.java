@@ -21,6 +21,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.survey.Survey;
+import com.mifos.utils.Constants;
 
 import java.util.List;
 
@@ -30,11 +31,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * This Class shows the List of Surveys after fetching the surveys list from the REST API :
+ * https://demo.openmf.org/fineract-provider/api/v1/surveys
+ * <p/>
  * Created by Nasim Banu on 27,January,2016.
  */
 public class SurveyListFragment extends ProgressableFragment implements SurveyListMvpView {
-
-    private static final String CLIENTID = "ClientID";
 
     @BindView(R.id.lv_surveys_list)
     ListView lv_surveys_list;
@@ -42,15 +44,14 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
     @Inject
     SurveyListPresenter mSurveyListPresenter;
 
-    private SurveyListAdapter surveyListAdapter;
     private OnFragmentInteractionListener mListener;
     private View rootView;
     private int clientId;
 
-    public static SurveyListFragment newInstance(int clientid) {
+    public static SurveyListFragment newInstance(int clientId) {
         SurveyListFragment fragment = new SurveyListFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(CLIENTID, clientid);
+        bundle.putInt(Constants.CLIENT_ID, clientId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -59,6 +60,9 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        if (getArguments() != null) {
+            clientId = getArguments().getInt(Constants.CLIENT_ID);
+        }
     }
 
     @Override
@@ -69,11 +73,31 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
         ButterKnife.bind(this, rootView);
         mSurveyListPresenter.attachView(this);
 
-        clientId = getArguments().getInt(CLIENTID);
-
         mSurveyListPresenter.loadSurveyList();
 
         return rootView;
+    }
+
+    @Override
+    public void showAllSurvey(final List<Survey> surveys) {
+        SurveyListAdapter surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
+        lv_surveys_list.setAdapter(surveyListAdapter);
+        lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                mListener.loadSurveyQuestion(surveys.get(position), clientId);
+            }
+        });
+    }
+
+    @Override
+    public void showFetchingError(int errorMessage) {
+        Toaster.show(rootView, getResources().getString(errorMessage));
+    }
+
+    @Override
+    public void showProgressbar(boolean b) {
+        showProgress(b);
     }
 
     @Override
@@ -96,28 +120,6 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
     }
 
     @Override
-    public void showAllSurvey(final List<Survey> surveys) {
-        surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
-        lv_surveys_list.setAdapter(surveyListAdapter);
-        lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.loadSurveyQuestion(surveys.get(i), clientId);
-            }
-        });
-    }
-
-    @Override
-    public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
-    }
-
-    @Override
-    public void showProgressbar(boolean b) {
-        showProgress(b);
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mSurveyListPresenter.detachView();
@@ -125,7 +127,7 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
 
     public interface OnFragmentInteractionListener {
 
-        void loadSurveyQuestion(Survey survey, int Clientid);
+        void loadSurveyQuestion(Survey survey, int clientId);
     }
 
 }

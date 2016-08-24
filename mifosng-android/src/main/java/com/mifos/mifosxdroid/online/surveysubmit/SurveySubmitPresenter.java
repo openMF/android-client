@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.surveysubmit;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerSurveys;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.survey.Scorecard;
 
@@ -16,12 +17,12 @@ import rx.schedulers.Schedulers;
  */
 public class SurveySubmitPresenter extends BasePresenter<SurveySubmitMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerSurveys mDataManagerSurveys;
     private Subscription mSubscription;
 
     @Inject
-    public SurveySubmitPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SurveySubmitPresenter(DataManagerSurveys dataManagerSurveys) {
+        mDataManagerSurveys = dataManagerSurveys;
     }
 
     @Override
@@ -39,19 +40,18 @@ public class SurveySubmitPresenter extends BasePresenter<SurveySubmitMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.submitScore(survey, scorecardPayload)
+        mSubscription = mDataManagerSurveys.submitScore(survey, scorecardPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Scorecard>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Try Again");
+                        getMvpView().showError(R.string.failed_to_create_survey_scorecard);
                     }
 
                     @Override
