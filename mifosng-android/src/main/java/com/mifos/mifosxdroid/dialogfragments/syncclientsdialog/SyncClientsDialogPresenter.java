@@ -232,7 +232,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      */
     public void syncLoanAndLoanRepayment(int loanId) {
         checkViewAttached();
-        mSubscriptions.add(Observable.zip(
+        mSubscriptions.add(Observable.combineLatest(
                 mDataManagerLoan.syncLoanById(loanId),
                 mDataManagerLoan.syncLoanRepaymentTemplate(loanId),
                 new Func2<LoanWithAssociations, LoanRepaymentTemplate, LoanAndLoanRepayment>() {
@@ -283,7 +283,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      */
     public void syncSavingsAccountAndTemplate(String savingsAccountType, int savingsAccountId) {
         checkViewAttached();
-        mSubscriptions.add(Observable.zip(
+        mSubscriptions.add(Observable.combineLatest(
                 mDataManagerSavings.syncSavingsAccount(savingsAccountType, savingsAccountId,
                         Constants.TRANSACTIONS),
                 mDataManagerSavings.syncSavingsAccountTransactionTemplate(savingsAccountType,
