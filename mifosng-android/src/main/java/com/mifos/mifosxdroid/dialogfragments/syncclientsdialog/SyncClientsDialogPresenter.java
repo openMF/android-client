@@ -17,13 +17,12 @@ import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
 import com.mifos.objects.zipmodels.SavingsAccountAndTransactionTemplate;
 import com.mifos.utils.Constants;
 
-import org.apache.http.HttpException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -175,8 +174,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
      * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
      * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
-     * <p>
-     * <p>
+     * <p/>
+     * <p/>
      * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
      * onError :
      *
@@ -280,7 +279,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      * Database table.
      *
      * @param savingsAccountType SavingsAccount Type Example : savingsaccounts
-     * @param savingsAccountId SavingsAccount Id
+     * @param savingsAccountId   SavingsAccount Id
      */
     public void syncSavingsAccountAndTemplate(String savingsAccountType, int savingsAccountId) {
         checkViewAttached();
