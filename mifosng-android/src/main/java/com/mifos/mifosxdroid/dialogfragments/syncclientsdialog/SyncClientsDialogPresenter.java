@@ -17,12 +17,13 @@ import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
 import com.mifos.objects.zipmodels.SavingsAccountAndTransactionTemplate;
 import com.mifos.utils.Constants;
 
+import org.apache.http.HttpException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -159,8 +160,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                 int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
                 getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
 
-                mClientSyncIndex = mClientSyncIndex + 1;
                 mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
+                mClientSyncIndex = mClientSyncIndex + 1;
 
                 getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
                 checkNetworkConnectionAndSyncClient();
