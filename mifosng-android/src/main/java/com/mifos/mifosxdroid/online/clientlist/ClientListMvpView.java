@@ -12,6 +12,8 @@ public interface ClientListMvpView extends MvpView {
 
     void showClientList(Page<Client> clientPage);
 
+    void loadClientList();
+
     void showErrorFetchingClients();
 
 }

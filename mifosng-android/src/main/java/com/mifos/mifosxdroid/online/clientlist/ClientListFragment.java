@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online.clientlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
@@ -79,6 +80,7 @@ public class ClientListFragment extends MifosBaseFragment
     private int mApiRestCounter;
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
+    private Boolean IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT = false;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -100,18 +102,24 @@ public class ClientListFragment extends MifosBaseFragment
         toggleSelection(position);
     }
 
-    public static ClientListFragment newInstance(List<Client> clientList) {
+    public static ClientListFragment newInstance() {
         ClientListFragment clientListFragment = new ClientListFragment();
-        if (clientList != null) {
-            clientListFragment.setClientList(clientList);
-        }
+        clientListFragment.setArguments(null);
         return clientListFragment;
     }
 
     public static ClientListFragment newInstance(List<Client> clientList, boolean
             isParentFragmentAGroupFragment) {
         ClientListFragment clientListFragment = new ClientListFragment();
-        clientListFragment.setClientList(clientList);
+        Bundle args = new Bundle();
+        if (isParentFragmentAGroupFragment) {
+            if (clientList != null) {
+                args.putParcelableArrayList(Constants.CLIENTS,
+                        (ArrayList<? extends Parcelable>) clientList);
+                args.putBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT, true);
+                clientListFragment.setArguments(args);
+            }
+        }
         return clientListFragment;
     }
 
@@ -122,6 +130,11 @@ public class ClientListFragment extends MifosBaseFragment
         clientList = new ArrayList<>();
         selectedClients = new ArrayList<>();
         actionModeCallback = new ActionModeCallback();
+        if (getArguments() != null) {
+            clientList = getArguments().getParcelableArrayList(Constants.CLIENTS);
+            IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT = getArguments()
+                    .getBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT);
+        }
     }
 
     @Override
@@ -140,10 +153,6 @@ public class ClientListFragment extends MifosBaseFragment
         rv_clients.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_clients.setHasFixedSize(true);
 
-        mApiRestCounter = 1;
-        mClientListPresenter.loadClients(true, 0, limit);
-        mClientListPresenter.loadDatabaseClients();
-
         /**
          * Setting mApiRestCounter to 1 and send Fresh Request to Server
          */
@@ -153,10 +162,7 @@ public class ClientListFragment extends MifosBaseFragment
             @Override
             public void onRefresh() {
 
-                mApiRestCounter = 1;
-
-                mClientListPresenter.loadClients(true, 0, limit);
-                mClientListPresenter.loadDatabaseClients();
+                loadClientList();
 
                 if (actionMode != null) actionMode.finish();
 
@@ -179,7 +185,24 @@ public class ClientListFragment extends MifosBaseFragment
             }
         });
 
+        if (IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT) {
+            Page<Client> clientPage = new Page<>();
+            clientPage.setPageItems(clientList);
+            showClientList(clientPage);
+            rv_clients.clearOnScrollListeners();
+            swipeRefreshLayout.setEnabled(false);
+        } else {
+            loadClientList();
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void loadClientList() {
+        mApiRestCounter = 1;
+        mClientListPresenter.loadClients(true, 0, limit);
+        mClientListPresenter.loadDatabaseClients();
     }
 
     /**
@@ -192,11 +215,6 @@ public class ClientListFragment extends MifosBaseFragment
         mClientListPresenter.loadClients(true, 0, limit);
         mClientListPresenter.loadDatabaseClients();
     }
-
-    public void setClientList(List<Client> clientList) {
-        this.clientList = clientList;
-    }
-
 
     /**
      * Setting Data in RecyclerView of the ClientListFragment if the mApiRestCounter value is 1,
@@ -212,11 +230,10 @@ public class ClientListFragment extends MifosBaseFragment
          * if mApiRestCounter is 1, So this is the first Api Request.
          * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
          */
-        if (mApiRestCounter == 1) {
+        if (mApiRestCounter == 1 || IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT) {
             clientList = clientPage.getPageItems();
             clientNameListAdapter = new ClientNameListAdapter(getActivity(), clientList);
             rv_clients.setAdapter(clientNameListAdapter);
-
             ll_error.setVisibility(View.GONE);
         } else {
 

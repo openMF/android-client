@@ -130,7 +130,7 @@ public class DashboardActivity extends MifosBaseActivity
                 replaceFragment(new ClientSearchFragment(), false, R.id.container);
                 break;
             case R.id.item_clients:
-                replaceFragment(new ClientListFragment(), false, R.id.container);
+                replaceFragment(ClientListFragment.newInstance(), false, R.id.container);
                 break;
             case R.id.item_groups:
                 replaceFragment(new GroupsListFragment(), false, R.id.container);
