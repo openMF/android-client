@@ -9,12 +9,15 @@ import com.mifos.objects.client.Page;
  */
 public interface ClientListMvpView extends MvpView {
 
+    void showUserInterface();
 
     void showClientList(Page<Client> clientPage);
 
     void showEmptyClientList(String s);
 
     void loadClientList();
+
+    void unregisterSwipeAndScrollListener();
 
     void showErrorFetchingClients();
 

@@ -54,7 +54,7 @@ import butterknife.OnClick;
  * =limit_value</>
  */
 public class ClientListFragment extends MifosBaseFragment
-        implements OnItemClickListener, ClientListMvpView {
+        implements OnItemClickListener, ClientListMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.rv_clients)
     RecyclerView rv_clients;
@@ -68,6 +68,7 @@ public class ClientListFragment extends MifosBaseFragment
     @BindView(R.id.ll_error)
     LinearLayout ll_error;
 
+    @Inject
     ClientNameListAdapter clientNameListAdapter;
 
     @Inject
@@ -81,6 +82,7 @@ public class ClientListFragment extends MifosBaseFragment
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
     private Boolean isParentFragmentAGroupFragment = false;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -148,29 +150,7 @@ public class ClientListFragment extends MifosBaseFragment
         ButterKnife.bind(this, rootView);
         mClientListPresenter.attachView(this);
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_clients.setLayoutManager(mLayoutManager);
-        rv_clients.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
-        rv_clients.setHasFixedSize(true);
-
-        /**
-         * Setting mApiRestCounter to 1 and send Fresh Request to Server
-         */
-        swipeRefreshLayout.setColorSchemeColors(getActivity()
-                .getResources().getIntArray(R.array.swipeRefreshColors));
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                loadClientList();
-
-                if (actionMode != null) actionMode.finish();
-
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        showUserInterface();
 
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
@@ -193,8 +173,7 @@ public class ClientListFragment extends MifosBaseFragment
                 Page<Client> clientPage = new Page<>();
                 clientPage.setPageItems(clientList);
                 showClientList(clientPage);
-                rv_clients.clearOnScrollListeners();
-                swipeRefreshLayout.setEnabled(false);
+                unregisterSwipeAndScrollListener();
             }
         } else {
             loadClientList();
@@ -204,10 +183,41 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     @Override
+    public void showUserInterface() {
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        clientNameListAdapter.setContext(getActivity());
+        rv_clients.setLayoutManager(mLayoutManager);
+        rv_clients.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
+        rv_clients.setHasFixedSize(true);
+        rv_clients.setAdapter(clientNameListAdapter);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
+        swipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        loadClientList();
+
+        if (actionMode != null) actionMode.finish();
+
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
     public void loadClientList() {
         mApiRestCounter = 1;
         mClientListPresenter.loadClients(true, 0, limit);
         mClientListPresenter.loadDatabaseClients();
+    }
+
+    @Override
+    public void unregisterSwipeAndScrollListener() {
+        rv_clients.clearOnScrollListeners();
+        swipeRefreshLayout.setEnabled(false);
     }
 
     /**
@@ -237,8 +247,7 @@ public class ClientListFragment extends MifosBaseFragment
          */
         if (mApiRestCounter == 1 || isParentFragmentAGroupFragment) {
             clientList = clientPage.getPageItems();
-            clientNameListAdapter = new ClientNameListAdapter(getActivity(), clientList);
-            rv_clients.setAdapter(clientNameListAdapter);
+            clientNameListAdapter.setClients(clientList);
             ll_error.setVisibility(View.GONE);
         } else {
 

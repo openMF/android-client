@@ -24,7 +24,10 @@ import com.mifos.mifosxdroid.core.SelectableAdapter;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.PrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,15 +37,12 @@ import butterknife.ButterKnife;
  */
 public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHolder> {
 
-    LayoutInflater layoutInflater;
     private List<Client> pageItems;
     private Context mContext;
 
-    public ClientNameListAdapter(Context context, List<Client> pageItems) {
-
-        layoutInflater = LayoutInflater.from(context);
-        this.pageItems = pageItems;
-        this.mContext = context;
+    @Inject
+    public ClientNameListAdapter() {
+        this.pageItems  = new ArrayList<>();
     }
 
     public Client getItem(int position) {
@@ -121,6 +121,14 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         return pageItems.size();
     }
 
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+    public void setClients(List<Client> clients) {
+        pageItems = clients;
+        notifyDataSetChanged();
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

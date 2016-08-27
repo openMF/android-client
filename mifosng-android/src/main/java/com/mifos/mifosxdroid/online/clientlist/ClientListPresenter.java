@@ -26,6 +26,11 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
     private Page<Client> databaseClientPage;
 
+    private int limit = 100;
+    private int mApiRestCounter;
+    private Boolean mPagination  = true;
+    private Boolean isParentFragmentAGroupFragment = false;
+
     @Inject
     public ClientListPresenter(DataManagerClient dataManagerClient) {
         mDataManagerClient = dataManagerClient;
@@ -42,6 +47,20 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     public void detachView() {
         super.detachView();
         mSubscriptions.unsubscribe();
+    }
+
+    public void loadClients(int offset) {
+        mApiRestCounter = 1;
+        loadClients(mPagination, offset, limit);
+    }
+
+    public void setParentFragmentIsGroupOrNot(boolean isParentFragmentAGroupFragment) {
+        this.isParentFragmentAGroupFragment = isParentFragmentAGroupFragment;
+    }
+
+
+    public void showClientsList() {
+
     }
 
 
