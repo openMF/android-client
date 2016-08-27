@@ -80,7 +80,7 @@ public class ClientListFragment extends MifosBaseFragment
     private int mApiRestCounter;
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
-    private Boolean IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT = false;
+    private Boolean isParentFragmentAGroupFragment = false;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -108,8 +108,8 @@ public class ClientListFragment extends MifosBaseFragment
         return clientListFragment;
     }
 
-    public static ClientListFragment newInstance(List<Client> clientList, boolean
-            isParentFragmentAGroupFragment) {
+    public static ClientListFragment newInstance(List<Client> clientList,
+                                                 boolean isParentFragmentAGroupFragment) {
         ClientListFragment clientListFragment = new ClientListFragment();
         Bundle args = new Bundle();
         if (isParentFragmentAGroupFragment) {
@@ -132,7 +132,7 @@ public class ClientListFragment extends MifosBaseFragment
         actionModeCallback = new ActionModeCallback();
         if (getArguments() != null) {
             clientList = getArguments().getParcelableArrayList(Constants.CLIENTS);
-            IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT = getArguments()
+            isParentFragmentAGroupFragment = getArguments()
                     .getBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT);
         }
     }
@@ -185,12 +185,16 @@ public class ClientListFragment extends MifosBaseFragment
             }
         });
 
-        if (IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT) {
-            Page<Client> clientPage = new Page<>();
-            clientPage.setPageItems(clientList);
-            showClientList(clientPage);
-            rv_clients.clearOnScrollListeners();
-            swipeRefreshLayout.setEnabled(false);
+        if (isParentFragmentAGroupFragment) {
+            if (clientList.size() == 0) {
+                showEmptyClientList("Empty Group ClientList");
+            } else {
+                Page<Client> clientPage = new Page<>();
+                clientPage.setPageItems(clientList);
+                showClientList(clientPage);
+                rv_clients.clearOnScrollListeners();
+                swipeRefreshLayout.setEnabled(false);
+            }
         } else {
             loadClientList();
         }
@@ -230,7 +234,7 @@ public class ClientListFragment extends MifosBaseFragment
          * if mApiRestCounter is 1, So this is the first Api Request.
          * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
          */
-        if (mApiRestCounter == 1 || IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT) {
+        if (mApiRestCounter == 1 || isParentFragmentAGroupFragment) {
             clientList = clientPage.getPageItems();
             clientNameListAdapter = new ClientNameListAdapter(getActivity(), clientList);
             rv_clients.setAdapter(clientNameListAdapter);
@@ -247,6 +251,13 @@ public class ClientListFragment extends MifosBaseFragment
                 Toaster.show(rootView,
                         getResources().getString(R.string.no_more_clients_available));
         }
+    }
+
+    @Override
+    public void showEmptyClientList(String s) {
+        ll_error.setVisibility(View.VISIBLE);
+        mNoClientText.setText(s);
+
     }
 
     /**
