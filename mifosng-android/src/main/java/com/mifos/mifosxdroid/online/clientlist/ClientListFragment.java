@@ -103,8 +103,9 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     public static ClientListFragment newInstance() {
+        Bundle arguments = new Bundle();
         ClientListFragment clientListFragment = new ClientListFragment();
-        clientListFragment.setArguments(null);
+        clientListFragment.setArguments(arguments);
         return clientListFragment;
     }
 
