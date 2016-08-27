@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +57,8 @@ import butterknife.OnClick;
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView, SwipeRefreshLayout.OnRefreshListener {
 
+    public static final String LOG_TAG = ClientListFragment.class.getSimpleName();
+
     @BindView(R.id.rv_clients)
     RecyclerView rv_clients;
 
@@ -80,8 +83,6 @@ public class ClientListFragment extends MifosBaseFragment
     private View rootView;
     private List<Client> clientList;
     private List<Client> selectedClients;
-    private int limit = 100;
-    private int mApiRestCounter;
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
     private Boolean isParentFragmentAGroupFragment = false;
@@ -155,14 +156,6 @@ public class ClientListFragment extends MifosBaseFragment
 
         showUserInterface();
 
-
-        if (isParentFragmentAGroupFragment) {
-            mClientListPresenter.showGroupClients(clientList);
-        } else {
-            mClientListPresenter.loadClients(false, 0);
-        }
-        mClientListPresenter.loadDatabaseClients();
-
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
@@ -175,6 +168,13 @@ public class ClientListFragment extends MifosBaseFragment
                 mClientListPresenter.loadClients(true, clientList.size());
             }
         });
+
+        if (isParentFragmentAGroupFragment) {
+            mClientListPresenter.showGroupClients(clientList);
+        } else {
+            mClientListPresenter.loadClients(false, 0);
+        }
+        mClientListPresenter.loadDatabaseClients();
 
         return rootView;
     }
@@ -232,17 +232,21 @@ public class ClientListFragment extends MifosBaseFragment
     public void showClientList(List<Client> clients) {
         clientList = clients;
         mClientNameListAdapter.setClients(clients);
+        mClientNameListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showLoadMoreClients(List<Client> clients) {
         clientList.addAll(clients);
         mClientNameListAdapter.addClients(clients);
+        mClientNameListAdapter.notifyDataSetChanged();
+        Log.d(LOG_TAG, "" + clientList.size());
     }
 
     @Override
     public void showGroupClients(List<Client> clients) {
         mClientNameListAdapter.setClients(clients);
+        mClientNameListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -265,6 +269,7 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @Override
     public void showError() {
+        rv_clients.setVisibility(View.GONE);
         ll_error.setVisibility(View.VISIBLE);
         String errorMessage = getResources().getString(R.string.failed_to_load_client)
                 + getResources().getString(R.string.new_line) +

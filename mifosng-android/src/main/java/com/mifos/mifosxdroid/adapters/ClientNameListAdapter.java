@@ -127,12 +127,10 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
 
     public void setClients(List<Client> clients) {
         pageItems = clients;
-        notifyDataSetChanged();
     }
 
     public void addClients(List<Client> clients) {
         pageItems.addAll(clients);
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,5 +1,7 @@
 package com.mifos.mifosxdroid.online.clientlist;
 
+import android.util.Log;
+
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
@@ -7,6 +9,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.EspressoIdlingResource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,11 +26,12 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
+    private static final String LOG_TAG = ClientListPresenter.class.getSimpleName();
 
     private final DataManagerClient mDataManagerClient;
     private CompositeSubscription mSubscriptions;
 
-    private Page<Client> databaseClientPage;
+    private List<Client> mDbClientList;
 
     private int limit = 100;
     private Boolean loadmore = false;
@@ -36,7 +40,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     public ClientListPresenter(DataManagerClient dataManagerClient) {
         mDataManagerClient = dataManagerClient;
         mSubscriptions = new CompositeSubscription();
-        databaseClientPage = new Page<>();
+        mDbClientList = new ArrayList<>();
     }
 
     @Override
@@ -57,6 +61,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
     public void showClientList(List<Client> clients) {
         if (loadmore) {
+            Log.d(LOG_TAG, "showClient" + clients.size());
             getMvpView().showLoadMoreClients(clients);
         } else {
             getMvpView().showClientList(clients);
@@ -65,12 +70,12 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
     //This method handling Group Client event
     public void showGroupClients(List<Client> clients) {
+        getMvpView().unregisterSwipeAndScrollListener();
         if (clients.size() == 0) {
             getMvpView().showEmptyClientList(R.string.empty_group_clients);
         } else {
             getMvpView().showGroupClients(clients);
         }
-        getMvpView().unregisterSwipeAndScrollListener();
     }
 
 
@@ -111,9 +116,8 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                         } else if (clients.size() == 0 && loadmore) {
                             getMvpView().showMessage(R.string.no_more_clients_available);
                         } else {
-                            showClientList(clients);
+                            showClientList(checkClientAlreadySyncedOrNot(clients));
                         }
-                        getMvpView().showClientList(checkClientAlreadySyncedOrNot(clientPage.getPageItems()));
 
                         EspressoIdlingResource.decrement(); // App is idle.
                     }
@@ -145,7 +149,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
-                        databaseClientPage = clientPage;
+                        mDbClientList = clientPage.getPageItems();
                     }
                 })
         );
@@ -160,12 +164,11 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      * @return Page<Client>
      */
     public List<Client> checkClientAlreadySyncedOrNot(final List<Client> clients) {
-        if (databaseClientPage.getPageItems().size() != 0) {
+        if (mDbClientList.size() != 0) {
 
-            for (int i = 0; i < databaseClientPage.getPageItems().size(); ++i) {
+            for (int i = 0; i < mDbClientList.size(); ++i) {
                 for (int j = 0; j < clients.size(); ++j) {
-                    if (databaseClientPage.getPageItems().get(i).getId() ==
-                            clients.get(j).getId()) {
+                    if (mDbClientList.get(i).getId() == clients.get(j).getId()) {
 
                         clients.get(j).setSync(true);
                         break;
