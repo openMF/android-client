@@ -230,7 +230,7 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @Override
     public void showClientList(List<Client> clients) {
-        clientList = clients;
+        clientList.addAll(clients);
         mClientNameListAdapter.setClients(clients);
         mClientNameListAdapter.notifyDataSetChanged();
     }
@@ -238,15 +238,8 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void showLoadMoreClients(List<Client> clients) {
         clientList.addAll(clients);
-        mClientNameListAdapter.addClients(clients);
         mClientNameListAdapter.notifyDataSetChanged();
         Log.d(LOG_TAG, "" + clientList.size());
-    }
-
-    @Override
-    public void showGroupClients(List<Client> clients) {
-        mClientNameListAdapter.setClients(clients);
-        mClientNameListAdapter.notifyDataSetChanged();
     }
 
     @Override

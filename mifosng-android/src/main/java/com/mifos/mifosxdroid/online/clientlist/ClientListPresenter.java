@@ -74,7 +74,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         if (clients.size() == 0) {
             getMvpView().showEmptyClientList(R.string.empty_group_clients);
         } else {
-            getMvpView().showGroupClients(clients);
+            getMvpView().showClientList(clients);
         }
     }
 

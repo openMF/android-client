@@ -129,10 +129,6 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         pageItems = clients;
     }
 
-    public void addClients(List<Client> clients) {
-        pageItems.addAll(clients);
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_clientName)
