@@ -1,10 +1,13 @@
 package com.mifos.mifosxdroid.online.clientlist;
 
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.EspressoIdlingResource;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,9 +30,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     private Page<Client> databaseClientPage;
 
     private int limit = 100;
-    private int mApiRestCounter;
-    private Boolean mPagination  = true;
-    private Boolean isParentFragmentAGroupFragment = false;
+    private Boolean loadmore = false;
 
     @Inject
     public ClientListPresenter(DataManagerClient dataManagerClient) {
@@ -49,18 +50,27 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         mSubscriptions.unsubscribe();
     }
 
-    public void loadClients(int offset) {
-        mApiRestCounter = 1;
-        loadClients(mPagination, offset, limit);
+    public void loadClients(Boolean loadmore, int offset) {
+        this.loadmore = loadmore;
+        loadClients(true, offset, limit);
     }
 
-    public void setParentFragmentIsGroupOrNot(boolean isParentFragmentAGroupFragment) {
-        this.isParentFragmentAGroupFragment = isParentFragmentAGroupFragment;
+    public void showClientList(List<Client> clients) {
+        if (loadmore) {
+            getMvpView().showLoadMoreClients(clients);
+        } else {
+            getMvpView().showClientList(clients);
+        }
     }
 
-
-    public void showClientsList() {
-
+    //This method handling Group Client event
+    public void showGroupClients(List<Client> clients) {
+        if (clients.size() == 0) {
+            getMvpView().showEmptyClientList(R.string.empty_group_clients);
+        } else {
+            getMvpView().showGroupClients(clients);
+        }
+        getMvpView().unregisterSwipeAndScrollListener();
     }
 
 
@@ -84,15 +94,26 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showErrorFetchingClients();
+                        getMvpView().showError();
                         EspressoIdlingResource.decrement(); // App is idle.
 
                     }
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
+
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientList(filterClientsAndShowClientsList(clientPage));
+                        List<Client> clients = clientPage.getPageItems();
+
+                        if (clients.size() == 0 && !loadmore) {
+                            getMvpView().showEmptyClientList(R.string.empty_client_list);
+                            getMvpView().unregisterSwipeAndScrollListener();
+                        } else if (clients.size() == 0 && loadmore) {
+                            getMvpView().showMessage(R.string.no_more_clients_available);
+                        } else {
+                            showClientList(clients);
+                        }
+                        getMvpView().showClientList(checkClientAlreadySyncedOrNot(clientPage.getPageItems()));
 
                         EspressoIdlingResource.decrement(); // App is idle.
                     }
@@ -119,7 +140,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showErrorFetchingClients();
+                        getMvpView().showError();
                     }
 
                     @Override
@@ -135,24 +156,24 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      * This Method Filtering the Clients Loaded from Server is already sync or not. If yes the
      * put the client.setSync(true) and view will show those clients as sync already to user
      *
-     * @param clientPage Client List Page
+     * @param
      * @return Page<Client>
      */
-    public Page<Client> filterClientsAndShowClientsList(final Page<Client> clientPage) {
+    public List<Client> checkClientAlreadySyncedOrNot(final List<Client> clients) {
         if (databaseClientPage.getPageItems().size() != 0) {
 
             for (int i = 0; i < databaseClientPage.getPageItems().size(); ++i) {
-                for (int j = 0; j < clientPage.getPageItems().size(); ++j) {
+                for (int j = 0; j < clients.size(); ++j) {
                     if (databaseClientPage.getPageItems().get(i).getId() ==
-                            clientPage.getPageItems().get(j).getId()) {
+                            clients.get(j).getId()) {
 
-                        clientPage.getPageItems().get(j).setSync(true);
+                        clients.get(j).setSync(true);
                         break;
                     }
                 }
             }
         }
-        return clientPage;
+        return clients;
     }
 
 }

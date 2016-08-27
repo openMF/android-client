@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,7 +33,6 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
@@ -48,7 +48,7 @@ import butterknife.OnClick;
 
 /**
  * Created by ishankhanna on 09/02/14.
- * <p/>
+ * <p>
  * ClientListFragment Fetching Showing ClientList in RecyclerView from
  * </>demo.openmf.org/fineract-provider/api/v1/clients?paged=true&offset=offset_value&limit
  * =limit_value</>
@@ -68,8 +68,11 @@ public class ClientListFragment extends MifosBaseFragment
     @BindView(R.id.ll_error)
     LinearLayout ll_error;
 
+    @BindView(R.id.noClientIcon)
+    ImageView mNoClientIcon;
+
     @Inject
-    ClientNameListAdapter clientNameListAdapter;
+    ClientNameListAdapter mClientNameListAdapter;
 
     @Inject
     ClientListPresenter mClientListPresenter;
@@ -152,6 +155,14 @@ public class ClientListFragment extends MifosBaseFragment
 
         showUserInterface();
 
+
+        if (isParentFragmentAGroupFragment) {
+            mClientListPresenter.showGroupClients(clientList);
+        } else {
+            mClientListPresenter.loadClients(false, 0);
+        }
+        mClientListPresenter.loadDatabaseClients();
+
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
@@ -161,23 +172,9 @@ public class ClientListFragment extends MifosBaseFragment
         rv_clients.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int current_page) {
-                mApiRestCounter = mApiRestCounter + 1;
-                mClientListPresenter.loadClients(true, clientList.size(), limit);
+                mClientListPresenter.loadClients(true, clientList.size());
             }
         });
-
-        if (isParentFragmentAGroupFragment) {
-            if (clientList.size() == 0) {
-                showEmptyClientList("Empty Group ClientList");
-            } else {
-                Page<Client> clientPage = new Page<>();
-                clientPage.setPageItems(clientList);
-                showClientList(clientPage);
-                unregisterSwipeAndScrollListener();
-            }
-        } else {
-            loadClientList();
-        }
 
         return rootView;
     }
@@ -186,11 +183,11 @@ public class ClientListFragment extends MifosBaseFragment
     public void showUserInterface() {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        clientNameListAdapter.setContext(getActivity());
+        mClientNameListAdapter.setContext(getActivity());
         rv_clients.setLayoutManager(mLayoutManager);
         rv_clients.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_clients.setHasFixedSize(true);
-        rv_clients.setAdapter(clientNameListAdapter);
+        rv_clients.setAdapter(mClientNameListAdapter);
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -198,26 +195,21 @@ public class ClientListFragment extends MifosBaseFragment
 
     @Override
     public void onRefresh() {
-        loadClientList();
-
+        mClientListPresenter.loadClients(false, 0);
         if (actionMode != null) actionMode.finish();
-
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
     }
 
-    @Override
-    public void loadClientList() {
-        mApiRestCounter = 1;
-        mClientListPresenter.loadClients(true, 0, limit);
-        mClientListPresenter.loadDatabaseClients();
-    }
 
     @Override
     public void unregisterSwipeAndScrollListener() {
         rv_clients.clearOnScrollListeners();
         swipeRefreshLayout.setEnabled(false);
+        mNoClientIcon.setEnabled(false);
+    }
+
+    @Override
+    public void showMessage(int message) {
+        Toaster.show(rootView, getStringMessage(message));
     }
 
     /**
@@ -227,7 +219,7 @@ public class ClientListFragment extends MifosBaseFragment
     @OnClick(R.id.noClientIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
-        mClientListPresenter.loadClients(true, 0, limit);
+        mClientListPresenter.loadClients(false, 0);
         mClientListPresenter.loadDatabaseClients();
     }
 
@@ -235,39 +227,34 @@ public class ClientListFragment extends MifosBaseFragment
      * Setting Data in RecyclerView of the ClientListFragment if the mApiRestCounter value is 1,
      * otherwise adding value in ArrayList and updating the ClientListAdapter.
      * If the Response is have null then show Toast to User There is No Center Available.
-     *
-     * @param clientPage is the List<Client> and
-     *                   TotalValue of center API Response by Server
      */
     @Override
-    public void showClientList(Page<Client> clientPage) {
-        /**
-         * if mApiRestCounter is 1, So this is the first Api Request.
-         * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
-         */
-        if (mApiRestCounter == 1 || isParentFragmentAGroupFragment) {
-            clientList = clientPage.getPageItems();
-            clientNameListAdapter.setClients(clientList);
-            ll_error.setVisibility(View.GONE);
-        } else {
-
-            clientList.addAll(clientPage.getPageItems());
-            clientNameListAdapter.notifyDataSetChanged();
-
-            //checking the response size if size is zero then show toast No More
-            // Clients Available for fetch
-            if (clientPage.getPageItems().size() == 0 &&
-                    (clientPage.getTotalFilteredRecords() == clientList.size()))
-                Toaster.show(rootView,
-                        getResources().getString(R.string.no_more_clients_available));
-        }
+    public void showClientList(List<Client> clients) {
+        clientList = clients;
+        mClientNameListAdapter.setClients(clients);
     }
 
     @Override
-    public void showEmptyClientList(String s) {
-        ll_error.setVisibility(View.VISIBLE);
-        mNoClientText.setText(s);
+    public void showLoadMoreClients(List<Client> clients) {
+        clientList.addAll(clients);
+        mClientNameListAdapter.addClients(clients);
+    }
 
+    @Override
+    public void showGroupClients(List<Client> clients) {
+        mClientNameListAdapter.setClients(clients);
+    }
+
+    @Override
+    public String getStringMessage(int message) {
+        return getResources().getString(message);
+    }
+
+    @Override
+    public void showEmptyClientList(int message) {
+        rv_clients.setVisibility(View.GONE);
+        ll_error.setVisibility(View.VISIBLE);
+        mNoClientText.setText(getStringMessage(message));
     }
 
     /**
@@ -277,16 +264,12 @@ public class ClientListFragment extends MifosBaseFragment
      * show the Toast Message of Error Message.
      */
     @Override
-    public void showErrorFetchingClients() {
-        if (mApiRestCounter == 1) {
-            ll_error.setVisibility(View.VISIBLE);
-            String errorMessage = getResources().getString(R.string.failed_to_load_client)
-                    + getResources().getString(R.string.new_line) +
-                    getResources().getString(R.string.click_to_refresh);
-            mNoClientText.setText(errorMessage);
-        }
-
-        Toaster.show(rootView, getResources().getString(R.string.failed_to_load_client) );
+    public void showError() {
+        ll_error.setVisibility(View.VISIBLE);
+        String errorMessage = getResources().getString(R.string.failed_to_load_client)
+                + getResources().getString(R.string.new_line) +
+                getResources().getString(R.string.click_to_refresh);
+        mNoClientText.setText(errorMessage);
     }
 
 
@@ -295,20 +278,15 @@ public class ClientListFragment extends MifosBaseFragment
      * show MifosBaseActivity ProgressBar and if it is greater than 1,
      * It means this Request is the second and so on than show SwipeRefreshLayout
      * Check the the b is true or false
-     *
-     * @param b is the status of the progressbar
      */
     @Override
-    public void showProgressbar(boolean b) {
-
-        if (mApiRestCounter == 1) {
-            if (b) {
-                showMifosProgressBar();
-            } else {
-                hideMifosProgressBar();
-            }
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(show);
+        if (show && mClientNameListAdapter.getItemCount() == 0) {
+            showMifosProgressBar();
+            swipeRefreshLayout.setRefreshing(false);
         } else {
-            swipeRefreshLayout.setRefreshing(b);
+            hideMifosProgressBar();
         }
     }
 
@@ -323,15 +301,15 @@ public class ClientListFragment extends MifosBaseFragment
 
     /**
      * Toggle the selection state of an item.
-     * <p/>
+     * <p>
      * If the item was the last one in the selection and is unselected, the selection is stopped.
      * Note that the selection must already be started (actionMode must not be null).
      *
      * @param position Position of the item to toggle the selection state
      */
     private void toggleSelection(int position) {
-        clientNameListAdapter.toggleSelection(position);
-        int count = clientNameListAdapter.getSelectedItemCount();
+        mClientNameListAdapter.toggleSelection(position);
+        int count = mClientNameListAdapter.getSelectedItemCount();
 
         if (count == 0) {
             actionMode.finish();
@@ -366,7 +344,7 @@ public class ClientListFragment extends MifosBaseFragment
                 case R.id.action_sync:
 
                     selectedClients.clear();
-                    for (Integer position : clientNameListAdapter.getSelectedItems()) {
+                    for (Integer position : mClientNameListAdapter.getSelectedItems()) {
                         selectedClients.add(clientList.get(position));
                     }
 
@@ -388,7 +366,7 @@ public class ClientListFragment extends MifosBaseFragment
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            clientNameListAdapter.clearSelection();
+            mClientNameListAdapter.clearSelection();
             actionMode = null;
         }
     }

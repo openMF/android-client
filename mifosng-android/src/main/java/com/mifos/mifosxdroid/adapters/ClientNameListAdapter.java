@@ -130,6 +130,11 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    public void addClients(List<Client> clients) {
+        pageItems.addAll(clients);
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_clientName)

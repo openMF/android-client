@@ -2,7 +2,8 @@ package com.mifos.mifosxdroid.online.clientlist;
 
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.client.Page;
+
+import java.util.List;
 
 /**
  * Created by Rajan Maurya on 6/6/16.
@@ -11,14 +12,20 @@ public interface ClientListMvpView extends MvpView {
 
     void showUserInterface();
 
-    void showClientList(Page<Client> clientPage);
+    void showClientList(List<Client>  clients);
 
-    void showEmptyClientList(String s);
+    void showLoadMoreClients(List<Client> clients);
 
-    void loadClientList();
+    void showGroupClients(List<Client> clients);
+
+    String getStringMessage(int message);
+
+    void showEmptyClientList(int message);
 
     void unregisterSwipeAndScrollListener();
 
-    void showErrorFetchingClients();
+    void showMessage(int message);
+
+    void showError();
 
 }

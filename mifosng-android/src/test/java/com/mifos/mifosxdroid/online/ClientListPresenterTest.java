@@ -77,7 +77,7 @@ public class ClientListPresenterTest {
 
         verify(mClientListMvpView).showClientList(clientPage);
         verify(mClientListMvpView, never())
-                .showErrorFetchingClients();
+                .showError();
 
     }
 
@@ -88,7 +88,7 @@ public class ClientListPresenterTest {
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
         mClientListPresenter.loadClients(true, offset, limit);
-        verify(mClientListMvpView).showErrorFetchingClients();
+        verify(mClientListMvpView).showError();
         verify(mClientListMvpView, never()).showClientList(clientPage);
     }
 

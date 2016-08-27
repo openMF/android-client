@@ -109,6 +109,8 @@
         \n Thanks for taking Survey </string>
     <string name="please_attempt_atleast_one_question">Please Attempt AtLeast One Question </string>
     <string name="attempt_question">Attempt Questions : </string>
+    <string name="empty_client_list">Empty ClientList</string>
+    <string name="empty_group_clients">Empty Group ClientList</string>
     <!-- General Terms End Here -->
 
 
