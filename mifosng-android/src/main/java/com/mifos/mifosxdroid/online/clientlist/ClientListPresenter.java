@@ -1,7 +1,5 @@
 package com.mifos.mifosxdroid.online.clientlist;
 
-import android.util.Log;
-
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
@@ -65,7 +63,6 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
     public void showClientList(List<Client> clients) {
         if (loadmore) {
-            Log.d(LOG_TAG, "showClient" + clients.size());
             getMvpView().showLoadMoreClients(clients);
         } else {
             getMvpView().showClientList(clients);
@@ -162,7 +159,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showError();
+                        getMvpView().showMessage(R.string.failed_to_load_db_clients);
                     }
 
                     @Override

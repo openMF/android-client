@@ -13,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -239,7 +238,6 @@ public class ClientListFragment extends MifosBaseFragment
     public void showLoadMoreClients(List<Client> clients) {
         clientList.addAll(clients);
         mClientNameListAdapter.notifyDataSetChanged();
-        Log.d(LOG_TAG, "" + clientList.size());
     }
 
     @Override

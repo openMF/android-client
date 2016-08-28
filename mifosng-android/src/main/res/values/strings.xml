@@ -422,6 +422,7 @@
     <string name="failed_to_update_savingsaccount">Failed to update Savings Accounts</string>
     <string name="failed_to_fetch_surveys_list">Failed to Fetch Surveys List</string>
     <string name="failed_to_create_survey_scorecard">Failed to create Survey Score Card</string>
+    <string name="failed_to_load_db_clients">Failed to load Database Clients</string>
 
 
     <string-array name="office_ids">
