@@ -69,13 +69,12 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     /**
      * Showing Client List in View, If loadmore is true call showLoadMoreClients(...) and else
      * call showClientList(...).
-     * @param clients List<Client>
      */
-    public void showClientList(List<Client> clients) {
+    public void showClientList() {
         if (loadmore) {
-            getMvpView().showLoadMoreClients(clients);
+            getMvpView().showLoadMoreClients(mSyncClientList);
         } else {
-            getMvpView().showClientList(clients);
+            getMvpView().showClientList(mSyncClientList);
         }
     }
 
@@ -102,7 +101,8 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      */
     public void setAlreadyClientSyncStatus() {
         if (mRestApiClientSyncStatus && mDatabaseClientSyncStatus) {
-            showClientList(checkClientAlreadySyncedOrNot(mSyncClientList));
+            checkClientAlreadySyncedOrNot();
+            showClientList();
         }
     }
 
@@ -142,7 +142,6 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                     @Override
                     public void onNext(Page<Client> clientPage) {
 
-                        getMvpView().showProgressbar(false);
                         mSyncClientList = clientPage.getPageItems();
 
                         if (mSyncClientList.size() == 0 && !loadmore) {
@@ -154,6 +153,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                             mRestApiClientSyncStatus = true;
                             setAlreadyClientSyncStatus();
                         }
+                        getMvpView().showProgressbar(false);
 
                         EspressoIdlingResource.decrement(); // App is idle.
                     }
@@ -201,20 +201,19 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      * @param
      * @return Page<Client>
      */
-    public List<Client> checkClientAlreadySyncedOrNot(final List<Client> clients) {
+    public void checkClientAlreadySyncedOrNot() {
         if (mDbClientList.size() != 0) {
 
             for (int i = 0; i < mDbClientList.size(); ++i) {
-                for (int j = 0; j < clients.size(); ++j) {
-                    if (mDbClientList.get(i).getId() == clients.get(j).getId()) {
+                for (int j = 0; j < mSyncClientList.size(); ++j) {
+                    if (mDbClientList.get(i).getId() == mSyncClientList.get(j).getId()) {
 
-                        clients.get(j).setSync(true);
+                        mSyncClientList.get(j).setSync(true);
                         break;
                     }
                 }
             }
         }
-        return clients;
     }
 
 }

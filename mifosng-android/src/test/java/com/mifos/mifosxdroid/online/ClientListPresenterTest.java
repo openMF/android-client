@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.online;
 
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.clientlist.ClientListMvpView;
 import com.mifos.mifosxdroid.online.clientlist.ClientListPresenter;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;
@@ -65,16 +66,25 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClients() {
 
+        when(mDataManagerClient.getAllDatabaseClients()).thenReturn(Observable.just
+                (clientPage));
+        mClientListPresenter.setAlreadyClientSyncStatus();
+        verify(mClientListMvpView, never()).showMessage(R.string.failed_to_load_db_clients);
+
         when(mDataManagerClient.getAllClients(true, offset, limit)).thenReturn(Observable.just
                 (clientPage));
 
         mClientListPresenter.loadClients(false, offset);
 
-        //verify(mClientListMvpView).showClientList(clientPage.getPageItems());
-        mClientListPresenter.setAlreadyClientSyncStatus();
-        verify(mClientListMvpView, never())
-                .showError();
+        verify(mClientListMvpView).showProgressbar(true);
 
+        mClientListPresenter.setAlreadyClientSyncStatus();
+        mClientListPresenter.checkClientAlreadySyncedOrNot();
+        mClientListPresenter.showClientList();
+
+        verify(mClientListMvpView).showClientList(clientPage.getPageItems());
+        verify(mClientListMvpView, never()).showError();
+        verify(mClientListMvpView).showProgressbar(false);
     }
 
     @Test
@@ -83,7 +93,7 @@ public class ClientListPresenterTest {
         when(mDataManagerClient.getAllClients(true, offset, limit))
                 .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
 
-        mClientListPresenter.loadClients(true, offset, limit);
+        mClientListPresenter.loadClients(false, offset);
         verify(mClientListMvpView).showError();
         verify(mClientListMvpView, never()).showClientList(clientPage.getPageItems());
     }
