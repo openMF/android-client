@@ -230,7 +230,7 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @Override
     public void showClientList(List<Client> clients) {
-        clientList.addAll(clients);
+        clientList = clients;
         mClientNameListAdapter.setClients(clients);
         mClientNameListAdapter.notifyDataSetChanged();
     }

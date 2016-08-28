@@ -99,7 +99,13 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError();
+
+                        if (loadmore) {
+                            getMvpView().showMessage(R.string.failed_to_load_client);
+                        } else {
+                            getMvpView().showError();
+                        }
+
                         EspressoIdlingResource.decrement(); // App is idle.
 
                     }
