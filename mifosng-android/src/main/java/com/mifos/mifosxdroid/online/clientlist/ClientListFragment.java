@@ -49,9 +49,21 @@ import butterknife.OnClick;
 /**
  * Created by ishankhanna on 09/02/14.
  * <p>
- * ClientListFragment Fetching Showing ClientList in RecyclerView from
+ * This class loading client, Here is two way to load the clients. First one to load clients
+ * from Rest API
+ *
  * </>demo.openmf.org/fineract-provider/api/v1/clients?paged=true&offset=offset_value&limit
  * =limit_value</>
+ *
+ * Offset : From Where index, client will be fetch.
+ * limit : Total number of client, need to fetch
+ *
+ * and showing in the ClientList.
+ *
+ * and Second one is showing Group Clients. Here Group load the ClientList and send the
+ * Client to ClientListFragment newInstance(List<Client> clientList,
+ * boolean isParentFragment) {...}
+ * and unregister the ScrollListener and SwipeLayout.
  */
 public class ClientListFragment extends MifosBaseFragment
         implements OnItemClickListener, ClientListMvpView, SwipeRefreshLayout.OnRefreshListener {
@@ -84,7 +96,7 @@ public class ClientListFragment extends MifosBaseFragment
     private List<Client> selectedClients;
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
-    private Boolean isParentFragmentAGroupFragment = false;
+    private Boolean isParentFragment = false;
     private LinearLayoutManager mLayoutManager;
 
     @Override
@@ -107,6 +119,12 @@ public class ClientListFragment extends MifosBaseFragment
         toggleSelection(position);
     }
 
+    /**
+     * This is method will be called, whenever ClientListFragment will not have Parent Fragment.
+     * So, Presenter make the call to Rest API and fetch the Client List and show in UI
+     *
+     * @return ClientListFragment
+     */
     public static ClientListFragment newInstance() {
         Bundle arguments = new Bundle();
         ClientListFragment clientListFragment = new ClientListFragment();
@@ -114,11 +132,21 @@ public class ClientListFragment extends MifosBaseFragment
         return clientListFragment;
     }
 
+    /**
+     * This Method will be called, whenever Parent (Fragment or Activity) will be true and Presenter
+     * do not need to make Rest API call to server. Parent (Fragment or Activity) already fetched
+     * the clients and for showing, they call ClientListFragment.
+     *
+     * Example : Showing Group Clients.
+     * @param clientList List<Client>
+     * @param isParentFragment true
+     * @return ClientListFragment
+     */
     public static ClientListFragment newInstance(List<Client> clientList,
-                                                 boolean isParentFragmentAGroupFragment) {
+                                                 boolean isParentFragment) {
         ClientListFragment clientListFragment = new ClientListFragment();
         Bundle args = new Bundle();
-        if (isParentFragmentAGroupFragment) {
+        if (isParentFragment) {
             if (clientList != null) {
                 args.putParcelableArrayList(Constants.CLIENTS,
                         (ArrayList<? extends Parcelable>) clientList);
@@ -138,7 +166,7 @@ public class ClientListFragment extends MifosBaseFragment
         actionModeCallback = new ActionModeCallback();
         if (getArguments() != null) {
             clientList = getArguments().getParcelableArrayList(Constants.CLIENTS);
-            isParentFragmentAGroupFragment = getArguments()
+            isParentFragment = getArguments()
                     .getBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT);
         }
     }
@@ -153,13 +181,12 @@ public class ClientListFragment extends MifosBaseFragment
         ButterKnife.bind(this, rootView);
         mClientListPresenter.attachView(this);
 
+        //setting all the UI content to the view
         showUserInterface();
 
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
-         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
-         * and offset(mCenterList.size()) and limit(100).
          */
         rv_clients.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
             @Override
@@ -168,8 +195,14 @@ public class ClientListFragment extends MifosBaseFragment
             }
         });
 
-        if (isParentFragmentAGroupFragment) {
-            mClientListPresenter.showGroupClients(clientList);
+        /**
+         * First Check the Parent Fragment is true or false. If parent fragment is true then no
+         * need to fetch clientList from Rest API, just need to showing parent fragment ClientList
+         * and is Parent Fragment is false then Presenter make the call to Rest API and fetch the
+         * Client Lis to show. and Presenter make transaction to Database to load saved clients.
+         */
+        if (isParentFragment) {
+            mClientListPresenter.showParentClients(clientList);
         } else {
             mClientListPresenter.loadClients(false, 0);
         }
@@ -178,6 +211,10 @@ public class ClientListFragment extends MifosBaseFragment
         return rootView;
     }
 
+
+    /**
+     * This method initializes the all Views.
+     */
     @Override
     public void showUserInterface() {
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -192,13 +229,21 @@ public class ClientListFragment extends MifosBaseFragment
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    /**
+     * This method will be called when user will swipe down to Refresh the ClientList then
+     * Presenter make the Fresh call to Rest API to load ClientList from offset = 0 and fetch the
+     * first 100 clients and update the client list.
+     */
     @Override
     public void onRefresh() {
         mClientListPresenter.loadClients(false, 0);
         if (actionMode != null) actionMode.finish();
     }
 
-
+    /**
+     * This Method unregister the RecyclerView OnScrollListener and SwipeRefreshLayout
+     * and NoClientIcon click event.
+     */
     @Override
     public void unregisterSwipeAndScrollListener() {
         rv_clients.clearOnScrollListeners();
@@ -206,13 +251,16 @@ public class ClientListFragment extends MifosBaseFragment
         mNoClientIcon.setEnabled(false);
     }
 
+    /**
+     * This Method showing the Simple Taster Message to user.
+     * @param message String Message to show.
+     */
     @Override
     public void showMessage(int message) {
         Toaster.show(rootView, getStringMessage(message));
     }
 
     /**
-     * Shows When mApiRestValue is 1 and Server Response is Null.
      * Onclick Send Fresh Request for Client list.
      */
     @OnClick(R.id.noClientIcon)
@@ -223,9 +271,7 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     /**
-     * Setting Data in RecyclerView of the ClientListFragment if the mApiRestCounter value is 1,
-     * otherwise adding value in ArrayList and updating the ClientListAdapter.
-     * If the Response is have null then show Toast to User There is No Center Available.
+     * Setting ClientList to the Adapter and updating the Adapter.
      */
     @Override
     public void showClientList(List<Client> clients) {
@@ -234,17 +280,20 @@ public class ClientListFragment extends MifosBaseFragment
         mClientNameListAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Updating Adapter Attached ClientList
+     * @param clients List<Client></>
+     */
     @Override
     public void showLoadMoreClients(List<Client> clients) {
         clientList.addAll(clients);
         mClientNameListAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public String getStringMessage(int message) {
-        return getResources().getString(message);
-    }
-
+    /**
+     * Showing Fetched ClientList size is 0 and show there is no client to show.
+     * @param message String Message to show user.
+     */
     @Override
     public void showEmptyClientList(int message) {
         rv_clients.setVisibility(View.GONE);
@@ -253,27 +302,22 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     /**
-     * Check the mApiRestCounter value is the value is 1,
-     * So there no data to show and setVisibility VISIBLE
-     * of Error ImageView and TextView layout and otherwise simple
-     * show the Toast Message of Error Message.
+     * This Method Will be called. When Presenter failed to First page of ClientList from Rest API.
+     * Then user look the Message that failed to fetch clientList.
      */
     @Override
     public void showError() {
         rv_clients.setVisibility(View.GONE);
         ll_error.setVisibility(View.VISIBLE);
-        String errorMessage = getResources().getString(R.string.failed_to_load_client)
-                + getResources().getString(R.string.new_line) +
-                getResources().getString(R.string.click_to_refresh);
+        String errorMessage = getStringMessage(R.string.failed_to_load_client)
+                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
         mNoClientText.setText(errorMessage);
     }
 
 
     /**
-     * Check mApiRestCounter value, if the value is 1 then
-     * show MifosBaseActivity ProgressBar and if it is greater than 1,
-     * It means this Request is the second and so on than show SwipeRefreshLayout
-     * Check the the b is true or false
+     * show MifosBaseActivity ProgressBar, if mClientNameListAdapter.getItemCount() == 0
+     * otherwise show SwipeRefreshLayout.
      */
     @Override
     public void showProgressbar(boolean show) {

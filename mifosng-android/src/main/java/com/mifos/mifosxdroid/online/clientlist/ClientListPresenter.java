@@ -19,7 +19,7 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 6/6/16.
- * This Presenter Holds the All Logic to request to DataManagerClient and DataManagerClient Take
+ * This Presenter Holds the All Logic to request to DataManagerClient and DataManagerClient, Take
  * care of that From Where Data will come Database or REST API.
  */
 public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
@@ -56,11 +56,21 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         mSubscriptions.unsubscribe();
     }
 
+    /**
+     * Loading Client List from Rest API and setting loadmore status
+     * @param loadmore Status, need ClientList page other then first.
+     * @param offset Index from Where ClientList will be fetched.
+     */
     public void loadClients(Boolean loadmore, int offset) {
         this.loadmore = loadmore;
         loadClients(true, offset, limit);
     }
 
+    /**
+     * Showing Client List in View, If loadmore is true call showLoadMoreClients(...) and else
+     * call showClientList(...).
+     * @param clients List<Client>
+     */
     public void showClientList(List<Client> clients) {
         if (loadmore) {
             getMvpView().showLoadMoreClients(clients);
@@ -69,8 +79,13 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         }
     }
 
-    //This method handling Group Client event
-    public void showGroupClients(List<Client> clients) {
+    /**
+     * This Method will called, when Parent (Fragment or Activity) will be true.
+     * If Parent Fragment is true there is no need to fetch ClientList, Just show the Parent
+     * (Fragment or Activity) ClientList in View
+     * @param clients List<Client></>
+     */
+    public void showParentClients(List<Client> clients) {
         getMvpView().unregisterSwipeAndScrollListener();
         if (clients.size() == 0) {
             getMvpView().showEmptyClientList(R.string.empty_group_clients);
@@ -81,6 +96,10 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         }
     }
 
+    /**
+     * Setting ClientSync Status True when mRestApiClientSyncStatus && mDatabaseClientSyncStatus
+     * are true.
+     */
     public void setAlreadyClientSyncStatus() {
         if (mRestApiClientSyncStatus && mDatabaseClientSyncStatus) {
             showClientList(checkClientAlreadySyncedOrNot(mSyncClientList));
@@ -88,6 +107,8 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     }
 
     /**
+     * This Method fetching Client List from Rest API.
+     *
      * @param paged  True Enabling the Pagination of the API
      * @param offset Value give from which position Fetch ClientList
      * @param limit  Maximum size of the Center

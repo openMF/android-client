@@ -16,8 +16,6 @@ public interface ClientListMvpView extends MvpView {
 
     void showLoadMoreClients(List<Client> clients);
 
-    String getStringMessage(int message);
-
     void showEmptyClientList(int message);
 
     void unregisterSwipeAndScrollListener();

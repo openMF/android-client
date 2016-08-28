@@ -96,4 +96,7 @@ public class MifosBaseFragment extends Fragment {
         mMifosProgressBarHandler.hide();
     }
 
+    protected String getStringMessage(int message) {
+        return getResources().getString(message);
+    }
 }
