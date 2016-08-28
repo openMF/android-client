@@ -71,8 +71,7 @@ public class ClientListPresenterTest {
         mClientListPresenter.setAlreadyClientSyncStatus();
         verify(mClientListMvpView, never()).showMessage(R.string.failed_to_load_db_clients);
 
-        when(mDataManagerClient.getAllClients(true, offset, limit)).thenReturn(Observable.just
-                (clientPage));
+        stubDataManagerGetClients(Observable.just(clientPage));
 
         mClientListPresenter.loadClients(false, offset);
 
@@ -90,12 +89,74 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClientFails() {
 
-        when(mDataManagerClient.getAllClients(true, offset, limit))
-                .thenReturn(Observable.<Page<Client>>error(new RuntimeException()));
+        stubDataManagerGetClients(Observable.<Page<Client>>error(new RuntimeException()));
 
         mClientListPresenter.loadClients(false, offset);
         verify(mClientListMvpView).showError();
         verify(mClientListMvpView, never()).showClientList(clientPage.getPageItems());
     }
 
+    @Test
+    public void testLoadMoreClients() {
+
+        stubDataManagerGetClients(Observable.just(clientPage));
+
+        mClientListPresenter.setAlreadyClientSyncStatus();
+        verify(mClientListMvpView, never()).showMessage(R.string.failed_to_load_db_clients);
+
+        stubDataManagerGetClients(Observable.just(clientPage));
+
+        mClientListPresenter.loadClients(true, offset);
+
+        verify(mClientListMvpView).showProgressbar(true);
+
+        mClientListPresenter.setAlreadyClientSyncStatus();
+        mClientListPresenter.checkClientAlreadySyncedOrNot();
+        mClientListPresenter.showClientList();
+
+        verify(mClientListMvpView).showLoadMoreClients(clientPage.getPageItems());
+        verify(mClientListMvpView, never()).showError();
+        verify(mClientListMvpView).showProgressbar(false);
+    }
+
+    @Test
+    public void testLoadMoreClientFails() {
+
+        stubDataManagerGetClients(Observable.<Page<Client>>error(new RuntimeException()));
+
+        mClientListPresenter.loadClients(true, offset);
+        verify(mClientListMvpView).showMessage(R.string.failed_to_load_client);
+        verify(mClientListMvpView, never()).showClientList(clientPage.getPageItems());
+    }
+
+    @Test
+    public void testEmptyClientList() {
+
+        stubDataManagerGetClients(Observable.just(new Page<Client>()));
+
+        mClientListPresenter.loadClients(false, offset);
+
+        verify(mClientListMvpView).showProgressbar(true);
+        verify(mClientListMvpView).showEmptyClientList(R.string.empty_client_list);
+        verify(mClientListMvpView).unregisterSwipeAndScrollListener();
+        verify(mClientListMvpView, never()).showError();
+        verify(mClientListMvpView).showProgressbar(false);
+    }
+
+    @Test
+    public void testNoMoreClientsAvailable() {
+
+        stubDataManagerGetClients(Observable.just(new Page<Client>()));
+
+        mClientListPresenter.loadClients(true, offset);
+
+        verify(mClientListMvpView).showProgressbar(true);
+        verify(mClientListMvpView).showMessage(R.string.no_more_clients_available);
+        verify(mClientListMvpView, never()).showError();
+        verify(mClientListMvpView).showProgressbar(false);
+    }
+
+    public void stubDataManagerGetClients(Observable observable) {
+        when(mDataManagerClient.getAllClients(true, offset, limit)).thenReturn(observable);
+    }
 }
