@@ -1,10 +1,7 @@
 package com.mifos.mifosxdroid.online;
 
-import android.content.Context;
-
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
-import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.online.clientlist.ClientListMvpView;
 import com.mifos.mifosxdroid.online.clientlist.ClientListPresenter;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;
@@ -40,9 +37,6 @@ public class ClientListPresenterTest {
     @Mock
     DataManagerClient mDataManagerClient;
 
-    @ApplicationContext
-    Context context;
-
     @Mock
     ClientListMvpView mClientListMvpView;
     int offset = 0;
@@ -67,15 +61,17 @@ public class ClientListPresenterTest {
     }
 
 
+
     @Test
     public void testLoadClients() {
 
         when(mDataManagerClient.getAllClients(true, offset, limit)).thenReturn(Observable.just
                 (clientPage));
 
-        mClientListPresenter.loadClients(true, offset, limit);
+        mClientListPresenter.loadClients(false, offset);
 
-        verify(mClientListMvpView).showClientList(clientPage);
+        //verify(mClientListMvpView).showClientList(clientPage.getPageItems());
+        mClientListPresenter.setAlreadyClientSyncStatus();
         verify(mClientListMvpView, never())
                 .showError();
 
@@ -89,7 +85,7 @@ public class ClientListPresenterTest {
 
         mClientListPresenter.loadClients(true, offset, limit);
         verify(mClientListMvpView).showError();
-        verify(mClientListMvpView, never()).showClientList(clientPage);
+        verify(mClientListMvpView, never()).showClientList(clientPage.getPageItems());
     }
 
 }
