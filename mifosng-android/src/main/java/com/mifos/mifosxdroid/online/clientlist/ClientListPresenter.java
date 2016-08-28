@@ -32,15 +32,19 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     private CompositeSubscription mSubscriptions;
 
     private List<Client> mDbClientList;
+    private List<Client> mSyncClientList;
 
     private int limit = 100;
     private Boolean loadmore = false;
+    private Boolean mRestApiClientSyncStatus = false;
+    private Boolean mDatabaseClientSyncStatus = false;
 
     @Inject
     public ClientListPresenter(DataManagerClient dataManagerClient) {
         mDataManagerClient = dataManagerClient;
         mSubscriptions = new CompositeSubscription();
         mDbClientList = new ArrayList<>();
+        mSyncClientList = new ArrayList<>();
     }
 
     @Override
@@ -74,10 +78,17 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         if (clients.size() == 0) {
             getMvpView().showEmptyClientList(R.string.empty_group_clients);
         } else {
-            getMvpView().showClientList(clients);
+            mRestApiClientSyncStatus = true;
+            mSyncClientList = clients;
+            setAlreadyClientSyncStatus();
         }
     }
 
+    public void setAlreadyClientSyncStatus() {
+        if (mRestApiClientSyncStatus && mDatabaseClientSyncStatus) {
+            showClientList(checkClientAlreadySyncedOrNot(mSyncClientList));
+        }
+    }
 
     /**
      * @param paged  True Enabling the Pagination of the API
@@ -114,15 +125,16 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                     public void onNext(Page<Client> clientPage) {
 
                         getMvpView().showProgressbar(false);
-                        List<Client> clients = clientPage.getPageItems();
+                        mSyncClientList = clientPage.getPageItems();
 
-                        if (clients.size() == 0 && !loadmore) {
+                        if (mSyncClientList.size() == 0 && !loadmore) {
                             getMvpView().showEmptyClientList(R.string.empty_client_list);
                             getMvpView().unregisterSwipeAndScrollListener();
-                        } else if (clients.size() == 0 && loadmore) {
+                        } else if (mSyncClientList.size() == 0 && loadmore) {
                             getMvpView().showMessage(R.string.no_more_clients_available);
                         } else {
-                            showClientList(checkClientAlreadySyncedOrNot(clients));
+                            mRestApiClientSyncStatus = true;
+                            setAlreadyClientSyncStatus();
                         }
 
                         EspressoIdlingResource.decrement(); // App is idle.
@@ -155,7 +167,9 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
                     @Override
                     public void onNext(Page<Client> clientPage) {
+                        mDatabaseClientSyncStatus = true;
                         mDbClientList = clientPage.getPageItems();
+                        setAlreadyClientSyncStatus();
                     }
                 })
         );
