@@ -70,11 +70,11 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      * Showing Client List in View, If loadmore is true call showLoadMoreClients(...) and else
      * call showClientList(...).
      */
-    public void showClientList() {
+    public void showClientList(List<Client> clients) {
         if (loadmore) {
-            getMvpView().showLoadMoreClients(mSyncClientList);
+            getMvpView().showLoadMoreClients(clients);
         } else {
-            getMvpView().showClientList(mSyncClientList);
+            getMvpView().showClientList(clients);
         }
     }
 
@@ -101,8 +101,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      */
     public void setAlreadyClientSyncStatus() {
         if (mRestApiClientSyncStatus && mDatabaseClientSyncStatus) {
-            checkClientAlreadySyncedOrNot();
-            showClientList();
+            showClientList(checkClientAlreadySyncedOrNot(mSyncClientList));
         }
     }
 
@@ -201,19 +200,19 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      * @param
      * @return Page<Client>
      */
-    public void checkClientAlreadySyncedOrNot() {
+    public List<Client> checkClientAlreadySyncedOrNot(List<Client> clients) {
         if (mDbClientList.size() != 0) {
 
-            for (int i = 0; i < mDbClientList.size(); ++i) {
-                for (int j = 0; j < mSyncClientList.size(); ++j) {
-                    if (mDbClientList.get(i).getId() == mSyncClientList.get(j).getId()) {
-
-                        mSyncClientList.get(j).setSync(true);
+            for (Client dbClient : mDbClientList) {
+                for (Client syncClient : clients) {
+                    if (dbClient.getId() == syncClient.getId()) {
+                        syncClient.setSync(true);
                         break;
                     }
                 }
             }
         }
+        return clients;
     }
 
 }

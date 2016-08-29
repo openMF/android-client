@@ -42,7 +42,7 @@ public class ClientListPresenterTest {
     ClientListMvpView mClientListMvpView;
     int offset = 0;
     int limit = 100;
-    private Page<Client> clientPage;
+    private Page<Client> clientPage = null;
 
     @Before
     public void setUp() throws Exception {
@@ -51,7 +51,7 @@ public class ClientListPresenterTest {
         mClientListPresenter.attachView(mClientListMvpView);
 
 
-        clientPage = new Page<>();
+        clientPage = new Page<Client>();
         clientPage = FakeRemoteDataSource.getClientList();
 
     }
@@ -66,8 +66,10 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadClients() {
 
-        when(mDataManagerClient.getAllDatabaseClients()).thenReturn(Observable.just
-                (clientPage));
+        stubDatabaseGetAllClients(Observable.just(clientPage));
+
+        mClientListPresenter.loadDatabaseClients();
+
         mClientListPresenter.setAlreadyClientSyncStatus();
         verify(mClientListMvpView, never()).showMessage(R.string.failed_to_load_db_clients);
 
@@ -76,11 +78,6 @@ public class ClientListPresenterTest {
         mClientListPresenter.loadClients(false, offset);
 
         verify(mClientListMvpView).showProgressbar(true);
-
-        mClientListPresenter.setAlreadyClientSyncStatus();
-        mClientListPresenter.checkClientAlreadySyncedOrNot();
-        mClientListPresenter.showClientList();
-
         verify(mClientListMvpView).showClientList(clientPage.getPageItems());
         verify(mClientListMvpView, never()).showError();
         verify(mClientListMvpView).showProgressbar(false);
@@ -99,7 +96,7 @@ public class ClientListPresenterTest {
     @Test
     public void testLoadMoreClients() {
 
-        stubDataManagerGetClients(Observable.just(clientPage));
+        stubDatabaseGetAllClients(Observable.just(clientPage));
 
         mClientListPresenter.setAlreadyClientSyncStatus();
         verify(mClientListMvpView, never()).showMessage(R.string.failed_to_load_db_clients);
@@ -109,11 +106,6 @@ public class ClientListPresenterTest {
         mClientListPresenter.loadClients(true, offset);
 
         verify(mClientListMvpView).showProgressbar(true);
-
-        mClientListPresenter.setAlreadyClientSyncStatus();
-        mClientListPresenter.checkClientAlreadySyncedOrNot();
-        mClientListPresenter.showClientList();
-
         verify(mClientListMvpView).showLoadMoreClients(clientPage.getPageItems());
         verify(mClientListMvpView, never()).showError();
         verify(mClientListMvpView).showProgressbar(false);
@@ -158,5 +150,9 @@ public class ClientListPresenterTest {
 
     public void stubDataManagerGetClients(Observable observable) {
         when(mDataManagerClient.getAllClients(true, offset, limit)).thenReturn(observable);
+    }
+
+    public void stubDatabaseGetAllClients(Observable observable) {
+        when(mDataManagerClient.getAllDatabaseClients()).thenReturn(observable);
     }
 }
