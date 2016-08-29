@@ -98,6 +98,8 @@ public class ClientListPresenterTest {
 
         stubDatabaseGetAllClients(Observable.just(clientPage));
 
+        mClientListPresenter.loadDatabaseClients();
+
         mClientListPresenter.setAlreadyClientSyncStatus();
         verify(mClientListMvpView, never()).showMessage(R.string.failed_to_load_db_clients);
 
@@ -146,6 +148,24 @@ public class ClientListPresenterTest {
         verify(mClientListMvpView).showMessage(R.string.no_more_clients_available);
         verify(mClientListMvpView, never()).showError();
         verify(mClientListMvpView).showProgressbar(false);
+    }
+
+    @Test
+    public void testLoadDatabaseClients() {
+        stubDatabaseGetAllClients(Observable.just(clientPage));
+
+        mClientListPresenter.loadDatabaseClients();
+        mClientListPresenter.setAlreadyClientSyncStatus();
+        verify(mClientListMvpView, never()).showMessage(R.string.failed_to_load_db_clients);
+    }
+
+    @Test
+    public void testLoadDatabaseClientsFails() {
+        stubDatabaseGetAllClients(Observable.<Page<Client>>error(new RuntimeException()));
+
+        mClientListPresenter.loadDatabaseClients();
+
+        verify(mClientListMvpView).showMessage(R.string.failed_to_load_db_clients);
     }
 
     public void stubDataManagerGetClients(Observable observable) {
