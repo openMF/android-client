@@ -51,15 +51,15 @@ import butterknife.OnClick;
  * <p>
  * This class loading client, Here is two way to load the clients. First one to load clients
  * from Rest API
- *
+ * <p>
  * </>demo.openmf.org/fineract-provider/api/v1/clients?paged=true&offset=offset_value&limit
  * =limit_value</>
- *
+ * <p>
  * Offset : From Where index, client will be fetch.
  * limit : Total number of client, need to fetch
- *
+ * <p>
  * and showing in the ClientList.
- *
+ * <p>
  * and Second one is showing Group Clients. Here Group load the ClientList and send the
  * Client to ClientListFragment newInstance(List<Client> clientList,
  * boolean isParentFragment) {...}
@@ -136,9 +136,10 @@ public class ClientListFragment extends MifosBaseFragment
      * This Method will be called, whenever Parent (Fragment or Activity) will be true and Presenter
      * do not need to make Rest API call to server. Parent (Fragment or Activity) already fetched
      * the clients and for showing, they call ClientListFragment.
-     *
+     * <p>
      * Example : Showing Group Clients.
-     * @param clientList List<Client>
+     *
+     * @param clientList       List<Client>
      * @param isParentFragment true
      * @return ClientListFragment
      */
@@ -146,13 +147,11 @@ public class ClientListFragment extends MifosBaseFragment
                                                  boolean isParentFragment) {
         ClientListFragment clientListFragment = new ClientListFragment();
         Bundle args = new Bundle();
-        if (isParentFragment) {
-            if (clientList != null) {
-                args.putParcelableArrayList(Constants.CLIENTS,
-                        (ArrayList<? extends Parcelable>) clientList);
-                args.putBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT, true);
-                clientListFragment.setArguments(args);
-            }
+        if (isParentFragment && clientList != null) {
+            args.putParcelableArrayList(Constants.CLIENTS,
+                    (ArrayList<? extends Parcelable>) clientList);
+            args.putBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT, true);
+            clientListFragment.setArguments(args);
         }
         return clientListFragment;
     }
@@ -253,6 +252,7 @@ public class ClientListFragment extends MifosBaseFragment
 
     /**
      * This Method showing the Simple Taster Message to user.
+     *
      * @param message String Message to show.
      */
     @Override
@@ -282,6 +282,7 @@ public class ClientListFragment extends MifosBaseFragment
 
     /**
      * Updating Adapter Attached ClientList
+     *
      * @param clients List<Client></>
      */
     @Override
@@ -292,6 +293,7 @@ public class ClientListFragment extends MifosBaseFragment
 
     /**
      * Showing Fetched ClientList size is 0 and show there is no client to show.
+     *
      * @param message String Message to show user.
      */
     @Override

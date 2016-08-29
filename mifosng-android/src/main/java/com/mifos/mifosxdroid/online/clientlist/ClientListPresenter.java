@@ -58,8 +58,9 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
     /**
      * Loading Client List from Rest API and setting loadmore status
+     *
      * @param loadmore Status, need ClientList page other then first.
-     * @param offset Index from Where ClientList will be fetched.
+     * @param offset   Index from Where ClientList will be fetched.
      */
     public void loadClients(Boolean loadmore, int offset) {
         this.loadmore = loadmore;
@@ -82,6 +83,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      * This Method will called, when Parent (Fragment or Activity) will be true.
      * If Parent Fragment is true there is no need to fetch ClientList, Just show the Parent
      * (Fragment or Activity) ClientList in View
+     *
      * @param clients List<Client></>
      */
     public void showParentClients(List<Client> clients) {

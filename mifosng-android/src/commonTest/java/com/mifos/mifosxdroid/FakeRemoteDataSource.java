@@ -23,7 +23,7 @@ public class FakeRemoteDataSource {
 
 
     public static Page<Client> getClientList() {
-        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Client>>(){
+        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Client>>() {
         }, FakeJsonName.CLIENTS_JSON);
     }
 
