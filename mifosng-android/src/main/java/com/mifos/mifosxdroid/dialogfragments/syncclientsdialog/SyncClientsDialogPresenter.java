@@ -22,12 +22,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -151,23 +153,29 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
         }
     }
 
-    public void onAccountSyncFailed() {
-        int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
-        getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
+    public void onAccountSyncFailed(Throwable e) {
+        try {
+            if (e instanceof HttpException) {
+                int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
+                getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
 
-        mClientSyncIndex = mClientSyncIndex + 1;
-        mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
+                mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
+                mClientSyncIndex = mClientSyncIndex + 1;
 
-        getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
-        checkNetworkConnectionAndSyncClient();
+                getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
+                checkNetworkConnectionAndSyncClient();
+            }
+        } catch (Throwable throwable) {
+            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
+        }
     }
 
     /**
      * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
      * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
      * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
-     * <p>
-     * <p>
+     * <p/>
+     * <p/>
      * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
      * onError :
      *
@@ -224,7 +232,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      */
     public void syncLoanAndLoanRepayment(int loanId) {
         checkViewAttached();
-        mSubscriptions.add(Observable.zip(
+        mSubscriptions.add(Observable.combineLatest(
                 mDataManagerLoan.syncLoanById(loanId),
                 mDataManagerLoan.syncLoanRepaymentTemplate(loanId),
                 new Func2<LoanWithAssociations, LoanRepaymentTemplate, LoanAndLoanRepayment>() {
@@ -247,7 +255,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onError(Throwable e) {
-                        onAccountSyncFailed();
+                        onAccountSyncFailed(e);
                     }
 
                     @Override
@@ -271,11 +279,11 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
      * Database table.
      *
      * @param savingsAccountType SavingsAccount Type Example : savingsaccounts
-     * @param savingsAccountId SavingsAccount Id
+     * @param savingsAccountId   SavingsAccount Id
      */
     public void syncSavingsAccountAndTemplate(String savingsAccountType, int savingsAccountId) {
         checkViewAttached();
-        mSubscriptions.add(Observable.zip(
+        mSubscriptions.add(Observable.combineLatest(
                 mDataManagerSavings.syncSavingsAccount(savingsAccountType, savingsAccountId,
                         Constants.TRANSACTIONS),
                 mDataManagerSavings.syncSavingsAccountTransactionTemplate(savingsAccountType,
@@ -308,7 +316,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onError(Throwable e) {
-                        onAccountSyncFailed();
+                        onAccountSyncFailed(e);
                     }
 
                     @Override
@@ -388,7 +396,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                 .filter(new Func1<SavingsAccount, Boolean>() {
                     @Override
                     public Boolean call(SavingsAccount savingsAccount) {
-                        return savingsAccount.getStatus().getActive();
+                        return (savingsAccount.getStatus().getActive() &&
+                                !savingsAccount.isRecurring());
                     }
                 })
                 .subscribe(new Action1<SavingsAccount>() {

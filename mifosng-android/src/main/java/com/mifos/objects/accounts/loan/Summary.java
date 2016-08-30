@@ -51,7 +51,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
     @Column
     Double interestPaid;
 
-    Integer interestWaived;
+    Double interestWaived;
 
     Integer interestWrittenOff;
 
@@ -61,21 +61,21 @@ public class Summary extends MifosBaseModel implements Parcelable {
     Double interestOverdue;
 
     @Column
-    Integer feeChargesCharged;
+    Double feeChargesCharged;
 
     Integer feeChargesDueAtDisbursementCharged;
 
     @Column
-    Integer feeChargesPaid;
+    Double feeChargesPaid;
 
-    Integer feeChargesWaived;
+    Double feeChargesWaived;
 
     Integer feeChargesWrittenOff;
 
     @Column
     Integer feeChargesOutstanding;
 
-    Integer feeChargesOverdue;
+    Double feeChargesOverdue;
 
     @Column
     Integer penaltyChargesCharged;
@@ -102,7 +102,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
 
     Double totalCostOfLoan;
 
-    Integer totalWaived;
+    Double totalWaived;
 
     Integer totalWrittenOff;
 
@@ -186,11 +186,11 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.interestPaid = interestPaid;
     }
 
-    public Integer getInterestWaived() {
+    public Double getInterestWaived() {
         return interestWaived;
     }
 
-    public void setInterestWaived(Integer interestWaived) {
+    public void setInterestWaived(Double interestWaived) {
         this.interestWaived = interestWaived;
     }
 
@@ -218,11 +218,11 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.interestOverdue = interestOverdue;
     }
 
-    public Integer getFeeChargesCharged() {
+    public Double getFeeChargesCharged() {
         return feeChargesCharged;
     }
 
-    public void setFeeChargesCharged(Integer feeChargesCharged) {
+    public void setFeeChargesCharged(Double feeChargesCharged) {
         this.feeChargesCharged = feeChargesCharged;
     }
 
@@ -234,19 +234,19 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.feeChargesDueAtDisbursementCharged = feeChargesDueAtDisbursementCharged;
     }
 
-    public Integer getFeeChargesPaid() {
+    public Double getFeeChargesPaid() {
         return feeChargesPaid;
     }
 
-    public void setFeeChargesPaid(Integer feeChargesPaid) {
+    public void setFeeChargesPaid(Double feeChargesPaid) {
         this.feeChargesPaid = feeChargesPaid;
     }
 
-    public Integer getFeeChargesWaived() {
+    public Double getFeeChargesWaived() {
         return feeChargesWaived;
     }
 
-    public void setFeeChargesWaived(Integer feeChargesWaived) {
+    public void setFeeChargesWaived(Double feeChargesWaived) {
         this.feeChargesWaived = feeChargesWaived;
     }
 
@@ -266,11 +266,11 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.feeChargesOutstanding = feeChargesOutstanding;
     }
 
-    public Integer getFeeChargesOverdue() {
+    public Double getFeeChargesOverdue() {
         return feeChargesOverdue;
     }
 
-    public void setFeeChargesOverdue(Integer feeChargesOverdue) {
+    public void setFeeChargesOverdue(Double feeChargesOverdue) {
         this.feeChargesOverdue = feeChargesOverdue;
     }
 
@@ -354,11 +354,11 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.totalCostOfLoan = totalCostOfLoan;
     }
 
-    public Integer getTotalWaived() {
+    public Double getTotalWaived() {
         return totalWaived;
     }
 
-    public void setTotalWaived(Integer totalWaived) {
+    public void setTotalWaived(Double totalWaived) {
         this.totalWaived = totalWaived;
     }
 
@@ -450,18 +450,18 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.principalOverdue = (Double) in.readValue(Double.class.getClassLoader());
         this.interestCharged = (Double) in.readValue(Double.class.getClassLoader());
         this.interestPaid = (Double) in.readValue(Double.class.getClassLoader());
-        this.interestWaived = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.interestWaived = (Double) in.readValue(Double.class.getClassLoader());
         this.interestWrittenOff = (Integer) in.readValue(Integer.class.getClassLoader());
         this.interestOutstanding = (Double) in.readValue(Double.class.getClassLoader());
         this.interestOverdue = (Double) in.readValue(Double.class.getClassLoader());
-        this.feeChargesCharged = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.feeChargesCharged = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesDueAtDisbursementCharged = (Integer) in.readValue(Integer.class
                 .getClassLoader());
-        this.feeChargesPaid = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.feeChargesWaived = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.feeChargesPaid = (Double) in.readValue(Double.class.getClassLoader());
+        this.feeChargesWaived = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesWrittenOff = (Integer) in.readValue(Integer.class.getClassLoader());
         this.feeChargesOutstanding = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.feeChargesOverdue = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.feeChargesOverdue = (Double) in.readValue(Double.class.getClassLoader());
         this.penaltyChargesCharged = (Integer) in.readValue(Integer.class.getClassLoader());
         this.penaltyChargesPaid = (Integer) in.readValue(Integer.class.getClassLoader());
         this.penaltyChargesWaived = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -472,7 +472,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.totalRepayment = (Double) in.readValue(Double.class.getClassLoader());
         this.totalExpectedCostOfLoan = (Double) in.readValue(Double.class.getClassLoader());
         this.totalCostOfLoan = (Double) in.readValue(Double.class.getClassLoader());
-        this.totalWaived = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.totalWaived = (Double) in.readValue(Double.class.getClassLoader());
         this.totalWrittenOff = (Integer) in.readValue(Integer.class.getClassLoader());
         this.totalOutstanding = (Double) in.readValue(Double.class.getClassLoader());
         this.totalOverdue = (Double) in.readValue(Double.class.getClassLoader());

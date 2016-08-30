@@ -79,8 +79,8 @@ public class MifosOkHttpClient {
         logger.setLevel(Level.BODY);
 
         //Setting Timeout 30 Seconds
-        builder.connectTimeout(30, TimeUnit.SECONDS);
-        builder.readTimeout(30, TimeUnit.SECONDS);
+        builder.connectTimeout(60, TimeUnit.SECONDS);
+        builder.readTimeout(60, TimeUnit.SECONDS);
 
         //Interceptor :> Full Body Logger and ApiRequest Header
         builder.addInterceptor(logger);
