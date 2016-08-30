@@ -36,6 +36,8 @@ public class Constants {
 
     public static final String CLIENT = "Client";
 
+    public static final String CLIENTS = "clients";
+
     public static final String LOAN_ACCOUNT_NUMBER = "loanAccountNumber";
 
     public static final String LOAN_PAYMENT_TYPE_OPTIONS = "LoanPaymentTypeOptions";
@@ -81,6 +83,9 @@ public class Constants {
     public static final String ANSWERS = "answers";
 
     public static final String QUESTION_DATA = "question data";
+
+    public static final String IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT =
+            "isParentFragmentAGroupFragment";
 
 
     /**

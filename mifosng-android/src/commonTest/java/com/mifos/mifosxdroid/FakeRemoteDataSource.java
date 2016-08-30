@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
@@ -21,8 +22,9 @@ public class FakeRemoteDataSource {
     private static TestDataFactory mTestDataFactory = new TestDataFactory();
 
 
-    public static Page getClientList() {
-        return mTestDataFactory.getObjectTypePojo(Page.class, FakeJsonName.CLIENTS_JSON);
+    public static Page<Client> getClientList() {
+        return mTestDataFactory.getListTypePojo(new TypeToken<Page<Client>>() {
+        }, FakeJsonName.CLIENTS_JSON);
     }
 
     public static List<SearchedEntity> getSearchedEntity() {
