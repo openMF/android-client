@@ -60,33 +60,32 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                                                           SavingProductsTemplate template) {
                         return new SavingProductsAndTemplate(productSavings, template);
                     }
-                }
-                )
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new Subscriber<SavingProductsAndTemplate>() {
-                            @Override
-                            public void onCompleted() {
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<SavingProductsAndTemplate>() {
+                    @Override
+                    public void onCompleted() {
 
-                            }
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                getMvpView().showProgressbar(false);
-                                getMvpView().showFetchingError("Failed to load SavingProducts and" +
-                                        " " +
-                                        "template");
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError("Failed to load SavingProducts and" +
+                                " " +
+                                "template");
+                    }
 
-                            @Override
-                            public void onNext(SavingProductsAndTemplate productsAndTemplate) {
-                                getMvpView().showProgressbar(false);
-                                getMvpView().showSavingsAccounts(productsAndTemplate
-                                        .getmProductSavings());
-                                getMvpView().showSavingsAccountTemplate(
-                                        productsAndTemplate.getmSavingProductsTemplate());
-                            }
-                        })
+                    @Override
+                    public void onNext(SavingProductsAndTemplate productsAndTemplate) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showSavingsAccounts(productsAndTemplate
+                                .getmProductSavings());
+                        getMvpView().showSavingsAccountTemplate(
+                                productsAndTemplate.getmSavingProductsTemplate());
+                    }
+                })
         );
     }
 
@@ -100,13 +99,12 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                 .subscribe(new Subscriber<Savings>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Try Again");
+                        getMvpView().showFetchingError("Failed to add SavingsAccount");
                     }
 
                     @Override
@@ -127,5 +125,17 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                     }
                 });
         return interestNameList;
+    }
+
+    public List<String> filterSavingProductsNames(List<ProductSavings> productSavings) {
+        final ArrayList<String> productsNames = new ArrayList<>();
+        Observable.from(productSavings)
+                .subscribe(new Action1<ProductSavings>() {
+                    @Override
+                    public void call(ProductSavings product) {
+                        productsNames.add(product.getName());
+                    }
+                });
+        return productsNames;
     }
 }
