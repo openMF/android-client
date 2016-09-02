@@ -3,11 +3,13 @@ package com.mifos.mifosxdroid.online.savingsaccount;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Savings;
+import com.mifos.objects.common.InterestType;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.zipmodels.SavingProductsAndTemplate;
 import com.mifos.services.data.SavingsPayload;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,6 +17,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -58,30 +61,32 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                         return new SavingProductsAndTemplate(productSavings, template);
                     }
                 }
-        )
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingProductsAndTemplate>() {
-                    @Override
-                    public void onCompleted() {
+                )
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new Subscriber<SavingProductsAndTemplate>() {
+                            @Override
+                            public void onCompleted() {
 
-                    }
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load SavingProducts and " +
-                                "template");
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                getMvpView().showProgressbar(false);
+                                getMvpView().showFetchingError("Failed to load SavingProducts and" +
+                                        " " +
+                                        "template");
+                            }
 
-                    @Override
-                    public void onNext(SavingProductsAndTemplate productsAndTemplate) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showSavingsAccounts(productsAndTemplate.getmProductSavings());
-                        getMvpView().showSavingsAccountTemplate(
-                                productsAndTemplate.getmSavingProductsTemplate());
-                    }
-                })
+                            @Override
+                            public void onNext(SavingProductsAndTemplate productsAndTemplate) {
+                                getMvpView().showProgressbar(false);
+                                getMvpView().showSavingsAccounts(productsAndTemplate
+                                        .getmProductSavings());
+                                getMvpView().showSavingsAccountTemplate(
+                                        productsAndTemplate.getmSavingProductsTemplate());
+                            }
+                        })
         );
     }
 
@@ -110,5 +115,17 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                         getMvpView().showSavingsAccountCreatedSuccessfully(savings);
                     }
                 }));
+    }
+
+    public List<String> filterSpinnerOptions(List<InterestType> interestTypes) {
+        final ArrayList<String> interestNameList = new ArrayList<>();
+        Observable.from(interestTypes)
+                .subscribe(new Action1<InterestType>() {
+                    @Override
+                    public void call(InterestType interestType) {
+                        interestNameList.add(interestType.getValue());
+                    }
+                });
+        return interestNameList;
     }
 }

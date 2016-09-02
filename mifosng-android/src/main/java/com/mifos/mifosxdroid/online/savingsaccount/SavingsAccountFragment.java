@@ -25,15 +25,14 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.common.InterestType;
 import com.mifos.objects.client.Savings;
+import com.mifos.objects.common.InterestType;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +48,8 @@ import butterknife.ButterKnife;
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class SavingsAccountFragment extends ProgressableDialogFragment
-        implements MFDatePicker.OnDatePickListener, SavingsAccountMvpView {
+public class SavingsAccountFragment extends ProgressableDialogFragment implements
+        MFDatePicker.OnDatePickListener, SavingsAccountMvpView, AdapterView.OnItemSelectedListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
@@ -85,7 +84,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     SavingsAccountPresenter mSavingsAccountPresenter;
 
     private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
+
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
@@ -93,7 +92,20 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
     private int interestCalculationDaysInYearTypeId;
-    private String submittion_date;
+    private String submission_date;
+
+    List<String> mListInterestPostingPeriodType = new ArrayList<>();
+    List<String> mListInterestCalculationTypeNames = new ArrayList<>();
+    List<String> mListInterestCalculationDaysInYearType = new ArrayList<>();
+    List<String> mListInterestCompoundingPeriodType = new ArrayList<>();
+    List<String> mListSavingProductsNames = new ArrayList<>();
+
+    ArrayAdapter<String> mInterestPostingPeriodTypeAdapter;
+    ArrayAdapter<String> mInterestCalculationTypeAdapter;
+    ArrayAdapter<String> mInterestCalculationDaysInYearTypeAdapter;
+    ArrayAdapter<String> mInterestCompoundingPeriodTypeAdapter;
+    ArrayAdapter<String> mSavingProductsAdapter;
+
     private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
     private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
 
@@ -126,9 +138,9 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
         inflateSavingsSpinner();
         getSavingsAccountTemplateAPI();
 
-        submittion_date = tv_submittedon_date.getText().toString();
-        submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                (submittion_date).replace("-", " ");
+        submission_date = tv_submittedon_date.getText().toString();
+        submission_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (submission_date).replace("-", " ");
 
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +149,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
                 SavingsPayload savingsPayload = new SavingsPayload();
                 savingsPayload.setExternalId(et_client_external_id.getEditableText().toString());
                 savingsPayload.setLocale("en");
-                savingsPayload.setSubmittedOnDate(submittion_date);
+                savingsPayload.setSubmittedOnDate(submission_date);
                 savingsPayload.setDateFormat("dd MMMM yyyy");
                 savingsPayload.setClientId(clientId);
                 savingsPayload.setProductId(productId);
@@ -165,6 +177,48 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
 
     private void initiateSavingCreation(SavingsPayload savingsPayload) {
         mSavingsAccountPresenter.createSavingsAccount(savingsPayload);
+    }
+
+    public void inflateSavingsSpinners() {
+
+        mInterestPostingPeriodTypeAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestPostingPeriodType);
+        mInterestPostingPeriodTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_interest_p_period.setAdapter(mInterestPostingPeriodTypeAdapter);
+        sp_interest_p_period.setOnItemSelectedListener(this);
+
+
+        mInterestCalculationTypeAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestCalculationTypeNames);
+        mInterestCalculationTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_interest_calc.setAdapter(mInterestCalculationTypeAdapter);
+        sp_interest_calc.setOnItemSelectedListener(this);
+
+
+        mInterestCalculationDaysInYearTypeAdapter  = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestCalculationDaysInYearType);
+        mInterestCalculationDaysInYearTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_days_in_year.setAdapter(mInterestCalculationDaysInYearTypeAdapter);
+        sp_days_in_year.setOnItemSelectedListener(this);
+
+
+        mInterestCompoundingPeriodTypeAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestCompoundingPeriodType);
+        mInterestCompoundingPeriodTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_interest_comp.setAdapter(mInterestCompoundingPeriodTypeAdapter);
+        sp_interest_comp.setOnItemSelectedListener(this);
+
+
+        mSavingProductsAdapter = new ArrayAdapter<>(getActivity(), layout
+                .simple_spinner_item, mListSavingProductsNames);
+        mSavingProductsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_product.setAdapter(mSavingProductsAdapter);
+        sp_product.setOnItemSelectedListener(this);
+
     }
 
     private void inflateInterestPostingPeriodType() {
@@ -421,5 +475,15 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     public void onDestroyView() {
         super.onDestroyView();
         mSavingsAccountPresenter.detachView();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
