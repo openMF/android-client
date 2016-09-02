@@ -340,7 +340,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     }
 
     private void getSavingsAccountTemplateAPI() {
-        mSavingsAccountPresenter.loadSavingsAccountTemplate();
+        //mSavingsAccountPresenter.loadSavingsAccountTemplate();
     }
 
     //TODO Replace this method with Presenter rxJava filter method

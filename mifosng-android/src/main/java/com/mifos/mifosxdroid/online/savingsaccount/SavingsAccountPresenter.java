@@ -5,14 +5,17 @@ import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
+import com.mifos.objects.zipmodels.SavingProductsAndTemplate;
 import com.mifos.services.data.SavingsPayload;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -44,29 +47,44 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     public void loadSavingsAccounts() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.getSavingsAccounts()
+        mSubscriptions.add(Observable.combineLatest(
+                mDataManagerSavings.getSavingsAccounts(),
+                mDataManagerSavings.getSavingsAccountTemplate(),
+                new Func2<List<ProductSavings>, SavingProductsTemplate,
+                        SavingProductsAndTemplate>() {
+                    @Override
+                    public SavingProductsAndTemplate call(List<ProductSavings> productSavings,
+                                                          SavingProductsTemplate template) {
+                        return new SavingProductsAndTemplate(productSavings, template);
+                    }
+                }
+        )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<ProductSavings>>() {
+                .subscribe(new Subscriber<SavingProductsAndTemplate>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load SavingsAccounts");
+                        getMvpView().showFetchingError("Failed to load SavingProducts and " +
+                                "template");
                     }
 
                     @Override
-                    public void onNext(List<ProductSavings> productSavingses) {
+                    public void onNext(SavingProductsAndTemplate productsAndTemplate) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showSavingsAccounts(productSavingses);
+                        getMvpView().showSavingsAccounts(productsAndTemplate.getmProductSavings());
+                        getMvpView().showSavingsAccountTemplate(
+                                productsAndTemplate.getmSavingProductsTemplate());
                     }
-                }));
-
+                })
+        );
     }
+
 
     public void createSavingsAccount(SavingsPayload savingsPayload) {
         checkViewAttached();
@@ -93,31 +111,4 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                     }
                 }));
     }
-
-    public void loadSavingsAccountTemplate() {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.getSavingsAccountTemplate()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingProductsTemplate>() {
-                    @Override
-                    public void onCompleted() {
-                        getMvpView().showProgressbar(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch SavingsAccountTemplate");
-                    }
-
-                    @Override
-                    public void onNext(SavingProductsTemplate savingProductsTemplate) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showSavingsAccountTemplate(savingProductsTemplate);
-                    }
-                }));
-    }
-
 }
