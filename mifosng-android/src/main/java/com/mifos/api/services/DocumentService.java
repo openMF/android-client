@@ -42,5 +42,5 @@ public interface DocumentService {
                                                @Path("entityId") int entityId,
                                                @Part("name") String nameOfDocument,
                                                @Part("description") String description,
-                                               @Part("file") MultipartBody.Part typedFile);
+                                               @Part() MultipartBody.Part typedFile);
 }
