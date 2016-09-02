@@ -10,9 +10,14 @@ import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.client.Savings;
+import com.mifos.objects.organisation.ProductSavings;
+import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
+import com.mifos.services.data.SavingsPayload;
 
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -93,4 +98,13 @@ public interface SavingsAccountService {
             @Path("savingsAccountId") int savingsAccountId,
             @Body SavingsApproval savingsApproval);
 
+
+    @GET(APIEndPoint.CREATESAVINGSPRODUCTS)
+    Observable<List<ProductSavings>> getAllSavingsAccounts();
+
+    @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
+    Observable<Savings> createSavingsAccount(@Body SavingsPayload savingsPayload);
+
+    @GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
+    Observable<SavingProductsTemplate> getSavingsAccountTemplate();
 }

@@ -20,7 +20,6 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
-import com.mifos.objects.client.Savings;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Center;
@@ -33,13 +32,10 @@ import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
-import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.organisation.Staff;
-import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
-import com.mifos.services.data.SavingsPayload;
 
 import java.util.List;
 import java.util.Map;
@@ -329,24 +325,6 @@ public class DataManager {
                                                                  SavingsApproval savingsApproval) {
         return mBaseApiManager.getSavingsApi().approveSavingsApplication(
                 savingsAccountId, savingsApproval);
-    }
-
-
-    /**
-     * SavingsAccount API
-     */
-    public Observable<List<ProductSavings>> getSavingsAccounts() {
-        return mBaseApiManager.getCreateSavingsAccountService().getAllSavingsAccounts();
-    }
-
-    public Observable<Savings> createSavingsAccount(SavingsPayload savingsPayload) {
-        return mBaseApiManager
-                .getCreateSavingsAccountService()
-                .createSavingsAccount(savingsPayload);
-    }
-
-    public Observable<SavingProductsTemplate> getSavingsAccountTemplate() {
-        return mBaseApiManager.getCreateSavingsAccountService().getSavingsAccountTemplate();
     }
 
 

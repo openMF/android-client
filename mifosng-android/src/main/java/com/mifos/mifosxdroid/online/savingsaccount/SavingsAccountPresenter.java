@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.savingsaccount;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.ProductSavings;
@@ -21,12 +21,12 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerSavings mDataManagerSavings;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingsAccountPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SavingsAccountPresenter(DataManagerSavings dataManagerSavings) {
+        mDataManagerSavings = dataManagerSavings;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -44,7 +44,7 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     public void loadSavingsAccounts() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getSavingsAccounts()
+        mSubscriptions.add(mDataManagerSavings.getSavingsAccounts()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<ProductSavings>>() {
@@ -71,7 +71,7 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     public void createSavingsAccount(SavingsPayload savingsPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.createSavingsAccount(savingsPayload)
+        mSubscriptions.add(mDataManagerSavings.createSavingsAccount(savingsPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Savings>() {
@@ -97,7 +97,7 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     public void loadSavingsAccountTemplate() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getSavingsAccountTemplate()
+        mSubscriptions.add(mDataManagerSavings.getSavingsAccountTemplate()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<SavingProductsTemplate>() {

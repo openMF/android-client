@@ -6,7 +6,11 @@ import com.mifos.api.local.databasehelper.DatabaseHelperSavings;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.client.Savings;
+import com.mifos.objects.organisation.ProductSavings;
+import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
+import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.PrefManager;
 
 import java.util.HashMap;
@@ -254,5 +258,17 @@ public class DataManagerSavings {
             SavingsAccountTransactionRequest savingsAccountTransactionRequest) {
         return mDatabaseHelperSavings.updateSavingsAccountTransaction(
                 savingsAccountTransactionRequest);
+    }
+
+    public Observable<List<ProductSavings>> getSavingsAccounts() {
+        return mBaseApiManager.getSavingsApi().getAllSavingsAccounts();
+    }
+
+    public Observable<Savings> createSavingsAccount(SavingsPayload savingsPayload) {
+        return mBaseApiManager.getSavingsApi().createSavingsAccount(savingsPayload);
+    }
+
+    public Observable<SavingProductsTemplate> getSavingsAccountTemplate() {
+        return mBaseApiManager.getSavingsApi().getSavingsAccountTemplate();
     }
 }
