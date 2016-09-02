@@ -49,7 +49,7 @@ import butterknife.OnClick;
 public class SavingsAccountFragment extends ProgressableDialogFragment implements
         MFDatePicker.OnDatePickListener, SavingsAccountMvpView, AdapterView.OnItemSelectedListener {
 
-    public final String LOG_TAG = getClass().getSimpleName();
+    public static final String LOG_TAG = SavingsAccountFragment.class.getSimpleName();
 
     @BindView(R.id.sp_product)
     Spinner sp_product;
@@ -119,8 +119,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null)
-            clientId = getArguments().getInt(Constants.CLIENT_ID);
+        if (getArguments() != null) clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
 
 
@@ -135,11 +134,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         inflateSubmissionDate();
         inflateSavingsSpinners();
 
-        submission_date = tv_submission_date.getText().toString();
-        submission_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                (submission_date).replace("-", " ");
-
-        mSavingsAccountPresenter.loadSavingsAccounts();
+        mSavingsAccountPresenter.loadSavingsAccountsAndTemplate();
 
         return rootView;
     }
@@ -210,12 +205,13 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @Override
     public void onDatePicked(String date) {
         tv_submission_date.setText(date);
+        setSubmissionDate();
     }
 
     public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
         tv_submission_date.setText(MFDatePicker.getDatePickedAsString());
-
+        setSubmissionDate();
         tv_submission_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,6 +220,12 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
             }
         });
 
+    }
+
+    public void setSubmissionDate() {
+        submission_date = tv_submission_date.getText().toString();
+        submission_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (submission_date).replace("-", " ");
     }
 
     @Override
@@ -259,14 +261,15 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     @Override
     public void showSavingsAccountCreatedSuccessfully(Savings savings) {
-        Toast.makeText(getActivity(), "The Savings Account has been submitted for " +
-                "Approval", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),
+                getResources().getString(R.string.savings_account_submitted_for_approval),
+                Toast.LENGTH_LONG).show();
     }
 
 
     @Override
-    public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
+    public void showFetchingError(int errorMessage) {
+        Toaster.show(rootView, getResources().getString(errorMessage));
     }
 
     @Override

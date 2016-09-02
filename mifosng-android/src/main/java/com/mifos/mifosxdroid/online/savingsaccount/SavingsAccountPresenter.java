@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.savingsaccount;
 
 import com.mifos.api.datamanager.DataManagerSavings;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.common.InterestType;
@@ -47,7 +48,7 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
         mSubscriptions.unsubscribe();
     }
 
-    public void loadSavingsAccounts() {
+    public void loadSavingsAccountsAndTemplate() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscriptions.add(Observable.combineLatest(
@@ -72,9 +73,8 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load SavingProducts and" +
-                                " " +
-                                "template");
+                        getMvpView().showFetchingError(
+                                R.string.failed_to_load_savings_products_and_template);
                     }
 
                     @Override
@@ -104,7 +104,7 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to add SavingsAccount");
+                        getMvpView().showFetchingError(R.string.failed_to_add_savings_account);
                     }
 
                     @Override
