@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.documentdialog;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.mifosxdroid.base.BasePresenter;
 
 import java.io.File;
@@ -21,12 +21,12 @@ import rx.schedulers.Schedulers;
  */
 public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerDocument mDataManagerDocument;
     private Subscription mSubscription;
 
     @Inject
-    public DocumentDialogPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public DocumentDialogPresenter(DataManagerDocument dataManagerDocument) {
+        mDataManagerDocument = dataManagerDocument;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
         Part body = Part.createFormData("picture", file.getName(), requestFile);
 
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.createDocument(type, id, name, desc, body)
+        mSubscription = mDataManagerDocument.createDocument(type, id, name, desc, body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
