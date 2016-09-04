@@ -166,6 +166,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE,
                     getResources().getString(
                             R.string.dialog_message_read_external_storage_permission_denied),
+                    getResources().getString(R.string.dialog_message_permission_never_ask_again),
                     Constants.READ_EXTERNAL_STORAGE_STATUS);
         }
     }
