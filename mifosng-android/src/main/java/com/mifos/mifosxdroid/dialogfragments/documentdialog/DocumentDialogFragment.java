@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.dialogfragments.documentdialog;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.utils.AndroidVersionUtil;
 import com.mifos.utils.CheckSelfPermissionAndRequest;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
@@ -160,15 +162,21 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
             getExternalStorageDocument();
         } else {
-            CheckSelfPermissionAndRequest.requestPermission(
-                    (MifosBaseActivity) getActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE,
-                    getResources().getString(
-                            R.string.dialog_message_read_external_storage_permission_denied),
-                    getResources().getString(R.string.dialog_message_permission_never_ask_again),
-                    Constants.READ_EXTERNAL_STORAGE_STATUS);
+            requestPermission();
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void requestPermission() {
+        CheckSelfPermissionAndRequest.requestPermission(
+                (MifosBaseActivity) getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE,
+                getResources().getString(
+                        R.string.dialog_message_read_external_storage_permission_denied),
+                getResources().getString(R.string.dialog_message_permission_never_ask_again),
+                Constants.READ_EXTERNAL_STORAGE_STATUS);
     }
 
     @Override
@@ -190,7 +198,6 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     Toaster.show(rootView, getResources()
                             .getString(R.string.permission_denied_to_read_external_document));
                 }
-                return;
             }
         }
     }
@@ -198,7 +205,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @Override
     public void getExternalStorageDocument() {
         Intent intentDocument;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if(AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)){
             intentDocument = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         }else{
             intentDocument = new Intent(Intent.ACTION_GET_CONTENT);
