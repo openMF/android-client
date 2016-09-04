@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/sync_clients_full_information"
+            android:text="@string/upload_document"
             />
 
         <TableRow
