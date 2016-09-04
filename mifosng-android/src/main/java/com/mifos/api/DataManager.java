@@ -47,7 +47,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import okhttp3.MultipartBody.Part;
 import okhttp3.ResponseBody;
 import rx.Observable;
 
@@ -190,11 +189,6 @@ public class DataManager {
      */
     public Observable<List<Document>> getDocumentsList(String type, int id) {
         return mBaseApiManager.getDocumentApi().getListOfDocuments(type, id);
-    }
-
-    public Observable<GenericResponse> createDocument(
-            String type, int id, String name, String desc, Part file) {
-        return mBaseApiManager.getDocumentApi().createDocument(type, id, name, desc, file);
     }
 
 

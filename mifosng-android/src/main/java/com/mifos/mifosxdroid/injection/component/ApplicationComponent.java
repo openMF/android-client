@@ -8,6 +8,7 @@ import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerDataTable;
+import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.api.datamanager.DataManagerOffices;
@@ -56,6 +57,7 @@ public interface ApplicationComponent {
     DataManagerLoan dataManagerLoan();
     DataManagerSavings dataManagerSavings();
     DataManagerSurveys dataManagerSurveys();
+    DataManagerDocument dataManagerDocument();
 
 
     DatabaseHelperClient databaseHelperClient();

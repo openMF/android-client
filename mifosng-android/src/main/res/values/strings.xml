@@ -111,6 +111,7 @@
     <string name="attempt_question">Attempt Questions : </string>
     <string name="empty_client_list">Empty ClientList</string>
     <string name="empty_group_clients">Empty Group ClientList</string>
+    <string name="package_name">Package Name</string>
     <!-- General Terms End Here -->
 
 
@@ -118,6 +119,12 @@
     <string name="active">Active</string>
     <string name="inactive">InActive</string>
     <!-- Group Terms End Here -->
+
+
+    <!--RunTime User Permission Here-->
+    <string name="permission_denied">Permission Denied</string>
+    <string name="permission_denied_to_read_external_document">Permission Denied to Read
+        External Document</string>
 
 
     <!-- Loan Related Terminologies Begin Here -->
@@ -389,6 +396,14 @@
         with This Savings Account Id First. \n\nGo to Navigation Menu \'Offline Sync *\' and Sync
         transaction First.
         \n\nBefore making new SavingAccount Transaction with this SavingAccount</string>
+    <string name="dialog_message_read_external_storage_permission_denied">With out this
+        permission the app is unable to upload document when uploading document, app need to
+        access photos media and files on your device. Are you sure you want to deny this
+        permission?</string>
+    <string name="dialog_message_permission_never_ask_again">App Needs the Permission to
+        Read the External Storage but you had previously checked the Button Never Ask Again.
+        Please Click on \'App Settings\' button to enable the Permission Read External Storage.
+    </string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -397,6 +412,9 @@
     <string name="dialog_error_title">Sorry</string>
     <string name="dialog_action_pay_now">Pay Now</string>
     <string name="dialog_action_back">Back</string>
+    <string name="dialog_action_i_am_sure">I\'M Sure</string>
+    <string name="dialog_action_re_try">Re-Try</string>
+    <string name="dialog_action_app_settings">App Settings</string>
 
 
     <!--OnError Message-->
