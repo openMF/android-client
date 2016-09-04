@@ -97,6 +97,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         if (getArguments() != null) {
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -111,9 +112,6 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-
-        getDialog().setTitle(R.string.upload_document);
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
 
         ButterKnife.bind(this, rootView);
@@ -137,18 +135,25 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         checkPermissionAndRequest();
     }
 
+    /**
+     * This Method Validating the Name and Description String if any of them is null them throw
+     * an RequiredFieldException, Otherwise start uploading Document.
+     *
+     * @throws RequiredFieldException
+     */
     public void validateInput() throws RequiredFieldException {
 
         documentName = et_document_name.getEditableText().toString();
 
         if (documentName.length() == 0 || documentName.equals(""))
-            throw new RequiredFieldException(getResources().getString(R.string.name), getString(R
-                    .string.message_field_required));
+            throw new RequiredFieldException(getResources().getString(R.string.name),
+                    getString(R.string.message_field_required));
 
         documentDescription = et_document_description.getEditableText().toString();
 
-        if (documentDescription.length() == 0)
-            documentDescription = "";
+        if (documentDescription.length() == 0 || documentDescription.equals(""))
+            throw new RequiredFieldException(getResources().getString(R.string.description),
+                    getString(R.string.message_field_required));
 
         //Start Uploading Document
         mDocumentDialogPresenter.createDocument(entityType, entityId,
@@ -156,6 +161,12 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
     }
 
+    /**
+     * This Method Checking the Permission READ_EXTERNAL_STORAGE is granted or not.
+     * If not then prompt user a dialog to grant the READ_EXTERNAL_STORAGE permission.
+     * and If Permission is granted already then start Intent to get the Document from the External
+     * Storage.
+     */
     @Override
     public void checkPermissionAndRequest() {
         if (CheckSelfPermissionAndRequest.checkSelfPermission(getActivity(),
@@ -166,6 +177,9 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         }
     }
 
+    /**
+     * This Method is Requesting the Permission
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void requestPermission() {
@@ -179,6 +193,13 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                 Constants.READ_EXTERNAL_STORAGE_STATUS);
     }
 
+    /**
+     * This Method getting the Response after User Grant or denied the Permission
+     *
+     * @param requestCode  Request Code
+     * @param permissions  Permission
+     * @param grantResults GrantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -202,12 +223,17 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         }
     }
 
+    /**
+     * This method is to start an intent(getExternal Storage Document).
+     * If Android Version is Kitkat or greater then start intent with ACTION_OPEN_DOCUMENT,
+     * otherwise with ACTION_GET_CONTENT
+     */
     @Override
     public void getExternalStorageDocument() {
         Intent intentDocument;
-        if(AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)){
+        if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
             intentDocument = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        }else{
+        } else {
             intentDocument = new Intent(Intent.ACTION_GET_CONTENT);
         }
         intentDocument.addCategory(Intent.CATEGORY_OPENABLE);
@@ -215,6 +241,13 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         startActivityForResult(intentDocument, FILE_SELECT_CODE);
     }
 
+    /**
+     * This Method will be called when any document will be selected from the External Storage.
+     *
+     * @param requestCode Request Code
+     * @param resultCode  Result Code ok or Cancel
+     * @param data        Intent Data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -247,8 +280,8 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         if (genericResponse != null) {
 
             Toast.makeText(getActivity(), String.format(getString(R.string
-                    .uploaded_successfully), fileChoosen.getName()), Toast
-                    .LENGTH_SHORT).show();
+                            .uploaded_successfully), fileChoosen.getName()),
+                    Toast.LENGTH_SHORT).show();
 
             Log.d(LOG_TAG, genericResponse.toString());
         }
@@ -279,6 +312,4 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public interface OnDialogFragmentInteractionListener {
         void initiateFileUpload(String name, String description);
     }
-
-
 }
