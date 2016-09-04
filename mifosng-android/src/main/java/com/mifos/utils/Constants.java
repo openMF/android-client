@@ -87,10 +87,22 @@ public class Constants {
     public static final String IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT =
             "isParentFragmentAGroupFragment";
 
+    //This needs to be 8 bits because validateRequestPermissionsRequestCode
+    // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
+    public static final int REQUEST_PERMISSION_SETTING = 254;
 
 
+    /**
+     * PERMISSIONS_........ is an app-defined int constant of RunTime Permission . The callback
+     * method gets the result of the request.
+     */
     public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
+
+    /**
+     * String Constant of Permissions in SharedPreference
+     */
+    public static final String READ_EXTERNAL_STORAGE_STATUS = "read_external_storage_status";
 
     /**
      * Constants to identify which Data Tables have to be shown
