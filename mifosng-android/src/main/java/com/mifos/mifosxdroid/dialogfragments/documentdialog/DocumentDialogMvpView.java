@@ -10,6 +10,8 @@ public interface DocumentDialogMvpView extends MvpView {
 
     void checkPermissionAndRequest();
 
+    void requestPermission();
+
     void getExternalStorageDocument();
 
     void showDocumentedCreatedSuccessfully(GenericResponse genericResponse);

@@ -15,14 +15,20 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
-import java.net.URISyntaxException;
-
 /**
  * Created by ishankhanna on 03/07/14.
  */
 public class FileUtils {
 
-    public static String getPath(Context context, Uri uri) throws URISyntaxException {
+    public static String getPathReal(final Context context, final Uri uri) {
+        if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
+            return getPathRealOnKitkatAboveVersion(context, uri);
+        } else {
+            return getPathOnKitkatBelowVersion(context, uri);
+        }
+    }
+
+    public static String getPathOnKitkatBelowVersion(Context context, Uri uri) {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
             String[] projection = {"_data"};
             Cursor cursor = null;
@@ -44,7 +50,7 @@ public class FileUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static String getPathReal(final Context context, final Uri uri) {
+    public static String getPathRealOnKitkatAboveVersion(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
