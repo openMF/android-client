@@ -111,6 +111,7 @@
     <string name="attempt_question">Attempt Questions : </string>
     <string name="empty_client_list">Empty ClientList</string>
     <string name="empty_group_clients">Empty Group ClientList</string>
+    <string name="package_name">Package Name</string>
     <!-- General Terms End Here -->
 
 
@@ -401,6 +402,7 @@
         permission?</string>
     <string name="dialog_message_permission_never_ask_again">App Needs the Permission to
         Read the External Storage but you had previously checked the Button Never Ask Again.
+        Please Click on \'App Settings\' button to enable the Permission Read External Storage.
     </string>
 
     <!--Material Dialog-->
