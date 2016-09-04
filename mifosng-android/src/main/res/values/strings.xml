@@ -121,6 +121,7 @@
 
 
     <!--RunTime User Permission Here-->
+    <string name="permission_denied">Permission Denied</string>
     <string name="permission_denied_to_read_external_document">Permission Denied to Read
         External Document</string>
 
@@ -394,6 +395,10 @@
         with This Savings Account Id First. \n\nGo to Navigation Menu \'Offline Sync *\' and Sync
         transaction First.
         \n\nBefore making new SavingAccount Transaction with this SavingAccount</string>
+    <string name="dialog_message_read_external_storage_permission_denied">With out this
+        permission the app is unable to upload document when uploading document, app need to
+        access photos media and files on your device. Are you sure you want to deny this
+        permission?</string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -402,6 +407,8 @@
     <string name="dialog_error_title">Sorry</string>
     <string name="dialog_action_pay_now">Pay Now</string>
     <string name="dialog_action_back">Back</string>
+    <string name="dialog_action_i_am_sure">I\'M Sure</string>
+    <string name="dialog_action_re_try">Re-Try</string>
 
 
     <!--OnError Message-->

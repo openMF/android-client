@@ -163,7 +163,9 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
             CheckSelfPermissionAndRequest.requestPermission(
                     (MifosBaseActivity) getActivity(),
                     Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE,
+                    getResources().getString(
+                            R.string.dialog_message_read_external_storage_permission_denied));
         }
     }
 
