@@ -120,6 +120,11 @@
     <!-- Group Terms End Here -->
 
 
+    <!--RunTime User Permission Here-->
+    <string name="permission_denied_to_read_external_document">Permission Denied to Read
+        External Document</string>
+
+
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
     <string name="loan_purposes">Loan Purposes</string>

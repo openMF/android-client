@@ -11,10 +11,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +28,8 @@ import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.utils.CheckSelfPermissionAndRequest;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
 import com.mifos.utils.SafeUIBlockingUtility;
@@ -49,13 +51,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
     private static final int FILE_SELECT_CODE = 0;
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
-
     private final String LOG_TAG = getClass().getSimpleName();
-
-    View rootView;
-
-    SafeUIBlockingUtility safeUIBlockingUtility;
 
     @BindView(R.id.et_document_name)
     EditText et_document_name;
@@ -72,17 +68,18 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @Inject
     DocumentDialogPresenter mDocumentDialogPresenter;
 
+    View rootView;
+
+    SafeUIBlockingUtility safeUIBlockingUtility;
+
     private OnDialogFragmentInteractionListener mListener;
 
     private String documentName;
     private String documentDescription;
     private String entityType;
     private String filePath;
-
     private int entityId;
-
     private File fileChoosen;
-
     private Uri uri;
 
     public static DocumentDialogFragment newInstance(String entityType, int entiyId) {
@@ -126,30 +123,85 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
     @OnClick(R.id.bt_upload)
     public void beginUpload() {
-
         try {
             validateInput();
         } catch (RequiredFieldException e) {
             e.notifyUserWithToast(getActivity());
         }
+    }
 
+    @OnClick(R.id.tv_choose_file)
+    public void openFilePicker() {
+        checkPermissionAndRequest();
     }
 
     public void validateInput() throws RequiredFieldException {
 
         documentName = et_document_name.getEditableText().toString();
 
-        if (documentName == null || documentName.equals(""))
+        if (documentName.length() == 0 || documentName.equals(""))
             throw new RequiredFieldException(getResources().getString(R.string.name), getString(R
                     .string.message_field_required));
 
         documentDescription = et_document_description.getEditableText().toString();
 
-        if (documentDescription == null)
+        if (documentDescription.length() == 0)
             documentDescription = "";
 
-        uploadFile();
+        //Start Uploading Document
+        mDocumentDialogPresenter.createDocument(entityType, entityId,
+                documentName, documentDescription, fileChoosen);
 
+    }
+
+    @Override
+    public void checkPermissionAndRequest() {
+        if (CheckSelfPermissionAndRequest.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            getExternalStorageDocument();
+        } else {
+            CheckSelfPermissionAndRequest.requestPermission(
+                    (MifosBaseActivity) getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    getExternalStorageDocument();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    Toaster.show(rootView, getResources()
+                            .getString(R.string.permission_denied_to_read_external_document));
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void getExternalStorageDocument() {
+        Intent intentDocument;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            intentDocument = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        }else{
+            intentDocument = new Intent(Intent.ACTION_GET_CONTENT);
+        }
+        intentDocument.addCategory(Intent.CATEGORY_OPENABLE);
+        intentDocument.setType("*/*");
+        startActivityForResult(intentDocument, FILE_SELECT_CODE);
     }
 
     @Override
@@ -160,43 +212,10 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     // Get the Uri of the selected file
                     uri = data.getData();
 
-
-                    // Here, thisActivity is the current activity
-                    if (ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED) {
-
-                        // Should we show an explanation?
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                                Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                            // Show an expanation to the user *asynchronously* -- don't block
-                            // this thread waiting for the user's response! After the user
-                            // sees the explanation, try again to request the permission.
-
-                        } else {
-
-                            // No explanation needed, we can request the permission.
-
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-                            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                            // app-defined int constant. The callback method gets the
-                            // result of the request.
-                        }
-                    }
-
-
-
-
                     filePath = FileUtils.getPathReal(getActivity(), uri);
-                    fileChoosen = new File(filePath);
-
-
-                    Log.d(LOG_TAG, "File Uri: " + uri.toString());
-
+                    if (filePath != null) {
+                        fileChoosen = new File(filePath);
+                    }
 
                     if (fileChoosen != null) {
                         tv_choose_file.setText(fileChoosen.getName());
@@ -209,22 +228,6 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @OnClick(R.id.tv_choose_file)
-    public void openFilePicker() {
-        //TODO check android version and fire accordingly intent,
-        //TODO use ACTION_PICK_CONTENT for below 4.3 version
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, FILE_SELECT_CODE);
-    }
-
-    public void uploadFile() {
-
-        mDocumentDialogPresenter.createDocument(entityType, entityId,
-                documentName, documentDescription, fileChoosen);
     }
 
 
@@ -263,9 +266,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     }
 
     public interface OnDialogFragmentInteractionListener {
-
-        public void initiateFileUpload(String name, String description);
-
+        void initiateFileUpload(String name, String description);
     }
 
 

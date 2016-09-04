@@ -88,6 +88,10 @@ public class Constants {
             "isParentFragmentAGroupFragment";
 
 
+
+    public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+
+
     /**
      * Constants to identify which Data Tables have to be shown
      */
