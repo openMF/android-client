@@ -401,6 +401,9 @@
         permission the app is unable to upload document when uploading document, app need to
         access photos media and files on your device. Are you sure you want to deny this
         permission?</string>
+    <string name="dialog_message_permission_never_ask_again">App Needs the Permission to
+        Read the External Storage but you had previously checked the Button Never Ask Again.
+    </string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -411,6 +414,7 @@
     <string name="dialog_action_back">Back</string>
     <string name="dialog_action_i_am_sure">I\'M Sure</string>
     <string name="dialog_action_re_try">Re-Try</string>
+    <string name="dialog_action_app_settings">App Settings</string>
 
 
     <!--OnError Message-->
