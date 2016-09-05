@@ -8,6 +8,12 @@ import com.mifos.mifosxdroid.base.MvpView;
  */
 public interface DocumentDialogMvpView extends MvpView {
 
+    void checkPermissionAndRequest();
+
+    void requestPermission();
+
+    void getExternalStorageDocument();
+
     void showDocumentedCreatedSuccessfully(GenericResponse genericResponse);
 
     void showError(String s);

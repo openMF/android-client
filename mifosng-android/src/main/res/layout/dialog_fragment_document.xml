@@ -8,7 +8,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +15,15 @@
         android:layout_centerHorizontal="true"
         android:padding="8dp"
         android:id="@+id/tableLayout">
+
+        <TextView
+            android:id="@+id/tv_sync_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/upload_document"
+            />
 
         <TableRow
             android:layout_width="fill_parent"
