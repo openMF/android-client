@@ -12,7 +12,6 @@ import com.mifos.api.services.CenterService;
 import com.mifos.api.services.ChargeService;
 import com.mifos.api.services.ClientAccountsService;
 import com.mifos.api.services.ClientService;
-import com.mifos.api.services.CreateSavingsAccountService;
 import com.mifos.api.services.DataTableService;
 import com.mifos.api.services.DocumentService;
 import com.mifos.api.services.GpsCoordinatesService;
@@ -49,7 +48,6 @@ public class BaseApiManager {
     private static LoanService loanApi;
     private static SavingsAccountService savingsApi;
     private static ChargeService chargeApi;
-    private static CreateSavingsAccountService createSavingsAccountService;
     private static SearchService searchApi;
     private static GpsCoordinatesService gpsApi;
     private static GroupService groupApi;
@@ -81,7 +79,6 @@ public class BaseApiManager {
         staffApi = createApi(StaffService.class);
         surveyApi = createApi(SurveyService.class);
         chargeApi = createApi(ChargeService.class);
-        createSavingsAccountService = createApi(CreateSavingsAccountService.class);
         groupAccountsServiceApi = createApi(GroupAccountService.class);
     }
 
@@ -169,9 +166,5 @@ public class BaseApiManager {
 
     public ChargeService getChargeApi() {
         return chargeApi;
-    }
-
-    public CreateSavingsAccountService getCreateSavingsAccountService() {
-        return createSavingsAccountService;
     }
 }

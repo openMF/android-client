@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.online.savingsaccount;
 import android.R.layout;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.common.InterestType;
 import com.mifos.objects.client.Savings;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
@@ -33,26 +31,25 @@ import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by nellyk on 1/22/2016.
  * <p/>
  * Use this Dialog Fragment to Create and/or Update charges
  */
-public class SavingsAccountFragment extends ProgressableDialogFragment
-        implements MFDatePicker.OnDatePickListener, SavingsAccountMvpView {
+public class SavingsAccountFragment extends ProgressableDialogFragment implements
+        MFDatePicker.OnDatePickListener, SavingsAccountMvpView, AdapterView.OnItemSelectedListener {
 
-    public final String LOG_TAG = getClass().getSimpleName();
+    public static final String LOG_TAG = SavingsAccountFragment.class.getSimpleName();
 
     @BindView(R.id.sp_product)
     Spinner sp_product;
@@ -61,7 +58,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     EditText et_client_external_id;
 
     @BindView(R.id.tv_submittedon_date)
-    TextView tv_submittedon_date;
+    TextView tv_submission_date;
 
     @BindView(R.id.et_nominal_annual)
     EditText et_nominal_annual;
@@ -85,7 +82,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     SavingsAccountPresenter mSavingsAccountPresenter;
 
     private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
+
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
@@ -93,9 +90,22 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
     private int interestCalculationDaysInYearTypeId;
-    private String submittion_date;
-    private HashMap<String, Integer> savingsNameIdHashMap = new HashMap<String, Integer>();
-    private SavingProductsTemplate savingproductstemplate = new SavingProductsTemplate();
+    private String submission_date;
+
+    List<String> mListInterestPostingPeriodType = new ArrayList<>();
+    List<String> mListInterestCalculationTypeNames = new ArrayList<>();
+    List<String> mListInterestCalculationDaysInYearType = new ArrayList<>();
+    List<String> mListInterestCompoundingPeriodType = new ArrayList<>();
+    List<String> mListSavingProductsNames = new ArrayList<>();
+
+    ArrayAdapter<String> mInterestPostingPeriodTypeAdapter;
+    ArrayAdapter<String> mInterestCalculationTypeAdapter;
+    ArrayAdapter<String> mInterestCalculationDaysInYearTypeAdapter;
+    ArrayAdapter<String> mInterestCompoundingPeriodTypeAdapter;
+    ArrayAdapter<String> mSavingProductsAdapter;
+
+    private SavingProductsTemplate mSavingProductsTemplate;
+    private List<ProductSavings> mProductSavings;
 
     public static SavingsAccountFragment newInstance(int clientId) {
         SavingsAccountFragment savingsAccountFragment = new SavingsAccountFragment();
@@ -109,8 +119,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null)
-            clientId = getArguments().getInt(Constants.CLIENT_ID);
+        if (getArguments() != null) clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
 
 
@@ -123,213 +132,87 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
         mSavingsAccountPresenter.attachView(this);
 
         inflateSubmissionDate();
-        inflateSavingsSpinner();
-        getSavingsAccountTemplateAPI();
+        inflateSavingsSpinners();
 
-        submittion_date = tv_submittedon_date.getText().toString();
-        submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                (submittion_date).replace("-", " ");
+        mSavingsAccountPresenter.loadSavingsAccountsAndTemplate();
 
-        bt_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                SavingsPayload savingsPayload = new SavingsPayload();
-                savingsPayload.setExternalId(et_client_external_id.getEditableText().toString());
-                savingsPayload.setLocale("en");
-                savingsPayload.setSubmittedOnDate(submittion_date);
-                savingsPayload.setDateFormat("dd MMMM yyyy");
-                savingsPayload.setClientId(clientId);
-                savingsPayload.setProductId(productId);
-                savingsPayload.setNominalAnnualInterestRate(et_nominal_annual.getEditableText()
-                        .toString());
-                savingsPayload.setInterestCompoundingPeriodType(interestCompoundingPeriodTypeId);
-                savingsPayload.setInterestPostingPeriodType(interestPostingPeriodTypeId);
-                savingsPayload.setInterestCalculationType(interestCalculationTypeAdapterId);
-                savingsPayload.getInterestCalculationDaysInYearType();
-
-                initiateSavingCreation(savingsPayload);
-            }
-        });
         return rootView;
+    }
+
+    public void inflateSavingsSpinners() {
+
+        mInterestPostingPeriodTypeAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestPostingPeriodType);
+        mInterestPostingPeriodTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_interest_p_period.setAdapter(mInterestPostingPeriodTypeAdapter);
+        sp_interest_p_period.setOnItemSelectedListener(this);
+
+
+        mInterestCalculationTypeAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestCalculationTypeNames);
+        mInterestCalculationTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_interest_calc.setAdapter(mInterestCalculationTypeAdapter);
+        sp_interest_calc.setOnItemSelectedListener(this);
+
+
+        mInterestCalculationDaysInYearTypeAdapter  = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestCalculationDaysInYearType);
+        mInterestCalculationDaysInYearTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_days_in_year.setAdapter(mInterestCalculationDaysInYearTypeAdapter);
+        sp_days_in_year.setOnItemSelectedListener(this);
+
+
+        mInterestCompoundingPeriodTypeAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListInterestCompoundingPeriodType);
+        mInterestCompoundingPeriodTypeAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_interest_comp.setAdapter(mInterestCompoundingPeriodTypeAdapter);
+        sp_interest_comp.setOnItemSelectedListener(this);
+
+
+        mSavingProductsAdapter = new ArrayAdapter<>(getActivity(), layout
+                .simple_spinner_item, mListSavingProductsNames);
+        mSavingProductsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        sp_product.setAdapter(mSavingProductsAdapter);
+        sp_product.setOnItemSelectedListener(this);
+
+    }
+
+
+    @OnClick(R.id.bt_submit)
+    void submitSavingsAccount() {
+
+        SavingsPayload savingsPayload = new SavingsPayload();
+        savingsPayload.setExternalId(et_client_external_id.getEditableText().toString());
+        savingsPayload.setLocale("en");
+        savingsPayload.setSubmittedOnDate(submission_date);
+        savingsPayload.setDateFormat("dd MMMM yyyy");
+        savingsPayload.setClientId(clientId);
+        savingsPayload.setProductId(productId);
+        savingsPayload.setNominalAnnualInterestRate(et_nominal_annual.getEditableText()
+                .toString());
+        savingsPayload.setInterestCompoundingPeriodType(interestCompoundingPeriodTypeId);
+        savingsPayload.setInterestPostingPeriodType(interestPostingPeriodTypeId);
+        savingsPayload.setInterestCalculationType(interestCalculationTypeAdapterId);
+        savingsPayload.getInterestCalculationDaysInYearType();
+
+        mSavingsAccountPresenter.createSavingsAccount(savingsPayload);
     }
 
     @Override
     public void onDatePicked(String date) {
-        tv_submittedon_date.setText(date);
-    }
-
-    private void inflateSavingsSpinner() {
-        mSavingsAccountPresenter.loadSavingsAccounts();
-    }
-
-    private void initiateSavingCreation(SavingsPayload savingsPayload) {
-        mSavingsAccountPresenter.createSavingsAccount(savingsPayload);
-    }
-
-    private void inflateInterestPostingPeriodType() {
-
-        final ArrayList<String> InterestPostingPeriodTypeNames = filterListObject
-                (savingproductstemplate.getInterestPostingPeriodTypeOptions());
-
-        final ArrayAdapter<String> interestPostingPeriodTypeAdapter =
-                new ArrayAdapter<>(getActivity(),
-                        layout.simple_spinner_item, InterestPostingPeriodTypeNames);
-
-        interestPostingPeriodTypeAdapter.setDropDownViewResource(
-                layout.simple_spinner_dropdown_item);
-        sp_interest_p_period.setAdapter(interestPostingPeriodTypeAdapter);
-        sp_interest_p_period.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                interestPostingPeriodTypeId = savingproductstemplate
-                        .getInterestPostingPeriodTypeOptions().get(i).getId();
-                Log.d("interestPosting " + InterestPostingPeriodTypeNames.get(i), String.valueOf
-                        (interestPostingPeriodTypeId));
-                if (interestPostingPeriodTypeId != -1) {
-
-
-                } else {
-
-                    Toast.makeText(getActivity(), getString(R.string.interestPostingPeriodTypeId)
-                            , Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-    }
-
-    private void inflateInterestCalculationTypeSpinner() {
-
-        final ArrayList<String> interestCalculationTypeNames = filterListObject
-                (savingproductstemplate.getInterestCalculationTypeOptions());
-        final ArrayAdapter<String> interestCalculationTypeAdapter =
-                new ArrayAdapter<>(getActivity(),
-                        layout.simple_spinner_item, interestCalculationTypeNames);
-        interestCalculationTypeAdapter.setDropDownViewResource(
-                layout.simple_spinner_dropdown_item);
-        sp_interest_calc.setAdapter(interestCalculationTypeAdapter);
-        sp_interest_calc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                interestCalculationTypeAdapterId = savingproductstemplate
-                        .getInterestCalculationTypeOptions().get(i).getId();
-                Log.d("interestCalculation " + interestCalculationTypeNames.get(i), String
-                        .valueOf(interestCalculationTypeAdapterId));
-                if (interestCalculationTypeAdapterId != -1) {
-
-
-                } else {
-
-                    Toast.makeText(getActivity(), getString(R.string.error_select_office), Toast
-                            .LENGTH_SHORT).show();
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    private void inflateinterestCalculationDaysInYearType() {
-
-        final ArrayList<String> InterestCalculationDaysInYearTypeNames = filterListObject
-                (savingproductstemplate.getInterestCalculationDaysInYearTypeOptions());
-
-        final ArrayAdapter<String> interestCalculationDaysInYearTypeAdapter =
-                new ArrayAdapter<>(getActivity(),
-                        layout.simple_spinner_item,
-                        InterestCalculationDaysInYearTypeNames);
-        interestCalculationDaysInYearTypeAdapter.setDropDownViewResource(
-                layout.simple_spinner_dropdown_item);
-        sp_days_in_year.setAdapter(interestCalculationDaysInYearTypeAdapter);
-        sp_days_in_year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                interestCalculationDaysInYearTypeId = savingproductstemplate
-                        .getInterestCalculationDaysInYearTypeOptions().get(i).getId();
-                Log.d("interestCalculationD" + InterestCalculationDaysInYearTypeNames.get(i),
-                        String.valueOf(interestCalculationDaysInYearTypeId));
-                if (interestCalculationDaysInYearTypeId != -1) {
-
-
-                } else {
-
-                    Toast.makeText(getActivity(), getString(R.string
-                            .interestCalculationDaysInYearTypeAdapterId), Toast.LENGTH_SHORT)
-                            .show();
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-    }
-
-    private void interestCompoundingPeriodType() {
-
-        final ArrayList<String> InterestCompoundingPeriodType = filterListObject
-                (savingproductstemplate.getInterestCompoundingPeriodTypeOptions());
-
-        final ArrayAdapter<String> interestCompoundingPeriodTypeAdapter =
-                new ArrayAdapter<>(getActivity(),
-                        layout.simple_spinner_item,
-                        InterestCompoundingPeriodType);
-        interestCompoundingPeriodTypeAdapter.setDropDownViewResource(
-                layout.simple_spinner_dropdown_item);
-        sp_interest_comp.setAdapter(interestCompoundingPeriodTypeAdapter);
-        sp_interest_comp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                interestCompoundingPeriodTypeId = savingproductstemplate
-                        .getInterestCompoundingPeriodTypeOptions().get(i).getId();
-                Log.d("clientTypeId " + InterestCompoundingPeriodType.get(i), String.valueOf
-                        (interestCompoundingPeriodTypeId));
-                if (interestCompoundingPeriodTypeId != -1) {
-
-
-                } else {
-
-                    Toast.makeText(getActivity(), getString(R.string.error_select_intrested_cmp),
-                            Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
+        tv_submission_date.setText(date);
+        setSubmissionDate();
     }
 
     public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
-        tv_submittedon_date.setText(MFDatePicker.getDatePickedAsString());
-
-        tv_submittedon_date.setOnClickListener(new View.OnClickListener() {
+        tv_submission_date.setText(MFDatePicker.getDatePickedAsString());
+        setSubmissionDate();
+        tv_submission_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
@@ -339,77 +222,54 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
 
     }
 
-    private void getSavingsAccountTemplateAPI() {
-        mSavingsAccountPresenter.loadSavingsAccountTemplate();
-    }
-
-    //TODO Replace this method with Presenter rxJava filter method
-    private ArrayList<String> filterListObject(List<InterestType> interestTypes) {
-
-        ArrayList<String> InterestValueList = new ArrayList<>();
-        for (InterestType interestType : interestTypes) {
-            InterestValueList.add(interestType.getValue());
-        }
-
-        return InterestValueList;
+    public void setSubmissionDate() {
+        submission_date = tv_submission_date.getText().toString();
+        submission_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (submission_date).replace("-", " ");
     }
 
     @Override
     public void showSavingsAccounts(List<ProductSavings> productSavings) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
+        mProductSavings = productSavings;
 
-        final List<String> savingsList = new ArrayList<String>();
+        mListSavingProductsNames.addAll(mSavingsAccountPresenter
+                .filterSavingProductsNames(productSavings));
+        mSavingProductsAdapter.notifyDataSetChanged();
 
-        for (ProductSavings savingsname : productSavings) {
-            savingsList.add(savingsname.getName());
-            savingsNameIdHashMap.put(savingsname.getName(), savingsname.getId());
-        }
-        ArrayAdapter<String> savingsAdapter = new ArrayAdapter<>(getActivity(),
-                layout.simple_spinner_item, savingsList);
-        savingsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
-        sp_product.setAdapter(savingsAdapter);
-        sp_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                    l) {
-                productId = savingsNameIdHashMap.get(savingsList.get(i));
-                Log.d("productId " + savingsList.get(i), String.valueOf(productId));
-                if (productId != -1) {
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string
-                            .error_select_product), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    @Override
-    public void showSavingsAccountCreatedSuccessfully(Savings savings) {
-        Toast.makeText(getActivity(), "The Savings Account has been submitted for " +
-                "Approval", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showSavingsAccountTemplate(SavingProductsTemplate savingProductsTemplate) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
+        mSavingProductsTemplate = savingProductsTemplate;
 
-        savingproductstemplate = savingProductsTemplate;
-        interestCompoundingPeriodType();
-        inflateinterestCalculationDaysInYearType();
-        inflateInterestCalculationTypeSpinner();
-        inflateInterestPostingPeriodType();
+        mListInterestCompoundingPeriodType.addAll(mSavingsAccountPresenter.filterSpinnerOptions
+                (savingProductsTemplate.getInterestCompoundingPeriodTypeOptions()));
+        mInterestCompoundingPeriodTypeAdapter.notifyDataSetChanged();
+
+        mListInterestCalculationDaysInYearType.addAll(mSavingsAccountPresenter.filterSpinnerOptions(
+                savingProductsTemplate.getInterestCalculationDaysInYearTypeOptions()));
+        mInterestCalculationDaysInYearTypeAdapter.notifyDataSetChanged();
+
+        mListInterestCalculationTypeNames.addAll(mSavingsAccountPresenter.filterSpinnerOptions
+                (savingProductsTemplate.getInterestCalculationTypeOptions()));
+        mInterestCalculationTypeAdapter.notifyDataSetChanged();
+
+        mListInterestPostingPeriodType.addAll(mSavingsAccountPresenter.filterSpinnerOptions
+                (savingProductsTemplate.getInterestPostingPeriodTypeOptions()));
+        mInterestPostingPeriodTypeAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
+    public void showSavingsAccountCreatedSuccessfully(Savings savings) {
+        Toast.makeText(getActivity(),
+                getResources().getString(R.string.savings_account_submitted_for_approval),
+                Toast.LENGTH_LONG).show();
+    }
+
+
+    @Override
+    public void showFetchingError(int errorMessage) {
+        Toaster.show(rootView, getResources().getString(errorMessage));
     }
 
     @Override
@@ -421,5 +281,35 @@ public class SavingsAccountFragment extends ProgressableDialogFragment
     public void onDestroyView() {
         super.onDestroyView();
         mSavingsAccountPresenter.detachView();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()) {
+            case R.id.sp_interest_comp:
+                interestCompoundingPeriodTypeId = mSavingProductsTemplate
+                        .getInterestCompoundingPeriodTypeOptions().get(position).getId();
+                break;
+            case R.id.sp_days_in_year:
+                interestCalculationDaysInYearTypeId = mSavingProductsTemplate
+                        .getInterestCalculationDaysInYearTypeOptions().get(position).getId();
+                break;
+            case R.id.sp_interest_calc:
+                interestCalculationTypeAdapterId = mSavingProductsTemplate
+                        .getInterestCalculationTypeOptions().get(position).getId();
+                break;
+            case R.id.sp_interest_p_period:
+                interestPostingPeriodTypeId = mSavingProductsTemplate
+                        .getInterestPostingPeriodTypeOptions().get(position).getId();
+                break;
+            case R.id.sp_product:
+                productId = mProductSavings.get(position).getId();
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

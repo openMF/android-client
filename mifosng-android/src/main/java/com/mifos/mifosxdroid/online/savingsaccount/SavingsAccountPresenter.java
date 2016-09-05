@@ -1,32 +1,40 @@
 package com.mifos.mifosxdroid.online.savingsaccount;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerSavings;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Savings;
+import com.mifos.objects.common.InterestType;
 import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
+import com.mifos.objects.zipmodels.SavingProductsAndTemplate;
 import com.mifos.services.data.SavingsPayload;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 8/6/16.
  */
 public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerSavings mDataManagerSavings;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
-    public SavingsAccountPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SavingsAccountPresenter(DataManagerSavings dataManagerSavings) {
+        mDataManagerSavings = dataManagerSavings;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -37,54 +45,66 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
-    public void loadSavingsAccounts() {
+    public void loadSavingsAccountsAndTemplate() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsAccounts()
+        mSubscriptions.add(Observable.combineLatest(
+                mDataManagerSavings.getSavingsAccounts(),
+                mDataManagerSavings.getSavingsAccountTemplate(),
+                new Func2<List<ProductSavings>, SavingProductsTemplate,
+                        SavingProductsAndTemplate>() {
+                    @Override
+                    public SavingProductsAndTemplate call(List<ProductSavings> productSavings,
+                                                          SavingProductsTemplate template) {
+                        return new SavingProductsAndTemplate(productSavings, template);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<ProductSavings>>() {
+                .subscribe(new Subscriber<SavingProductsAndTemplate>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load SavingsAccounts");
+                        getMvpView().showFetchingError(
+                                R.string.failed_to_load_savings_products_and_template);
                     }
 
                     @Override
-                    public void onNext(List<ProductSavings> productSavingses) {
+                    public void onNext(SavingProductsAndTemplate productsAndTemplate) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showSavingsAccounts(productSavingses);
+                        getMvpView().showSavingsAccounts(productsAndTemplate
+                                .getmProductSavings());
+                        getMvpView().showSavingsAccountTemplate(
+                                productsAndTemplate.getmSavingProductsTemplate());
                     }
-                });
-
+                })
+        );
     }
+
 
     public void createSavingsAccount(SavingsPayload savingsPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.createSavingsAccount(savingsPayload)
+        mSubscriptions.add(mDataManagerSavings.createSavingsAccount(savingsPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Savings>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Try Again");
+                        getMvpView().showFetchingError(R.string.failed_to_add_savings_account);
                     }
 
                     @Override
@@ -92,34 +112,30 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                         getMvpView().showProgressbar(false);
                         getMvpView().showSavingsAccountCreatedSuccessfully(savings);
                     }
-                });
+                }));
     }
 
-    public void loadSavingsAccountTemplate() {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getSavingsAccountTemplate()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingProductsTemplate>() {
+    public List<String> filterSpinnerOptions(List<InterestType> interestTypes) {
+        final ArrayList<String> interestNameList = new ArrayList<>();
+        Observable.from(interestTypes)
+                .subscribe(new Action1<InterestType>() {
                     @Override
-                    public void onCompleted() {
-                        getMvpView().showProgressbar(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch SavingsAccountTemplate");
-                    }
-
-                    @Override
-                    public void onNext(SavingProductsTemplate savingProductsTemplate) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showSavingsAccountTemplate(savingProductsTemplate);
+                    public void call(InterestType interestType) {
+                        interestNameList.add(interestType.getValue());
                     }
                 });
+        return interestNameList;
     }
 
+    public List<String> filterSavingProductsNames(List<ProductSavings> productSavings) {
+        final ArrayList<String> productsNames = new ArrayList<>();
+        Observable.from(productSavings)
+                .subscribe(new Action1<ProductSavings>() {
+                    @Override
+                    public void call(ProductSavings product) {
+                        productsNames.add(product.getName());
+                    }
+                });
+        return productsNames;
+    }
 }
