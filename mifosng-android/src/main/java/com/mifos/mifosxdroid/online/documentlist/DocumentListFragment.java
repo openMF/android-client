@@ -179,9 +179,11 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        if (b) {
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(show);
+        if (show && mDocumentListAdapter.getItemCount() == 0) {
             showMifosProgressBar();
+            swipeRefreshLayout.setRefreshing(false);
         } else {
             hideMifosProgressBar();
         }

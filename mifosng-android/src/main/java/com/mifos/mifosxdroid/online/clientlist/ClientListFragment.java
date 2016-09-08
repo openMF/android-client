@@ -266,6 +266,7 @@ public class ClientListFragment extends MifosBaseFragment
     @OnClick(R.id.noClientIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
+        rv_clients.setVisibility(View.VISIBLE);
         mClientListPresenter.loadClients(false, 0);
         mClientListPresenter.loadDatabaseClients();
     }

@@ -20,9 +20,8 @@ ext {
     espressoVersion = '2.2.1'
     runnerVersion = '0.4.1'
     rulesVersion = '0.4.1'
-    retrofitVersion = '2.0.2'
-    retrofitVersionLatest = '2.0.0'
-    okHttpVersion = '2.0.0'
+    retrofitVersionLatest = '2.1.0'
+    okHttp3Version = '3.3.1'
     flipTableVersion = '1.0.1'
     butterKnifeVersion = '8.0.1'
 
