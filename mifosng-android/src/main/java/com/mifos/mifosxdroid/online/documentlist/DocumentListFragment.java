@@ -40,6 +40,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView,
         RecyclerItemClickListener.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
@@ -97,7 +98,6 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         mDocumentList = new ArrayList<>();
         if (getArguments() != null) {
@@ -136,17 +136,23 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
     }
 
+    @OnClick(R.id.noDocumentIcon)
+    public void reloadOnError() {
+        ll_error.setVisibility(View.GONE);
+        mDocumentListPresenter.loadDocumentList(entityType, entityId);
+    }
+
     @Override
     public void showDocumentList(final List<Document> documents) {
+        mDocumentList = documents;
+        mDocumentListAdapter.setDocuments(mDocumentList);
+    }
 
-        if (documents.size() == 0) {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoChargesText.setText(getResources().getString(R.string.no_document_to_show));
-            mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
-        } else {
-            mDocumentList = documents;
-            mDocumentListAdapter.setDocuments(mDocumentList);
-        }
+    @Override
+    public void showEmptyDocuments() {
+        ll_error.setVisibility(View.VISIBLE);
+        mNoChargesText.setText(getResources().getString(R.string.no_document_to_show));
+        mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
     }
 
     @Override

@@ -1,7 +1,8 @@
 package com.mifos.mifosxdroid.online;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListMvpView;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListPresenter;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;
@@ -15,13 +16,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Rajan Maurya on 21/06/16.
@@ -35,7 +37,7 @@ public class DocumentListPresenterTest {
     DocumentListPresenter mDocumentListPresenter;
 
     @Mock
-    DataManager mDataManager;
+    DataManagerDocument mDataManager;
 
     @Mock
     DocumentListMvpView mDocumentListMvpView;
@@ -60,24 +62,41 @@ public class DocumentListPresenterTest {
 
     @Test
     public void testLoadDocumentList() {
-        when(mDataManager.getDocumentsList(entityType, entityId))
-                .thenReturn(Observable.just(documentList));
+        stubDataManagerGetDocuments(Observable.just(documentList));
 
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
 
         verify(mDocumentListMvpView).showDocumentList(documentList);
-        verify(mDocumentListMvpView, never()).showFetchingError("Failed to fetch documents");
+        verify(mDocumentListMvpView, never()).showEmptyDocuments();
+        verify(mDocumentListMvpView, never()).showFetchingError(R.string.failed_to_fetch_documents);
+    }
+
+    @Test
+    public void testLoadDocumentEmptyList() {
+        List<Document> emptyDocuments = new ArrayList<>();
+        stubDataManagerGetDocuments(Observable.just(emptyDocuments));
+
+        mDocumentListPresenter.loadDocumentList(entityType, entityId);
+
+        verify(mDocumentListMvpView).showEmptyDocuments();
+        verify(mDocumentListMvpView, never()).showDocumentList(documentList);
+        verify(mDocumentListMvpView, never()).showFetchingError(R.string.failed_to_fetch_documents);
     }
 
     @Test
     public void testLoadDocumentListFails() {
-        when(mDataManager.getDocumentsList(entityType, entityId))
-                .thenReturn(Observable.<List<Document>>error(new RuntimeException()));
+        stubDataManagerGetDocuments(Observable.error(new RuntimeException()));
 
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
 
-        verify(mDocumentListMvpView).showFetchingError("Failed to fetch documents");
+        verify(mDocumentListMvpView).showFetchingError(R.string.failed_to_fetch_documents);
         verify(mDocumentListMvpView, never()).showDocumentList(documentList);
+        verify(mDocumentListMvpView, never()).showEmptyDocuments();
     }
 
+    private void stubDataManagerGetDocuments(Observable observable) {
+        doReturn(observable)
+                .when(mDataManager)
+                .getDocumentsList(entityType, entityId);
+    }
 }
