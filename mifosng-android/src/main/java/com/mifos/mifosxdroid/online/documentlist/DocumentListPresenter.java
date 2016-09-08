@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.documentlist;
 
 import com.mifos.api.DataManager;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.noncore.Document;
 
@@ -48,13 +49,12 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
                 .subscribe(new Subscriber<List<Document>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch documents");
+                        getMvpView().showFetchingError(R.string.failed_to_fetch_documents);
                     }
 
                     @Override
