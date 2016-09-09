@@ -1,9 +1,12 @@
 package com.mifos.mifosxdroid.online.groupslist;
 
 import com.mifos.api.datamanager.DataManagerGroups;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -46,6 +49,17 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
         loadGroups(true, offset, limit);
     }
 
+    /**
+     * Showing Groups List in View, If loadmore is true call showLoadMoreGroups(...) and else
+     * call showGroupsList(...).
+     */
+    public void showClientList(List<Group> clients) {
+        if (loadmore) {
+            getMvpView().showLoadMoreGroups(clients);
+        } else {
+            getMvpView().showGroups(clients);
+        }
+    }
 
 
     public void loadGroups(boolean paged, int offset, int limit) {
@@ -62,14 +76,18 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load Groups");
+                        if (loadmore) {
+                            getMvpView().showMessage(R.string.failed_to_fetch_groups);
+                        } else {
+                            getMvpView().showFetchingError();
+                        }
 
                     }
 
                     @Override
                     public void onNext(Page<Group> groupPage) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showGroups(groupPage);
+                        showClientList(groupPage.getPageItems());
                     }
                 }));
     }

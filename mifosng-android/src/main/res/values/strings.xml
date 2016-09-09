@@ -448,6 +448,7 @@
         Template</string>
     <string name="failed_to_add_savings_account">Failed to add SavingsAccount</string>
     <string name="failed_to_fetch_documents">Failed to fetch documents</string>
+    <string name="failed_to_fetch_groups">Failed to Fetch Groups</string>
 
 
     <string-array name="office_ids">
