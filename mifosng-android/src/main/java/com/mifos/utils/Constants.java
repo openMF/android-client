@@ -62,6 +62,8 @@ public class Constants {
 
     public static final String GROUP_ID = "groupId";
 
+    public static final String GROUPS = "groups";
+
     public static final String ENTITY_TYPE = "entityType";
 
     public static final String ENTITY_ID = "entityId";
@@ -84,8 +86,7 @@ public class Constants {
 
     public static final String QUESTION_DATA = "question data";
 
-    public static final String IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT =
-            "isParentFragmentAGroupFragment";
+    public static final String IS_A_PARENT_FRAGMENT = "isAParentFragment";
 
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.

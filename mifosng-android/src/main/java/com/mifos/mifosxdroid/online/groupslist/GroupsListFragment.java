@@ -6,6 +6,7 @@ package com.mifos.mifosxdroid.online.groupslist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +23,8 @@ import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
-import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.GroupsActivity;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
@@ -82,17 +83,40 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     }
 
-    public static GroupsListFragment newInstance(List<Group> groupList) {
+    /**
+     * This method will be called, whenever GroupsListFragment will not have Parent Fragment.
+     * So, Presenter make the call to Rest API and fetch the Client List and show in UI
+     *
+     * @return GroupsListFragment
+     */
+    public static GroupsListFragment newInstance() {
+        Bundle arguments = new Bundle();
         GroupsListFragment groupListFragment = new GroupsListFragment();
-        if (groupList != null)
-            groupListFragment.setGroupList(groupList);
+        groupListFragment.setArguments(arguments);
         return groupListFragment;
     }
 
-    public static GroupsListFragment newInstance(List<Group> groupList, boolean
-            isParentFragmentAGroupFragment) {
+    /**
+     * This Method will be called, whenever isParentFragment will be true
+     * and Presenter do not need to make Rest API call to server. Parent (Fragment or Activity)
+     * already fetched the groups and for showing, they call GroupsListFragment.
+     * <p/>
+     * Example : Showing Parent Groups.
+     *
+     * @param groupList        List<Group>
+     * @param isParentFragment true
+     * @return GroupsListFragment
+     */
+    public static GroupsListFragment newInstance(List<Group> groupList,
+                                                 boolean isParentFragment) {
         GroupsListFragment groupListFragment = new GroupsListFragment();
-        groupListFragment.setGroupList(groupList);
+        Bundle args = new Bundle();
+        if (isParentFragment && groupList != null) {
+            args.putParcelableArrayList(Constants.GROUPS,
+                    (ArrayList<? extends Parcelable>) groupList);
+            args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true);
+            groupListFragment.setArguments(args);
+        }
         return groupListFragment;
     }
 
@@ -123,7 +147,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         ButterKnife.bind(this, rootView);
         mGroupsListPresenter.attachView(this);
 
-        setUpUserInterface();
+        //setting all the UI content to the view
+        showUserInterface();
 
         mApiRestCounter = 1;
         mGroupsListPresenter.loadGroups(true, 0, limit);
@@ -131,8 +156,6 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
-         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
-         * and offset(mGroupsList.size()) and limit(100).
          */
         rv_groups.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
@@ -146,7 +169,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     }
 
     @Override
-    public void setUpUserInterface() {
+    public void showUserInterface() {
         setToolbarTitle(getResources().getString(R.string.groups));
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -162,12 +185,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Override
     public void onRefresh() {
-        mApiRestCounter = 1;
 
-        mGroupsListPresenter.loadGroups(true, 0, limit);
-
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -180,10 +198,6 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         mGroupsListPresenter.loadGroups(true, 0, limit);
     }
 
-    public void setGroupList(List<Group> groupList) {
-        this.mGroupList = groupList;
-    }
-
     /**
      * Setting Data in RecyclerView of the GroupsListFragment if the mApiRestCounter value is 1,
      * otherwise adding value in ArrayList and updating the GroupListAdapter.
@@ -194,28 +208,29 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      */
     @Override
     public void showGroups(Page<Group> groupPage) {
-        /**
-         * if mApiRestCounter is 1, So this is the first Api Request.
-         * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
-         */
-        if (mApiRestCounter == 1) {
-            mGroupList = groupPage.getPageItems();
-            mGroupListAdapter.setGroups(mGroupList);
 
-            ll_error.setVisibility(View.GONE);
-        } else {
-
-            mGroupList.addAll(groupPage.getPageItems());
-            mGroupListAdapter.notifyDataSetChanged();
-
-            //checking the response size if size is zero then show toast No More
-            // Clients Available for fetch
-            if (groupPage.getPageItems().size() == 0 &&
-                    (groupPage.getTotalFilteredRecords() == mGroupList.size()))
-                Toaster.show(rootView, "No more Groups Available");
-        }
     }
 
+
+    @Override
+    public void showLoadMoreGroups(List<Client> clients) {
+
+    }
+
+    @Override
+    public void showEmptyGroups(int message) {
+
+    }
+
+    @Override
+    public void unregisterSwipeAndScrollListener() {
+
+    }
+
+    @Override
+    public void showMessage(int message) {
+
+    }
 
     /**
      * Check the mApiRestCounter value is the value is 1,
@@ -227,12 +242,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      */
     @Override
     public void showFetchingError(String s) {
-        if (mApiRestCounter == 1) {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoGroupsText.setText(s + "\n Click to Refresh ");
-        }
 
-        Toaster.show(rootView, s);
     }
 
     /**
@@ -257,7 +267,6 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hideMifosProgressBar();
         mGroupsListPresenter.detachView();
     }
 }
