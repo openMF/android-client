@@ -90,10 +90,10 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
 
         // create RequestBody instance from file
         RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), pngFile);
+                RequestBody.create(MediaType.parse("image/png"), pngFile);
 
         // MultipartBody.Part is used to send also the actual file name
-        Part body = Part.createFormData("picture", pngFile.getName(), requestFile);
+        Part body = Part.createFormData("file", pngFile.getName(), requestFile);
 
         getMvpView().showUploadImageProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
