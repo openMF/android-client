@@ -21,6 +21,9 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
     private final DataManagerGroups mDataManagerGroups;
     private CompositeSubscription mSubscriptions;
 
+    private int limit = 100;
+    private Boolean loadmore = false;
+
     @Inject
     public GroupsListPresenter(DataManagerGroups dataManagerGroups) {
         mDataManagerGroups = dataManagerGroups;
@@ -37,6 +40,13 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
         super.detachView();
         mSubscriptions.unsubscribe();
     }
+
+    public void loadGroups(Boolean loadmore, int offset) {
+        this.loadmore = loadmore;
+        loadGroups(true, offset, limit);
+    }
+
+
 
     public void loadGroups(boolean paged, int offset, int limit) {
         checkViewAttached();

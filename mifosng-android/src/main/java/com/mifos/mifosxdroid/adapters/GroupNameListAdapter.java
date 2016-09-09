@@ -5,32 +5,33 @@
 
 package com.mifos.mifosxdroid.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.SelectableAdapter;
 import com.mifos.objects.group.Group;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GroupNameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHolder> {
 
-    LayoutInflater layoutInflater;
-    List<Group> pageItems;
+    List<Group> groups;
 
-    public GroupNameListAdapter(Context context, List<Group> pageItems) {
-
-        layoutInflater = LayoutInflater.from(context);
-        this.pageItems = pageItems;
+    @Inject
+    public GroupNameListAdapter() {
+        this.groups = new ArrayList<>();
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,19 +45,31 @@ public class GroupNameListAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            ((ViewHolder) holder).tv_groupsName.setText(pageItems.get(position).getName());
-            ((ViewHolder) holder).tv_groupsId.setText(pageItems.get(position).getId().toString());
+            ((ViewHolder) holder).tv_groupsName.setText(groups.get(position).getName());
+            ((ViewHolder) holder).tv_groupsId.setText(String.valueOf(groups.get(position).getId()));
+
+            //Changing the Color of Selected Groups
+            ((ViewHolder) holder).view_selectedOverlay
+                    .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+
+            ((ViewHolder) holder).iv_sync_status
+                    .setVisibility(false ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
 
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return pageItems.size();
+        return groups.size();
     }
 
     public Group getItem(int position) {
-        return pageItems.get(position);
+        return groups.get(position);
     }
 
     @Override
@@ -66,11 +79,17 @@ public class GroupNameListAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_grouplistName)
+        @BindView(R.id.tv_group_name)
         TextView tv_groupsName;
 
-        @BindView(R.id.tv_groupsId)
+        @BindView(R.id.tv_group_id)
         TextView tv_groupsId;
+
+        @BindView(R.id.selected_overlay)
+        View view_selectedOverlay;
+
+        @BindView(R.id.iv_sync_status)
+        ImageView iv_sync_status;
 
         public ViewHolder(View v) {
             super(v);

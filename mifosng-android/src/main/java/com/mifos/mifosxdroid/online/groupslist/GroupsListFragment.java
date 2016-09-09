@@ -60,8 +60,12 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
+
+    @Inject
+    GroupNameListAdapter mGroupListAdapter;
+
     List<Group> mGroupList = new ArrayList<>();
-    private GroupNameListAdapter mGroupListAdapter;
+
     private View rootView;
     private int limit = 100;
     private int mApiRestCounter;
@@ -122,6 +126,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         rv_groups.setLayoutManager(mLayoutManager);
         rv_groups.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_groups.setHasFixedSize(true);
+        rv_groups.setAdapter(mGroupListAdapter);
+
 
         mApiRestCounter = 1;
         mGroupsListPresenter.loadGroups(true, 0, limit);
@@ -190,8 +196,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
          */
         if (mApiRestCounter == 1) {
             mGroupList = groupPage.getPageItems();
-            mGroupListAdapter = new GroupNameListAdapter(getActivity(), mGroupList);
-            rv_groups.setAdapter(mGroupListAdapter);
+            mGroupListAdapter.setGroups(mGroupList);
 
             ll_error.setVisibility(View.GONE);
         } else {
