@@ -13,11 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
-import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
+import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
@@ -43,11 +44,14 @@ import butterknife.OnClick;
  * =limit_value</>
  */
 public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
-        RecyclerItemClickListener.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.rv_groups)
     RecyclerView rv_groups;
+
+    @BindView(R.id.progressbar_group)
+    ProgressBar pb_groups;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -65,6 +69,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     GroupNameListAdapter mGroupListAdapter;
 
     List<Group> mGroupList = new ArrayList<>();
+
+    LinearLayoutManager mLayoutManager;
 
     private View rootView;
     private int limit = 100;
@@ -106,47 +112,21 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        if (getActivity().getActionBar() != null)
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_groups, container, false);
-        setToolbarTitle(getResources().getString(R.string.groups));
-        setHasOptionsMenu(true);
-
 
         ButterKnife.bind(this, rootView);
         mGroupsListPresenter.attachView(this);
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_groups.setLayoutManager(mLayoutManager);
-        rv_groups.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
-        rv_groups.setHasFixedSize(true);
-        rv_groups.setAdapter(mGroupListAdapter);
-
+        setUpUserInterface();
 
         mApiRestCounter = 1;
         mGroupsListPresenter.loadGroups(true, 0, limit);
-
-        /**
-         * Setting mApiRestCounter to 1 and send Fresh Request to Server
-         */
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mApiRestCounter = 1;
-
-                mGroupsListPresenter.loadGroups(true, 0, limit);
-
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
@@ -154,16 +134,40 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
          * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
          * and offset(mGroupsList.size()) and limit(100).
          */
-        rv_groups.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+        rv_groups.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
-            public void onLoadMore(int current_page) {
-
+            public void onLoadMore(int page, int totalItemsCount) {
                 mApiRestCounter = mApiRestCounter + 1;
-                mGroupsListPresenter.loadGroups(true, mGroupList.size(), limit);
+                mGroupsListPresenter.loadGroups(true, totalItemsCount, limit);
             }
         });
 
         return rootView;
+    }
+
+    @Override
+    public void setUpUserInterface() {
+        setToolbarTitle(getResources().getString(R.string.groups));
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_groups.setLayoutManager(mLayoutManager);
+        rv_groups.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
+        rv_groups.setHasFixedSize(true);
+        rv_groups.setAdapter(mGroupListAdapter);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
+        swipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+
+    @Override
+    public void onRefresh() {
+        mApiRestCounter = 1;
+
+        mGroupsListPresenter.loadGroups(true, 0, limit);
+
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -212,6 +216,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         }
     }
 
+
     /**
      * Check the mApiRestCounter value is the value is 1,
      * So there no data to show and setVisibility VISIBLE
@@ -236,19 +241,16 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      * It means this Request is the second and so on than show SwipeRefreshLayout
      * Check the the b is true or false
      *
-     * @param b is the status of the progressbar
+     * @param show is the status of the progressbar
      */
     @Override
-    public void showProgressbar(boolean b) {
-
-        if (mApiRestCounter == 1) {
-            if (b) {
-                showMifosProgressBar();
-            } else {
-                hideMifosProgressBar();
-            }
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(show);
+        if (show && mGroupListAdapter.getItemCount() == 0) {
+            pb_groups.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(false);
         } else {
-            swipeRefreshLayout.setRefreshing(b);
+            pb_groups.setVisibility(View.GONE);
         }
     }
 
