@@ -76,6 +76,16 @@ public class DataManagerGroups {
         }
     }
 
+    /**
+     * This method call the DatabaseHelperGroups Helper and mDatabaseHelperGroups.readAllGroups()
+     * read the all Groups from the Database Group table and returns the Page<Group>.
+     *
+     * @return Page<Group>
+     */
+    public Observable<Page<Group>> getDatabaseGroups() {
+        return mDatabaseHelperGroups.readAllGroups();
+    }
+
 
     public Observable<Group> createGroup(GroupPayload groupPayload) {
         switch (PrefManager.getUserStatus()) {

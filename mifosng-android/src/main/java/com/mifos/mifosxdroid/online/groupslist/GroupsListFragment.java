@@ -175,10 +175,11 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
          * Client Lis to show. and Presenter make transaction to Database to load saved clients.
          */
         if (isParentFragment) {
-            //mGroupsListPresenter.showParentClients(clientList);
+            mGroupsListPresenter.showParentClients(mGroupList);
         } else {
             mGroupsListPresenter.loadGroups(false, 0);
         }
+        mGroupsListPresenter.loadDatabaseGroups();
 
         return rootView;
     }
@@ -201,6 +202,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Override
     public void onRefresh() {
         mGroupsListPresenter.loadGroups(false, 0);
+        mGroupsListPresenter.loadDatabaseGroups();
     }
 
     /**
@@ -210,8 +212,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @OnClick(R.id.noGroupsIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
-        rv_groups.setVisibility(View.VISIBLE);
         mGroupsListPresenter.loadGroups(false, 0);
+        mGroupsListPresenter.loadDatabaseGroups();
     }
 
     /**
@@ -242,7 +244,6 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      */
     @Override
     public void showEmptyGroups(int message) {
-        rv_groups.setVisibility(View.GONE);
         ll_error.setVisibility(View.VISIBLE);
         mNoGroupsText.setText(getStringMessage(message));
     }
@@ -267,7 +268,6 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Override
     public void showFetchingError() {
-        rv_groups.setVisibility(View.GONE);
         ll_error.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
                 + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);

@@ -112,6 +112,7 @@
     <string name="attempt_question">Attempt Questions : </string>
     <string name="empty_client_list">Empty ClientList</string>
     <string name="empty_group_clients">Empty Group ClientList</string>
+    <string name="empty_groups_list">Empty GroupList</string>
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
@@ -242,6 +243,7 @@
     <string name="interest_comp">Intrest Compounding Period</string>
     <string name="repaidevery">Repaid Every</string>
     <string name="no_more_clients_available">No more Clients Available</string>
+    <string name="no_more_groups_available">No more Groups Available</string>
 
     <string name="numberofrepayments">Number of repayments</string>
 

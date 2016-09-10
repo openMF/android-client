@@ -29,48 +29,63 @@ import java.util.List;
 public class Group extends MifosBaseModel implements Parcelable {
 
     @PrimaryKey
-    private Integer id;
+    Integer id;
 
     @Column
-    private String accountNo;
+    String accountNo;
 
     @Column
-    private String name;
-
-    private Status status;
+    transient boolean sync;
 
     @Column
-    private Boolean active;
+    String name;
 
-    private List<Integer> activationDate = new ArrayList<>();
-
-    @Column
-    private Integer officeId;
+    Status status;
 
     @Column
-    private String officeName;
+    Boolean active;
+
+    List<Integer> activationDate = new ArrayList<>();
 
     @Column
-    private int centerId;
+    Integer officeId;
 
     @Column
-    private String centerName;
+    String officeName;
 
     @Column
-    private Integer staffId;
+    int centerId;
 
     @Column
-    private String staffName;
+    String centerName;
 
     @Column
-    private String hierarchy;
+    Integer staffId;
 
     @Column
-    private int groupLevel;
+    String staffName;
 
-    private Timeline timeline;
+    @Column
+    String hierarchy;
 
-    private String externalId;
+    @Column
+    int groupLevel;
+
+    Timeline timeline;
+
+    String externalId;
+
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
 
     public int getCenterId() {
         return centerId;

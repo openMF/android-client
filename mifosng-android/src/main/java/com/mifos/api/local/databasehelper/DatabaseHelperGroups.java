@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Func0;
 
 /**
@@ -43,6 +42,8 @@ public class DatabaseHelperGroups {
      */
     @Nullable
     public Observable<Void> saveGroups(final Page<Group> groupPage) {
+
+
         AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
@@ -55,27 +56,38 @@ public class DatabaseHelperGroups {
         return null;
     }
 
+    /**
+     * This Method Saving the Single Group in the Database
+     *
+     * @param group
+     * @return Observable.just(Group)
+     */
+    public Observable<Group> saveGroup(final Group group) {
+        return Observable.defer(new Func0<Observable<Group>>() {
+            @Override
+            public Observable<Group> call() {
+                group.save();
+                return Observable.just(group);
+            }
+        });
+    }
 
     /**
-     * Reading All groups from table of Group and return the GroupList
+     * Reading All groups from Database table of Group and return the GroupList
      *
      * @return List Of Groups
      */
-    //TODO Implement Observable Transaction to load Client List
     public Observable<Page<Group>> readAllGroups() {
-        return Observable.create(new Observable.OnSubscribe<Page<Group>>() {
+        return Observable.defer(new Func0<Observable<Page<Group>>>() {
             @Override
-            public void call(Subscriber<? super Page<Group>> subscriber) {
-
+            public Observable<Page<Group>> call() {
                 Page<Group> groupPage = new Page<>();
                 groupPage.setPageItems(SQLite.select()
                         .from(Group.class)
                         .queryList());
-                subscriber.onNext(groupPage);
-                subscriber.onCompleted();
+                return Observable.just(groupPage);
             }
         });
-
     }
 
 
