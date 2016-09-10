@@ -12,11 +12,17 @@ import android.graphics.Typeface;
 import com.facebook.stetho.Stetho;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
+import com.mifos.api.local.MifosDatabase;
+import com.mifos.api.local.MifosSQLCipherHelper;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
+import com.raizlabs.android.dbflow.config.DatabaseConfig;
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.database.DatabaseHelperListener;
+import com.raizlabs.android.dbflow.structure.database.OpenHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +57,23 @@ public class App extends Application {
         //Crashlytics.start(this);
 
         Iconify.with(new MaterialModule());
-        FlowManager.init(new FlowConfig.Builder(this).build());
+
+        //Initializing the DBFlow and SQL Cipher Encryption
+        FlowManager.init(new FlowConfig.Builder(this)
+                .addDatabaseConfig(
+                        new DatabaseConfig.Builder(MifosDatabase.class)
+                                .openHelper(new DatabaseConfig.OpenHelperCreator() {
+                                    @Override
+                                    public OpenHelper createHelper(
+                                            DatabaseDefinition databaseDefinition,
+                                            DatabaseHelperListener helperListener) {
+                                        return new MifosSQLCipherHelper(
+                                                databaseDefinition, helperListener);
+                                    }
+                                })
+                                .build())
+                .build());
+
         Stetho.initializeWithDefaults(this);
     }
 
