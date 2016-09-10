@@ -56,7 +56,6 @@ public class DataManagerGroups {
                         .concatMap(new Func1<Page<Group>, Observable<? extends Page<Group>>>() {
                             @Override
                             public Observable<? extends Page<Group>> call(Page<Group> groupPage) {
-                                mDatabaseHelperGroups.saveGroups(groupPage);
                                 return Observable.just(groupPage);
                             }
                         });

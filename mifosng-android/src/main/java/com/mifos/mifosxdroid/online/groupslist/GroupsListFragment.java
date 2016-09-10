@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -72,11 +75,13 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Inject
     GroupNameListAdapter mGroupListAdapter;
 
-    List<Group> mGroupList;
-
     LinearLayoutManager mLayoutManager;
+    private List<Group> mGroupList;
+    private List<Group> selectedGroups;
     private Boolean isParentFragment = false;
     private View rootView;
+    private ActionModeCallback actionModeCallback;
+    private ActionMode actionMode;
 
 
     //TODO Remove this default constructor
@@ -123,14 +128,22 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Override
     public void onItemClick(View childView, int position) {
-        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
-        groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
-        startActivity(groupActivityIntent);
+        if (actionMode != null) {
+            toggleSelection(position);
+        } else {
+            Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+            groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
+            startActivity(groupActivityIntent);
+        }
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
-
+        if (actionMode == null) {
+            actionMode = ((MifosBaseActivity) getActivity()).startSupportActionMode
+                    (actionModeCallback);
+        }
+        toggleSelection(position);
     }
 
     @Override
@@ -138,6 +151,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         mGroupList = new ArrayList<>();
+        selectedGroups = new ArrayList<>();
+        actionModeCallback = new ActionModeCallback();
         if (getArguments() != null) {
             mGroupList = getArguments().getParcelableArrayList(Constants.GROUPS);
             isParentFragment = getArguments()
@@ -203,6 +218,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     public void onRefresh() {
         mGroupsListPresenter.loadGroups(false, 0);
         mGroupsListPresenter.loadDatabaseGroups();
+        if (actionMode != null) actionMode.finish();
     }
 
     /**
@@ -212,6 +228,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @OnClick(R.id.noGroupsIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
+        rv_groups.setVisibility(View.VISIBLE);
         mGroupsListPresenter.loadGroups(false, 0);
         mGroupsListPresenter.loadDatabaseGroups();
     }
@@ -244,6 +261,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      */
     @Override
     public void showEmptyGroups(int message) {
+        rv_groups.setVisibility(View.GONE);
         ll_error.setVisibility(View.VISIBLE);
         mNoGroupsText.setText(getStringMessage(message));
     }
@@ -268,6 +286,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Override
     public void showFetchingError() {
+        rv_groups.setVisibility(View.GONE);
         ll_error.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
                 + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
@@ -290,6 +309,75 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     public void onDestroyView() {
         super.onDestroyView();
         mGroupsListPresenter.detachView();
+        //As the Fragment Detach Finish the ActionMode
+        if (actionMode != null) actionMode.finish();
+    }
+
+    /**
+     * Toggle the selection state of an item.
+     * <p>
+     * If the item was the last one in the selection and is unselected, the selection is stopped.
+     * Note that the selection must already be started (actionMode must not be null).
+     *
+     * @param position Position of the item to toggle the selection state
+     */
+    private void toggleSelection(int position) {
+        mGroupListAdapter.toggleSelection(position);
+        int count = mGroupListAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+
+    /**
+     * This ActionModeCallBack Class handling the User Event after the Selection of Clients. Like
+     * Click of Menu Sync Button and finish the ActionMode
+     */
+    private class ActionModeCallback implements ActionMode.Callback {
+        @SuppressWarnings("unused")
+        private final String LOG_TAG = ActionModeCallback.class.getSimpleName();
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_sync, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_sync:
+
+                    selectedGroups.clear();
+                    for (Integer position : mGroupListAdapter.getSelectedItems()) {
+                        selectedGroups.add(mGroupList.get(position));
+                    }
+
+                    Toaster.show(rootView, "Selected Groups : " + selectedGroups.size());
+                    //TODO added SyncDialogFragment to syn Groups
+
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mGroupListAdapter.clearSelection();
+            actionMode = null;
+        }
     }
 }
 
