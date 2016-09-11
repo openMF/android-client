@@ -5,6 +5,7 @@ import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.utils.Constants;
 
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
     private final DataManagerLoan mDataManagerLoan;
     private final DataManagerDataTable mDataManagerDataTable;
     private CompositeSubscription mSubscriptions;
-    private static final String LOAN_DATA_TABLE_NAME = "m_loan";
 
     @Inject
     public LoanAccountSummaryPresenter(DataManagerLoan dataManagerLoan,
@@ -47,7 +47,7 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
     public void loadLoanDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerDataTable.getDataTable(LOAN_DATA_TABLE_NAME)
+        mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_LOANS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
