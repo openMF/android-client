@@ -76,8 +76,13 @@ public class Utils {
         return paymentTypeName[0];
     }
 
-
-
+    /**
+     * This Method Converting the List<Integer> of Activation Date to String.
+     *
+     * @param context Context
+     * @param dateObj List<Integer> of Date
+     * @return
+     */
     public static String getStringOfDate(Context context, List<Integer> dateObj) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy",
                 context.getResources().getConfiguration().locale);

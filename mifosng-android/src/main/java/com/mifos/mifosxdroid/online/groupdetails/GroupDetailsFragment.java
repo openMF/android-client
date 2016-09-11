@@ -93,7 +93,6 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     private View rootView;
     private int groupId;
     private OnFragmentInteractionListener mListener;
-    private AccountAccordion accountAccordion;
     public List<DataTable> clientDataTables = new ArrayList<>();
 
     public static GroupDetailsFragment newInstance(int groupId) {
@@ -122,28 +121,11 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
         ButterKnife.bind(this, rootView);
         mGroupDetailsPresenter.attachView(this);
 
-        inflateClientInformation();
+        mGroupDetailsPresenter.loadGroupDetailsAndAccounts(groupId);
+        mGroupDetailsPresenter.loadClientDataTable();
 
         return rootView;
     }
-
-    public void inflateClientInformation() {
-        mGroupDetailsPresenter.loadGroup(groupId);
-    }
-
-
-    public void inflateClientsAccounts() {
-        mGroupDetailsPresenter.loadGroupsOfClients(groupId);
-    }
-
-    /**
-     * Use this method to fetch all datatables for client and inflate them as
-     * menu options
-     */
-    public void inflateDataTablesList() {
-        mGroupDetailsPresenter.loadClientDataTable();
-    }
-
 
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
@@ -155,7 +137,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
         fragmentTransaction.commit();
     }
 
-    public void addgrouploanaccount() {
+    public void addGroupLoanAccount() {
         GroupLoanAccountFragment grouploanAccountFragment = GroupLoanAccountFragment.newInstance
                 (groupId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
@@ -193,18 +175,16 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
 
             if (TextUtils.isEmpty(group.getOfficeName()))
                 rowOffice.setVisibility(GONE);
-
-            inflateClientsAccounts();
         }
     }
 
     @Override
-    public void showGroupsOfClient(GroupAccounts groupAccounts) {
+    public void showGroupAccounts(GroupAccounts groupAccounts) {
         // Proceed only when the fragment is added to the activity.
         if (!isAdded()) {
             return;
         }
-        accountAccordion = new AccountAccordion(getActivity());
+
         if (groupAccounts.getLoanAccounts().size() > 0) {
             AccountAccordion.Section section = AccountAccordion.Section.LOANS;
             final LoanAccountsListAdapter adapter =
@@ -248,11 +228,10 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
                 }
             });
         }
-        inflateDataTablesList();
     }
 
     @Override
-    public void showClientDataTable(List<DataTable> dataTables) {
+    public void showGroupDataTable(List<DataTable> dataTables) {
         if (dataTables != null) {
             Iterator<DataTable> dataTableIterator = dataTables.iterator();
             clientDataTables.clear();
@@ -263,8 +242,8 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     }
 
     @Override
-    public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    public void showFetchingError(int errorMessage) {
+        Toast.makeText(getActivity(), getStringMessage(errorMessage), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -292,7 +271,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
                 loadDocuments();
                 break;
             case R.id.add_group_loan:
-                addgrouploanaccount();
+                addGroupLoanAccount();
                 break;
 
         }

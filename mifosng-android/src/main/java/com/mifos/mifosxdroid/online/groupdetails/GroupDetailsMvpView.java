@@ -15,9 +15,9 @@ public interface GroupDetailsMvpView extends MvpView {
 
     void showGroup(Group group);
 
-    void showGroupsOfClient(GroupAccounts groupAccounts);
+    void showGroupAccounts(GroupAccounts groupAccounts);
 
-    void showClientDataTable(List<DataTable> dataTables);
+    void showGroupDataTable(List<DataTable> dataTables);
 
-    void showFetchingError(String s);
+    void showFetchingError(int errorMessage);
 }
