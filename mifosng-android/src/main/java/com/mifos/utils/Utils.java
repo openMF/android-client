@@ -1,8 +1,15 @@
 package com.mifos.utils;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.mifos.objects.PaymentTypeOption;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -14,6 +21,7 @@ import rx.functions.Func1;
  */
 public class Utils {
 
+    public static final String LOG_TAG = Utils.class.getSimpleName();
 
     /**
      * This Method transforming the PaymentTypeOption to String(PaymentTypeName).
@@ -66,5 +74,20 @@ public class Utils {
                     }
                 });
         return paymentTypeName[0];
+    }
+
+
+
+    public static String getStringOfDate(Context context, List<Integer> dateObj) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy",
+                context.getResources().getConfiguration().locale);
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
+        } catch (ParseException e) {
+            Log.d(LOG_TAG, e.getLocalizedMessage());
+        }
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        return df.format(date);
     }
 }

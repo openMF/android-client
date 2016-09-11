@@ -101,25 +101,21 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
 
     public void loadClientDataTable() {
         checkViewAttached();
-        getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_GROUP)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
                         getMvpView().showFetchingError("Failed to load DataTable");
                     }
 
                     @Override
                     public void onNext(List<DataTable> dataTables) {
-                        getMvpView().showProgressbar(false);
                         getMvpView().showClientDataTable(dataTables);
                     }
                 }));

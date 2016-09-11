@@ -65,9 +65,9 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
-import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
+import com.mifos.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,14 +75,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
@@ -522,13 +517,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 rowExternal.setVisibility(GONE);
 
             try {
-                List<Integer> dateObj = client.getActivationDate();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-                Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
-                Locale currentLocale = getResources().getConfiguration().locale;
-                DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
-                        currentLocale);
-                String dateString = df.format(date);
+                String dateString = Utils.getStringOfDate(getActivity(),
+                        client.getActivationDate());
                 tv_activationDate.setText(dateString);
 
                 if (TextUtils.isEmpty(dateString))
@@ -538,8 +528,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 Toast.makeText(getActivity(), getString(R.string.error_client_inactive),
                         Toast.LENGTH_SHORT).show();
                 tv_activationDate.setText("");
-            } catch (ParseException e) {
-                Log.d(TAG, e.getLocalizedMessage());
             }
             tv_office.setText(client.getOfficeName());
 
