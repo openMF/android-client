@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.mifos.utils.Network;
+
 /**
  * @author fomenkoo
  */
@@ -98,5 +100,9 @@ public class MifosBaseFragment extends Fragment {
 
     protected String getStringMessage(int message) {
         return getResources().getString(message);
+    }
+
+    protected Boolean isOnline() {
+        return Network.isOnline(getActivity());
     }
 }
