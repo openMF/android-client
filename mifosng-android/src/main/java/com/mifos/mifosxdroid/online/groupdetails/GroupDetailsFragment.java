@@ -60,37 +60,50 @@ import static android.view.View.VISIBLE;
  */
 public class GroupDetailsFragment extends ProgressableFragment implements GroupDetailsMvpView {
 
-    public final String LOG_TAG = getClass().getSimpleName();
-    public int groupId;
-    public List<DataTable> clientDataTables = new ArrayList<>();
+    public static final String LOG_TAG = GroupDetailsFragment.class.getSimpleName();
+
     @BindView(R.id.tv_groupsName)
     TextView tv_fullName;
+
     @BindView(R.id.tv_groupexternalId)
     TextView tv_externalId;
+
     @BindView(R.id.tv_groupactivationDate)
     TextView tv_activationDate;
+
     @BindView(R.id.tv_groupoffice)
     TextView tv_office;
+
     @BindView(R.id.row_account)
     TableRow rowAccount;
+
     @BindView(R.id.row_external)
     TableRow rowExternal;
+
     @BindView(R.id.row_activation)
     TableRow rowActivation;
+
     @BindView(R.id.row_office)
     TableRow rowOffice;
+
     @BindView(R.id.row_group)
     TableRow rowGroup;
+
     @BindView(R.id.row_staff)
     TableRow rowStaff;
+
     @BindView(R.id.row_loan)
     TableRow rowLoan;
+
     @Inject
     GroupDetailsPresenter mGroupDetailsPresenter;
+
     private View rootView;
+    private int groupId;
     private SharedPreferences sharedPreferences;
     private OnFragmentInteractionListener mListener;
     private AccountAccordion accountAccordion;
+    public List<DataTable> clientDataTables = new ArrayList<>();
 
     public static GroupDetailsFragment newInstance(int groupId) {
         GroupDetailsFragment fragment = new GroupDetailsFragment();
@@ -104,8 +117,9 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             groupId = getArguments().getInt(Constants.GROUP_ID);
+        }
         setHasOptionsMenu(true);
     }
 

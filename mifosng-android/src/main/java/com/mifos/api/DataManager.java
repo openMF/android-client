@@ -9,8 +9,6 @@ import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
-import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -27,7 +25,6 @@ import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupWithAssociations;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.noncore.Document;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.LoanProducts;
@@ -239,30 +236,9 @@ public class DataManager {
                 .createEntryInDataTable(table, entityId, payload);
     }
 
-    //TODO Remove this method after removing its usage
-    public Observable<List<DataTable>> getClientDataTable() {
-        return mBaseApiManager.getDataTableApi().getTableOf("m_client");
-    }
-
     public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId) {
         return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
                 table, entity, rowId);
-    }
-
-
-    /**
-     * GroupAccountsService
-     */
-    public Observable<GroupAccounts> getAllGroupsOfClient(int groupId) {
-        return mBaseApiManager.getGroupAccountsServiceApi().getAllGroupsOfClient(groupId);
-    }
-
-
-    /**
-     * Client Accounts API
-     */
-    public Observable<ClientAccounts> getClientAccounts(int clientId) {
-        return mBaseApiManager.getAccountsApi().getAllAccountsOfClient(clientId);
     }
 
     /**

@@ -1,32 +1,37 @@
 package com.mifos.mifosxdroid.online.groupdetails;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerDataTable;
+import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.utils.Constants;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
 public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
 
-
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerGroups mDataManagerGroups;
+    private final DataManagerDataTable mDataManagerDataTable;
+    private CompositeSubscription mSubscriptions;
 
     @Inject
-    public GroupDetailsPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public GroupDetailsPresenter(DataManagerGroups dataManagerGroups,
+                                 DataManagerDataTable dataManagerDataTable) {
+        mDataManagerGroups = dataManagerGroups;
+        mDataManagerDataTable = dataManagerDataTable;
+        mSubscriptions = new CompositeSubscription();
     }
 
 
@@ -38,15 +43,14 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscriptions.unsubscribe();
     }
 
 
     public void loadGroup(int groupId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getGroup(groupId)
+        mSubscriptions.add(mDataManagerGroups.getGroup(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Group>() {
@@ -66,14 +70,13 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
                         getMvpView().showProgressbar(false);
                         getMvpView().showGroup(group);
                     }
-                });
+                }));
     }
 
     public void loadGroupsOfClients(int groupId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getAllGroupsOfClient(groupId)
+        mSubscriptions.add(mDataManagerGroups.getGroupAccounts(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GroupAccounts>() {
@@ -93,14 +96,13 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
                         getMvpView().showProgressbar(false);
                         getMvpView().showGroupsOfClient(groupAccounts);
                     }
-                });
+                }));
     }
 
     public void loadClientDataTable() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getClientDataTable()
+        mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_GROUP)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<DataTable>>() {
@@ -120,7 +122,7 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
                         getMvpView().showProgressbar(false);
                         getMvpView().showClientDataTable(dataTables);
                     }
-                });
+                }));
     }
 
 }

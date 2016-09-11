@@ -2,6 +2,7 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
+import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
@@ -128,7 +129,22 @@ public class DataManagerGroups {
     }
 
 
+    /**
+     * This Method updating the GroupPayload in Database and return the same GroupPayload
+     *
+     * @param groupPayload GroupPayload
+     * @return GroupPayload
+     */
     public Observable<GroupPayload> updateGroupPayload(GroupPayload groupPayload) {
         return mDatabaseHelperGroups.updateDatabaseGroupPayload(groupPayload);
     }
+
+    public Observable<Group> getGroup(int groupId) {
+        return mBaseApiManager.getGroupApi().getGroup(groupId);
+    }
+
+    public Observable<GroupAccounts> getGroupAccounts(int groupId) {
+        return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
+    }
+
 }

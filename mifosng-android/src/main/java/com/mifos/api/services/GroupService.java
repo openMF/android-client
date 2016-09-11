@@ -5,6 +5,7 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
@@ -44,11 +45,7 @@ public interface GroupService {
     @GET(APIEndPoint.GROUPS + "/{groupId}")
     Observable<Group> getGroup(@Path("groupId") int groupId);
 
-    @GET(APIEndPoint.GROUPS + "?paged=true")
-    Observable<Page<Group>> listAllGroups(@Query("offset") int offset, @Query("limit") int limit);
-
-    @GET(APIEndPoint.GROUPS + "?paged=true")
-    Observable<Page<Group>> getAllGroup();
-
+    @GET(APIEndPoint.GROUPS + "/{groupId}/accounts")
+    Observable<GroupAccounts> getGroupAccounts(@Path("groupId") int groupId);
 
 }

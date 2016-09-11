@@ -123,6 +123,7 @@ public class Constants {
     public static final String DATA_TABLE_NAME_CLIENT = "m_client";
     public static final String DATA_TABLE_NAME_SAVINGS = "m_savings_account";
     public static final String DATA_TABLE_NAME_LOANS = "m_loan";
+    public static final String DATA_TABLE_NAME_GROUP = "m_group";
 
     /**
      * User Logged In Status

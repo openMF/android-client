@@ -15,7 +15,6 @@ import com.mifos.api.services.ClientService;
 import com.mifos.api.services.DataTableService;
 import com.mifos.api.services.DocumentService;
 import com.mifos.api.services.GpsCoordinatesService;
-import com.mifos.api.services.GroupAccountService;
 import com.mifos.api.services.GroupService;
 import com.mifos.api.services.IdentifierService;
 import com.mifos.api.services.LoanService;
@@ -57,7 +56,6 @@ public class BaseApiManager {
     private static OfficeService officeApi;
     private static StaffService staffApi;
     private static SurveyService surveyApi;
-    private static GroupAccountService groupAccountsServiceApi;
 
     public BaseApiManager() {
         createService();
@@ -80,7 +78,6 @@ public class BaseApiManager {
         staffApi = createApi(StaffService.class);
         surveyApi = createApi(SurveyService.class);
         chargeApi = createApi(ChargeService.class);
-        groupAccountsServiceApi = createApi(GroupAccountService.class);
     }
 
     private static <T> T createApi(Class<T> clazz) {
@@ -140,10 +137,6 @@ public class BaseApiManager {
 
     public GroupService getGroupApi() {
         return groupApi;
-    }
-
-    public GroupAccountService getGroupAccountsServiceApi() {
-        return groupAccountsServiceApi;
     }
 
     public DocumentService getDocumentApi() {
