@@ -46,7 +46,7 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        mSubscriptions.clear();
     }
 
     public void loadGroupDetailsAndAccounts(int groupId) {
