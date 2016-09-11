@@ -92,6 +92,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
 
     private View rootView;
     private int groupId;
+    private AccountAccordion accountAccordion;
     private OnFragmentInteractionListener mListener;
     public List<DataTable> clientDataTables = new ArrayList<>();
 
@@ -184,7 +185,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
         if (!isAdded()) {
             return;
         }
-
+        accountAccordion = new AccountAccordion(getActivity());
         if (groupAccounts.getLoanAccounts().size() > 0) {
             AccountAccordion.Section section = AccountAccordion.Section.LOANS;
             final LoanAccountsListAdapter adapter =

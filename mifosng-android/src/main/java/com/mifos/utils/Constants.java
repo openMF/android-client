@@ -24,6 +24,10 @@ public class Constants {
 
     public static final String API_PATH = "/mifosng-provider/api/v1";
 
+
+    /**
+     * Entity Type, Like Clients, Groups, Staff, Loans, Savings and Client Identifiers
+     */
     public static final String ENTITY_TYPE_CLIENTS = "clients";
 
     public static final String ENTITY_TYPE_GROUPS = "groups";
@@ -31,6 +35,11 @@ public class Constants {
     public static final String ENTITY_TYPE_LOANS = "loans";
 
     public static final String ENTITY_TYPE_SAVINGS = "savings";
+
+    public static final String ENTITY_TYPE_STAFF = "staff";
+
+    public static final String ENTITY_TYPE_CLIENT_IDENTIFIERS = "client_identifiers";
+
 
     public static final String CLIENT_NAME = "clientName";
 
