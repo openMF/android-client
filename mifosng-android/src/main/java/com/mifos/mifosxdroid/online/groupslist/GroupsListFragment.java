@@ -43,9 +43,23 @@ import butterknife.OnClick;
 
 /**
  * Created by nellyk on 2/27/2016.
- * GroupsListFragment Fetching Showing GroupsList in RecyclerView from
+ * <p/>
+ * This class loading and showing groups, Here is two way to load the Groups. First one to load
+ * Groups from Rest API
+ * <p/>
  * </>demo.openmf.org/fineract-provider/api/v1/groups?paged=true&offset=offset_value&limit
  * =limit_value</>
+ * <p/>
+ * Offset : From Where index, Groups will be fetch.
+ * limit : Total number of client, need to fetch
+ * <p/>
+ * and showing in the GroupList.
+ * <p/>
+ * and Second one is showing Groups provided by Parent(Fragment or Activity).
+ * Parent(Fragment or Activity) load the GroupList and send the
+ * Groups to GroupsListFragment newInstance(List<Group> groupList,
+ * boolean isParentFragment) {...}
+ * and unregister the ScrollListener and SwipeLayout.
  */
 public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
         RecyclerItemClickListener.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
@@ -185,9 +199,10 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
         /**
          * First Check the Parent Fragment is true or false. If parent fragment is true then no
-         * need to fetch clientList from Rest API, just need to showing parent fragment ClientList
-         * and is Parent Fragment is false then Presenter make the call to Rest API and fetch the
-         * Client Lis to show. and Presenter make transaction to Database to load saved clients.
+         * need to fetch groupList from Rest API, just need to show parent fragment groupList
+         * and if Parent Fragment is false then Presenter make the call to Rest API and fetch the
+         * Group List to show. and Presenter make transaction to Database to load saved clients.
+         * To show user that is there already any group is synced already or not.
          */
         if (isParentFragment) {
             mGroupsListPresenter.showParentClients(mGroupList);
@@ -199,6 +214,9 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         return rootView;
     }
 
+    /**
+     * This method Initializing the UI.
+     */
     @Override
     public void showUserInterface() {
         setToolbarTitle(getResources().getString(R.string.groups));
@@ -214,6 +232,9 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     }
 
 
+    /**
+     * This Method will be called. Whenever user will swipe down to refresh the group list.
+     */
     @Override
     public void onRefresh() {
         mGroupsListPresenter.loadGroups(false, 0);
@@ -222,8 +243,10 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     }
 
     /**
-     * Shows When mApiRestValue is 1 and Server Response is Null.
-     * Onclick Send Fresh Request for Client list.
+     * This method will be called, whenever first time error occurred during the fetching group
+     * list from REST API.
+     * As the error will occurred. user is able to see the error message and ability to reload
+     * groupList.
      */
     @OnClick(R.id.noGroupsIcon)
     public void reloadOnError() {
@@ -244,7 +267,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
 
     /**
-     * Updating Adapter
+     * Adding the More Groups in List and Update the Adapter.
      *
      * @param groups
      */
@@ -255,7 +278,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     }
 
     /**
-     * Showing Fetched GroupList size is 0 and show there is no Group to show.
+     * This method will be called, if fetched groupList is Empty and show there is no Group to show.
      *
      * @param message String Message.
      */
@@ -266,6 +289,9 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         mNoGroupsText.setText(getStringMessage(message));
     }
 
+    /**
+     * This Method unregistered the SwipeLayout and OnScrollListener
+     */
     @Override
     public void unregisterSwipeAndScrollListener() {
         rv_groups.clearOnScrollListeners();
@@ -284,6 +310,10 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     }
 
 
+    /**
+     * If Any any exception occurred during fetching the Groups. like No Internet or etc.
+     * then this method show the error message to user and give the ability to refresh groups.
+     */
     @Override
     public void showFetchingError() {
         rv_groups.setVisibility(View.GONE);
@@ -294,6 +324,12 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     }
 
 
+    /**
+     * This Method showing the Progressbar during fetching the group List on first time and
+     * otherwise showing swipe refresh layout
+     *
+     * @param show Status of Progressbar or SwipeRefreshLayout
+     */
     @Override
     public void showProgressbar(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
@@ -315,8 +351,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     /**
      * Toggle the selection state of an item.
-     * <p>
-     * If the item was the last one in the selection and is unselected, the selection is stopped.
+     * <p/>
+     * If the item was the last one in the selection and is unselected, then selection will stopped.
      * Note that the selection must already be started (actionMode must not be null).
      *
      * @param position Position of the item to toggle the selection state
