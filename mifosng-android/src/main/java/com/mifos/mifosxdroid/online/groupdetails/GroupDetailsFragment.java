@@ -129,7 +129,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
 
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
-                .ENTITY_TYPE_CLIENTS, groupId);
+                .ENTITY_TYPE_GROUPS, groupId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
