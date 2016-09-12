@@ -12,5 +12,7 @@ public interface DocumentListMvpView extends MvpView {
 
     void showDocumentList(List<Document> documents);
 
-    void showFetchingError(String s);
+    void showEmptyDocuments();
+
+    void showFetchingError(int errorMessage);
 }

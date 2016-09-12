@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.documentlist;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerDocument;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.noncore.Document;
 
@@ -19,12 +20,12 @@ import rx.schedulers.Schedulers;
 public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
 
 
-    private final DataManager mDataManager;
+    private final DataManagerDocument mDataManagerDocument;
     private Subscription mSubscription;
 
     @Inject
-    public DocumentListPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public DocumentListPresenter(DataManagerDocument dataManagerDocument) {
+        mDataManagerDocument = dataManagerDocument;
     }
 
     @Override
@@ -42,25 +43,29 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getDocumentsList(type, id)
+        mSubscription = mDataManagerDocument.getDocumentsList(type, id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Document>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch documents");
+                        getMvpView().showFetchingError(R.string.failed_to_fetch_documents);
                     }
 
                     @Override
                     public void onNext(List<Document> documents) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showDocumentList(documents);
+                        if (!documents.isEmpty()) {
+                            getMvpView().showDocumentList(documents);
+                        } else {
+                            getMvpView().showEmptyDocuments();
+                        }
+
                     }
                 });
     }

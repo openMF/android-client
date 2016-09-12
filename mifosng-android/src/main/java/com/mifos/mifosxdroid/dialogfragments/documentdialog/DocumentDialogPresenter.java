@@ -49,7 +49,7 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
         // MultipartBody.Part is used to send also the actual file name
-        Part body = Part.createFormData("picture", file.getName(), requestFile);
+        Part body = Part.createFormData("file", file.getName(), requestFile);
 
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManagerDocument.createDocument(type, id, name, desc, body)

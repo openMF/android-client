@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter;
-import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
@@ -41,9 +40,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView,
-        RecyclerItemClickListener.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
@@ -64,7 +64,10 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
 
     @Inject
     DocumentListPresenter mDocumentListPresenter;
+
+    @Inject
     DocumentListAdapter mDocumentListAdapter;
+
     private View rootView;
     private String entityType;
     private int entityId;
@@ -95,7 +98,6 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         mDocumentList = new ArrayList<>();
         if (getArguments() != null) {
@@ -119,69 +121,59 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
         rv_documents.setLayoutManager(layoutManager);
         rv_documents.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_documents.setHasFixedSize(true);
-
+        rv_documents.setAdapter(mDocumentListAdapter);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
-
-        /**
-         * Setting mApiRestCounter to 1 and send Refresh Request to Server
-         */
-        swipeRefreshLayout.setColorSchemeResources(R.color.blue_light, R.color.green_light, R
-                .color.orange_light, R.color.red_light);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mDocumentListPresenter.loadDocumentList(entityType, entityId);
-
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        /**
-         * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
-         * is shown on the Screen.
-         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
-         * and offset(mCenterList.size()) and limit(100).
-         */
-        rv_documents.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-
-                //Future Implementation
-            }
-        });
 
         return rootView;
     }
 
     @Override
-    public void showDocumentList(final List<Document> documents) {
-
-        if (documents.size() == 0) {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoChargesText.setText("There is No Documents to Show");
-            mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
-        } else {
-            mDocumentList = documents;
-            mDocumentListAdapter = new DocumentListAdapter(getActivity(), documents);
-            rv_documents.setAdapter(mDocumentListAdapter);
-        }
-    }
-
-    @Override
-    public void showFetchingError(String s) {
-        ll_error.setVisibility(View.VISIBLE);
-        mNoChargesText.setText(s + "\n Click to Refresh ");
+    public void onRefresh() {
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
-        Toaster.show(rootView, s);
+    }
+
+    @OnClick(R.id.noDocumentIcon)
+    public void reloadOnError() {
+        ll_error.setVisibility(View.GONE);
+        mDocumentListPresenter.loadDocumentList(entityType, entityId);
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        if (b) {
+    public void showDocumentList(final List<Document> documents) {
+        mDocumentList = documents;
+        mDocumentListAdapter.setDocuments(mDocumentList);
+    }
+
+    @Override
+    public void showEmptyDocuments() {
+        ll_error.setVisibility(View.VISIBLE);
+        mNoChargesText.setText(getResources().getString(R.string.no_document_to_show));
+        mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+    }
+
+    @Override
+    public void showFetchingError(int message) {
+        if (mDocumentListAdapter.getItemCount() == 0) {
+            ll_error.setVisibility(View.VISIBLE);
+            String errorMessage = getStringMessage(message) + getStringMessage(R.string.new_line) +
+                    getStringMessage(R.string.click_to_refresh);
+            mNoChargesText.setText(errorMessage);
+        } else {
+            Toaster.show(rootView, getStringMessage(message));
+        }
+
+    }
+
+    @Override
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(show);
+        if (show && mDocumentListAdapter.getItemCount() == 0) {
             showMifosProgressBar();
+            swipeRefreshLayout.setRefreshing(false);
         } else {
             hideMifosProgressBar();
         }

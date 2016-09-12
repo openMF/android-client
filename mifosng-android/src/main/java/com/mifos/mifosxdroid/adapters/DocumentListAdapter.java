@@ -5,7 +5,6 @@
 
 package com.mifos.mifosxdroid.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,8 @@ import com.mifos.objects.noncore.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,16 +29,11 @@ import butterknife.ButterKnife;
  */
 public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    LayoutInflater layoutInflater;
-    Context context;
     List<Document> documents = new ArrayList<Document>();
 
-    public DocumentListAdapter(Context context, List<Document> documents) {
-
-        this.context = context;
-        layoutInflater = LayoutInflater.from(context);
-        this.documents = documents;
-
+    @Inject
+    public DocumentListAdapter() {
+        documents = new ArrayList<>();
     }
 
     public Document getItem(int i) {
@@ -60,7 +56,7 @@ public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).tv_doc_name.setText(documents.get(position).getName());
             ((ViewHolder) holder).tv_doc_description
                     .setText(documents.get(position).getDescription() == null ?
-                    "-" : documents.get(position).getDescription());
+                            "-" : documents.get(position).getDescription());
 
             MaterialIcons cloudIcon = MaterialIcons.md_cloud_download;
 //        Iconify.IconValue cloudIcon = Iconify.IconValue.fa_download;
@@ -72,6 +68,11 @@ public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 //        Iconify.addIcons(reusableDocumentViewHolder.tv_doc_location_icon);
         }
+    }
+
+    public void setDocuments(List<Document> documentList) {
+        documents = documentList;
+        notifyDataSetChanged();
     }
 
     @Override

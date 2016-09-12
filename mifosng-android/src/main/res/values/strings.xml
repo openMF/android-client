@@ -69,6 +69,7 @@
     <string name="file_name">File Name</string>
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
+    <string name="no_document_to_show">There is No Documents to Show</string>
     <string name="approve_savings">Approve Savings</string>
     <string name="activate_savings">Activate Savings</string>
     <string name="savings_account_closed">Savings Account Closed</string>
@@ -114,6 +115,7 @@
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
+
     <!-- General Terms End Here -->
 
 
@@ -445,6 +447,7 @@
     <string name="failed_to_load_savings_products_and_template">Failed to load SavingProducts and
         Template</string>
     <string name="failed_to_add_savings_account">Failed to add SavingsAccount</string>
+    <string name="failed_to_fetch_documents">Failed to fetch documents</string>
 
 
     <string-array name="office_ids">

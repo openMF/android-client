@@ -134,9 +134,9 @@ dependencies {
     compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
 
     //DBFlow dependencies
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:3.1.1"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:3.1.1"
-    compile "com.github.Raizlabs.DBFlow:dbflow:3.1.1"
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
+    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
 
     // App's Support dependencies, including test
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -164,10 +164,11 @@ dependencies {
         exclude module: 'okhttp'
     }
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersionLatest"
+    compile "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersionLatest"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersionLatest"
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile "com.squareup.okhttp3:okhttp:$rootProject.okHttp3Version"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttp3Version"
     compile "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
 
     compile 'javax.annotation:jsr250-api:1.0@jar'
 
