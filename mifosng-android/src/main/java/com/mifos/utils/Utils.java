@@ -96,7 +96,8 @@ public class Utils {
         return loanAccounts;
     }
 
-    public static List<SavingsAccount> getActiveSavingsAccounts(List<SavingsAccount> savingsAccounts) {
+    public static List<SavingsAccount> getActiveSavingsAccounts(List<SavingsAccount>
+                                                                        savingsAccounts) {
         final List<SavingsAccount> accounts = new ArrayList<>();
         Observable.from(savingsAccounts)
                 .filter(new Func1<SavingsAccount, Boolean>() {

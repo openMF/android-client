@@ -100,12 +100,6 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
 
-
-    //TODO Remove this default constructor
-    public GroupsListFragment() {
-
-    }
-
     /**
      * This method will be called, whenever GroupsListFragment will not have Parent Fragment.
      * So, Presenter make the call to Rest API and fetch the Client List and show in UI

@@ -105,8 +105,8 @@ public class GroupDate extends MifosBaseModel implements Parcelable {
         this.year = in.readInt();
     }
 
-    public static final Parcelable.Creator<GroupDate> CREATOR = new Parcelable.Creator<GroupDate>
-            () {
+    public static final Parcelable.Creator<GroupDate> CREATOR =
+            new Parcelable.Creator<GroupDate>() {
         @Override
         public GroupDate createFromParcel(Parcel source) {
             return new GroupDate(source);

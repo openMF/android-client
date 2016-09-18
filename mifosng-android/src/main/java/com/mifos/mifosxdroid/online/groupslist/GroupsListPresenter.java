@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -144,9 +143,19 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
         mSubscriptions.add(mDataManagerGroups.getDatabaseGroups()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Action1<Page<Group>>() {
+                .subscribe(new Subscriber<Page<Group>>() {
                     @Override
-                    public void call(Page<Group> groupPage) {
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showMessage(R.string.failed_to_load_db_groups);
+                    }
+
+                    @Override
+                    public void onNext(Page<Group> groupPage) {
                         mDatabaseGroupSyncStatus = true;
                         mDbGroupList = groupPage.getPageItems();
                         setAlreadyClientSyncStatus();
@@ -167,7 +176,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
 
             for (Group dbGroup : mDbGroupList) {
                 for (Group syncGroup : groups) {
-                    if (dbGroup.getId() == syncGroup.getId()) {
+                    if (dbGroup.getId().intValue() == syncGroup.getId().intValue()) {
                         syncGroup.setSync(true);
                         break;
                     }

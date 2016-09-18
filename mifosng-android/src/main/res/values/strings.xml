@@ -448,6 +448,7 @@
     <string name="failed_to_fetch_surveys_list">Failed to Fetch Surveys List</string>
     <string name="failed_to_create_survey_scorecard">Failed to create Survey Score Card</string>
     <string name="failed_to_load_db_clients">Failed to load Database Clients</string>
+    <string name="failed_to_load_db_groups">Failed to load Database Groups</string>
     <string name="failed_to_load_savings_products_and_template">Failed to load SavingProducts and
         Template</string>
     <string name="failed_to_add_savings_account">Failed to add SavingsAccount</string>

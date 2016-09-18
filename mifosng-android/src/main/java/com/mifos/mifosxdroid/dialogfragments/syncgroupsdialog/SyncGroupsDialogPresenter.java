@@ -172,8 +172,8 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
      * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
      * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
      * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
      * onError :
      *
@@ -291,8 +291,8 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
                     public SavingsAccountAndTransactionTemplate call(
                             SavingsAccountWithAssociations savingsAccountWithAssociations,
                             SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
-                        return new SavingsAccountAndTransactionTemplate
-                                (savingsAccountWithAssociations, savingsAccountTransactionTemplate);
+                        return new SavingsAccountAndTransactionTemplate(
+                                savingsAccountWithAssociations, savingsAccountTransactionTemplate);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

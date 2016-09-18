@@ -15,7 +15,7 @@ public class GroupListActivity extends MifosBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         showBackButton();
-        replaceFragment(new GroupsListFragment(), false, R.id.container);
+        replaceFragment(GroupsListFragment.newInstance(), false, R.id.container);
     }
 
 }
