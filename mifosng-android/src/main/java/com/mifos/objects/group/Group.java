@@ -10,9 +10,10 @@ import android.os.Parcelable;
 
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
+import com.mifos.objects.client.Status;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -45,6 +46,10 @@ public class Group extends MifosBaseModel implements Parcelable {
     @Column
     Boolean active;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    transient GroupDate groupDate;
+
     List<Integer> activationDate = new ArrayList<>();
 
     @Column
@@ -74,6 +79,14 @@ public class Group extends MifosBaseModel implements Parcelable {
     Timeline timeline;
 
     String externalId;
+
+    public GroupDate getGroupDate() {
+        return groupDate;
+    }
+
+    public void setGroupDate(GroupDate groupDate) {
+        this.groupDate = groupDate;
+    }
 
     public boolean isSync() {
         return sync;

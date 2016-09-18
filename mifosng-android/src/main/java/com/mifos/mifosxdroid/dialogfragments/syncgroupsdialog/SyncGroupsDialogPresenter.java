@@ -182,7 +182,7 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
      */
     public void syncGroupAccounts(int groupId) {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerGroups.getGroupAccounts(groupId)
+        mSubscriptions.add(mDataManagerGroups.syncGroupAccounts(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GroupAccounts>() {

@@ -67,8 +67,8 @@ public class GroupsListPresenterTest {
 
         mGroupsListPresenter.loadGroups(true, offset, limit);
 
-        verify(mGroupsListMvpView).showGroups(groupPage);
-        verify(mGroupsListMvpView, never()).showFetchingError("Failed to load Groups");
+        verify(mGroupsListMvpView).showGroups(groupPage.getPageItems());
+        verify(mGroupsListMvpView, never()).showFetchingError();
     }
 
     @Test
@@ -79,8 +79,8 @@ public class GroupsListPresenterTest {
 
         mGroupsListPresenter.loadGroups(true, offset, limit);
 
-        verify(mGroupsListMvpView).showFetchingError("Failed to load Groups");
-        verify(mGroupsListMvpView, never()).showGroups(groupPage);
+        verify(mGroupsListMvpView).showFetchingError();
+        verify(mGroupsListMvpView, never()).showGroups(groupPage.getPageItems());
     }
 
 }

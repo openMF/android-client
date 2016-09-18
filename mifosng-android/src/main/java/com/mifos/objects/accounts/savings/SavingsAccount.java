@@ -5,7 +5,6 @@
 
 package com.mifos.objects.accounts.savings;
 
-import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -23,10 +22,10 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
 
     @Column
-    transient Integer clientId;
+    transient long clientId;
 
     @Column
-    transient Intent groupId;
+    transient long groupId;
 
     @PrimaryKey
     Integer id;
@@ -69,19 +68,19 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
         this.depositType = in.readParcelable(DepositType.class.getClassLoader());
     }
 
-    public Intent getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(Intent groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 
-    public Integer getClientId() {
+    public long getClientId() {
         return this.clientId;
     }
 
-    public void setClientId(Integer clientId) {
+    public void setClientId(long clientId) {
         this.clientId = clientId;
     }
 

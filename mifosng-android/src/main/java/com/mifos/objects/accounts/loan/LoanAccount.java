@@ -73,6 +73,14 @@ public class LoanAccount extends MifosBaseModel implements Parcelable {
         this.inArrears = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
+    public long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
+    }
+
     public long getClientId() {
         return this.clientId;
     }

@@ -86,6 +86,59 @@ public class DataManagerGroups {
         return mDatabaseHelperGroups.readAllGroups();
     }
 
+    public Observable<Group> getGroup(int groupId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getGroupApi().getGroup(groupId);
+            case 1:
+                /**
+                 * Return Clients from DatabaseHelperClient only one time.
+                 */
+                return mDatabaseHelperGroups.getGroup(groupId);
+
+            default:
+                return Observable.just(new Group());
+        }
+    }
+
+    public Observable<Group> syncGroupInDatabase(Group group) {
+        return mDatabaseHelperGroups.saveGroup(group);
+    }
+
+
+    public Observable<GroupAccounts> getGroupAccounts(int groupId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
+            case 1:
+                /**
+                 * Return Group from DatabaseHelperGroups.
+                 */
+                return mDatabaseHelperGroups.readGroupAccounts(groupId);
+
+            default:
+                return Observable.just(new GroupAccounts());
+        }
+    }
+
+    /**
+     * This Method Fetching the Client Accounts (Loan, saving, etc Accounts ) from REST API
+     * and get the ClientAccounts and then Saving all Accounts into the Database and give the
+     * ClientAccount in return.
+     *
+     * @param groupId Client Id
+     * @return GroupAccounts
+     */
+    public Observable<GroupAccounts> syncGroupAccounts(final int groupId) {
+        return mBaseApiManager.getGroupApi().getGroupAccounts(groupId)
+                .concatMap(new Func1<GroupAccounts, Observable<? extends GroupAccounts>>() {
+                    @Override
+                    public Observable<? extends GroupAccounts> call(GroupAccounts
+                                                                             groupAccounts) {
+                        return mDatabaseHelperGroups.saveGroupAccounts(groupAccounts, groupId);
+                    }
+                });
+    }
 
     public Observable<Group> createGroup(GroupPayload groupPayload) {
         switch (PrefManager.getUserStatus()) {
@@ -137,17 +190,5 @@ public class DataManagerGroups {
      */
     public Observable<GroupPayload> updateGroupPayload(GroupPayload groupPayload) {
         return mDatabaseHelperGroups.updateDatabaseGroupPayload(groupPayload);
-    }
-
-    public Observable<Group> getGroup(int groupId) {
-        return mBaseApiManager.getGroupApi().getGroup(groupId);
-    }
-
-    public Observable<GroupAccounts> getGroupAccounts(int groupId) {
-        return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
-    }
-
-    public Observable<Group> syncGroupInDatabase(Group group) {
-        return mDatabaseHelperGroups.saveGroup(group);
     }
 }
