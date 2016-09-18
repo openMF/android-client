@@ -385,8 +385,10 @@
     <string name="all_clients_synced">All Clients have been Sync</string>
     <string name="click_to_refresh">\n Click to Refresh</string>
     <string name="syncing_client">Syncing Client</string>
+    <string name="syncing_group">Syncing Group</string>
     <string name="total_sync_progress">Total Sync Progress</string>
     <string name="sync_clients_full_information"> Sync Clients All Information </string>
+    <string name="sync_groups_full_information">Sync Groups All Information</string>
 
     <!--Material Dialog Titles-->
     <string name="sync_previous_transaction">Sync Previous Transaction</string>
