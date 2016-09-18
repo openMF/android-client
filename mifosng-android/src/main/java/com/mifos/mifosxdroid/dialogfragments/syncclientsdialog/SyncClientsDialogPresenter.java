@@ -96,7 +96,6 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
             updateClientName();
             syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
         } else {
-            getMvpView().showError(R.string.no_more_clients_to_sync);
             getMvpView().showClientsSyncSuccessfully();
         }
 

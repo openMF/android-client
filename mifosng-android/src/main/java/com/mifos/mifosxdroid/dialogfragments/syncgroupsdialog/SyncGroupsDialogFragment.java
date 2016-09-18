@@ -95,6 +95,8 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
         ButterKnife.bind(this, rootView);
         syncGroupsDialogPresenter.attachView(this);
 
+        showUI();
+
         //Start Syncing Groups
         if (isOnline()) {
             syncGroupsDialogPresenter.startSyncingClients(groups);

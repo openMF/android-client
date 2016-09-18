@@ -92,7 +92,7 @@ public class DataManagerGroups {
                 return mBaseApiManager.getGroupApi().getGroup(groupId);
             case 1:
                 /**
-                 * Return Clients from DatabaseHelperClient only one time.
+                 * Return Groups from DatabaseHelperGroups.
                  */
                 return mDatabaseHelperGroups.getGroup(groupId);
 

@@ -96,7 +96,6 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
             updateClientName();
             syncGroupAccounts(mGroupList.get(mGroupSyncIndex).getId());
         } else {
-            getMvpView().showError(R.string.no_more_clients_to_sync);
             getMvpView().showGroupsSyncSuccessfully();
         }
 
@@ -142,7 +141,7 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
         } else {
             // If LoanAccounts and SavingsAccount are null then sync Client to Database
             getMvpView().setMaxSingleSyncGroupProgressBar(1);
-            //syncClient(mClientList.get(mClientSyncIndex));
+            syncGroup(mGroupList.get(mGroupSyncIndex));
         }
     }
 
@@ -328,6 +327,7 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
 
     public void syncGroup(Group group) {
         checkViewAttached();
+        group.setSync(true);
         mSubscriptions.add(mDataManagerGroups.syncGroupInDatabase(group)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
