@@ -45,15 +45,17 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            ((ViewHolder) holder).tv_groupsName.setText(groups.get(position).getName());
-            ((ViewHolder) holder).tv_groupsId.setText(String.valueOf(groups.get(position).getId()));
+            Group group = groups.get(position);
+
+            ((ViewHolder) holder).tv_groupsName.setText(group.getName());
+            ((ViewHolder) holder).tv_groupsId.setText(String.valueOf(group.getId()));
 
             //Changing the Color of Selected Groups
             ((ViewHolder) holder).view_selectedOverlay
                     .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
 
             ((ViewHolder) holder).iv_sync_status
-                    .setVisibility(false ? View.VISIBLE : View.INVISIBLE);
+                    .setVisibility(group.isSync() ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
