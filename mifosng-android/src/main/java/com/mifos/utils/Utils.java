@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.accounts.loan.LoanAccount;
+import com.mifos.objects.accounts.savings.SavingsAccount;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -74,6 +76,44 @@ public class Utils {
                     }
                 });
         return paymentTypeName[0];
+    }
+
+    public static List<LoanAccount> getActiveLoanAccounts(List<LoanAccount> loanAccountList) {
+        final List<LoanAccount> loanAccounts = new ArrayList<>();
+        Observable.from(loanAccountList)
+                .filter(new Func1<LoanAccount, Boolean>() {
+                    @Override
+                    public Boolean call(LoanAccount loanAccount) {
+                        return loanAccount.getStatus().getActive();
+                    }
+                })
+                .subscribe(new Action1<LoanAccount>() {
+                    @Override
+                    public void call(LoanAccount loanAccount) {
+                        loanAccounts.add(loanAccount);
+                    }
+                });
+        return loanAccounts;
+    }
+
+    public static List<SavingsAccount> getActiveSavingsAccounts(List<SavingsAccount> savingsAccounts) {
+        final List<SavingsAccount> accounts = new ArrayList<>();
+        Observable.from(savingsAccounts)
+                .filter(new Func1<SavingsAccount, Boolean>() {
+                    @Override
+                    public Boolean call(SavingsAccount savingsAccount) {
+                        return (savingsAccount.getStatus().getActive() &&
+                                !savingsAccount.isRecurring());
+                    }
+                })
+                .subscribe(new Action1<SavingsAccount>() {
+                    @Override
+                    public void call(SavingsAccount savingsAccount) {
+                        accounts.add(savingsAccount)
+                        ;
+                    }
+                });
+        return accounts;
     }
 
     /**

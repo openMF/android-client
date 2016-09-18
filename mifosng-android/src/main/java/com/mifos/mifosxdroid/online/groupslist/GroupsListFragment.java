@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online.groupslist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,9 +29,11 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment;
 import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -399,8 +402,15 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
                         selectedGroups.add(mGroupList.get(position));
                     }
 
-                    Toaster.show(rootView, "Selected Groups : " + selectedGroups.size());
-                    //TODO added SyncDialogFragment to syn Groups
+                    SyncGroupsDialogFragment syncGroupsDialogFragment =
+                            SyncGroupsDialogFragment.newInstance(selectedGroups);
+                    FragmentTransaction fragmentTransaction = getActivity()
+                            .getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_SYNC);
+                    syncGroupsDialogFragment.setCancelable(false);
+                    syncGroupsDialogFragment.show(fragmentTransaction,
+                            getResources().getString(R.string.sync_groups));
+                    mode.finish();
 
                     return true;
 

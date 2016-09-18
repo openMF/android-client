@@ -16,6 +16,7 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
 import com.mifos.objects.zipmodels.SavingsAccountAndTransactionTemplate;
 import com.mifos.utils.Constants;
+import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,6 @@ import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
@@ -206,9 +205,10 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
                     @Override
                     public void onNext(ClientAccounts clientAccounts) {
-                        mLoanAccountList = getActiveLoanAccounts(clientAccounts.getLoanAccounts());
-                        mSavingsAccountList =
-                                getActiveSavingsAccounts(clientAccounts.getSavingsAccounts());
+                        mLoanAccountList = Utils.getActiveLoanAccounts(clientAccounts
+                                .getLoanAccounts());
+                        mSavingsAccountList = Utils.getActiveSavingsAccounts(clientAccounts
+                                .getSavingsAccounts());
 
                         //Updating UI
                         getMvpView().setMaxSingleSyncClientProgressBar(mLoanAccountList.size() +
@@ -369,45 +369,6 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     }
                 })
         );
-    }
-
-
-    public List<LoanAccount> getActiveLoanAccounts(List<LoanAccount> loanAccountList) {
-        final List<LoanAccount> loanAccounts = new ArrayList<>();
-        Observable.from(loanAccountList)
-                .filter(new Func1<LoanAccount, Boolean>() {
-                    @Override
-                    public Boolean call(LoanAccount loanAccount) {
-                        return loanAccount.getStatus().getActive();
-                    }
-                })
-                .subscribe(new Action1<LoanAccount>() {
-                    @Override
-                    public void call(LoanAccount loanAccount) {
-                        loanAccounts.add(loanAccount);
-                    }
-                });
-        return loanAccounts;
-    }
-
-    public List<SavingsAccount> getActiveSavingsAccounts(List<SavingsAccount> savingsAccounts) {
-        final List<SavingsAccount> accounts = new ArrayList<>();
-        Observable.from(savingsAccounts)
-                .filter(new Func1<SavingsAccount, Boolean>() {
-                    @Override
-                    public Boolean call(SavingsAccount savingsAccount) {
-                        return (savingsAccount.getStatus().getActive() &&
-                                !savingsAccount.isRecurring());
-                    }
-                })
-                .subscribe(new Action1<SavingsAccount>() {
-                    @Override
-                    public void call(SavingsAccount savingsAccount) {
-                        accounts.add(savingsAccount)
-                        ;
-                    }
-                });
-        return accounts;
     }
 
     public void updateTotalSyncProgressBarAndCount() {

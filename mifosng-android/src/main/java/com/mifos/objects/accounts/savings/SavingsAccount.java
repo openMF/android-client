@@ -5,6 +5,7 @@
 
 package com.mifos.objects.accounts.savings;
 
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -22,7 +23,10 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
 
     @Column
-    Integer clientId;
+    transient Integer clientId;
+
+    @Column
+    transient Intent groupId;
 
     @PrimaryKey
     Integer id;
@@ -55,7 +59,6 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
     }
 
     protected SavingsAccount(Parcel in) {
-        this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.accountNo = in.readString();
         this.productId = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -64,6 +67,14 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
         this.currency = in.readParcelable(Currency.class.getClassLoader());
         this.accountBalance = (Double) in.readValue(Double.class.getClassLoader());
         this.depositType = in.readParcelable(DepositType.class.getClassLoader());
+    }
+
+    public Intent getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Intent groupId) {
+        this.groupId = groupId;
     }
 
     public Integer getClientId() {
@@ -198,7 +209,6 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.clientId);
         dest.writeValue(this.id);
         dest.writeString(this.accountNo);
         dest.writeValue(this.productId);
@@ -209,8 +219,8 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
         dest.writeParcelable(this.depositType, flags);
     }
 
-    public static final Parcelable.Creator<SavingsAccount> CREATOR = new Parcelable
-            .Creator<SavingsAccount>() {
+    public static final Parcelable.Creator<SavingsAccount> CREATOR =
+            new Parcelable.Creator<SavingsAccount>() {
         @Override
         public SavingsAccount createFromParcel(Parcel source) {
             return new SavingsAccount(source);

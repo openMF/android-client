@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
+import com.mifos.utils.Network;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,7 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     TextView tv_syncing_group_name;
 
     @BindView(R.id.tv_total_groups)
-    TextView tv_total_group;
+    TextView tv_total_groups;
 
     @BindView(R.id.tv_syncing_group)
     TextView tv_syncing_group;
@@ -49,8 +52,8 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     @BindView(R.id.tv_total_progress)
     TextView tv_total_progress;
 
-    @BindView(R.id.pb_total_sync_client)
-    ProgressBar pb_total_sync_client;
+    @BindView(R.id.pb_total_sync_group)
+    ProgressBar pb_total_sync_group;
 
     @BindView(R.id.tv_sync_failed)
     TextView tv_sync_failed;
@@ -88,9 +91,17 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_fragment_sync_clients, container, false);
+        rootView = inflater.inflate(R.layout.dialog_fragment_sync_groups, container, false);
         ButterKnife.bind(this, rootView);
         syncGroupsDialogPresenter.attachView(this);
+
+        //Start Syncing Groups
+        if (isOnline()) {
+
+        } else {
+            showNetworkIsNotAvailable();
+            dismissDialog();
+        }
 
         return rootView;
     }
@@ -110,6 +121,87 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     }
 
     @Override
+    public void showUI() {
+        pb_total_sync_group.setMax(groups.size());
+        String total_groups = groups.size() + getResources().getString(R.string.space) +
+                getResources().getString(R.string.groups);
+        tv_total_groups.setText(total_groups);
+        tv_sync_failed.setText(String.valueOf(0));
+    }
+
+    @Override
+    public void showSyncingGroup(String groupName) {
+        tv_syncing_group.setText(groupName);
+        tv_syncing_group_name.setText(groupName);
+    }
+
+    @Override
+    public void showSyncedFailedGroups(int failedCount) {
+        tv_sync_failed.setText(String.valueOf(failedCount));
+    }
+
+    @Override
+    public void setMaxSingleSyncGroupProgressBar(int total) {
+        pb_syncing_group.setMax(total);
+    }
+
+    @Override
+    public void updateSingleSyncGroupProgressBar(int count) {
+        pb_syncing_group.setProgress(count);
+    }
+
+    @Override
+    public void updateTotalSyncGroupProgressBarAndCount(int count) {
+        pb_total_sync_group.setProgress(count);
+        String total_sync_count = getResources()
+                .getString(R.string.space) + count + getResources()
+                .getString(R.string.slash) + groups.size();
+        tv_total_progress.setText(total_sync_count);
+    }
+
+    @Override
+    public int getMaxSingleSyncGroupProgressBar() {
+        return pb_syncing_group.getMax();
+    }
+
+    @Override
+    public void showNetworkIsNotAvailable() {
+        Toast.makeText(getActivity(), getResources()
+                .getString(R.string.error_network_not_available), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showGroupsSyncSuccessfully() {
+        btn_cancel.setVisibility(View.INVISIBLE);
+        btn_hide.setText(getResources().getString(R.string.dialog_action_ok));
+    }
+
+    @Override
+    public Boolean isOnline() {
+        return Network.isOnline(getActivity());
+    }
+
+    @Override
+    public void dismissDialog() {
+        getDialog().dismiss();
+    }
+
+    @Override
+    public void showDialog() {
+        getDialog().show();
+    }
+
+    @Override
+    public void hideDialog() {
+        getDialog().hide();
+    }
+
+    @Override
+    public void showError(int s) {
+        Toaster.show(rootView, s);
+    }
+
+    @Override
     public void showProgressbar(boolean b) {
 
     }
@@ -118,75 +210,5 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     public void onDestroyView() {
         super.onDestroyView();
         syncGroupsDialogPresenter.detachView();
-    }
-
-    @Override
-    public void showUI() {
-
-    }
-
-    @Override
-    public void showSyncingGroup(String clientName) {
-
-    }
-
-    @Override
-    public void showSyncedFailedGroups(int failedCount) {
-
-    }
-
-    @Override
-    public void setMaxSingleSyncGroupProgressBar(int total) {
-
-    }
-
-    @Override
-    public void updateSingleSyncGroupProgressBar(int i) {
-
-    }
-
-    @Override
-    public void updateTotalSyncGroupProgressBarAndCount(int i) {
-
-    }
-
-    @Override
-    public int getMaxSingleSyncGroupProgressBar() {
-        return 0;
-    }
-
-    @Override
-    public void showNetworkIsNotAvailable() {
-
-    }
-
-    @Override
-    public void showGroupsSyncSuccessfully() {
-
-    }
-
-    @Override
-    public Boolean isOnline() {
-        return null;
-    }
-
-    @Override
-    public void dismissDialog() {
-
-    }
-
-    @Override
-    public void showDialog() {
-
-    }
-
-    @Override
-    public void hideDialog() {
-
-    }
-
-    @Override
-    public void showError(int s) {
-
     }
 }
