@@ -29,6 +29,18 @@ public class SavingsAccountAndTransactionTemplate {
         this.savingsAccountTransactionTemplate = savingsAccountTransactionTemplate;
     }
 
+    public SavingsAccountAndTransactionTemplate() {
+
+    }
+
+    public SavingsAccountAndTransactionTemplate(SavingsAccountWithAssociations
+                                                        savingsAccountWithAssociations,
+                                                SavingsAccountTransactionTemplate
+                                                        savingsAccountTransactionTemplate) {
+        this.savingsAccountWithAssociations = savingsAccountWithAssociations;
+        this.savingsAccountTransactionTemplate = savingsAccountTransactionTemplate;
+    }
+
     @Override
     public String toString() {
         return "SavingsAccountAndTransactionTemplate{" +

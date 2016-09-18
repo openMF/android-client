@@ -27,6 +27,7 @@ import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func2;
 import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
@@ -84,7 +85,7 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
      */
     public void startSyncingClients(List<Group> groups) {
         mGroupList = groups;
-        checkNetworkConnectionAndSyncClient();
+        checkNetworkConnectionAndSyncGroup();
     }
 
     public void syncClientAndUpdateUI() {
@@ -101,7 +102,7 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
 
     }
 
-    public void checkNetworkConnectionAndSyncClient() {
+    public void checkNetworkConnectionAndSyncGroup() {
         if (getMvpView().isOnline()) {
             syncClientAndUpdateUI();
         } else {
@@ -161,7 +162,7 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
                 mGroupSyncIndex = mGroupSyncIndex + 1;
 
                 getMvpView().showSyncedFailedGroups(mFailedSyncGroup.size());
-                checkNetworkConnectionAndSyncClient();
+                checkNetworkConnectionAndSyncGroup();
             }
         } catch (Throwable throwable) {
             RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
@@ -198,7 +199,7 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
                         mFailedSyncGroup.add(mGroupList.get(mGroupSyncIndex));
                         getMvpView().showSyncedFailedGroups(mFailedSyncGroup.size());
                         mGroupSyncIndex = mGroupSyncIndex + 1;
-                        checkNetworkConnectionAndSyncClient();
+                        checkNetworkConnectionAndSyncGroup();
                     }
 
                     @Override
@@ -237,10 +238,8 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
                     @Override
                     public LoanAndLoanRepayment call(LoanWithAssociations loanWithAssociations,
                                                      LoanRepaymentTemplate loanRepaymentTemplate) {
-                        LoanAndLoanRepayment loanAndLoanRepayment = new LoanAndLoanRepayment();
-                        loanAndLoanRepayment.setLoanWithAssociations(loanWithAssociations);
-                        loanAndLoanRepayment.setLoanRepaymentTemplate(loanRepaymentTemplate);
-                        return loanAndLoanRepayment;
+                        return new LoanAndLoanRepayment(loanWithAssociations,
+                                loanRepaymentTemplate);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -293,15 +292,8 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
                     public SavingsAccountAndTransactionTemplate call(
                             SavingsAccountWithAssociations savingsAccountWithAssociations,
                             SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
-
-                        SavingsAccountAndTransactionTemplate accountAndTransactionTemplate =
-                                new SavingsAccountAndTransactionTemplate();
-                        accountAndTransactionTemplate.setSavingsAccountTransactionTemplate(
-                                savingsAccountTransactionTemplate);
-                        accountAndTransactionTemplate.setSavingsAccountWithAssociations(
-                                savingsAccountWithAssociations);
-
-                        return accountAndTransactionTemplate;
+                        return new SavingsAccountAndTransactionTemplate
+                                (savingsAccountWithAssociations, savingsAccountTransactionTemplate);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -327,24 +319,29 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
                         if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size()) {
                             checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate();
                         } else {
-                            //syncGroup(mGroupList.get(mGroupSyncIndex));
+                            syncGroup(mGroupList.get(mGroupSyncIndex));
                         }
                     }
                 })
         );
     }
 
-
-
-
-
-
-
-
-
-
-
-
+    public void syncGroup(Group group) {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerGroups.syncGroupInDatabase(group)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Action1<Group>() {
+                    @Override
+                    public void call(Group group) {
+                        int singleSyncClientMax = getMvpView().getMaxSingleSyncGroupProgressBar();
+                        getMvpView().updateSingleSyncGroupProgressBar(singleSyncClientMax);
+                        mGroupSyncIndex = mGroupSyncIndex + 1;
+                        checkNetworkConnectionAndSyncGroup();
+                    }
+                })
+        );
+    }
 
     public void updateTotalSyncProgressBarAndCount() {
         getMvpView().updateTotalSyncGroupProgressBarAndCount(mGroupSyncIndex);

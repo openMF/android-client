@@ -28,6 +28,16 @@ public class LoanAndLoanRepayment {
         this.loanRepaymentTemplate = loanRepaymentTemplate;
     }
 
+    public LoanAndLoanRepayment() {
+
+    }
+
+    public LoanAndLoanRepayment(LoanWithAssociations loanWithAssociations, LoanRepaymentTemplate
+            loanRepaymentTemplate) {
+        this.loanWithAssociations = loanWithAssociations;
+        this.loanRepaymentTemplate = loanRepaymentTemplate;
+    }
+
     @Override
     public String toString() {
         return "LoanAndLoanRepayment{" +

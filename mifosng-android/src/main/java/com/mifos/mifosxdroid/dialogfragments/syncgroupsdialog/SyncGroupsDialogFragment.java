@@ -97,7 +97,7 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
 
         //Start Syncing Groups
         if (isOnline()) {
-
+            syncGroupsDialogPresenter.startSyncingClients(groups);
         } else {
             showNetworkIsNotAvailable();
             dismissDialog();

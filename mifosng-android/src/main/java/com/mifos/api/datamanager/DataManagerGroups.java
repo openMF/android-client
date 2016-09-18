@@ -147,4 +147,7 @@ public class DataManagerGroups {
         return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
     }
 
+    public Observable<Group> syncGroupInDatabase(Group group) {
+        return mDatabaseHelperGroups.saveGroup(group);
+    }
 }
