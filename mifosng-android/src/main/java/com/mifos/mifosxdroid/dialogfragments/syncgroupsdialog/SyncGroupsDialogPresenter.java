@@ -169,12 +169,12 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
     }
 
     /**
-     * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
+     * Sync the Group Account with Group Id. This method fetching the Group Accounts from the
      * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
-     * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
+     * and then DataManagerClient returns the Group Accounts to Presenter.
      * <p>
      * <p>
-     * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
+     * onNext : As Group Accounts Successfully sync then sync there Loan and LoanRepayment
      * onError :
      *
      * @param groupId Client Id
@@ -220,11 +220,11 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
 
 
     /**
-     * This Method Syncing the Client's Loans and their LoanRepayment. This is the Observable.zip
-     * In Which two request is going to server Loans and LoanRepayment and This request will not
-     * complete till that both request successfully got response (200 OK). In Which one will fail
-     * then response will come in onError. and If both request is 200 response then response will
-     * come in onNext.
+     * This Method Syncing the Group's Loan and their LoanRepayment. This is the
+     * Observable.combineLatest In Which two request is going to server Loans and LoanRepayment
+     * and This request will not complete till that both request completed successfully with
+     * response (200 OK). If one will fail then response will come in onError. and If both
+     * request is 200 response then response will come in onNext.
      *
      * @param loanId Loan Id
      */
@@ -271,8 +271,8 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
 
 
     /**
-     * This Method Fetch SavingsAccount and SavingsAccountTransactionTemplate and Sync them in
-     * Database table.
+     * This Method Fetching the  SavingsAccount and SavingsAccountTransactionTemplate and Sync
+     * them in Database table.
      *
      * @param savingsAccountType SavingsAccount Type Example : savingsaccounts
      * @param savingsAccountId   SavingsAccount Id
