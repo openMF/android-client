@@ -98,7 +98,7 @@ public class DatabaseHelperGroups {
                             group.getGroupDate().getMonth(), group.getGroupDate().getYear()));
                 }
 
-                return null;
+                return Observable.just(group);
             }
         });
     }
