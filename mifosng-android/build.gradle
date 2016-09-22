@@ -139,9 +139,6 @@ dependencies {
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
     compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
-    // sql-cipher database encyrption (optional)
-    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:$rootProject.raizLabsDBFlow@aar"
-    compile "net.zetetic:android-database-sqlcipher:3.5.1"
 
     // App's Support dependencies, including test
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
