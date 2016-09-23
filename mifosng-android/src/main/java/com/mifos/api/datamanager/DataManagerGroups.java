@@ -2,6 +2,7 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
+import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
@@ -39,7 +40,7 @@ public class DataManagerGroups {
      * get list of the groups. The response is pass to the DatabaseHelperGroups
      * that save the response in Database in different thread and next pass the response to
      * Presenter to show in the view
-     * <p/>
+     * <p>
      * If the offset is zero and UserStatus is 1 then fetch all clients list and show on the view.
      * else if offset is not zero and UserStatus is 1 then return default empty response to
      * presenter
@@ -52,14 +53,7 @@ public class DataManagerGroups {
     public Observable<Page<Group>> getGroups(boolean paged, int offset, int limit) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getGroupApi().getGroups(paged, offset, limit)
-                        .concatMap(new Func1<Page<Group>, Observable<? extends Page<Group>>>() {
-                            @Override
-                            public Observable<? extends Page<Group>> call(Page<Group> groupPage) {
-                                mDatabaseHelperGroups.saveGroups(groupPage);
-                                return Observable.just(groupPage);
-                            }
-                        });
+                return mBaseApiManager.getGroupApi().getGroups(paged, offset, limit);
             case 1:
                 /**
                  * offset : is the value from which position we want to fetch the list, It means
@@ -76,7 +70,96 @@ public class DataManagerGroups {
         }
     }
 
+    /**
+     * This method call the DatabaseHelperGroups Helper and mDatabaseHelperGroups.readAllGroups()
+     * read the all Groups from the Database Group table and returns the Page<Group>.
+     *
+     * @return Page<Group>
+     */
+    public Observable<Page<Group>> getDatabaseGroups() {
+        return mDatabaseHelperGroups.readAllGroups();
+    }
 
+    /**
+     * This Method fetch the Group from REST API if the user status is 0,
+     * and if user status is 1 then load the Group from Database with groupId.
+     *
+     * @param groupId Group Id
+     * @return Group
+     */
+    public Observable<Group> getGroup(int groupId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getGroupApi().getGroup(groupId);
+            case 1:
+                /**
+                 * Return Groups from DatabaseHelperGroups.
+                 */
+                return mDatabaseHelperGroups.getGroup(groupId);
+
+            default:
+                return Observable.just(new Group());
+        }
+    }
+
+    /**
+     * This method save the single Group in Database.
+     *
+     * @param group Group
+     * @return Group
+     */
+    public Observable<Group> syncGroupInDatabase(Group group) {
+        return mDatabaseHelperGroups.saveGroup(group);
+    }
+
+
+    /**
+     * This method fetch the Group Accounts if the User status is zero and otherwise load the
+     * Group Accounts from the Database with the Group Id.
+     *
+     * @param groupId Group Id
+     * @return GroupAccounts
+     */
+    public Observable<GroupAccounts> getGroupAccounts(int groupId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
+            case 1:
+                /**
+                 * Return Groups from DatabaseHelperGroups.
+                 */
+                return mDatabaseHelperGroups.readGroupAccounts(groupId);
+
+            default:
+                return Observable.just(new GroupAccounts());
+        }
+    }
+
+    /**
+     * This Method Fetching the Group Accounts (Loan, saving, etc Accounts ) from REST API
+     * and then Saving all Accounts into the Database and then returns the Same Group Accounts
+     *
+     * @param groupId Group Id
+     * @return GroupAccounts
+     */
+    public Observable<GroupAccounts> syncGroupAccounts(final int groupId) {
+        return mBaseApiManager.getGroupApi().getGroupAccounts(groupId)
+                .concatMap(new Func1<GroupAccounts, Observable<? extends GroupAccounts>>() {
+                    @Override
+                    public Observable<? extends GroupAccounts> call(GroupAccounts
+                                                                            groupAccounts) {
+                        return mDatabaseHelperGroups.saveGroupAccounts(groupAccounts, groupId);
+                    }
+                });
+    }
+
+    /**
+     * This method creating the Group if user status is zero otherwise saving the GroupPayload in
+     * the Database.
+     *
+     * @param groupPayload GroupPayload
+     * @return Group
+     */
     public Observable<Group> createGroup(GroupPayload groupPayload) {
         switch (PrefManager.getUserStatus()) {
             case 0:
@@ -89,11 +172,7 @@ public class DataManagerGroups {
                         });
             case 1:
                 /**
-                 * offset : is the value from which position we want to fetch the list, It means
-                 * if offset is 0 and User is in the Offline Mode So fetch all groups
-                 * Return All Groups List from DatabaseHelperGroups only one time.
-                 * If offset is zero this means this is first request and
-                 * return all clients from DatabaseHelperClient
+                 * Save GroupPayload in Database table.
                  */
                 return mDatabaseHelperGroups.saveGroupPayload(groupPayload);
 
@@ -102,12 +181,17 @@ public class DataManagerGroups {
         }
     }
 
+    /**
+     * This method loading the all GroupPayloads from the Database.
+     *
+     * @return List<GroupPayload>
+     */
     public Observable<List<GroupPayload>> getAllDatabaseGroupPayload() {
         return mDatabaseHelperGroups.realAllGroupPayload();
     }
 
     /**
-     * This method will called when user is syncing the group created from Database.
+     * This method will called when user is syncing the Database group.
      * whenever a group is synced then request goes to Database to delete that group form
      * Database and reload the list from Database and update the list in UI
      *
@@ -119,6 +203,12 @@ public class DataManagerGroups {
     }
 
 
+    /**
+     * This Method updating the GroupPayload in Database and return the same GroupPayload
+     *
+     * @param groupPayload GroupPayload
+     * @return GroupPayload
+     */
     public Observable<GroupPayload> updateGroupPayload(GroupPayload groupPayload) {
         return mDatabaseHelperGroups.updateDatabaseGroupPayload(groupPayload);
     }

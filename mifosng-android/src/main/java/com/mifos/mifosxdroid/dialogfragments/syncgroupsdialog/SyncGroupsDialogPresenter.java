@@ -1,16 +1,16 @@
-package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog;
+package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog;
 
-import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.accounts.ClientAccounts;
+import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
-import com.mifos.objects.client.Client;
+import com.mifos.objects.group.Group;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.objects.zipmodels.LoanAndLoanRepayment;
@@ -27,81 +27,81 @@ import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func2;
 import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by Rajan Maurya on 08/08/16.
+ * Created by Rajan Maurya on 11/09/16.
  */
-public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogMvpView> {
+public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvpView> {
 
-    private final DataManagerClient mDataManagerClient;
+    private final DataManagerGroups mDataManagerGroups;
     private final DataManagerLoan mDataManagerLoan;
     private final DataManagerSavings mDataManagerSavings;
 
     private CompositeSubscription mSubscriptions;
 
-    private List<Client> mClientList, mFailedSyncClient;
+    private List<Group> mGroupList, mFailedSyncGroup;
     private List<LoanAccount> mLoanAccountList;
     private List<SavingsAccount> mSavingsAccountList;
 
     private Boolean mLoanAccountSyncStatus = false;
 
-    private int mClientSyncIndex, mLoanAndRepaymentSyncIndex = 0,
+    private int mGroupSyncIndex, mLoanAndRepaymentSyncIndex = 0,
             mSavingsAndTransactionSyncIndex = 0;
 
     @Inject
-    public SyncClientsDialogPresenter(DataManagerClient dataManagerClient,
-                                      DataManagerLoan dataManagerLoan,
-                                      DataManagerSavings dataManagerSavings) {
-        mDataManagerClient = dataManagerClient;
+    public SyncGroupsDialogPresenter(DataManagerGroups dataManagerGroups,
+                                     DataManagerLoan dataManagerLoan,
+                                     DataManagerSavings dataManagerSavings) {
+        mDataManagerGroups = dataManagerGroups;
         mDataManagerLoan = dataManagerLoan;
         mDataManagerSavings = dataManagerSavings;
         mSubscriptions = new CompositeSubscription();
-        mClientList = new ArrayList<>();
-        mFailedSyncClient = new ArrayList<>();
+        mGroupList = new ArrayList<>();
+        mFailedSyncGroup = new ArrayList<>();
         mLoanAccountList = new ArrayList<>();
         mSavingsAccountList = new ArrayList<>();
     }
 
     @Override
-    public void attachView(SyncClientsDialogMvpView mvpView) {
+    public void attachView(SyncGroupsDialogMvpView mvpView) {
         super.attachView(mvpView);
     }
 
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        mSubscriptions.clear();
     }
 
     /**
-     * This Method Start Syncing Clients. Start Syncing the Client Accounts.
+     * This Method Start Syncing Groups. Start Syncing the Groups Accounts.
      *
-     * @param clients Selected Clients For Syncing
+     * @param groups Selected Groups For Syncing
      */
-    public void startSyncingClients(List<Client> clients) {
-        mClientList = clients;
-        checkNetworkConnectionAndSyncClient();
+    public void startSyncingClients(List<Group> groups) {
+        mGroupList = groups;
+        checkNetworkConnectionAndSyncGroup();
     }
-
 
     public void syncClientAndUpdateUI() {
         mLoanAndRepaymentSyncIndex = 0;
         mSavingsAndTransactionSyncIndex = 0;
         updateTotalSyncProgressBarAndCount();
-        if (mClientSyncIndex != mClientList.size()) {
+        if (mGroupSyncIndex != mGroupList.size()) {
             updateClientName();
-            syncClientAccounts(mClientList.get(mClientSyncIndex).getId());
+            syncGroupAccounts(mGroupList.get(mGroupSyncIndex).getId());
         } else {
-            getMvpView().showClientsSyncSuccessfully();
+            getMvpView().showGroupsSyncSuccessfully();
         }
 
     }
 
-    public void checkNetworkConnectionAndSyncClient() {
+    public void checkNetworkConnectionAndSyncGroup() {
         if (getMvpView().isOnline()) {
             syncClientAndUpdateUI();
         } else {
@@ -140,8 +140,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
             checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate();
         } else {
             // If LoanAccounts and SavingsAccount are null then sync Client to Database
-            getMvpView().setMaxSingleSyncClientProgressBar(1);
-            syncClient(mClientList.get(mClientSyncIndex));
+            getMvpView().setMaxSingleSyncGroupProgressBar(1);
+            syncGroup(mGroupList.get(mGroupSyncIndex));
         }
     }
 
@@ -154,14 +154,14 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     public void onAccountSyncFailed(Throwable e) {
         try {
             if (e instanceof HttpException) {
-                int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
-                getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
+                int singleSyncClientMax = getMvpView().getMaxSingleSyncGroupProgressBar();
+                getMvpView().updateSingleSyncGroupProgressBar(singleSyncClientMax);
 
-                mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
-                mClientSyncIndex = mClientSyncIndex + 1;
+                mFailedSyncGroup.add(mGroupList.get(mGroupSyncIndex));
+                mGroupSyncIndex = mGroupSyncIndex + 1;
 
-                getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
-                checkNetworkConnectionAndSyncClient();
+                getMvpView().showSyncedFailedGroups(mFailedSyncGroup.size());
+                checkNetworkConnectionAndSyncGroup();
             }
         } catch (Throwable throwable) {
             RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
@@ -169,22 +169,22 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     }
 
     /**
-     * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
+     * Sync the Group Account with Group Id. This method fetching the Group Accounts from the
      * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
-     * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
-     * <p/>
-     * <p/>
-     * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
+     * and then DataManagerClient returns the Group Accounts to Presenter.
+     * <p>
+     * <p>
+     * onNext : As Group Accounts Successfully sync then sync there Loan and LoanRepayment
      * onError :
      *
-     * @param clientId Client Id
+     * @param groupId Client Id
      */
-    public void syncClientAccounts(int clientId) {
+    public void syncGroupAccounts(int groupId) {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerClient.syncClientAccounts(clientId)
+        mSubscriptions.add(mDataManagerGroups.syncGroupAccounts(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ClientAccounts>() {
+                .subscribe(new Subscriber<GroupAccounts>() {
                     @Override
                     public void onCompleted() {
 
@@ -195,22 +195,21 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                         getMvpView().showError(R.string.failed_to_sync_clientaccounts);
 
                         //Updating UI
-                        mFailedSyncClient.add(mClientList.get(mClientSyncIndex));
-                        getMvpView().showSyncedFailedClients(mFailedSyncClient.size());
-                        mClientSyncIndex = mClientSyncIndex + 1;
-                        checkNetworkConnectionAndSyncClient();
-
+                        mFailedSyncGroup.add(mGroupList.get(mGroupSyncIndex));
+                        getMvpView().showSyncedFailedGroups(mFailedSyncGroup.size());
+                        mGroupSyncIndex = mGroupSyncIndex + 1;
+                        checkNetworkConnectionAndSyncGroup();
                     }
 
                     @Override
-                    public void onNext(ClientAccounts clientAccounts) {
-                        mLoanAccountList = Utils.getActiveLoanAccounts(clientAccounts
-                                .getLoanAccounts());
-                        mSavingsAccountList = Utils.getActiveSavingsAccounts(clientAccounts
-                                .getSavingsAccounts());
+                    public void onNext(GroupAccounts groupAccounts) {
+                        mLoanAccountList = Utils.getActiveLoanAccounts(
+                                groupAccounts.getLoanAccounts());
+                        mSavingsAccountList = Utils.getActiveSavingsAccounts(
+                                groupAccounts.getSavingsAccounts());
 
                         //Updating UI
-                        getMvpView().setMaxSingleSyncClientProgressBar(mLoanAccountList.size() +
+                        getMvpView().setMaxSingleSyncGroupProgressBar(mLoanAccountList.size() +
                                 mSavingsAccountList.size());
 
                         checkAccountsSyncStatusAndSyncAccounts();
@@ -221,11 +220,11 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
 
     /**
-     * This Method Syncing the Client's Loans and their LoanRepayment. This is the Observable.zip
-     * In Which two request is going to server Loans and LoanRepayment and This request will not
-     * complete till that both request successfully got response (200 OK). In Which one will fail
-     * then response will come in onError. and If both request is 200 response then response will
-     * come in onNext.
+     * This Method Syncing the Group's Loan and their LoanRepayment. This is the
+     * Observable.combineLatest In Which two request is going to server Loans and LoanRepayment
+     * and This request will not complete till that both request completed successfully with
+     * response (200 OK). If one will fail then response will come in onError. and If both
+     * request is 200 response then response will come in onNext.
      *
      * @param loanId Loan Id
      */
@@ -238,10 +237,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     @Override
                     public LoanAndLoanRepayment call(LoanWithAssociations loanWithAssociations,
                                                      LoanRepaymentTemplate loanRepaymentTemplate) {
-                        LoanAndLoanRepayment loanAndLoanRepayment = new LoanAndLoanRepayment();
-                        loanAndLoanRepayment.setLoanWithAssociations(loanWithAssociations);
-                        loanAndLoanRepayment.setLoanRepaymentTemplate(loanRepaymentTemplate);
-                        return loanAndLoanRepayment;
+                        return new LoanAndLoanRepayment(loanWithAssociations,
+                                loanRepaymentTemplate);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -260,7 +257,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     @Override
                     public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
                         mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
-                        getMvpView().updateSingleSyncClientProgressBar(mLoanAndRepaymentSyncIndex);
+                        getMvpView().updateSingleSyncGroupProgressBar(mLoanAndRepaymentSyncIndex);
                         if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size()) {
                             checkNetworkConnectionAndSyncLoanAndLoanRepayment();
                         } else {
@@ -274,8 +271,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
 
 
     /**
-     * This Method Fetch SavingsAccount and SavingsAccountTransactionTemplate and Sync them in
-     * Database table.
+     * This Method Fetching the  SavingsAccount and SavingsAccountTransactionTemplate and Sync
+     * them in Database table.
      *
      * @param savingsAccountType SavingsAccount Type Example : savingsaccounts
      * @param savingsAccountId   SavingsAccount Id
@@ -294,15 +291,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public SavingsAccountAndTransactionTemplate call(
                             SavingsAccountWithAssociations savingsAccountWithAssociations,
                             SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
-
-                        SavingsAccountAndTransactionTemplate accountAndTransactionTemplate =
-                                new SavingsAccountAndTransactionTemplate();
-                        accountAndTransactionTemplate.setSavingsAccountTransactionTemplate(
-                                savingsAccountTransactionTemplate);
-                        accountAndTransactionTemplate.setSavingsAccountWithAssociations(
-                                savingsAccountWithAssociations);
-
-                        return accountAndTransactionTemplate;
+                        return new SavingsAccountAndTransactionTemplate(
+                                savingsAccountWithAssociations, savingsAccountTransactionTemplate);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -322,61 +312,43 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public void onNext(SavingsAccountAndTransactionTemplate
                                                savingsAccountAndTransactionTemplate) {
                         mSavingsAndTransactionSyncIndex = mSavingsAndTransactionSyncIndex + 1;
-                        getMvpView().updateSingleSyncClientProgressBar(
+                        getMvpView().updateSingleSyncGroupProgressBar(
                                 mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex);
 
                         if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size()) {
                             checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate();
                         } else {
-                            syncClient(mClientList.get(mClientSyncIndex));
+                            syncGroup(mGroupList.get(mGroupSyncIndex));
                         }
                     }
                 })
         );
-
     }
 
-    /**
-     * This Method Saving the Clients to Database, If their Accounts, Loan and LoanRepayment
-     * saved successfully to Synced.
-     *
-     * @param client
-     */
-    public void syncClient(Client client) {
+    public void syncGroup(Group group) {
         checkViewAttached();
-        client.setSync(true);
-        mSubscriptions.add(mDataManagerClient.syncClientInDatabase(client)
+        group.setSync(true);
+        mSubscriptions.add(mDataManagerGroups.syncGroupInDatabase(group)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Client>() {
+                .subscribe(new Action1<Group>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showError(R.string.failed_to_sync_client);
-                    }
-
-                    @Override
-                    public void onNext(Client client) {
-                        int singleSyncClientMax = getMvpView().getMaxSingleSyncClientProgressBar();
-                        getMvpView().updateSingleSyncClientProgressBar(singleSyncClientMax);
-                        mClientSyncIndex = mClientSyncIndex + 1;
-                        checkNetworkConnectionAndSyncClient();
+                    public void call(Group group) {
+                        int singleSyncClientMax = getMvpView().getMaxSingleSyncGroupProgressBar();
+                        getMvpView().updateSingleSyncGroupProgressBar(singleSyncClientMax);
+                        mGroupSyncIndex = mGroupSyncIndex + 1;
+                        checkNetworkConnectionAndSyncGroup();
                     }
                 })
         );
     }
 
     public void updateTotalSyncProgressBarAndCount() {
-        getMvpView().updateTotalSyncClientProgressBarAndCount(mClientSyncIndex);
+        getMvpView().updateTotalSyncGroupProgressBarAndCount(mGroupSyncIndex);
     }
 
     public void updateClientName() {
-        String clientName = mClientList.get(mClientSyncIndex).getFirstname() +
-                mClientList.get(mClientSyncIndex).getLastname();
-        getMvpView().showSyncingClient(clientName);
+        String groupName = mGroupList.get(mGroupSyncIndex).getName();
+        getMvpView().showSyncingGroup(groupName);
     }
 }

@@ -1,8 +1,17 @@
 package com.mifos.utils;
 
-import com.mifos.objects.PaymentTypeOption;
+import android.content.Context;
+import android.util.Log;
 
+import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.accounts.loan.LoanAccount;
+import com.mifos.objects.accounts.savings.SavingsAccount;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -14,6 +23,7 @@ import rx.functions.Func1;
  */
 public class Utils {
 
+    public static final String LOG_TAG = Utils.class.getSimpleName();
 
     /**
      * This Method transforming the PaymentTypeOption to String(PaymentTypeName).
@@ -66,5 +76,64 @@ public class Utils {
                     }
                 });
         return paymentTypeName[0];
+    }
+
+    public static List<LoanAccount> getActiveLoanAccounts(List<LoanAccount> loanAccountList) {
+        final List<LoanAccount> loanAccounts = new ArrayList<>();
+        Observable.from(loanAccountList)
+                .filter(new Func1<LoanAccount, Boolean>() {
+                    @Override
+                    public Boolean call(LoanAccount loanAccount) {
+                        return loanAccount.getStatus().getActive();
+                    }
+                })
+                .subscribe(new Action1<LoanAccount>() {
+                    @Override
+                    public void call(LoanAccount loanAccount) {
+                        loanAccounts.add(loanAccount);
+                    }
+                });
+        return loanAccounts;
+    }
+
+    public static List<SavingsAccount> getActiveSavingsAccounts(List<SavingsAccount>
+                                                                        savingsAccounts) {
+        final List<SavingsAccount> accounts = new ArrayList<>();
+        Observable.from(savingsAccounts)
+                .filter(new Func1<SavingsAccount, Boolean>() {
+                    @Override
+                    public Boolean call(SavingsAccount savingsAccount) {
+                        return (savingsAccount.getStatus().getActive() &&
+                                !savingsAccount.isRecurring());
+                    }
+                })
+                .subscribe(new Action1<SavingsAccount>() {
+                    @Override
+                    public void call(SavingsAccount savingsAccount) {
+                        accounts.add(savingsAccount)
+                        ;
+                    }
+                });
+        return accounts;
+    }
+
+    /**
+     * This Method Converting the List<Integer> of Activation Date to String.
+     *
+     * @param context Context
+     * @param dateObj List<Integer> of Date
+     * @return
+     */
+    public static String getStringOfDate(Context context, List<Integer> dateObj) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy",
+                context.getResources().getConfiguration().locale);
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
+        } catch (ParseException e) {
+            Log.d(LOG_TAG, e.getLocalizedMessage());
+        }
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        return df.format(date);
     }
 }

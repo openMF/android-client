@@ -1,22 +1,26 @@
 package com.mifos.api.local.databasehelper;
 
-import android.os.AsyncTask;
-import android.support.annotation.Nullable;
-
+import com.mifos.objects.accounts.GroupAccounts;
+import com.mifos.objects.accounts.loan.LoanAccount;
+import com.mifos.objects.accounts.loan.LoanAccount_Table;
+import com.mifos.objects.accounts.savings.SavingsAccount;
+import com.mifos.objects.accounts.savings.SavingsAccount_Table;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
+import com.mifos.objects.group.GroupDate;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupPayload_Table;
+import com.mifos.objects.group.Group_Table;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Func0;
 
 /**
@@ -34,50 +38,134 @@ public class DatabaseHelperGroups {
 
 
     /**
-     * Saving Groups in Database using DBFlow.
-     * save() method save the value reference to primary key if its exist the update if not the
-     * insert.
+     * This Method Saving the Single Group in the Database
      *
-     * @param groupPage
-     * @return null
+     * @param group
+     * @return Observable.just(Group)
      */
-    @Nullable
-    public Observable<Void> saveGroups(final Page<Group> groupPage) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+    public Observable<Group> saveGroup(final Group group) {
+        return Observable.defer(new Func0<Observable<Group>>() {
             @Override
-            public void run() {
+            public Observable<Group> call() {
 
-                for (Group group : groupPage.getPageItems()) {
-                    group.save();
-                }
+                GroupDate groupDate = new GroupDate(group.getId(), 0,
+                        group.getActivationDate().get(0),
+                        group.getActivationDate().get(1),
+                        group.getActivationDate().get(2));
+                group.setGroupDate(groupDate);
+                group.save();
+                return Observable.just(group);
             }
         });
-        return null;
     }
 
-
     /**
-     * Reading All groups from table of Group and return the GroupList
+     * Reading All groups from Database table of Group and return the GroupList
      *
      * @return List Of Groups
      */
-    //TODO Implement Observable Transaction to load Client List
     public Observable<Page<Group>> readAllGroups() {
-        return Observable.create(new Observable.OnSubscribe<Page<Group>>() {
+        return Observable.defer(new Func0<Observable<Page<Group>>>() {
             @Override
-            public void call(Subscriber<? super Page<Group>> subscriber) {
-
+            public Observable<Page<Group>> call() {
                 Page<Group> groupPage = new Page<>();
                 groupPage.setPageItems(SQLite.select()
                         .from(Group.class)
                         .queryList());
-                subscriber.onNext(groupPage);
-                subscriber.onCompleted();
+                return Observable.just(groupPage);
             }
         });
-
     }
 
+    /**
+     * This Method Retrieving the Group from the Local Database.
+     *
+     * @param groupId Group Id
+     * @return Group
+     */
+    public Observable<Group> getGroup(final int groupId) {
+        return Observable.defer(new Func0<Observable<Group>>() {
+            @Override
+            public Observable<Group> call() {
+
+                Group group = SQLite.select()
+                        .from(Group.class)
+                        .where(Group_Table.id.eq(groupId))
+                        .querySingle();
+
+                if (group != null) {
+                    group.setActivationDate(Arrays.asList(group.getGroupDate().getDay(),
+                            group.getGroupDate().getMonth(), group.getGroupDate().getYear()));
+                }
+
+                return Observable.just(group);
+            }
+        });
+    }
+
+    /**
+     * This Method  write the GroupAccounts in tho DB. According to Schema Defined in Model
+     *
+     * @param groupAccounts Model of List of LoanAccount and SavingAccount
+     * @param groupId       Group Id
+     * @return GroupAccounts
+     */
+    public Observable<GroupAccounts> saveGroupAccounts(final GroupAccounts groupAccounts,
+                                                        final int groupId) {
+
+        return Observable.defer(new Func0<Observable<GroupAccounts>>() {
+            @Override
+            public Observable<GroupAccounts> call() {
+
+                List<LoanAccount> loanAccounts = groupAccounts.getLoanAccounts();
+                List<SavingsAccount> savingsAccounts = groupAccounts.getSavingsAccounts();
+
+                for (LoanAccount loanAccount : loanAccounts) {
+                    loanAccount.setGroupId(groupId);
+                    loanAccount.save();
+                }
+
+                for (SavingsAccount savingsAccount : savingsAccounts) {
+                    savingsAccount.setGroupId(groupId);
+                    savingsAccount.save();
+                }
+
+                return Observable.just(groupAccounts);
+            }
+        });
+    }
+
+
+    /**
+     * This Method Read the Table of LoanAccount and SavingAccount and return the List of
+     * LoanAccount and SavingAccount according to groupId
+     *
+     * @param groupId Group Id
+     * @return the GroupAccounts according to Group Id
+     */
+    public Observable<GroupAccounts> readGroupAccounts(final int groupId) {
+        return Observable.defer(new Func0<Observable<GroupAccounts>>() {
+            @Override
+            public Observable<GroupAccounts> call() {
+
+                List<LoanAccount> loanAccounts = SQLite.select()
+                        .from(LoanAccount.class)
+                        .where(LoanAccount_Table.groupId.eq(groupId))
+                        .queryList();
+
+                List<SavingsAccount> savingsAccounts = SQLite.select()
+                        .from(SavingsAccount.class)
+                        .where(SavingsAccount_Table.groupId.eq(groupId))
+                        .queryList();
+
+                GroupAccounts groupAccounts = new GroupAccounts();
+                groupAccounts.setLoanAccounts(loanAccounts);
+                groupAccounts.setSavingsAccounts(savingsAccounts);
+
+                return Observable.just(groupAccounts);
+            }
+        });
+    }
 
     public Observable<Group> saveGroupPayload(final GroupPayload groupPayload) {
         return Observable.defer(new Func0<Observable<Group>>() {

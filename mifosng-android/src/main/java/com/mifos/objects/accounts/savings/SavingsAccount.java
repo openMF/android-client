@@ -22,7 +22,10 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
 
     @Column
-    Integer clientId;
+    transient long clientId;
+
+    @Column
+    transient long groupId;
 
     @PrimaryKey
     Integer id;
@@ -55,7 +58,6 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
     }
 
     protected SavingsAccount(Parcel in) {
-        this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.accountNo = in.readString();
         this.productId = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -66,11 +68,19 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
         this.depositType = in.readParcelable(DepositType.class.getClassLoader());
     }
 
-    public Integer getClientId() {
+    public long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
+    }
+
+    public long getClientId() {
         return this.clientId;
     }
 
-    public void setClientId(Integer clientId) {
+    public void setClientId(long clientId) {
         this.clientId = clientId;
     }
 
@@ -198,7 +208,6 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.clientId);
         dest.writeValue(this.id);
         dest.writeString(this.accountNo);
         dest.writeValue(this.productId);
@@ -209,8 +218,8 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
         dest.writeParcelable(this.depositType, flags);
     }
 
-    public static final Parcelable.Creator<SavingsAccount> CREATOR = new Parcelable
-            .Creator<SavingsAccount>() {
+    public static final Parcelable.Creator<SavingsAccount> CREATOR =
+            new Parcelable.Creator<SavingsAccount>() {
         @Override
         public SavingsAccount createFromParcel(Parcel source) {
             return new SavingsAccount(source);

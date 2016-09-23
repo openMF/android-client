@@ -10,9 +10,10 @@ import android.os.Parcelable;
 
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
+import com.mifos.objects.client.Status;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -29,48 +30,75 @@ import java.util.List;
 public class Group extends MifosBaseModel implements Parcelable {
 
     @PrimaryKey
-    private Integer id;
+    Integer id;
 
     @Column
-    private String accountNo;
+    String accountNo;
 
     @Column
-    private String name;
-
-    private Status status;
+    transient boolean sync;
 
     @Column
-    private Boolean active;
+    String name;
 
-    private List<Integer> activationDate = new ArrayList<>();
-
-    @Column
-    private Integer officeId;
+    Status status;
 
     @Column
-    private String officeName;
+    Boolean active;
 
     @Column
-    private int centerId;
+    @ForeignKey(saveForeignKeyModel = true)
+    transient GroupDate groupDate;
+
+    List<Integer> activationDate = new ArrayList<>();
 
     @Column
-    private String centerName;
+    Integer officeId;
 
     @Column
-    private Integer staffId;
+    String officeName;
 
     @Column
-    private String staffName;
+    int centerId;
 
     @Column
-    private String hierarchy;
+    String centerName;
 
     @Column
-    private int groupLevel;
+    Integer staffId;
 
-    private Timeline timeline;
+    @Column
+    String staffName;
 
-    private String externalId;
+    @Column
+    String hierarchy;
+
+    @Column
+    int groupLevel;
+
+    Timeline timeline;
+
+    String externalId;
+
+    public GroupDate getGroupDate() {
+        return groupDate;
+    }
+
+    public void setGroupDate(GroupDate groupDate) {
+        this.groupDate = groupDate;
+    }
+
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
 
     public int getCenterId() {
         return centerId;

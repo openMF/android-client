@@ -120,7 +120,7 @@ public class ClientListFragment extends MifosBaseFragment
     }
 
     /**
-     * This is method will be called, whenever ClientListFragment will not have Parent Fragment.
+     * This method will be called, whenever ClientListFragment will not have Parent Fragment.
      * So, Presenter make the call to Rest API and fetch the Client List and show in UI
      *
      * @return ClientListFragment
@@ -150,7 +150,7 @@ public class ClientListFragment extends MifosBaseFragment
         if (isParentFragment && clientList != null) {
             args.putParcelableArrayList(Constants.CLIENTS,
                     (ArrayList<? extends Parcelable>) clientList);
-            args.putBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT, true);
+            args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true);
             clientListFragment.setArguments(args);
         }
         return clientListFragment;
@@ -166,7 +166,7 @@ public class ClientListFragment extends MifosBaseFragment
         if (getArguments() != null) {
             clientList = getArguments().getParcelableArrayList(Constants.CLIENTS);
             isParentFragment = getArguments()
-                    .getBoolean(Constants.IS_PARENT_FRAGMENT_A_GROUP_FRAGMENT);
+                    .getBoolean(Constants.IS_A_PARENT_FRAGMENT);
         }
     }
 
@@ -236,6 +236,7 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void onRefresh() {
         mClientListPresenter.loadClients(false, 0);
+        mClientListPresenter.loadDatabaseClients();
         if (actionMode != null) actionMode.finish();
     }
 

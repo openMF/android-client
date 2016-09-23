@@ -5,19 +5,19 @@
 
 package com.mifos.objects.accounts;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class GroupAccounts {
+public class GroupAccounts implements Parcelable {
 
     private List<LoanAccount> loanAccounts = new ArrayList<LoanAccount>();
     private List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public List<LoanAccount> getLoanAccounts() {
         return loanAccounts;
@@ -70,16 +70,39 @@ public class GroupAccounts {
         return "ClientAccounts{" +
                 "loanAccounts=" + loanAccounts +
                 ", savingsAccounts=" + savingsAccounts +
-                ", additionalProperties=" + additionalProperties +
                 '}';
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setAdditionalProperties(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(this.loanAccounts);
+        dest.writeTypedList(this.savingsAccounts);
     }
 
+    public GroupAccounts() {
+    }
+
+    protected GroupAccounts(Parcel in) {
+        this.loanAccounts = in.createTypedArrayList(LoanAccount.CREATOR);
+        this.savingsAccounts = in.createTypedArrayList(SavingsAccount.CREATOR);
+    }
+
+    public static final Parcelable.Creator<GroupAccounts> CREATOR = new Parcelable
+            .Creator<GroupAccounts>() {
+        @Override
+        public GroupAccounts createFromParcel(Parcel source) {
+            return new GroupAccounts(source);
+        }
+
+        @Override
+        public GroupAccounts[] newArray(int size) {
+            return new GroupAccounts[size];
+        }
+    };
 }

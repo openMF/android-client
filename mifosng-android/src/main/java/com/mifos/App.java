@@ -51,6 +51,7 @@ public class App extends Application {
         //Crashlytics.start(this);
 
         Iconify.with(new MaterialModule());
+        //Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(new FlowConfig.Builder(this).build());
         Stetho.initializeWithDefaults(this);
     }

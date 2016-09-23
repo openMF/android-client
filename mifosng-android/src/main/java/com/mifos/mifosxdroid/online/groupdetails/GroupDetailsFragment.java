@@ -1,12 +1,9 @@
 package com.mifos.mifosxdroid.online.groupdetails;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,17 +32,12 @@ import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
-import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Utils;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -60,37 +52,49 @@ import static android.view.View.VISIBLE;
  */
 public class GroupDetailsFragment extends ProgressableFragment implements GroupDetailsMvpView {
 
-    public final String LOG_TAG = getClass().getSimpleName();
-    public int groupId;
-    public List<DataTable> clientDataTables = new ArrayList<>();
+    public static final String LOG_TAG = GroupDetailsFragment.class.getSimpleName();
+
     @BindView(R.id.tv_groupsName)
     TextView tv_fullName;
+
     @BindView(R.id.tv_groupexternalId)
     TextView tv_externalId;
+
     @BindView(R.id.tv_groupactivationDate)
     TextView tv_activationDate;
+
     @BindView(R.id.tv_groupoffice)
     TextView tv_office;
+
     @BindView(R.id.row_account)
     TableRow rowAccount;
+
     @BindView(R.id.row_external)
     TableRow rowExternal;
+
     @BindView(R.id.row_activation)
     TableRow rowActivation;
+
     @BindView(R.id.row_office)
     TableRow rowOffice;
+
     @BindView(R.id.row_group)
     TableRow rowGroup;
+
     @BindView(R.id.row_staff)
     TableRow rowStaff;
+
     @BindView(R.id.row_loan)
     TableRow rowLoan;
+
     @Inject
     GroupDetailsPresenter mGroupDetailsPresenter;
+
     private View rootView;
-    private SharedPreferences sharedPreferences;
-    private OnFragmentInteractionListener mListener;
+    private int groupId;
     private AccountAccordion accountAccordion;
+    private OnFragmentInteractionListener mListener;
+    public List<DataTable> clientDataTables = new ArrayList<>();
 
     public static GroupDetailsFragment newInstance(int groupId) {
         GroupDetailsFragment fragment = new GroupDetailsFragment();
@@ -104,8 +108,9 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             groupId = getArguments().getInt(Constants.GROUP_ID);
+        }
         setHasOptionsMenu(true);
     }
 
@@ -114,69 +119,18 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_details, container, false);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
         ButterKnife.bind(this, rootView);
         mGroupDetailsPresenter.attachView(this);
 
-        inflateClientInformation();
+        mGroupDetailsPresenter.loadGroupDetailsAndAccounts(groupId);
+        mGroupDetailsPresenter.loadClientDataTable();
 
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().getClass().getSimpleName() + " must " +
-                    "implement OnFragmentInteractionListener");
-        }
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.group, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.documents:
-                loadDocuments();
-                break;
-            case R.id.add_group_loan:
-                addgrouploanaccount();
-                break;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void inflateClientInformation() {
-        mGroupDetailsPresenter.loadGroup(groupId);
-    }
-
-
-    public void inflateClientsAccounts() {
-        mGroupDetailsPresenter.loadGroupsOfClients(groupId);
-    }
-
-    /**
-     * Use this method to fetch all datatables for client and inflate them as
-     * menu options
-     */
-    public void inflateDataTablesList() {
-        mGroupDetailsPresenter.loadClientDataTable();
-    }
-
-
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
-                .ENTITY_TYPE_CLIENTS, groupId);
+                .ENTITY_TYPE_GROUPS, groupId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
@@ -184,7 +138,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
         fragmentTransaction.commit();
     }
 
-    public void addgrouploanaccount() {
+    public void addGroupLoanAccount() {
         GroupLoanAccountFragment grouploanAccountFragment = GroupLoanAccountFragment.newInstance
                 (groupId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
@@ -207,13 +161,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
             tv_externalId.setText(group.getExternalId());
 
             try {
-                List<Integer> dateObj = group.getActivationDate();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-                Date date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
-                Locale currentLocale = getResources().getConfiguration().locale;
-                DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
-                        currentLocale);
-                String dateString = df.format(date);
+                String dateString = Utils.getStringOfDate(getActivity(), group.getActivationDate());
                 tv_activationDate.setText(dateString);
 
                 if (TextUtils.isEmpty(dateString))
@@ -223,20 +171,16 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
                 Toast.makeText(getActivity(), getString(R.string.error_group_inactive),
                         Toast.LENGTH_SHORT).show();
                 tv_activationDate.setText("");
-            } catch (ParseException e) {
-                Log.d(LOG_TAG, e.getMessage());
             }
             tv_office.setText(group.getOfficeName());
 
             if (TextUtils.isEmpty(group.getOfficeName()))
                 rowOffice.setVisibility(GONE);
-
-            inflateClientsAccounts();
         }
     }
 
     @Override
-    public void showGroupsOfClient(GroupAccounts groupAccounts) {
+    public void showGroupAccounts(GroupAccounts groupAccounts) {
         // Proceed only when the fragment is added to the activity.
         if (!isAdded()) {
             return;
@@ -285,11 +229,10 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
                 }
             });
         }
-        inflateDataTablesList();
     }
 
     @Override
-    public void showClientDataTable(List<DataTable> dataTables) {
+    public void showGroupDataTable(List<DataTable> dataTables) {
         if (dataTables != null) {
             Iterator<DataTable> dataTableIterator = dataTables.iterator();
             clientDataTables.clear();
@@ -300,8 +243,40 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     }
 
     @Override
-    public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    public void showFetchingError(int errorMessage) {
+        Toast.makeText(getActivity(), getStringMessage(errorMessage), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().getClass().getSimpleName() + " must " +
+                    "implement OnFragmentInteractionListener");
+        }
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.group, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.documents:
+                loadDocuments();
+                break;
+            case R.id.add_group_loan:
+                addGroupLoanAccount();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

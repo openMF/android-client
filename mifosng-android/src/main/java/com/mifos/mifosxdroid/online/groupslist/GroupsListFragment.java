@@ -6,26 +6,34 @@ package com.mifos.mifosxdroid.online.groupslist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
-import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
+import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment;
 import com.mifos.mifosxdroid.online.GroupsActivity;
-import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +46,33 @@ import butterknife.OnClick;
 
 /**
  * Created by nellyk on 2/27/2016.
- * GroupsListFragment Fetching Showing GroupsList in RecyclerView from
+ * <p/>
+ * This class loading and showing groups, Here is two way to load the Groups. First one to load
+ * Groups from Rest API
+ * <p/>
  * </>demo.openmf.org/fineract-provider/api/v1/groups?paged=true&offset=offset_value&limit
  * =limit_value</>
+ * <p/>
+ * Offset : From Where index, Groups will be fetch.
+ * limit : Total number of client, need to fetch
+ * <p/>
+ * and showing in the GroupList.
+ * <p/>
+ * and Second one is showing Groups provided by Parent(Fragment or Activity).
+ * Parent(Fragment or Activity) load the GroupList and send the
+ * Groups to GroupsListFragment newInstance(List<Group> groupList,
+ * boolean isParentFragment) {...}
+ * and unregister the ScrollListener and SwipeLayout.
  */
 public class GroupsListFragment extends MifosBaseFragment implements GroupsListMvpView,
-        RecyclerItemClickListener.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.rv_groups)
     RecyclerView rv_groups;
+
+    @BindView(R.id.progressbar_group)
+    ProgressBar pb_groups;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -55,203 +80,344 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @BindView(R.id.noGroupsText)
     TextView mNoGroupsText;
 
+    @BindView(R.id.noGroupsIcon)
+    ImageView mNoGroupIcon;
+
     @BindView(R.id.ll_error)
     LinearLayout ll_error;
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
-    List<Group> mGroupList = new ArrayList<>();
-    private GroupNameListAdapter mGroupListAdapter;
+
+    @Inject
+    GroupNameListAdapter mGroupListAdapter;
+
+    LinearLayoutManager mLayoutManager;
+    private List<Group> mGroupList;
+    private List<Group> selectedGroups;
+    private Boolean isParentFragment = false;
     private View rootView;
-    private int limit = 100;
-    private int mApiRestCounter;
+    private ActionModeCallback actionModeCallback;
+    private ActionMode actionMode;
 
-
-    //TODO Remove this default constructor
-    public GroupsListFragment() {
-
-    }
-
-    public static GroupsListFragment newInstance(List<Group> groupList) {
+    /**
+     * This method will be called, whenever GroupsListFragment will not have Parent Fragment.
+     * So, Presenter make the call to Rest API and fetch the Client List and show in UI
+     *
+     * @return GroupsListFragment
+     */
+    public static GroupsListFragment newInstance() {
+        Bundle arguments = new Bundle();
         GroupsListFragment groupListFragment = new GroupsListFragment();
-        if (groupList != null)
-            groupListFragment.setGroupList(groupList);
+        groupListFragment.setArguments(arguments);
         return groupListFragment;
     }
 
-    public static GroupsListFragment newInstance(List<Group> groupList, boolean
-            isParentFragmentAGroupFragment) {
+    /**
+     * This Method will be called, whenever isParentFragment will be true
+     * and Presenter do not need to make Rest API call to server. Parent (Fragment or Activity)
+     * already fetched the groups and for showing, they call GroupsListFragment.
+     * <p/>
+     * Example : Showing Parent Groups.
+     *
+     * @param groupList        List<Group>
+     * @param isParentFragment true
+     * @return GroupsListFragment
+     */
+    public static GroupsListFragment newInstance(List<Group> groupList,
+                                                 boolean isParentFragment) {
         GroupsListFragment groupListFragment = new GroupsListFragment();
-        groupListFragment.setGroupList(groupList);
+        Bundle args = new Bundle();
+        if (isParentFragment && groupList != null) {
+            args.putParcelableArrayList(Constants.GROUPS,
+                    (ArrayList<? extends Parcelable>) groupList);
+            args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true);
+            groupListFragment.setArguments(args);
+        }
         return groupListFragment;
     }
 
     @Override
     public void onItemClick(View childView, int position) {
-        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
-        groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
-        startActivity(groupActivityIntent);
+        if (actionMode != null) {
+            toggleSelection(position);
+        } else {
+            Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+            groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
+            startActivity(groupActivityIntent);
+        }
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
-
+        if (actionMode == null) {
+            actionMode = ((MifosBaseActivity) getActivity()).startSupportActionMode
+                    (actionModeCallback);
+        }
+        toggleSelection(position);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        mGroupList = new ArrayList<>();
+        selectedGroups = new ArrayList<>();
+        actionModeCallback = new ActionModeCallback();
+        if (getArguments() != null) {
+            mGroupList = getArguments().getParcelableArrayList(Constants.GROUPS);
+            isParentFragment = getArguments()
+                    .getBoolean(Constants.IS_A_PARENT_FRAGMENT);
+        }
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        if (getActivity().getActionBar() != null)
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_groups, container, false);
-        setToolbarTitle(getResources().getString(R.string.groups));
-        setHasOptionsMenu(true);
-
 
         ButterKnife.bind(this, rootView);
         mGroupsListPresenter.attachView(this);
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_groups.setLayoutManager(mLayoutManager);
-        rv_groups.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
-        rv_groups.setHasFixedSize(true);
-
-        mApiRestCounter = 1;
-        mGroupsListPresenter.loadGroups(true, 0, limit);
-
-        /**
-         * Setting mApiRestCounter to 1 and send Fresh Request to Server
-         */
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mApiRestCounter = 1;
-
-                mGroupsListPresenter.loadGroups(true, 0, limit);
-
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        //setting all the UI content to the view
+        showUserInterface();
 
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
-         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
-         * and offset(mGroupsList.size()) and limit(100).
          */
-        rv_groups.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+        rv_groups.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
-            public void onLoadMore(int current_page) {
-
-                mApiRestCounter = mApiRestCounter + 1;
-                mGroupsListPresenter.loadGroups(true, mGroupList.size(), limit);
+            public void onLoadMore(int page, int totalItemsCount) {
+                mGroupsListPresenter.loadGroups(true, totalItemsCount);
             }
         });
+
+        /**
+         * First Check the Parent Fragment is true or false. If parent fragment is true then no
+         * need to fetch groupList from Rest API, just need to show parent fragment groupList
+         * and if Parent Fragment is false then Presenter make the call to Rest API and fetch the
+         * Group List to show. and Presenter make transaction to Database to load saved clients.
+         * To show user that is there already any group is synced already or not.
+         */
+        if (isParentFragment) {
+            mGroupsListPresenter.showParentClients(mGroupList);
+        } else {
+            mGroupsListPresenter.loadGroups(false, 0);
+        }
+        mGroupsListPresenter.loadDatabaseGroups();
 
         return rootView;
     }
 
     /**
-     * Shows When mApiRestValue is 1 and Server Response is Null.
-     * Onclick Send Fresh Request for Client list.
+     * This method Initializing the UI.
+     */
+    @Override
+    public void showUserInterface() {
+        setToolbarTitle(getResources().getString(R.string.groups));
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_groups.setLayoutManager(mLayoutManager);
+        rv_groups.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
+        rv_groups.setHasFixedSize(true);
+        rv_groups.setAdapter(mGroupListAdapter);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
+        swipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+
+    /**
+     * This Method will be called. Whenever user will swipe down to refresh the group list.
+     */
+    @Override
+    public void onRefresh() {
+        mGroupsListPresenter.loadGroups(false, 0);
+        mGroupsListPresenter.loadDatabaseGroups();
+        if (actionMode != null) actionMode.finish();
+    }
+
+    /**
+     * This method will be called, whenever first time error occurred during the fetching group
+     * list from REST API.
+     * As the error will occurred. user is able to see the error message and ability to reload
+     * groupList.
      */
     @OnClick(R.id.noGroupsIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
-        mGroupsListPresenter.loadGroups(true, 0, limit);
-    }
-
-    public void setGroupList(List<Group> groupList) {
-        this.mGroupList = groupList;
+        rv_groups.setVisibility(View.VISIBLE);
+        mGroupsListPresenter.loadGroups(false, 0);
+        mGroupsListPresenter.loadDatabaseGroups();
     }
 
     /**
-     * Setting Data in RecyclerView of the GroupsListFragment if the mApiRestCounter value is 1,
-     * otherwise adding value in ArrayList and updating the GroupListAdapter.
-     * If the Response is have null then show Toast to User There is No Center Available.
-     *
-     * @param groupPage is the List<Group> and
-     *                  TotalValue of center API Response by Server
+     * Setting GroupList to the Adapter and updating the Adapter.
      */
     @Override
-    public void showGroups(Page<Group> groupPage) {
-        /**
-         * if mApiRestCounter is 1, So this is the first Api Request.
-         * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
-         */
-        if (mApiRestCounter == 1) {
-            mGroupList = groupPage.getPageItems();
-            mGroupListAdapter = new GroupNameListAdapter(getActivity(), mGroupList);
-            rv_groups.setAdapter(mGroupListAdapter);
+    public void showGroups(List<Group> groups) {
+        mGroupList = groups;
+        mGroupListAdapter.setGroups(groups);
+    }
 
-            ll_error.setVisibility(View.GONE);
+
+    /**
+     * Adding the More Groups in List and Update the Adapter.
+     *
+     * @param groups
+     */
+    @Override
+    public void showLoadMoreGroups(List<Group> groups) {
+        mGroupList.addAll(groups);
+        mGroupListAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * This method will be called, if fetched groupList is Empty and show there is no Group to show.
+     *
+     * @param message String Message.
+     */
+    @Override
+    public void showEmptyGroups(int message) {
+        rv_groups.setVisibility(View.GONE);
+        ll_error.setVisibility(View.VISIBLE);
+        mNoGroupsText.setText(getStringMessage(message));
+    }
+
+    /**
+     * This Method unregistered the SwipeLayout and OnScrollListener
+     */
+    @Override
+    public void unregisterSwipeAndScrollListener() {
+        rv_groups.clearOnScrollListeners();
+        swipeRefreshLayout.setEnabled(false);
+        mNoGroupIcon.setEnabled(false);
+    }
+
+    /**
+     * This Method showing the Simple Taster Message to user.
+     *
+     * @param message String Message to show.
+     */
+    @Override
+    public void showMessage(int message) {
+        Toaster.show(rootView, getStringMessage(message));
+    }
+
+
+    /**
+     * If Any any exception occurred during fetching the Groups. like No Internet or etc.
+     * then this method show the error message to user and give the ability to refresh groups.
+     */
+    @Override
+    public void showFetchingError() {
+        rv_groups.setVisibility(View.GONE);
+        ll_error.setVisibility(View.VISIBLE);
+        String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
+                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
+        mNoGroupsText.setText(errorMessage);
+    }
+
+
+    /**
+     * This Method showing the Progressbar during fetching the group List on first time and
+     * otherwise showing swipe refresh layout
+     *
+     * @param show Status of Progressbar or SwipeRefreshLayout
+     */
+    @Override
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(show);
+        if (show && mGroupListAdapter.getItemCount() == 0) {
+            pb_groups.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(false);
         } else {
-
-            mGroupList.addAll(groupPage.getPageItems());
-            mGroupListAdapter.notifyDataSetChanged();
-
-            //checking the response size if size is zero then show toast No More
-            // Clients Available for fetch
-            if (groupPage.getPageItems().size() == 0 &&
-                    (groupPage.getTotalFilteredRecords() == mGroupList.size()))
-                Toaster.show(rootView, "No more Groups Available");
-        }
-    }
-
-    /**
-     * Check the mApiRestCounter value is the value is 1,
-     * So there no data to show and setVisibility VISIBLE
-     * of Error ImageView and TextView layout and otherwise simple
-     * show the Toast Message of Error Message.
-     *
-     * @param s is the Error Message given by GroupsListPresenter
-     */
-    @Override
-    public void showFetchingError(String s) {
-        if (mApiRestCounter == 1) {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoGroupsText.setText(s + "\n Click to Refresh ");
-        }
-
-        Toaster.show(rootView, s);
-    }
-
-    /**
-     * Check mApiRestCounter value, if the value is 1 then
-     * show MifosBaseActivity ProgressBar and if it is greater than 1,
-     * It means this Request is the second and so on than show SwipeRefreshLayout
-     * Check the the b is true or false
-     *
-     * @param b is the status of the progressbar
-     */
-    @Override
-    public void showProgressbar(boolean b) {
-
-        if (mApiRestCounter == 1) {
-            if (b) {
-                showMifosProgressBar();
-            } else {
-                hideMifosProgressBar();
-            }
-        } else {
-            swipeRefreshLayout.setRefreshing(b);
+            pb_groups.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hideMifosProgressBar();
         mGroupsListPresenter.detachView();
+        //As the Fragment Detach Finish the ActionMode
+        if (actionMode != null) actionMode.finish();
+    }
+
+    /**
+     * Toggle the selection state of an item.
+     * <p/>
+     * If the item was the last one in the selection and is unselected, then selection will stopped.
+     * Note that the selection must already be started (actionMode must not be null).
+     *
+     * @param position Position of the item to toggle the selection state
+     */
+    private void toggleSelection(int position) {
+        mGroupListAdapter.toggleSelection(position);
+        int count = mGroupListAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+
+    /**
+     * This ActionModeCallBack Class handling the User Event after the Selection of Clients. Like
+     * Click of Menu Sync Button and finish the ActionMode
+     */
+    private class ActionModeCallback implements ActionMode.Callback {
+        @SuppressWarnings("unused")
+        private final String LOG_TAG = ActionModeCallback.class.getSimpleName();
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_sync, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_sync:
+
+                    selectedGroups.clear();
+                    for (Integer position : mGroupListAdapter.getSelectedItems()) {
+                        selectedGroups.add(mGroupList.get(position));
+                    }
+
+                    SyncGroupsDialogFragment syncGroupsDialogFragment =
+                            SyncGroupsDialogFragment.newInstance(selectedGroups);
+                    FragmentTransaction fragmentTransaction = getActivity()
+                            .getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_SYNC);
+                    syncGroupsDialogFragment.setCancelable(false);
+                    syncGroupsDialogFragment.show(fragmentTransaction,
+                            getResources().getString(R.string.sync_groups));
+                    mode.finish();
+
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mGroupListAdapter.clearSelection();
+            actionMode = null;
+        }
     }
 }
 
