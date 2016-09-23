@@ -4,8 +4,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.mifos.App;
 import com.mifos.api.BaseUrl;
+import com.mifos.objects.User;
 
 import java.util.Set;
 
@@ -21,6 +23,9 @@ public class PrefManager {
     private static final String INSTANCE_DOMAIN = "preferences_domain";
     private static final String PORT = "preferences_port";
     private static final String USER_STATUS = "user_status";
+    private static final String USER_DETAILS = "user_details";
+
+    private static Gson gson = new Gson();
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(App.getInstance()
@@ -85,6 +90,14 @@ public class PrefManager {
      * Authentication
      */
 
+    public static void saveUser(User user) {
+        putString(USER_DETAILS, gson.toJson(user));
+    }
+
+    public static User getUser() {
+        return gson.fromJson(getString(USER_DETAILS, "null"),
+                User.class);
+    }
     public static void saveToken(String token) {
         putString(TOKEN, token);
     }

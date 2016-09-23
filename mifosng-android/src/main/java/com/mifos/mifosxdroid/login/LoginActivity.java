@@ -162,6 +162,8 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         PrefManager.setUserId(user.getUserId());
         // Saving user's token
         PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
+        // Saving user
+        PrefManager.saveUser(user);
 
         startActivity(new Intent(this, DashboardActivity.class));
         finish();
