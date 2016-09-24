@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
-import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
+import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
@@ -43,7 +43,7 @@ import butterknife.OnClick;
 /**
  * Created by ishankhanna on 11/03/14.
  * <p/>
- * CenterListFragment Fetching Showing CenterList in RecyclerView from
+ * CenterListFragment Fetching and Showing CenterList in RecyclerView from
  * </>demo.openmf.org/fineract-provider/api/v1/centers?paged=true&offset=0&limit=100</>
  */
 public class CenterListFragment extends MifosBaseFragment
@@ -67,7 +67,7 @@ public class CenterListFragment extends MifosBaseFragment
     @Inject
     CenterListPresenter mCenterListPresenter;
 
-
+    @Inject
     CentersListAdapter centersListAdapter;;
 
     private View rootView;
@@ -90,7 +90,6 @@ public class CenterListFragment extends MifosBaseFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         centers = new ArrayList<>();
-        centersListAdapter = new CentersListAdapter();
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
@@ -108,24 +107,24 @@ public class CenterListFragment extends MifosBaseFragment
         showUserInterface();
 
         mCenterListPresenter.loadCenters(false, 0);
-        mCenterListPresenter.loadDatabaseCenters();
 
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
-         * is shown on the Screen.
-         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
-         * and offset(mCenterList.size()) and limit(100).
+         * will shown on the Screen.
          */
-        rv_centers.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
+        rv_centers.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
-            public void onLoadMore(int current_page) {
-                mCenterListPresenter.loadCenters(true, centers.size());
+            public void onLoadMore(int page, int totalItemsCount) {
+                mCenterListPresenter.loadCenters(true, totalItemsCount);
             }
         });
 
         return rootView;
     }
 
+    /**
+     * This Method is setting the UI
+     */
     @Override
     public void showUserInterface() {
         layoutManager = new LinearLayoutManager(getActivity());
@@ -140,37 +139,48 @@ public class CenterListFragment extends MifosBaseFragment
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    /**
+     * This Method will be called, whenever user will pull down to RefreshLayout.
+     */
     @Override
     public void onRefresh() {
         mCenterListPresenter.loadCenters(false, 0);
-        mCenterListPresenter.loadDatabaseCenters();
     }
 
     /**
-     * Shows When mApiRestValue is 1 and Server Response is Null.
-     * Onclick Send Fresh Request for Center list.
+     * OnClick Error Image icon, reload the centers
      */
     @OnClick(R.id.noCentersIcon)
     public void reloadOnError() {
         ll_error.setVisibility(View.GONE);
         rv_centers.setVisibility(View.VISIBLE);
         mCenterListPresenter.loadCenters(false, 0);
-        mCenterListPresenter.loadDatabaseCenters();
     }
 
+    /**
+     * Attaching the this.centers to the CentersListAdapter
+     * @param centers List<Center>
+     */
     @Override
     public void showCenters(List<Center> centers) {
         this.centers = centers;
         centersListAdapter.setCenters(centers);
     }
 
-
+    /**
+     * Updating the CenterListAdapter
+     * @param centers List<Center>
+     */
     @Override
     public void showMoreCenters(List<Center> centers) {
         this.centers.addAll(centers);
         centersListAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Showing that Server response is Empty
+     * @param message
+     */
     @Override
     public void showEmptyCenters(int message) {
         rv_centers.setVisibility(View.GONE);
@@ -178,11 +188,20 @@ public class CenterListFragment extends MifosBaseFragment
         mNoCenterText.setText(getStringMessage(message));
     }
 
+    /**
+     * This Method for showing simple SeekBar
+     * @param message
+     */
     @Override
     public void showMessage(int message) {
         Toaster.show(rootView, getStringMessage(message));
     }
 
+    /**
+     * This Method for showing the CollectionSheet of Center
+     * @param centerWithAssociations
+     * @param id
+     */
     @Override
     public void showCentersGroupAndMeeting(
             final CenterWithAssociations centerWithAssociations, final int id) {
@@ -203,6 +222,10 @@ public class CenterListFragment extends MifosBaseFragment
 
     }
 
+    /**
+     * If Loading Centers is failed on first request then show to user a message that center failed
+     * to load.
+     */
     @Override
     public void showFetchingError() {
         rv_centers.setVisibility(View.GONE);
@@ -213,12 +236,9 @@ public class CenterListFragment extends MifosBaseFragment
     }
 
     /**
-     * Check mApiRestCounter value, if the value is 1 then
-     * show MifosBaseActivity ProgressBar and if it is greater than 1,
-     * It means this Request is the second and so on than show SwipeRefreshLayout
-     * Check the the b is true or false
-     *
-     * @param show is the status of the progressbar
+     * This Method for showing Progress bar if the Center count is zero otherwise
+     * shows swipeRefreshLayout
+     * @param show Boolean
      */
     @Override
     public void showProgressbar(boolean show) {

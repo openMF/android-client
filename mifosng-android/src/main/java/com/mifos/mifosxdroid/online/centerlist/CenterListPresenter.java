@@ -24,13 +24,10 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
     private final DataManagerCenter mDataManagerCenter;
     private CompositeSubscription mSubscriptions;
 
-    private List<Center> mDbCenterList;
     private List<Center> mSyncCenterList;
 
     private int limit = 100;
     private Boolean loadmore = false;
-    private Boolean mRestApiCenterSyncStatus = false;
-    private Boolean mDatabaseCenterSyncStatus = false;
 
     @Inject
     public CenterListPresenter(DataManagerCenter dataManagerCenter) {
@@ -63,22 +60,15 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
         loadCenters(true, offset, limit);
     }
 
+    /**
+     * This Method For showing Center List in UI.
+     * @param centers
+     */
     public void showCenters(List<Center> centers) {
         if (loadmore) {
             getMvpView().showMoreCenters(centers);
         } else {
             getMvpView().showCenters(centers);
-        }
-    }
-
-
-    /**
-     * Setting CenterSync Status True when mRestApiCenterSyncStatus && mDatabaseCenterSyncStatus
-     * are true.
-     */
-    public void setAlreadyCenterSyncStatus() {
-        if (mRestApiCenterSyncStatus && mDatabaseCenterSyncStatus) {
-            showCenters(checkCenterAlreadySyncedOrNot(mSyncCenterList));
         }
     }
 
@@ -118,18 +108,12 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                         } else if (mSyncCenterList.size() == 0 && loadmore) {
                             getMvpView().showMessage(R.string.no_more_groups_available);
                         } else {
-                            mRestApiCenterSyncStatus = true;
-                            setAlreadyCenterSyncStatus();
+                            showCenters(mSyncCenterList);
                         }
                         getMvpView().showProgressbar(false);
                     }
                 }));
     }
-
-    public void loadDatabaseCenters() {
-
-    }
-
 
     public void loadCentersGroupAndMeeting(final int id) {
         getMvpView().showProgressbar(true);
@@ -154,28 +138,4 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                     }
                 }));
     }
-
-    /**
-     * This Method Filtering the Centers Loaded from Server, is already sync or not. If yes the
-     * put the centers.setSync(true) and view will show to user that group already synced
-     *
-     * @param centers
-     * @return List<Center>
-     */
-    public List<Center> checkCenterAlreadySyncedOrNot(List<Center> centers) {
-        if (mDbCenterList.size() != 0) {
-
-            for (Center dbCenter : mDbCenterList) {
-                for (Center syncCenter : centers) {
-                    if (dbCenter.getId().intValue() == syncCenter.getId().intValue()) {
-                        syncCenter.setSync(true);
-                        break;
-                    }
-                }
-            }
-
-        }
-        return centers;
-    }
-
 }
