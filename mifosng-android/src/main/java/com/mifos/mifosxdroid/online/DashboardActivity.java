@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
@@ -22,13 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.mifos.api.BaseApiManager;
-import com.mifos.api.DataManager;
-import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -39,18 +31,13 @@ import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
-import com.mifos.objects.client.Client;
+import com.mifos.objects.User;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by ishankhanna on 09/02/14.
@@ -194,75 +181,21 @@ public class DashboardActivity extends MifosBaseActivity
 
 
     /**
-     * downloads the client name and picture(if exists)
-     * sets the downloaded data to the nav drawer account header
+     * downloads the logged in user's username
+     * sets dummy profile picture as no profile picture attribute available
      */
-    //TODO Setup In MVP
     private void loadClientDetails() {
 
-        // download client details
-        final int userId = PrefManager.getUserId();
-        BaseApiManager baseApiManager = new BaseApiManager();
-        DataManager mDataManager = new DataManager(baseApiManager);
-        Observable<Client> call = mDataManager.getClient(userId);
-        Subscription subscription = call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Client>() {
-                    @Override
-                    public void onCompleted() {
+        // download logged in user
+        final User loggedInUser = PrefManager.getUser();
 
-                    }
+        TextView textViewUsername = ButterKnife.findById(mNavigationHeader, R.id.tv_user_name);
+        textViewUsername.setText(loggedInUser.getUsername());
 
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Client client) {
-                        // add name to profile
-                        String name = client.getDisplayName();
-                        TextView textViewUsername = (TextView) findViewById(R.id.tv_user_name);
-                        textViewUsername.setText(name);
-
-                        // download image
-                        if (client.isImagePresent()) {
-                            String url = PrefManager.getInstanceUrl()
-                                    + "/"
-                                    + "clients/"
-                                    + userId
-                                    + "/images?maxHeight=120&maxWidth=120";
-                            GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                                    .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager
-                                            .getTenant())
-                                    .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager
-                                            .getToken())
-                                    .addHeader("Accept", "application/octet-stream")
-                                    .build());
-
-                            ImageView imageViewUserPicture = (ImageView) findViewById(R.id
-                                    .iv_user_picture);
-                            Glide.with(getApplicationContext())
-                                    .load(glideUrl)
-                                    .asBitmap()
-                                    .error(R.drawable.ic_account_circle)
-                                    .placeholder(R.drawable.ic_account_circle)
-                                    .into(new BitmapImageViewTarget(imageViewUserPicture) {
-                                        @Override
-                                        protected void setResource(Bitmap result) {
-                                            // check a valid bitmap is downloaded
-                                            if (result == null || result.getWidth() == 0)
-                                                return;
-
-                                            // set to image view
-                                            ImageView imageViewUserPicture = (ImageView)
-                                                    findViewById(R.id.iv_user_picture);
-                                            imageViewUserPicture.setImageBitmap(result);
-                                        }
-                                    });
-                        }
-                    }
-                });
+        // no profile picture credential, using dummy profile picture
+        ImageView imageViewUserPicture = ButterKnife
+                .findById(mNavigationHeader, R.id.iv_user_picture);
+        imageViewUserPicture.setImageResource(R.drawable.ic_account_circle);
     }
 
     @Override
