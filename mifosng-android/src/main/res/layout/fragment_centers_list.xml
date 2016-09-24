@@ -24,6 +24,14 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <ProgressBar
+        android:id="@+id/progressbar_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
     <LinearLayout
         android:id="@+id/ll_error"
         android:layout_width="wrap_content"

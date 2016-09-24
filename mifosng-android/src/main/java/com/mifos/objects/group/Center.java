@@ -32,6 +32,9 @@ public class Center extends MifosBaseModel implements Parcelable {
     private Integer id;
 
     @Column
+    transient private Boolean sync;
+
+    @Column
     private String accountNo;
 
     @Column
@@ -62,6 +65,14 @@ public class Center extends MifosBaseModel implements Parcelable {
     private Timeline timeline;
 
     private String externalId;
+
+    public Boolean getSync() {
+        return sync;
+    }
+
+    public void setSync(Boolean sync) {
+        this.sync = sync;
+    }
 
     public Boolean getActive() {
         return this.active;
