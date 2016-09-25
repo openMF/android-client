@@ -39,6 +39,7 @@ import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosResponseHandler;
+import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,6 +236,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
     }
 
     public boolean isValidGroupName() {
+        result = true;
         try {
             if (TextUtils.isEmpty(et_groupName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.group_name),
@@ -245,7 +247,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
                     .getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.group_name), 4);
             }
-            if (!et_groupName.getEditableText().toString().matches("[a-zA-Z]+")) {
+            if (!ValidationUtil.isAlphabetic(et_groupName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.group_name)
                         , getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
