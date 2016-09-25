@@ -68,7 +68,7 @@ public class CenterListFragment extends MifosBaseFragment
     CenterListPresenter mCenterListPresenter;
 
     @Inject
-    CentersListAdapter centersListAdapter;;
+    CentersListAdapter centersListAdapter;
 
     private View rootView;
     private OnFragmentInteractionListener mListener;
@@ -98,14 +98,13 @@ public class CenterListFragment extends MifosBaseFragment
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_centers_list, container, false);
 
-        setToolbarTitle(getResources().getString(R.string.title_activity_centers));
-
         ButterKnife.bind(this, rootView);
         mCenterListPresenter.attachView(this);
 
         //Showing User Interface.
         showUserInterface();
 
+        //Fetching Centers
         mCenterListPresenter.loadCenters(false, 0);
 
         /**
@@ -127,6 +126,7 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showUserInterface() {
+        setToolbarTitle(getResources().getString(R.string.title_activity_centers));
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_centers.setLayoutManager(layoutManager);
@@ -159,6 +159,7 @@ public class CenterListFragment extends MifosBaseFragment
 
     /**
      * Attaching the this.centers to the CentersListAdapter
+     *
      * @param centers List<Center>
      */
     @Override
@@ -169,6 +170,7 @@ public class CenterListFragment extends MifosBaseFragment
 
     /**
      * Updating the CenterListAdapter
+     *
      * @param centers List<Center>
      */
     @Override
@@ -179,6 +181,7 @@ public class CenterListFragment extends MifosBaseFragment
 
     /**
      * Showing that Server response is Empty
+     *
      * @param message
      */
     @Override
@@ -190,6 +193,7 @@ public class CenterListFragment extends MifosBaseFragment
 
     /**
      * This Method for showing simple SeekBar
+     *
      * @param message
      */
     @Override
@@ -199,6 +203,7 @@ public class CenterListFragment extends MifosBaseFragment
 
     /**
      * This Method for showing the CollectionSheet of Center
+     *
      * @param centerWithAssociations
      * @param id
      */
@@ -238,6 +243,7 @@ public class CenterListFragment extends MifosBaseFragment
     /**
      * This Method for showing Progress bar if the Center count is zero otherwise
      * shows swipeRefreshLayout
+     *
      * @param show Boolean
      */
     @Override

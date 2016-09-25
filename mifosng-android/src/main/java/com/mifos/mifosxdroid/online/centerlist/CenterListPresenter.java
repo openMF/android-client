@@ -62,6 +62,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
 
     /**
      * This Method For showing Center List in UI.
+     *
      * @param centers
      */
     public void showCenters(List<Center> centers) {
@@ -93,7 +94,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
                         if (loadmore) {
-                            getMvpView().showMessage(R.string.failed_to_fetch_groups);
+                            getMvpView().showMessage(R.string.failed_to_fetch_center);
                         } else {
                             getMvpView().showFetchingError();
                         }
@@ -104,9 +105,9 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                         mSyncCenterList = centerPage.getPageItems();
 
                         if (mSyncCenterList.size() == 0 && !loadmore) {
-                            getMvpView().showEmptyCenters(R.string.empty_groups_list);
+                            getMvpView().showEmptyCenters(R.string.empty_center_list);
                         } else if (mSyncCenterList.size() == 0 && loadmore) {
-                            getMvpView().showMessage(R.string.no_more_groups_available);
+                            getMvpView().showMessage(R.string.no_more_centers_available);
                         } else {
                             showCenters(mSyncCenterList);
                         }
@@ -128,7 +129,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError();
+                        getMvpView().showMessage(R.string.failed_to_fetch_Group_and_meeting);
                     }
 
                     @Override
