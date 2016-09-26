@@ -39,6 +39,7 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.clients.Options;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -354,6 +355,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     }
 
     public boolean isValidFirstName() {
+        result = true;
         try {
             if (TextUtils.isEmpty(et_clientFirstName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.first_name),
@@ -363,7 +365,7 @@ public class CreateNewClientFragment extends ProgressableFragment
                     et_clientFirstName.getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
             }
-            if (!et_clientFirstName.getEditableText().toString().matches("[a-zA-Z]+")) {
+            if (!ValidationUtil.isAlphabetic(et_clientFirstName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.first_name)
                         , getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
@@ -382,8 +384,9 @@ public class CreateNewClientFragment extends ProgressableFragment
     }
 
     public boolean isValidMiddleName() {
+        result = true;
         try {
-            if (!et_clientMiddleName.getEditableText().toString().matches("[a-zA-Z]+")) {
+            if (!ValidationUtil.isAlphabetic(et_clientMiddleName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string
                         .middle_name), getResources().getString(R.string
                         .error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
@@ -409,7 +412,7 @@ public class CreateNewClientFragment extends ProgressableFragment
                 throw new ShortOfLengthException(getResources().getString(R.string.last_name), 4);
             }
 
-            if (!et_clientLastName.getEditableText().toString().matches("[a-zA-Z]+")) {
+            if (!ValidationUtil.isAlphabetic(et_clientLastName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.last_name),
                         getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
