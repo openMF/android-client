@@ -6,6 +6,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.group.Group;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.zipmodels.GroupAndGroupAccounts;
 import com.mifos.utils.Constants;
@@ -83,6 +84,34 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
                 })
         );
     }
+
+    public void loadGroupAssociateClients(int groupId) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerGroups.getGroupWithAssociations(groupId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<GroupWithAssociations>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError(R.string.failed_to_load_client);
+                    }
+
+                    @Override
+                    public void onNext(GroupWithAssociations groupWithAssociations) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showGroupClients(groupWithAssociations.getClientMembers());
+                    }
+                })
+        );
+    }
+
 
     public void loadClientDataTable() {
         checkViewAttached();

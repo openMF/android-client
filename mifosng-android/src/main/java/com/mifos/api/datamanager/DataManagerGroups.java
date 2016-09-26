@@ -1,11 +1,13 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.utils.PrefManager;
 
 import java.util.List;
@@ -27,12 +29,15 @@ public class DataManagerGroups {
 
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelperGroups mDatabaseHelperGroups;
+    public final DatabaseHelperClient mDatabaseHelperClient;
 
     @Inject
     public DataManagerGroups(BaseApiManager baseApiManager,
-                             DatabaseHelperGroups databaseHelperGroups) {
+                             DatabaseHelperGroups databaseHelperGroups,
+                             DatabaseHelperClient databaseHelperClient) {
         mBaseApiManager = baseApiManager;
         mDatabaseHelperGroups = databaseHelperGroups;
+        mDatabaseHelperClient = databaseHelperClient;
     }
 
     /**
@@ -112,6 +117,25 @@ public class DataManagerGroups {
         return mDatabaseHelperGroups.saveGroup(group);
     }
 
+    /**
+     * This Method Fetch the Clients that are attached to the Group.
+     * @param groupId Group Id
+     * @return GroupWithAssociations
+     */
+    public Observable<GroupWithAssociations> getGroupWithAssociations(int groupId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getGroupApi().getGroupWithAssociations(groupId);
+            case 1:
+                /**
+                 * Return Groups from DatabaseHelperGroups.
+                 */
+                return mDatabaseHelperClient.getGroupAssociateClients(groupId);
+
+            default:
+                return Observable.just(new GroupWithAssociations());
+        }
+    }
 
     /**
      * This method fetch the Group Accounts if the User status is zero and otherwise load the

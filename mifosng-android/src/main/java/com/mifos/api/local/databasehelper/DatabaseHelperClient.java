@@ -1,8 +1,5 @@
 package com.mifos.api.local.databasehelper;
 
-import android.os.AsyncTask;
-import android.support.annotation.Nullable;
-
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanAccount_Table;
@@ -14,6 +11,7 @@ import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.ClientPayload_Table;
 import com.mifos.objects.client.Client_Table;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.clients.InterestType;
 import com.mifos.objects.templates.clients.OfficeOptions;
@@ -50,35 +48,6 @@ public class DatabaseHelperClient {
 
     @Inject
     public DatabaseHelperClient() {
-    }
-
-
-    /**
-     * Saving Clients in Database using DBFlow.
-     * save() method save the value reference to primary key if its exist the update if not the
-     * insert.
-     *
-     * @param clientPage
-     * @return null
-     */
-    @Nullable
-    public Observable<Void> saveAllClients(final Page<Client> clientPage) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
-            @Override
-            public void run() {
-
-                for (Client client : clientPage.getPageItems()) {
-
-                    ClientDate clientDate = new ClientDate(client.getId(), 0,
-                            client.getActivationDate().get(0),
-                            client.getActivationDate().get(1),
-                            client.getActivationDate().get(2));
-                    client.setClientDate(clientDate);
-                    client.save();
-                }
-            }
-        });
-        return null;
     }
 
     /**
@@ -126,6 +95,23 @@ public class DatabaseHelperClient {
 
     }
 
+    public Observable<GroupWithAssociations> getGroupAssociateClients(final int groupId) {
+        return Observable.defer(new Func0<Observable<GroupWithAssociations>>() {
+            @Override
+            public Observable<GroupWithAssociations> call() {
+
+                List<Client> clients = SQLite.select()
+                        .from(Client.class)
+                        .where(Client_Table.groupId.eq(groupId))
+                        .queryList();
+                GroupWithAssociations groupWithAssociations = new GroupWithAssociations();
+                groupWithAssociations.setClientMembers(clients);
+
+                return Observable.just(groupWithAssociations);
+            }
+        });
+    }
+
     /**
      * This Method select query with clientId, In return the Client Details will be come.
      *
@@ -162,7 +148,7 @@ public class DatabaseHelperClient {
      * @return null
      */
     public Observable<ClientAccounts> saveClientAccounts(final ClientAccounts clientAccounts,
-                                               final int clientId) {
+                                                         final int clientId) {
 
         return Observable.defer(new Func0<Observable<ClientAccounts>>() {
             @Override
@@ -222,6 +208,7 @@ public class DatabaseHelperClient {
 
     /**
      * Saving ClientTemplate into Database ClientTemplate_Table
+     *
      * @param clientsTemplate fetched from Server
      * @return void
      */
@@ -272,6 +259,7 @@ public class DatabaseHelperClient {
 
     /**
      * Reading ClientTemplate from Database ClientTemplate_Table
+     *
      * @return ClientTemplate
      */
     public Observable<ClientsTemplate> readClientTemplate() {
@@ -332,6 +320,7 @@ public class DatabaseHelperClient {
 
     /**
      * Saving ClientPayload into Database ClientPayload_Table
+     *
      * @param clientPayload created in offline mode
      * @return Client
      */
@@ -348,6 +337,7 @@ public class DatabaseHelperClient {
 
     /**
      * Reading All Entries in the ClientPayload_Table
+     *
      * @return List<ClientPayload></>
      */
     public Observable<List<ClientPayload>> readAllClientPayload() {
@@ -368,6 +358,7 @@ public class DatabaseHelperClient {
     /**
      * This Method for deleting the client payload from the Database according to Id and
      * again fetch the client List from the Database ClientPayload_Table
+     *
      * @param id is Id of the Client Payload in which reference client was saved into Database
      * @return List<ClientPayload></>
      */

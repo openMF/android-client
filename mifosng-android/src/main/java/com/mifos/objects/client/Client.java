@@ -31,6 +31,9 @@ public class Client extends MifosBaseModel implements Parcelable {
     int id;
 
     @Column
+    transient int groupId;
+
+    @Column
     String accountNo;
 
     @Column
@@ -88,6 +91,14 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     @Column
     private String externalId;
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
 
     public boolean isSync() {
         return sync;

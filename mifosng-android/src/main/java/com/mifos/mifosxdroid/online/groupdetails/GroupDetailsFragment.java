@@ -29,6 +29,7 @@ import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
@@ -180,6 +181,11 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     }
 
     @Override
+    public void showGroupClients(List<Client> clients) {
+        mListener.loadGroupClients(clients);
+    }
+
+    @Override
     public void showGroupAccounts(GroupAccounts groupAccounts) {
         // Proceed only when the fragment is added to the activity.
         if (!isAdded()) {
@@ -274,6 +280,9 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
             case R.id.add_group_loan:
                 addGroupLoanAccount();
                 break;
+            case R.id.group_clients:
+                mGroupDetailsPresenter.loadGroupAssociateClients(groupId);
+                break;
 
         }
         return super.onOptionsItemSelected(item);
@@ -290,6 +299,8 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
         void loadLoanAccountSummary(int loanAccountNumber);
 
         void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType);
+
+        void loadGroupClients(List<Client> clients);
     }
 
 

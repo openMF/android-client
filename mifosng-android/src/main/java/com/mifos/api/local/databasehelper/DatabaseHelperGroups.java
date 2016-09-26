@@ -48,11 +48,13 @@ public class DatabaseHelperGroups {
             @Override
             public Observable<Group> call() {
 
-                GroupDate groupDate = new GroupDate(group.getId(), 0,
-                        group.getActivationDate().get(0),
-                        group.getActivationDate().get(1),
-                        group.getActivationDate().get(2));
-                group.setGroupDate(groupDate);
+                if (group.getActivationDate().size() != 0) {
+                    GroupDate groupDate = new GroupDate(group.getId(), 0,
+                            group.getActivationDate().get(0),
+                            group.getActivationDate().get(1),
+                            group.getActivationDate().get(2));
+                    group.setGroupDate(groupDate);
+                }
                 group.save();
                 return Observable.just(group);
             }
