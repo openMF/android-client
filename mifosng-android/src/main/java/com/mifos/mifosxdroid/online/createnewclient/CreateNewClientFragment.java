@@ -23,7 +23,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mifos.objects.client.ClientPayload;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
@@ -33,6 +32,7 @@ import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -175,7 +175,9 @@ public class CreateNewClientFragment extends ProgressableFragment
             public void onClick(View view) {
                 ClientPayload clientPayload = new ClientPayload();
                 clientPayload.setFirstname(et_clientFirstName.getEditableText().toString());
-                clientPayload.setMiddlename(et_clientMiddleName.getEditableText().toString());
+                if (!TextUtils.isEmpty(et_clientMiddleName.getEditableText().toString())) {
+                    clientPayload.setMiddlename(et_clientMiddleName.getEditableText().toString());
+                }
                 clientPayload.setMobileNo(et_clientMobileNo.getEditableText().toString());
                 clientPayload.setExternalId(et_clientexternalId.getEditableText().toString());
                 clientPayload.setLastname(et_clientLastName.getEditableText().toString());
@@ -386,10 +388,14 @@ public class CreateNewClientFragment extends ProgressableFragment
     public boolean isValidMiddleName() {
         result = true;
         try {
-            if (!ValidationUtil.isAlphabetic(et_clientMiddleName.getEditableText().toString())) {
-                throw new InvalidTextInputException(getResources().getString(R.string
-                        .middle_name), getResources().getString(R.string
-                        .error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+            if (!TextUtils.isEmpty(et_clientMiddleName.getEditableText().toString())) {
+                if (!ValidationUtil.isAlphabetic(
+                        et_clientMiddleName.getEditableText().toString())) {
+                    throw new InvalidTextInputException(
+                            getResources().getString(R.string.middle_name),
+                            getResources().getString(R.string.error_should_contain_only),
+                            InvalidTextInputException.TYPE_ALPHABETS);
+                }
             }
         } catch (InvalidTextInputException e) {
             e.notifyUserWithToast(getActivity());
