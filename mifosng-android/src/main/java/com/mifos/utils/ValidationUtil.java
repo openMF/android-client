@@ -22,7 +22,7 @@ public class ValidationUtil {
             "([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
             "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5])" +
             ")$";
-    private static final String ALPHABETIC_REGEX_PATTERN = "^[\\p{L} .'-]+$";
+    private static final String NAME_REGEX_PATTERN = "^[\\p{L} .'-]+$";
     private static Pattern domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);
     private static Matcher domainNameMatcher;
     private static Pattern ipAddressPattern = Pattern.compile(IP_ADDRESS_REGEX_PATTERN);
@@ -89,7 +89,13 @@ public class ValidationUtil {
         return false;
     }
 
-    public static boolean isAlphabetic(String string) {
-        return string.matches(ALPHABETIC_REGEX_PATTERN);
+    /**
+     * Validates the Name of Client, Group, Center etc.
+     *
+     * @param string Name
+     * @return Boolean
+     */
+    public static boolean isNameValid(String string) {
+        return string.matches(NAME_REGEX_PATTERN);
     }
 }

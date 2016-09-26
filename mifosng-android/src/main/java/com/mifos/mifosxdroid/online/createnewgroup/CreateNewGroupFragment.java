@@ -34,8 +34,8 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Group;
-import com.mifos.objects.organisation.Office;
 import com.mifos.objects.group.GroupPayload;
+import com.mifos.objects.organisation.Office;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosResponseHandler;
@@ -247,7 +247,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
                     .getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.group_name), 4);
             }
-            if (!ValidationUtil.isAlphabetic(et_groupName.getEditableText().toString())) {
+            if (!ValidationUtil.isNameValid(et_groupName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.group_name)
                         , getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
