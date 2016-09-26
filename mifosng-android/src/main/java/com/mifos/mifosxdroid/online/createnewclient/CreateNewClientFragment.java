@@ -388,14 +388,13 @@ public class CreateNewClientFragment extends ProgressableFragment
     public boolean isValidMiddleName() {
         result = true;
         try {
-            if (!TextUtils.isEmpty(et_clientMiddleName.getEditableText().toString())) {
-                if (!ValidationUtil.isAlphabetic(
-                        et_clientMiddleName.getEditableText().toString())) {
-                    throw new InvalidTextInputException(
-                            getResources().getString(R.string.middle_name),
-                            getResources().getString(R.string.error_should_contain_only),
-                            InvalidTextInputException.TYPE_ALPHABETS);
-                }
+            if (!TextUtils.isEmpty(et_clientMiddleName.getEditableText().toString())
+                    && !ValidationUtil.isAlphabetic(et_clientMiddleName.getEditableText()
+                    .toString())) {
+                throw new InvalidTextInputException(
+                        getResources().getString(R.string.middle_name),
+                        getResources().getString(R.string.error_should_contain_only),
+                        InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
             e.notifyUserWithToast(getActivity());
