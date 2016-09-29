@@ -4,12 +4,18 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
-import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.noncore.IdentifierPayload;
+import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.objects.templates.clients.ClientsTemplate;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -71,4 +77,60 @@ public interface ClientService {
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
     Observable<ClientAccounts> getClientAccounts(@Path("clientId") int clientId);
+
+    /**
+     * This Service is for fetching the List of Identifiers.
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers
+     *
+     * @param clientId Client Id
+     * @return List<Identifier>
+     */
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
+    Observable<List<Identifier>> getClientIdentifiers(@Path("clientId") int clientId);
+
+
+    /**
+     * This Service is for Creating the Client Identifier.
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers
+     *
+     * @param clientId Client Id
+     * @param identifierPayload IdentifierPayload
+     * @return GenericResponse
+     */
+    @POST(APIEndPoint.CLIENTS + "/{clientId}/identifiers")
+    Observable<GenericResponse> createClientIdentifier(@Path("clientId") int clientId,
+                                                       @Body IdentifierPayload identifierPayload);
+
+
+    /**
+     * This Service is for the Fetching the Client Identifier Template.
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/template
+     *
+     * @param clientId Client Id
+     * @return IdentifierTemplate
+     */
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/identifiers/template")
+    Observable<IdentifierTemplate> getClientIdentifierTemplate(@Path("clientId") int clientId);
+
+    /**
+     * This Service for Deleting the Client Identifier.
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/
+     * {identifierId}
+     *
+     * @param clientId Client Id
+     * @param identifierId Identifier Id
+     * @return GenericResponse
+     */
+    @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
+    Observable<GenericResponse> deleteClientIdentifier(@Path("clientId") int clientId,
+                                                       @Path("identifierId") int identifierId);
+
+
+
+
+
 }

@@ -14,11 +14,20 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Created by ishankhanna on 03/07/14.
  */
 public class FileUtils {
+
+    public static final String LOG_TAG = FileUtils.class.getSimpleName();
 
     public static String getPathReal(final Context context, final Uri uri) {
         if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
@@ -170,5 +179,41 @@ public class FileUtils {
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    /**
+     * This Method for getting File Mime Type
+     *
+     * @param filePath Path of the file
+     * @return String Mime Type
+     */
+    public static String getMimeType(String filePath) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(filePath);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
+    /**
+     * This Method for writing InputStream into File.
+     *
+     * @param in   InputStream
+     * @param file File
+     */
+    public static void writeInputStreamDataToFile(InputStream in, File file) {
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            Log.d(LOG_TAG, e.getLocalizedMessage());
+        }
     }
 }

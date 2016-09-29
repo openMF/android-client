@@ -16,5 +16,7 @@ public interface DocumentDialogMvpView extends MvpView {
 
     void showDocumentedCreatedSuccessfully(GenericResponse genericResponse);
 
-    void showError(String s);
+    void showDocumentUpdatedSuccessfully();
+
+    void showError(int errorMessage);
 }

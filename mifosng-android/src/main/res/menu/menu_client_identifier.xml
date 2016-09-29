@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_remove_identifier"
+        android:enabled="true"
+        android:title="@string/remove"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_identifier_documents"
+        android:enabled="true"
+        android:title="@string/documents"
+        app:showAsAction="never" />
+
+</menu>

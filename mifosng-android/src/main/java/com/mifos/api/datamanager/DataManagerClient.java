@@ -1,11 +1,15 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.noncore.IdentifierPayload;
+import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.utils.PrefManager;
 
@@ -281,7 +285,56 @@ public class DataManagerClient {
         return mDatabaseHelperClient.deleteAndUpdatePayloads(id);
     }
 
+    /**
+     * This Method for Updating the Client Payload into the Database.
+     *
+     * @param clientPayload ClientPayload
+     * @return ClientPayload
+     */
     public Observable<ClientPayload> updateClientPayload(ClientPayload clientPayload) {
         return mDatabaseHelperClient.updateDatabaseClientPayload(clientPayload);
+    }
+
+    /**
+     * This Method is for fetching the Client identifier from the REST API.
+     *
+     * @param clientId Client Id
+     * @return List<Identifier>
+     */
+    public Observable<List<Identifier>> getClientIdentifiers(int clientId) {
+        return mBaseApiManager.getClientsApi().getClientIdentifiers(clientId);
+    }
+
+    /**
+     * This Method is, for creating the Client Identifier.
+     *
+     * @param clientId Client Id
+     * @param identifierPayload IdentifierPayload
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> createClientIdentifier(int clientId,
+                                                              IdentifierPayload identifierPayload) {
+        return mBaseApiManager.getClientsApi().createClientIdentifier(clientId, identifierPayload);
+    }
+
+    /**
+     * This Method is, for fetching the Client Identifier Template.
+     *
+     * @param clientId Client Id
+     * @return IdentifierTemplate
+     */
+    public Observable<IdentifierTemplate> getClientIdentifierTemplate(int clientId) {
+        return mBaseApiManager.getClientsApi().getClientIdentifierTemplate(clientId);
+    }
+
+    /**
+     * This Method is for deleting the Client Identifier.
+     *
+     * @param clientId Client Id
+     * @param identifierId Identifier Id
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> deleteClientIdentifier(int clientId, int identifierId) {
+        return mBaseApiManager.getClientsApi().deleteClientIdentifier(clientId, identifierId);
     }
 }

@@ -5,21 +5,20 @@
 
 package com.mifos.mifosxdroid.adapters;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mifos.api.BaseApiManager;
-import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,46 +26,40 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 03/07/14.
  */
-public class IdentifierListAdapter extends BaseAdapter {
+public class IdentifierListAdapter extends RecyclerView.Adapter<IdentifierListAdapter.ViewHolder> {
 
-    public final String LOG_TAG = getClass().getSimpleName();
+    private List<Identifier> identifiers;
+    private IdentifierOptionsListener identifierOptionsListener;
 
-    Context context;
-
-    LayoutInflater layoutInflater;
-
-    List<Identifier> identifiers = new ArrayList<Identifier>();
-
-    int clientId;
-
-    DataManager dataManager;
-    BaseApiManager baseApiManager;
-
-    private DeleteIdentifierListener mDeleteIdentifierListener;
-
-    public interface DeleteIdentifierListener {
-        void onClickRemoveIdentifier(int identifierId, int position);
-    }
-
-    public IdentifierListAdapter(Context context, List<Identifier> identifierList, int clientId
-            , DeleteIdentifierListener listener) {
-        this.context = context;
-        layoutInflater = LayoutInflater.from(context);
-        identifiers = identifierList;
-        this.clientId = clientId;
-        baseApiManager = new BaseApiManager();
-        dataManager = new DataManager(baseApiManager);
-        mDeleteIdentifierListener = listener;
+    @Inject
+    public IdentifierListAdapter() {
+        identifiers = new ArrayList<>();
     }
 
     @Override
-    public int getCount() {
-        return identifiers.size();
+    public IdentifierListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.row_identifier_list, parent, false);
+        return new IdentifierListAdapter.ViewHolder(view);
     }
 
     @Override
-    public Identifier getItem(int i) {
-        return identifiers.get(i);
+    public void onBindViewHolder(final IdentifierListAdapter.ViewHolder holder, int position) {
+
+        final Identifier identifier = identifiers.get(position);
+
+        holder.tv_identifier_id.setText(String.valueOf(identifier.getDocumentKey()));
+        holder.tv_identifier_description.setText(identifier.getDescription());
+        holder.tv_identifier_type.setText(identifier.getDocumentType().getName());
+    }
+
+    public void setIdentifiers(List<Identifier> identifiers) {
+        this.identifiers = identifiers;
+        notifyDataSetChanged();
+    }
+
+    public void setIdentifierOptionsListener(IdentifierOptionsListener identifierOptionsListener) {
+        this.identifierOptionsListener = identifierOptionsListener;
     }
 
     @Override
@@ -75,56 +68,38 @@ public class IdentifierListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
-
-        ReusableIdentifierViewHolder reusableIdentifierViewHolder;
-        if (view == null) {
-
-            view = layoutInflater.inflate(R.layout.row_identifier_list, null);
-            reusableIdentifierViewHolder = new ReusableIdentifierViewHolder(view);
-            view.setTag(reusableIdentifierViewHolder);
-
-        } else {
-            reusableIdentifierViewHolder = (ReusableIdentifierViewHolder) view.getTag();
-        }
-
-        final Identifier identifier = identifiers.get(i);
-        reusableIdentifierViewHolder.tv_identifier_id.setText(String.valueOf(identifier.getId()));
-        reusableIdentifierViewHolder.tv_identifier_descrption.setText(identifier.getDescription()
-                == null ? "" : identifier.getDescription());
-        reusableIdentifierViewHolder.tv_identifier_type.setText(identifier.getDocumentType()
-                .getName());
-
-        reusableIdentifierViewHolder.bt_delete_identifier.setOnClickListener(new View
-                .OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mDeleteIdentifierListener.onClickRemoveIdentifier(identifier.getId(), i);
-            }
-        });
-
-        return view;
+    public int getItemCount() {
+        return identifiers.size();
     }
 
-    public static class ReusableIdentifierViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_identifier_id)
         TextView tv_identifier_id;
-        @BindView(R.id.tv_identifier_descrption)
-        TextView tv_identifier_descrption;
+
         @BindView(R.id.tv_identifier_type)
         TextView tv_identifier_type;
-        @BindView(R.id.tv_identifier_document)
-        TextView tv_identifier_document;
-        @BindView(R.id.bt_move_identifier)
-        Button bt_move_identifier;
-        @BindView(R.id.bt_delete_identifier)
-        Button bt_delete_identifier;
 
-        public ReusableIdentifierViewHolder(View view) {
+        @BindView(R.id.tv_identifier_description)
+        TextView tv_identifier_description;
+
+        @BindView(R.id.iv_identifier_options)
+        ImageView iv_identifier_options;
+
+        public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
+            iv_identifier_options.setOnClickListener(this);
+
         }
 
+        @Override
+        public void onClick(View v) {
+            identifierOptionsListener.onClickIdentifierOptions(getAdapterPosition(), v);
+        }
+    }
 
+    public interface IdentifierOptionsListener {
+        void onClickIdentifierOptions(int position, View view);
     }
 }

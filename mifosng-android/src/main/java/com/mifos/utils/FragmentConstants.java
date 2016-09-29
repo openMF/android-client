@@ -20,6 +20,8 @@ public class FragmentConstants {
 
     public static final String FRAG_CLIENT_DETAILS = "Client Details Fragment";
 
+    public static final String FRAG_CLIENT_IDENTIFIER = "Client Identifier Fragment";
+
     public static final String FRAG_GROUP_DETAILS = "Group Details Fragment";
 
     public static final String FRAG_LOAN_ACCOUNT_SUMMARY = "Loan Account Summary Fragment";

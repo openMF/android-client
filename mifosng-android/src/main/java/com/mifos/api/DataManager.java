@@ -15,18 +15,13 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.client.Client;
-import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
-import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupWithAssociations;
-import com.mifos.objects.noncore.Document;
-import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
@@ -136,52 +131,11 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().createLoanCharges(loanId, chargesPayload);
     }
 
-
-    /**
-     * Client API
-     */
-    public Observable<Page<Client>> getAllClients() {
-        return mBaseApiManager.getClientsApi().getAllClients();
-    }
-
-    public Observable<Page<Client>> getAllClients(int offset, int limit) {
-        return mBaseApiManager.getClientsApi().getAllClients(offset, limit);
-    }
-
-    public Observable<Client> createClient(ClientPayload clientPayload) {
-        return mBaseApiManager.getClientsApi().createClient(clientPayload);
-    }
-
-    public Observable<Client> getClient(int id) {
-        return mBaseApiManager.getClientsApi().getClient(id);
-    }
-
-
-    /**
-     * Identifiers API
-     */
-    public Observable<List<Identifier>> getIdentifiers(int clientid) {
-        return mBaseApiManager.getIdentifierApi().getListOfIdentifiers(clientid);
-    }
-
-    public Observable<GenericResponse> deleteIdentifier(int clientId, int id) {
-        return mBaseApiManager.getIdentifierApi().deleteIdentifier(clientId, id);
-    }
-
-
     /**
      * Search API
      */
     public Observable<List<SearchedEntity>> searchClientsByName(String query) {
         return mBaseApiManager.getSearchApi().searchClientsByName(query);
-    }
-
-
-    /**
-     * Documents API
-     */
-    public Observable<List<Document>> getDocumentsList(String type, int id) {
-        return mBaseApiManager.getDocumentApi().getListOfDocuments(type, id);
     }
 
 
@@ -194,14 +148,6 @@ public class DataManager {
 
     public Observable<List<Group>> getGroupsByOffice(int office, Map<String, Object> params) {
         return mBaseApiManager.getGroupApi().getAllGroupsInOffice(office, params);
-    }
-
-    public Observable<Group> createGroup(GroupPayload groupPayload) {
-        return mBaseApiManager.getGroupApi().createGroup(groupPayload);
-    }
-
-    public Observable<Group> getGroup(int groupId) {
-        return mBaseApiManager.getGroupApi().getGroup(groupId);
     }
 
     /**

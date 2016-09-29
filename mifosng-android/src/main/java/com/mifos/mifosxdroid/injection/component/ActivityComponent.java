@@ -4,6 +4,7 @@ import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
@@ -144,4 +145,6 @@ public interface ActivityComponent {
     void inject(SyncSavingsAccountTransactionFragment syncSavingsAccountTransactionFragment);
 
     void inject(SyncGroupsDialogFragment syncGroupsDialogFragment);
+
+    void inject(IdentifierDialogFragment identifierDialogFragment);
 }

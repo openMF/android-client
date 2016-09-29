@@ -58,6 +58,7 @@
     <string name="create_loan_terms">Loan Terms</string>
     <string name="create_center">Create Center</string>
     <string name="create_group">Create Group</string>
+    <string name="create_identifier">Create Identifier</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
     <string name="id">ID</string>
@@ -70,6 +71,7 @@
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
     <string name="no_document_to_show">There is No Documents to Show</string>
+    <string name="no_identifier_to_show">There is No Identifier to Show</string>
     <string name="approve_savings">Approve Savings</string>
     <string name="activate_savings">Activate Savings</string>
     <string name="savings_account_closed">Savings Account Closed</string>
@@ -117,8 +119,24 @@
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
+    <string name="document_directory">/mifos/documents/</string>
+    <string name="open_document">Open Document</string>
+    <string name="document_remove_successfully">Document Removed Successfully</string>
+    <string name="document_fetch_successfully">Document Fetch Successfully</string>
+    <string name="update_document">Update Document</string>
+    <string name="document_updated_successfully">%1$s Document Updated Successfully</string>
+    <string name="document_dialog">"Document Dialog</string>
+    <string name="document_type">Document Type</string>
+    <string name="status">Status</string>
+    <string name="unique_id">Unique Id</string>
+    <string name="identifier_created_successfully">Identifier Created Successfully</string>
+    <string name="empty_identifier_document_type">Identifier Document Type id is Empty \n
+        May be, Identifier Template is failed to fetch. Please Check your Internet
+    Connection</string>
+    <string name="unique_id_required">Unique Id is required!</string>
+    <string name="update">Update</string>
     <string name="group_clients">Group Clients</string>
-
+    <string name="identifier_deleted_successfully">Identifier deleted Successfully</string>
     <!-- General Terms End Here -->
 
 
@@ -132,6 +150,8 @@
     <string name="permission_denied">Permission Denied</string>
     <string name="permission_denied_to_read_external_document">Permission Denied to Read
         External Document</string>
+    <string name="permission_denied_to_write_external_document">Permission Denied to write
+        Document in External Storage</string>
 
 
     <!-- Loan Related Terminologies Begin Here -->
@@ -411,8 +431,15 @@
         permission the app is unable to upload document when uploading document, app need to
         access photos media and files on your device. Are you sure you want to deny this
         permission?</string>
-    <string name="dialog_message_permission_never_ask_again">App Needs the Permission to
+    <string name="dialog_message_write_external_storage_permission_denied">With out this
+        permission the app is unable to save document when downloading document, app need to
+        access external write storage permission. Are you sure you want to deny this
+        permission?</string>
+    <string name="dialog_message_permission_never_ask_again_read">App Needs the Permission to
         Read the External Storage but you had previously checked the Button Never Ask Again.
+    </string>
+    <string name="dialog_message_permission_never_ask_again_write">App Needs the Permission to
+        Write the External Storage but you had previously checked the Button Never Ask Again.
     </string>
 
     <!--Material Dialog-->
@@ -460,6 +487,14 @@
     <string name="failed_to_fetch_center">Failed to Fetch Center</string>
     <string name="failed_to_fetch_Group_and_meeting">Failed to Fetch Group and Meeting</string>
     <string name="failed_to_fetch_group_and_account">Failed to fetch group and accounts</string>
+    <string name="failed_fetch_document">Failed to fetch document</string>
+    <string name="failed_to_remove_document">Failed  to remove document</string>
+    <string name="failed_to_upload_document">Failed to upload document</string>
+    <string name="failed_to_update_document">Failed to update document</string>
+    <string name="failed_to_fetch_identifier_template">Failed to Fetch Identifier Template</string>
+    <string name="failed_to_create_identifier">Failed to Create Identifier</string>
+    <string name="failed_to_fetch_identifier">Failed to fetch identifiers</string>
+    <string name="failed_to_delete_identifier">Failed to delete Identifier</string>
 
 
     <string-array name="office_ids">
@@ -472,6 +507,19 @@
         <item>office 6</item>
         <item>office 7</item>
     </string-array>
+
+    <string-array name="document_options">
+        <item>Download Document</item>
+        <item>Update Document</item>
+        <item>Remove Document</item>
+    </string-array>
+
+    <!--Any Type of Status-->
+    <string-array name="status">
+        <item>Active</item>
+        <item>InActive</item>
+    </string-array>
+
     <string name="surveyEmpty">This Survey is Empty</string>
 
 
