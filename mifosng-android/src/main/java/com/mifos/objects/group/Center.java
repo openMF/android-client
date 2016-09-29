@@ -10,8 +10,8 @@ import android.os.Parcelable;
 
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
+import com.mifos.objects.client.Status;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -29,39 +29,50 @@ import java.util.List;
 public class Center extends MifosBaseModel implements Parcelable {
 
     @PrimaryKey
-    private Integer id;
+    Integer id;
 
     @Column
-    private String accountNo;
+    transient Boolean sync;
 
     @Column
-    private String name;
+    String accountNo;
 
     @Column
-    private Integer officeId;
+    String name;
 
     @Column
-    private String officeName;
+    Integer officeId;
 
     @Column
-    private Integer staffId;
+    String officeName;
 
     @Column
-    private String staffName;
+    Integer staffId;
 
     @Column
-    private String hierarchy;
-
-    private Status status;
+    String staffName;
 
     @Column
-    private Boolean active;
+    String hierarchy;
 
-    private List<Integer> activationDate = new ArrayList<Integer>();
+    Status status;
 
-    private Timeline timeline;
+    @Column
+    Boolean active;
 
-    private String externalId;
+    List<Integer> activationDate = new ArrayList<Integer>();
+
+    Timeline timeline;
+
+    String externalId;
+
+    public Boolean getSync() {
+        return sync;
+    }
+
+    public void setSync(Boolean sync) {
+        this.sync = sync;
+    }
 
     public Boolean getActive() {
         return this.active;

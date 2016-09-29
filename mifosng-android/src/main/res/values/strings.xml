@@ -113,6 +113,7 @@
     <string name="empty_client_list">Empty ClientList</string>
     <string name="empty_group_clients">Empty Group ClientList</string>
     <string name="empty_groups_list">Empty GroupList</string>
+    <string name="empty_center_list">Empty CenterList</string>
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
@@ -244,6 +245,7 @@
     <string name="repaidevery">Repaid Every</string>
     <string name="no_more_clients_available">No more Clients Available</string>
     <string name="no_more_groups_available">No more Groups Available</string>
+    <string name="no_more_centers_available">No more Centers Available</string>
 
     <string name="numberofrepayments">Number of repayments</string>
 
@@ -454,6 +456,8 @@
     <string name="failed_to_add_savings_account">Failed to add SavingsAccount</string>
     <string name="failed_to_fetch_documents">Failed to fetch documents</string>
     <string name="failed_to_fetch_groups">Failed to Fetch Groups</string>
+    <string name="failed_to_fetch_center">Failed to Fetch Center</string>
+    <string name="failed_to_fetch_Group_and_meeting">Failed to Fetch Group and Meeting</string>
     <string name="failed_to_fetch_group_and_account">Failed to fetch group and accounts</string>
 
 

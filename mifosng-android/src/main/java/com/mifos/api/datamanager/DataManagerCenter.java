@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server
@@ -35,11 +34,11 @@ public class DataManagerCenter {
 
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
-     * get list of the centers. The response is pass to the DatabaseHelperCenter
-     * that save the response in Database in different thread and next pass the response to
-     * Presenter to show in the view
+     * get list of the centers. The response will pass Presenter to show in the view
      * <p/>
-     * If the offset is zero and UserStatus is 1 then fetch all Center list and show on the view.
+     * If the offset is zero and UserStatus is 1 then fetch all Center list from Database and show
+     * on the view.
+     *
      * else if offset is not zero and UserStatus is 1 then return default empty response to
      * presenter
      *
@@ -51,16 +50,8 @@ public class DataManagerCenter {
     public Observable<Page<Center>> getCenters(boolean paged, int offset, int limit) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getCenterApi().getCenters(paged, offset, limit)
-                        .concatMap(new Func1<Page<Center>, Observable<? extends Page<Center>>>() {
-                            @Override
-                            public Observable<? extends Page<Center>> call(Page<Center>
-                                                                                   centerPage) {
-                                //Saving Clients in Database
-                                mDatabaseHelperCenter.saveAllCenters(centerPage);
-                                return Observable.just(centerPage);
-                            }
-                        });
+                return mBaseApiManager.getCenterApi().getCenters(paged, offset, limit);
+
             case 1:
                 /**
                  * Return All Centers List from DatabaseHelperCenter only one time.
