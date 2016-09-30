@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter;
@@ -40,6 +41,9 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
 
     @BindView(R.id.lv_surveys_list)
     ListView lv_surveys_list;
+
+    @BindView(R.id.tv_survey_name)
+    TextView surveySelectText;
 
     @Inject
     SurveyListPresenter mSurveyListPresenter;
@@ -80,14 +84,20 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
 
     @Override
     public void showAllSurvey(final List<Survey> surveys) {
-        SurveyListAdapter surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
-        lv_surveys_list.setAdapter(surveyListAdapter);
-        lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                mListener.loadSurveyQuestion(surveys.get(position), clientId);
-            }
-        });
+        if (surveys.size() == 0) {
+            surveySelectText.setText(getResources().
+                    getString(R.string.no_survey_available_for_client));
+        } else {
+            SurveyListAdapter surveyListAdapter = new SurveyListAdapter(getActivity(), surveys);
+            lv_surveys_list.setAdapter(surveyListAdapter);
+            lv_surveys_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position,
+                                        long l) {
+                    mListener.loadSurveyQuestion(surveys.get(position), clientId);
+                }
+            });
+        }
     }
 
     @Override
