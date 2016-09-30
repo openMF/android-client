@@ -24,7 +24,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.survey.Survey;
 import com.mifos.utils.Constants;
 
-import org.w3c.dom.Text;
+
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
 
     @Override
     public void showAllSurvey(final List<Survey> surveys) {
-        if(surveys.size() == 0) {
+        if (surveys.size() == 0) {
             TextView surveySelectText = (TextView) rootView.findViewById(R.id.tv_survey_name);
             surveySelectText.setText("No Survey Available for this client");
         }
