@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment;
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment;
@@ -14,7 +15,10 @@ import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTrans
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
+import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -57,6 +61,11 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
     public void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType) {
         replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber,
                 accountType), true, R.id.container);
+    }
+
+    @Override
+    public void loadGroupClients(List<Client> clients) {
+        replaceFragment(ClientListFragment.newInstance(clients, true), true, R.id.container);
     }
 
     /**

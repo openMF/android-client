@@ -105,6 +105,37 @@
             android:indeterminate="false"/>
 
         <TableRow
+            android:id="@+id/tableRow6"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/syncing_client"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/syncing_client"
+                />
+
+            <TextView
+                android:id="@+id/tv_syncing_client"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/syncing_client"
+                />
+
+        </TableRow>
+
+        <ProgressBar
+            android:id="@+id/pb_sync_client"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"/>
+
+        <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

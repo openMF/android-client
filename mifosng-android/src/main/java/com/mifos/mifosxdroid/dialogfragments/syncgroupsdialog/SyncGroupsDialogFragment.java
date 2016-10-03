@@ -55,6 +55,12 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     @BindView(R.id.pb_total_sync_group)
     ProgressBar pb_total_sync_group;
 
+    @BindView(R.id.tv_syncing_client)
+    TextView tv_syncing_client;
+
+    @BindView(R.id.pb_sync_client)
+    ProgressBar pb_syncing_client;
+
     @BindView(R.id.tv_sync_failed)
     TextView tv_sync_failed;
 
@@ -99,7 +105,7 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
 
         //Start Syncing Groups
         if (isOnline()) {
-            syncGroupsDialogPresenter.startSyncingClients(groups);
+            syncGroupsDialogPresenter.startSyncingGroups(groups);
         } else {
             showNetworkIsNotAvailable();
             dismissDialog();
@@ -145,6 +151,16 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     @Override
     public void setMaxSingleSyncGroupProgressBar(int total) {
         pb_syncing_group.setMax(total);
+    }
+
+    @Override
+    public void setClientSyncProgressBarMax(int count) {
+        pb_syncing_client.setMax(count);
+    }
+
+    @Override
+    public void updateClientSyncProgressBar(int i) {
+        pb_syncing_client.setProgress(i);
     }
 
     @Override

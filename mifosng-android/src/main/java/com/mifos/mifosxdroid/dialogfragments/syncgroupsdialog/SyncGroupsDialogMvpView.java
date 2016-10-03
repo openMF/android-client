@@ -15,6 +15,10 @@ public interface SyncGroupsDialogMvpView extends MvpView {
 
     void setMaxSingleSyncGroupProgressBar(int total);
 
+    void setClientSyncProgressBarMax(int count);
+
+    void updateClientSyncProgressBar(int i);
+
     void updateSingleSyncGroupProgressBar(int i);
 
     void updateTotalSyncGroupProgressBarAndCount(int i);
