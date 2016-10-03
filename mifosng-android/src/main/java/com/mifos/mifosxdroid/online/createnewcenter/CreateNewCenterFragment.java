@@ -40,6 +40,7 @@ import com.mifos.objects.organisation.Office;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,7 +149,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     private void initiateCenterCreation(CenterPayload centerPayload) {
 
-        if (isValidCenterName()) {
+        if (isCenterNameValid()) {
             mCreateNewCenterPresenter.createCenter(centerPayload);
         }
     }
@@ -176,7 +177,8 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     }
 
-    public boolean isValidCenterName() {
+    public boolean isCenterNameValid() {
+        result = true;
         try {
             if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.center_name),
@@ -187,10 +189,11 @@ public class CreateNewCenterFragment extends MifosBaseFragment
                     .getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.center_name), 4);
             }
-            if (!et_centerName.getEditableText().toString().matches("[a-zA-Z]+")) {
-                throw new InvalidTextInputException(getResources().getString(R.string
-                        .center_name), getResources().getString(R.string
-                        .error_should_contain_only), InvalidTextInputException.TYPE_ALPHABETS);
+            if (!ValidationUtil.isNameValid(et_centerName.getEditableText().toString())) {
+                throw new InvalidTextInputException(
+                        getResources().getString(R.string.center_name),
+                        getResources().getString(R.string.error_should_contain_only),
+                        InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
             e.notifyUserWithToast(getActivity());
