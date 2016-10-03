@@ -395,6 +395,7 @@
 
     <!--Material Dialog Titles-->
     <string name="sync_previous_transaction">Sync Previous Transaction</string>
+    <string name="no_survey_available_for_client">No Survey Available for this client</string>
 
     <!--Material Dialog Message-->
     <string name="dialog_message_offline_sync_alert">You are in offline mode, for syncing, You
