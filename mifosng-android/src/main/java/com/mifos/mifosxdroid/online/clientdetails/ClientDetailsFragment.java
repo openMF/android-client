@@ -37,6 +37,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaderFactory;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -108,6 +112,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public static final int MENU_ITEM_DOCUMENTS = 1006;
     public static final int MENU_ITEM_IDENTIFIERS = 1007;
     public static final int MENU_ITEM_SURVEYS = 1008;
+    //public static boolean IMAGE_STATUS;
 
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
@@ -169,7 +174,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
     private AccountAccordion accountAccordion;
-    private ImageLoadingAsyncTask imageLoadingAsyncTask;
+    // private ImageLoadingAsyncTask imageLoadingAsyncTask;
 
 
     /**
@@ -186,13 +191,13 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         return fragment;
     }
 
-    @Override
-    public void onDetach() {
-        if (imageLoadingAsyncTask != null && !imageLoadingAsyncTask.getStatus().equals(AsyncTask
-                .Status.FINISHED))
-            imageLoadingAsyncTask.cancel(true);
-        super.onDetach();
-    }
+//    @Override
+//    public void onDetach() {
+//        if (imageLoadingAsyncTask != null && !imageLoadingAsyncTask.getStatus().equals(AsyncTask
+//                .Status.FINISHED))
+//            imageLoadingAsyncTask.cancel(true);
+//        super.onDetach();
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -535,8 +540,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 rowOffice.setVisibility(GONE);
 
             if (client.isImagePresent()) {
-                imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                imageLoadingAsyncTask.execute(client.getId());
+//                imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+//                imageLoadingAsyncTask.execute(client.getId());
+                imageload_glide(client.getId());
             } else {
                 iv_clientImage.setImageDrawable(
                         ResourcesCompat.getDrawable(getResources(), R.drawable
@@ -586,8 +592,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void showUploadImageFailed(String s) {
         Toaster.show(rootView, s);
-        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-        imageLoadingAsyncTask.execute(clientId);
+//        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
+//        imageLoadingAsyncTask.execute(clientId);
+        imageload_glide(clientId);
+
     }
 
     @Override
@@ -811,11 +819,12 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
         @Override
         protected Void doInBackground(Integer... integers) {
+
             String url = PrefManager.getInstanceUrl()
                     + "clients/"
                     + integers[0]
                     + "/images?maxHeight=120&maxWidth=120";
-
+            Log.d("ashu",url);
             try {
                 HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
                         .openConnection();
@@ -848,6 +857,23 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             }
 
         }
+    }
+
+    public void imageload_glide(int clientId){
+        pb_imageProgressBar.setVisibility(VISIBLE);
+        String url = PrefManager.getInstanceUrl()
+                + "clients/"
+                + clientId
+                + "/images?maxHeight=120&maxWidth=120";
+
+        GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
+                .addHeader(MifosInterceptor.HEADER_TENANT, "default")
+                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
+                .addHeader("Accept", "application/octet-stream")
+                .build());
+        Log.d("ashu1",glideUrl.toString());
+        Glide.with(getActivity()).load(glideUrl).error(R.drawable.ic_launcher).into(iv_clientImage);
+        pb_imageProgressBar.setVisibility(GONE);
     }
 
 }
