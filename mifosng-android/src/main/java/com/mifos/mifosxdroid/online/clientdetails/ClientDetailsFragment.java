@@ -8,11 +8,9 @@ package com.mifos.mifosxdroid.online.clientdetails;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
@@ -37,6 +35,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -70,11 +71,6 @@ import com.mifos.utils.PrefManager;
 import com.mifos.utils.Utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -113,6 +109,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     public int clientId;
     public List<DataTable> clientDataTables = new ArrayList<>();
+    public String urlStringBuilder;
     List<Charges> chargesList = new ArrayList<Charges>();
 
     @BindView(R.id.tv_fullName)
@@ -169,7 +166,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
     private AccountAccordion accountAccordion;
-    private ImageLoadingAsyncTask imageLoadingAsyncTask;
 
 
     /**
@@ -184,14 +180,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         args.putInt(Constants.CLIENT_ID, clientId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onDetach() {
-        if (imageLoadingAsyncTask != null && !imageLoadingAsyncTask.getStatus().equals(AsyncTask
-                .Status.FINISHED))
-            imageLoadingAsyncTask.cancel(true);
-        super.onDetach();
     }
 
     @Override
@@ -535,8 +523,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 rowOffice.setVisibility(GONE);
 
             if (client.isImagePresent()) {
-                imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                imageLoadingAsyncTask.execute(client.getId());
+                urlBuilder(client.getId());
+                loadClientProfileImage();
             } else {
                 iv_clientImage.setImageDrawable(
                         ResourcesCompat.getDrawable(getResources(), R.drawable
@@ -586,8 +574,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void showUploadImageFailed(String s) {
         Toaster.show(rootView, s);
-        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-        imageLoadingAsyncTask.execute(clientId);
+        urlBuilder(clientId);
+        loadClientProfileImage();
     }
 
     @Override
@@ -597,6 +585,27 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         } else {
             pb_imageProgressBar.setVisibility(GONE);
         }
+    }
+
+    public void urlBuilder(int clientId) {
+        urlStringBuilder = new String(PrefManager.getInstanceUrl());
+        urlStringBuilder += (
+                String.format("clients/%d/images?maxHeight=120&maxWidth=120", clientId));
+    }
+
+    public void loadClientProfileImage() {
+        pb_imageProgressBar.setVisibility(VISIBLE);
+        String url = urlStringBuilder;
+        GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
+                .addHeader(MifosInterceptor.HEADER_TENANT, "default")
+                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
+                .addHeader("Accept", "application/octet-stream")
+                .build());
+        Glide.with(getActivity())
+                .load(glideUrl)
+                .error(R.drawable.ic_launcher)
+                .into(iv_clientImage);
+        pb_imageProgressBar.setVisibility(GONE);
     }
 
     @Override
@@ -799,55 +808,4 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             }
         }
     }
-
-    public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
-        Bitmap bmp;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pb_imageProgressBar.setVisibility(VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            String url = PrefManager.getInstanceUrl()
-                    + "clients/"
-                    + integers[0]
-                    + "/images?maxHeight=120&maxWidth=120";
-
-            try {
-                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
-                        .openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_TENANT,
-                        "default");
-                httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_AUTH,
-                        PrefManager.getToken());
-                httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                bmp = BitmapFactory.decodeStream(inputStream);
-                httpURLConnection.disconnect();
-            } catch (MalformedURLException e) {
-            } catch (IOException ioe) {
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (bmp != null) {
-                iv_clientImage.setImageBitmap(bmp);
-            } else {
-                iv_clientImage.setImageDrawable(
-                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_launcher));
-                pb_imageProgressBar.setVisibility(GONE);
-            }
-
-        }
-    }
-
 }
