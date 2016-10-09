@@ -601,7 +601,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     }
 
 
-    public void loadImageGlide(int clientId){
+    public void loadImageGlide(int clientId) {
         pb_imageProgressBar.setVisibility(VISIBLE);
         String url = PrefManager.getInstanceUrl()
                 + "clients/"
@@ -613,7 +613,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
                 .addHeader("Accept", "application/octet-stream")
                 .build());
-        Log.d("ashu1",glideUrl.toString());
         Glide.with(getActivity())
                 .load(glideUrl)
                 .error(R.drawable.ic_launcher)
