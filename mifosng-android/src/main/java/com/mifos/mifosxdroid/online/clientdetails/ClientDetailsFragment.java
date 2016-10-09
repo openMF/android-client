@@ -37,6 +37,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -169,7 +172,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
     private AccountAccordion accountAccordion;
-    private ImageLoadingAsyncTask imageLoadingAsyncTask;
+    private ImageLoadingAsyncTask imageLoadingAsyncTask=null;
 
 
     /**
@@ -428,6 +431,28 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         }
     }
 
+    public void loadImageGlide(int clientId){
+        pb_imageProgressBar.setVisibility(VISIBLE);
+        String url = PrefManager.getInstanceUrl()
+                + "clients/"
+                + clientId
+                + "/images?maxHeight=120&maxWidth=120";
+
+        GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
+                .addHeader(MifosInterceptor.HEADER_TENANT, "default")
+                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
+                .addHeader("Accept", "application/octet-stream")
+                .build());
+
+        Log.d("ashu1",glideUrl.toString());
+
+        Glide.with(getActivity())
+                .load(glideUrl)
+                .error(R.drawable.ic_launcher)
+                .into(iv_clientImage);
+        pb_imageProgressBar.setVisibility(GONE);
+    }
+
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
                 .ENTITY_TYPE_CLIENTS, clientId);
@@ -535,8 +560,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 rowOffice.setVisibility(GONE);
 
             if (client.isImagePresent()) {
-                imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-                imageLoadingAsyncTask.execute(client.getId());
+                loadImageGlide(clientId);
             } else {
                 iv_clientImage.setImageDrawable(
                         ResourcesCompat.getDrawable(getResources(), R.drawable
@@ -586,8 +610,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void showUploadImageFailed(String s) {
         Toaster.show(rootView, s);
-        imageLoadingAsyncTask = new ImageLoadingAsyncTask();
-        imageLoadingAsyncTask.execute(clientId);
+        loadImageGlide(clientId);
     }
 
     @Override
