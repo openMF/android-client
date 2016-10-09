@@ -172,7 +172,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     private AtomicBoolean locationAvailable = new AtomicBoolean(false);
 
     private AccountAccordion accountAccordion;
-    private ImageLoadingAsyncTask imageLoadingAsyncTask;
 
 
     /**
@@ -191,9 +190,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     @Override
     public void onDetach() {
-        if (imageLoadingAsyncTask != null && !imageLoadingAsyncTask.getStatus().equals(AsyncTask
-                .Status.FINISHED))
-            imageLoadingAsyncTask.cancel(true);
         super.onDetach();
     }
 
@@ -820,55 +816,5 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
             }
         }
     }
-
-    public class ImageLoadingAsyncTask extends AsyncTask<Integer, Void, Void> {
-        Bitmap bmp;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pb_imageProgressBar.setVisibility(VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            String url = PrefManager.getInstanceUrl()
-                    + "clients/"
-                    + integers[0]
-                    + "/images?maxHeight=120&maxWidth=120";
-
-            try {
-                HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url))
-                        .openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_TENANT,
-                        "default");
-                httpURLConnection.setRequestProperty(MifosInterceptor.HEADER_AUTH,
-                        PrefManager.getToken());
-                httpURLConnection.setRequestProperty("Accept", "application/octet-stream");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                bmp = BitmapFactory.decodeStream(inputStream);
-                httpURLConnection.disconnect();
-            } catch (MalformedURLException e) {
-            } catch (IOException ioe) {
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (bmp != null) {
-                iv_clientImage.setImageBitmap(bmp);
-            } else {
-                iv_clientImage.setImageDrawable(
-                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_launcher));
-                pb_imageProgressBar.setVisibility(GONE);
-            }
-
-        }
-    }
-
+    
 }
