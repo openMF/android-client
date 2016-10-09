@@ -278,7 +278,7 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="type">Type</string>
     <string name="upload">Upload</string>
-    <string name="choose_file">Click to Choose File</string>
+    <string name="choose_file">Tap to Choose File</string>
     <string name="download">Download</string>
     <string name="remove">Remove</string>
     <string name="identifiers">Identifiers</string>
@@ -383,7 +383,7 @@
     <string name="all_repayment_synced">All LoanRepayment have been Sync</string>
     <string name="all_groups_synced">All Groups have been Sync</string>
     <string name="all_clients_synced">All Clients have been Sync</string>
-    <string name="click_to_refresh">\n Click to Refresh</string>
+    <string name="click_to_refresh">\n Tap to Refresh</string>
     <string name="syncing_client">Syncing Client</string>
     <string name="syncing_group">Syncing Group</string>
     <string name="total_sync_progress">Total Sync Progress</string>
