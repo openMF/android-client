@@ -67,7 +67,7 @@ public class LoanTemplate implements Parcelable {
     RepaymentFrequencyType repaymentFrequencyType;
 
     @SerializedName("interestRatePerPeriod")
-    Integer interestRatePerPeriod;
+    Double interestRatePerPeriod;
 
     @SerializedName("interestRateFrequencyType")
     InterestRateFrequencyType interestRateFrequencyType;
@@ -315,11 +315,11 @@ public class LoanTemplate implements Parcelable {
         this.repaymentFrequencyType = repaymentFrequencyType;
     }
 
-    public Integer getInterestRatePerPeriod() {
+    public Double getInterestRatePerPeriod() {
         return interestRatePerPeriod;
     }
 
-    public void setInterestRatePerPeriod(Integer interestRatePerPeriod) {
+    public void setInterestRatePerPeriod(Double interestRatePerPeriod) {
         this.interestRatePerPeriod = interestRatePerPeriod;
     }
 
@@ -691,7 +691,7 @@ public class LoanTemplate implements Parcelable {
         this.repaymentEvery = (Integer) in.readValue(Integer.class.getClassLoader());
         this.repaymentFrequencyType = in.readParcelable(RepaymentFrequencyType.class
                 .getClassLoader());
-        this.interestRatePerPeriod = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.interestRatePerPeriod = (Double) in.readValue(Double.class.getClassLoader());
         this.interestRateFrequencyType = in.readParcelable(InterestRateFrequencyType.class
                 .getClassLoader());
         this.annualInterestRate = (Integer) in.readValue(Integer.class.getClassLoader());
