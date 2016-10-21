@@ -30,6 +30,7 @@ import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.templates.loans.GroupLoanTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
@@ -253,7 +254,7 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().getAllLoans();
     }
 
-    public Observable<ResponseBody> getGroupLoansAccountTemplate(int groupId, int productId) {
+    public Observable<GroupLoanTemplate> getGroupLoansAccountTemplate(int groupId, int productId) {
         return mBaseApiManager.getLoanApi().getGroupLoansAccountTemplate(groupId, productId);
     }
 
