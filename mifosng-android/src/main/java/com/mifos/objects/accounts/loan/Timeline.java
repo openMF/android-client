@@ -8,6 +8,7 @@ package com.mifos.objects.accounts.loan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -31,40 +32,55 @@ public class Timeline extends MifosBaseModel implements Parcelable {
     @PrimaryKey
     transient Integer loanId;
 
-    List<Integer> submittedOnDate = new ArrayList<Integer>();
+    @SerializedName("submittedOnDate")
+    List<Integer> submittedOnDate;
 
+    @SerializedName("submittedByUsername")
     String submittedByUsername;
 
+    @SerializedName("submittedByFirstname")
     String submittedByFirstname;
 
+    @SerializedName("submittedByLastname")
     String submittedByLastname;
 
-    List<Integer> approvedOnDate = new ArrayList<Integer>();
+    @SerializedName("approvedOnDate")
+    List<Integer> approvedOnDate;
 
+    @SerializedName("approvedByUsername")
     String approvedByUsername;
 
+    @SerializedName("approvedByFirstname")
     String approvedByFirstname;
 
+    @SerializedName("approvedByLastname")
     String approvedByLastname;
 
-    List<Integer> expectedDisbursementDate = new ArrayList<Integer>();
+    @SerializedName("expectedDisbursementDate")
+    List<Integer> expectedDisbursementDate;
 
     //This Object for saving the actualDisbursementDate, Not belong to any POST and GET Request
     @Column
     @ForeignKey(saveForeignKeyModel = true)
     transient ActualDisbursementDate actualDisburseDate;
 
-    List<Integer> actualDisbursementDate = new ArrayList<Integer>();
+    @SerializedName("actualDisbursementDate")
+    List<Integer> actualDisbursementDate;
 
+    @SerializedName("disbursedByUsername")
     String disbursedByUsername;
 
+    @SerializedName("disbursedByFirstname")
     String disbursedByFirstname;
 
+    @SerializedName("disbursedByLastname")
     String disbursedByLastname;
 
-    List<Integer> closedOnDate = new ArrayList<Integer>();
+    @SerializedName("closedOnDate")
+    List<Integer> closedOnDate;
 
-    List<Integer> expectedMaturityDate = new ArrayList<Integer>();
+    @SerializedName("expectedMaturityDate")
+    List<Integer> expectedMaturityDate;
 
     public ActualDisbursementDate getActualDisburseDate() {
         return actualDisburseDate;
