@@ -10,11 +10,13 @@ import java.util.List;
  */
 public interface ClientIdentifiersMvpView extends MvpView {
 
+    void showUserInterface();
+
     void showClientIdentifiers(List<Identifier> identifiers);
 
-    void showFetchingError(String s);
+    void showEmptyClientIdentifier();
 
-    void onClickRemoveIdentifier(int identifierId, int position);
+    void showFetchingError(int errorMessage);
 
-    void identifierDeletedSuccessfully(String s, int position);
+    void identifierDeletedSuccessfully();
 }

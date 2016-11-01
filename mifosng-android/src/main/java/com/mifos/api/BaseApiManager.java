@@ -16,7 +16,6 @@ import com.mifos.api.services.DataTableService;
 import com.mifos.api.services.DocumentService;
 import com.mifos.api.services.GpsCoordinatesService;
 import com.mifos.api.services.GroupService;
-import com.mifos.api.services.IdentifierService;
 import com.mifos.api.services.LoanService;
 import com.mifos.api.services.OfficeService;
 import com.mifos.api.services.SavingsAccountService;
@@ -52,7 +51,6 @@ public class BaseApiManager {
     private static GpsCoordinatesService gpsApi;
     private static GroupService groupApi;
     private static DocumentService documentApi;
-    private static IdentifierService identifierApi;
     private static OfficeService officeApi;
     private static StaffService staffApi;
     private static SurveyService surveyApi;
@@ -73,7 +71,6 @@ public class BaseApiManager {
         gpsApi = createApi(GpsCoordinatesService.class);
         groupApi = createApi(GroupService.class);
         documentApi = createApi(DocumentService.class);
-        identifierApi = createApi(IdentifierService.class);
         officeApi = createApi(OfficeService.class);
         staffApi = createApi(StaffService.class);
         surveyApi = createApi(SurveyService.class);
@@ -141,10 +138,6 @@ public class BaseApiManager {
 
     public DocumentService getDocumentApi() {
         return documentApi;
-    }
-
-    public IdentifierService getIdentifierApi() {
-        return identifierApi;
     }
 
     public OfficeService getOfficeApi() {

@@ -6,19 +6,31 @@
 package com.mifos.mifosxdroid.online.clientidentifiers;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
+import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import java.util.List;
 
@@ -27,22 +39,37 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.mifos.mifosxdroid.adapters.IdentifierListAdapter.DeleteIdentifierListener;
+import static com.mifos.mifosxdroid.adapters.IdentifierListAdapter.IdentifierOptionsListener;
 
 
-public class ClientIdentifiersFragment extends ProgressableFragment
-        implements ClientIdentifiersMvpView, DeleteIdentifierListener {
+public class ClientIdentifiersFragment extends MifosBaseFragment implements
+        ClientIdentifiersMvpView, IdentifierOptionsListener, SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.lv_identifiers)
-    ListView lv_identifiers;
-    @BindView(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.rv_client_identifier)
+    RecyclerView rv_client_identifier;
+
+    @BindView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.noIdentifierText)
+    TextView mNoIdentifierText;
+
+    @BindView(R.id.ll_error)
+    LinearLayout ll_error;
+
+    @BindView(R.id.noIdentifierIcon)
+    ImageView mNoIdentifierIcon;
+
     @Inject
     ClientIdentifiersPresenter mClientIdentifiersPresenter;
+
+    @Inject
+    IdentifierListAdapter identifierListAdapter;
+
     private View rootView;
     private int clientId;
     List<Identifier> identifiers;
-    IdentifierListAdapter identifierListAdapter;
+    private LinearLayoutManager mLayoutManager;
 
     public static ClientIdentifiersFragment newInstance(int clientId) {
         ClientIdentifiersFragment fragment = new ClientIdentifiersFragment();
@@ -56,8 +83,10 @@ public class ClientIdentifiersFragment extends ProgressableFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             clientId = getArguments().getInt(Constants.CLIENT_ID);
+        }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -68,10 +97,8 @@ public class ClientIdentifiersFragment extends ProgressableFragment
         ButterKnife.bind(this, rootView);
         mClientIdentifiersPresenter.attachView(this);
 
-        setToolbarTitle(getString(R.string.identifiers));
+        showUserInterface();
         loadIdentifiers();
-
-        swipeToRefresh();
 
         return rootView;
     }
@@ -80,58 +107,118 @@ public class ClientIdentifiersFragment extends ProgressableFragment
         mClientIdentifiersPresenter.loadIdentifiers(clientId);
     }
 
-    public void swipeToRefresh() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadIdentifiers();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
+    @Override
+    public void onRefresh() {
+        loadIdentifiers();
+    }
+
+    @Override
+    public void showUserInterface() {
+        setToolbarTitle(getString(R.string.identifiers));
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        identifierListAdapter.setIdentifierOptionsListener(this);
+        rv_client_identifier.setLayoutManager(mLayoutManager);
+        rv_client_identifier.setHasFixedSize(true);
+        rv_client_identifier.setAdapter(identifierListAdapter);
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
     public void showClientIdentifiers(List<Identifier> identifiers) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
         this.identifiers = identifiers;
+        identifierListAdapter.setIdentifiers(identifiers);
+    }
 
-        if (identifiers != null && identifiers.size() > 0) {
-            identifierListAdapter = new IdentifierListAdapter(getActivity(),
-                    this.identifiers, clientId, this);
-            lv_identifiers.setAdapter(identifierListAdapter);
+    @Override
+    public void showEmptyClientIdentifier() {
+        ll_error.setVisibility(View.VISIBLE);
+        mNoIdentifierText.setText(getResources().getString(R.string.no_identifier_to_show));
+        mNoIdentifierIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+    }
+
+    @Override
+    public void showFetchingError(int errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClickIdentifierOptions(final int position, View view) {
+        PopupMenu popup = new PopupMenu(getContext(), view);
+        popup.getMenuInflater().inflate(R.menu.menu_client_identifier, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_remove_identifier:
+                        mClientIdentifiersPresenter.deleteIdentifier(clientId,
+                                identifiers.get(position).getId());
+                        break;
+                    case R.id.menu_identifier_documents:
+                        DocumentListFragment documentListFragment =
+                                DocumentListFragment.newInstance(
+                                        Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
+                                        identifiers.get(position).getId());
+                        FragmentTransaction fragmentTransaction =
+                                getActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.addToBackStack(FragmentConstants
+                                .FRAG_CLIENT_IDENTIFIER);
+                        fragmentTransaction.replace(R.id.container, documentListFragment);
+                        fragmentTransaction.commit();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    @Override
+    public void identifierDeletedSuccessfully() {
+        Toast.makeText(getActivity(), R.string.identifier_deleted_successfully,
+                Toast.LENGTH_SHORT).show();
+        loadIdentifiers();
+    }
+
+    @Override
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(show);
+        if (show && identifierListAdapter.getItemCount() == 0) {
+            showMifosProgressBar();
+            swipeRefreshLayout.setRefreshing(false);
         } else {
-            Toast.makeText(getActivity(), getString(R.string
-                            .message_no_identifiers_available),
-                    Toast.LENGTH_SHORT).show();
+            hideMifosProgressBar();
         }
     }
 
     @Override
-    public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_add, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onClickRemoveIdentifier(int identifierId, int position) {
-        mClientIdentifiersPresenter.deleteIdentifier(clientId, identifierId, position);
-    }
-
-    @Override
-    public void identifierDeletedSuccessfully(String s, int position) {
-        identifiers.remove(position);
-        identifierListAdapter.notifyDataSetChanged();
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showProgressbar(boolean b) {
-        showProgress(b);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add:
+                IdentifierDialogFragment identifierDialogFragment =
+                        IdentifierDialogFragment.newInstance(clientId);
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                        .beginTransaction();
+                fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST);
+                identifierDialogFragment.show(fragmentTransaction, "Identifier Dialog Fragment");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mClientIdentifiersPresenter.detachView();
+        hideMifosProgressBar();
     }
 }
