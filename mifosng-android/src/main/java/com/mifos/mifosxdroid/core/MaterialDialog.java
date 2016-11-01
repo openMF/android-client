@@ -141,6 +141,16 @@ public final class MaterialDialog  {
             return this;
         }
 
+        public Builder setItems(int items, DialogInterface.OnClickListener listener) {
+            mMaterialDialogBuilder.setItems(items, listener);
+            return this;
+        }
+
+        public Builder setItems(CharSequence[] items, DialogInterface.OnClickListener listener) {
+            mMaterialDialogBuilder.setItems(items, listener);
+            return this;
+        }
+
         //This Method Create the Final Material Dialog
         public Builder createMaterialDialog() {
             mMaterialDialogBuilder.create();
