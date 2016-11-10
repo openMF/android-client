@@ -31,7 +31,13 @@
     <string name="error_client_inactive">Cliente Incativo</string>
     <string name="error_invalid_amount">Cantidad introducida incorrecta</string>
     <string name="error_login_again">Por favor, inicia sesión para continuar</string>
-    <string name="error_login_failed">Vuelvelo a probar, tus credenciales no son válidas</string>
+    <string name="error_login_failed">Credenciales no válidas</string>
+    <string name="error_invalid_url">URL invalida</string>
+    <string name="error_invalid_connection">Datos de conexión no válidos</string>
+    <string name="error_username_length">Longitud de nombre de usuario no válida</string>
+    <string name="error_password_length">Longitud de contraseña no válida</string>
+    <string name="error_internal_server">Error de servidor interno</string>
+    <string name="error_not_connected_internet">No conectado a la red</string>
     <string name="username">Usuario</string>
     <string name="upload_document">Subir documento</string>
     <string name="upload">Subir</string>

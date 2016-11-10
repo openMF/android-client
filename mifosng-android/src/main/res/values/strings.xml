@@ -137,6 +137,7 @@
     <string name="update">Update</string>
     <string name="group_clients">Group Clients</string>
     <string name="identifier_deleted_successfully">Identifier deleted Successfully</string>
+    <string name="logging_in">Logging In</string>
     <!-- General Terms End Here -->
 
 
@@ -309,7 +310,13 @@
     <string name="add_charge">Add Charges</string>
 
     <!-- Error Messages -->
-    <string name="error_login_failed">Please try again, your credentials are not valid</string>
+    <string name="error_invalid_url">Invalid URL</string>
+    <string name="error_invalid_connection">Invalid connection Data</string>
+    <string name="error_username_length">Invalid username length</string>
+    <string name="error_password_length">Invalid password length</string>
+    <string name="error_login_failed">Invalid Credentials</string>
+    <string name="error_internal_server">Internal server error</string>
+    <string name="error_not_connected_internet">Not connected to Network</string>
     <string name="message_no_identifiers_available">No Identifiers available for this client</string>
     <string name="message_no_charges_available">No Charges available for this client</string>
     <string name="message_field_required"> is mandatory and cannot be left blank</string>
@@ -416,6 +423,7 @@
     <!--Material Dialog Titles-->
     <string name="sync_previous_transaction">Sync Previous Transaction</string>
     <string name="no_survey_available_for_client">No Survey Available for this client</string>
+    <string name="ssl_certificate_dialog">SSL Certificate Problem</string>
 
     <!--Material Dialog Message-->
     <string name="dialog_message_offline_sync_alert">You are in offline mode, for syncing, You
@@ -442,6 +450,8 @@
     <string name="dialog_message_permission_never_ask_again_write">App Needs the Permission to
         Write the External Storage but you had previously checked the Button Never Ask Again.
     </string>
+    <string name="dialog_ssl_certificate_message">There is a problem with your SSLCertificate, would you like to
+        continue? This connection would be unsafe.</string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -453,6 +463,8 @@
     <string name="dialog_action_i_am_sure">I\'M Sure</string>
     <string name="dialog_action_re_try">Re-Try</string>
     <string name="dialog_action_app_settings">App Settings</string>
+    <string name="Continue">Continue</string>
+    <string name="Exit">Exit</string>
 
 
     <!--OnError Message-->
