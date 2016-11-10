@@ -1,71 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-  ~ This project is licensed under the open source MPL V2.
-  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
-  -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="8dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/center_name"
-        android:id="@+id/tv_center_name"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+<android.support.v7.widget.CardView
+xmlns:card_view="http://schemas.android.com/apk/res-auto"
+android:id="@+id/card_view"
+android:layout_gravity="center"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    android:background="@color/blue_light"
+    android:padding="5dp"
+    android:layout_marginBottom="5dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/center_id"
-        android:id="@+id/tv_center_id"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:layout_marginBottom="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/staff_name"
-        android:id="@+id/tv_staff_name"
-        android:layout_below="@+id/tv_center_name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:text="@string/center_name"
+                android:id="@+id/tv_center_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textStyle="normal|bold"
+                android:textSize="20sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/staff_id"
-        android:id="@+id/tv_staff_id"
-        android:layout_alignBottom="@+id/tv_staff_name"
-        android:layout_alignLeft="@+id/tv_center_id"
-        android:layout_alignStart="@+id/tv_center_id" />
+                <TextView
+                    android:text="@string/center_id"
+                    android:id="@+id/tv_center_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/office"
-        android:id="@+id/tv_office_name"
-        android:layout_below="@+id/tv_staff_name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/office_id"
-        android:id="@+id/tv_office_id"
-        android:layout_alignBottom="@+id/tv_office_name"
-        android:layout_alignLeft="@+id/tv_staff_id"
-        android:layout_alignStart="@+id/tv_staff_id" />
-</RelativeLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="Office Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/office_name_head"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="@string/office"
+                    android:id="@+id/tv_office_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="Office Id"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/office_id_head"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="@string/office_id"
+                    android:id="@+id/tv_office_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="Staff Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/staff_name_head"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="@string/staff_name"
+                    android:id="@+id/tv_staff_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="Staff Id"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/staff_id_head"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="@string/staff_id"
+                    android:id="@+id/tv_staff_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+    </LinearLayout>
