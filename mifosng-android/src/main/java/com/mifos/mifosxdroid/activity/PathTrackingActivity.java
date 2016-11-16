@@ -14,13 +14,13 @@ import android.content.ServiceConnection;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.mifos.mifosxdroid.LocationService;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -34,9 +34,6 @@ import butterknife.ButterKnife;
  */
 public class PathTrackingActivity extends MifosBaseActivity implements ServiceConnection {
 
-    private static final int COARSE_LOCATION_REQUEST_CODE = 200;
-    // private static final int FINE_LOCATION_REQUEST_CODE = 100;
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
     @BindView(R.id.start)
     Button start;
@@ -45,7 +42,6 @@ public class PathTrackingActivity extends MifosBaseActivity implements ServiceCo
     Button stop;
     boolean bound = false;
     private LocationService service;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,19 +49,25 @@ public class PathTrackingActivity extends MifosBaseActivity implements ServiceCo
         setContentView(R.layout.activity_path_tracker);
         ButterKnife.bind(this);
 
-
-        if (!CheckSelfPermissionAndRequest.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) || !CheckSelfPermissionAndRequest.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-            CheckSelfPermissionAndRequest.requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, 100, "Location Permission is necessary for this feature", "Location Permission is necessary for this feature", "Permission Denied");
-
-
+        if (!CheckSelfPermissionAndRequest
+                .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                || !CheckSelfPermissionAndRequest
+                .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            CheckSelfPermissionAndRequest
+                    .requestPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            100,
+                            "Location Permission is necessary for this feature",
+                            "Location Permission is necessary for this feature",
+                            "Permission Denied");
         } else {
 
             start.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(buildLocationEnableDialog())
+                    if (buildLocationEnableDialog()) {
                         service.startLogging();
+                    }
                 }
             });
 
@@ -119,41 +121,46 @@ public class PathTrackingActivity extends MifosBaseActivity implements ServiceCo
 
     private boolean buildLocationEnableDialog() {
 
-        LocationManager lm = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
+        LocationManager locationManager =
+                (LocationManager) getApplicationContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+        boolean gpsEnabled = false;
+        boolean networkEnabled = false;
 
         try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
         }
 
         try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch (Exception ex) {
         }
 
-        if (!gps_enabled && !network_enabled) {
+        if (!gpsEnabled && !networkEnabled) {
             // notify user
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Location seems to be disabled, do you want to enable it?")
                     .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Yes" , new DialogInterface.OnClickListener() {
                         public void onClick(final DialogInterface dialog, final int id) {
-
-                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            String mLocationSettings = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+                            startActivity(
+                                    new Intent(mLocationSettings));
                         }
                     })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("No" , new DialogInterface.OnClickListener() {
                         public void onClick(final DialogInterface dialog, final int id) {
                             dialog.cancel();
-                            Toast.makeText(getApplicationContext(),"This feature requires Location to be enabled",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext() ,
+                                    "This feature requires Location to be enabled" ,
+                                    Toast.LENGTH_LONG).show();
                         }
                     });
             final AlertDialog alert = builder.create();
             alert.show();
             return false;
-        }else{
+        } else {
             return true;
         }
     }
