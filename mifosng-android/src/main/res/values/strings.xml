@@ -152,6 +152,8 @@
         External Document</string>
     <string name="permission_denied_to_write_external_document">Permission Denied to write
         Document in External Storage</string>
+    <string name="permission_denied_to_access_fine_location">Permission Denied to Access
+        Location</string>
 
 
     <!-- Loan Related Terminologies Begin Here -->
@@ -441,6 +443,14 @@
     </string>
     <string name="dialog_message_permission_never_ask_again_write">App Needs the Permission to
         Write the External Storage but you had previously checked the Button Never Ask Again.
+    </string>
+    <string name="dialog_message_access_fine_location_permission_denied">With out this
+        permission the app is unable to track your path, app needs to
+        access location on your device. Are you sure you want to deny this
+        permission?
+    </string>
+    <string name="dialog_message_permission_never_ask_location">App Needs the Permission to
+        Get your Location but you had previously checked the Button Never Ask Again.
     </string>
 
     <!--Material Dialog-->
