@@ -87,7 +87,7 @@ public class MifosBaseFragment extends Fragment {
 
     public void hideKeyboard(View view) {
         inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager
-                .HIDE_IMPLICIT_ONLY);
+                .RESULT_UNCHANGED_SHOWN);
     }
 
     protected void showMifosProgressBar() {
