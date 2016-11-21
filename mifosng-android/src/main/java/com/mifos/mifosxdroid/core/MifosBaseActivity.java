@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.core;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
@@ -119,6 +122,13 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         PrefManager.clearPrefs();
         startActivity(new Intent(this, SplashScreenActivity.class));
         finish();
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputManager = (InputMethodManager) this
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager
+                .RESULT_UNCHANGED_SHOWN);
     }
 
     public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {

@@ -93,6 +93,13 @@ public class DashboardActivity extends MifosBaseActivity
                 super.onDrawerOpened(drawerView);
                 setUserStatus(userStatusToggle);
             }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if (slideOffset != 0 )
+                    hideKeyboard(mDrawerLayout);
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
         };
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -234,6 +241,12 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        hideKeyboard(mDrawerLayout);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     public void openCreateClient() {

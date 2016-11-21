@@ -77,6 +77,7 @@ public class ClientSearchFragment extends MifosBaseFragment
 
     @OnClick(R.id.bt_searchClient)
     public void performSearch() {
+        hideKeyboard(et_searchById);
         String q = et_searchById.getEditableText().toString().trim();
         if (!q.isEmpty()) {
             findClients(q);
