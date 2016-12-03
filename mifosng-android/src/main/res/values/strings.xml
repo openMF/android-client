@@ -42,7 +42,7 @@
     <string name="principal">Principal</string>
     <string name="loanterm">Loan Term</string>
     <string name="loanterm_month">Select Loan Term</string>
-    <string name="nominal">Nominal annual intrest </string>
+    <string name="nominal">Nominal annual interest </string>
     <string name="submittedon">Submitted On</string>
     <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
