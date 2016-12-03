@@ -262,7 +262,7 @@
     <string name="product">Savings Products</string>
     <string name="field_officer">Field Officer</string>
     <string name="client_classification">Client Classification</string>
-    <string name="interest_comp">Intrest Compounding Period</string>
+    <string name="interest_comp">Interest Compounding Period</string>
     <string name="repaidevery">Repaid Every</string>
     <string name="no_more_clients_available">No more Clients Available</string>
     <string name="no_more_groups_available">No more Groups Available</string>
