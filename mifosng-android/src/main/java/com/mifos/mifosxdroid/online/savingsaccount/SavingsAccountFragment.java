@@ -86,6 +86,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
+    private int groupId;
     private int interestCalculationTypeAdapterId;
     private int interestCompoundingPeriodTypeId;
     private int interestPostingPeriodTypeId;
@@ -107,10 +108,10 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     private SavingProductsTemplate mSavingProductsTemplate;
     private List<ProductSavings> mProductSavings;
 
-    public static SavingsAccountFragment newInstance(int clientId) {
+    public static SavingsAccountFragment newInstance(int id, boolean isGroupAccount) {
         SavingsAccountFragment savingsAccountFragment = new SavingsAccountFragment();
         Bundle args = new Bundle();
-        args.putInt(Constants.CLIENT_ID, clientId);
+        args.putInt(isGroupAccount ? Constants.GROUP_ID : Constants.CLIENT_ID, id);
         savingsAccountFragment.setArguments(args);
         return savingsAccountFragment;
     }
@@ -119,7 +120,11 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null) clientId = getArguments().getInt(Constants.CLIENT_ID);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            clientId = arguments.getInt(Constants.CLIENT_ID);
+            groupId = arguments.getInt(Constants.GROUP_ID);
+        }
     }
 
 
@@ -190,7 +195,12 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         savingsPayload.setLocale("en");
         savingsPayload.setSubmittedOnDate(submission_date);
         savingsPayload.setDateFormat("dd MMMM yyyy");
-        savingsPayload.setClientId(clientId);
+        if (clientId != 0) {
+            savingsPayload.setClientId(clientId);
+        }
+        if (groupId != 0) {
+            savingsPayload.setGroupId(groupId);
+        }
         savingsPayload.setProductId(productId);
         savingsPayload.setNominalAnnualInterestRate(et_nominal_annual.getEditableText()
                 .toString());
