@@ -21,7 +21,6 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
