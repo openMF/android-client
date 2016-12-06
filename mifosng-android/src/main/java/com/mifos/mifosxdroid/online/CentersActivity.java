@@ -15,6 +15,7 @@ import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
+import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.objects.client.Client;
 
 import java.util.List;
@@ -56,5 +57,10 @@ public class CentersActivity extends MifosBaseActivity implements CenterListFrag
     @Override
     public void loadClientsOfGroup(List<Client> clientList) {
         replaceFragment(ClientListFragment.newInstance(clientList, true), true, R.id.container);
+    }
+
+    @Override
+    public void addCenterSavingAccount(int centerId) {
+        replaceFragment(SavingsAccountFragment.newInstance(centerId, true), true, R.id.container);
     }
 }

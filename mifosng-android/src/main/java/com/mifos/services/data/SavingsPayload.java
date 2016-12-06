@@ -7,6 +7,7 @@ public class SavingsPayload {
 
     private Integer productId;
     private Integer clientId;
+    private Integer groupId;
     private Integer fieldOfficerId;
     private String locale;
     private String dateFormat;
@@ -48,6 +49,14 @@ public class SavingsPayload {
 
     public void setClientId(Integer clientId) {
         this.clientId = clientId;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
     public Integer getFieldOfficerId() {
