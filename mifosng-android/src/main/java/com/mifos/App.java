@@ -20,7 +20,6 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Locale; 
 
 /**
  * Created by ishankhanna on 13/03/15.
