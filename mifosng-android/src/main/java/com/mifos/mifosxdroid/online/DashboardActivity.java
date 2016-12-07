@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -55,6 +57,7 @@ public class DashboardActivity extends MifosBaseActivity
 
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
+    private Menu menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,64 @@ public class DashboardActivity extends MifosBaseActivity
 
         // setup navigation drawer and Navigation Toggle click and Offline Mode SwitchButton
         setupNavigationBar();
+
+        //addOnBackStackChangedListener
+        //to change title after Back Stack Changed
+        addOnBackStackChangedListener();
+    }
+
+    private void addOnBackStackChangedListener() {
+        if (getSupportFragmentManager() == null) {
+            return;
+        }
+        getSupportFragmentManager()
+                .addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+                    @Override
+                    public void onBackStackChanged() {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        Fragment fragment = fragmentManager.findFragmentById(R.id.container);
+                        if (fragment instanceof CreateNewClientFragment) {
+                            setActionBarTitle(R.string.create_client);
+                            setMenuCreateClient(false);
+                            setMenuCreateCentre(true);
+                            setMenuCreateGroup(true);
+                        } else if (fragment instanceof CreateNewGroupFragment) {
+                            setActionBarTitle(R.string.create_group);
+                            setMenuCreateClient(true);
+                            setMenuCreateCentre(true);
+                            setMenuCreateGroup(false);
+                        } else if (fragment instanceof CreateNewCenterFragment) {
+                            setActionBarTitle(R.string.create_center);
+                            setMenuCreateClient(true);
+                            setMenuCreateCentre(false);
+                            setMenuCreateGroup(true);
+                        }
+
+                    }
+                });
+
+    }
+
+    private void setMenuCreateGroup(boolean visibility) {
+        if (menu != null) {
+            //position of mItem_create_new_group is 2
+            menu.getItem(2).setVisible(visibility);
+        }
+
+    }
+
+    private void setMenuCreateCentre(boolean visibility) {
+        if (menu != null) {
+            //position of mItem_create_new_centre is 1
+            menu.getItem(1).setVisible(visibility);
+        }
+    }
+
+    private void setMenuCreateClient(boolean visibility) {
+        if (menu != null) {
+            //position of mItem_create_new_client is 0
+            menu.getItem(0).setVisible(visibility);
+        }
     }
 
 
@@ -95,11 +156,11 @@ public class DashboardActivity extends MifosBaseActivity
             }
 
             @Override
-             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (slideOffset != 0 )
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if (slideOffset != 0)
                     hideKeyboard(mDrawerLayout);
                 super.onDrawerSlide(drawerView, slideOffset);
-                }
+            }
         };
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -218,7 +279,8 @@ public class DashboardActivity extends MifosBaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.client_search, menu);
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -232,13 +294,16 @@ public class DashboardActivity extends MifosBaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mItem_create_new_client:
+                setActionBarTitle(R.string.create_client);
                 openCreateClient();
                 break;
             case R.id.mItem_create_new_center:
+                setActionBarTitle(R.string.create_center);
                 openCreateCenter();
                 break;
             case R.id.mItem_create_new_group:
                 openCreateGroup();
+                setActionBarTitle(R.string.create_group);
                 break;
             case R.id.logout:
                 logout();
