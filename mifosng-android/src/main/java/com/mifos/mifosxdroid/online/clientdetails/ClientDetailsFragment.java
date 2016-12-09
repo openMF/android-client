@@ -411,7 +411,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 Toaster.show(rootView, getString(R.string.connection_loc_service_failed));
             }
         } else { // No resolution available.
-            Log.e(TAG, getString(R.string.connection_loc_service_failed) + connectionResult.getErrorCode());
+            Log.e(TAG, getString(R.string.connection_loc_service_failed) +
+                    connectionResult.getErrorCode());
             Toaster.show(rootView, getString(R.string.connection_loc_service_failed));
         }
     }

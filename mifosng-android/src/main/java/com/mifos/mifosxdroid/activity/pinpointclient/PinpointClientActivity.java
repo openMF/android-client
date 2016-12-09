@@ -70,7 +70,8 @@ public class PinpointClientActivity extends MifosMapActivity implements PinPoint
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_pin) {
             if (client.getPosition() == null) {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string.you_should_drop_client_pin));
+                Toaster.show(findViewById(android.R.id.content),
+                        getString(R.string.you_should_drop_client_pin));
                 return false;
             }
 

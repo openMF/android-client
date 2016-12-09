@@ -145,7 +145,8 @@ public class ClientSearchFragment extends MifosBaseFragment
         adapter.notifyDataSetChanged();
 
         if (searchedEntities.isEmpty())
-            showAlertDialog(getString(R.string.message), getString(R.string.no_results_found_for_query));
+            showAlertDialog(getString(R.string.message),
+                    getString(R.string.no_results_found_for_query));
 
         EspressoIdlingResource.decrement(); // App is idle.
     }

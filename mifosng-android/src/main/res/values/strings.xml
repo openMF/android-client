@@ -526,7 +526,6 @@
     <string name="change_created_success">Charge created successfully</string>
     <string name="no_more_changes_available">No more Charges Available</string>
     <string name="change_dialog_fragment">Charge Dialog Fragment</string>
-    <string name="click_to_refresh1">"Click to Refresh "</string>
     <string name="connected_to_loc_services">Connected to location services</string>
     <string name="current_location">"Current location: "</string>
     <string name="disconnected_from_loc_services">Disconnected from location services</string>
@@ -538,15 +537,12 @@
     <string name="message">Message</string>
     <string name="center_created">Center created successfully</string>
     <string name="loan_submitted_for_approval">The Loan has been submitted for Approval</string>
-    <string name="loan_submitted_for_approval1">The Loan has been submitted for Approval</string>
     <string name="make_repayment">Make Repayment</string>
     <string name="approve_loan">Approve Loan</string>
     <string name="disburse_loan">Disburse Loan</string>
-    <string name="make_repayment1">Make Repayment</string>
     <string name="loan_closed">Loan Closed</string>
     <string name="charge_created">Charge created successfully</string>
     <string name="no_charges_to_show">There is No Charges to Show</string>
-    <string name="click_to_refresh2">"Click to Refresh "</string>
     <string name="ok">OK</string>
     <string name="working">Working...</string>
     <string name="you_should_drop_client_pin">You should drop client pin first!</string>
@@ -561,7 +557,6 @@
     <string name="_237">237</string>
     <string name="may_24_2014">May 24,2014</string>
     <string name="select_a_client_from_the_list">Select a Client from the list</string>
-    <string name="name1">name</string>
     <string name="next">Next</string>
     <string name="_12_02_2014">12-02-2014</string>
     <string name="pyload_name">Pyload Name</string>
@@ -569,6 +564,5 @@
     <string name="submission_date">Submission Date:</string>
     <string name="disbursement_on">Disbursement on:</string>
     <string name="select_client_date_of_birth">select client\'s date of birth :</string>
-
 
 </resources>

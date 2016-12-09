@@ -273,7 +273,8 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                     .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST);
-            chargeDialogFragment.show(fragmentTransaction, getString(R.string.change_dialog_fragment));
+            chargeDialogFragment.show(fragmentTransaction,
+                    getString(R.string.change_dialog_fragment));
         }
 
         return super.onOptionsItemSelected(item);
