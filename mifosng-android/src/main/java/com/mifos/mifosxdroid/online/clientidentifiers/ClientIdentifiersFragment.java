@@ -209,7 +209,8 @@ public class ClientIdentifiersFragment extends MifosBaseFragment implements
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                         .beginTransaction();
                 fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST);
-                identifierDialogFragment.show(fragmentTransaction, "Identifier Dialog Fragment");
+                identifierDialogFragment.show(fragmentTransaction,
+                        getString(R.string.identifier_dialog_fragment));
                 break;
         }
         return super.onOptionsItemSelected(item);

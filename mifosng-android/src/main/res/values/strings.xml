@@ -110,13 +110,13 @@
     <string name="scorecard_created_successfully">Scorecard created successfully</string>
     <string name="survey_successfully_submitted">Survey Successfully Submitted !
         \n Thanks for taking Survey </string>
-    <string name="please_attempt_atleast_one_question">Please Attempt AtLeast One Question </string>
+    <string name="attempt_atleast_one_question">Please Attempt AtLeast One Question </string>
     <string name="attempt_question">Attempt Questions : </string>
     <string name="empty_client_list">Empty ClientList</string>
     <string name="empty_group_clients">Empty Group ClientList</string>
     <string name="empty_groups_list">Empty GroupList</string>
     <string name="empty_center_list">Empty CenterList</string>
-    <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
+    <string name="savings_account_submitted_for_approval">Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
     <string name="document_directory">/mifos/documents/</string>
@@ -137,6 +137,39 @@
     <string name="update">Update</string>
     <string name="group_clients">Group Clients</string>
     <string name="identifier_deleted_successfully">Identifier deleted Successfully</string>
+    <string name="next">Next</string>
+    <string name="purpose">Purpose</string>
+    <string name="surveyEmpty">This Survey is Empty</string>
+    <string name="charges_loaded_successfully">Charges Loaded Successfully</string>
+    <string name="charge_created_success">Charge created successfully</string>
+    <string name="no_more_charges_available">No more Charges Available</string>
+    <string name="deposit_success__transaction_id">"Deposit Successful, Transaction ID = "</string>
+    <string name="withdraw_success__transation_id">"Withdrawal Successful, Transaction ID = "</string>
+    <string name="thanks_for_taking_survey">Thanks for taking Survey</string>
+    <string name="no_charges_to_show">There is No Charges to Show</string>
+    <string name="center_created">Center created successfully</string>
+    <string name="connected_to_loc_services">Connected to location services</string>
+    <string name="charge_dialog_fragment">Charge Dialog Fragment</string>
+    <string name="disconnected_from_loc_services">Disconnected from location services</string>
+    <string name="image_deleted">Image deleted</string>
+    <string name="loan_submitted_for_approval">The Loan has been submitted for Approval</string>
+    <string name="make_repayment">Make Repayment</string>
+    <string name="approve_loan">Approve Loan</string>
+    <string name="disburse_loan">Disburse Loan</string>
+    <string name="loan_closed">Loan Closed</string>
+    <string name="working">Working...</string>
+    <string name="updating_gps">Updating Gps Data</string>
+    <string name="save_pin">Save pin</string>
+    <string name="survey_name">Survey Name</string>
+    <string name="start_tracking">Start tracking</string>
+    <string name="stop_tracking">Stop tracking</string>
+    <string name="client_id">Client Id</string>
+    <string name="no_results_found_for_query">No results found for entered query</string>
+    <string name="current_location">"Current location: "</string>
+    <string name="identifier_dialog_fragment">Identifier Dialog Fragment</string>
+    <string name="submission_date">Submission Date:</string>
+    <string name="disbursement_on">Disbursement on:</string>
+    <string name="payload_name">Payload Name</string>
     <!-- General Terms End Here -->
 
 
@@ -204,8 +237,6 @@
     <string name="transaction_body">Transaction Body</string>
     <string name="transaction_failed">Transaction Failed</string>
     <string name="transaction_saved_in_db">Transaction Saved in DB</string>
-    <string name="payment_failed">Payment Failed</string>
-    <string name="transaction_type">Transaction Type</string>
 
     <!-- Loan Related Terminologies End Here -->
 
@@ -235,7 +266,6 @@
     <!-- Action Bar Fragment and Activity Titles End Here -->
 
     <!-- Create Client Terms -->
-
     <string name="fname">First Name</string>
     <string name="mname">Middle Name</string>
     <string name="lname">Last Name</string>
@@ -267,9 +297,10 @@
     <string name="no_more_clients_available">No more Clients Available</string>
     <string name="no_more_groups_available">No more Groups Available</string>
     <string name="no_more_centers_available">No more Centers Available</string>
-
+    <string name="select_a_client_from_the_list">Select a Client from the list</string>
+    <string name="drop_client_pin">You should drop client pin first!</string>
+    <string name="select_client_date_of_birth">select client\'s date of birth :</string>
     <string name="numberofrepayments">Number of repayments</string>
-
     <string name="days_in_year">Days in year</string>
 
     <!-- Create Center Terms -->
@@ -279,6 +310,7 @@
     <string name="center_add_group">Add Group</string>
     <string name="center_active">Active</string>
     <string name="groupname">Name</string>
+    <string name="no_meeting_found">No Meetings Found</string>
 
     <string name="center_add_client">Add Client</string>
 
@@ -309,6 +341,9 @@
     <string name="add_charge">Add Charges</string>
 
     <!-- Error Messages -->
+    <string name="payment_failed">Payment Failed</string>
+    <string name="transaction_type">Transaction Type</string>
+    <string name="connection_loc_service_failed">Connection to location services failed</string>
     <string name="error_login_failed">Please try again, your credentials are not valid</string>
     <string name="message_no_identifiers_available">No Identifiers available for this client</string>
     <string name="message_no_charges_available">No Charges available for this client</string>
@@ -346,6 +381,7 @@
     <string name="error_group_inactive">Group Inactive</string>
     <string name="error_to_activate_savingsaccount">Error To Activate SavingsAccount</string>
     <string name="error_submitting_survey">Error While Submitting Survey.\nPlease Try Again</string>
+    <string name="no_search_query_entered">No Search Query Entered!</string>
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
@@ -442,6 +478,7 @@
     <string name="dialog_message_permission_never_ask_again_write">App Needs the Permission to
         Write the External Storage but you had previously checked the Button Never Ask Again.
     </string>
+    <string name="dialog_message">Message</string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -521,7 +558,5 @@
         <item>InActive</item>
     </string-array>
 
-    <string name="surveyEmpty">This Survey is Empty</string>
-
-
 </resources>
+

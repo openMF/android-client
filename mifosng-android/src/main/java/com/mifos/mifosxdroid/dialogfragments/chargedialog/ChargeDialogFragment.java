@@ -174,7 +174,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
 
-        Log.d(LOG_TAG, "Charges Loaded Successfully");
+        Log.d(LOG_TAG, getString(R.string.charges_loaded_successfully));
 
         final List<Charges> charges = new ArrayList<>();
         // you can use this array to populate your spinner
@@ -239,7 +239,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     @Override
     public void showChargesCreatedSuccessfully(Charges changes) {
-        Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG)
+        Toast.makeText(getActivity(), R.string.charge_created_success, Toast.LENGTH_LONG)
                 .show();
     }
 

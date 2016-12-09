@@ -195,7 +195,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
 
         if (charges.size() == 0) {
             ll_error.setVisibility(View.VISIBLE);
-            mNoChargesText.setText("There is No Charges to Show");
+            mNoChargesText.setText(R.string.no_charges_to_show);
             mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         } else {
             chargesList = charges;
@@ -208,7 +208,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
     @Override
     public void showFetchingError(String s) {
         ll_error.setVisibility(View.VISIBLE);
-        mNoChargesText.setText(s + "\n Click to Refresh ");
+        mNoChargesText.setText(s + "\n" + getString(R.string.click_to_refresh));
         mLoanChargePresenter.loadLoanChargesList(loanAccountNumber);
         Toaster.show(rootView, s);
     }

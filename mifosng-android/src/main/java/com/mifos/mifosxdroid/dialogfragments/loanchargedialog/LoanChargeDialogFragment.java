@@ -247,7 +247,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
     @Override
     public void showLoanChargesCreatedSuccessfully(Charges charges) {
-        Toast.makeText(getActivity(), "Charge created successfully", Toast
+        Toast.makeText(getActivity(), R.string.charge_created_success, Toast
                 .LENGTH_LONG)
                 .show();
     }

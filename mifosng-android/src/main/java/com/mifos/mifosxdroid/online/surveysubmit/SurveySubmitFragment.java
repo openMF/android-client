@@ -94,7 +94,7 @@ public class SurveySubmitFragment extends MifosBaseFragment implements
             mSurveySubmitPresenter.submitSurvey(mSurveyId, mScorecard);
         } else {
             Toast.makeText(context, getResources()
-                    .getString(R.string.please_attempt_atleast_one_question), Toast.LENGTH_SHORT)
+                    .getString(R.string.attempt_atleast_one_question), Toast.LENGTH_SHORT)
                     .show();
         }
     }
