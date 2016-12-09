@@ -415,7 +415,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             view_status_indicator.setBackgroundColor(
                     ContextCompat.getColor(getActivity(), R.color.light_green));
 
-            bt_processLoanTransaction.setText("Make Repayment");
+            bt_processLoanTransaction.setText(R.string.make_repayment);
             processLoanTransactionAction = TRANSACTION_REPAYMENT;
 
         } else if (loanWithAssociations.getStatus().getPendingApproval()) {
@@ -423,7 +423,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             // the Action would be Approve Loan
             view_status_indicator.setBackgroundColor(
                     ContextCompat.getColor(getActivity(), R.color.blue));
-            bt_processLoanTransaction.setText("Approve Loan");
+            bt_processLoanTransaction.setText(R.string.approve_loan);
             processLoanTransactionAction = ACTION_APPROVE_LOAN;
         } else if (loanWithAssociations.getStatus().getWaitingForDisbursal()) {
             // if Loan is Waiting for Disbursal
@@ -431,7 +431,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             view_status_indicator.setBackgroundColor(
                     ContextCompat.getColor(getActivity(), R.color.light_yellow));
 
-            bt_processLoanTransaction.setText("Disburse Loan");
+            bt_processLoanTransaction.setText(R.string.disburse_loan);
             processLoanTransactionAction = ACTION_DISBURSE_LOAN;
         } else if (loanWithAssociations.getStatus().getClosedObligationsMet()) {
             inflateLoanSummary(loanWithAssociations);
@@ -441,14 +441,14 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
                     ContextCompat.getColor(getActivity(), R.color.black));
 
             bt_processLoanTransaction.setEnabled(false);
-            bt_processLoanTransaction.setText("Make Repayment");
+            bt_processLoanTransaction.setText(R.string.make_repayment);
         } else {
             inflateLoanSummary(loanWithAssociations);
             view_status_indicator.setBackgroundColor(
                     ContextCompat.getColor(getActivity(), R.color.black));
 
             bt_processLoanTransaction.setEnabled(false);
-            bt_processLoanTransaction.setText("Loan Closed");
+            bt_processLoanTransaction.setText(R.string.loan_closed);
         }
         inflateDataTablesList();
     }

@@ -68,7 +68,7 @@
                         <EditText
                             android:id="@+id/et_instancePort"
                             style="@style/EditText.Connection"
-                            android:hint="Port"
+                            android:hint="@string/port"
                             android:inputType="number"
                             android:maxLength="9"
                             android:nextFocusDown="@+id/et_tenantIdentifier" />

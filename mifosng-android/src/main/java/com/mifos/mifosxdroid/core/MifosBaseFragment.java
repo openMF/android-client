@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.mifos.mifosxdroid.R;
 import com.mifos.utils.Network;
 
 /**
@@ -51,7 +52,7 @@ public class MifosBaseFragment extends Fragment {
     public void showAlertDialog(String title, String message) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
-        dialog.setMessage(message).setCancelable(false).setPositiveButton("OK", new
+        dialog.setMessage(message).setCancelable(false).setPositiveButton(R.string.ok, new
                 DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -64,7 +65,7 @@ public class MifosBaseFragment extends Fragment {
     }
 
     protected void showMifosProgressDialog() {
-        showMifosProgressDialog("Working...");
+        showMifosProgressDialog(getString(R.string.working));
     }
 
     protected void showMifosProgressDialog(String message) {

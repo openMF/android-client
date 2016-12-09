@@ -379,9 +379,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         locationAvailable.set(true);
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation
                 (mGoogleApiClient);
-        Log.d(TAG, "Connected to location services");
+        Log.d(TAG, getString(R.string.connected_to_loc_services));
         try {
-            Log.d(TAG, "Current location: " + mLastLocation.toString());
+            Log.d(TAG, getString(R.string.current_location) + mLastLocation.toString());
         } catch (NullPointerException e) {
             //Location client is Null
         }
@@ -390,7 +390,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void onConnectionSuspended(int i) {
         locationAvailable.set(false);
-        Log.d(TAG, "Disconnected from location services");
+        Log.d(TAG, getString(R.string.disconnected_from_loc_services));
     }
 
     @Override
@@ -406,13 +406,13 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                  * PendingIntent
                  */
             } catch (IntentSender.SendIntentException e) {
-                Log.e(TAG, "Connection to location services failed" + connectionResult
+                Log.e(TAG, getString(R.string.connection_loc_service_failed) + connectionResult
                         .getErrorCode(), e);
-                Toaster.show(rootView, "Connection to location services failed.");
+                Toaster.show(rootView, getString(R.string.connection_loc_service_failed));
             }
         } else { // No resolution available.
-            Log.e(TAG, "Connection to location services failed" + connectionResult.getErrorCode());
-            Toaster.show(rootView, "Connection to location services failed.");
+            Log.e(TAG, getString(R.string.connection_loc_service_failed) + connectionResult.getErrorCode());
+            Toaster.show(rootView, getString(R.string.connection_loc_service_failed));
         }
     }
 
@@ -610,7 +610,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     @Override
     public void showClientImageDeletedSuccessfully() {
-        Toaster.show(rootView, "Image deleted");
+        Toaster.show(rootView, getString(R.string.image_deleted));
         iv_clientImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable
                 .ic_launcher));
     }
