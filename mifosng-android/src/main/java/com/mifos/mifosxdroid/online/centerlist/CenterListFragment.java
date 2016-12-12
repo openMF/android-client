@@ -208,23 +208,22 @@ public class CenterListFragment extends MifosBaseFragment
      * @param id
      */
     @Override
-    public void showCentersGroupAndMeeting(
-            final CenterWithAssociations centerWithAssociations, final int id) {
-
+    public void showCentersGroupAndMeeting(final CenterWithAssociations centerWithAssociations,
+                                           final int id) {
         MFDatePicker mfDatePicker = new MFDatePicker();
-        mfDatePicker.setOnDatePickListener(new MFDatePicker
-                .OnDatePickListener() {
+        mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
             @Override
             public void onDatePicked(String date) {
-                mListener.loadCollectionSheetForCenter(id, date,
-                        centerWithAssociations
-                                .getCollectionMeetingCalendar()
-                                .getId());
+                if (centerWithAssociations.getCollectionMeetingCalendar().getId() != null) {
+                    mListener.loadCollectionSheetForCenter(id, date, centerWithAssociations
+                            .getCollectionMeetingCalendar()
+                            .getId());
+                } else {
+                    showMessage(R.string.no_meeting_found);
+                }
             }
         });
-        mfDatePicker.show(getActivity().getSupportFragmentManager(),
-                MFDatePicker.TAG);
-
+        mfDatePicker.show(getActivity().getSupportFragmentManager(), MFDatePicker.TAG);
     }
 
     /**
