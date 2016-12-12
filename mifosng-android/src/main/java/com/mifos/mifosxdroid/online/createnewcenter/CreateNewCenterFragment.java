@@ -246,7 +246,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @Override
     public void centerCreatedSuccessfully(Center center) {
-        Toast.makeText(getActivity(), "Center created successfully", Toast
+        Toast.makeText(getActivity(), R.string.center_created, Toast
                 .LENGTH_LONG).show();
     }
 
