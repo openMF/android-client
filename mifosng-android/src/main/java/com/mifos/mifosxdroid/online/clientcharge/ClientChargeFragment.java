@@ -213,7 +213,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
             // Clients Available for fetch
             if (chargesPage.getPageItems().size() == 0 &&
                     (chargesPage.getTotalFilteredRecords() == chargesList.size()))
-                Toaster.show(rootView, "No more Charges Available");
+                Toaster.show(rootView, getString(R.string.no_more_changes_available));
         }
 
     }
@@ -223,7 +223,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
         if (mApiRestCounter == 1) {
             ll_error.setVisibility(View.VISIBLE);
-            mNoChargesText.setText(s + "\n Click to Refresh ");
+            mNoChargesText.setText(s + "\n" + getString(R.string.click_to_refresh));
         }
 
         Toaster.show(rootView, s);
@@ -273,7 +273,8 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                     .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST);
-            chargeDialogFragment.show(fragmentTransaction, "Charge Dialog Fragment");
+            chargeDialogFragment.show(fragmentTransaction,
+                    getString(R.string.change_dialog_fragment));
         }
 
         return super.onOptionsItemSelected(item);

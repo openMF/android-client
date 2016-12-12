@@ -120,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/light_grey"
-                android:hint="select client's date of birth :"
+                android:hint="@string/select_client_date_of_birth"
                 android:imeOptions="actionNext"
                 android:paddingBottom="16dp"
                 android:paddingTop="10dp"

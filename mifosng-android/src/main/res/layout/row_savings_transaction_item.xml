@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:id="@+id/tv_transaction_date"
-        android:text="May 24,2014"
+        android:text="@string/may_24_2014"
         android:textColor="@color/black"
         style="@android:style/TextAppearance.Medium"
         android:gravity="left"/>

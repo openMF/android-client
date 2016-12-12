@@ -327,10 +327,10 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
             Toaster.show(rootView, getResources().getString(string.transaction_saved_in_db));
         } else {
             if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT)) {
-                Toaster.show(rootView, "Deposit Successful, Transaction ID = " +
+                Toaster.show(rootView, getString(string.deposit_success__transactionid) +
                         savingsAccountTransactionResponse.getResourceId());
             } else if (transactionType.equals(Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL)) {
-                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = "
+                Toaster.show(rootView, getString(string.withdraw_success__transationid)
                         + savingsAccountTransactionResponse.getResourceId());
             }
         }

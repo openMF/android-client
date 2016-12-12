@@ -427,7 +427,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @Override
     public void showLoanAccountCreatedSuccessfully(Loans loans) {
-        Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast
+        Toast.makeText(getActivity(), R.string.loan_submitted_for_approval, Toast
                 .LENGTH_LONG).show();
     }
 

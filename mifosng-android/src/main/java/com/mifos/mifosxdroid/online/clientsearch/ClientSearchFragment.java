@@ -82,7 +82,7 @@ public class ClientSearchFragment extends MifosBaseFragment
         if (!q.isEmpty()) {
             findClients(q);
         } else {
-            Toaster.show(et_searchById, "No Search Query Entered!");
+            Toaster.show(et_searchById, getString(R.string.no_search_query_entered));
         }
 
     }
@@ -145,7 +145,8 @@ public class ClientSearchFragment extends MifosBaseFragment
         adapter.notifyDataSetChanged();
 
         if (searchedEntities.isEmpty())
-            showAlertDialog("Message", "No results found for entered query");
+            showAlertDialog(getString(R.string.message),
+                    getString(R.string.no_results_found_for_query));
 
         EspressoIdlingResource.decrement(); // App is idle.
     }
