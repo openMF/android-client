@@ -279,6 +279,7 @@
     <string name="center_add_group">Add Group</string>
     <string name="center_active">Active</string>
     <string name="groupname">Name</string>
+    <string name="no_meeting_found">No Meetings Found</string>
 
     <string name="center_add_client">Add Client</string>
 
