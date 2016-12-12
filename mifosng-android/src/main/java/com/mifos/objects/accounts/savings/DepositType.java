@@ -49,6 +49,18 @@ public class DepositType extends MifosBaseModel implements Parcelable {
         }
     };
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public Integer getId() {
         return id;
     }

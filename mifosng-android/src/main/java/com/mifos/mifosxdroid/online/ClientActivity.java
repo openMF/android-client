@@ -33,14 +33,29 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
         SavingsAccountSummaryFragment.OnFragmentInteractionListener,
         SurveyListFragment.OnFragmentInteractionListener {
 
+    private int clientId = 0, loanAccountNumber = 0, savingsAccountNumber = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         ButterKnife.bind(this);
         showBackButton();
-        int clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
-        replaceFragment(ClientDetailsFragment.newInstance(clientId), false, R.id.container);
+        clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
+        loanAccountNumber = getIntent().getExtras().getInt(Constants.LOAN_ACCOUNT_NUMBER);
+        savingsAccountNumber = getIntent().getExtras().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
+        DepositType depositType = new DepositType();
+        depositType.setId(100);
+        depositType.setValue(Constants.ENTITY_TYPE_SAVINGS);
+        if (clientId != 0) {
+            replaceFragment(ClientDetailsFragment.newInstance(clientId), false, R.id.container);
+        } else if (loanAccountNumber != 0) {
+            replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber, false), true,
+                    R.id.container);
+        } else if (savingsAccountNumber != 0) {
+            replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber,
+                    depositType, false), true, R.id.container);
+        }
     }
 
     /**
@@ -50,7 +65,7 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
      */
     @Override
     public void loadLoanAccountSummary(int loanAccountNumber) {
-        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber), true, R.id
+        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber, true), true, R.id
                 .container);
     }
 
@@ -63,7 +78,7 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
     @Override
     public void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType) {
         replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber,
-                accountType), true, R.id.container);
+                accountType, true), true, R.id.container);
     }
 
     /**

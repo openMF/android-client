@@ -13,6 +13,7 @@ import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.api.datamanager.DataManagerSavings;
+import com.mifos.api.datamanager.DataManagerSearch;
 import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.api.datamanager.DataManagerSurveys;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
@@ -58,6 +59,7 @@ public interface ApplicationComponent {
     DataManagerSavings dataManagerSavings();
     DataManagerSurveys dataManagerSurveys();
     DataManagerDocument dataManagerDocument();
+    DataManagerSearch dataManagerSearch();
 
 
     DatabaseHelperClient databaseHelperClient();

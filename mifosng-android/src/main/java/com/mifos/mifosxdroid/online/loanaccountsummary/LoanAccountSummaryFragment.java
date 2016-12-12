@@ -47,6 +47,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.mifos.mifosxdroid.R.id.container;
+
 /**
  * Created by ishankhanna on 09/05/14.
  */
@@ -154,6 +156,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     private View rootView;
     // Action Identifier in the onProcessTransactionClicked Method
     private int processLoanTransactionAction = -1;
+    private boolean parentFragment = true;
     private OnFragmentInteractionListener mListener;
     private LoanWithAssociations clientLoanWithAssociations;
 
@@ -161,10 +164,12 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         // Required empty public constructor
     }
 
-    public static LoanAccountSummaryFragment newInstance(int loanAccountNumber) {
+    public static LoanAccountSummaryFragment newInstance(int loanAccountNumber,
+                                                         boolean parentFragment) {
         LoanAccountSummaryFragment fragment = new LoanAccountSummaryFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber);
+        args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, parentFragment);
         fragment.setArguments(args);
         return fragment;
     }
@@ -172,8 +177,10 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
+            parentFragment = getArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT);
+        }
         //Necessary Call to add and update the Menu in a Fragment
         setHasOptionsMenu(true);
     }
@@ -228,6 +235,14 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (!parentFragment) {
+            getActivity().finish();
+        }
+    }
+
+    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
@@ -272,7 +287,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                     .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
-            fragmentTransaction.replace(R.id.container, dataTableDataFragment);
+            fragmentTransaction.replace(container, dataTableDataFragment);
             fragmentTransaction.commit();
         }
 
@@ -344,7 +359,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
-        fragmentTransaction.replace(R.id.container, documentListFragment);
+        fragmentTransaction.replace(container, documentListFragment);
         fragmentTransaction.commit();
     }
 
@@ -355,7 +370,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.container, loanChargeFragment);
+        fragmentTransaction.replace(container, loanChargeFragment);
         fragmentTransaction.commit();
     }
 
@@ -366,7 +381,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
-        fragmentTransaction.replace(R.id.container, loanAccountApproval);
+        fragmentTransaction.replace(container, loanAccountApproval);
         fragmentTransaction.commit();
     }
 
@@ -377,7 +392,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
-        fragmentTransaction.replace(R.id.container, loanAccountDisbursement);
+        fragmentTransaction.replace(container, loanAccountDisbursement);
         fragmentTransaction.commit();
 
     }

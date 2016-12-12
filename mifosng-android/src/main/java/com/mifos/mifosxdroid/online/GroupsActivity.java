@@ -47,8 +47,8 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
      */
     @Override
     public void loadLoanAccountSummary(int loanAccountNumber) {
-        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber), true, R.id
-                .container);
+        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber, true), true,
+                R.id.container);
     }
 
     /**
@@ -60,7 +60,7 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
     @Override
     public void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType) {
         replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber,
-                accountType), true, R.id.container);
+                accountType, true), true, R.id.container);
     }
 
     @Override

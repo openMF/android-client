@@ -7,7 +7,6 @@ import com.mifos.api.model.GpsCoordinatesRequest;
 import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.User;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
@@ -131,14 +130,6 @@ public class DataManager {
     public Observable<Charges> createLoanCharges(int loanId, ChargesPayload chargesPayload) {
         return mBaseApiManager.getChargeApi().createLoanCharges(loanId, chargesPayload);
     }
-
-    /**
-     * Search API
-     */
-    public Observable<List<SearchedEntity>> searchClientsByName(String query) {
-        return mBaseApiManager.getSearchApi().searchClientsByName(query);
-    }
-
 
     /**
      * Groups API

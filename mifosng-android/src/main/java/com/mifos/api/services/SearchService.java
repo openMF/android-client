@@ -18,6 +18,8 @@ import rx.Observable;
  */
 public interface SearchService {
 
-    @GET(APIEndPoint.SEARCH + "?resource=clients")
-    Observable<List<SearchedEntity>> searchClientsByName(@Query("query") String clientName);
+    @GET(APIEndPoint.SEARCH)
+    Observable<List<SearchedEntity>> searchResources(@Query("query") String clientName,
+                                                     @Query("resource") String resources,
+                                                     @Query("exactMatch") Boolean exactMatch);
 }

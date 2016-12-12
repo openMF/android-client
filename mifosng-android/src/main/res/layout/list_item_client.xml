@@ -5,12 +5,12 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/icon"
+        android:id="@+id/tv_icon"
         style="@style/ImageView.ListIcon"
         tools:src="@drawable/ic_launcher" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/tv_name"
         style="@style/TextView.BaseWidth"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"

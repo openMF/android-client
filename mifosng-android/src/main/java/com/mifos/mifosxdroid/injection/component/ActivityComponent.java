@@ -24,7 +24,7 @@ import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
-import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
@@ -68,7 +68,7 @@ public interface ActivityComponent {
 
     void inject(ClientIdentifiersFragment clientIdentifiersFragment);
 
-    void inject(ClientSearchFragment clientSearchFragment);
+    void inject(SearchFragment clientSearchFragment);
 
     void inject(DocumentListFragment documentListFragment);
 

@@ -112,6 +112,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     private View rootView;
     private int processSavingTransactionAction = -1;
     private SavingsAccountWithAssociations savingsAccountWithAssociations;
+    private boolean parentFragment = true;
     private boolean loadmore; // variable to enable and disable loading of data into listview
     // variables to capture position of first visible items
     // so that while loading the listview does not scroll automatically
@@ -122,11 +123,13 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     private OnFragmentInteractionListener mListener;
 
     public static SavingsAccountSummaryFragment newInstance(int savingsAccountNumber,
-                                                            DepositType type) {
+                                                            DepositType type,
+                                                            boolean parentFragment) {
         SavingsAccountSummaryFragment fragment = new SavingsAccountSummaryFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber);
         args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, type);
+        args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, parentFragment);
         fragment.setArguments(args);
         return fragment;
     }
@@ -137,6 +140,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         if (getArguments() != null) {
             savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
+            parentFragment = getArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT);
         }
         setHasOptionsMenu(true);
     }
@@ -185,6 +189,9 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (!parentFragment) {
+            getActivity().finish();
+        }
     }
 
     @Override
