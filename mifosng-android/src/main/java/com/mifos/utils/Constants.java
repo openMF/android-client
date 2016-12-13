@@ -40,6 +40,12 @@ public class Constants {
 
     public static final String ENTITY_TYPE_CLIENT_IDENTIFIERS = "client_identifiers";
 
+    //Search Entities
+    public static final String SEARCH_ENTITY_CLIENT = "CLIENT";
+    public static final String SEARCH_ENTITY_GROUP = "GROUP";
+    public static final String SEARCH_ENTITY_LOAN = "LOAN";
+    public static final String SEARCH_ENTITY_SAVING = "SAVING";
+    public static final String SEARCH_ENTITY_CENTER = "CENTER";
 
     public static final String CLIENT_NAME = "clientName";
 

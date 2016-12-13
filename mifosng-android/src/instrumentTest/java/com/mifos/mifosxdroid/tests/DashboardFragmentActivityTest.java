@@ -28,7 +28,7 @@ import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.DashboardActivity;
-import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 
@@ -48,7 +48,7 @@ public class DashboardFragmentActivityTest extends
     Button bt_searchClient;
     ListView lv_searchResults;
     TextView tv_title_search;
-    ClientSearchFragment searchFragment;
+    SearchFragment searchFragment;
 
     public DashboardFragmentActivityTest() {
         super(DashboardActivity.class);
@@ -58,7 +58,7 @@ public class DashboardFragmentActivityTest extends
     protected void setUp() throws Exception {
         super.setUp();
         dashboardActivity = getActivity();
-        searchFragment = (ClientSearchFragment) getActivity().getSupportFragmentManager()
+        searchFragment = (SearchFragment) getActivity().getSupportFragmentManager()
                 .findFragmentByTag(FragmentConstants.FRAG_CLIENT_SEARCH);
         et_searchById = (EditText) dashboardActivity.findViewById(R.id.et_search_by_id);
         bt_searchClient = (Button) dashboardActivity.findViewById(R.id.bt_searchClient);
