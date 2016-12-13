@@ -36,7 +36,13 @@
     <string name="error_client_inactive">Client inactiu</string>
     <string name="error_invalid_amount">Quantitat introduïda incorrecta</string>
     <string name="error_login_again">Sius plau, iniciï sessió per continuar</string>
-    <string name="error_login_failed">Torni-ho a intentar, les credencials no són vàlides</string>
+    <string name="error_login_failed">Credencials no vàlides</string>
+    <string name="error_invalid_url">URL no vàlida</string>
+    <string name="error_invalid_connection">Les dades de connexió no vàlid</string>
+    <string name="error_username_length">longitud de nom de usuari no vàlid</string>
+    <string name="error_password_length">longitud de la contrasenya no vàlid</string>
+    <string name="error_internal_server">Error del servidor intern</string>
+    <string name="error_not_connected_internet">No connectats a la xarxa</string>
     <string name="error_request_timed_out">Temps límit superat</string>
     <string name="error_save_location_not_available">Posició no disponible, provi-ho més tard</string>
     <string name="error_select_center">Sius plau, selecciona un centre</string>

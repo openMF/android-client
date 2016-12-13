@@ -9,7 +9,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -21,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.api.BaseApiManager;
-import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
@@ -77,7 +75,8 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     private String username;
     private String instanceURL;
     private String password;
-    private boolean isValidUrl;
+    private String domain;
+    private boolean isValidUrl = false;
 
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
@@ -94,15 +93,20 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         public void afterTextChanged(Editable editable) {
             Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer
                     .valueOf(et_port.getEditableText().toString());
+
             instanceURL = ValidationUtil.getInstanceUrl(et_domain.getText().toString(), port);
             isValidUrl = ValidationUtil.isValidUrl(instanceURL);
-            tv_full_url.setText(instanceURL);
-            tv_full_url.setTextColor(isValidUrl ?
-                    ContextCompat.getColor(getApplicationContext(),
-                            R.color.green_light) :
-                    ContextCompat.getColor(getApplicationContext(),
-                            R.color.red_light));
 
+            tv_full_url.setText(instanceURL);
+
+            domain = et_domain.getEditableText().toString();
+
+            if (domain.length() == 0 || domain.contains(" ")) {
+                isValidUrl = false;
+            }
+
+            tv_full_url.setTextColor(getResources()
+                    .getColor(isValidUrl ? R.color.green_light : R.color.red_light));
         }
     };
 
@@ -136,18 +140,27 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     }
 
     public boolean validateUserInputs() {
+
+        domain = et_domain.getEditableText().toString();
+        if (domain.length() == 0 || domain.contains(" ")) {
+            Toaster.show(findViewById(android.R.id.content), getString(R.string.error_invalid_url));
+            return false;
+        }
         if (!isValidUrl) {
-            Toaster.show(findViewById(android.R.id.content), "Invalid connection Data");
+            Toaster.show(findViewById(android.R.id.content),
+                    getString(R.string.error_invalid_connection));
             return false;
         }
         username = et_username.getEditableText().toString();
         if (username.length() < 5) {
-            Toaster.show(findViewById(android.R.id.content), "Invalid username length");
+            Toaster.show(findViewById(android.R.id.content),
+                    getString(R.string.error_username_length));
             return false;
         }
         password = et_password.getEditableText().toString();
         if (password.length() < 6) {
-            Toaster.show(findViewById(android.R.id.content), "Invalid password length");
+            Toaster.show(findViewById(android.R.id.content),
+                    getString(R.string.error_password_length));
             return false;
         }
         return true;
@@ -171,32 +184,36 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @Override
     public void onLoginError(Throwable throwable) {
-        try {
 
-            if (throwable.getCause() instanceof SSLHandshakeException) {
-                promptUserToByPassTheSSLHandshake();
-            } /*else if (throwable.getResponse().getStatus() ==
-                    org.apache.http.HttpStatus.SC_UNAUTHORIZED) {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string
-                        .error_login_failed));
-            } else if (retrofitError.getResponse().getStatus() ==
-                    org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                Toaster.show(findViewById(android.R.id.content), "Internal server error");
-            }*/
-        } catch (NullPointerException e) {
-            if (Network.getConnectivityStatusString(this).equals("Not connected to " +
-                    "Internet")) {
-                Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
-            } else {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
-            }
+        if (throwable instanceof SSLHandshakeException) {
+            promptUserToByPassTheSSLHandshake();
+
+        } else if (throwable.getMessage().substring(5, 8)
+                .equals(org.apache.http.HttpStatus.SC_UNAUTHORIZED + "")) {
+            Toaster.show(findViewById(android.R.id.content), getString(R.string
+                    .error_login_failed));
+
+        } else if (throwable.getMessage().substring(5, 8)
+                .equals(org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR + "")) {
+            Toaster.show(findViewById(android.R.id.content), getString(R.string
+                    .error_internal_server));
+
+        } else if (Network.getConnectivityStatusString(this).equals("Not connected to " +
+                "Internet")) {
+            Toaster.show(findViewById(android.R.id.content), getString(R.string
+                    .error_not_connected_internet));
+
+        } else {
+            Toaster.show(findViewById(android.R.id.content), getString(R.string
+                    .error_unknown));
         }
+
     }
 
     @Override
     public void showProgressbar(boolean show) {
         if (show) {
-            showProgress("Logging In");
+            showProgress(getString(R.string.logging_in));
         } else {
             hideProgress();
         }
@@ -210,20 +227,20 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
      */
     private void promptUserToByPassTheSSLHandshake() {
         new AlertDialog.Builder(this)
-                .setTitle("SSL Certificate Problem")
-                .setMessage("There is a problem with your SSLCertificate, would you like to " +
-                        "continue? This connection would be unsafe.")
-                .setIcon(android.R.drawable.stat_sys_warning)
-                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.ssl_certificate_dialog))
+                .setMessage(getString(R.string.dialog_ssl_certificate_message))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(getString(R.string.Continue), new DialogInterface
+                        .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         login(true);
                     }
                 })
-                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.Exit), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                        dialog.dismiss();
                     }
                 })
                 .create().show();
@@ -231,6 +248,13 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @OnClick(R.id.bt_login)
     public void onLoginClick(Button button) {
+        login(false);
+    }
+
+    private void login(boolean shouldByPassSSLSecurity) {
+        if (!validateUserInputs())
+            return;
+
         // Saving tenant
         PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
         // Saving InstanceURL for next usages
@@ -240,16 +264,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         // Saving port
         PrefManager.setPort(et_port.getEditableText().toString());
         // Updating Services
-        if (!PrefManager.getInstanceDomain().equals(BaseUrl.API_ENDPOINT)) {
-            BaseApiManager.createService();
-        }
-
-        login(false);
-    }
-
-    private void login(boolean shouldByPassSSLSecurity) {
-        if (!validateUserInputs())
-            return;
+        BaseApiManager.createService();
 
         mLoginPresenter.login(instanceURL, username, password);
     }
