@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,6 +26,7 @@ import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
 import com.mifos.objects.accounts.GroupAccounts;
@@ -54,6 +56,11 @@ import static android.view.View.VISIBLE;
 public class GroupDetailsFragment extends ProgressableFragment implements GroupDetailsMvpView {
 
     public static final String LOG_TAG = GroupDetailsFragment.class.getSimpleName();
+
+    public static final int MENU_ITEM_DATA_TABLES = 1000;
+    public static final int MENU_ITEM_ADD_LOAN_ACCOUNT = 1001;
+    public static final int MENU_ITEM_DOCUMENTS = 1002;
+    public static final int MENU_ITEM_GROUP_CLIENTS = 1003;
 
     @BindView(R.id.tv_groupsName)
     TextView tv_fullName;
@@ -95,7 +102,7 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     private int groupId;
     private AccountAccordion accountAccordion;
     private OnFragmentInteractionListener mListener;
-    public List<DataTable> clientDataTables = new ArrayList<>();
+    public List<DataTable> groupDataTables = new ArrayList<>();
 
     public static GroupDetailsFragment newInstance(int groupId) {
         GroupDetailsFragment fragment = new GroupDetailsFragment();
@@ -241,9 +248,9 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     public void showGroupDataTable(List<DataTable> dataTables) {
         if (dataTables != null) {
             Iterator<DataTable> dataTableIterator = dataTables.iterator();
-            clientDataTables.clear();
+            groupDataTables.clear();
             while (dataTableIterator.hasNext()) {
-                clientDataTables.add(dataTableIterator.next());
+                groupDataTables.add(dataTableIterator.next());
             }
         }
     }
@@ -267,20 +274,60 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.group, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.clear();
+        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+                .DATA_TABLE_GROUP_NAME);
+        menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE, getString(R.string.add_loan));
+        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
+        menu.add(Menu.NONE, MENU_ITEM_GROUP_CLIENTS, Menu.NONE, getString(R.string.group_clients));
+
+        SubMenu more_info_subSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
+
+        int SUBMENU_ITEM_ID = 0;
+
+        // Create a Sub Menu that holds a link to all data tables
+        if (more_info_subSubMenu != null && groupDataTables != null && groupDataTables.size() >
+                0) {
+            Iterator<DataTable> dataTableIterator = groupDataTables.iterator();
+            while (dataTableIterator.hasNext()) {
+                more_info_subSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator
+                        .next()
+                        .getRegisteredTableName());
+                SUBMENU_ITEM_ID++;
+            }
+        }
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id >= 0 && id < groupDataTables.size()) {
+
+            DataTableDataFragment dataTableDataFragment
+                    = DataTableDataFragment.newInstance(groupDataTables.get(id), groupId);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
+            fragmentTransaction.replace(R.id.container, dataTableDataFragment, FragmentConstants
+                    .FRAG_DATA_TABLE);
+
+            fragmentTransaction.commit();
+        }
         switch (item.getItemId()) {
-            case R.id.documents:
+            case MENU_ITEM_DOCUMENTS:
                 loadDocuments();
                 break;
-            case R.id.add_group_loan:
+            case MENU_ITEM_ADD_LOAN_ACCOUNT:
                 addGroupLoanAccount();
                 break;
-            case R.id.group_clients:
+            case MENU_ITEM_GROUP_CLIENTS:
                 mGroupDetailsPresenter.loadGroupAssociateClients(groupId);
                 break;
 
