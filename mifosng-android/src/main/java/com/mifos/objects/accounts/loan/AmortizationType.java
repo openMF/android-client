@@ -8,11 +8,18 @@ package com.mifos.objects.accounts.loan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class AmortizationType implements Parcelable {
 
-    private Integer id;
-    private String code;
-    private String value;
+    @SerializedName("id")
+    Integer id;
+
+    @SerializedName("code")
+    String code;
+
+    @SerializedName("value")
+    String value;
 
     public Integer getId() {
         return id;
@@ -36,6 +43,15 @@ public class AmortizationType implements Parcelable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "AmortizationType{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 
 

@@ -8,11 +8,18 @@ package com.mifos.objects.accounts.loan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class InterestCalculationPeriodType implements Parcelable {
 
-    private Integer id;
-    private String code;
-    private String value;
+    @SerializedName("id")
+    Integer id;
+
+    @SerializedName("code")
+    String code;
+
+    @SerializedName("value")
+    String value;
 
     public Integer getId() {
         return id;
@@ -38,6 +45,15 @@ public class InterestCalculationPeriodType implements Parcelable {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "InterestCalculationPeriodType{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
+
 
     @Override
     public int describeContents() {
@@ -60,8 +76,8 @@ public class InterestCalculationPeriodType implements Parcelable {
         this.value = in.readString();
     }
 
-    public static final Parcelable.Creator<InterestCalculationPeriodType> CREATOR = new
-            Parcelable.Creator<InterestCalculationPeriodType>() {
+    public static final Parcelable.Creator<InterestCalculationPeriodType> CREATOR = new Parcelable
+            .Creator<InterestCalculationPeriodType>() {
         @Override
         public InterestCalculationPeriodType createFromParcel(Parcel source) {
             return new InterestCalculationPeriodType(source);
