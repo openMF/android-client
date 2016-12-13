@@ -3,14 +3,19 @@ package com.mifos.mifosxdroid.dialogfragments.chargedialog;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Charges;
+import com.mifos.objects.templates.clients.ChargeOptions;
+import com.mifos.objects.templates.clients.ChargeTemplate;
 import com.mifos.services.data.ChargesPayload;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 
-import okhttp3.ResponseBody;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -44,7 +49,7 @@ public class ChargeDialogPresenter extends BasePresenter<ChargeDialogMvpView> {
         mSubscription = mDataManager.getAllChargesV2(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribe(new Subscriber<ChargeTemplate>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -57,9 +62,9 @@ public class ChargeDialogPresenter extends BasePresenter<ChargeDialogMvpView> {
                     }
 
                     @Override
-                    public void onNext(ResponseBody response) {
+                    public void onNext(ChargeTemplate chargeTemplate) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showAllChargesV2(response);
+                        getMvpView().showAllChargesV2(chargeTemplate);
                     }
                 });
     }
@@ -89,5 +94,18 @@ public class ChargeDialogPresenter extends BasePresenter<ChargeDialogMvpView> {
                         getMvpView().showChargesCreatedSuccessfully(charges);
                     }
                 });
+    }
+
+    public List<String> filterChargeName(final List<ChargeOptions>
+                                                    chargeOptions) {
+        final ArrayList<String> chargeNameList = new ArrayList<>();
+        Observable.from(chargeOptions)
+                .subscribe(new Action1<ChargeOptions>() {
+                    @Override
+                    public void call(ChargeOptions chargeOptions) {
+                        chargeNameList.add(chargeOptions.getName());
+                    }
+                });
+        return chargeNameList;
     }
 }
