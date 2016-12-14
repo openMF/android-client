@@ -15,7 +15,7 @@ public class LoansPayload {
     String dateFormat;
     String expectedDisbursementDate;
     int interestCalculationPeriodType;
-    int interestRatePerPeriod;
+    Double interestRatePerPeriod;
     int interestType;
     int loanTermFrequency;
     int loanTermFrequencyType;
@@ -26,11 +26,22 @@ public class LoansPayload {
     int productId;
     String repaymentEvery;
     int repaymentFrequencyType;
+    Integer repaymentFrequencyDayOfWeekType;
+    Integer repaymentFrequencyNthDayType;
     String submittedOnDate;
     int transactionProcessingStrategyId;
     int loanPurposeId;
     int loanOfficerId;
     int fundId;
+    Integer linkAccountId;
+
+    public Integer getLinkAccountId() {
+        return linkAccountId;
+    }
+
+    public void setLinkAccountId(Integer linkAccountId) {
+        this.linkAccountId = linkAccountId;
+    }
 
     public int getClientId() {
         return clientId;
@@ -98,11 +109,11 @@ public class LoansPayload {
         this.interestCalculationPeriodType = interestCalculationPeriodType;
     }
 
-    public int getInterestRatePerPeriod() {
+    public Double getInterestRatePerPeriod() {
         return interestRatePerPeriod;
     }
 
-    public void setInterestRatePerPeriod(int interestRatePerPeriod) {
+    public void setInterestRatePerPeriod(Double interestRatePerPeriod) {
         this.interestRatePerPeriod = interestRatePerPeriod;
     }
 
@@ -216,5 +227,21 @@ public class LoansPayload {
 
     public void setTransactionProcessingStrategyId(int transactionProcessingStrategyId) {
         this.transactionProcessingStrategyId = transactionProcessingStrategyId;
+    }
+
+    public Integer getRepaymentFrequencyDayOfWeekType() {
+        return repaymentFrequencyDayOfWeekType;
+    }
+
+    public void setRepaymentFrequencyDayOfWeekType(Integer repaymentFrequencyDayOfWeekType) {
+        this.repaymentFrequencyDayOfWeekType = repaymentFrequencyDayOfWeekType;
+    }
+
+    public Integer getRepaymentFrequencyNthDayType() {
+        return repaymentFrequencyNthDayType;
+    }
+
+    public void setRepaymentFrequencyNthDayType(Integer repaymentFrequencyNthDayType) {
+        this.repaymentFrequencyNthDayType = repaymentFrequencyNthDayType;
     }
 }
