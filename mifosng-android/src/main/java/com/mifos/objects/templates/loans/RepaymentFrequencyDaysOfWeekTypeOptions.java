@@ -45,7 +45,7 @@ public class RepaymentFrequencyDaysOfWeekTypeOptions implements Parcelable {
 
     @Override
     public String toString() {
-        return "RepaymentFrequencyNthDayTypeOptions{" +
+        return "RepaymentFrequencyDayOfWeekTypeOptions{" +
                 "id=" + id +
                 ", code='" + code + '\'' +
                 ", value='" + value + '\'' +
@@ -74,16 +74,16 @@ public class RepaymentFrequencyDaysOfWeekTypeOptions implements Parcelable {
         this.value = in.readString();
     }
 
-    public static final Parcelable.Creator<RepaymentFrequencyNthDayTypeOptions> CREATOR =
-            new Parcelable.Creator<RepaymentFrequencyNthDayTypeOptions>() {
+    public static final Parcelable.Creator<RepaymentFrequencyDaysOfWeekTypeOptions> CREATOR =
+            new Parcelable.Creator<RepaymentFrequencyDaysOfWeekTypeOptions>() {
                 @Override
-                public RepaymentFrequencyNthDayTypeOptions createFromParcel(Parcel source) {
-                    return new RepaymentFrequencyNthDayTypeOptions(source);
+                public RepaymentFrequencyDaysOfWeekTypeOptions createFromParcel(Parcel source) {
+                    return new RepaymentFrequencyDaysOfWeekTypeOptions(source);
                 }
 
                 @Override
-                public RepaymentFrequencyNthDayTypeOptions[] newArray(int size) {
-                    return new RepaymentFrequencyNthDayTypeOptions[size];
+                public RepaymentFrequencyDaysOfWeekTypeOptions[] newArray(int size) {
+                    return new RepaymentFrequencyDaysOfWeekTypeOptions[size];
                 }
             };
 }

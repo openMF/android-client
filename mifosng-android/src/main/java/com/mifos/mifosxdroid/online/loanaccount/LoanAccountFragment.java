@@ -27,6 +27,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
+import com.mifos.objects.accounts.loan.AccountLinkingOptions;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.AmortizationTypeOptions;
@@ -35,6 +36,8 @@ import com.mifos.objects.templates.loans.InterestCalculationPeriodType;
 import com.mifos.objects.templates.loans.InterestTypeOptions;
 import com.mifos.objects.templates.loans.LoanOfficerOptions;
 import com.mifos.objects.templates.loans.LoanTemplate;
+import com.mifos.objects.templates.loans.RepaymentFrequencyDaysOfWeekTypeOptions;
+import com.mifos.objects.templates.loans.RepaymentFrequencyNthDayTypeOptions;
 import com.mifos.objects.templates.loans.TransactionProcessingStrategyOptions;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.utils.Constants;
@@ -49,7 +52,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.ResponseBody;
 
 
 /**
@@ -79,6 +81,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @BindView(R.id.et_principal)
     EditText etPrincipal;
 
+    @BindView(R.id.sp_linking_options)
+    Spinner spLinkingOptions;
+
     @BindView(R.id.et_loanterm)
     EditText etLoanTerm;
 
@@ -90,6 +95,15 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @BindView(R.id.sp_payment_periods)
     Spinner spPaymentPeriods;
+
+    @BindView(R.id.tv_repaid_nthfreq_label_on)
+    TextView tvRepaidNthFreqLabelOn;
+
+    @BindView(R.id.sp_repayment_freq_nth_day)
+    Spinner spRepaymentFreqNthDay;
+
+    @BindView(R.id.sp_repayment_freq_day_of_week)
+    Spinner spRepaymentFreqDayOfWeek;
 
     @BindView(R.id.et_nominal_interest_rate)
     EditText etNominalInterestRate;
@@ -121,48 +135,63 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @BindView(R.id.tv_disbursementon_date)
     TextView tvDisbursementOnDate;
 
-    @BindView(R.id.bt_loan_submit)
+    @BindView(R.id.btn_loan_submit)
     Button btnLoanSubmit;
 
     @Inject
     LoanAccountPresenter mLoanAccountPresenter;
 
-    ResponseBody mResponse;
-
-    String submittion_date;
-    String disbursementon_date;
+    String submissionDate;
+    String disbursementDate;
 
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
     private int loanPurposeId;
     private int loanTermFrequency;
+    private int loanTermFrequencyType;
+    private Integer termFrequency;
+    private Integer repaymentEvery;
     private int transactionProcessingStrategyId;
     private int amortizationTypeId;
     private int interestCalculationPeriodTypeId;
-    private int fundId;
+    private Integer fundId;
     private int loanOfficerId;
     private int interestTypeId;
+    private Integer repaymentFrequencyNthDayType;
+    private Integer repaymentFrequencyDayOfWeek;
+    private Double interestRatePerPeriod;
+    private Integer linkAccountId;
 
     List<LoanProducts> mLoanProducts = new ArrayList<>();
+    List<RepaymentFrequencyNthDayTypeOptions>
+            mRepaymentFrequencyNthDayTypeOptions = new ArrayList<>();
+    List<RepaymentFrequencyDaysOfWeekTypeOptions>
+            mRepaymentFrequencyDaysOfWeekTypeOptions = new ArrayList<>();
     LoanTemplate mLoanTemplate = new LoanTemplate();
 
     List<String> mListLoanProducts = new ArrayList<>();
     List<String> mListLoanPurposeOptions = new ArrayList<>();
+    List<String> mListAccountLinkingOptions = new ArrayList<>();
     List<String> mListAmortizationTypeOptions = new ArrayList<>();
     List<String> mListInterestCalculationPeriodTypeOptions  = new ArrayList<>();
     List<String> mListTransactionProcessingStrategyOptions = new ArrayList<>();
     List<String> mListTermFrequencyTypeOptions = new ArrayList<>();
+    List<String> mListRepaymentFrequencyNthDayTypeOptions = new ArrayList<>();
+    List<String> mListRepaymentFrequencyDayOfWeekTypeOptions = new ArrayList<>();
     List<String> mListLoanFundOptions = new ArrayList<>();
     List<String> mListLoanOfficerOptions = new ArrayList<>();
     List<String> mListInterestTypeOptions = new ArrayList<>();
 
     ArrayAdapter<String> mLoanProductAdapter;
     ArrayAdapter<String> mLoanPurposeOptionsAdapter;
+    ArrayAdapter<String> mAccountLinkingOptionsAdapter;
     ArrayAdapter<String> mAmortizationTypeOptionsAdapter;
     ArrayAdapter<String> mInterestCalculationPeriodTypeOptionsAdapter;
     ArrayAdapter<String> mTransactionProcessingStrategyOptionsAdapter;
     ArrayAdapter<String> mTermFrequencyTypeOptionsAdapter;
+    ArrayAdapter<String> mRepaymentFrequencyNthDayTypeOptionsAdapter;
+    ArrayAdapter<String> mRepaymentFrequencyDayOfWeekTypeOptionsAdapter;
     ArrayAdapter<String> mLoanFundOptionsAdapter;
     ArrayAdapter<String> mLoanOfficerOptionsAdapter;
     ArrayAdapter<String> mInterestTypeOptionsAdapter;
@@ -196,23 +225,23 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         ButterKnife.bind(this, rootView);
         mLoanAccountPresenter.attachView(this);
 
-        inflatesubmissionDate();
-        inflatedisbusmentDate();
+        inflateSubmissionDate();
+        inflateDisbursementDate();
         inflateLoansProductSpinner();
 
-        disbursementon_date = tvDisbursementOnDate.getText().toString();
-        submittion_date = tvSubmittedOnDate.getText().toString();
-        submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                (submittion_date).replace("-", " ");
-        disbursementon_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                (disbursementon_date).replace("-", " ");
+        disbursementDate = tvDisbursementOnDate.getText().toString();
+        submissionDate = tvSubmittedOnDate.getText().toString();
+        submissionDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (submissionDate).replace("-", " ");
+        disbursementDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                (disbursementDate).replace("-", " ");
 
         inflateSpinners();
 
         return rootView;
     }
 
-    @OnClick(R.id.bt_loan_submit)
+    @OnClick(R.id.btn_loan_submit)
     public void submit() {
 
         LoansPayload loansPayload = new LoansPayload();
@@ -221,7 +250,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         loansPayload.setAmortizationType(amortizationTypeId);
         loansPayload.setClientId(clientId);
         loansPayload.setDateFormat("dd MMMM yyyy");
-        loansPayload.setExpectedDisbursementDate(disbursementon_date);
+        loansPayload.setExpectedDisbursementDate(disbursementDate);
         loansPayload.setInterestCalculationPeriodType(interestCalculationPeriodTypeId);
         loansPayload.setLoanType("individual");
         loansPayload.setLocale("en");
@@ -230,13 +259,26 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         loansPayload.setPrincipal(etPrincipal.getEditableText().toString());
         loansPayload.setProductId(productId);
         loansPayload.setRepaymentEvery(etRepaidEvery.getEditableText().toString());
-        loansPayload.setSubmittedOnDate(submittion_date);
+        loansPayload.setSubmittedOnDate(submissionDate);
         loansPayload.setLoanPurposeId(loanPurposeId);
-        loansPayload.setLoanTermFrequency(loanTermFrequency);
+        loansPayload.setLoanTermFrequency(
+                Integer.parseInt(etLoanTerm.getEditableText().toString()));
+        loansPayload.setLoanTermFrequencyType(loanTermFrequencyType);
+
+        //loanTermFrequencyType and repaymentFrequencyType should be the same.
+        loansPayload.setRepaymentFrequencyType(loanTermFrequencyType);
+        loansPayload.setRepaymentFrequencyDayOfWeekType(
+                repaymentFrequencyDayOfWeek != null ? repaymentFrequencyDayOfWeek : null);
+        loansPayload.setRepaymentFrequencyNthDayType(
+                repaymentFrequencyNthDayType != null ? repaymentFrequencyNthDayType : null);
         loansPayload.setTransactionProcessingStrategyId(transactionProcessingStrategyId);
         loansPayload.setFundId(fundId);
         loansPayload.setInterestType(interestTypeId);
         loansPayload.setLoanOfficerId(loanOfficerId);
+        loansPayload.setLinkAccountId(linkAccountId);
+        interestRatePerPeriod = Double.parseDouble(
+                etNominalInterestRate.getEditableText().toString());
+        loansPayload.setInterestRatePerPeriod(interestRatePerPeriod);
 
         initiateLoanCreation(loansPayload);
     }
@@ -263,6 +305,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         mLoanPurposeOptionsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
         spLoanPurpose.setAdapter(mLoanPurposeOptionsAdapter);
         spLoanPurpose.setOnItemSelectedListener(this);
+
+        //Inflating Linking Options
+        mAccountLinkingOptionsAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListAccountLinkingOptions);
+        mAccountLinkingOptionsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        spLinkingOptions.setAdapter(mAccountLinkingOptionsAdapter);
+        spLinkingOptions.setOnItemSelectedListener(this);
 
         //Inflating AmortizationTypeOptions Spinner
         mAmortizationTypeOptionsAdapter = new ArrayAdapter<>(getActivity(),
@@ -319,6 +368,25 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     }
 
+    private void inflateRepaidMonthSpinners() {
+
+        mRepaymentFrequencyNthDayTypeOptionsAdapter = new ArrayAdapter<>(
+                getActivity(), layout.simple_spinner_item,
+                mListRepaymentFrequencyNthDayTypeOptions);
+        mRepaymentFrequencyNthDayTypeOptionsAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        spRepaymentFreqNthDay.setAdapter(mRepaymentFrequencyNthDayTypeOptionsAdapter);
+        spRepaymentFreqNthDay.setOnItemSelectedListener(this);
+
+        mRepaymentFrequencyDayOfWeekTypeOptionsAdapter = new ArrayAdapter<>(
+                getActivity(), layout.simple_spinner_item,
+                mListRepaymentFrequencyDayOfWeekTypeOptions);
+        mRepaymentFrequencyDayOfWeekTypeOptionsAdapter
+                .setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        spRepaymentFreqDayOfWeek.setAdapter(mRepaymentFrequencyDayOfWeekTypeOptionsAdapter);
+        spRepaymentFreqDayOfWeek.setOnItemSelectedListener(this);
+    }
+
     private void inflateLoansProductSpinner() {
         mLoanAccountPresenter.loadAllLoans();
     }
@@ -331,26 +399,26 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         mLoanAccountPresenter.createLoansAccount(loansPayload);
     }
 
-    public void inflatesubmissionDate() {
+    public void inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
 
         tvSubmittedOnDate.setText(MFDatePicker.getDatePickedAsString());
     }
 
     @OnClick(R.id.tv_submittedon_date)
-    public void setSubmittedOnDate() {
+    public void setTvSubmittedOnDate() {
         mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
 
-    public void inflatedisbusmentDate() {
+    public void inflateDisbursementDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
 
         tvDisbursementOnDate.setText(MFDatePicker.getDatePickedAsString());
     }
 
     @OnClick(R.id.tv_disbursementon_date)
-    public void setDisbursementDate() {
+    public void setTvDisbursementOnDate() {
         mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
@@ -358,6 +426,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public void showAllLoan(List<LoanProducts> loans) {
         mLoanProducts = loans;
+        mListLoanProducts.clear();
         for (LoanProducts loanProducts : mLoanProducts) {
             mListLoanProducts.add(loanProducts.getName());
         }
@@ -368,24 +437,51 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     public void showLoanAccountTemplate(LoanTemplate loanTemplate) {
         mLoanTemplate = loanTemplate;
 
+        mListRepaymentFrequencyNthDayTypeOptions.clear();
+        mRepaymentFrequencyNthDayTypeOptions = mLoanTemplate
+                .getRepaymentFrequencyNthDayTypeOptions();
+        for (RepaymentFrequencyNthDayTypeOptions options : mRepaymentFrequencyNthDayTypeOptions) {
+            mListRepaymentFrequencyNthDayTypeOptions.add(options.getValue());
+        }
+
+        mListRepaymentFrequencyDayOfWeekTypeOptions.clear();
+        mRepaymentFrequencyDaysOfWeekTypeOptions = mLoanTemplate
+                .getRepaymentFrequencyDaysOfWeekTypeOptions();
+        for (RepaymentFrequencyDaysOfWeekTypeOptions options
+                : mRepaymentFrequencyDaysOfWeekTypeOptions) {
+            mListRepaymentFrequencyDayOfWeekTypeOptions.add(options.getValue());
+        }
+
+        mListLoanPurposeOptions.clear();
         for (com.mifos.objects.templates.loans.LoanPurposeOptions loanPurposeOptions :
                 mLoanTemplate.getLoanPurposeOptions()) {
             mListLoanPurposeOptions.add(loanPurposeOptions.getName());
         }
         mLoanPurposeOptionsAdapter.notifyDataSetChanged();
 
+        mListAccountLinkingOptions.clear();
+        for (AccountLinkingOptions options : mLoanTemplate.getAccountLinkingOptions()) {
+            mListAccountLinkingOptions.add(options.getProductName());
+        }
+        mListAccountLinkingOptions.add(
+                getResources().getString(R.string.select_linkage_account_hint));
+        mAccountLinkingOptionsAdapter.notifyDataSetChanged();
+
+        mListAmortizationTypeOptions.clear();
         for (AmortizationTypeOptions amortizationTypeOptions :
                 mLoanTemplate.getAmortizationTypeOptions()) {
             mListAmortizationTypeOptions.add(amortizationTypeOptions.getValue());
         }
         mAmortizationTypeOptionsAdapter.notifyDataSetChanged();
 
+        mListInterestCalculationPeriodTypeOptions.clear();
         for (InterestCalculationPeriodType interestCalculationPeriodType : mLoanTemplate
                 .getInterestCalculationPeriodTypeOptions()) {
             mListInterestCalculationPeriodTypeOptions.add(interestCalculationPeriodType.getValue());
         }
         mInterestCalculationPeriodTypeOptionsAdapter.notifyDataSetChanged();
 
+        mListTransactionProcessingStrategyOptions.clear();
         for (TransactionProcessingStrategyOptions transactionProcessingStrategyOptions :
                 mLoanTemplate.getTransactionProcessingStrategyOptions()) {
             mListTransactionProcessingStrategyOptions.add(transactionProcessingStrategyOptions
@@ -393,28 +489,32 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         }
         mTransactionProcessingStrategyOptionsAdapter.notifyDataSetChanged();
 
+        mListTermFrequencyTypeOptions.clear();
         for (com.mifos.objects.templates.loans.TermFrequencyTypeOptions termFrequencyTypeOptions :
                  mLoanTemplate.getTermFrequencyTypeOptions()) {
             mListTermFrequencyTypeOptions.add(termFrequencyTypeOptions.getValue());
         }
         mTermFrequencyTypeOptionsAdapter.notifyDataSetChanged();
 
+        mListLoanFundOptions.clear();
         for (FundOptions fundOptions : mLoanTemplate.getFundOptions()) {
             mListLoanFundOptions.add(fundOptions.getName());
         }
         mLoanFundOptionsAdapter.notifyDataSetChanged();
 
+        mListLoanOfficerOptions.clear();
         for (LoanOfficerOptions loanOfficerOptions : mLoanTemplate.getLoanOfficerOptions()) {
             mListLoanOfficerOptions.add(loanOfficerOptions.getDisplayName());
         }
         mLoanOfficerOptionsAdapter.notifyDataSetChanged();
 
+        mListInterestTypeOptions.clear();
         for (InterestTypeOptions interestTypeOptions : mLoanTemplate.getInterestTypeOptions()) {
             mListInterestTypeOptions.add(interestTypeOptions.getValue());
         }
         mInterestTypeOptionsAdapter.notifyDataSetChanged();
 
-        showDefaultValues(mLoanTemplate.getInterestRateFrequencyType().getValue());
+        showDefaultValues();
 
     }
 
@@ -482,6 +582,24 @@ public class LoanAccountFragment extends ProgressableDialogFragment
             case R.id.sp_payment_periods :
                 loanTermFrequency = mLoanTemplate.getTermFrequencyTypeOptions().get(position)
                         .getId();
+                if (loanTermFrequency == 2) {
+                    // Show and inflate Nth day and week spinners
+                    showHideRepaidMonthSpinners(View.VISIBLE);
+                    inflateRepaidMonthSpinners();
+                } else {
+                    showHideRepaidMonthSpinners(View.GONE);
+                }
+                break;
+            case R.id.sp_repayment_freq_nth_day:
+                repaymentFrequencyNthDayType = mLoanTemplate
+                        .getRepaymentFrequencyNthDayTypeOptions()
+                        .get(position).getId();
+                break;
+
+            case R.id.sp_repayment_freq_day_of_week:
+                repaymentFrequencyDayOfWeek = mLoanTemplate
+                        .getRepaymentFrequencyDaysOfWeekTypeOptions()
+                        .get(position).getId();
                 break;
 
             case R.id.sp_fund :
@@ -495,6 +613,14 @@ public class LoanAccountFragment extends ProgressableDialogFragment
             case R.id.sp_interest_type :
                 interestTypeId = mLoanTemplate.getInterestTypeOptions().get(position).getId();
                 break;
+
+            case R.id.sp_linking_options:
+                if (mListAccountLinkingOptions.get(position)
+                        .equals(getResources().getString(R.string.select_linkage_account_hint))) {
+                    linkAccountId = null;
+                } else {
+                    linkAccountId = mLoanTemplate.getAccountLinkingOptions().get(position).getId();
+                }
         }
     }
 
@@ -503,7 +629,30 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     }
 
-    private void showDefaultValues(String nominalRatePerYearMonth) {
-        tvNominalRatePerYearMonth.setText(nominalRatePerYearMonth);
+    private void showHideRepaidMonthSpinners(int visibility) {
+        spRepaymentFreqNthDay.setVisibility(visibility);
+        spRepaymentFreqDayOfWeek.setVisibility(visibility);
+        tvRepaidNthFreqLabelOn.setVisibility(visibility);
+    }
+
+    private void showDefaultValues() {
+        interestRatePerPeriod = mLoanTemplate.getInterestRatePerPeriod();
+        loanTermFrequencyType = mLoanTemplate.getInterestRateFrequencyType().getId();
+        termFrequency = mLoanTemplate.getTermFrequency();
+        etPrincipal.setText(mLoanTemplate.getPrincipal().toString());
+        etNumberOfRepayments.setText(mLoanTemplate.getNumberOfRepayments().toString());
+        tvNominalRatePerYearMonth
+                .setText(mLoanTemplate.getInterestRateFrequencyType().getValue());
+        etNominalInterestRate.setText(mLoanTemplate.getInterestRatePerPeriod().toString());
+        etLoanTerm.setText(termFrequency.toString());
+        if (mLoanTemplate.getRepaymentEvery() != null) {
+            repaymentEvery = mLoanTemplate.getRepaymentEvery();
+            etRepaidEvery.setText(repaymentEvery.toString());
+        }
+        if (mLoanTemplate.getFundId() != null) {
+            fundId = mLoanTemplate.getFundId();
+            spFund.setSelection(mLoanTemplate.getFundNameFromId(fundId));
+        }
+        spLinkingOptions.setSelection(mListAccountLinkingOptions.size());
     }
 }

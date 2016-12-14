@@ -281,6 +281,7 @@
     <string name="client_classification">Client Classification</string>
     <string name="interest_comp">Interest Compounding Period</string>
     <string name="repaidevery">Repaid Every</string>
+    <string name="repaidevery_nthfreq">on</string>
     <string name="no_more_clients_available">No more Clients Available</string>
     <string name="no_more_groups_available">No more Groups Available</string>
     <string name="no_more_centers_available">No more Centers Available</string>
@@ -305,6 +306,8 @@
     <string name="logout">Logout</string>
     <string name="action_save_location">Save location</string>
     <string name="loan_disbursement_date">Disbursement Date</string>
+    <string name="loan_account_linking_option_label">Link Savings</string>
+    <string name="select_linkage_account_hint">Select Account</string>
     <string name="savings_interest_earned">Interest Earned</string>
     <string name="sync">Sync</string>
     <string name="enter_center_id">Center Id</string>
