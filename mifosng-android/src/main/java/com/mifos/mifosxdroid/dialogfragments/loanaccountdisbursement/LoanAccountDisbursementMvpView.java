@@ -1,18 +1,18 @@
 package com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.accounts.loan.Loans;
+import com.mifos.objects.templates.loans.LoanDisburseTemplate;
 
-import okhttp3.ResponseBody;
 
 /**
  * Created by Rajan Maurya on 8/6/16.
  */
 public interface LoanAccountDisbursementMvpView extends MvpView {
 
-    void showLoanTemplate(ResponseBody response);
+    void showLoanTemplate(LoanDisburseTemplate loanDisburseTemplate);
 
-    void showDispurseLoanSuccessfully(GenericResponse genericResponse);
+    void showDispurseLoanSuccessfully(Loans loans);
 
     void showError(String s);
 }

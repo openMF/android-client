@@ -1,16 +1,23 @@
 package com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement;
 
+
 import com.mifos.api.DataManager;
-import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
+import com.mifos.objects.accounts.loan.Loans;
+import com.mifos.objects.templates.loans.LoanDisburseTemplate;;
+import com.mifos.objects.templates.loans.PaymentTypeOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
-import okhttp3.ResponseBody;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -45,7 +52,7 @@ public class LoanAccountDisbursementPresenter
         mSubscription = mDataManager.getLoanTemplate(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribe(new Subscriber<LoanDisburseTemplate>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -58,9 +65,9 @@ public class LoanAccountDisbursementPresenter
                     }
 
                     @Override
-                    public void onNext(ResponseBody response) {
+                    public void onNext(LoanDisburseTemplate loanDisburseTemplate) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showLoanTemplate(response);
+                        getMvpView().showLoanTemplate(loanDisburseTemplate);
                     }
                 });
     }
@@ -72,7 +79,7 @@ public class LoanAccountDisbursementPresenter
         mSubscription = mDataManager.dispurseLoan(loanId, loanDisbursement)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribe(new Subscriber<Loans>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -85,11 +92,23 @@ public class LoanAccountDisbursementPresenter
                     }
 
                     @Override
-                    public void onNext(GenericResponse genericResponse) {
+                    public void onNext(Loans loans) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showDispurseLoanSuccessfully(genericResponse);
+                        getMvpView().showDispurseLoanSuccessfully(loans);
                     }
                 });
     }
 
+    public List<String> filterPaymentType(final List<PaymentTypeOptions>
+                                              paymentTypeOptions) {
+        final ArrayList<String> paymentTypeNameList = new ArrayList<>();
+        Observable.from(paymentTypeOptions)
+                .subscribe(new Action1<PaymentTypeOptions>() {
+                    @Override
+                    public void call(PaymentTypeOptions paymentTypeOptions) {
+                        paymentTypeNameList.add(paymentTypeOptions.getName());
+                    }
+                });
+        return paymentTypeNameList;
+    }
 }
