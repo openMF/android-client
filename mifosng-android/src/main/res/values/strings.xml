@@ -44,7 +44,6 @@
     <string name="loanterm_month">Select Loan Term</string>
     <string name="nominal">Nominal annual interest </string>
     <string name="submittedon">Submitted On</string>
-    <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
     <string name="group">Group</string>
     <string name="cancel">Cancel</string>
@@ -312,6 +311,20 @@
     <string name="no_meeting_found">No Meetings Found</string>
 
     <string name="center_add_client">Add Client</string>
+
+    <!-- Center Details Related Strings -->
+    <string name="center_details">Center Details</string>
+    <string name="activation_date">Activation Date</string>
+    <string name="next_meeting_on">Next Meeting On</string>
+    <string name="meeting_frequency">Meeting Frequency</string>
+    <string name="summary_info">Summary Info</string>
+    <string name="active_clients">Active Clients</string>
+    <string name="active_group_borrowers">Active Group Borrowers</string>
+    <string name="active_client_borrowers">Active Client Borrowers</string>
+    <string name="active_overdue_group_loans">Active Overdue Group Loans</string>
+    <string name="active_overdue_client_loans">Active Overdue Client Loans</string>
+    <string name="active_group_loans">Active Group Loans</string>
+    <string name="active_client_loans">Active Client Loans</string>
 
     <!-- Menu Item Names Begin Here -->
     <string name="action_settings">Settings</string>

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
@@ -22,7 +23,8 @@ import com.mifos.utils.Constants;
 import java.util.List;
 
 public class CentersActivity extends MifosBaseActivity implements CenterListFragment
-        .OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener {
+        .OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener,
+        CenterDetailsFragment.OnFragmentInteractionListener {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
 
@@ -72,5 +74,10 @@ public class CentersActivity extends MifosBaseActivity implements CenterListFrag
     @Override
     public void addCenterSavingAccount(int centerId) {
         replaceFragment(SavingsAccountFragment.newInstance(centerId, true), true, R.id.container);
+    }
+
+    @Override
+    public void loadCenterDetails(int centerId) {
+        replaceFragment(CenterDetailsFragment.newInstance(centerId), true, R.id.container);
     }
 }
