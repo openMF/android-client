@@ -8,6 +8,7 @@ package com.mifos.objects.accounts.loan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -20,12 +21,15 @@ import com.raizlabs.android.dbflow.annotation.Table;
 public class LoanType extends MifosBaseModel implements Parcelable {
 
     @PrimaryKey
+    @SerializedName("id")
     Integer id;
 
     @Column
+    @SerializedName("code")
     String code;
 
     @Column
+    @SerializedName("value")
     String value;
 
     public Integer getId() {

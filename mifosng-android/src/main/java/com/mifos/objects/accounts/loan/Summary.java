@@ -8,9 +8,9 @@ package com.mifos.objects.accounts.loan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
-import com.mifos.objects.accounts.savings.Currency;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -30,89 +30,123 @@ public class Summary extends MifosBaseModel implements Parcelable {
     @PrimaryKey
     transient Integer loanId;
 
+    @SerializedName("Currency")
     Currency currency;
 
     @Column
+    @SerializedName("principalDisbursed")
     Integer principalDisbursed;
 
     @Column
+    @SerializedName("principalPaid")
     Double principalPaid;
 
+    @SerializedName("principalWrittenOff")
     Integer principalWrittenOff;
 
     @Column
+    @SerializedName("principalOutstanding")
     Double principalOutstanding;
 
+    @SerializedName("principalOverdue")
     Double principalOverdue;
 
     @Column
+    @SerializedName("interestCharged")
     Double interestCharged;
 
     @Column
+    @SerializedName("interestPaid")
     Double interestPaid;
 
+    @SerializedName("interestWaived")
     Double interestWaived;
 
+    @SerializedName("interestWrittenOff")
     Integer interestWrittenOff;
 
     @Column
+    @SerializedName("interestOutstanding")
     Double interestOutstanding;
 
+    @SerializedName("interestOverdue")
     Double interestOverdue;
 
     @Column
+    @SerializedName("feeChargesCharged")
     Double feeChargesCharged;
 
+    @SerializedName("feeChargesDueAtDisbursementCharged")
     Integer feeChargesDueAtDisbursementCharged;
 
     @Column
+    @SerializedName("feeChargesPaid")
     Double feeChargesPaid;
 
+    @SerializedName("feeChargesWaived")
     Double feeChargesWaived;
 
+    @SerializedName("feeChargesWrittenOff")
     Integer feeChargesWrittenOff;
 
     @Column
+    @SerializedName("feeChargesOutstanding")
     Integer feeChargesOutstanding;
 
+    @SerializedName("feeChargesOverdue")
     Double feeChargesOverdue;
 
     @Column
+    @SerializedName("penaltyChargesCharged")
     Integer penaltyChargesCharged;
 
     @Column
+    @SerializedName("penaltyChargesPaid")
     Integer penaltyChargesPaid;
 
+    @SerializedName("penaltyChargesWaived")
     Integer penaltyChargesWaived;
 
+    @SerializedName("penaltyChargesWrittenOff")
     Integer penaltyChargesWrittenOff;
 
     @Column
+    @SerializedName("penaltyChargesOutstanding")
     Integer penaltyChargesOutstanding;
 
+    @SerializedName("penaltyChargesOverdue")
     Integer penaltyChargesOverdue;
 
     @Column
+    @SerializedName("totalExpectedRepayment")
     Double totalExpectedRepayment;
 
     @Column
+    @SerializedName("totalRepayment")
     Double totalRepayment;
 
+    @SerializedName("totalExpectedCostOfLoan")
     Double totalExpectedCostOfLoan;
 
+    @SerializedName("totalCostOfLoan")
     Double totalCostOfLoan;
 
+    @SerializedName("totalWaived")
     Double totalWaived;
 
+    @SerializedName("totalWrittenOff")
     Integer totalWrittenOff;
 
     @Column
+    @SerializedName("totalOutstanding")
     Double totalOutstanding;
 
     @Column
+    @SerializedName("totalOverdue")
     Double totalOverdue;
 
-    List<Integer> overdueSinceDate = new ArrayList<Integer>();
+    @SerializedName("overdueSinceDate")
+    List<Integer> overdueSinceDate;
 
     public Integer getLoanId() {
         return loanId;

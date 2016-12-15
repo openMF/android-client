@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.core;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -50,14 +49,19 @@ public class MifosBaseFragment extends Fragment {
     }
 
     public void showAlertDialog(String title, String message) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        dialog.setMessage(message).setCancelable(false).
-                setPositiveButton(R.string.dialog_action_ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        }).create().show();
+
+        new MaterialDialog.Builder().init(getActivity())
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(getStringMessage(R.string.dialog_action_ok), new
+                        DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                })
+                .createMaterialDialog()
+                .show();
     }
 
     public Toolbar getToolbar() {

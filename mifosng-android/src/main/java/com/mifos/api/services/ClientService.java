@@ -45,15 +45,6 @@ public interface ClientService {
                                            @Query("offset") int offset,
                                            @Query("limit") int limit);
 
-    //TODO Remove this method and above method for fetching Client list
-    @GET(APIEndPoint.CLIENTS)
-    Observable<Page<Client>> getAllClients();
-
-    //TODO Remove this method and above method for fetching Client list
-    @GET(APIEndPoint.CLIENTS)
-    Observable<Page<Client>> getAllClients(@Query("offset") int offset,
-                                           @Query("limit") int limit);
-
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     Observable<Client> getClient(@Path("clientId") int clientId);
 

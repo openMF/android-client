@@ -15,7 +15,7 @@
     <string name="staff_name">Staff Name</string>
     <string name="level_name">Level Name</string>
     <string name="offline">Offline Sync *</string>
-    <string name="client_search_hint">Client name or ID</string>
+    <string name="search_hint">Name or Account Number or External Id</string>
     <string name="search_results">Search Results</string>
     <string name="client_search">Client Search</string>
     <string name="total">Total</string>
@@ -170,7 +170,9 @@
     <string name="submission_date">Submission Date:</string>
     <string name="disbursement_on">Disbursement on:</string>
     <string name="payload_name">Payload Name</string>
-    <!-- General Terms End Here -->
+    <string name="exact_match">Exact Match</string>
+    <string name="no_search_result_found">No results found for entered query</string>
+<!-- General Terms End Here -->
 
 
     <!-- Group Terms Begin Here -->
@@ -454,6 +456,7 @@
     <string name="no_survey_available_for_client">No Survey Available for this client</string>
 
     <!--Material Dialog Message-->
+    <string name="dialog_message">Message</string>
     <string name="dialog_message_offline_sync_alert">You are in offline mode, for syncing, You
         need to switch Online mode. \n\nIf you are trying to sync Please make sure
         your internet connection is working well</string>
@@ -478,8 +481,6 @@
     <string name="dialog_message_permission_never_ask_again_write">App Needs the Permission to
         Write the External Storage but you had previously checked the Button Never Ask Again.
     </string>
-    <string name="dialog_message">Message</string>
-
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
     <string name="dialog_action_cancel">Cancel</string>
@@ -533,6 +534,7 @@
     <string name="failed_to_create_identifier">Failed to Create Identifier</string>
     <string name="failed_to_fetch_identifier">Failed to fetch identifiers</string>
     <string name="failed_to_delete_identifier">Failed to delete Identifier</string>
+    <string name="failed_to_fetch_resources_of_query">Failed to fetch resources</string>
 
 
     <string-array name="office_ids">
@@ -558,5 +560,19 @@
         <item>InActive</item>
     </string-array>
 
+    <string-array name="search_options">
+        <item>All</item>
+        <item>Clients</item>
+        <item>Groups</item>
+        <item>Loan Accounts</item>
+        <item>Savings Accounts</item>
+    </string-array>
+
+    <string-array name="search_options_values">
+        <item>clients</item>
+        <item>groups</item>
+        <item>loans</item>
+        <item>savingsaccounts</item>
+    </string-array>
 </resources>
 

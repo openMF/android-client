@@ -1,11 +1,11 @@
 [
     {
-        "entityId": 243,
-        "entityAccountNo": "000000243",
-        "entityName": "Sri Bacgab",
+        "entityId": 621,
+        "entityAccountNo": "000000621",
+        "entityName": "Ram Singh",
         "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
+        "parentId": 93,
+        "parentName": "Group G2",
         "entityStatus": {
             "id": 300,
             "code": "clientStatusType.active",
@@ -13,13 +13,13 @@
         }
     },
     {
-        "entityId": 332,
-        "entityAccountNo": "000000332",
-        "entityName": "abra dabra",
+        "entityId": 645,
+        "entityAccountNo": "000000645",
+        "entityName": "Madenge Pimbi",
         "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "2342342345",
+        "parentId": 96,
+        "parentName": "Arusha",
+        "entityMobileNo": "0762213979",
         "entityStatus": {
             "id": 300,
             "code": "clientStatusType.active",
@@ -27,457 +27,112 @@
         }
     },
     {
-        "entityId": 374,
-        "entityAccountNo": "Head Office000000374",
-        "entityExternalId": "123456789",
-        "entityName": "Ahmed Abd-Elbaky",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "01002915314",
+        "entityId": 261,
+        "entityAccountNo": "000000261",
+        "entityName": "For Prepay - Calculate till preclosure date",
+        "entityType": "LOAN",
+        "parentId": 30,
+        "parentName": "Joseph Sese Seko Mobutu",
+        "entityStatus": {
+            "id": 200,
+            "code": "loanStatusType.approved",
+            "value": "Approved"
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 281,
+        "entityAccountNo": "000000281",
+        "entityName": "LP",
+        "entityType": "LOAN",
+        "parentId": 547,
+        "parentName": "Fishermen Welfare Federation",
         "entityStatus": {
             "id": 300,
-            "code": "clientStatusType.active",
+            "code": "loanStatusType.active",
+            "value": "Active"
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 316,
+        "entityAccountNo": "GPSP000000316",
+        "entityName": "Group P Saving Product",
+        "entityType": "SAVING",
+        "parentId": 626,
+        "parentName": "James Austin",
+        "entityStatus": {
+            "id": 0,
+            "code": "",
+            "value": ""
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 317,
+        "entityAccountNo": "GPSP000000317",
+        "entityName": "Group P Saving Product",
+        "entityType": "SAVING",
+        "parentId": 629,
+        "parentName": "Asha Gupta",
+        "entityStatus": {
+            "id": 0,
+            "code": "",
+            "value": ""
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 58,
+        "entityAccountNo": "000000058",
+        "entityExternalId": "001",
+        "entityName": "Farmers",
+        "entityType": "GROUP",
+        "parentId": 25,
+        "parentName": "EDI",
+        "entityStatus": {
+            "id": 300,
+            "code": "groupingStatusType.active",
             "value": "Active"
         }
     },
     {
-        "entityId": 391,
-        "entityAccountNo": "Head Office000000391",
-        "entityName": "Abc Client",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
+        "entityId": 71,
+        "entityAccountNo": "000000071",
+        "entityName": "SHGGB001",
+        "entityType": "GROUP",
+        "parentId": 30,
+        "parentName": "Group B",
         "entityStatus": {
             "id": 300,
-            "code": "clientStatusType.active",
+            "code": "groupingStatusType.active",
             "value": "Active"
         }
     },
     {
-        "entityId": 392,
-        "entityAccountNo": "Head Office000000392",
-        "entityName": "Abc Client",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
+        "entityId": 184,
+        "entityAccountNo": "000000184",
+        "entityName": "JRR",
+        "entityType": "CENTER",
+        "parentId": 92,
+        "parentName": "Group G1",
         "entityStatus": {
             "id": 300,
-            "code": "clientStatusType.active",
+            "code": "groupingStatusType.active",
             "value": "Active"
         }
     },
     {
-        "entityId": 455,
-        "entityAccountNo": "Head Office000000455",
-        "entityName": "Peter J Abeho",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "077777777",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 495,
-        "entityAccountNo": "Head Office000000495",
-        "entityName": "ABC BIN ABC",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "0123322114",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 602,
-        "entityAccountNo": "Head Office000000602",
-        "entityExternalId": "avab",
-        "entityName": "aaaa aaaa",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "8447094044",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 719,
-        "entityAccountNo": "Footballer000000719",
-        "entityName": "Abigail Asante",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "0244152333",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 733,
-        "entityAccountNo": "000000733",
-        "entityName": "SAM BAB",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 761,
-        "entityAccountNo": "000000761",
-        "entityName": "BABATU MORO",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 773,
-        "entityAccountNo": "Footballer000000773",
-        "entityName": "Gabriel Gedzah",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 774,
-        "entityAccountNo": "Footballer000000774",
-        "entityName": "Abass Sizar",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 794,
-        "entityAccountNo": "Footballer000000794",
-        "entityName": "Frank Obuabi",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 811,
-        "entityAccountNo": "Footballer000000811",
-        "entityName": "Jamal Abdul Nasar",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 816,
-        "entityAccountNo": "Footballer000000816",
-        "entityName": "Haleem Abdul Abubakar",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 818,
-        "entityAccountNo": "Footballer000000818",
-        "entityName": "Abdul Karim Zito",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 819,
-        "entityAccountNo": "Footballer000000819",
-        "entityName": "Mustapha Abdul Nur",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 820,
-        "entityAccountNo": "Footballer000000820",
-        "entityName": "Razak Abdul",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 821,
-        "entityAccountNo": "Footballer000000821",
-        "entityName": "Abdul Karim Kabutey",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 830,
-        "entityAccountNo": "000000830",
-        "entityName": "Wiro Sableng",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "628123456789",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 833,
-        "entityAccountNo": "000000833",
-        "entityName": "ABC DATAIMPORT TOOL DIT",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 912,
-        "entityAccountNo": "000000912",
-        "entityName": "Siyabonga Sibiya",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 917,
-        "entityAccountNo": "Restaurant000000917",
-        "entityExternalId": "12101048",
-        "entityName": "abu Sufian",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "01817005326",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 924,
-        "entityAccountNo": "000000924",
-        "entityExternalId": "12101064",
-        "entityName": "Abu Sufian",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "018257955",
-        "entityStatus": {
-            "id": 100,
-            "code": "clientStatusType.pending",
-            "value": "Pending"
-        }
-    },
-    {
-        "entityId": 934,
-        "entityAccountNo": "Footballer000000934",
-        "entityExternalId": "889kkr",
-        "entityName": "Abul Hasan",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "0182579555",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 954,
-        "entityAccountNo": "Supplier000000954",
-        "entityExternalId": "wandy",
-        "entityName": "elisabeth wandile moyo",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "0793217854",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 965,
-        "entityAccountNo": "000000965",
-        "entityExternalId": "63987654w12",
-        "entityName": "Anesu JJ Mushabala",
-        "entityType": "CLIENT",
-        "parentId": 1,
-        "parentName": "Head Office",
-        "entityMobileNo": "0711234567",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 27,
-        "entityAccountNo": "000000027",
-        "entityName": "Saurabh Sharma",
-        "entityType": "CLIENT",
-        "parentId": 9,
-        "parentName": "Saurabh_2015",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 627,
-        "entityAccountNo": "sapna_2016000000627",
-        "entityExternalId": "abc1234",
-        "entityName": "chetan mann",
-        "entityType": "CLIENT",
-        "parentId": 10,
-        "parentName": "sapna_2016",
-        "entityMobileNo": "9873932094",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 41,
-        "entityAccountNo": "000000041",
-        "entityName": "Babu saheb",
-        "entityType": "CLIENT",
-        "parentId": 12,
-        "parentName": "Kinley microfinance 2016",
-        "entityMobileNo": "8980594730",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 532,
-        "entityAccountNo": "pavan_2016000000532",
-        "entityName": "Ed Cable",
-        "entityType": "CLIENT",
-        "parentId": 15,
-        "parentName": "pavan_2016",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 240,
-        "entityAccountNo": "clienttype1000000240",
-        "entityExternalId": "maba111",
-        "entityName": "mabundo nagumbe",
-        "entityType": "CLIENT",
-        "parentId": 35,
-        "parentName": "LSI",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 925,
-        "entityAccountNo": "000000925",
-        "entityName": "Ravi babu Marapalli",
-        "entityType": "CLIENT",
-        "parentId": 38,
-        "parentName": "Bangalore",
-        "entityMobileNo": "9889345678",
-        "entityStatus": {
-            "id": 300,
-            "code": "clientStatusType.active",
-            "value": "Active"
-        }
-    },
-    {
-        "entityId": 970,
-        "entityAccountNo": "cleinttype2000000970",
-        "entityExternalId": "indb1234",
-        "entityName": "abc def xyz",
-        "entityType": "CLIENT",
+        "entityId": 192,
+        "entityAccountNo": "000000192",
+        "entityName": "Center Rumpin",
+        "entityType": "CENTER",
         "parentId": 101,
-        "parentName": "Branch 1",
-        "entityMobileNo": "2222222222",
+        "parentName": "Sub Area",
         "entityStatus": {
-            "id": 100,
-            "code": "clientStatusType.pending",
-            "value": "Pending"
+            "id": 300,
+            "code": "groupingStatusType.active",
+            "value": "Active"
         }
     }
 ]

@@ -28,7 +28,7 @@ import com.mifos.mifosxdroid.activity.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
-import com.mifos.mifosxdroid.online.clientsearch.ClientSearchFragment;
+import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
@@ -66,7 +66,7 @@ public class DashboardActivity extends MifosBaseActivity
 
         ButterKnife.bind(this);
 
-        replaceFragment(new ClientSearchFragment(), false, R.id.container);
+        replaceFragment(new SearchFragment(), false, R.id.container);
 
         // setup navigation drawer and Navigation Toggle click and Offline Mode SwitchButton
         setupNavigationBar();
@@ -182,7 +182,7 @@ public class DashboardActivity extends MifosBaseActivity
         final Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.item_dashboard:
-                replaceFragment(new ClientSearchFragment(), false, R.id.container);
+                replaceFragment(new SearchFragment(), false, R.id.container);
                 break;
             case R.id.item_clients:
                 replaceFragment(ClientListFragment.newInstance(), false, R.id.container);

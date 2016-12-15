@@ -17,18 +17,26 @@ import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.objects.client.Client;
+import com.mifos.utils.Constants;
 
 import java.util.List;
 
 public class CentersActivity extends MifosBaseActivity implements CenterListFragment
         .OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener {
 
+    private int centerId = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         showBackButton();
-        replaceFragment(new CenterListFragment(), false, R.id.container);
+        centerId = getIntent().getExtras().getInt(Constants.CENTER_ID);
+        if (centerId != 0) {
+            replaceFragment(GroupListFragment.newInstance(centerId), true, R.id.container);
+        } else {
+            replaceFragment(new CenterListFragment(), false, R.id.container);
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
-package com.mifos.mifosxdroid.online.clientsearch;
+package com.mifos.mifosxdroid.online.search;
 
-import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerSearch;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.SearchedEntity;
 
@@ -16,19 +17,18 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Rajan Maurya on 06/06/16.
  */
-public class ClientSearchPresenter extends BasePresenter<ClientSearchMvpView> {
+public class SearchPresenter extends BasePresenter<SearchMvpView> {
 
-
-    private final DataManager mDataManager;
+    private final DataManagerSearch dataManagerSearch;
     private Subscription mSubscription;
 
     @Inject
-    public ClientSearchPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SearchPresenter(DataManagerSearch dataManager) {
+        dataManagerSearch = dataManager;
     }
 
     @Override
-    public void attachView(ClientSearchMvpView mvpView) {
+    public void attachView(SearchMvpView mvpView) {
         super.attachView(mvpView);
     }
 
@@ -38,29 +38,32 @@ public class ClientSearchPresenter extends BasePresenter<ClientSearchMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void searchClients(String query) {
+    public void searchResources(String query, String resources, Boolean exactMatch) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.searchClientsByName(query)
+        mSubscription = dataManagerSearch.searchResources(query, resources, exactMatch)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<SearchedEntity>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        getMvpView().showMessage(R.string.failed_to_fetch_resources_of_query);
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load clients");
                     }
 
                     @Override
                     public void onNext(List<SearchedEntity> searchedEntities) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientsSearched(searchedEntities);
+                        if (searchedEntities.size() == 0) {
+                            getMvpView().showNoResultFound();
+                        } else {
+                            getMvpView().showSearchedResources(searchedEntities);
+                        }
                     }
                 });
     }
