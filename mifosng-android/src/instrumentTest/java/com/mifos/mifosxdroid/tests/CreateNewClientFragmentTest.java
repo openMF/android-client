@@ -111,7 +111,7 @@ public class CreateNewClientFragmentTest extends
         onView(withId(R.id.tv_dateofbirth)).perform(scrollTo());
         onView(withId(R.id.tv_dateofbirth)).perform(click());
         Thread.sleep(1000);
-        assertTrue(createNewClientFragment.newDatePicker.isAdded());
+        assertTrue(createNewClientFragment.datePickerDateOfBirth.isAdded());
 
         // update date and close date picker
         dashboardActivity.runOnUiThread(new Runnable() {
@@ -120,7 +120,7 @@ public class CreateNewClientFragmentTest extends
                 createNewClientFragment.onDatePicked(dateOfBirth);
             }
         });
-        createNewClientFragment.newDatePicker.dismiss();
+        createNewClientFragment.datePickerDateOfBirth.dismiss();
         Thread.sleep(1000);
     }
 
@@ -129,7 +129,7 @@ public class CreateNewClientFragmentTest extends
         onView(withId(R.id.tv_submission_date)).perform(scrollTo());
         onView(withId(R.id.tv_submission_date)).perform(click());
         Thread.sleep(1000);
-        assertTrue(createNewClientFragment.mfDatePicker.isAdded());
+        assertTrue(createNewClientFragment.datePickerSubmissionDate.isAdded());
 
         // update date and close date picker
         dashboardActivity.runOnUiThread(new Runnable() {
@@ -138,7 +138,7 @@ public class CreateNewClientFragmentTest extends
                 createNewClientFragment.onDatePicked(submissionDate);
             }
         });
-        createNewClientFragment.mfDatePicker.dismiss();
+        createNewClientFragment.datePickerSubmissionDate.dismiss();
         Thread.sleep(1000);
     }
 

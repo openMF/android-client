@@ -28,11 +28,11 @@
                     android:id="@+id/et_client_first_name"
                     style="@style/EditText.BaseWidth"
                     android:gravity="start"
-                    android:hint="@string/fname"
+                    android:hint="@string/first_name_mandatory"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
 
                 <requestFocus />
             </android.support.design.widget.TextInputLayout>
@@ -48,7 +48,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
@@ -57,11 +57,11 @@
                     android:id="@+id/et_client_last_name"
                     style="@style/EditText.BaseWidth"
                     android:gravity="start"
-                    android:hint="@string/lname"
+                    android:hint="@string/last_name_mandatory"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
@@ -74,7 +74,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="phone"
                     android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
@@ -87,7 +87,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
             </android.support.design.widget.TextInputLayout>
 
             <TextView
@@ -167,7 +167,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="@string/office_name"
+                android:text="@string/office_name_mandatory"
                 android:textSize="16sp"
 
                 />
@@ -220,7 +220,7 @@
 
 
             <Button
-                android:id="@+id/bt_submit"
+                android:id="@+id/btn_submit"
                 style="@style/Button.Base"
                 android:layout_marginTop="10dp"
                 android:text="@string/submit" />

@@ -76,7 +76,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
     @BindView(R.id.sp_group_offices)
     Spinner sp_offices;
 
-    @BindView(R.id.bt_submit)
+    @BindView(R.id.btn_submit)
     Button bt_submit;
 
     @Inject

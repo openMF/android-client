@@ -101,7 +101,7 @@ public class CreateNewCenterFragmentTest extends
         onView(withId(R.id.cb_center_active_status))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()));
-        onView(withId(R.id.bt_submit))
+        onView(withId(R.id.btn_submit))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()));
 
@@ -155,7 +155,7 @@ public class CreateNewCenterFragmentTest extends
                 .check(matches(withText(currentDate)));
 
         // submit
-        onView(withId(R.id.bt_submit))
+        onView(withId(R.id.btn_submit))
                 .perform(scrollTo(), click());
     }
 
