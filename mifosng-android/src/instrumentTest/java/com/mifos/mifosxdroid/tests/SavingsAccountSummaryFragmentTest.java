@@ -71,7 +71,7 @@ public class SavingsAccountSummaryFragmentTest extends
 
         //Moving to SavingsAccountSummaryFragment with the following id and account type
         SavingsAccountSummaryFragment savingsAccountSummaryFragment
-                = SavingsAccountSummaryFragment.newInstance(419, depositType);
+                = SavingsAccountSummaryFragment.newInstance(419, depositType, false);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
