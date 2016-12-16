@@ -44,7 +44,7 @@ public class DashboardFragmentActivityTest extends
         ActivityInstrumentationTestCase2<DashboardActivity> {
 
     DashboardActivity dashboardActivity;
-    // EditText et_searchById;
+    EditText et_searchById;
     Button bt_searchClient;
     ListView lv_searchResults;
     TextView tv_title_search;
