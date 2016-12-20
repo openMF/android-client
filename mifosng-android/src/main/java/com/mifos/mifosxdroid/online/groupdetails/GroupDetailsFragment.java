@@ -198,7 +198,7 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
             tv_externalId.setText(group.getExternalId());
 
             try {
-                String dateString = Utils.getStringOfDate(getActivity(), group.getActivationDate());
+                String dateString = Utils.getStringOfDate(group.getActivationDate());
                 tv_activationDate.setText(dateString);
 
                 if (TextUtils.isEmpty(dateString))
