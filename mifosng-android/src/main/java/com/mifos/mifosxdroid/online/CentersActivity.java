@@ -24,15 +24,17 @@ import java.util.List;
 public class CentersActivity extends MifosBaseActivity implements CenterListFragment
         .OnFragmentInteractionListener, GroupListFragment.OnFragmentInteractionListener {
 
-    private int centerId = 0;
+    private final String LOG_TAG = this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         showBackButton();
-        centerId = getIntent().getExtras().getInt(Constants.CENTER_ID);
-        if (centerId != 0) {
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            int centerId = bundle.getInt(Constants.CENTER_ID);
             replaceFragment(GroupListFragment.newInstance(centerId), true, R.id.container);
         } else {
             replaceFragment(new CenterListFragment(), false, R.id.container);
