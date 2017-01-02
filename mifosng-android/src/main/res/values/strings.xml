@@ -548,6 +548,8 @@
     </string-array>
 
     <string name="surveyEmpty">This Survey is Empty</string>
+    <string name="centerList_account_prefix">Account No: %1$s</string>
+    <string name="no_staff">no staff</string>
 
 
 </resources>

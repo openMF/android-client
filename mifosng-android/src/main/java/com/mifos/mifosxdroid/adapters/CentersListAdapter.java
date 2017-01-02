@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.group.Center;
+import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,22 +47,28 @@ public class CentersListAdapter extends RecyclerView.Adapter<CentersListAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Center center = centers.get(position);
 
-        String centerId = context.getResources()
-                .getString(R.string.center_id) + centers.get(position).getId();
-
-        String staffId = context.getResources()
-                .getString(R.string.staff_id) + centers.get(position).getStaffId();
-
-        String officeId = context.getResources()
-                .getString(R.string.office_id) + centers.get(position).getOfficeId();
-
-        holder.tv_center_id.setText(centerId);
-        holder.tv_center_name.setText(centers.get(position).getName());
-        holder.tv_staff_id.setText(staffId);
-        holder.tv_staff_name.setText(centers.get(position).getStaffName());
-        holder.tv_office_id.setText(officeId);
-        holder.tv_office_name.setText(centers.get(position).getOfficeName());
+        holder.tvAccountNumber.setText(String.format(context.
+                getString(R.string.centerList_account_prefix), center.getAccountNo()));
+        holder.tvCenterId.setText(String.valueOf(center.getId()));
+        holder.tvCenterName.setText(center.getName());
+        if (center.getStaffId() != null) {
+            holder.tvStaffId.setText(String.valueOf(center.getStaffId()));
+            holder.tvStaffName.setText(center.getStaffName());
+        } else {
+            holder.tvStaffId.setText("");
+            holder.tvStaffName.setText(R.string.no_staff);
+        }
+        holder.tvOfficeId.setText(String.valueOf(center.getOfficeId()));
+        holder.tvOfficeName.setText(center.getOfficeName());
+        if (center.getActive()) {
+            holder.ivStatusIndicator.setImageDrawable(
+                    Utils.setCircularBackground(R.color.light_green, context));
+        } else {
+            holder.ivStatusIndicator.setImageDrawable(
+                    Utils.setCircularBackground(R.color.light_red, context));
+        }
     }
 
     public void setContext(Context context) {
@@ -89,23 +97,29 @@ public class CentersListAdapter extends RecyclerView.Adapter<CentersListAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.iv_status_indicator)
+        CircularImageView ivStatusIndicator;
+
+        @BindView(R.id.tv_account_number)
+        TextView tvAccountNumber;
+
         @BindView(R.id.tv_center_name)
-        TextView tv_center_name;
+        TextView tvCenterName;
 
         @BindView(R.id.tv_center_id)
-        TextView tv_center_id;
+        TextView tvCenterId;
 
         @BindView(R.id.tv_staff_name)
-        TextView tv_staff_name;
+        TextView tvStaffName;
 
         @BindView(R.id.tv_staff_id)
-        TextView tv_staff_id;
+        TextView tvStaffId;
 
         @BindView(R.id.tv_office_name)
-        TextView tv_office_name;
+        TextView tvOfficeName;
 
         @BindView(R.id.tv_office_id)
-        TextView tv_office_id;
+        TextView tvOfficeId;
 
         public ViewHolder(View v) {
             super(v);

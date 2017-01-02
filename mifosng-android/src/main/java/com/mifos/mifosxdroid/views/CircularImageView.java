@@ -150,13 +150,19 @@ public class CircularImageView extends ImageView {
     }
 
     public Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap;
         if (drawable == null) {
             return null;
         } else if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
         }
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable
-                .getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        if (drawable.getIntrinsicWidth() > 0 && drawable
+                .getIntrinsicHeight() > 0) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable
+                    .getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        } else {
+            bitmap = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
+        }
         Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, bitmap.getHeight() / 5, bitmap
                 .getHeight() / 5, true);
         Canvas canvas = new Canvas(bitmapScaled);
@@ -164,5 +170,4 @@ public class CircularImageView extends ImageView {
         drawable.draw(canvas);
         return bitmapScaled;
     }
-
 }
