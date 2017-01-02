@@ -23,6 +23,7 @@ import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.injection.component.ActivityComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
 
@@ -137,12 +138,21 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName,
                 0);
 
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            DashboardActivity.fragmentBackStackEmpty = true;
+        } else {
+            DashboardActivity.fragmentBackStackEmpty = false;
+        }
+
         if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) ==
                 null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(containerId, fragment, backStateName);
             if (addToBackStack) {
                 transaction.addToBackStack(backStateName);
+                DashboardActivity.fragmentBackStackEmpty = false;
+            } else if (!DashboardActivity.fragmentBackStackEmpty) {
+                DashboardActivity.lastNonBackStackFragment = backStateName;
             }
             transaction.commit();
         }
