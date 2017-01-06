@@ -30,6 +30,12 @@ public class CentersListAdapter extends RecyclerView.Adapter<CentersListAdapter.
 
     private List<Center> centers;
     private Context context;
+    private String centerId;
+    private String staffId;
+    private String officeId;
+    private String centerName;
+    private String staffName;
+    private String officeName;
 
     @Inject
     public CentersListAdapter() {
@@ -46,21 +52,26 @@ public class CentersListAdapter extends RecyclerView.Adapter<CentersListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        String centerId = context.getResources()
-                .getString(R.string.center_id) + centers.get(position).getId();
+        centerId = "Center Id: " + centers.get(position).getId();
+        centerName = centers.get(position).getName();
 
-        String staffId = context.getResources()
-                .getString(R.string.staff_id) + centers.get(position).getStaffId();
+        if (centers.get(position).getStaffId() != null) {
+            staffId = "" + (centers.get(position).getStaffId());
+            staffName = centers.get(position).getStaffName();
+        } else {
+            staffId = "no staff";
+            staffName = "no staff";
+        }
 
-        String officeId = context.getResources()
-                .getString(R.string.office_id) + centers.get(position).getOfficeId();
+        officeId = "" + centers.get(position).getOfficeId();
+        officeName = centers.get(position).getOfficeName();
 
         holder.tv_center_id.setText(centerId);
-        holder.tv_center_name.setText(centers.get(position).getName());
+        holder.tv_center_name.setText(centerName);
         holder.tv_staff_id.setText(staffId);
-        holder.tv_staff_name.setText(centers.get(position).getStaffName());
+        holder.tv_staff_name.setText(staffName);
         holder.tv_office_id.setText(officeId);
-        holder.tv_office_name.setText(centers.get(position).getOfficeName());
+        holder.tv_office_name.setText(officeName);
     }
 
     public void setContext(Context context) {
