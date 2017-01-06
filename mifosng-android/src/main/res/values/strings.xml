@@ -140,6 +140,8 @@
     <string name="exact_match">Exact Match</string>
     <string name="no_search_result_found">No results found for entered query</string>
     <string name="no_search_query_entered">No Search Query Entered!</string>
+    <string name="client_created_successfully">Client Created Successfully</string>
+    <string name="no_staff_associated_with_office">No Staff associated with this Office</string>
     <!-- General Terms End Here -->
 
 
@@ -239,12 +241,12 @@
 
     <!-- Create Client Terms -->
 
-    <string name="fname">First Name</string>
+    <string name="first_name_mandatory">First Name*</string>
     <string name="mname">Middle Name</string>
-    <string name="lname">Last Name</string>
+    <string name="last_name_mandatory">Last Name*</string>
     <string name="mnumber">Mobile Number</string>
     <string name="dob">Date of Birth</string>
-    <string name="office_name">Office</string>
+    <string name="office_name_mandatory">Office*</string>
     <string name="interest_p_period">Interest Posting Period</string>
     <string name="nominal_interest_rate"> Nominal interest rate per Year</string>
     <string name="amortization">Amortization</string>
@@ -502,6 +504,9 @@
     <string name="failed_to_fetch_identifier">Failed to fetch identifiers</string>
     <string name="failed_to_delete_identifier">Failed to delete Identifier</string>
     <string name="failed_to_fetch_resources_of_query">Failed to fetch resources</string>
+    <string name="failed_to_fetch_client_template">Failed to fetch clientTemplate</string>
+    <string name="failed_to_fetch_offices">Failed to fetch Offices</string>
+    <string name="failed_to_fetch_staffs">Failed to fetch Staffs</string>
 
 
     <string-array name="office_ids">

@@ -151,7 +151,7 @@
                 android:spinnerMode="dropdown" />
 
             <Button
-                android:id="@+id/bt_submit"
+                android:id="@+id/btn_submit"
                 style="@style/Button.Base"
                 android:layout_marginTop="10dp"
                 android:text="@string/submit" />

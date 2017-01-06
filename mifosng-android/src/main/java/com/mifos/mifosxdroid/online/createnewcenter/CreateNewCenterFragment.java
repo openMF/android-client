@@ -70,7 +70,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     @BindView(R.id.sp_center_offices)
     Spinner sp_offices;
 
-    @BindView(R.id.bt_submit)
+    @BindView(R.id.btn_submit)
     Button bt_submit;
 
     int officeId;

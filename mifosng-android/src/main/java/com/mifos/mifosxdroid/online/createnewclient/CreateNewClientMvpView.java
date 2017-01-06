@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.online.createnewclient;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.client.Client;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -13,13 +12,17 @@ import java.util.List;
  */
 public interface CreateNewClientMvpView extends MvpView {
 
+    void showUserInterface();
+
     void showClientTemplate(ClientsTemplate clientsTemplate);
 
     void showOffices(List<Office> offices);
 
     void showStaffInOffices(List<Staff> staffs);
 
-    void showClientCreatedSuccessfully(Client client, String s);
+    void showClientCreatedSuccessfully(int s);
 
-    void showFetchingError(String s);
+    void showMessage(int message);
+
+    void showMessage(String message);
 }

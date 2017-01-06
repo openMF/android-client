@@ -3,20 +3,27 @@ package com.mifos.mifosxdroid.online.createnewclient;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.api.datamanager.DataManagerStaff;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
-import com.mifos.utils.MifosResponseHandler;
+import com.mifos.objects.templates.clients.Options;
+import com.mifos.utils.MFErrorParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -66,7 +73,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch clientTemplate");
+                        getMvpView().showMessage(R.string.failed_to_fetch_client_template);
                     }
 
                     @Override
@@ -92,7 +99,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load offices list");
+                        getMvpView().showMessage(R.string.failed_to_fetch_offices);
                     }
 
                     @Override
@@ -117,7 +124,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showFetchingError("Failed to load Staffs");
+                        getMvpView().showMessage(R.string.failed_to_fetch_staffs);
                     }
 
                     @Override
@@ -142,17 +149,61 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Try Again");
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showMessage(MFErrorParser.parseError(errorMessage)
+                                        .getErrors().get(0).getDefaultUserMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
                     }
 
                     @Override
                     public void onNext(Client client) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientCreatedSuccessfully(client, "Client" +
-                                MifosResponseHandler.getResponse());
+                        getMvpView().showClientCreatedSuccessfully(
+                                R.string.client_created_successfully);
                     }
                 }));
     }
 
 
+    public List<String> filterOptions(List<Options> options) {
+        final List<String> filterValues = new ArrayList<>();
+        Observable.from(options)
+                .subscribe(new Action1<Options>() {
+                    @Override
+                    public void call(Options options) {
+                        filterValues.add(options.getName());
+                    }
+                });
+        return filterValues;
+    }
+
+    public List<String> filterOffices(List<Office> offices) {
+        final List<String> officesList = new ArrayList<>();
+        Observable.from(offices)
+                .subscribe(new Action1<Office>() {
+                    @Override
+                    public void call(Office office) {
+                        officesList.add(office.getName());
+                    }
+                });
+        return officesList;
+    }
+
+    public List<String> filterStaff(List<Staff> staffs) {
+        final List<String> staffList = new ArrayList<>();
+        Observable.from(staffs)
+                .subscribe(new Action1<Staff>() {
+                    @Override
+                    public void call(Staff staff) {
+                        staffList.add(staff.getDisplayName());
+                    }
+                });
+        return staffList;
+    }
 }

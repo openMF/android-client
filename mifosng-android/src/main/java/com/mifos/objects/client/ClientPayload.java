@@ -7,12 +7,16 @@ package com.mifos.objects.client;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ADMIN on 16-Jun-15.
@@ -21,60 +25,86 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @ModelContainer
 public class ClientPayload extends MifosBaseModel implements Parcelable {
 
-
     @PrimaryKey(autoincrement = true)
-    transient int id;
+    transient Integer id;
 
     @Column
     transient String errorMessage;
 
+    @SerializedName("firstname")
     @Column
     String firstname;
 
+    @SerializedName("lastname")
     @Column
     String lastname;
 
+    @SerializedName("middlename")
     @Column
     String middlename;
 
+    @SerializedName("officeId")
     @Column
-    int officeId;
+    Integer officeId;
 
+    @SerializedName("staffId")
     @Column
-    int staffId;
+    Integer staffId;
 
+    @SerializedName("genderId")
     @Column
-    int genderId;
+    Integer genderId;
 
+    @SerializedName("active")
     @Column
-    boolean active;
+    Boolean active;
 
+    @SerializedName("activationDate")
     @Column
     String activationDate;
 
+    @SerializedName("submittedOnDate")
     @Column
     String submittedOnDate;
 
+    @SerializedName("dateOfBirth")
     @Column
     String dateOfBirth;
 
+    @SerializedName("mobileNo")
     @Column
     String mobileNo;
 
+    @SerializedName("externalId")
     @Column
     String externalId;
 
+    @SerializedName("clientTypeId")
     @Column
-    int clientTypeId;
+    Integer clientTypeId;
 
+    @SerializedName("clientClassificationId")
     @Column
-    int clientClassificationId;
+    Integer clientClassificationId;
 
+    @SerializedName("address")
+    List<Address> address = new ArrayList<>();
+
+    @SerializedName("dateFormat")
     @Column
     String dateFormat = "dd MMMM YYYY";
 
+    @SerializedName("locale")
     @Column
     String locale = "en";
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getErrorMessage() {
         return errorMessage;
@@ -82,30 +112,6 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    public int getClientClassificationId() {
-        return clientClassificationId;
-    }
-
-    public void setClientClassificationId(int clientClassificationId) {
-        this.clientClassificationId = clientClassificationId;
-    }
-
-    public int getGenderId() {
-        return genderId;
-    }
-
-    public void setGenderId(int genderId) {
-        this.genderId = genderId;
-    }
-
-    public int getClientTypeId() {
-        return clientTypeId;
-    }
-
-    public void setClientTypeId(int clientTypeId) {
-        this.clientTypeId = clientTypeId;
     }
 
     public String getFirstname() {
@@ -116,12 +122,12 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
         this.firstname = firstname;
     }
 
-    public int getStaffId() {
-        return staffId;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getMiddlename() {
@@ -132,28 +138,28 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
         this.middlename = middlename;
     }
 
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public int getOfficeId() {
+    public Integer getOfficeId() {
         return officeId;
     }
 
-    public void setOfficeId(int officeId) {
+    public void setOfficeId(Integer officeId) {
         this.officeId = officeId;
+    }
+
+    public Integer getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(Integer staffId) {
+        this.staffId = staffId;
+    }
+
+    public Integer getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(Integer genderId) {
+        this.genderId = genderId;
     }
 
     public boolean isActive() {
@@ -196,20 +202,36 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
         this.mobileNo = mobileNo;
     }
 
-    public String getLocale() {
-        return locale;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setLocale(String locale) {
-        this.locale = locale;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
-    public int getId() {
-        return id;
+    public Integer getClientTypeId() {
+        return clientTypeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setClientTypeId(Integer clientTypeId) {
+        this.clientTypeId = clientTypeId;
+    }
+
+    public Integer getClientClassificationId() {
+        return clientClassificationId;
+    }
+
+    public void setClientClassificationId(Integer clientClassificationId) {
+        this.clientClassificationId = clientClassificationId;
+    }
+
+    public List<Address> getAddress() {
+        return address;
+    }
+
+    public void setAddress(List<Address> address) {
+        this.address = address;
     }
 
     public String getDateFormat() {
@@ -220,6 +242,38 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
         this.dateFormat = dateFormat;
     }
 
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientPayload{" +
+                "id=" + id +
+                ", errorMessage='" + errorMessage + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", middlename='" + middlename + '\'' +
+                ", officeId=" + officeId +
+                ", staffId=" + staffId +
+                ", genderId=" + genderId +
+                ", active=" + active +
+                ", activationDate='" + activationDate + '\'' +
+                ", submittedOnDate='" + submittedOnDate + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", mobileNo='" + mobileNo + '\'' +
+                ", externalId='" + externalId + '\'' +
+                ", clientTypeId=" + clientTypeId +
+                ", clientClassificationId=" + clientClassificationId +
+                ", address=" + address +
+                ", dateFormat='" + dateFormat + '\'' +
+                ", locale='" + locale + '\'' +
+                '}';
+    }
 
     @Override
     public int describeContents() {
@@ -228,21 +282,21 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
         dest.writeString(this.firstname);
         dest.writeString(this.lastname);
         dest.writeString(this.middlename);
-        dest.writeInt(this.officeId);
-        dest.writeInt(this.staffId);
-        dest.writeInt(this.genderId);
-        dest.writeByte(this.active ? (byte) 1 : (byte) 0);
+        dest.writeValue(this.officeId);
+        dest.writeValue(this.staffId);
+        dest.writeValue(this.genderId);
+        dest.writeValue(this.active);
         dest.writeString(this.activationDate);
         dest.writeString(this.submittedOnDate);
         dest.writeString(this.dateOfBirth);
         dest.writeString(this.mobileNo);
         dest.writeString(this.externalId);
-        dest.writeInt(this.clientTypeId);
-        dest.writeInt(this.clientClassificationId);
+        dest.writeValue(this.clientTypeId);
+        dest.writeValue(this.clientClassificationId);
+        dest.writeTypedList(this.address);
         dest.writeString(this.dateFormat);
         dest.writeString(this.locale);
     }
@@ -251,27 +305,27 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
     }
 
     protected ClientPayload(Parcel in) {
-        this.id = in.readInt();
         this.firstname = in.readString();
         this.lastname = in.readString();
         this.middlename = in.readString();
-        this.officeId = in.readInt();
-        this.staffId = in.readInt();
-        this.genderId = in.readInt();
-        this.active = in.readByte() != 0;
+        this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.staffId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.genderId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.activationDate = in.readString();
         this.submittedOnDate = in.readString();
         this.dateOfBirth = in.readString();
         this.mobileNo = in.readString();
         this.externalId = in.readString();
-        this.clientTypeId = in.readInt();
-        this.clientClassificationId = in.readInt();
+        this.clientTypeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.clientClassificationId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.address = in.createTypedArrayList(Address.CREATOR);
         this.dateFormat = in.readString();
         this.locale = in.readString();
     }
 
-    public static final Parcelable.Creator<ClientPayload> CREATOR = new Parcelable
-            .Creator<ClientPayload>() {
+    public static final Parcelable.Creator<ClientPayload> CREATOR =
+            new Parcelable.Creator<ClientPayload>() {
         @Override
         public ClientPayload createFromParcel(Parcel source) {
             return new ClientPayload(source);

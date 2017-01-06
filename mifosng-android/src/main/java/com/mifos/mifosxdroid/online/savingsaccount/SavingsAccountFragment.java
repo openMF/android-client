@@ -75,7 +75,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @BindView(R.id.sp_days_in_year)
     Spinner sp_days_in_year;
 
-    @BindView(R.id.bt_submit)
+    @BindView(R.id.btn_submit)
     Button bt_submit;
 
     @Inject
@@ -191,7 +191,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     }
 
 
-    @OnClick(R.id.bt_submit)
+    @OnClick(R.id.btn_submit)
     void submitSavingsAccount() {
 
         SavingsPayload savingsPayload = new SavingsPayload();
