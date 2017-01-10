@@ -1,8 +1,13 @@
 package com.mifos.utils;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.mifos.mifosxdroid.R;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
@@ -135,5 +140,12 @@ public class Utils {
         }
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
         return df.format(date);
+    }
+
+    public static LayerDrawable setCircularBackground(int colorId, Context context) {
+        Drawable color = new ColorDrawable(ContextCompat.getColor(context, colorId));
+        Drawable image = ContextCompat.getDrawable(context, R.drawable.circular_background);
+        LayerDrawable ld = new LayerDrawable(new Drawable[]{image, color});
+        return ld;
     }
 }
