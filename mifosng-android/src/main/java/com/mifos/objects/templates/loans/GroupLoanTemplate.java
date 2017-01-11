@@ -111,7 +111,7 @@ public class GroupLoanTemplate implements Parcelable {
     List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyNthDayTypeOptions;
 
     @SerializedName("repaymentFrequencyDaysOfWeekTypeOptions")
-    List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions;
+    List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions;
 
     @SerializedName("interestRateFrequencyTypeOptions")
     List<InterestRateFrequencyTypeOptions> interestRateFrequencyTypeOptions;
@@ -445,12 +445,13 @@ public class GroupLoanTemplate implements Parcelable {
         this.repaymentFrequencyNthDayTypeOptions = repaymentFrequencyNthDayTypeOptions;
     }
 
-    public List<RepaymentFrequencyNthDayTypeOptions> getRepaymentFrequencyDaysOfWeekTypeOptions() {
+    public List<RepaymentFrequencyDaysOfWeekTypeOptions>
+            getRepaymentFrequencyDaysOfWeekTypeOptions() {
         return repaymentFrequencyDaysOfWeekTypeOptions;
     }
 
     public void setRepaymentFrequencyDaysOfWeekTypeOptions(
-            List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions) {
+            List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions) {
         this.repaymentFrequencyDaysOfWeekTypeOptions = repaymentFrequencyDaysOfWeekTypeOptions;
     }
 
