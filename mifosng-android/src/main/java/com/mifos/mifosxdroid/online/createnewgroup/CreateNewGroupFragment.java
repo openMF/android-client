@@ -10,8 +10,10 @@ package com.mifos.mifosxdroid.online.createnewgroup;
  */
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -278,6 +280,31 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     @Override
     public void showGroupCreatedSuccessfully(Group group) {
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Group Created!")
+                .setMessage("Do you want to create another group?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        et_groupName.setText("");
+                        et_groupexternalId.setText("");
+
+                        if(cb_groupActiveStatus.isChecked())
+                            cb_groupActiveStatus.toggle();
+
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        getActivity().onBackPressed();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
         Toast.makeText(getActivity(), "Group" + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show();
     }
