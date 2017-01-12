@@ -3,7 +3,7 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,5 +26,29 @@
             android:id="@+id/lv_group_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </ViewFlipper>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/noGroupsIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_error_black_24dp" />
+
+        <TextView
+            android:id="@+id/noGroupsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+</FrameLayout>
