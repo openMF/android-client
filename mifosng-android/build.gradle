@@ -146,7 +146,9 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.google.android.gms:play-services-places:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
     compile "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
 

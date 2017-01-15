@@ -1,14 +1,32 @@
 package com.mifos.mifosxdroid.activity.pinpointclient;
 
-import com.mifos.api.model.GpsCoordinatesResponse;
+import android.support.annotation.Nullable;
+
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.client.ClientAddressResponse;
+
+import java.util.List;
 
 /**
  * Created by Rajan Maurya on 08/06/16.
  */
 public interface PinPointClientMvpView extends MvpView {
 
-    void showGpsDataUpdatedSuccessfully(GpsCoordinatesResponse gpsCoordinatesResponse);
+    void showUserInterface();
 
-    void showFailedToUpdateGpsData(String s);
+    void requestPermission(int requestCode);
+
+    void showClientPinpointLocations(List<ClientAddressResponse> clientAddressResponses);
+
+    void showFailedToFetchAddress();
+
+    void showEmptyAddress();
+
+    void showPlacePiker(int requestCode);
+
+    void showProgressDialog(boolean show, @Nullable Integer message);
+
+    void showMessage(int message);
+
+    void updateClientAddress(int message);
 }

@@ -142,6 +142,15 @@
     <string name="no_search_query_entered">No Search Query Entered!</string>
     <string name="client_created_successfully">Client Created Successfully</string>
     <string name="no_staff_associated_with_office">No Staff associated with this Office</string>
+    <string name="adding_client_address">Adding Client Address</string>
+    <string name="updating_client_address">Updating Client Address</string>
+    <string name="deleting_client_address">Deleting Client Address</string>
+    <string name="address_added_successfully">Address Added Successfully</string>
+    <string name="address_deleted_successfully">Address Deleted Successfully</string>
+    <string name="address_updated_successfully">Address Updated Successfully</string>
+    <string name="google_play_services_not_available">Google Play Services is not available
+        .</string>
+    <string name="empty_client_address">Empty Address List</string>
     <!-- General Terms End Here -->
 
 
@@ -157,6 +166,8 @@
         External Document</string>
     <string name="permission_denied_to_write_external_document">Permission Denied to write
         Document in External Storage</string>
+    <string name="permission_denied_to_access_fine_location">Permission Denied to Access
+        Fine Location</string>
 
 
     <!-- Loan Related Terminologies Begin Here -->
@@ -449,6 +460,13 @@
     <string name="dialog_message_permission_never_ask_again_write">App Needs the Permission to
         Write the External Storage but you had previously checked the Button Never Ask Again.
     </string>
+    <string name="dialog_message_access_fine_location_permission_denied">With out this
+        permission the app is unable to get fine location, app need to
+        access you correct location. Are you sure you want to deny this permission?</string>
+    <string name="dialog_message_permission_never_ask_again_fine_location">App Needs the
+        Permission to access fine location but you had previously checked the Button Never
+        Ask Again.
+    </string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -507,6 +525,10 @@
     <string name="failed_to_fetch_client_template">Failed to fetch clientTemplate</string>
     <string name="failed_to_fetch_offices">Failed to fetch Offices</string>
     <string name="failed_to_fetch_staffs">Failed to fetch Staffs</string>
+    <string name="failed_to_fetch_pinpoint_location">Failed to pinpoint locations</string>
+    <string name="failed_to_add_pinpoint_location">Failed to add pinpoint location</string>
+    <string name="failed_to_delete_pinpoint_location">Failed to delete pinpoint location</string>
+    <string name="failed_to_update_pinpoint_location">Failed to update pinpoint location</string>
 
 
     <string-array name="office_ids">
@@ -518,6 +540,11 @@
         <item>office 5</item>
         <item>office 6</item>
         <item>office 7</item>
+    </string-array>
+
+    <string-array name="client_pinpoint_location_options">
+        <item>Update Address</item>
+        <item>Delete Address</item>
     </string-array>
 
     <string-array name="document_options">

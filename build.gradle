@@ -13,7 +13,7 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '23.1.1'
-    playServicesVersion = '8.3.0'
+    playServicesVersion = '10.0.1'
     mapUtilsServices = '0.4.2'
     daggerVersion = '2.2'
     raizLabsDBFlow = '3.1.1'
