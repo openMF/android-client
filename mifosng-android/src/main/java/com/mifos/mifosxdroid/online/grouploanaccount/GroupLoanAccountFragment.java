@@ -104,10 +104,10 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     @BindView(R.id.sp_repaymentstrategy)
     Spinner spRepaymentStrategy;
 
-    @BindView(R.id.ck_calculateinterest)
-    CheckBox ckCalculateInterest;
+    @BindView(R.id.cb_calculateinterest)
+    CheckBox cbCalculateInterest;
 
-    @BindView(R.id.disbursementon_date)
+    @BindView(R.id.tv_disbursementon_date)
     TextView tvDisbursementonDate;
 
     @BindView(R.id.bt_loan_submit)
@@ -209,7 +209,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
             public void onClick(View view) {
 
                 GroupLoanPayload loansPayload = new GroupLoanPayload();
-                loansPayload.setAllowPartialPeriodInterestCalcualtion(ckCalculateInterest
+                loansPayload.setAllowPartialPeriodInterestCalcualtion(cbCalculateInterest
                         .isChecked());
                 loansPayload.setAmortizationType(amortizationTypeId);
                 loansPayload.setGroupId(groupId);

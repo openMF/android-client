@@ -248,7 +248,7 @@
     <string name="dob">Date of Birth</string>
     <string name="office_name_mandatory">Office*</string>
     <string name="interest_p_period">Interest Posting Period</string>
-    <string name="nominal_interest_rate"> Nominal interest rate per Year</string>
+    <string name="nominal_interest_rate"> Nominal interest rate</string>
     <string name="amortization">Amortization</string>
     <string name="interestcalculationperiod">Interest calculation period</string>
     <string name="repaymentstrategy">Repayment Strategy</string>

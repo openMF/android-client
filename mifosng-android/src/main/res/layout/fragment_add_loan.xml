@@ -68,7 +68,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/disbursementon_date"
+                android:id="@+id/tv_disbursementon_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint=" Disbursement on:"
@@ -86,19 +86,6 @@
                     android:hint="@string/external_id"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:paddingBottom="16dp"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-
-                <EditText
-                    android:id="@+id/et_nominal_annual"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/nominal"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
                     android:paddingBottom="16dp"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -179,18 +166,31 @@
                 android:spinnerMode="dropdown"
                 android:visibility="gone" />
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <LinearLayout style="@style/LinearLayout.Width">
 
-                <EditText
-                    android:id="@+id/et_nominal_interest_rate"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/nominal_interest_rate"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:paddingBottom="16dp"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInput.Base.Weight"
+                    android:layout_weight="0.3">
+
+                    <EditText
+                        android:id="@+id/et_nominal_interest_rate"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:gravity="start"
+                        android:hint="@string/nominal_interest_rate"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:paddingBottom="16dp"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_nominal_rate_year_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="start"/>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_amortization"
@@ -241,7 +241,7 @@
                 android:spinnerMode="dropdown" />
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/ck_calculateinterest"
+                android:id="@+id/cb_calculateinterest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"

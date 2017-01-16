@@ -48,6 +48,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
 
@@ -64,64 +65,64 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     View rootView;
 
     @BindView(R.id.sp_lproduct)
-    Spinner sp_loan_product;
+    Spinner spLoanProduct;
 
     @BindView(R.id.sp_loan_purpose)
-    Spinner sp_loan_purpose;
+    Spinner spLoanPurpose;
 
     @BindView(R.id.tv_submittedon_date)
-    TextView tv_submittedon_date;
+    TextView tvSubmittedOnDate;
 
     @BindView(R.id.et_client_external_id)
-    EditText et_client_external_id;
-
-    @BindView(R.id.et_nominal_annual)
-    EditText et_nominal_annual;
+    EditText etClientExternalId;
 
     @BindView(R.id.et_principal)
-    EditText et_principal;
+    EditText etPrincipal;
 
     @BindView(R.id.et_loanterm)
-    EditText et_loanterm;
+    EditText etLoanTerm;
 
     @BindView(R.id.et_numberofrepayments)
-    EditText et_numberofrepayments;
+    EditText etNumberOfRepayments;
 
     @BindView(R.id.et_repaidevery)
-    EditText et_repaidevery;
+    EditText etRepaidEvery;
 
     @BindView(R.id.sp_payment_periods)
-    Spinner sp_payment_periods;
+    Spinner spPaymentPeriods;
 
     @BindView(R.id.et_nominal_interest_rate)
-    EditText et_nominal_interest_rate;
+    EditText etNominalInterestRate;
+
+    @BindView(R.id.tv_nominal_rate_year_month)
+    TextView tvNominalRatePerYearMonth;
 
     @BindView(R.id.sp_amortization)
-    Spinner sp_amortization;
+    Spinner spAmortization;
 
     @BindView(R.id.sp_interestcalculationperiod)
-    Spinner sp_interestcalculationperiod;
+    Spinner spInterestCalculationPeriod;
 
     @BindView(R.id.sp_repaymentstrategy)
-    Spinner sp_repaymentstrategy;
+    Spinner spRepaymentStrategy;
 
     @BindView(R.id.sp_interest_type)
-    Spinner sp_interest_type;
+    Spinner spInterestType;
 
     @BindView(R.id.sp_loan_officer)
-    Spinner sp_loan_officer;
+    Spinner spLoanOfficer;
 
     @BindView(R.id.sp_fund)
-    Spinner sp_fund;
+    Spinner spFund;
 
-    @BindView(R.id.ck_calculateinterest)
-    CheckBox ck_calculateinterest;
+    @BindView(R.id.cb_calculateinterest)
+    CheckBox cbCalculateInterest;
 
-    @BindView(R.id.disbursementon_date)
-    TextView tv_disbursementon_date;
+    @BindView(R.id.tv_disbursementon_date)
+    TextView tvDisbursementOnDate;
 
     @BindView(R.id.bt_loan_submit)
-    Button bt_loan_submit;
+    Button btnLoanSubmit;
 
     @Inject
     LoanAccountPresenter mLoanAccountPresenter;
@@ -199,55 +200,51 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         inflatedisbusmentDate();
         inflateLoansProductSpinner();
 
-        disbursementon_date = tv_disbursementon_date.getText().toString();
-        submittion_date = tv_submittedon_date.getText().toString();
+        disbursementon_date = tvDisbursementOnDate.getText().toString();
+        submittion_date = tvSubmittedOnDate.getText().toString();
         submittion_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
                 (submittion_date).replace("-", " ");
         disbursementon_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload
                 (disbursementon_date).replace("-", " ");
-
-
-        bt_loan_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                LoansPayload loansPayload = new LoansPayload();
-                loansPayload.setAllowPartialPeriodInterestCalcualtion(ck_calculateinterest
-                        .isChecked());
-                loansPayload.setAmortizationType(amortizationTypeId);
-                loansPayload.setClientId(clientId);
-                loansPayload.setDateFormat("dd MMMM yyyy");
-                loansPayload.setExpectedDisbursementDate(disbursementon_date);
-                loansPayload.setInterestCalculationPeriodType(interestCalculationPeriodTypeId);
-                loansPayload.setLoanType("individual");
-                loansPayload.setLocale("en");
-                loansPayload.setNumberOfRepayments(et_numberofrepayments.getEditableText()
-                        .toString());
-                loansPayload.setPrincipal(et_principal.getEditableText().toString());
-                loansPayload.setProductId(productId);
-                loansPayload.setRepaymentEvery(et_repaidevery.getEditableText().toString());
-                loansPayload.setSubmittedOnDate(submittion_date);
-                loansPayload.setLoanPurposeId(loanPurposeId);
-                loansPayload.setLoanTermFrequency(loanTermFrequency);
-                loansPayload.setTransactionProcessingStrategyId(transactionProcessingStrategyId);
-                loansPayload.setFundId(fundId);
-                loansPayload.setInterestType(interestTypeId);
-                loansPayload.setLoanOfficerId(loanOfficerId);
-
-
-                initiateLoanCreation(loansPayload);
-            }
-        });
 
         inflateSpinners();
 
         return rootView;
     }
 
+    @OnClick(R.id.bt_loan_submit)
+    public void submit() {
+
+        LoansPayload loansPayload = new LoansPayload();
+        loansPayload.setAllowPartialPeriodInterestCalcualtion(cbCalculateInterest
+                .isChecked());
+        loansPayload.setAmortizationType(amortizationTypeId);
+        loansPayload.setClientId(clientId);
+        loansPayload.setDateFormat("dd MMMM yyyy");
+        loansPayload.setExpectedDisbursementDate(disbursementon_date);
+        loansPayload.setInterestCalculationPeriodType(interestCalculationPeriodTypeId);
+        loansPayload.setLoanType("individual");
+        loansPayload.setLocale("en");
+        loansPayload.setNumberOfRepayments(etNumberOfRepayments.getEditableText()
+                .toString());
+        loansPayload.setPrincipal(etPrincipal.getEditableText().toString());
+        loansPayload.setProductId(productId);
+        loansPayload.setRepaymentEvery(etRepaidEvery.getEditableText().toString());
+        loansPayload.setSubmittedOnDate(submittion_date);
+        loansPayload.setLoanPurposeId(loanPurposeId);
+        loansPayload.setLoanTermFrequency(loanTermFrequency);
+        loansPayload.setTransactionProcessingStrategyId(transactionProcessingStrategyId);
+        loansPayload.setFundId(fundId);
+        loansPayload.setInterestType(interestTypeId);
+        loansPayload.setLoanOfficerId(loanOfficerId);
+
+        initiateLoanCreation(loansPayload);
+    }
+
     @Override
     public void onDatePicked(String date) {
-        tv_submittedon_date.setText(date);
-        tv_disbursementon_date.setText(date);
+        tvSubmittedOnDate.setText(date);
+        tvDisbursementOnDate.setText(date);
 
     }
 
@@ -257,68 +254,68 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         mLoanProductAdapter = new ArrayAdapter<>(getActivity(), layout.simple_spinner_item,
                 mListLoanProducts);
         mLoanProductAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
-        sp_loan_product.setAdapter(mLoanProductAdapter);
-        sp_loan_product.setOnItemSelectedListener(this);
+        spLoanProduct.setAdapter(mLoanProductAdapter);
+        spLoanProduct.setOnItemSelectedListener(this);
 
         //Inflating the LoanPurposeOptions
         mLoanPurposeOptionsAdapter = new ArrayAdapter<>(getActivity(), layout.simple_spinner_item,
                 mListLoanPurposeOptions);
         mLoanPurposeOptionsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
-        sp_loan_purpose.setAdapter(mLoanPurposeOptionsAdapter);
-        sp_loan_purpose.setOnItemSelectedListener(this);
+        spLoanPurpose.setAdapter(mLoanPurposeOptionsAdapter);
+        spLoanPurpose.setOnItemSelectedListener(this);
 
         //Inflating AmortizationTypeOptions Spinner
         mAmortizationTypeOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListAmortizationTypeOptions);
         mAmortizationTypeOptionsAdapter.setDropDownViewResource(
                 layout.simple_spinner_dropdown_item);
-        sp_amortization.setAdapter(mAmortizationTypeOptionsAdapter);
-        sp_amortization.setOnItemSelectedListener(this);
+        spAmortization.setAdapter(mAmortizationTypeOptionsAdapter);
+        spAmortization.setOnItemSelectedListener(this);
 
         //Inflating InterestCalculationPeriodTypeOptions Spinner
         mInterestCalculationPeriodTypeOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListInterestCalculationPeriodTypeOptions);
         mInterestCalculationPeriodTypeOptionsAdapter.setDropDownViewResource(
                 layout.simple_spinner_dropdown_item);
-        sp_interestcalculationperiod.setAdapter(mInterestCalculationPeriodTypeOptionsAdapter);
-        sp_interestcalculationperiod.setOnItemSelectedListener(this);
+        spInterestCalculationPeriod.setAdapter(mInterestCalculationPeriodTypeOptionsAdapter);
+        spInterestCalculationPeriod.setOnItemSelectedListener(this);
 
         //Inflate TransactionProcessingStrategyOptions Spinner
         mTransactionProcessingStrategyOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListTransactionProcessingStrategyOptions);
         mTransactionProcessingStrategyOptionsAdapter.setDropDownViewResource(
                 layout.simple_spinner_dropdown_item);
-        sp_repaymentstrategy.setAdapter(mTransactionProcessingStrategyOptionsAdapter);
-        sp_repaymentstrategy.setOnItemSelectedListener(this);
+        spRepaymentStrategy.setAdapter(mTransactionProcessingStrategyOptionsAdapter);
+        spRepaymentStrategy.setOnItemSelectedListener(this);
 
         //Inflate TermFrequencyTypeOptionsAdapter Spinner
         mTermFrequencyTypeOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListTermFrequencyTypeOptions);
         mTermFrequencyTypeOptionsAdapter.setDropDownViewResource(
                 layout.simple_spinner_dropdown_item);
-        sp_payment_periods.setAdapter(mTermFrequencyTypeOptionsAdapter);
-        sp_payment_periods.setOnItemSelectedListener(this);
+        spPaymentPeriods.setAdapter(mTermFrequencyTypeOptionsAdapter);
+        spPaymentPeriods.setOnItemSelectedListener(this);
 
         //Inflate FondOptions Spinner
         mLoanFundOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListLoanFundOptions);
         mLoanFundOptionsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
-        sp_fund.setAdapter(mLoanFundOptionsAdapter);
-        sp_fund.setOnItemSelectedListener(this);
+        spFund.setAdapter(mLoanFundOptionsAdapter);
+        spFund.setOnItemSelectedListener(this);
 
         //Inflating LoanOfficerOptions Spinner
         mLoanOfficerOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListLoanOfficerOptions);
         mLoanOfficerOptionsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
-        sp_loan_officer.setAdapter(mLoanOfficerOptionsAdapter);
-        sp_loan_officer.setOnItemSelectedListener(this);
+        spLoanOfficer.setAdapter(mLoanOfficerOptionsAdapter);
+        spLoanOfficer.setOnItemSelectedListener(this);
 
         //Inflating InterestTypeOptions Spinner
         mInterestTypeOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListInterestTypeOptions);
         mInterestTypeOptionsAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
-        sp_interest_type.setAdapter(mInterestTypeOptionsAdapter);
-        sp_interest_type.setOnItemSelectedListener(this);
+        spInterestType.setAdapter(mInterestTypeOptionsAdapter);
+        spInterestType.setOnItemSelectedListener(this);
 
     }
 
@@ -337,31 +334,25 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     public void inflatesubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
 
-        tv_submittedon_date.setText(MFDatePicker.getDatePickedAsString());
+        tvSubmittedOnDate.setText(MFDatePicker.getDatePickedAsString());
+    }
 
-        tv_submittedon_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
-            }
-        });
-
+    @OnClick(R.id.tv_submittedon_date)
+    public void setSubmittedOnDate() {
+        mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                .DFRAG_DATE_PICKER);
     }
 
     public void inflatedisbusmentDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
 
-        tv_disbursementon_date.setText(MFDatePicker.getDatePickedAsString());
+        tvDisbursementOnDate.setText(MFDatePicker.getDatePickedAsString());
+    }
 
-        tv_disbursementon_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
-            }
-        });
-
+    @OnClick(R.id.tv_disbursementon_date)
+    public void setDisbursementDate() {
+        mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                .DFRAG_DATE_PICKER);
     }
 
     @Override
@@ -422,6 +413,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
             mListInterestTypeOptions.add(interestTypeOptions.getValue());
         }
         mInterestTypeOptionsAdapter.notifyDataSetChanged();
+
+        showDefaultValues(mLoanTemplate.getInterestRateFrequencyType().getValue());
 
     }
 
@@ -508,5 +501,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void showDefaultValues(String nominalRatePerYearMonth) {
+        tvNominalRatePerYearMonth.setText(nominalRatePerYearMonth);
     }
 }
