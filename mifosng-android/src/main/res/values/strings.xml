@@ -211,6 +211,7 @@
     <string name="transaction_saved_in_db">Transaction Saved in DB</string>
     <string name="payment_failed">Payment Failed</string>
     <string name="transaction_type">Transaction Type</string>
+    <string name="loan_submission_date">Submission Date</string>
 
     <!-- Loan Related Terminologies End Here -->
 

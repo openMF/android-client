@@ -57,25 +57,43 @@
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
-            <TextView
-                android:id="@+id/tv_submittedon_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Submission Date:"
-                android:imeOptions="actionNext"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
-                android:textSize="20sp" />
+            <LinearLayout style="@style/LinearLayout.Width">
 
-            <TextView
-                android:id="@+id/tv_disbursementon_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint=" Disbursement on:"
-                android:imeOptions="actionNext"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
-                android:textSize="20sp" />
+                <TextView style="@style/TextView.Base.Weight"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/loan_submission_date"/>
+
+                <TextView
+                    android:layout_weight="0.5"
+                    android:id="@+id/tv_submittedon_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="20sp"
+                    android:background="@color/gray_light"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/LinearLayout.Width">
+
+                <TextView style="@style/TextView.Base.Weight"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/loan_disbursement_date"/>
+
+                <TextView
+                    android:layout_weight="0.5"
+                    android:id="@+id/tv_disbursementon_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textSize="20sp"
+                    android:background="@color/gray_light"/>
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
