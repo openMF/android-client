@@ -303,7 +303,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 break;
             case MENU_PIN_PONIT:
                 Intent i = new Intent(getActivity(), PinpointClientActivity.class);
-                i.putExtra(PinpointClientActivity.EXTRA_CLIENT_ID, clientId);
+                i.putExtra(Constants.CLIENT_ID, clientId);
                 startActivity(i);
                 break;
             case MENU_ITEM_SURVEYS:

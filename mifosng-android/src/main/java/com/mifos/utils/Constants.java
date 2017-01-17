@@ -125,12 +125,12 @@ public class Constants {
     public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
-
     /**
      * String Constant of Permissions in SharedPreference
      */
     public static final String READ_EXTERNAL_STORAGE_STATUS = "read_external_storage_status";
     public static final String WRITE_EXTERNAL_STORAGE_STATUS = "write_external_storage_status";
+    public static final String ACCESS_FINE_LOCATION_STATUS = "access_fine_location_status";
 
     /**
      * Constants to identify which Data Tables have to be shown
