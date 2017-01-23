@@ -2,7 +2,7 @@ package com.mifos.mifosxdroid.login;
 
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.Presenter;
-import com.mifos.objects.User;
+import com.mifos.objects.user.User;
 
 import javax.inject.Inject;
 

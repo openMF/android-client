@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.objects;
+package com.mifos.objects.user;
 
 import com.mifos.objects.client.Role;
 

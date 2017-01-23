@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.mifos.App;
 import com.mifos.api.BaseUrl;
-import com.mifos.objects.User;
+import com.mifos.objects.user.User;
 
 import java.util.Set;
 

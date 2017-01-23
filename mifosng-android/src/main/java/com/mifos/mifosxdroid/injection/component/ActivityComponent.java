@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.injection.component;
 
+import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
@@ -147,4 +148,6 @@ public interface ActivityComponent {
     void inject(SyncGroupsDialogFragment syncGroupsDialogFragment);
 
     void inject(IdentifierDialogFragment identifierDialogFragment);
+
+    void inject(PathTrackingActivity pathTrackingActivity);
 }

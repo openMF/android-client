@@ -109,7 +109,7 @@
         </activity>
 
         <activity
-            android:name=".activity.PathTrackingActivity"
+            android:name=".activity.pathtracking.PathTrackingActivity"
             android:label="@string/track_path"
             android:screenOrientation="portrait" />
 
@@ -131,7 +131,8 @@
             android:screenOrientation="portrait"/>
 
 
-        <service android:name=".LocationService" />
+        <service android:name=".activity.pathtracking.PathTrackingService"
+                 android:exported="false"/>
 
     </application>
 

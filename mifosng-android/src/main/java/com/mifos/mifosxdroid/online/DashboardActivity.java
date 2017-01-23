@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.activity.PathTrackingActivity;
+import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
@@ -33,7 +33,7 @@ import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
-import com.mifos.objects.User;
+import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;

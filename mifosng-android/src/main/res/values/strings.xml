@@ -116,6 +116,7 @@
     <string name="empty_group_clients">Empty Group ClientList</string>
     <string name="empty_groups_list">Empty GroupList</string>
     <string name="empty_center_list">Empty CenterList</string>
+    <string name="empty_path_tracking">Empty Path Tracking</string>
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
@@ -151,6 +152,11 @@
     <string name="google_play_services_not_available">Google Play Services is not available
         .</string>
     <string name="empty_client_address">Empty Address List</string>
+    <string name="mifos_path_tracker">Mifos Path Tracker</string>
+    <string name="description_location_tracking">Location tracking starts now</string>
+    <string name="stop_tracking">Stop Tracking</string>
+    <string name="start_tracking">Start Tracking</string>
+    <string name="tracks_submitted">Your location submitted Successfully</string>
     <!-- General Terms End Here -->
 
 
@@ -533,6 +539,8 @@
     <string name="failed_to_add_pinpoint_location">Failed to add pinpoint location</string>
     <string name="failed_to_delete_pinpoint_location">Failed to delete pinpoint location</string>
     <string name="failed_to_update_pinpoint_location">Failed to update pinpoint location</string>
+    <string name="failed_to_fetch_path_tracking_details">Failed to fetch path tracking
+        details</string>
 
 
     <string-array name="office_ids">

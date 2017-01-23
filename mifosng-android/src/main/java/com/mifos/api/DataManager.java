@@ -5,7 +5,7 @@ import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.User;
+import com.mifos.objects.user.User;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
