@@ -41,6 +41,22 @@
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
+            <TextView
+                android:id="@+id/tv_field_officer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/field_officer"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_field_officer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
@@ -51,7 +67,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
@@ -83,7 +99,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
@@ -94,13 +110,13 @@
                 android:text="@string/interest_calc"
                 android:textSize="16sp" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/sp_interest_calc"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_interest_comp"
@@ -110,13 +126,13 @@
                 android:text="@string/interest_comp"
                 android:textSize="16sp" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/sp_interest_comp"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_interest_p_period"
@@ -126,13 +142,13 @@
                 android:text="@string/interest_p_period"
                 android:textSize="16sp" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/sp_interest_p_period"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_days_in_year"
@@ -142,13 +158,88 @@
                 android:text="@string/days_in_year"
                 android:textSize="16sp" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/sp_days_in_year"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
+                android:textSize="20sp" />
+
+            <CheckBox
+                android:id="@+id/cb_enforce_required_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:paddingTop="10dp"
+                android:text="@string/saving_min_required_balance" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_min_required_balance"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/minbalance"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/cb_overdraft_allowed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:paddingTop="10dp"
+                android:text="@string/saving_overdraft_allowed" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_max_overdraft_amount"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/maxoverdraft"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_nominal_annual_overdraft"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/nominal_overdraft"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_min_overdraft_required"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/min_overdraft"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+
+            </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_submit"

@@ -1,6 +1,7 @@
 package com.mifos.objects.templates.savings;
 
 import com.mifos.objects.accounts.savings.Currency;
+import com.mifos.objects.accounts.savings.FieldOfficerOptions;
 import com.mifos.objects.common.InterestType;
 import com.mifos.objects.PaymentTypeOption;
 
@@ -35,6 +36,15 @@ public class SavingProductsTemplate {
     private List<AccountOptions> assetAccountOptions;
     private List<AccountOptions> expenseAccountOptions;
     private List<AccountOptions> incomeAccountOptions;
+    private List<FieldOfficerOptions> fieldOfficerOptions;
+
+    public List<FieldOfficerOptions> getFieldOfficerOptions() {
+        return fieldOfficerOptions;
+    }
+
+    public void setFieldOfficerOptions(List<FieldOfficerOptions> fieldOfficerOptions) {
+        this.fieldOfficerOptions = fieldOfficerOptions;
+    }
 
     public Currency getCurrency() {
         return currency;

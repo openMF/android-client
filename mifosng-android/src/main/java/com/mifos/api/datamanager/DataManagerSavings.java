@@ -271,4 +271,16 @@ public class DataManagerSavings {
     public Observable<SavingProductsTemplate> getSavingsAccountTemplate() {
         return mBaseApiManager.getSavingsApi().getSavingsAccountTemplate();
     }
+
+    public Observable<SavingProductsTemplate>
+            getClientSavingsAccountTemplateByProduct(int clientId, int productId) {
+        return mBaseApiManager.getSavingsApi().
+                getClientSavingsAccountTemplateByProduct(clientId, productId);
+    }
+
+    public Observable<SavingProductsTemplate>
+            getGroupSavingsAccountTemplateByProduct(int groupId, int productId) {
+        return mBaseApiManager.getSavingsApi().
+                getGroupSavingsAccountTemplateByProduct(groupId, productId);
+    }
 }

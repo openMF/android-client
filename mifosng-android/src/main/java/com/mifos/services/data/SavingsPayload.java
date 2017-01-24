@@ -18,6 +18,12 @@ public class SavingsPayload {
     private Integer interestCalculationType;
     private Integer interestCalculationDaysInYearType;
     private Integer interestPostingPeriodType;
+    private Boolean allowOverdraft;
+    private Boolean enforceMinRequiredBalance;
+    private String minRequiredOpeningBalance;
+    private String nominalAnnualInterestRateOverdraft;
+    private String overdraftLimit;
+    private String minOverdraftForInterestCalculation;;
 
     public Integer getInterestCompoundingPeriodType() {
         return interestCompoundingPeriodType;
@@ -121,5 +127,53 @@ public class SavingsPayload {
 
     public void setInterestPostingPeriodType(Integer interestPostingPeriodType) {
         this.interestPostingPeriodType = interestPostingPeriodType;
+    }
+
+    public Boolean getAllowOverdraft() {
+        return allowOverdraft;
+    }
+
+    public void setAllowOverdraft(Boolean allowOverdraft) {
+        this.allowOverdraft = allowOverdraft;
+    }
+
+    public Boolean getEnforceMinRequiredBalance() {
+        return enforceMinRequiredBalance;
+    }
+
+    public void setEnforceMinRequiredBalance(Boolean enforceMinRequiredBalance) {
+        this.enforceMinRequiredBalance = enforceMinRequiredBalance;
+    }
+
+    public String getMinRequiredOpeningBalance() {
+        return minRequiredOpeningBalance;
+    }
+
+    public void setMinRequiredOpeningBalance(String minRequiredOpeningBalance) {
+        this.minRequiredOpeningBalance = minRequiredOpeningBalance;
+    }
+
+    public String getNominalAnnualInterestRateOverdraft() {
+        return nominalAnnualInterestRateOverdraft;
+    }
+
+    public void setNominalAnnualInterestRateOverdraft(String nominalAnnualInterestRateOverdraft) {
+        this.nominalAnnualInterestRateOverdraft = nominalAnnualInterestRateOverdraft;
+    }
+
+    public String getOverdraftLimit() {
+        return overdraftLimit;
+    }
+
+    public void setOverdraftLimit(String overdraftLimit) {
+        this.overdraftLimit = overdraftLimit;
+    }
+
+    public String getMinOverdraftForInterestCalculation() {
+        return minOverdraftForInterestCalculation;
+    }
+
+    public void setMinOverdraftForInterestCalculation(String minOverdraftForInterestCalculation) {
+        this.minOverdraftForInterestCalculation = minOverdraftForInterestCalculation;
     }
 }

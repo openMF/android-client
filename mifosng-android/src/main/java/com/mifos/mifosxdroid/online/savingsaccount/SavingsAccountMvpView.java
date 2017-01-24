@@ -16,7 +16,7 @@ public interface SavingsAccountMvpView extends MvpView {
 
     void showSavingsAccountCreatedSuccessfully(Savings savings);
 
-    void showSavingsAccountTemplate(SavingProductsTemplate savingProductsTemplate);
+    void showSavingsAccountTemplateByProduct(SavingProductsTemplate savingProductsTemplate);
 
     void showFetchingError(int errorMessage);
 }
