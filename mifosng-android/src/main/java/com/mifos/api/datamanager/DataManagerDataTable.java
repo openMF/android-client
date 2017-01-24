@@ -1,8 +1,10 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperDataTable;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.user.UserLocation;
 
 import java.util.List;
 
@@ -44,5 +46,25 @@ public class DataManagerDataTable {
         return mBaseApiManager.getDataTableApi().getTableOf(tableName);
     }
 
+    /**
+     * This Method is adding the User Tracking Data in the data Table "user_tracking"
+     *
+     * @param userId UserId Id
+     * @param userLocation  UserLocation
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> addUserPathTracking(int userId,
+                                                           UserLocation userLocation) {
+        return mBaseApiManager.getDataTableApi().addUserPathTracking(userId, userLocation);
+    }
 
+    /**
+     * This Method is fetching the User Path Tracking from the DataTable "user_tracking"
+     *
+     * @param userId UserId Id
+     * @return List<UserLocation>
+     */
+    public Observable<List<UserLocation>> getUserPathTracking(int userId) {
+        return mBaseApiManager.getDataTableApi().getUserPathTracking(userId);
+    }
 }

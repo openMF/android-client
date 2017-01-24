@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.user.UserLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -45,4 +46,13 @@ public interface DataTableService {
             @Path("dataTableName") String dataTableName,
             @Path("entityId") int entityId,
             @Path("dataTableRowId") int dataTableRowId);
+
+    @POST(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
+    Observable<GenericResponse> addUserPathTracking(
+            @Path("userId") int userId,
+            @Body UserLocation userLocation);
+
+    @GET(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
+    Observable<List<UserLocation>> getUserPathTracking(@Path("userId") int userId);
 }
+

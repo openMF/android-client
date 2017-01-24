@@ -113,6 +113,10 @@ public class Constants {
 
     public static final String IS_A_PARENT_FRAGMENT = "isAParentFragment";
 
+    public static final String STOP_TRACKING = "stop_tracking";
+
+    public static final String SERVICE_STATUS = "service_status";
+
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
     public static final int REQUEST_PERMISSION_SETTING = 254;
@@ -124,6 +128,7 @@ public class Constants {
      */
     public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 3;
 
     /**
      * String Constant of Permissions in SharedPreference

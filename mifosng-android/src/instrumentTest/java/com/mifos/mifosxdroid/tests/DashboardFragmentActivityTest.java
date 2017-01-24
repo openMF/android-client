@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.mifos.mifosxdroid.ClientListActivity;
 import com.mifos.mifosxdroid.GroupListActivity;
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.activity.PathTrackingActivity;
+import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.DashboardActivity;

@@ -5,10 +5,13 @@
 
 package com.mifos.utils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ishankhanna on 30/05/14.
@@ -19,6 +22,8 @@ public class DateHelper {
 
 
     public static final String DATE_FORMAT_VALUE = "dd MMM yyyy";
+    public static final String DATE_TIME_FORMAT_VALUE = "dd MMMM yyyy HH:mm";
+    public static final String TIME_FORMAT_VALUE = "HH:mm a";
 
     /**
      * @return current date formatted as day - month - year where month is a number from 1 to 12
@@ -130,6 +135,19 @@ public class DateHelper {
 
         return date;
 
+    }
+
+    /**
+     * This method returns the String of date and time. Just need to pass the format in which you
+     * want. Example Pass the format "dd MMMM yyyy HH:mm" and you will get the date and time in
+     * this format "24 January 2017 18:32".
+     *
+     * @param format Format of Date and Time
+     * @return String of Date and Time
+     */
+    public static String getCurrentDateTime(String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format, Locale.ENGLISH);
+        return dateFormat.format(new Date());
     }
 
 

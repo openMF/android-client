@@ -26,6 +26,7 @@ import com.mifos.api.local.databasehelper.DatabaseHelperOffices;
 import com.mifos.api.local.databasehelper.DatabaseHelperSavings;
 import com.mifos.api.local.databasehelper.DatabaseHelperStaff;
 import com.mifos.api.local.databasehelper.DatabaseHelperSurveys;
+import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingService;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 
@@ -41,6 +42,7 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
+    void inject(PathTrackingService pathTrackingService);
 
     @ApplicationContext
     Context context();
