@@ -132,6 +132,10 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     private int loanOfficerId;
     private int interestTypeMethodId;
 
+    // Boolean values to act as flags for date selection
+    boolean isdisbursementDate = false;
+    boolean issubmittedDate = false;
+
     private List<String> amortizationType = new ArrayList<>();
     private List<String> interestCalculationPeriodType = new ArrayList<>();
     private List<String> transactionProcessingStrategy = new ArrayList<>();
@@ -300,9 +304,14 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
 
     @Override
     public void onDatePicked(String date) {
-        tvSubmittedonDate.setText(date);
-        tvDisbursementonDate.setText(date);
-
+        if (isdisbursementDate) {
+            tvDisbursementonDate.setText(date);
+            isdisbursementDate = false;
+        }
+        if (issubmittedDate) {
+            tvSubmittedonDate.setText(date);
+            issubmittedDate = false;
+        }
     }
 
     private void inflateLoansProductSpinner() {
@@ -328,6 +337,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         tvSubmittedonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                issubmittedDate = true;
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                         .DFRAG_DATE_PICKER);
             }
@@ -343,6 +353,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         tvDisbursementonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isdisbursementDate = true;
                 mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                         .DFRAG_DATE_PICKER);
             }
