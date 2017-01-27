@@ -8,6 +8,7 @@
     <!-- General Terms Begin Here -->
     <string name="app_name">MifosXDroid</string>
     <string name="datatables">Datatables</string>
+    <string name="associated_datatables">Associated Datatables</string>
     <string name="login">Login</string>
     <string name="test_ip">10.0.2.2</string>
     <string name="search">Search</string>
@@ -218,6 +219,7 @@
     <string name="loanAccountSummaryStatus">Loan Account Summary</string>
     <string name="loan_repayment_schedule">Loan Repayment Schedule</string>
     <string name="loan_rejected_message">Loan was Rejected</string>
+    <string name="loan_creation_success">Loan application submitted successfully.</string>
     <string name="repayment">Repayment</string>
     <string name="complete">Complete</string>
     <string name="pending">Pending</string>
@@ -547,6 +549,7 @@
     <string name="failed_to_update_pinpoint_location">Failed to update pinpoint location</string>
     <string name="failed_to_fetch_path_tracking_details">Failed to fetch path tracking
         details</string>
+    <string name="generic_failure_message">Request failed. Please try again.</string>
 
 
     <string-array name="office_ids">
