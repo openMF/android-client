@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
@@ -71,15 +72,10 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         //TODO Fix Single digit problem that fails with the locale
-        onDatePickListener.onDatePicked(
-                new StringBuilder()
-                        .append(day < 10 ? "0" + day : day)
-                        .append("-")
-                        .append((month + 1) < 10 ? "0" + (month + 1) : month + 1)
-                        .append("-")
-                        .append(year)
-                        .toString()
-        );
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        Date date = calendar.getTime();
+        onDatePickListener.onDatePicked(DateFormat.format("dd-mm-yyyy", date).toString());
 
     }
 
