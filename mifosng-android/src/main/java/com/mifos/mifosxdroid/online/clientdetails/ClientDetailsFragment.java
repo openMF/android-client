@@ -28,12 +28,14 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -67,6 +69,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.Utils;
 
@@ -80,6 +83,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
 import static android.view.View.GONE;
@@ -111,6 +115,15 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     public List<DataTable> clientDataTables = new ArrayList<>();
     public String urlStringBuilder;
     List<Charges> chargesList = new ArrayList<Charges>();
+
+    @BindView(R.id.view_flipper)
+    ViewFlipper viewFlipper;
+
+    @BindView(R.id.noClientIcon)
+    ImageView noClientIcon;
+
+    @BindView(R.id.noClientText)
+    TextView noClientText;
 
     @BindView(R.id.tv_fullName)
     TextView tv_fullName;
@@ -670,7 +683,18 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     @Override
     public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        if (Network.isOnline(getContext())) {
+            viewFlipper.setDisplayedChild(2);
+            noClientText.setText(R.string.failed_to_fetch_client_details_account);
+        } else {
+            Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick(R.id.noClientIcon)
+    public void reloadOnError() {
+        viewFlipper.setDisplayedChild(1);
+        inflateClientInformation();
     }
 
     public interface OnFragmentInteractionListener {
