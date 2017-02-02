@@ -40,4 +40,6 @@ public class FragmentConstants {
     public static final String DFRAG_DATATABLE_ENTRY_FORM = "Data_Table_Entry_Form";
 
     public static final String FRAG_DATA_TABLE = "Data Table Fragment";
+
+    public static final String DATA_TABLE_LIST = "Associated Datatables";
 }

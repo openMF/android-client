@@ -25,6 +25,7 @@ import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
+import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment;
 import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
@@ -122,6 +123,8 @@ public interface ActivityComponent {
     void inject(ChargeDialogFragment chargeDialogFragment);
 
     void inject(DataTableRowDialogFragment dataTableRowDialogFragment);
+
+    void inject(DataTableListFragment dataTableListFragment);
 
     void inject(DocumentDialogFragment documentDialogFragment);
 
