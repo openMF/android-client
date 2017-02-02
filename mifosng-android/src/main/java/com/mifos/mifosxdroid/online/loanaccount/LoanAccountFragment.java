@@ -165,6 +165,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     private Integer repaymentFrequencyDayOfWeek;
     private Double interestRatePerPeriod;
     private Integer linkAccountId;
+    private boolean isDisbursebemntDate = false;
+    private boolean isSubmissionDate = false;
 
     List<LoanProducts> mLoanProducts = new ArrayList<>();
     List<RepaymentFrequencyNthDayTypeOptions>
@@ -301,9 +303,16 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @Override
     public void onDatePicked(String date) {
-        tvSubmittedOnDate.setText(date);
-        tvDisbursementOnDate.setText(date);
 
+        if (isSubmissionDate) {
+            tvSubmittedOnDate.setText(date);
+            isSubmissionDate = false;
+        }
+
+        if (isDisbursebemntDate) {
+            tvDisbursementOnDate.setText(date);
+            isDisbursebemntDate = false;
+        }
     }
 
     private void inflateSpinners() {
@@ -423,6 +432,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @OnClick(R.id.tv_submittedon_date)
     public void setTvSubmittedOnDate() {
+        isSubmissionDate = true;
         mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
@@ -435,6 +445,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @OnClick(R.id.tv_disbursementon_date)
     public void setTvDisbursementOnDate() {
+        isDisbursebemntDate = true;
         mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
