@@ -48,7 +48,7 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
     Integer feeChargesPortion;
 
     @Column
-    Integer penaltyChargesPortion;
+    Double penaltyChargesPortion;
 
     List<PaymentTypeOption> paymentTypeOptions = new ArrayList<PaymentTypeOption>();
 
@@ -116,11 +116,11 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
         this.feeChargesPortion = feeChargesPortion;
     }
 
-    public Integer getPenaltyChargesPortion() {
+    public Double getPenaltyChargesPortion() {
         return penaltyChargesPortion;
     }
 
-    public void setPenaltyChargesPortion(Integer penaltyChargesPortion) {
+    public void setPenaltyChargesPortion(Double penaltyChargesPortion) {
         this.penaltyChargesPortion = penaltyChargesPortion;
     }
 
@@ -179,7 +179,7 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
         this.principalPortion = (Double) in.readValue(Double.class.getClassLoader());
         this.interestPortion = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesPortion = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.penaltyChargesPortion = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.penaltyChargesPortion = (Double) in.readValue(Integer.class.getClassLoader());
         this.paymentTypeOptions = in.createTypedArrayList(PaymentTypeOption.CREATOR);
     }
 
