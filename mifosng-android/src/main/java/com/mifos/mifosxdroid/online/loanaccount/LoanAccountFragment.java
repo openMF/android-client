@@ -212,7 +212,6 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -221,14 +220,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-
-        // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_add_loan, null);
-
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         ButterKnife.bind(this, rootView);
         mLoanAccountPresenter.attachView(this);
+
 
         inflateSubmissionDate();
         inflateDisbursementDate();
