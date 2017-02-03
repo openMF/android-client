@@ -268,6 +268,7 @@ public class DashboardActivity extends MifosBaseActivity
 
     @Override
     public void onBackPressed() {
+        invalidateOptionsMenu();
         // check if the nav mDrawer is open
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
