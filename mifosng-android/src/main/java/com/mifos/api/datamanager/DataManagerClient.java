@@ -285,8 +285,9 @@ public class DataManagerClient {
      * @param id of the clientPayload in Database
      * @return List<ClientPayload></>
      */
-    public Observable<List<ClientPayload>> deleteAndUpdatePayloads(int id) {
-        return mDatabaseHelperClient.deleteAndUpdatePayloads(id);
+    public Observable<List<ClientPayload>> deleteAndUpdatePayloads(int id,
+                                                                   long clientCreationTIme) {
+        return mDatabaseHelperClient.deleteAndUpdatePayloads(id, clientCreationTIme);
     }
 
     /**

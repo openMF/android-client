@@ -1,5 +1,8 @@
 package com.mifos.api.local.databasehelper;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanAccount_Table;
@@ -12,6 +15,14 @@ import com.mifos.objects.client.ClientPayload_Table;
 import com.mifos.objects.client.Client_Table;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.GroupWithAssociations;
+import com.mifos.objects.noncore.ColumnHeader;
+import com.mifos.objects.noncore.ColumnHeader_Table;
+import com.mifos.objects.noncore.ColumnValue;
+import com.mifos.objects.noncore.ColumnValue_Table;
+import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.noncore.DataTablePayload;
+import com.mifos.objects.noncore.DataTablePayload_Table;
+import com.mifos.objects.noncore.DataTable_Table;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.clients.InterestType;
 import com.mifos.objects.templates.clients.OfficeOptions;
@@ -19,10 +30,12 @@ import com.mifos.objects.templates.clients.Options;
 import com.mifos.objects.templates.clients.Options_Table;
 import com.mifos.objects.templates.clients.SavingProductOptions;
 import com.mifos.objects.templates.clients.StaffOptions;
+import com.mifos.utils.Constants;
 import com.raizlabs.android.dbflow.sql.language.Delete;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,7 +43,10 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func0;
+
+import static com.raizlabs.android.dbflow.sql.language.SQLite.select;
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
@@ -46,8 +62,14 @@ public class DatabaseHelperClient {
     public static final String CLIENT_TYPE_OPTIONS = "clientTypeOptions";
     public static final String CLIENT_CLASSIFICATION_OPTIONS = "clientClassificationOptions";
 
+    private Gson gson;
+    private Type type;
+
     @Inject
     public DatabaseHelperClient() {
+        gson = new Gson();
+        type = new TypeToken<HashMap<String, Object>>() {
+        }.getType();
     }
 
     /**
@@ -85,7 +107,7 @@ public class DatabaseHelperClient {
             public void call(Subscriber<? super Page<Client>> subscriber) {
 
                 Page<Client> clientPage = new Page<>();
-                clientPage.setPageItems(SQLite.select()
+                clientPage.setPageItems(select()
                         .from(Client.class)
                         .queryList());
                 subscriber.onNext(clientPage);
@@ -100,7 +122,7 @@ public class DatabaseHelperClient {
             @Override
             public Observable<GroupWithAssociations> call() {
 
-                List<Client> clients = SQLite.select()
+                List<Client> clients = select()
                         .from(Client.class)
                         .where(Client_Table.groupId.eq(groupId))
                         .queryList();
@@ -123,7 +145,7 @@ public class DatabaseHelperClient {
             @Override
             public void call(Subscriber<? super Client> subscriber) {
 
-                Client client = SQLite.select()
+                Client client = select()
                         .from(Client.class)
                         .where(Client_Table.id.eq(clientId))
                         .querySingle();
@@ -185,12 +207,12 @@ public class DatabaseHelperClient {
             @Override
             public void call(Subscriber<? super ClientAccounts> subscriber) {
 
-                List<LoanAccount> loanAccounts = SQLite.select()
+                List<LoanAccount> loanAccounts = select()
                         .from(LoanAccount.class)
                         .where(LoanAccount_Table.clientId.eq(clientId))
                         .queryList();
 
-                List<SavingsAccount> savingsAccounts = SQLite.select()
+                List<SavingsAccount> savingsAccounts = select()
                         .from(SavingsAccount.class)
                         .where(SavingsAccount_Table.clientId.eq(clientId))
                         .queryList();
@@ -233,22 +255,42 @@ public class DatabaseHelperClient {
                 }
 
                 for (Options options : clientsTemplate.getGenderOptions()) {
-                    options.setGenderOptions(GENDER_OPTIONS);
+                    options.setOptionType(GENDER_OPTIONS);
                     options.save();
                 }
 
                 for (Options options : clientsTemplate.getClientTypeOptions()) {
-                    options.setClientTypeOptions(CLIENT_TYPE_OPTIONS);
+                    options.setOptionType(CLIENT_TYPE_OPTIONS);
                     options.save();
                 }
 
                 for (Options options : clientsTemplate.getClientClassificationOptions()) {
-                    options.setClientClassificationOptions(CLIENT_CLASSIFICATION_OPTIONS);
+                    options.setOptionType(CLIENT_CLASSIFICATION_OPTIONS);
                     options.save();
                 }
 
                 for (InterestType interestType : clientsTemplate.getClientLegalFormOptions()) {
                     interestType.save();
+                }
+
+                for (DataTable dataTable : clientsTemplate.getDataTables()) {
+
+                    Delete.table(DataTable.class, DataTable_Table.registeredTableName
+                             .eq(dataTable.getRegisteredTableName()));
+                    Delete.table(ColumnHeader.class, ColumnHeader_Table.registeredTableName.eq
+                            (dataTable.getRegisteredTableName()));
+                    Delete.table(ColumnValue.class, ColumnValue_Table.registeredTableName.eq
+                            (dataTable.getRegisteredTableName()));
+
+                    dataTable.save();
+                    for (ColumnHeader columnHeader : dataTable.getColumnHeaderData()) {
+                        columnHeader.setRegisteredTableName(dataTable.getRegisteredTableName());
+                        columnHeader.save();
+                        for (ColumnValue columnValue : columnHeader.getColumnValues()) {
+                            columnValue.setRegisteredTableName(dataTable.getRegisteredTableName());
+                            columnValue.save();
+                        }
+                    }
                 }
 
                 return Observable.just(clientsTemplate);
@@ -267,41 +309,70 @@ public class DatabaseHelperClient {
             @Override
             public Observable<ClientsTemplate> call() {
 
-                ClientsTemplate clientsTemplate = SQLite.select()
+                ClientsTemplate clientsTemplate = select()
                         .from(ClientsTemplate.class)
                         .querySingle();
 
-                List<OfficeOptions> officeOptionses = SQLite.select()
+                List<OfficeOptions> officeOptionses = select()
                         .from(OfficeOptions.class)
                         .queryList();
 
-                List<StaffOptions> staffOptionses = SQLite.select()
+                List<StaffOptions> staffOptionses = select()
                         .from(StaffOptions.class)
                         .queryList();
 
-                List<SavingProductOptions> savingProductOptionses = SQLite.select()
+                List<SavingProductOptions> savingProductOptionses = select()
                         .from(SavingProductOptions.class)
                         .queryList();
 
-                List<Options> genderOptions = SQLite.select()
+                List<Options> genderOptions = select()
                         .from(Options.class)
-                        .where(Options_Table.genderOptions.eq(GENDER_OPTIONS))
+                        .where(Options_Table.optionType.eq(GENDER_OPTIONS))
                         .queryList();
 
-                List<Options> clientTypeOptions = SQLite.select()
+                List<Options> clientTypeOptions = select()
                         .from(Options.class)
-                        .where(Options_Table.clientTypeOptions.eq(CLIENT_TYPE_OPTIONS))
+                        .where(Options_Table.optionType.eq(CLIENT_TYPE_OPTIONS))
                         .queryList();
 
-                List<Options> clientClassificationOptions = SQLite.select()
+                List<Options> clientClassificationOptions = select()
                         .from(Options.class)
                         .where(Options_Table
-                                .clientClassificationOptions.eq(CLIENT_CLASSIFICATION_OPTIONS))
+                                .optionType.eq(CLIENT_CLASSIFICATION_OPTIONS))
                         .queryList();
 
-                List<InterestType> clientLegalFormOptions = SQLite.select()
+                List<InterestType> clientLegalFormOptions = select()
                         .from(InterestType.class)
                         .queryList();
+
+                List<DataTable> dataTables = select()
+                        .from(DataTable.class)
+                        .where(DataTable_Table.applicationTableName.eq(Constants
+                                .DATA_TABLE_NAME_CLIENT))
+                        .queryList();
+
+                if (!dataTables.isEmpty()) {
+                    for (DataTable dataTable : dataTables) {
+                        List<ColumnHeader> columnHeaders = select()
+                                .from(ColumnHeader.class)
+                                .where(ColumnHeader_Table.registeredTableName
+                                        .eq(dataTable.getRegisteredTableName()))
+                                .queryList();
+                        for (ColumnHeader columnHeader : columnHeaders) {
+                            List<ColumnValue> columnValues = select()
+                                    .from(ColumnValue.class)
+                                    .where(ColumnValue_Table.registeredTableName.eq(dataTable
+                                            .getRegisteredTableName()))
+                                    .queryList();
+                            if (!columnValues.isEmpty()) {
+                                columnHeader.setColumnValues(columnValues);
+                            }
+                        }
+                        if (!columnHeaders.isEmpty()) {
+                            dataTable.setColumnHeaderData(columnHeaders);
+                        }
+                    }
+                }
 
                 assert clientsTemplate != null;
                 clientsTemplate.setOfficeOptions(officeOptionses);
@@ -311,6 +382,7 @@ public class DatabaseHelperClient {
                 clientsTemplate.setClientTypeOptions(clientTypeOptions);
                 clientsTemplate.setClientClassificationOptions(clientClassificationOptions);
                 clientsTemplate.setClientLegalFormOptions(clientLegalFormOptions);
+                clientsTemplate.setDataTables(dataTables);
 
                 return Observable.just(clientsTemplate);
             }
@@ -325,11 +397,26 @@ public class DatabaseHelperClient {
      * @return Client
      */
     public Observable<Client> saveClientPayloadToDB(final ClientPayload clientPayload) {
-        return Observable.create(new Observable.OnSubscribe<Client>() {
+        return Observable.defer(new Func0<Observable<Client>>() {
             @Override
-            public void call(Subscriber<? super Client> subscriber) {
+            public Observable<Client> call() {
+                final long currentTime = System.currentTimeMillis();
+                clientPayload.setClientCreationTime(currentTime);
+                if (!clientPayload.getDatatables().isEmpty()) {
+                    Observable.from(clientPayload.getDatatables())
+                            .subscribe(new Action1<DataTablePayload>() {
+                                @Override
+                                public void call(DataTablePayload dataTablePayload) {
+                                    dataTablePayload.setClientCreationTime(currentTime);
+                                    JsonObject jsonObject = gson.toJsonTree(dataTablePayload
+                                            .getData()).getAsJsonObject();
+                                    dataTablePayload.setDataTableString(jsonObject.toString());
+                                    dataTablePayload.save();
+                                }
+                            });
+                }
                 clientPayload.save();
-                subscriber.onNext(new Client());
+                return Observable.just(new Client());
             }
         });
     }
@@ -341,15 +428,38 @@ public class DatabaseHelperClient {
      * @return List<ClientPayload></>
      */
     public Observable<List<ClientPayload>> readAllClientPayload() {
-        return Observable.create(new Observable.OnSubscribe<List<ClientPayload>>() {
+        return Observable.defer(new Func0<Observable<List<ClientPayload>>>() {
             @Override
-            public void call(Subscriber<? super List<ClientPayload>> subscriber) {
-
-                List<ClientPayload> clientPayloads = SQLite.select()
+            public Observable<List<ClientPayload>> call() {
+                List<ClientPayload> clientPayloads = select()
                         .from(ClientPayload.class)
                         .queryList();
-
-                subscriber.onNext(clientPayloads);
+                if (!clientPayloads.isEmpty()) {
+                    Observable.from(clientPayloads).subscribe(new Action1<ClientPayload>() {
+                        @Override
+                        public void call(ClientPayload clientPayload) {
+                            List<DataTablePayload> dataTablePayloads = select()
+                                    .from(DataTablePayload.class)
+                                    .where(DataTablePayload_Table.clientCreationTime
+                                            .eq(clientPayload.getClientCreationTime()))
+                                    .queryList();
+                            if (!dataTablePayloads.isEmpty()) {
+                                Observable.from(dataTablePayloads)
+                                        .subscribe(new Action1<DataTablePayload>() {
+                                            @Override
+                                            public void call(DataTablePayload dataTablePayload) {
+                                                HashMap<String, Object> data = gson.fromJson(
+                                                        dataTablePayload.getDataTableString(),
+                                                        type);
+                                                dataTablePayload.setData(data);
+                                            }
+                                        });
+                                clientPayload.setDatatables(dataTablePayloads);
+                            }
+                        }
+                    });
+                }
+                return Observable.just(clientPayloads);
             }
         });
     }
@@ -362,22 +472,17 @@ public class DatabaseHelperClient {
      * @param id is Id of the Client Payload in which reference client was saved into Database
      * @return List<ClientPayload></>
      */
-    public Observable<List<ClientPayload>> deleteAndUpdatePayloads(final int id) {
-        return Observable.create(new Observable.OnSubscribe<List<ClientPayload>>() {
+    public Observable<List<ClientPayload>> deleteAndUpdatePayloads(final int id,
+                                                                   final long clientCreationTIme) {
+        return Observable.defer(new Func0<Observable<List<ClientPayload>>>() {
             @Override
-            public void call(Subscriber<? super List<ClientPayload>> subscriber) {
-
+            public Observable<List<ClientPayload>> call() {
                 Delete.table(ClientPayload.class, ClientPayload_Table.id.eq(id));
-
-                List<ClientPayload> clientPayloads = SQLite.select()
-                        .from(ClientPayload.class)
-                        .queryList();
-
-                subscriber.onNext(clientPayloads);
-
+                Delete.table(DataTablePayload.class, DataTablePayload_Table.clientCreationTime.eq
+                        (clientCreationTIme));
+                return readAllClientPayload();
             }
         });
-
     }
 
     public Observable<ClientPayload> updateDatabaseClientPayload(final ClientPayload

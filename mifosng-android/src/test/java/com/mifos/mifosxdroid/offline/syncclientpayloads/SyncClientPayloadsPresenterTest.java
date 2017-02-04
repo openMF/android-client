@@ -45,12 +45,15 @@ public class SyncClientPayloadsPresenterTest {
 
     ErrorSyncServerMessage errorSyncServerMessage;
 
+    long clientCreationTime;
+
     @Before
     public void setUp() {
         syncClientPayloadsPresenter = new SyncClientPayloadsPresenter(mDataManagerClient);
         syncClientPayloadsPresenter.attachView(mSyncClientPayloadsMvpView);
         clientPayloads = FakeRemoteDataSource.getClientPayloads();
         errorSyncServerMessage = FakeRemoteDataSource.getFailureServerResponse();
+        clientCreationTime = System.currentTimeMillis();
     }
 
     @After
@@ -112,10 +115,10 @@ public class SyncClientPayloadsPresenterTest {
     public void testDeleteAndUpdateClientPayload() throws Exception {
         //Deleting the Client Payload of Id = 1, Id is transient. it will not serialize and
         // deserialize during retrofit request. It is for just numbering the payload in Table.
-        when(mDataManagerClient.deleteAndUpdatePayloads(1)).thenReturn(Observable.just
-                (clientPayloads));
+        when(mDataManagerClient.deleteAndUpdatePayloads(1, clientCreationTime))
+                .thenReturn(Observable.just(clientPayloads));
 
-        syncClientPayloadsPresenter.deleteAndUpdateClientPayload(1);
+        syncClientPayloadsPresenter.deleteAndUpdateClientPayload(1, clientCreationTime);
 
         verify(mSyncClientPayloadsMvpView).showPayloadDeletedAndUpdatePayloads(clientPayloads);
         verify(mSyncClientPayloadsMvpView, never()).showError(R.string.failed_to_update_list);
@@ -123,10 +126,10 @@ public class SyncClientPayloadsPresenterTest {
 
     @Test
     public void testDeleteAndUpdateClientPayloadFails() {
-        when(mDataManagerClient.deleteAndUpdatePayloads(1))
+        when(mDataManagerClient.deleteAndUpdatePayloads(1, clientCreationTime))
                 .thenReturn(Observable.<List<ClientPayload>>error(new RuntimeException()));
 
-        syncClientPayloadsPresenter.deleteAndUpdateClientPayload(1);
+        syncClientPayloadsPresenter.deleteAndUpdateClientPayload(1, clientCreationTime);
 
         verify(mSyncClientPayloadsMvpView).showError(R.string.failed_to_update_list);
         verify(mSyncClientPayloadsMvpView, never())

@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
+import com.mifos.objects.noncore.DataTablePayload;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -27,6 +28,9 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
 
     @PrimaryKey(autoincrement = true)
     transient Integer id;
+
+    @Column
+    transient Long clientCreationTime;
 
     @Column
     transient String errorMessage;
@@ -98,12 +102,31 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
     @Column
     String locale = "en";
 
+    @SerializedName("datatables")
+    List<DataTablePayload> datatables = new ArrayList<>();
+
+    public List<DataTablePayload> getDatatables() {
+        return datatables;
+    }
+
+    public void setDatatables(List<DataTablePayload> datatables) {
+        this.datatables = datatables;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Long getClientCreationTime() {
+        return clientCreationTime;
+    }
+
+    public void setClientCreationTime(Long clientCreationTime) {
+        this.clientCreationTime = clientCreationTime;
     }
 
     public String getErrorMessage() {
