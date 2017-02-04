@@ -595,6 +595,9 @@
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="centerList_account_prefix">Account No: %1$s</string>
     <string name="no_staff">no staff</string>
+    <string name="create_center_dialog">Would you like to create another center?</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
 
 
 </resources>

@@ -10,9 +10,11 @@ package com.mifos.mifosxdroid.online.createnewcenter;
  */
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,19 +61,19 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     private static final String TAG = "CreateNewCenter";
 
     @BindView(R.id.et_center_name)
-    EditText et_centerName;
+    EditText etCenterName;
 
     @BindView(R.id.cb_center_active_status)
-    CheckBox cb_centerActiveStatus;
+    CheckBox cbCenterActiveStatus;
 
     @BindView(R.id.tv_center_activationDate)
-    TextView tv_activationDate;
+    TextView tvActivationDate;
 
     @BindView(R.id.sp_center_offices)
-    Spinner sp_offices;
+    Spinner spOffices;
 
     @BindView(R.id.btn_submit)
-    Button bt_submit;
+    Button btnSubmit;
 
     int officeId;
     Boolean result = true;
@@ -104,30 +106,30 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         inflateOfficeSpinner();
         inflateActivationDate();
         //client active checkbox onCheckedListener
-        cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton
+        cbCenterActiveStatus.setOnCheckedChangeListener(new CompoundButton
                 .OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    tv_activationDate.setVisibility(View.VISIBLE);
+                    tvActivationDate.setVisibility(View.VISIBLE);
                 } else {
-                    tv_activationDate.setVisibility(View.GONE);
+                    tvActivationDate.setVisibility(View.GONE);
                 }
 
             }
         });
 
-        activationdateString = tv_activationDate.getText().toString();
+        activationdateString = tvActivationDate.getText().toString();
         activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
                 (activationdateString).replace("-", " ");
-        bt_submit.setOnClickListener(new View.OnClickListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 CenterPayload centerPayload = new CenterPayload();
 
-                centerPayload.setName(et_centerName.getEditableText().toString());
-                centerPayload.setActive(cb_centerActiveStatus.isChecked());
+                centerPayload.setName(etCenterName.getEditableText().toString());
+                centerPayload.setActive(cbCenterActiveStatus.isChecked());
                 centerPayload.setActivationDate(activationdateString);
                 centerPayload.setOfficeId(officeId);
                 centerPayload.setDateFormat("dd MMMM yyyy");
@@ -151,6 +153,29 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
         if (isCenterNameValid()) {
             mCreateNewCenterPresenter.createCenter(centerPayload);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(),
+                    R.style.MaterialAlertDialogStyle);
+            alertDialogBuilder
+                    .setMessage(getString(R.string.create_center_dialog))
+                    .setPositiveButton(getString(R.string.action_yes),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface,
+                                                    int i) {
+                                    etCenterName.setText("");
+                                    cbCenterActiveStatus.setChecked(false);
+                                }
+                            })
+                    .setNegativeButton(getString(R.string.action_no),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface,
+                                                    int i) {
+                                    getFragmentManager().popBackStack();
+                                }
+                            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
     }
 
@@ -158,9 +183,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     public void inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this);
 
-        tv_activationDate.setText(MFDatePicker.getDatePickedAsString());
+        tvActivationDate.setText(MFDatePicker.getDatePickedAsString());
 
-        tv_activationDate.setOnClickListener(new View.OnClickListener() {
+        tvActivationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
@@ -173,23 +198,23 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     }
 
     public void onDatePicked(String date) {
-        tv_activationDate.setText(date);
+        tvActivationDate.setText(date);
 
     }
 
     public boolean isCenterNameValid() {
         result = true;
         try {
-            if (TextUtils.isEmpty(et_centerName.getEditableText().toString())) {
+            if (TextUtils.isEmpty(etCenterName.getEditableText().toString())) {
                 throw new RequiredFieldException(getResources().getString(R.string.center_name),
                         getResources().getString(R.string.error_cannot_be_empty));
             }
 
-            if (et_centerName.getEditableText().toString().trim().length() < 4 && et_centerName
+            if (etCenterName.getEditableText().toString().trim().length() < 4 && etCenterName
                     .getEditableText().toString().trim().length() > 0) {
                 throw new ShortOfLengthException(getResources().getString(R.string.center_name), 4);
             }
-            if (!ValidationUtil.isNameValid(et_centerName.getEditableText().toString())) {
+            if (!ValidationUtil.isNameValid(etCenterName.getEditableText().toString())) {
                 throw new InvalidTextInputException(
                         getResources().getString(R.string.center_name),
                         getResources().getString(R.string.error_should_contain_only),
@@ -221,8 +246,8 @@ public class CreateNewCenterFragment extends MifosBaseFragment
                 android.R.layout.simple_spinner_item, officeList);
         officeAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);
-        sp_offices.setAdapter(officeAdapter);
-        sp_offices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spOffices.setAdapter(officeAdapter);
+        spOffices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView,
