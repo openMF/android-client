@@ -35,16 +35,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
@@ -67,7 +63,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.PrefManager;
+import com.mifos.utils.ImageLoaderUtils;
 import com.mifos.utils.Utils;
 
 import java.io.File;
@@ -109,7 +105,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     public int clientId;
     public List<DataTable> clientDataTables = new ArrayList<>();
-    public String urlStringBuilder;
     List<Charges> chargesList = new ArrayList<Charges>();
 
     @BindView(R.id.tv_fullName)
@@ -523,7 +518,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 rowOffice.setVisibility(GONE);
 
             if (client.isImagePresent()) {
-                urlBuilder(client.getId());
                 loadClientProfileImage();
             } else {
                 iv_clientImage.setImageDrawable(
@@ -574,7 +568,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void showUploadImageFailed(String s) {
         Toaster.show(rootView, s);
-        urlBuilder(clientId);
         loadClientProfileImage();
     }
 
@@ -587,24 +580,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         }
     }
 
-    public void urlBuilder(int clientId) {
-        urlStringBuilder = new String(PrefManager.getInstanceUrl());
-        urlStringBuilder += (
-                String.format("clients/%d/images?maxHeight=120&maxWidth=120", clientId));
-    }
-
     public void loadClientProfileImage() {
         pb_imageProgressBar.setVisibility(VISIBLE);
-        String url = urlStringBuilder;
-        GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                .addHeader(MifosInterceptor.HEADER_TENANT, "default")
-                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
-                .addHeader("Accept", "application/octet-stream")
-                .build());
-        Glide.with(getActivity())
-                .load(glideUrl)
-                .error(R.drawable.ic_launcher)
-                .into(iv_clientImage);
+        ImageLoaderUtils.loadImage(getActivity(), clientId, iv_clientImage);
         pb_imageProgressBar.setVisibility(GONE);
     }
 
