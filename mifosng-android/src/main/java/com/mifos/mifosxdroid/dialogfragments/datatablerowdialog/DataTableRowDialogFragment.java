@@ -122,7 +122,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         while (columnHeaderIterator.hasNext()) {
 
             ColumnHeader columnHeader = columnHeaderIterator.next();
-            if (!columnHeader.getIsColumnPrimaryKey()) {
+            if (!columnHeader.getColumnPrimaryKey()) {
 
                 if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_STRING) ||
                         columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_TEXT)) {

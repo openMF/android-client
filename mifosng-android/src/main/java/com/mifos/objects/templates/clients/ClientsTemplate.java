@@ -5,10 +5,12 @@ import android.os.Parcelable;
 
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
+import com.mifos.objects.noncore.DataTable;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,6 +38,15 @@ public class ClientsTemplate extends MifosBaseModel implements Parcelable {
     private List<Options> clientTypeOptions;
     private List<Options> clientClassificationOptions;
     private List<InterestType> clientLegalFormOptions;
+    private List<DataTable> datatables = new ArrayList<>();
+
+    public List<DataTable> getDataTables() {
+        return datatables;
+    }
+
+    public void setDataTables(List<DataTable> dataTables) {
+        this.datatables = dataTables;
+    }
 
     public int[] getActivationDate() {
         return activationDate;

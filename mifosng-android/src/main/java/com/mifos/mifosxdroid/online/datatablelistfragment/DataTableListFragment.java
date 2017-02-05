@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -26,12 +27,13 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.formwidgets.FormEditText;
 import com.mifos.mifosxdroid.formwidgets.FormNumericEditText;
 import com.mifos.mifosxdroid.formwidgets.FormSpinner;
-import com.mifos.mifosxdroid.formwidgets.FormWidget;
 import com.mifos.mifosxdroid.formwidgets.FormToggleButton;
-import com.mifos.objects.noncore.DataTablePayload;
+import com.mifos.mifosxdroid.formwidgets.FormWidget;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.noncore.ColumnHeader;
 import com.mifos.objects.noncore.ColumnValue;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.objects.noncore.DataTablePayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.utils.Constants;
@@ -61,20 +63,24 @@ public class DataTableListFragment extends Fragment
         implements DataTableListMvpView {
 
     private final String LOG_TAG = getClass().getSimpleName();
+
     @BindView(R.id.ll_data_table_entry_form)
     LinearLayout linearLayout;
+
     @Inject
     DataTableListPresenter mDataTableListPresenter;
-    private ArrayList<DataTable> dataTables;
+
+    private List<DataTable> dataTables;
     private ArrayList<DataTablePayload> dataTablePayloadElements;
     private LoansPayload clientLoansPayload;
     private GroupLoanPayload groupLoanPayload;
+    private ClientPayload clientPayload;
     private int requestType;
     private View rootView;
     private SafeUIBlockingUtility safeUIBlockingUtility;
     private List<List<FormWidget>> listFormWidgets = new ArrayList<List<FormWidget>>();
 
-    public static DataTableListFragment newInstance(ArrayList<DataTable> dataTables,
+    public static DataTableListFragment newInstance(List<DataTable> dataTables,
                                                     Object payload, int type) {
         DataTableListFragment dataTableListFragment = new DataTableListFragment();
         Bundle args = new Bundle();
@@ -86,6 +92,9 @@ public class DataTableListFragment extends Fragment
                 break;
             case Constants.GROUP_LOAN:
                 dataTableListFragment.groupLoanPayload = (GroupLoanPayload) payload;
+                break;
+            case Constants.CREATE_CLIENT:
+                dataTableListFragment.clientPayload = (ClientPayload) payload;
                 break;
         }
         dataTableListFragment.setArguments(args);
@@ -140,7 +149,7 @@ public class DataTableListFragment extends Fragment
 
         for (ColumnHeader columnHeader : table.getColumnHeaderData()) {
 
-            if (!columnHeader.getIsColumnPrimaryKey()) {
+            if (!columnHeader.getColumnPrimaryKey()) {
 
                 if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_STRING) ||
                         columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_TEXT)) {
@@ -250,6 +259,8 @@ public class DataTableListFragment extends Fragment
                 break;
 
             case Constants.CREATE_CLIENT:
+                clientPayload.setDatatables(dataTablePayloadElements);
+                mDataTableListPresenter.createClient(clientPayload);
                 break;
         }
     }
@@ -282,15 +293,14 @@ public class DataTableListFragment extends Fragment
 
     @Override
     public void showMessage(int messageId) {
-        String message = getActivity().getResources()
-                .getString(messageId);
-        Toaster.show(rootView, message);
+        Toaster.show(rootView, getString(messageId));
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
 
-        //If the application is submitted successfully, popBack the fragment.
-        if (message.equals(getActivity().getResources()
-                .getString(R.string.loan_creation_success))) {
-            getActivity().getSupportFragmentManager().popBackStack();
-        }
+    @Override
+    public void showMessage(String message) {
+        Toaster.show(rootView, message);
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override

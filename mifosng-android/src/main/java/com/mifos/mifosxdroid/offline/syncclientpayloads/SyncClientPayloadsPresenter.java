@@ -110,10 +110,10 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
     }
 
 
-    public void deleteAndUpdateClientPayload(int id) {
+    public void deleteAndUpdateClientPayload(int id, long clientCreationTIme) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.deleteAndUpdatePayloads(id)
+        mSubscriptions.add(mDataManagerClient.deleteAndUpdatePayloads(id, clientCreationTIme)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<ClientPayload>>() {
