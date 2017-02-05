@@ -25,7 +25,6 @@
         android:paddingBottom="16dp"
         android:paddingTop="10dp"
         android:textSize="20sp"
-        android:enabled="false"
         android:background="@color/light_grey" />
 
     <TextView
@@ -45,7 +44,6 @@
         android:paddingBottom="16dp"
         android:paddingTop="10dp"
         android:textSize="20sp"
-        android:enabled="false"
         android:background="@color/light_grey" />
 
     <android.support.design.widget.TextInputLayout

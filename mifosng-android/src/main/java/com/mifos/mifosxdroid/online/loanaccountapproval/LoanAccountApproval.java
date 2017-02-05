@@ -134,17 +134,27 @@ public class LoanAccountApproval extends MifosBaseFragment
                 .DFRAG_DATE_PICKER);
     }
 
+    public void showApprovalDate() {
+        approvalDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvalDate)
+                .replace("-", " ");
+    }
+
+    public void showDisbursebemntDate() {
+        disbursementDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(disbursementDate)
+                .replace("-", " ");
+    }
+
     @Override
     public void showUserInterface() {
         mfDatePicker = MFDatePicker.newInsance(this);
         tv_loan_approval_dates.setText(MFDatePicker.getDatePickedAsString());
         approvalDate = tv_loan_approval_dates.getText().toString();
-        approvalDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvalDate)
-                .replace("-", " ");
 
         tv_expected_disbursement_dates.setText(DateHelper.getDateAsString(loanWithAssociations
                 .getTimeline().getExpectedDisbursementDate()));
         disbursementDate = tv_expected_disbursement_dates.getText().toString();
+
+        showApprovalDate();
 
         et_approved_amount.setText(String.valueOf(loanWithAssociations.getApprovedPrincipal()));
         et_transaction_amount.setText(String.valueOf(loanWithAssociations.getApprovedPrincipal()));
@@ -157,12 +167,15 @@ public class LoanAccountApproval extends MifosBaseFragment
         if (isApprovalDate) {
             tv_loan_approval_dates.setText(date);
             approvalDate = date;
+            showApprovalDate();
             isApprovalDate = false;
         } else if (isDisbursebemntDate) {
             tv_expected_disbursement_dates.setText(date);
             disbursementDate = date;
+            showDisbursebemntDate();
             isDisbursebemntDate = false;
         }
+
     }
 
     private void initiateLoanApproval(final LoanApproval loanApproval) {
