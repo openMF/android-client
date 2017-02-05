@@ -77,7 +77,7 @@ public class CenterListFragment extends MifosBaseFragment
 
     @Override
     public void onItemClick(View childView, int position) {
-        mListener.loadGroupsOfCenter(centers.get(position).getId());
+        mListener.loadCenterDetails(centersListAdapter.getItem(position).getId());
     }
 
     @Override
@@ -282,9 +282,10 @@ public class CenterListFragment extends MifosBaseFragment
 
 
     public interface OnFragmentInteractionListener {
-        void loadGroupsOfCenter(int centerId);
 
         void loadCollectionSheetForCenter(int centerId, String collectionDate, int
                 calenderInstanceId);
+
+        void loadCenterDetails(int centerId);
     }
 }

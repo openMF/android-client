@@ -29,6 +29,7 @@ public class APIEndPoint {
     public static final String IDENTIFIERS = "identifiers";
     public static final String OFFICES = "offices";
     public static final String STAFF = "staff";
+    public static final String RUNREPORTS = "runreports";
 
     public static final String SAVINGSACCOUNTS = "savingsaccounts";
     public static final String RECURRING_ACCOUNTS = "recurringdepositaccounts";

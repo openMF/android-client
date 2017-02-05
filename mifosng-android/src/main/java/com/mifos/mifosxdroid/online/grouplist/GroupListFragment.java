@@ -8,9 +8,6 @@ package com.mifos.mifosxdroid.online.grouplist;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -70,7 +67,6 @@ public class GroupListFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             centerId = getArguments().getInt(Constants.CENTER_ID);
@@ -150,27 +146,9 @@ public class GroupListFragment extends ProgressableFragment
         mListener = null;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_center, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int menuItemId = item.getItemId();
-        switch (menuItemId) {
-            case R.id.add_savings_account:
-                mListener.addCenterSavingAccount(centerId);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public interface OnFragmentInteractionListener {
 
         void loadClientsOfGroup(List<Client> clientList);
-
-        void addCenterSavingAccount(int centerId);
     }
 }
 
