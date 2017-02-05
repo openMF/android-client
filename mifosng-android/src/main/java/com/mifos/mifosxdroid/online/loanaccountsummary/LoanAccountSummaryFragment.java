@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountApproval;
+import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
@@ -377,7 +377,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     public void approveLoan() {
 
         LoanAccountApproval loanAccountApproval = LoanAccountApproval.newInstance
-                (loanAccountNumber);
+                (loanAccountNumber, clientLoanWithAssociations);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);

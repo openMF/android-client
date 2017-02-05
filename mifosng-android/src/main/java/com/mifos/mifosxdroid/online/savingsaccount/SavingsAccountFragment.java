@@ -229,6 +229,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @Override
     public void onDatePicked(String date) {
         tvSubmissionDate.setText(date);
+        submission_date  = date;
         setSubmissionDate();
     }
 

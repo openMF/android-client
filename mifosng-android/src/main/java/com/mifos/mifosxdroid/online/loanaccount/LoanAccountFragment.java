@@ -304,11 +304,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
         if (isSubmissionDate) {
             tvSubmittedOnDate.setText(date);
+            submissionDate = date;
             isSubmissionDate = false;
         }
 
         if (isDisbursebemntDate) {
             tvDisbursementOnDate.setText(date);
+            disbursementDate = date;
             isDisbursebemntDate = false;
         }
     }

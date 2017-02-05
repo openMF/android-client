@@ -9,16 +9,12 @@ package com.mifos.objects.mifoserror;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Errors implements Parcelable {
 
     private String developerMessage;
     private String defaultUserMessage;
     private String userMessageGlobalisationCode;
     private String parameterName;
-    private List<Arg> args = new ArrayList<>();
 
     public String getDeveloperMessage() {
         return developerMessage;
@@ -52,14 +48,6 @@ public class Errors implements Parcelable {
         this.parameterName = parameterName;
     }
 
-    public List<Arg> getArgs() {
-        return args;
-    }
-
-    public void setArgs(List<Arg> args) {
-        this.args = args;
-    }
-
 
     @Override
     public int describeContents() {
@@ -72,7 +60,6 @@ public class Errors implements Parcelable {
         dest.writeString(this.defaultUserMessage);
         dest.writeString(this.userMessageGlobalisationCode);
         dest.writeString(this.parameterName);
-        dest.writeList(this.args);
     }
 
     public Errors() {
@@ -83,8 +70,6 @@ public class Errors implements Parcelable {
         this.defaultUserMessage = in.readString();
         this.userMessageGlobalisationCode = in.readString();
         this.parameterName = in.readString();
-        this.args = new ArrayList<>();
-        in.readList(this.args, Arg.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Errors> CREATOR = new Parcelable.Creator<Errors>() {
