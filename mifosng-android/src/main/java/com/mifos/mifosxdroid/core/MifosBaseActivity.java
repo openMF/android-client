@@ -81,9 +81,10 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
