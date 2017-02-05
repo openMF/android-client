@@ -254,6 +254,7 @@
     <string name="recurringAccountSummary">Recurring Account Summary</string>
     <string name="approval_savings_date">Select Approval Date:</string>
     <string name="approval_disbursement_date">Expected disbursement on</string>
+    <string name="approved_on">Approved On*</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <string name="saving_min_required_balance">Enforce Minimum Required Balance</string>
     <string name="saving_overdraft_allowed">Overdraft Allowed</string>
@@ -281,7 +282,7 @@
     <string name="calculateinterest">Calculate interest for exact days in partial period</string>
     <string name="staff_names">Staff</string>
     <string name="approvedamount">Approved Amount</string>
-    <string name="transaction_amount">Transaction amount</string>
+    <string name="transaction_amount">Transaction amount*</string>
     <string name="approval_note">Note</string>
     <string name="savings_approval_reason">Reason for Approval</string>
     <string name="add_group">Add Group</string>
