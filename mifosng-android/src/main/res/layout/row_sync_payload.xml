@@ -33,7 +33,7 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:gravity="top|start"
-                    android:text="Pyload Name"
+                    android:text="@string/payload_name"
                     android:textColor="@color/black"/>
 
 
@@ -44,7 +44,7 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:gravity="bottom|start"
-                    android:text="Error Message"
+                    android:text="@string/row_sync_payload_error_message"
                     android:textColor="@color/black"
                     android:visibility="gone"/>
 

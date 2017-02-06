@@ -8,6 +8,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:paddingBottom="8dp"
     android:paddingLeft="4dp"
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:gravity="left"
-        android:text="May 24,2014"
+        tools:text="May 24,2014"
         android:textColor="@color/black" />
 
     <TextView
@@ -52,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:gravity="right"
-        android:text="2500 INR"
+        tools:text="2500 INR"
         android:textColor="@color/black" />
 
 

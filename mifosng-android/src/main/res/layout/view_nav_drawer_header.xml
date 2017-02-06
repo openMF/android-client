@@ -43,10 +43,12 @@
             android:text="@string/offline_mode"
             android:textColor="@color/white"
             app:showText="false"
+
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:textOn="On"
-            android:textOff="Off"/>
+            android:textOn="@string/on"
+            android:textOff="@string/off"
+            android:layout_alignParentStart="true"/>
 
     </LinearLayout>
 </LinearLayout>

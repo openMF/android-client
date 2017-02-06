@@ -8,6 +8,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp">
 
     <LinearLayout
@@ -43,6 +44,6 @@
         android:gravity="left"
         android:inputType="numberDecimal"
         android:paddingLeft="5dp"
-        android:text="460"
+        tools:text="460"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </RelativeLayout>

@@ -6,7 +6,9 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp">
 
@@ -18,14 +20,14 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="237"
+            tools:text="237"
             android:id="@+id/tv_clientId"
             android:layout_weight="1" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Raj Kumar Kaushikl"
+            tools:text="Raj Kumar Kaushik"
             android:id="@+id/tv_clientName"
             android:layout_weight="1" />
 

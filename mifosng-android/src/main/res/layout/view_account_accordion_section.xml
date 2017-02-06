@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp">
@@ -8,13 +9,12 @@
         android:id="@+id/tv_toggle_accounts_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_toggle_accounts"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="4dp"
-        android:text="{md-add-circle-outline}"
+        android:layout_above="@+id/line2"
+        android:layout_toEndOf="@+id/lv_accounts"
+        android:layout_toRightOf="@+id/lv_accounts"
         android:textColor="@color/secondary_text"
-        android:textSize="20sp" />
-
+        android:textSize="20sp"
+        android:text="{md-add-circle-outline}" />
 
     <TextView
         android:id="@+id/tv_toggle_accounts"
@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/tv_toggle_accounts"
         android:layout_alignParentRight="true"
-        android:text="0"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="0" />
 
     <View
         android:id="@+id/line2"
@@ -47,5 +47,6 @@
         android:layout_below="@+id/line2"
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
+
 
 </RelativeLayout>
