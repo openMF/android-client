@@ -18,6 +18,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
+import com.mifos.utils.PrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
         showUI();
 
         //Start Syncing Groups
-        if (isOnline()) {
+        if (isOnline() && (PrefManager.getUserStatus() == 0)) {
             syncGroupsDialogPresenter.startSyncingGroups(groups);
         } else {
             showNetworkIsNotAvailable();

@@ -18,6 +18,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
+import com.mifos.utils.PrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         showUI();
 
         //Start Syncing Clients
-        if (isOnline()) {
+        if (isOnline() && (PrefManager.getUserStatus() == 0)) {
             mSyncClientsDialogPresenter.startSyncingClients(mClientList);
         } else {
             showNetworkIsNotAvailable();
