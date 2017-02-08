@@ -22,6 +22,9 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/passwordWrapper"
@@ -31,7 +34,18 @@
                     android:id="@+id/et_password"
                     style="@style/EditText.Password"
                     android:nextFocusDown="@+id/bt_login" />
+
+
             </android.support.design.widget.TextInputLayout>
+                <ImageView
+                    android:id="@+id/show_password"
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_gravity="center|right"
+                    android:layout_marginRight="10dp"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
 
             <TextView
                 android:id="@+id/bt_connectionSettings"
