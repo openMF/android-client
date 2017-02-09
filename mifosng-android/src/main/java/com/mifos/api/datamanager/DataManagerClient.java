@@ -5,6 +5,7 @@ import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientActivate;
 import com.mifos.objects.client.ClientAddressRequest;
 import com.mifos.objects.client.ClientAddressResponse;
 import com.mifos.objects.client.ClientPayload;
@@ -392,5 +393,15 @@ public class DataManagerClient {
                                                                     ClientAddressRequest address) {
         return mBaseApiManager.getClientsApi().updateClientPinpointLocation(
                 apptableId, datatableId, address);
+    }
+
+    /**
+     * This method is activating the client
+     *
+     * @param clientId
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> activateClient(int clientId, ClientActivate clientActivate) {
+        return mBaseApiManager.getClientsApi().activateClient(clientId, clientActivate);
     }
 }

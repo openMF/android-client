@@ -8,6 +8,7 @@ import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ClientActivate;
 import com.mifos.objects.client.ClientAddressRequest;
 import com.mifos.objects.client.ClientAddressResponse;
 import com.mifos.objects.client.ClientPayload;
@@ -191,4 +192,16 @@ public interface ClientService {
     Observable<GenericResponse> updateClientPinpointLocation(@Path("apptableId") int apptableId,
                                                              @Path("datatableId") int datatableId,
                                                              @Body ClientAddressRequest address);
+
+    /**
+     * This is the service to activate the client
+     * REST ENT POINT
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}?command=activate
+     *
+     * @param clientId
+     * @return GenericResponse
+     */
+    @POST(APIEndPoint.CLIENTS + "/{clientId}?command=activate")
+    Observable<GenericResponse> activateClient(@Path("clientId") int clientId,
+                                               @Body ClientActivate clientActivate);
 }
