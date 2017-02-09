@@ -75,6 +75,8 @@
     <string name="no_identifier_to_show">There is No Identifier to Show</string>
     <string name="approve_savings">Approve Savings</string>
     <string name="activate_savings">Activate Savings</string>
+    <string name="activate_client">Activate Client</string>
+    <string name="client_activated_successfully">Client Activated Successfully</string>
     <string name="savings_account_closed">Savings Account Closed</string>
     <string name="savings_account_activated">Savings Account Activated</string>
     <string name="more_info">More client info</string>

@@ -9,6 +9,9 @@ package com.mifos.utils;
 import com.google.gson.Gson;
 import com.mifos.objects.mifoserror.MifosError;
 
+import retrofit2.adapter.rxjava.HttpException;
+import rx.plugins.RxJavaPlugins;
+
 public class MFErrorParser {
 
     public static final String LOG_TAG = "MFErrorParser";
@@ -17,5 +20,19 @@ public class MFErrorParser {
 
     public static MifosError parseError(String serverResponse) {
         return gson.fromJson(serverResponse, MifosError.class);
+    }
+
+    public static String errorMessage(Throwable throwableError) {
+        String errorMessage = "";
+        try {
+            if (throwableError instanceof HttpException) {
+                errorMessage = ((HttpException) throwableError).response().errorBody().string();
+                errorMessage =  MFErrorParser.parseError(errorMessage).getErrors()
+                        .get(0).getDefaultUserMessage();
+            }
+        } catch (Throwable throwable) {
+            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
+        }
+        return errorMessage;
     }
 }
