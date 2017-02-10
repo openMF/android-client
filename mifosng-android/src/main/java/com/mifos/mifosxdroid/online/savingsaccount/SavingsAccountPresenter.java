@@ -10,6 +10,7 @@ import com.mifos.objects.organisation.ProductSavings;
 import com.mifos.objects.templates.savings.SavingProductsTemplate;
 import com.mifos.objects.zipmodels.SavingProductsAndTemplate;
 import com.mifos.services.data.SavingsPayload;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +159,7 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError(R.string.failed_to_add_savings_account);
+                        getMvpView().showFetchingError(MFErrorParser.errorMessage(e));
                     }
 
                     @Override
