@@ -179,7 +179,8 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     @Override
     public void showSyncResponse() {
         mSyncPayloadsPresenter.deleteAndUpdateClientPayload(clientPayloads
-                .get(mClientSyncIndex).getId());
+                .get(mClientSyncIndex).getId(),
+                clientPayloads.get(mClientSyncIndex).getClientCreationTime());
     }
 
     /**

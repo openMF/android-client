@@ -163,4 +163,13 @@ public class Constants {
      */
     public static final int USER_ONLINE = 0;
     public static final int USER_OFFLINE = 1;
+
+    /**
+     * Constants to determine in the generic DataTableListFragment, the type of query that
+     * has to be forwarded after showing the datatables and adding the values
+     * to the corresponding payload.
+     */
+    public static final int CREATE_CLIENT = 3001;
+    public static final int CLIENT_LOAN = 3002;
+    public static final int GROUP_LOAN = 3003;
 }

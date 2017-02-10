@@ -11,4 +11,6 @@
     <dimen name="default_vertical_padding">8dp</dimen>
     <dimen name="text_padding_normal">4dp</dimen>
     <dimen name="item_offset">3dp</dimen>
+
+    <dimen name="datatable_name_heading">18sp</dimen>
 </resources>

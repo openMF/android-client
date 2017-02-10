@@ -7,9 +7,7 @@ package com.mifos.mifosxdroid.online.clientdetails;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -37,16 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
@@ -54,6 +44,7 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.activateclient.ActivateClientFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
@@ -77,7 +68,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
@@ -92,14 +82,12 @@ import static android.view.View.OnTouchListener;
 import static android.view.View.VISIBLE;
 
 
-public class ClientDetailsFragment extends ProgressableFragment implements GoogleApiClient
-        .ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,
-        ClientDetailsMvpView {
+public class ClientDetailsFragment extends ProgressableFragment implements ClientDetailsMvpView {
 
-    public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
 
+    public static final int MENU_ITEM_CLIENT_ACTIVATE = 999;
     public static final int MENU_ITEM_DATA_TABLES = 1000;
     public static final int MENU_PIN_PONIT = 1001;
     public static final int MENU_ITEM_CLIENT_CHARGES = 1003;
@@ -113,8 +101,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     public int clientId;
     public List<DataTable> clientDataTables = new ArrayList<>();
-    public String urlStringBuilder;
-    List<Charges> chargesList = new ArrayList<Charges>();
+    List<Charges> chargesList = new ArrayList<>();
 
     @BindView(R.id.view_flipper)
     ViewFlipper viewFlipper;
@@ -173,12 +160,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     private View rootView;
     private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
-    // Null if play services are not available.
-    private GoogleApiClient mGoogleApiClient;
-    // True if play services are available and location services are connected.
-    private AtomicBoolean locationAvailable = new AtomicBoolean(false);
-
     private AccountAccordion accountAccordion;
+    private boolean isClientActive = false;
 
 
     /**
@@ -246,39 +229,36 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-
         menu.clear();
+        if (!isClientActive) {
+            menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+                    .DATA_TABLE_CLIENTS_NAME);
+            menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.pinpoint));
+            menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges));
+            menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string
+                    .savings_account));
+            menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
+                    getString(R.string.add_loan));
+            menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
+            menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
+            menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
 
-        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
-                .DATA_TABLE_CLIENTS_NAME);
-
-        //menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.action_save_location));
-        menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.pinpoint));
-        menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges));
-        menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string
-                .savings_account));
-        menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE, getString(R.string.add_loan));
-        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
-        menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
-        menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
-
-
-        SubMenu more_info_subSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
-
-        int SUBMENU_ITEM_ID = 0;
-
-        // Create a Sub Menu that holds a link to all data tables
-        if (more_info_subSubMenu != null && clientDataTables != null && clientDataTables.size() >
-                0) {
-            Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
-            while (dataTableIterator.hasNext()) {
-                more_info_subSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator
-                        .next()
-                        .getRegisteredTableName());
-                SUBMENU_ITEM_ID++;
+            // Create a Sub Menu that holds a link to all data tables
+            SubMenu more_info_subSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
+            int SUBMENU_ITEM_ID = 0;
+            if (more_info_subSubMenu != null && clientDataTables != null &&
+                    clientDataTables.size() > 0) {
+                Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
+                while (dataTableIterator.hasNext()) {
+                    more_info_subSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE,
+                            dataTableIterator.next().getRegisteredTableName());
+                    SUBMENU_ITEM_ID++;
+                }
             }
+        } else {
+            menu.add(Menu.NONE, MENU_ITEM_CLIENT_ACTIVATE, Menu.NONE,
+                    getString(R.string.activate_client));
         }
-
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -299,6 +279,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         }
 
         switch (item.getItemId()) {
+            case MENU_ITEM_CLIENT_ACTIVATE:
+                activateClient();
+                break;
             case MENU_ITEM_DOCUMENTS:
                 loadDocuments();
                 break;
@@ -350,83 +333,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         mClientDetailsPresenter.loadClientDataTable();
     }
 
-    /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to {@link android.app.Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    /**
-     * Called when the Fragment is no longer started.  This is generally
-     * tied to {@link android.app.Activity#onStop() Activity.onStop} of the containing
-     * Activity's lifecycle.
-     */
-    @Override
-    public void onStop() {
-        if (mGoogleApiClient != null)
-            mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mClientDetailsPresenter.detachView();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        locationAvailable.set(true);
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation
-                (mGoogleApiClient);
-        Log.d(TAG, "Connected to location services");
-        try {
-            Log.d(TAG, "Current location: " + mLastLocation.toString());
-        } catch (NullPointerException e) {
-            //Location client is Null
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        locationAvailable.set(false);
-        Log.d(TAG, "Disconnected from location services");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        locationAvailable.set(false);
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(getActivity(),
-                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (IntentSender.SendIntentException e) {
-                Log.e(TAG, "Connection to location services failed" + connectionResult
-                        .getErrorCode(), e);
-                Toaster.show(rootView, "Connection to location services failed.");
-            }
-        } else { // No resolution available.
-            Log.e(TAG, "Connection to location services failed" + connectionResult.getErrorCode());
-            Toaster.show(rootView, "Connection to location services failed.");
-        }
     }
 
     public void loadDocuments() {
@@ -487,6 +397,15 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         fragmentTransaction.commit();
     }
 
+    public void activateClient() {
+        ActivateClientFragment loanAccountFragment = ActivateClientFragment.newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void showProgressbar(boolean b) {
         showProgress(false);
@@ -526,6 +445,8 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                     rowActivation.setVisibility(GONE);
 
             } catch (IndexOutOfBoundsException e) {
+                isClientActive = true;
+                getActivity().invalidateOptionsMenu();
                 Toast.makeText(getActivity(), getString(R.string.error_client_inactive),
                         Toast.LENGTH_SHORT).show();
                 tv_activationDate.setText("");
@@ -536,7 +457,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
                 rowOffice.setVisibility(GONE);
 
             if (client.isImagePresent()) {
-                urlBuilder(client.getId());
                 loadClientProfileImage();
             } else {
                 iv_clientImage.setImageDrawable(
@@ -587,7 +507,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
     @Override
     public void showUploadImageFailed(String s) {
         Toaster.show(rootView, s);
-        urlBuilder(clientId);
         loadClientProfileImage();
     }
 
@@ -600,24 +519,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Googl
         }
     }
 
-    public void urlBuilder(int clientId) {
-        urlStringBuilder = new String(PrefManager.getInstanceUrl());
-        urlStringBuilder += (
-                String.format("clients/%d/images?maxHeight=120&maxWidth=120", clientId));
-    }
-
     public void loadClientProfileImage() {
         pb_imageProgressBar.setVisibility(VISIBLE);
-        String url = urlStringBuilder;
-        GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                .addHeader(MifosInterceptor.HEADER_TENANT, "default")
-                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
-                .addHeader("Accept", "application/octet-stream")
-                .build());
-        Glide.with(getActivity())
-                .load(glideUrl)
-                .error(R.drawable.ic_launcher)
-                .into(iv_clientImage);
+        ImageLoaderUtils.loadImage(getActivity(), clientId, iv_clientImage);
         pb_imageProgressBar.setVisibility(GONE);
     }
 

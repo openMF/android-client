@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.mifos.objects.accounts.loan.AccountLinkingOptions;
+import com.mifos.objects.noncore.DataTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,6 +104,9 @@ public class LoanTemplate implements Parcelable {
 
     @SerializedName("productOptions")
     List<ProductOptions> productOptions;
+
+    @SerializedName("datatables")
+    ArrayList<DataTable> dataTables;
 
     @SerializedName("loanOfficerOptions")
     List<LoanOfficerOptions> loanOfficerOptions;
@@ -428,6 +433,14 @@ public class LoanTemplate implements Parcelable {
         this.productOptions = productOptions;
     }
 
+    public ArrayList<DataTable> getDataTables() {
+        return dataTables;
+    }
+
+    public void setDataTables(ArrayList<DataTable> dataTables) {
+        this.dataTables = dataTables;
+    }
+
     public List<LoanOfficerOptions> getLoanOfficerOptions() {
         return loanOfficerOptions;
     }
@@ -680,6 +693,7 @@ public class LoanTemplate implements Parcelable {
         dest.writeValue(this.graceOnArrearsAgeing);
         dest.writeParcelable(this.timeline, flags);
         dest.writeTypedList(this.productOptions);
+        dest.writeTypedList(this.dataTables);
         dest.writeTypedList(this.loanOfficerOptions);
         dest.writeTypedList(this.loanPurposeOptions);
         dest.writeTypedList(this.fundOptions);
@@ -748,6 +762,7 @@ public class LoanTemplate implements Parcelable {
         this.graceOnArrearsAgeing = (Integer) in.readValue(Integer.class.getClassLoader());
         this.timeline = in.readParcelable(Timeline.class.getClassLoader());
         this.productOptions = in.createTypedArrayList(ProductOptions.CREATOR);
+        this.dataTables = in.createTypedArrayList(DataTable.CREATOR);
         this.loanOfficerOptions = in.createTypedArrayList(LoanOfficerOptions.CREATOR);
         this.loanPurposeOptions = in.createTypedArrayList(LoanPurposeOptions.CREATOR);
         this.fundOptions = in.createTypedArrayList(FundOptions.CREATOR);

@@ -4,10 +4,17 @@
  */
 package com.mifos.services.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.objects.noncore.DataTablePayload;
+
+import java.util.ArrayList;
+
 /**
  * Created by nellyk on 2/20/2016.
  */
-public class LoansPayload {
+public class LoansPayload implements Parcelable {
 
     boolean allowPartialPeriodInterestCalcualtion;
     int amortizationType;
@@ -34,6 +41,15 @@ public class LoansPayload {
     int loanOfficerId;
     int fundId;
     Integer linkAccountId;
+    ArrayList<DataTablePayload> datatables;
+
+    public ArrayList<DataTablePayload> getDataTables() {
+        return datatables;
+    }
+
+    public void setDataTables(ArrayList<DataTablePayload> dataTablePayloads) {
+        this.datatables = dataTablePayloads;
+    }
 
     public Integer getLinkAccountId() {
         return linkAccountId;
@@ -244,4 +260,86 @@ public class LoansPayload {
     public void setRepaymentFrequencyNthDayType(Integer repaymentFrequencyNthDayType) {
         this.repaymentFrequencyNthDayType = repaymentFrequencyNthDayType;
     }
+
+
+    public LoansPayload() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte(this.allowPartialPeriodInterestCalcualtion ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.amortizationType);
+        dest.writeInt(this.clientId);
+        dest.writeString(this.dateFormat);
+        dest.writeString(this.expectedDisbursementDate);
+        dest.writeInt(this.interestCalculationPeriodType);
+        dest.writeValue(this.interestRatePerPeriod);
+        dest.writeInt(this.interestType);
+        dest.writeInt(this.loanTermFrequency);
+        dest.writeInt(this.loanTermFrequencyType);
+        dest.writeString(this.loanType);
+        dest.writeString(this.locale);
+        dest.writeString(this.numberOfRepayments);
+        dest.writeString(this.principal);
+        dest.writeInt(this.productId);
+        dest.writeString(this.repaymentEvery);
+        dest.writeInt(this.repaymentFrequencyType);
+        dest.writeValue(this.repaymentFrequencyDayOfWeekType);
+        dest.writeValue(this.repaymentFrequencyNthDayType);
+        dest.writeString(this.submittedOnDate);
+        dest.writeInt(this.transactionProcessingStrategyId);
+        dest.writeInt(this.loanPurposeId);
+        dest.writeInt(this.loanOfficerId);
+        dest.writeInt(this.fundId);
+        dest.writeValue(this.linkAccountId);
+        dest.writeTypedList(this.datatables);
+    }
+
+    protected LoansPayload(Parcel in) {
+        this.allowPartialPeriodInterestCalcualtion = in.readByte() != 0;
+        this.amortizationType = in.readInt();
+        this.clientId = in.readInt();
+        this.dateFormat = in.readString();
+        this.expectedDisbursementDate = in.readString();
+        this.interestCalculationPeriodType = in.readInt();
+        this.interestRatePerPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestType = in.readInt();
+        this.loanTermFrequency = in.readInt();
+        this.loanTermFrequencyType = in.readInt();
+        this.loanType = in.readString();
+        this.locale = in.readString();
+        this.numberOfRepayments = in.readString();
+        this.principal = in.readString();
+        this.productId = in.readInt();
+        this.repaymentEvery = in.readString();
+        this.repaymentFrequencyType = in.readInt();
+        this.repaymentFrequencyDayOfWeekType = (Integer) in.readValue(
+                Integer.class.getClassLoader());
+        this.repaymentFrequencyNthDayType = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.submittedOnDate = in.readString();
+        this.transactionProcessingStrategyId = in.readInt();
+        this.loanPurposeId = in.readInt();
+        this.loanOfficerId = in.readInt();
+        this.fundId = in.readInt();
+        this.linkAccountId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.datatables = in.createTypedArrayList(DataTablePayload.CREATOR);
+    }
+
+    public static final Parcelable.Creator<LoansPayload> CREATOR =
+            new Parcelable.Creator<LoansPayload>() {
+        @Override
+        public LoansPayload createFromParcel(Parcel source) {
+            return new LoansPayload(source);
+        }
+
+        @Override
+        public LoansPayload[] newArray(int size) {
+            return new LoansPayload[size];
+        }
+    };
 }

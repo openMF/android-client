@@ -8,18 +8,29 @@ package com.mifos.objects.noncore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ishankhanna on 16/06/14.
  */
-public class DataTable implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class DataTable extends MifosBaseModel implements Parcelable {
 
+    @PrimaryKey
     String applicationTableName;
 
-    List<ColumnHeader> columnHeaderData;
+    List<ColumnHeader> columnHeaderData = new ArrayList<>();
 
+    @Column
     String registeredTableName;
 
     public List<ColumnHeader> getColumnHeaderData() {

@@ -6,7 +6,9 @@ import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountApproval;
+import com.mifos.mifosxdroid.online.activateclient.ActivateClientFragment;
+import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment;
+import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval.SavingsAccountApproval;
@@ -25,6 +27,7 @@ import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
+import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment;
 import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
@@ -123,6 +126,8 @@ public interface ActivityComponent {
 
     void inject(DataTableRowDialogFragment dataTableRowDialogFragment);
 
+    void inject(DataTableListFragment dataTableListFragment);
+
     void inject(DocumentDialogFragment documentDialogFragment);
 
     void inject(LoanAccountApproval loanAccountApproval);
@@ -150,4 +155,8 @@ public interface ActivityComponent {
     void inject(IdentifierDialogFragment identifierDialogFragment);
 
     void inject(PathTrackingActivity pathTrackingActivity);
+
+    void inject(CenterDetailsFragment centerDetailsFragment);
+
+    void inject(ActivateClientFragment activateClientFragment);
 }
