@@ -103,52 +103,55 @@ public class LoanTemplate implements Parcelable {
     Timeline timeline;
 
     @SerializedName("productOptions")
-    List<ProductOptions> productOptions;
+    List<ProductOptions> productOptions = new ArrayList<>();
 
     @SerializedName("datatables")
-    ArrayList<DataTable> dataTables;
+    ArrayList<DataTable> dataTables = new ArrayList<>();
 
     @SerializedName("loanOfficerOptions")
-    List<LoanOfficerOptions> loanOfficerOptions;
+    List<LoanOfficerOptions> loanOfficerOptions = new ArrayList<>();
 
     @SerializedName("loanPurposeOptions")
-    List<LoanPurposeOptions> loanPurposeOptions;
+    List<LoanPurposeOptions> loanPurposeOptions = new ArrayList<>();
 
     @SerializedName("fundOptions")
-    List<FundOptions> fundOptions;
+    List<FundOptions> fundOptions = new ArrayList<>();
 
     @SerializedName("termFrequencyTypeOptions")
-    List<TermFrequencyTypeOptions> termFrequencyTypeOptions;
+    List<TermFrequencyTypeOptions> termFrequencyTypeOptions = new ArrayList<>();
 
     @SerializedName("repaymentFrequencyTypeOptions")
-    List<RepaymentFrequencyTypeOptions> repaymentFrequencyTypeOptions;
+    List<RepaymentFrequencyTypeOptions> repaymentFrequencyTypeOptions = new ArrayList<>();
 
     @SerializedName("repaymentFrequencyNthDayTypeOptions")
-    List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyNthDayTypeOptions;
+    List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyNthDayTypeOptions =
+            new ArrayList<>();
 
     @SerializedName("repaymentFrequencyDaysOfWeekTypeOptions")
-    List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions;
+    List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions =
+            new ArrayList<>();
 
     @SerializedName("interestRateFrequencyTypeOptions")
-    List<InterestRateFrequencyTypeOptions> interestRateFrequencyTypeOptions;
+    List<InterestRateFrequencyTypeOptions> interestRateFrequencyTypeOptions = new ArrayList<>();
 
     @SerializedName("amortizationTypeOptions")
-    List<AmortizationTypeOptions> amortizationTypeOptions;
+    List<AmortizationTypeOptions> amortizationTypeOptions = new ArrayList<>();
 
     @SerializedName("interestTypeOptions")
-    List<InterestTypeOptions> interestTypeOptions;
+    List<InterestTypeOptions> interestTypeOptions = new ArrayList<>();
 
     @SerializedName("interestCalculationPeriodTypeOptions")
-    List<InterestCalculationPeriodType> interestCalculationPeriodTypeOptions;
+    List<InterestCalculationPeriodType> interestCalculationPeriodTypeOptions = new ArrayList<>();
 
     @SerializedName("transactionProcessingStrategyOptions")
-    List<TransactionProcessingStrategyOptions> transactionProcessingStrategyOptions;
+    List<TransactionProcessingStrategyOptions> transactionProcessingStrategyOptions =
+            new ArrayList<>();
 
     @SerializedName("chargeOptions")
-    List<ChargeOptions> chargeOptions;
+    List<ChargeOptions> chargeOptions = new ArrayList<>();
 
     @SerializedName("loanCollateralOptions")
-    List<LoanCollateralOptions> loanCollateralOptions;
+    List<LoanCollateralOptions> loanCollateralOptions = new ArrayList<>();
 
     @SerializedName("multiDisburseLoan")
     Boolean multiDisburseLoan;
@@ -181,7 +184,7 @@ public class LoanTemplate implements Parcelable {
     Integer maximumGap;
 
     @SerializedName("accountLinkingOptions")
-    List<AccountLinkingOptions> accountLinkingOptions;
+    List<AccountLinkingOptions> accountLinkingOptions = new ArrayList<>();
 
     public List<AccountLinkingOptions> getAccountLinkingOptions() {
         return accountLinkingOptions;
