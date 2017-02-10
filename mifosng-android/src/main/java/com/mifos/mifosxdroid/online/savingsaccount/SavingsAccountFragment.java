@@ -282,12 +282,18 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         Toast.makeText(getActivity(),
                 getResources().getString(R.string.savings_account_submitted_for_approval),
                 Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
 
     @Override
     public void showFetchingError(int errorMessage) {
         Toaster.show(rootView, getResources().getString(errorMessage));
+    }
+
+    @Override
+    public void showFetchingError(String errorMessage) {
+        Toaster.show(rootView, errorMessage);
     }
 
     @Override
