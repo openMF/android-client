@@ -10,8 +10,12 @@ package com.mifos.mifosxdroid.online.createnewgroup;
  */
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +36,7 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
@@ -93,6 +98,8 @@ public class CreateNewGroupFragment extends ProgressableFragment
     private List<String> mListOffices = new ArrayList<>();
     private List<Office> officeList;
     private ArrayAdapter<String> mOfficesAdapter;
+
+    private MifosBaseActivity mifosBaseActivity;
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -278,6 +285,27 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     @Override
     public void showGroupCreatedSuccessfully(Group group) {
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Group Created!")
+                .setMessage("Create New Group?")
+                .setPositiveButton(R.string.dialog_action_createnewgrp, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        et_groupName.setText("");
+                        et_groupexternalId.setText("");
+                        if (cb_groupActiveStatus.isChecked())
+                            cb_groupActiveStatus.toggle();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_action_nothanks, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        getActivity().onBackPressed();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
         Toast.makeText(getActivity(), "Group" + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show();
     }
@@ -308,3 +336,5 @@ public class CreateNewGroupFragment extends ProgressableFragment
         super.onDetach();
     }
 }
+
+
