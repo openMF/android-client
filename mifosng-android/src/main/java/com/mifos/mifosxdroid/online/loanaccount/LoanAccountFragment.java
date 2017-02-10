@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.online.loanaccount;
 
 import android.R.layout;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
@@ -549,8 +548,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @Override
     public void showLoanAccountCreatedSuccessfully(Loans loans) {
-        Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast
-                .LENGTH_LONG).show();
+        Toast.makeText(getActivity(), R.string.loan_creation_success, Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void showMessage(int messageId) {
+        Toaster.show(rootView, messageId);
     }
 
     @Override
@@ -559,13 +563,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        showProgress(b);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void showProgressbar(boolean show) {
+        showProgress(show);
     }
 
     @Override
@@ -668,15 +667,17 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         interestRatePerPeriod = mLoanTemplate.getInterestRatePerPeriod();
         loanTermFrequencyType = mLoanTemplate.getInterestRateFrequencyType().getId();
         termFrequency = mLoanTemplate.getTermFrequency();
-        etPrincipal.setText(mLoanTemplate.getPrincipal().toString());
-        etNumberOfRepayments.setText(mLoanTemplate.getNumberOfRepayments().toString());
+        etPrincipal.setText(String.valueOf(mLoanTemplate.getPrincipal().toString()));
+        etNumberOfRepayments.setText(String.valueOf(
+                mLoanTemplate.getNumberOfRepayments().toString()));
         tvNominalRatePerYearMonth
                 .setText(mLoanTemplate.getInterestRateFrequencyType().getValue());
-        etNominalInterestRate.setText(mLoanTemplate.getInterestRatePerPeriod().toString());
-        etLoanTerm.setText(termFrequency.toString());
+        etNominalInterestRate.setText(String.valueOf(
+                mLoanTemplate.getInterestRatePerPeriod().toString()));
+        etLoanTerm.setText(String.valueOf(termFrequency.toString()));
         if (mLoanTemplate.getRepaymentEvery() != null) {
             repaymentEvery = mLoanTemplate.getRepaymentEvery();
-            etRepaidEvery.setText(repaymentEvery.toString());
+            etRepaidEvery.setText(String.valueOf(repaymentEvery.toString()));
         }
         if (mLoanTemplate.getFundId() != null) {
             fundId = mLoanTemplate.getFundId();
