@@ -35,7 +35,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
 
     @Column
     @SerializedName("principalDisbursed")
-    Integer principalDisbursed;
+    Double principalDisbursed;
 
     @Column
     @SerializedName("principalPaid")
@@ -77,7 +77,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
     Double feeChargesCharged;
 
     @SerializedName("feeChargesDueAtDisbursementCharged")
-    Integer feeChargesDueAtDisbursementCharged;
+    Double feeChargesDueAtDisbursementCharged;
 
     @Column
     @SerializedName("feeChargesPaid")
@@ -164,11 +164,11 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.currency = currency;
     }
 
-    public Integer getPrincipalDisbursed() {
+    public Double getPrincipalDisbursed() {
         return principalDisbursed;
     }
 
-    public void setPrincipalDisbursed(Integer principalDisbursed) {
+    public void setPrincipalDisbursed(Double principalDisbursed) {
         this.principalDisbursed = principalDisbursed;
     }
 
@@ -260,11 +260,11 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.feeChargesCharged = feeChargesCharged;
     }
 
-    public Integer getFeeChargesDueAtDisbursementCharged() {
+    public Double getFeeChargesDueAtDisbursementCharged() {
         return feeChargesDueAtDisbursementCharged;
     }
 
-    public void setFeeChargesDueAtDisbursementCharged(Integer feeChargesDueAtDisbursementCharged) {
+    public void setFeeChargesDueAtDisbursementCharged(Double feeChargesDueAtDisbursementCharged) {
         this.feeChargesDueAtDisbursementCharged = feeChargesDueAtDisbursementCharged;
     }
 
@@ -477,7 +477,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
 
     protected Summary(Parcel in) {
         this.currency = in.readParcelable(Currency.class.getClassLoader());
-        this.principalDisbursed = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.principalDisbursed = (Double) in.readValue(Double.class.getClassLoader());
         this.principalPaid = (Double) in.readValue(Double.class.getClassLoader());
         this.principalWrittenOff = (Integer) in.readValue(Integer.class.getClassLoader());
         this.principalOutstanding = (Double) in.readValue(Double.class.getClassLoader());
@@ -489,7 +489,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.interestOutstanding = (Double) in.readValue(Double.class.getClassLoader());
         this.interestOverdue = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesCharged = (Double) in.readValue(Double.class.getClassLoader());
-        this.feeChargesDueAtDisbursementCharged = (Integer) in.readValue(Integer.class
+        this.feeChargesDueAtDisbursementCharged = (Double) in.readValue(Double.class
                 .getClassLoader());
         this.feeChargesPaid = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesWaived = (Double) in.readValue(Double.class.getClassLoader());
