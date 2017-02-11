@@ -26,12 +26,14 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -58,7 +60,8 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.ImageLoaderUtils;
+import com.mifos.utils.Network;
+import com.mifos.utils.PrefManager;
 import com.mifos.utils.Utils;
 
 import java.io.File;
@@ -70,6 +73,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
 import static android.view.View.GONE;
@@ -98,6 +102,15 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
     public int clientId;
     public List<DataTable> clientDataTables = new ArrayList<>();
     List<Charges> chargesList = new ArrayList<>();
+
+    @BindView(R.id.view_flipper)
+    ViewFlipper viewFlipper;
+
+    @BindView(R.id.noClientIcon)
+    ImageView noClientIcon;
+
+    @BindView(R.id.noClientText)
+    TextView noClientText;
 
     @BindView(R.id.tv_fullName)
     TextView tv_fullName;
@@ -574,7 +587,18 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
 
     @Override
     public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        if (Network.isOnline(getContext())) {
+            viewFlipper.setDisplayedChild(2);
+            noClientText.setText(R.string.failed_to_fetch_client_details_account);
+        } else {
+            Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick(R.id.noClientIcon)
+    public void reloadOnError() {
+        viewFlipper.setDisplayedChild(1);
+        inflateClientInformation();
     }
 
     public interface OnFragmentInteractionListener {

@@ -564,6 +564,7 @@
     <string name="failed_to_add_pinpoint_location">Failed to add pinpoint location</string>
     <string name="failed_to_delete_pinpoint_location">Failed to delete pinpoint location</string>
     <string name="failed_to_update_pinpoint_location">Failed to update pinpoint location</string>
+    <string name="failed_to_fetch_client_details_account">Failed to fetch client details and account</string>
     <string name="failed_to_fetch_path_tracking_details">Failed to fetch path tracking
         details</string>
     <string name="failed_to_fetch_loan_products">Failed to fetch LoanProducts</string>
