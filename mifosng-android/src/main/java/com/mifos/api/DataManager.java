@@ -23,6 +23,7 @@ import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.loans.GroupLoanTemplate;
+import com.mifos.objects.templates.loans.LoanDisburseTemplate;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
@@ -206,11 +207,11 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().approveLoanApplication(loanId, loanApproval);
     }
 
-    public Observable<ResponseBody> getLoanTemplate(int loanId) {
+    public Observable<LoanDisburseTemplate> getLoanTemplate(int loanId) {
         return mBaseApiManager.getLoanApi().getLoanTemplate(loanId);
     }
 
-    public Observable<GenericResponse> dispurseLoan(int loanId,
+    public Observable<Loans> dispurseLoan(int loanId,
                                                     LoanDisbursement loanDisbursement) {
         return mBaseApiManager.getLoanApi().disburseLoan(loanId, loanDisbursement);
     }

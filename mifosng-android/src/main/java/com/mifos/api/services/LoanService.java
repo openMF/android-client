@@ -16,6 +16,7 @@ import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.GroupLoanTemplate;
+import com.mifos.objects.templates.loans.LoanDisburseTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.LoanTemplate;
 import com.mifos.services.data.GroupLoanPayload;
@@ -23,7 +24,6 @@ import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -52,7 +52,7 @@ public interface LoanService {
     //  Mandatory Fields
     //  String actualDisbursementDate
     @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
-    Observable<GenericResponse> disburseLoan(@Path("loanId") int loanId,
+    Observable<Loans> disburseLoan(@Path("loanId") int loanId,
                                              @Body LoanDisbursement loanDisbursement);
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
@@ -80,7 +80,7 @@ public interface LoanService {
 
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
-    Observable<ResponseBody> getLoanTemplate(@Path("loanId") int loanId);
+    Observable<LoanDisburseTemplate> getLoanTemplate(@Path("loanId") int loanId);
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
     Observable<Loans> createGroupLoansAccount(@Body GroupLoanPayload loansPayload);
