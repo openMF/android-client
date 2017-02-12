@@ -1,5 +1,6 @@
 package com.mifos.api.datamanager;
 
+import com.google.gson.JsonArray;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperDataTable;
@@ -7,6 +8,7 @@ import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.user.UserLocation;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,6 +46,21 @@ public class DataManagerDataTable {
      */
     public Observable<List<DataTable>> getDataTable(String tableName) {
         return mBaseApiManager.getDataTableApi().getTableOf(tableName);
+    }
+
+    public Observable<JsonArray> getDataTableInfo(String table, int entityId) {
+        return mBaseApiManager.getDataTableApi().getDataOfDataTable(table, entityId);
+    }
+
+    public Observable<GenericResponse> addDataTableEntry(
+            String table, int entityId, Map<String, Object> payload) {
+        return mBaseApiManager.getDataTableApi()
+                .createEntryInDataTable(table, entityId, payload);
+    }
+
+    public Observable<GenericResponse> deleteDataTableEntry(String table, int entity, int rowId) {
+        return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
+                table, entity, rowId);
     }
 
     /**

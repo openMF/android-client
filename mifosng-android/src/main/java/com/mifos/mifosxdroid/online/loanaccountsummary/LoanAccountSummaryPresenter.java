@@ -1,13 +1,8 @@
 package com.mifos.mifosxdroid.online.loanaccountsummary;
 
-import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
-import com.mifos.objects.noncore.DataTable;
-import com.mifos.utils.Constants;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -22,14 +17,11 @@ import rx.subscriptions.CompositeSubscription;
 public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummaryMvpView> {
 
     private final DataManagerLoan mDataManagerLoan;
-    private final DataManagerDataTable mDataManagerDataTable;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public LoanAccountSummaryPresenter(DataManagerLoan dataManagerLoan,
-                                       DataManagerDataTable dataManagerDataTable) {
+    public LoanAccountSummaryPresenter(DataManagerLoan dataManagerLoan) {
         mDataManagerLoan = dataManagerLoan;
-        mDataManagerDataTable = dataManagerDataTable;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -42,31 +34,6 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
     public void detachView() {
         super.detachView();
         mSubscriptions.unsubscribe();
-    }
-
-    public void loadLoanDataTable() {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_LOANS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<DataTable>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Loan DataTable not found.");
-                    }
-
-                    @Override
-                    public void onNext(List<DataTable> dataTables) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showLoanDataTable(dataTables);
-                    }
-                }));
     }
 
     public void loadLoanById(int loanAccountNumber) {

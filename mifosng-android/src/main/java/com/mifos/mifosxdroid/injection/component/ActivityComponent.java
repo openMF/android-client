@@ -8,6 +8,7 @@ import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragme
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
 import com.mifos.mifosxdroid.online.activateclient.ActivateClientFragment;
 import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment;
+import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
@@ -159,4 +160,6 @@ public interface ActivityComponent {
     void inject(CenterDetailsFragment centerDetailsFragment);
 
     void inject(ActivateClientFragment activateClientFragment);
+
+    void inject(DataTableFragment dataTableFragment);
 }

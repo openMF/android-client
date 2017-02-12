@@ -117,6 +117,10 @@ public class Constants {
 
     public static final String SERVICE_STATUS = "service_status";
 
+    public static final String DATA_TABLE_NAME = "data_table_name";
+    
+    public static final int DIALOG_FRAGMENT = 1;
+
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
     public static final int REQUEST_PERMISSION_SETTING = 254;

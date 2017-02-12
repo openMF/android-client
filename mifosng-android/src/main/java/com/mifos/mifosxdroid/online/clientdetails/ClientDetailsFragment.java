@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,7 +44,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.activateclient.ActivateClientFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
+import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
@@ -55,7 +54,6 @@ import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.ImageLoaderUtils;
@@ -63,7 +61,6 @@ import com.mifos.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -85,7 +82,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
 
     public static final int MENU_ITEM_CLIENT_ACTIVATE = 999;
     public static final int MENU_ITEM_DATA_TABLES = 1000;
-    public static final int MENU_PIN_PONIT = 1001;
+    public static final int MENU_ITEM_PIN_POINT = 1001;
     public static final int MENU_ITEM_CLIENT_CHARGES = 1003;
     public static final int MENU_ITEM_ADD_SAVINGS_ACCOUNT = 1004;
     public static final int MENU_ITEM_ADD_LOAN_ACCOUNT = 1005;
@@ -96,7 +93,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
     public int clientId;
-    public List<DataTable> clientDataTables = new ArrayList<>();
     List<Charges> chargesList = new ArrayList<>();
 
     @BindView(R.id.tv_fullName)
@@ -182,6 +178,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
 
         ButterKnife.bind(this, rootView);
         mClientDetailsPresenter.attachView(this);
+        getActivity().invalidateOptionsMenu();
 
         inflateClientInformation();
 
@@ -220,7 +217,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
         if (!isClientActive) {
             menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
                     .DATA_TABLE_CLIENTS_NAME);
-            menu.add(Menu.NONE, MENU_PIN_PONIT, Menu.NONE, getString(R.string.pinpoint));
+            menu.add(Menu.NONE, MENU_ITEM_PIN_POINT, Menu.NONE, getString(R.string.pinpoint));
             menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges));
             menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string
                     .savings_account));
@@ -229,19 +226,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
             menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
             menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
             menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
-
-            // Create a Sub Menu that holds a link to all data tables
-            SubMenu more_info_subSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
-            int SUBMENU_ITEM_ID = 0;
-            if (more_info_subSubMenu != null && clientDataTables != null &&
-                    clientDataTables.size() > 0) {
-                Iterator<DataTable> dataTableIterator = clientDataTables.iterator();
-                while (dataTableIterator.hasNext()) {
-                    more_info_subSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE,
-                            dataTableIterator.next().getRegisteredTableName());
-                    SUBMENU_ITEM_ID++;
-                }
-            }
         } else {
             menu.add(Menu.NONE, MENU_ITEM_CLIENT_ACTIVATE, Menu.NONE,
                     getString(R.string.activate_client));
@@ -251,21 +235,10 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id >= 0 && id < clientDataTables.size()) {
-
-            DataTableDataFragment dataTableDataFragment
-                    = DataTableDataFragment.newInstance(clientDataTables.get(id), clientId);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-            fragmentTransaction.replace(R.id.container, dataTableDataFragment, FragmentConstants
-                    .FRAG_DATA_TABLE);
-
-            fragmentTransaction.commit();
-        }
-
         switch (item.getItemId()) {
+            case MENU_ITEM_DATA_TABLES:
+                loadClientDataTables();
+                break;
             case MENU_ITEM_CLIENT_ACTIVATE:
                 activateClient();
                 break;
@@ -284,7 +257,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
             case MENU_ITEM_IDENTIFIERS:
                 loadIdentifiers();
                 break;
-            case MENU_PIN_PONIT:
+            case MENU_ITEM_PIN_POINT:
                 Intent i = new Intent(getActivity(), PinpointClientActivity.class);
                 i.putExtra(Constants.CLIENT_ID, clientId);
                 startActivity(i);
@@ -309,15 +282,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
      */
     private void uploadImage(File pngFile) {
         mClientDetailsPresenter.uploadImage(clientId, pngFile);
-    }
-
-
-    /**
-     * Use this method to fetch all datatables for client and inflate them as
-     * menu options
-     */
-    public void inflateDataTablesList() {
-        mClientDetailsPresenter.loadClientDataTable();
     }
 
     @Override
@@ -393,21 +357,19 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
         fragmentTransaction.commit();
     }
 
-    @Override
-    public void showProgressbar(boolean b) {
-        showProgress(false);
+    public void loadClientDataTables() {
+        DataTableFragment loanAccountFragment = DataTableFragment.newInstance(Constants
+                .DATA_TABLE_NAME_CLIENT, clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
-    public void showClientDataTable(List<DataTable> dataTables) {
-        if (dataTables != null) {
-            Iterator<DataTable> dataTableIterator = dataTables.iterator();
-            clientDataTables.clear();
-            while (dataTableIterator.hasNext()) {
-                clientDataTables.add(dataTableIterator.next());
-            }
-
-        }
+    public void showProgressbar(boolean b) {
+        showProgress(false);
     }
 
     @Override
@@ -569,7 +531,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
                 }
             });
         }
-        inflateDataTablesList();
     }
 
     @Override

@@ -10,5 +10,11 @@ public interface DataTableDataMvpView extends MvpView {
 
     void showDataTableInfo(JsonArray jsonElements);
 
+    void showDataTableDeletedSuccessfully();
+
+    void showEmptyDataTable();
+
+    void showFetchingError(int message);
+
     void showFetchingError(String s);
 }
