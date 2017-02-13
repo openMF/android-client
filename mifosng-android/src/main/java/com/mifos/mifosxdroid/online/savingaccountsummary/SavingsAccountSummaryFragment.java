@@ -27,10 +27,9 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval.SavingsAccountApproval;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
+import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalFragment;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
@@ -293,8 +292,8 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     }
 
     public void approveSavings() {
-        SavingsAccountApproval savingsAccountApproval = SavingsAccountApproval.newInstance
-                (savingsAccountNumber, savingsAccountType);
+        SavingsAccountApprovalFragment savingsAccountApproval = SavingsAccountApprovalFragment
+                .newInstance(savingsAccountNumber, savingsAccountType);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
@@ -424,20 +423,21 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     }
 
     @Override
-    public void showErrorFetchingSavingAccount(int s) {
-        Toaster.show(rootView, s);
-        getFragmentManager().popBackStackImmediate();
-    }
-
-    @Override
     public void showSavingsActivatedSuccessfully(GenericResponse genericResponse) {
         Toast.makeText(getActivity(), getResources().getString(R.string.savings_account_activated),
                 Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
     public void showFetchingError(int s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void showFetchingError(String errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override

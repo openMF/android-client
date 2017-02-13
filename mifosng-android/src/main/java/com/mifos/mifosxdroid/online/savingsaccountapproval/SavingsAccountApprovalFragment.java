@@ -3,11 +3,9 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval;
+package com.mifos.mifosxdroid.online.savingsaccountapproval;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +18,7 @@ import android.widget.Toast;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.DepositType;
@@ -33,40 +31,40 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * @author nellyk
  */
-public class SavingsAccountApproval extends DialogFragment implements
+public class SavingsAccountApprovalFragment extends MifosBaseFragment implements
         MFDatePicker.OnDatePickListener, SavingsAccountApprovalMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    public int savingsAccountNumber;
-    public DepositType savingsAccountType;
+    @BindView(R.id.tv_approval_date)
+    TextView tvApprovalDate;
 
-    View rootView;
-
-    @BindView(R.id.et_s_approval_date)
-    TextView et_s_approval_date;
-
-    @BindView(R.id.bt_approve_savings)
-    Button bt_approve_savings;
+    @BindView(R.id.btn_approve_savings)
+    Button btnApproveSavings;
 
     @BindView(R.id.et_savings_approval_reason)
-    EditText et_savings_approval_reason;
+    EditText etSavingsApprovalReason;
 
     @Inject
     SavingsAccountApprovalPresenter mSavingsAccountApprovalPresenter;
 
+    View rootView;
+
     String approvaldate;
-
+    public int savingsAccountNumber;
+    public DepositType savingsAccountType;
     private DialogFragment mfDatePicker;
-
     private SafeUIBlockingUtility safeUIBlockingUtility;
 
-    public static SavingsAccountApproval newInstance(int savingsAccountNumber, DepositType type) {
-        SavingsAccountApproval savingsAccountApproval = new SavingsAccountApproval();
+    public static SavingsAccountApprovalFragment newInstance(int savingsAccountNumber,
+                                                             DepositType type) {
+        SavingsAccountApprovalFragment savingsAccountApproval =
+                new SavingsAccountApprovalFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber);
         args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, type);
@@ -82,23 +80,12 @@ public class SavingsAccountApproval extends DialogFragment implements
             savingsAccountNumber = getArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
         }
-
         setHasOptionsMenu(true);
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        if (getArguments() != null)
-            savingsAccountNumber = getArguments().getInt(Constants.ENTITY_TYPE_SAVINGS);
-        return super.onCreateDialog(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-
         // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -106,67 +93,61 @@ public class SavingsAccountApproval extends DialogFragment implements
 
         ButterKnife.bind(this, rootView);
         mSavingsAccountApprovalPresenter.attachView(this);
-
         safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
 
-        inflateApprovalDate();
-
-        approvaldate = et_s_approval_date.getText().toString();
-        approvaldate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvaldate)
-                .replace("-", " ");
-
-        bt_approve_savings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                SavingsApproval savingsApproval = new SavingsApproval();
-                savingsApproval.setNote(et_savings_approval_reason.getEditableText().toString());
-                savingsApproval.setApprovedOnDate(approvaldate);
-
-                initiateSavingsApproval(savingsApproval);
-
-            }
-        });
+        showUserInterface();
 
         return rootView;
     }
 
     @Override
-    public void onDatePicked(String date) {
-        et_s_approval_date.setText(date);
-
+    public void showUserInterface() {
+        mfDatePicker = MFDatePicker.newInsance(this);
+        tvApprovalDate.setText(MFDatePicker.getDatePickedAsString());
+        approvaldate = tvApprovalDate.getText().toString();
+        showApprovalDate();
     }
 
+    @OnClick(R.id.btn_approve_savings)
+    void onClickApproveSavings() {
+        SavingsApproval savingsApproval = new SavingsApproval();
+        savingsApproval.setNote(etSavingsApprovalReason.getEditableText().toString());
+        savingsApproval.setApprovedOnDate(approvaldate);
+        initiateSavingsApproval(savingsApproval);
+    }
+
+    @OnClick(R.id.tv_approval_date)
+    void onClickApprovalDate() {
+        mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                .DFRAG_DATE_PICKER);
+    }
+
+    @Override
+    public void onDatePicked(String date) {
+        tvApprovalDate.setText(date);
+        approvaldate = date;
+        showApprovalDate();
+    }
+
+    public void showApprovalDate() {
+        approvaldate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(approvaldate)
+                .replace("-", " ");
+    }
 
     private void initiateSavingsApproval(final SavingsApproval savingsApproval) {
         mSavingsAccountApprovalPresenter.approveSavingsApplication(
                 savingsAccountNumber, savingsApproval);
     }
 
-
-    public void inflateApprovalDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
-
-        et_s_approval_date.setText(MFDatePicker.getDatePickedAsString());
-
-        et_s_approval_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
-            }
-        });
-
-    }
-
     @Override
     public void showSavingAccountApprovedSuccessfully(GenericResponse genericResponse) {
         Toast.makeText(getActivity(), "Savings Approved", Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
-    public void showError(String s) {
-        Toaster.show(rootView, s);
+    public void showError(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
