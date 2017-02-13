@@ -8,7 +8,6 @@ import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
@@ -202,15 +201,5 @@ public class DataManager {
 
     public Observable<Page<Charges>> getListOfCharges(int clientId) {
         return mBaseApiManager.getLoanApi().getListOfCharges(clientId);
-    }
-
-
-    /**
-     * Savings API
-     */
-    public Observable<GenericResponse> approveSavingsApplication(int savingsAccountId,
-                                                                 SavingsApproval savingsApproval) {
-        return mBaseApiManager.getSavingsApi().approveSavingsApplication(
-                savingsAccountId, savingsApproval);
     }
 }

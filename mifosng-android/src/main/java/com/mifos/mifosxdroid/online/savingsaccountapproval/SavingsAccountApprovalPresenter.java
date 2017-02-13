@@ -1,9 +1,10 @@
-package com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval;
+package com.mifos.mifosxdroid.online.savingsaccountapproval;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.SavingsApproval;
+import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
@@ -17,12 +18,12 @@ import rx.schedulers.Schedulers;
  */
 public class SavingsAccountApprovalPresenter extends BasePresenter<SavingsAccountApprovalMvpView> {
 
-    private final DataManager mDataManager;
+    private final DataManagerSavings dataManagerSavings;
     private Subscription mSubscription;
 
     @Inject
-    public SavingsAccountApprovalPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public SavingsAccountApprovalPresenter(DataManagerSavings dataManager) {
+        dataManagerSavings = dataManager;
     }
 
     @Override
@@ -40,19 +41,19 @@ public class SavingsAccountApprovalPresenter extends BasePresenter<SavingsAccoun
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.approveSavingsApplication(savingsAccountId, savingsApproval)
+        mSubscription = dataManagerSavings
+                .approveSavingsApplication(savingsAccountId, savingsApproval)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Try Again");
+                        getMvpView().showError(MFErrorParser.errorMessage(e));
                     }
 
                     @Override

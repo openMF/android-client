@@ -3,6 +3,7 @@ package com.mifos.api.datamanager;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperSavings;
+import com.mifos.objects.accounts.loan.SavingsApproval;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
@@ -282,5 +283,11 @@ public class DataManagerSavings {
             getGroupSavingsAccountTemplateByProduct(int groupId, int productId) {
         return mBaseApiManager.getSavingsApi().
                 getGroupSavingsAccountTemplateByProduct(groupId, productId);
+    }
+
+    public Observable<GenericResponse> approveSavingsApplication(int savingsAccountId,
+                                                                 SavingsApproval savingsApproval) {
+        return mBaseApiManager.getSavingsApi().approveSavingsApplication(
+                savingsAccountId, savingsApproval);
     }
 }
