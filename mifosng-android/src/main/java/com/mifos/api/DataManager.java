@@ -1,11 +1,9 @@
 package com.mifos.api;
 
-import com.google.gson.JsonArray;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.user.User;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -23,6 +21,7 @@ import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.loans.GroupLoanTemplate;
+import com.mifos.objects.user.User;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
@@ -157,24 +156,6 @@ public class DataManager {
 
     public Observable<List<Staff>> getAllStaff() {
         return mBaseApiManager.getStaffApi().getAllStaff();
-    }
-
-    /**
-     * DataTable API
-     */
-    public Observable<JsonArray> getDataTableInfo(String table, int entityId) {
-        return mBaseApiManager.getDataTableApi().getDataOfDataTable(table, entityId);
-    }
-
-    public Observable<GenericResponse> addDataTableEntry(
-            String table, int entityId, Map<String, Object> payload) {
-        return mBaseApiManager.getDataTableApi()
-                .createEntryInDataTable(table, entityId, payload);
-    }
-
-    public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId) {
-        return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
-                table, entity, rowId);
     }
 
     /**

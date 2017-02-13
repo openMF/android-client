@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -30,20 +29,18 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval.SavingsAccountApproval;
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
+import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
 import com.mifos.objects.accounts.savings.Transaction;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,7 +60,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
     public int savingsAccountNumber;
     public DepositType savingsAccountType;
-    public List<DataTable> savingsAccountDataTables = new ArrayList<DataTable>();
 
     @BindView(R.id.tv_clientName)
     TextView tv_clientName;
@@ -197,43 +193,21 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+        menu.add(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
                 .DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE,
                 getResources().getString(R.string.documents));
-
-        // This is the ID of Each data table which will be used in onOptionsItemSelected Method
-        int SUBMENU_ITEM_ID = 0;
-        // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
-        if (dataTableSubMenu != null && savingsAccountDataTables != null &&
-                savingsAccountDataTables.size() > 0) {
-            Iterator<DataTable> dataTableIterator = savingsAccountDataTables.iterator();
-            while (dataTableIterator.hasNext()) {
-                dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator
-                        .next().getRegisteredTableName());
-                SUBMENU_ITEM_ID++;
-            }
-        }
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id >= 0 && id < savingsAccountDataTables.size()) {
-            DataTableDataFragment dataTableDataFragment = DataTableDataFragment.newInstance
-                    (savingsAccountDataTables.get(id), savingsAccountNumber);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
-            fragmentTransaction.replace(R.id.container, dataTableDataFragment);
-            fragmentTransaction.commit();
-        }
-
-        if (item.getItemId() == MENU_ITEM_DOCUMENTS)
+        if (id == MENU_ITEM_DOCUMENTS) {
             loadDocuments();
+        } else if (id == MENU_ITEM_DATA_TABLES) {
+            loadSavingsDataTables();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -259,15 +233,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             Log.i(getActivity().getLocalClassName(),
                     getResources().getString(R.string.transaction_action_not_set));
         }
-    }
-
-    /**
-     * Use this method to fetch all dataTables for a savings account and inflate them as
-     * menu options
-     */
-    public void inflateDataTablesList() {
-        //TODO change loan service to savings account service
-        mSavingAccountSummaryPresenter.loadSavingDataTable();
     }
 
     public void enableInfiniteScrollOfTransactions() {
@@ -346,22 +311,20 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         mSavingAccountSummaryPresenter.activateSavings(savingsAccountNumber, hashMap);
     }
 
+    public void loadSavingsDataTables() {
+        DataTableFragment loanAccountFragment = DataTableFragment.newInstance(Constants
+                .DATA_TABLE_NAME_SAVINGS, savingsAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.commit();
+    }
+
     public void toggleTransactionCapabilityOfAccount(Status status) {
         if (!status.getActive()) {
             bt_deposit.setVisibility(View.GONE);
             bt_withdrawal.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void showSavingDataTable(List<DataTable> dataTables) {
-        if (dataTables != null) {
-            Iterator<DataTable> dataTableIterator = dataTables.iterator();
-            savingsAccountDataTables.clear();
-            while (dataTableIterator.hasNext()) {
-                DataTable dataTable = dataTableIterator.next();
-                savingsAccountDataTables.add(dataTable);
-            }
         }
     }
 
@@ -456,8 +419,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                 bt_approve_saving.setVisibility(View.GONE);
 
             }
-
-            inflateDataTablesList();
             enableInfiniteScrollOfTransactions();
         }
     }

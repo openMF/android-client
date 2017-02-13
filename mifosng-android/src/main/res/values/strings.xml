@@ -7,7 +7,7 @@
 
     <!-- General Terms Begin Here -->
     <string name="app_name">MifosXDroid</string>
-    <string name="datatables">Datatables</string>
+    <string name="datatables">DataTable</string>
     <string name="associated_datatables">Associated Datatables</string>
     <string name="login">Login</string>
     <string name="test_ip">10.0.2.2</string>
@@ -120,6 +120,7 @@
     <string name="empty_groups_list">Empty GroupList</string>
     <string name="empty_center_list">Empty CenterList</string>
     <string name="empty_path_tracking">Empty Path Tracking</string>
+    <string name="empty_data_table">Empty DataTable</string>
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
@@ -137,6 +138,7 @@
     <string name="empty_identifier_document_type">Identifier Document Type id is Empty \n
         May be, Identifier Template is failed to fetch. Please Check your Internet
     Connection</string>
+    <string name="data_table_entry_added">DataTable entry added successfully</string>
     <string name="unique_id_required">Unique Id is required!</string>
     <string name="update">Update</string>
     <string name="group_clients">Group Clients</string>
@@ -569,6 +571,7 @@
     <string name="failed_to_fetch_loan_products">Failed to fetch LoanProducts</string>
     <string name="failed_to_fetch_loan_template">Failed to fetch Loan Template</string>
     <string name="failed_to_fetch_center_info">Failed to fetch center info</string>
+    <string name="failed_to_fetch_datatable_info">Failed to fetch DataTableInfo</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
 
 
@@ -592,6 +595,10 @@
         <item>Download Document</item>
         <item>Update Document</item>
         <item>Remove Document</item>
+    </string-array>
+
+    <string-array name="datatable_options">
+        <item>Delete Item</item>
     </string-array>
 
     <!--Any Type of Status-->

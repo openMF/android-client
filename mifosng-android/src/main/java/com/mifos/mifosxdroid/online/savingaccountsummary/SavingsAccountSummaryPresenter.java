@@ -6,11 +6,9 @@ import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -45,32 +43,6 @@ public class SavingsAccountSummaryPresenter extends BasePresenter<SavingsAccount
     public void detachView() {
         super.detachView();
         mSubscriptions.unsubscribe();
-    }
-
-    public void loadSavingDataTable() {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_SAVINGS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<DataTable>>() {
-                    @Override
-                    public void onCompleted() {
-                        getMvpView().showProgressbar(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError(R.string.failed_to_fetch_datatable);
-                    }
-
-                    @Override
-                    public void onNext(List<DataTable> dataTables) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showSavingDataTable(dataTables);
-                    }
-                }));
     }
 
     //This Method will hit end point ?associations=transactions
