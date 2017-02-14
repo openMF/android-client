@@ -1,22 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ This project is licensed under the open source MPL V2.
-  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
-  -->
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/view_flipper"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:inAnimation="@android:anim/fade_in"
-    android:outAnimation="@android:anim/fade_out">
+    android:id="@+id/rl_client">
 
-    <!-- Comment this out when editing the actual content -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <!-- Actual content -->
     <ScrollView style="@style/ScrollView.Base">
 
         <LinearLayout style="@style/LinearLayout.Base">
@@ -30,18 +18,18 @@
                     <ProgressBar
                         android:id="@+id/pb_imageProgressBar"
                         style="@style/ProgressBar.Base"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"/>
 
                     <com.mifos.mifosxdroid.views.CircularImageView
                         android:id="@+id/iv_clientImage"
                         style="@style/ClientImage"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"/>
 
                 </FrameLayout>
 
                 <TextView
                     android:id="@+id/tv_fullName"
-                    style="@style/TextView.Client" />
+                    style="@style/TextView.Client"/>
 
             </LinearLayout>
 
@@ -56,11 +44,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/account_number" />
+                        android:text="@string/account_number"/>
 
                     <TextView
                         android:id="@+id/tv_accountNumber"
-                        style="@style/TextView.Row.Value" />
+                        style="@style/TextView.Row.Value"/>
                 </TableRow>
 
                 <TableRow
@@ -69,11 +57,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/external_id" />
+                        android:text="@string/external_id"/>
 
                     <TextView
                         android:id="@+id/tv_externalId"
-                        style="@style/TextView.Row.Value" />
+                        style="@style/TextView.Row.Value"/>
                 </TableRow>
 
                 <TableRow
@@ -82,11 +70,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/activation_date" />
+                        android:text="@string/activation_date"/>
 
                     <TextView
                         android:id="@+id/tv_activationDate"
-                        style="@style/TextView.Row.Value" />
+                        style="@style/TextView.Row.Value"/>
                 </TableRow>
 
                 <TableRow
@@ -95,11 +83,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/office" />
+                        android:text="@string/office"/>
 
                     <TextView
                         android:id="@+id/tv_office"
-                        style="@style/TextView.Row.Value" />
+                        style="@style/TextView.Row.Value"/>
                 </TableRow>
 
                 <TableRow
@@ -109,11 +97,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/group" />
+                        android:text="@string/group"/>
 
                     <TextView
                         android:id="@+id/tv_group"
-                        style="@style/TextView.Row.Value" />
+                        style="@style/TextView.Row.Value"/>
                 </TableRow>
 
                 <TableRow
@@ -123,13 +111,13 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/staff" />
+                        android:text="@string/staff"/>
 
                     <TextView
                         android:id="@+id/tv_loanOfficer"
                         style="@style/TextView.Row"
                         android:gravity="right"
-                        android:text="" />
+                        android:text=""/>
                 </TableRow>
 
                 <TableRow
@@ -139,13 +127,13 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/loan_cycle" />
+                        android:text="@string/loan_cycle"/>
 
                     <TextView
                         android:id="@+id/tv_loanCycle"
                         style="@style/TextView.Row"
                         android:gravity="right"
-                        android:text="" />
+                        android:text=""/>
                 </TableRow>
 
             </TableLayout>
@@ -155,20 +143,37 @@
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"/>
 
             <include
                 android:id="@+id/account_accordion_section_savings"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
             <include
                 android:id="@+id/account_accordion_section_recurring"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
     </ScrollView>
-</ViewFlipper>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+       <Button
+           android:id="@+id/btn_activate_client"
+           android:layout_width="match_parent"
+           android:layout_height="50dp"
+           android:text="@string/activate_client"
+           android:background="@color/accent" />
+    </LinearLayout>
+
+</RelativeLayout>
