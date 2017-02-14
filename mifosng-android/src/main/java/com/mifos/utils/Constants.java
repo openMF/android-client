@@ -154,6 +154,7 @@ public class Constants {
     public static final String DATA_TABLE_CLIENTS_NAME = "More Client Info";
     public static final String DATA_TABLE_LOAN_NAME = "More Loan Info";
     public static final String DATA_TABLE_SAVINGS_ACCOUNTS_NAME = "More Savings Account Info";
+    public static final String DATA_TABLE_GROUP_NAME = "More Group Info";
 
 
     public static final String DATA_TABLE_NAME_CLIENT = "m_client";
