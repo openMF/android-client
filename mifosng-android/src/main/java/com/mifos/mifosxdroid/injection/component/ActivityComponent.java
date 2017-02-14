@@ -10,7 +10,7 @@ import com.mifos.mifosxdroid.online.activateclient.ActivateClientFragment;
 import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
@@ -133,7 +133,7 @@ public interface ActivityComponent {
 
     void inject(LoanAccountApproval loanAccountApproval);
 
-    void inject(LoanAccountDisbursement loanAccountDisbursement);
+    void inject(LoanAccountDisbursementFragment loanAccountDisbursement);
 
     void inject(LoanChargeDialogFragment loanChargeDialogFragment);
 

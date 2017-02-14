@@ -5,7 +5,6 @@ import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
 import com.mifos.api.model.SaveResponse;
 import com.mifos.objects.accounts.loan.LoanApproval;
-import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.client.Charges;
@@ -184,15 +183,6 @@ public class DataManager {
 
     public Observable<GenericResponse> approveLoan(int loanId, LoanApproval loanApproval) {
         return mBaseApiManager.getLoanApi().approveLoanApplication(loanId, loanApproval);
-    }
-
-    public Observable<ResponseBody> getLoanTemplate(int loanId) {
-        return mBaseApiManager.getLoanApi().getLoanTemplate(loanId);
-    }
-
-    public Observable<GenericResponse> dispurseLoan(int loanId,
-                                                    LoanDisbursement loanDisbursement) {
-        return mBaseApiManager.getLoanApi().disburseLoan(loanId, loanDisbursement);
     }
 
     public Observable<List<Charges>> getListOfLoanCharges(int loanId) {
