@@ -1,13 +1,16 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
 import com.mifos.objects.accounts.GroupAccounts;
+import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupWithAssociations;
+import com.mifos.objects.response.SaveResponse;
 import com.mifos.utils.PrefManager;
 
 import java.util.List;
@@ -184,16 +187,10 @@ public class DataManagerGroups {
      * @param groupPayload GroupPayload
      * @return Group
      */
-    public Observable<Group> createGroup(GroupPayload groupPayload) {
+    public Observable<SaveResponse> createGroup(GroupPayload groupPayload) {
         switch (PrefManager.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getGroupApi().createGroup(groupPayload)
-                        .concatMap(new Func1<Group, Observable<? extends Group>>() {
-                            @Override
-                            public Observable<? extends Group> call(Group group) {
-                                return Observable.just(group);
-                            }
-                        });
+                return mBaseApiManager.getGroupApi().createGroup(groupPayload);
             case 1:
                 /**
                  * Save GroupPayload in Database table.
@@ -201,7 +198,7 @@ public class DataManagerGroups {
                 return mDatabaseHelperGroups.saveGroupPayload(groupPayload);
 
             default:
-                return Observable.just(new Group());
+                return Observable.just(new SaveResponse());
         }
     }
 
@@ -235,5 +232,16 @@ public class DataManagerGroups {
      */
     public Observable<GroupPayload> updateGroupPayload(GroupPayload groupPayload) {
         return mDatabaseHelperGroups.updateDatabaseGroupPayload(groupPayload);
+    }
+
+    /**
+     * This method is activating the Group
+     *
+     * @param groupId
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> activateGroup(int groupId,
+                                                      ActivatePayload activatePayload) {
+        return mBaseApiManager.getGroupApi().activateGroup(groupId, activatePayload);
     }
 }

@@ -4,7 +4,8 @@
     android:layout_height="fill_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/LinearLayout.Base">
+                  android:id="@+id/ll_center"
+                  style="@style/LinearLayout.Base">
         <TextView style="@style/TextView.CreateCenter" />
         <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
             <EditText

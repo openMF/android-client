@@ -12,8 +12,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +26,8 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.online.activate.ActivateFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
 import com.mifos.objects.accounts.GroupAccounts;
@@ -44,6 +47,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -51,7 +55,7 @@ import static android.view.View.VISIBLE;
 /**
  * Created by nellyk on 2/27/2016.
  */
-public class GroupDetailsFragment extends ProgressableFragment implements GroupDetailsMvpView {
+public class GroupDetailsFragment extends MifosBaseFragment implements GroupDetailsMvpView {
 
     public static final String LOG_TAG = GroupDetailsFragment.class.getSimpleName();
 
@@ -87,6 +91,12 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
 
     @BindView(R.id.row_loan)
     TableRow rowLoan;
+
+    @BindView(R.id.rl_group)
+    RelativeLayout rlGroup;
+
+    @BindView(R.id.ll_bottom_panel)
+    LinearLayout llBottomPanel;
 
     @Inject
     GroupDetailsPresenter mGroupDetailsPresenter;
@@ -129,6 +139,17 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
         return rootView;
     }
 
+    @OnClick(R.id.btn_activate_group)
+    void onClickActivateGroup() {
+        ActivateFragment activateFragment =
+                ActivateFragment.newInstance(groupId, Constants.ACTIVATE_GROUP);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, activateFragment);
+        fragmentTransaction.commit();
+    }
+
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
                 .ENTITY_TYPE_GROUPS, groupId);
@@ -150,13 +171,22 @@ public class GroupDetailsFragment extends ProgressableFragment implements GroupD
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        showProgress(b);
+    public void showProgressbar(boolean show) {
+        if (show) {
+            rlGroup.setVisibility(GONE);
+            showMifosProgressBar();
+        } else {
+            rlGroup.setVisibility(VISIBLE);
+            hideMifosProgressBar();
+        }
     }
 
     @Override
     public void showGroup(Group group) {
         if (group != null) {
+            if (!group.getActive()) {
+                llBottomPanel.setVisibility(VISIBLE);
+            }
             setToolbarTitle(getString(R.string.group) + " - " + group.getName());
             tv_fullName.setText(group.getName());
             tv_externalId.setText(group.getExternalId());

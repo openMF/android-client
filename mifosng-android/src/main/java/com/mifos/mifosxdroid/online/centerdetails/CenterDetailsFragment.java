@@ -3,23 +3,26 @@ package com.mifos.mifosxdroid.online.centerdetails;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.activate.ActivateFragment;
 import com.mifos.objects.group.CenterInfo;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.Utils;
 
 import java.util.List;
@@ -28,6 +31,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Rajan Maurya on 05/02/17.
@@ -67,11 +71,11 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
     @BindView(R.id.tv_active_overdue_client_loans)
     TextView tvActiveOverdueClientLoans;
 
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
+    @BindView(R.id.rl_center)
+    RelativeLayout rlCenter;
 
-    @BindView(R.id.container)
-    ScrollView scrollView;
+    @BindView(R.id.ll_bottom_panel)
+    LinearLayout llBottomPanel;
 
     @Inject
     CenterDetailsPresenter centerDetailsPresenter;
@@ -114,27 +118,44 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
         return rootView;
     }
 
+    @OnClick(R.id.btn_activate_center)
+    void onClickActivateCenter() {
+        ActivateFragment activateFragment =
+                ActivateFragment.newInstance(centerId, Constants.ACTIVATE_CENTER);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CENTER_DETAIL);
+        fragmentTransaction.replace(R.id.container, activateFragment);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void showProgressbar(boolean show) {
         if (show) {
-            progressBar.setVisibility(View.VISIBLE);
-            scrollView.setVisibility(View.INVISIBLE);
+            rlCenter.setVisibility(View.GONE);
+            showMifosProgressBar();
         } else {
-            progressBar.setVisibility(View.INVISIBLE);
-            scrollView.setVisibility(View.VISIBLE);
+            rlCenter.setVisibility(View.VISIBLE);
+            hideMifosProgressBar();
         }
     }
 
     @Override
     public void showCenterDetails(CenterWithAssociations centerWithAssociations) {
         setToolbarTitle(centerWithAssociations.getName());
-        tvStaffName.setText(centerWithAssociations.getStaffName());
-        tvActivationDate.setText(Utils.getStringOfDate(getContext(),
-                centerWithAssociations.getActivationDate()));
+        if (!centerWithAssociations.getActivationDate().isEmpty()) {
+            tvStaffName.setText(centerWithAssociations.getStaffName());
+            tvActivationDate.setText(Utils.getStringOfDate(getContext(),
+                    centerWithAssociations.getActivationDate()));
+        }
     }
 
     @Override
     public void showMeetingDetails(CenterWithAssociations centerWithAssociations) {
+        if (!centerWithAssociations.getActive()) {
+            llBottomPanel.setVisibility(View.VISIBLE);
+            showErrorMessage(R.string.error_center_inactive);
+        }
         if (centerWithAssociations.getCollectionMeetingCalendar().getCalendarInstanceId() == null) {
             tvMeetingDate.setText(getString(R.string.unassigned));
             if (getView() != null) {

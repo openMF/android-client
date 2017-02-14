@@ -27,6 +27,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
+import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
@@ -192,8 +193,7 @@ public class DashboardActivity extends MifosBaseActivity
                 replaceFragment(GroupsListFragment.newInstance(), false, R.id.container);
                 break;
             case R.id.item_centers:
-                intent.setClass(getApplicationContext(), CentersActivity.class);
-                startNavigationClickActivity(intent);
+                replaceFragment(CenterListFragment.newInstance(), false, R.id.container);
                 break;
             case R.id.item_path_tracker:
                 intent.setClass(getApplicationContext(), PathTrackingActivity.class);

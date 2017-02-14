@@ -18,7 +18,7 @@
         android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/tv_activation_client_date"
+        android:id="@+id/tv_activation_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
@@ -27,11 +27,11 @@
         android:background="@color/light_grey" />
 
     <Button
-        android:id="@+id/btn_activate_client"
+        android:id="@+id/btn_activate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/activate_client"
+        android:text="@string/activate"
         />
 
 </LinearLayout>

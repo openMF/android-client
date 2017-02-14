@@ -43,7 +43,7 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.online.activateclient.ActivateClientFragment;
+import com.mifos.mifosxdroid.online.activate.ActivateFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
@@ -356,11 +356,12 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     }
 
     public void activateClient() {
-        ActivateClientFragment loanAccountFragment = ActivateClientFragment.newInstance(clientId);
+        ActivateFragment activateFragment =
+                ActivateFragment.newInstance(clientId, Constants.ACTIVATE_CLIENT);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.replace(R.id.container, activateFragment);
         fragmentTransaction.commit();
     }
 

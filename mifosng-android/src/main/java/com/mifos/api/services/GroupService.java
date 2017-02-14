@@ -4,12 +4,15 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.accounts.GroupAccounts;
+import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.group.GroupPayload;
+import com.mifos.objects.response.SaveResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -40,12 +43,24 @@ public interface GroupService {
                                                  @QueryMap Map<String, Object> params);
 
     @POST(APIEndPoint.GROUPS)
-    Observable<Group> createGroup(@Body GroupPayload groupPayload);
+    Observable<SaveResponse> createGroup(@Body GroupPayload groupPayload);
 
     @GET(APIEndPoint.GROUPS + "/{groupId}")
     Observable<Group> getGroup(@Path("groupId") int groupId);
 
     @GET(APIEndPoint.GROUPS + "/{groupId}/accounts")
     Observable<GroupAccounts> getGroupAccounts(@Path("groupId") int groupId);
+
+    /**
+     * This is the service to activate the Group
+     * REST ENT POINT
+     * https://demo.openmf.org/fineract-provider/api/v1/groups/{groupId}?command=activate
+     *
+     * @param groupId
+     * @return GenericResponse
+     */
+    @POST(APIEndPoint.GROUPS + "/{groupId}?command=activate")
+    Observable<GenericResponse> activateGroup(@Path("groupId") int groupId,
+                                               @Body ActivatePayload activatePayload);
 
 }

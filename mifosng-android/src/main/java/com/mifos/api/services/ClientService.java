@@ -8,7 +8,7 @@ import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.client.ClientActivate;
+import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.ClientAddressRequest;
 import com.mifos.objects.client.ClientAddressResponse;
 import com.mifos.objects.client.ClientPayload;
@@ -203,5 +203,5 @@ public interface ClientService {
      */
     @POST(APIEndPoint.CLIENTS + "/{clientId}?command=activate")
     Observable<GenericResponse> activateClient(@Path("clientId") int clientId,
-                                               @Body ClientActivate clientActivate);
+                                               @Body ActivatePayload clientActivate);
 }

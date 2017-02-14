@@ -51,6 +51,8 @@ public class Constants {
 
     public static final String CLIENT_ID = "clientId";
 
+    public static final String ID = "id";
+
     public static final String CLIENT = "Client";
 
     public static final String CLIENTS = "clients";
@@ -120,6 +122,14 @@ public class Constants {
     public static final String DATA_TABLE_NAME = "data_table_name";
     
     public static final int DIALOG_FRAGMENT = 1;
+
+    public static final String ACTIVATE_CLIENT = "activate_client";
+
+    public static final String ACTIVATE_CENTER = "activate_center";
+
+    public static final String ACTIVATE_GROUP = "activate_group";
+
+    public static final String ACTIVATE_TYPE = "activation_type";
 
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.

@@ -1,11 +1,18 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
+import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.organisation.Office;
+import com.mifos.objects.response.SaveResponse;
+import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.PrefManager;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -80,4 +87,22 @@ public class DataManagerCenter {
                 .getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
     }
 
+    public Observable<SaveResponse> createCenter(CenterPayload centerPayload) {
+        return mBaseApiManager.getCenterApi().createCenter(centerPayload);
+    }
+
+    public Observable<List<Office>> getOffices() {
+        return mBaseApiManager.getOfficeApi().getAllOffices();
+    }
+
+    /**
+     * This method is activating the center
+     *
+     * @param centerId
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> activateCenter(int centerId,
+                                                      ActivatePayload activatePayload) {
+        return mBaseApiManager.getCenterApi().activateCenter(centerId, activatePayload);
+    }
 }
