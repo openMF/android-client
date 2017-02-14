@@ -25,9 +25,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +41,7 @@ import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.activateclient.ActivateClientFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
@@ -67,6 +69,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
 import static android.view.View.GONE;
@@ -75,12 +78,11 @@ import static android.view.View.OnTouchListener;
 import static android.view.View.VISIBLE;
 
 
-public class ClientDetailsFragment extends ProgressableFragment implements ClientDetailsMvpView {
+public class ClientDetailsFragment extends MifosBaseFragment implements ClientDetailsMvpView {
 
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
 
-    public static final int MENU_ITEM_CLIENT_ACTIVATE = 999;
     public static final int MENU_ITEM_DATA_TABLES = 1000;
     public static final int MENU_ITEM_PIN_POINT = 1001;
     public static final int MENU_ITEM_CLIENT_CHARGES = 1003;
@@ -137,6 +139,12 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
     @BindView(R.id.row_loan)
     TableRow rowLoan;
 
+    @BindView(R.id.ll_bottom_panel)
+    LinearLayout llBottomPanel;
+
+    @BindView(R.id.rl_client)
+    RelativeLayout rlClient;
+
     @Inject
     ClientDetailsPresenter mClientDetailsPresenter;
 
@@ -165,8 +173,9 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             clientId = getArguments().getInt(Constants.CLIENT_ID);
+        }
         setHasOptionsMenu(true);
         capturedClientImageFile = new File(getActivity().getExternalCacheDir(), "client_image.png");
     }
@@ -178,11 +187,15 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
 
         ButterKnife.bind(this, rootView);
         mClientDetailsPresenter.attachView(this);
-        getActivity().invalidateOptionsMenu();
 
         inflateClientInformation();
 
         return rootView;
+    }
+
+    @OnClick(R.id.btn_activate_client)
+    void onClickActivateClient() {
+        activateClient();
     }
 
     public void inflateClientInformation() {
@@ -214,7 +227,7 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        if (!isClientActive) {
+        if (isClientActive) {
             menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
                     .DATA_TABLE_CLIENTS_NAME);
             menu.add(Menu.NONE, MENU_ITEM_PIN_POINT, Menu.NONE, getString(R.string.pinpoint));
@@ -226,9 +239,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
             menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
             menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
             menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
-        } else {
-            menu.add(Menu.NONE, MENU_ITEM_CLIENT_ACTIVATE, Menu.NONE,
-                    getString(R.string.activate_client));
         }
         super.onPrepareOptionsMenu(menu);
     }
@@ -238,9 +248,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
         switch (item.getItemId()) {
             case MENU_ITEM_DATA_TABLES:
                 loadClientDataTables();
-                break;
-            case MENU_ITEM_CLIENT_ACTIVATE:
-                activateClient();
                 break;
             case MENU_ITEM_DOCUMENTS:
                 loadDocuments();
@@ -368,14 +375,25 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        showProgress(false);
+    public void showProgressbar(boolean show) {
+        if (show) {
+            rlClient.setVisibility(GONE);
+            showMifosProgressBar();
+        } else {
+            rlClient.setVisibility(VISIBLE);
+            hideMifosProgressBar();
+        }
     }
 
     @Override
     public void showClientInformation(Client client) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
+            isClientActive = client.isActive();
+            getActivity().invalidateOptionsMenu();
+            if (!client.isActive()) {
+                llBottomPanel.setVisibility(VISIBLE);
+            }
             tv_fullName.setText(client.getDisplayName());
             tv_accountNumber.setText(client.getAccountNo());
             tv_externalId.setText(client.getExternalId());
@@ -394,8 +412,6 @@ public class ClientDetailsFragment extends ProgressableFragment implements Clien
                     rowActivation.setVisibility(GONE);
 
             } catch (IndexOutOfBoundsException e) {
-                isClientActive = true;
-                getActivity().invalidateOptionsMenu();
                 Toast.makeText(getActivity(), getString(R.string.error_client_inactive),
                         Toast.LENGTH_SHORT).show();
                 tv_activationDate.setText("");

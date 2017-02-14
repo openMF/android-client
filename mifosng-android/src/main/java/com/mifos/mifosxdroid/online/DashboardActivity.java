@@ -179,6 +179,7 @@ public class DashboardActivity extends MifosBaseActivity
         }*/
 
         // select which activity to open
+        clearFragmentBackStack();
         final Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.item_dashboard:
@@ -315,16 +316,16 @@ public class DashboardActivity extends MifosBaseActivity
     }
 
     public void openCreateClient() {
-        replaceFragment(CreateNewClientFragment.newInstance(), false, R.id.container);
+        replaceFragment(CreateNewClientFragment.newInstance(), true, R.id.container);
     }
 
     public void openCreateCenter() {
-        replaceFragment(CreateNewCenterFragment.newInstance(), false, R.id.container);
+        replaceFragment(CreateNewCenterFragment.newInstance(), true, R.id.container);
 
     }
 
     public void openCreateGroup() {
-        replaceFragment(CreateNewGroupFragment.newInstance(), false, R.id.container);
+        replaceFragment(CreateNewGroupFragment.newInstance(), true, R.id.container);
     }
 
     @VisibleForTesting

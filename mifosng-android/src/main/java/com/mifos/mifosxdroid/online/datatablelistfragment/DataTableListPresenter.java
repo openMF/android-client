@@ -14,10 +14,8 @@ import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -117,22 +115,13 @@ public class DataTableListPresenter extends BasePresenter<DataTableListMvpView> 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        try {
-                            if (e instanceof HttpException) {
-                                String errorMessage = ((HttpException) e).response().errorBody()
-                                        .string();
-                                getMvpView().showMessage(MFErrorParser.parseError(errorMessage)
-                                        .getErrors().get(0).getDefaultUserMessage());
-                            }
-                        } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
-                        }
+                        getMvpView().showMessage(MFErrorParser.errorMessage(e));
                     }
 
                     @Override
                     public void onNext(Client client) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showMessage(R.string.client_created_successfully);
+                        getMvpView().showClientCreatedSuccessfully(client);
                     }
                 }));
     }

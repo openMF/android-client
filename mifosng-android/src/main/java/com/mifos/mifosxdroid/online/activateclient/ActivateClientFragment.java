@@ -103,7 +103,7 @@ public class ActivateClientFragment extends MifosBaseFragment implements Activat
     public void showClientActivatedSuccessfully() {
         Toast.makeText(getActivity(),
                 R.string.client_activated_successfully, Toast.LENGTH_SHORT).show();
-        getActivity().getSupportFragmentManager().popBackStackImmediate();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override

@@ -6,6 +6,7 @@
 package com.mifos.mifosxdroid.online.datatablelistfragment;
 
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
@@ -29,6 +31,8 @@ import com.mifos.mifosxdroid.formwidgets.FormNumericEditText;
 import com.mifos.mifosxdroid.formwidgets.FormSpinner;
 import com.mifos.mifosxdroid.formwidgets.FormToggleButton;
 import com.mifos.mifosxdroid.formwidgets.FormWidget;
+import com.mifos.mifosxdroid.online.ClientActivity;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.noncore.ColumnHeader;
 import com.mifos.objects.noncore.ColumnValue;
@@ -301,6 +305,17 @@ public class DataTableListFragment extends Fragment
     public void showMessage(String message) {
         Toaster.show(rootView, message);
         getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void showClientCreatedSuccessfully(Client client) {
+        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getSupportFragmentManager().popBackStack();
+        Toast.makeText(getActivity(), R.string.client_created_successfully,
+                Toast.LENGTH_SHORT).show();
+        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
+        clientActivityIntent.putExtra(Constants.CLIENT_ID, client.getClientId());
+        startActivity(clientActivityIntent);
     }
 
     @Override

@@ -346,6 +346,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     @Override
     public void showClientCreatedSuccessfully(int message) {
         Toaster.show(rootView, message);
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
