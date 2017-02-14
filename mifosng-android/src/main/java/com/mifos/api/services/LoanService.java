@@ -18,12 +18,12 @@ import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.GroupLoanTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.LoanTemplate;
+import com.mifos.objects.templates.loans.LoanTransactionTemplate;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -79,8 +79,24 @@ public interface LoanService {
                                                      @Query("productId") int productId);
 
 
-    @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
-    Observable<ResponseBody> getLoanTemplate(@Path("loanId") int loanId);
+    /**
+     * For fetching any type of loan template.
+     * Example:
+     * 1. repayment
+     * 2. disburse
+     * 3. waiver
+     * 4. refundbycash
+     * 5. foreclosure
+     *
+     * @param loanId Loan Id
+     * @param command Template Type
+     * @return
+     */
+    @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template")
+    Observable<LoanTransactionTemplate> getLoanTransactionTemplate(
+            @Path("loanId") int loanId,
+            @Query("command") String command);
+
 
     @POST(APIEndPoint.CREATELOANSACCOUNTS)
     Observable<Loans> createGroupLoansAccount(@Body GroupLoanPayload loansPayload);

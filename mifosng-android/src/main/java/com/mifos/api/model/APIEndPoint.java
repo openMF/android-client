@@ -33,4 +33,6 @@ public class APIEndPoint {
 
     public static final String SAVINGSACCOUNTS = "savingsaccounts";
     public static final String RECURRING_ACCOUNTS = "recurringdepositaccounts";
+
+    public static final String DISBURSE = "disburse";
 }

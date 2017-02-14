@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
@@ -357,8 +357,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
 
     public void disburseLoan() {
 
-        LoanAccountDisbursement loanAccountDisbursement = LoanAccountDisbursement.newInstance
-                (loanAccountNumber);
+        LoanAccountDisbursementFragment loanAccountDisbursement =
+                LoanAccountDisbursementFragment.newInstance(loanAccountNumber);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
@@ -405,14 +405,14 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             // if Loan is Pending for Approval
             // the Action would be Approve Loan
             view_status_indicator.setBackgroundColor(
-                    ContextCompat.getColor(getActivity(), R.color.blue));
+                    ContextCompat.getColor(getActivity(), R.color.light_yellow));
             bt_processLoanTransaction.setText("Approve Loan");
             processLoanTransactionAction = ACTION_APPROVE_LOAN;
         } else if (loanWithAssociations.getStatus().getWaitingForDisbursal()) {
             // if Loan is Waiting for Disbursal
             // the Action would be Disburse Loan
             view_status_indicator.setBackgroundColor(
-                    ContextCompat.getColor(getActivity(), R.color.light_yellow));
+                    ContextCompat.getColor(getActivity(), R.color.blue));
 
             bt_processLoanTransaction.setText("Disburse Loan");
             processLoanTransactionAction = ACTION_DISBURSE_LOAN;
