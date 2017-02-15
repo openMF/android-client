@@ -18,8 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -31,6 +31,7 @@ import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment;
 import com.mifos.mifosxdroid.online.GroupsActivity;
+import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
@@ -83,8 +84,8 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @BindView(R.id.noGroupsIcon)
     ImageView mNoGroupIcon;
 
-    @BindView(R.id.ll_error)
-    LinearLayout ll_error;
+    @BindView(R.id.rl_error)
+    RelativeLayout rlError;
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
@@ -228,6 +229,11 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    @OnClick(R.id.fab_create_group)
+    void onClickCreateNewGroup() {
+        ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewGroupFragment.newInstance(),
+                true, R.id.container);
+    }
 
     /**
      * This Method will be called. Whenever user will swipe down to refresh the group list.
@@ -247,7 +253,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      */
     @OnClick(R.id.noGroupsIcon)
     public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
+        rlError.setVisibility(View.GONE);
         rv_groups.setVisibility(View.VISIBLE);
         mGroupsListPresenter.loadGroups(false, 0);
         mGroupsListPresenter.loadDatabaseGroups();
@@ -282,7 +288,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Override
     public void showEmptyGroups(int message) {
         rv_groups.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         mNoGroupsText.setText(getStringMessage(message));
     }
 
@@ -314,7 +320,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Override
     public void showFetchingError() {
         rv_groups.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
                 + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
         mNoGroupsText.setText(errorMessage);

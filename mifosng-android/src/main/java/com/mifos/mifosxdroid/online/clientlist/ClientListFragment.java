@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -32,6 +32,7 @@ import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
+import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
@@ -79,8 +80,8 @@ public class ClientListFragment extends MifosBaseFragment
     @BindView(R.id.noClientText)
     TextView mNoClientText;
 
-    @BindView(R.id.ll_error)
-    LinearLayout ll_error;
+    @BindView(R.id.rl_error)
+    RelativeLayout rlError;
 
     @BindView(R.id.noClientIcon)
     ImageView mNoClientIcon;
@@ -228,6 +229,12 @@ public class ClientListFragment extends MifosBaseFragment
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    @OnClick(R.id.fab_create_client)
+    void onClickCreateNewClient() {
+        ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewClientFragment.newInstance(),
+                true, R.id.container);
+    }
+
     /**
      * This method will be called when user will swipe down to Refresh the ClientList then
      * Presenter make the Fresh call to Rest API to load ClientList from offset = 0 and fetch the
@@ -266,7 +273,7 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @OnClick(R.id.noClientIcon)
     public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
+        rlError.setVisibility(View.GONE);
         rv_clients.setVisibility(View.VISIBLE);
         mClientListPresenter.loadClients(false, 0);
         mClientListPresenter.loadDatabaseClients();
@@ -301,7 +308,7 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void showEmptyClientList(int message) {
         rv_clients.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         mNoClientText.setText(getStringMessage(message));
     }
 
@@ -312,7 +319,7 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void showError() {
         rv_clients.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_load_client)
                 + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
         mNoClientText.setText(errorMessage);
