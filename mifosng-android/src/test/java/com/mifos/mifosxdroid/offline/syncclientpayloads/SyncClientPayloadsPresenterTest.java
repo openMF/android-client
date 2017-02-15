@@ -4,7 +4,6 @@ import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
 
@@ -43,7 +42,7 @@ public class SyncClientPayloadsPresenterTest {
 
     List<ClientPayload> clientPayloads;
 
-    ErrorSyncServerMessage errorSyncServerMessage;
+    String errorSyncServerMessage;
 
     long clientCreationTime;
 
@@ -52,7 +51,8 @@ public class SyncClientPayloadsPresenterTest {
         syncClientPayloadsPresenter = new SyncClientPayloadsPresenter(mDataManagerClient);
         syncClientPayloadsPresenter.attachView(mSyncClientPayloadsMvpView);
         clientPayloads = FakeRemoteDataSource.getClientPayloads();
-        errorSyncServerMessage = FakeRemoteDataSource.getFailureServerResponse();
+        errorSyncServerMessage = FakeRemoteDataSource.getFailureServerResponse().getErrors()
+                .get(0).getDefaultUserMessage();
         clientCreationTime = System.currentTimeMillis();
     }
 

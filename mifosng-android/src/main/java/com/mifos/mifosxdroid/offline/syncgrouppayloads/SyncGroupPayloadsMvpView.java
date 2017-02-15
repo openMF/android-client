@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.offline.syncgrouppayloads;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.group.GroupPayload;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface SyncGroupPayloadsMvpView extends MvpView {
 
     void showGroupSyncResponse();
 
-    void showGroupSyncFailed(ErrorSyncServerMessage s);
+    void showGroupSyncFailed(String errorMessage);
 
     void showPayloadDeletedAndUpdatePayloads(List<GroupPayload> groupPayloads);
 

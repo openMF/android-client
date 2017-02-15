@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 
@@ -20,7 +19,7 @@ public interface SyncLoanRepaymentTransactionMvpView extends MvpView {
 
     void showPaymentSubmittedSuccessfully();
 
-    void showPaymentFailed(ErrorSyncServerMessage error);
+    void showPaymentFailed(String errorMessage);
 
     void showLoanRepaymentUpdated(LoanRepaymentRequest loanRepaymentRequest);
 

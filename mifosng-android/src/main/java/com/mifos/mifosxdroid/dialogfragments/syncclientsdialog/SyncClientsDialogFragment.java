@@ -102,11 +102,11 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
         showUI();
 
         //Start Syncing Clients
-        if (isOnline() && (PrefManager.getUserStatus() == 0)) {
+        if (isOnline() && (PrefManager.getUserStatus() == Constants.USER_ONLINE)) {
             mSyncClientsDialogPresenter.startSyncingClients(mClientList);
         } else {
             showNetworkIsNotAvailable();
-            dismissDialog();
+            getActivity().getSupportFragmentManager().popBackStack();
         }
 
         return rootView;

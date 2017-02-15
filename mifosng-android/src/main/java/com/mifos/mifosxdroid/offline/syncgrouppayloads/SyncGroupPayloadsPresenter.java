@@ -1,21 +1,18 @@
 package com.mifos.mifosxdroid.offline.syncgrouppayloads;
 
-import com.google.gson.Gson;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.response.SaveResponse;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -84,19 +81,8 @@ public class SyncGroupPayloadsPresenter extends BasePresenter<SyncGroupPayloadsM
 
                     @Override
                     public void onError(Throwable e) {
-                        try {
-                            if (e instanceof HttpException) {
-                                String errorMessage = ((HttpException) e).response().errorBody()
-                                        .string();
-                                Gson gson = new Gson();
-                                ErrorSyncServerMessage syncErrorMessage = gson.
-                                        fromJson(errorMessage, ErrorSyncServerMessage.class);
-                                getMvpView().showProgressbar(false);
-                                getMvpView().showGroupSyncFailed(syncErrorMessage);
-                            }
-                        } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
-                        }
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showGroupSyncFailed(MFErrorParser.errorMessage(e));
                     }
 
                     @Override

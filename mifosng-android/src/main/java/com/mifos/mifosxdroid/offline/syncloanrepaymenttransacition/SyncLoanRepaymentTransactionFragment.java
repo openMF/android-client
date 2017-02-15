@@ -22,7 +22,6 @@ import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.utils.Constants;
@@ -196,9 +195,9 @@ public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment impl
     }
 
     @Override
-    public void showPaymentFailed(ErrorSyncServerMessage error) {
+    public void showPaymentFailed(String errorMessage) {
         LoanRepaymentRequest loanRepaymentRequest = mLoanRepaymentRequests.get(mClientSyncIndex);
-        loanRepaymentRequest.setErrorMessage(error.getDefaultUserMessage());
+        loanRepaymentRequest.setErrorMessage(errorMessage);
         mSyncLoanRepaymentTransactionPresenter.updateLoanRepayment(loanRepaymentRequest);
     }
 
