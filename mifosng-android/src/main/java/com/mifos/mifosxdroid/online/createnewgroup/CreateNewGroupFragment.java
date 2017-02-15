@@ -42,6 +42,7 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosResponseHandler;
+import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
@@ -284,9 +285,11 @@ public class CreateNewGroupFragment extends ProgressableFragment
         Toast.makeText(getActivity(), "Group" + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show();
         getActivity().getSupportFragmentManager().popBackStack();
-        Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
-        groupActivityIntent.putExtra(Constants.GROUP_ID, saveResponse.getGroupId());
-        startActivity(groupActivityIntent);
+        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+            Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+            groupActivityIntent.putExtra(Constants.GROUP_ID, saveResponse.getGroupId());
+            startActivity(groupActivityIntent);
+        }
     }
 
     @Override

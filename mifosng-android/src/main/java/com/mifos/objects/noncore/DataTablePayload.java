@@ -20,7 +20,10 @@ import java.util.HashMap;
 @ModelContainer
 public class DataTablePayload extends MifosBaseModel implements Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoincrement = true)
+    transient Integer id;
+
+    @Column
     transient Long clientCreationTime;
 
     // this field belongs to database table only for saving the

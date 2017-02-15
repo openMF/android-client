@@ -41,6 +41,8 @@ import com.mifos.objects.noncore.DataTablePayload;
 import com.mifos.services.data.GroupLoanPayload;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MifosResponseHandler;
+import com.mifos.utils.PrefManager;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import java.util.ArrayList;
@@ -311,11 +313,13 @@ public class DataTableListFragment extends Fragment
     public void showClientCreatedSuccessfully(Client client) {
         getActivity().getSupportFragmentManager().popBackStack();
         getActivity().getSupportFragmentManager().popBackStack();
-        Toast.makeText(getActivity(), R.string.client_created_successfully,
-                Toast.LENGTH_SHORT).show();
-        Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
-        clientActivityIntent.putExtra(Constants.CLIENT_ID, client.getClientId());
-        startActivity(clientActivityIntent);
+        Toast.makeText(getActivity(), getString(R.string.client) +
+                MifosResponseHandler.getResponse(), Toast.LENGTH_SHORT).show();
+        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+            Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
+            clientActivityIntent.putExtra(Constants.CLIENT_ID, client.getClientId());
+            startActivity(clientActivityIntent);
+        }
     }
 
     @Override

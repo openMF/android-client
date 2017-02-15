@@ -25,12 +25,12 @@ import java.util.List;
 @ModelContainer
 public class DataTable extends MifosBaseModel implements Parcelable {
 
-    @PrimaryKey
+    @Column
     String applicationTableName;
 
     List<ColumnHeader> columnHeaderData = new ArrayList<>();
 
-    @Column
+    @PrimaryKey
     String registeredTableName;
 
     public List<ColumnHeader> getColumnHeaderData() {
