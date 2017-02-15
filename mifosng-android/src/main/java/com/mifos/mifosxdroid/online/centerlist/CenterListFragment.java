@@ -15,8 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -29,6 +29,7 @@ import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
+import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
@@ -64,8 +65,8 @@ public class CenterListFragment extends MifosBaseFragment
     @BindView(R.id.noCenterText)
     TextView mNoCenterText;
 
-    @BindView(R.id.ll_error)
-    LinearLayout ll_error;
+    @BindView(R.id.rl_error)
+    RelativeLayout rlError;
 
     @Inject
     CenterListPresenter mCenterListPresenter;
@@ -150,6 +151,12 @@ public class CenterListFragment extends MifosBaseFragment
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    @OnClick(R.id.fab_create_center)
+    void onClickCreateNewCenter() {
+        ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewCenterFragment.newInstance(),
+                true, R.id.container);
+    }
+
     /**
      * This Method will be called, whenever user will pull down to RefreshLayout.
      */
@@ -163,7 +170,7 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @OnClick(R.id.noCentersIcon)
     public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
+        rlError.setVisibility(View.GONE);
         rv_centers.setVisibility(View.VISIBLE);
         mCenterListPresenter.loadCenters(false, 0);
     }
@@ -198,7 +205,7 @@ public class CenterListFragment extends MifosBaseFragment
     @Override
     public void showEmptyCenters(int message) {
         rv_centers.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         mNoCenterText.setText(getStringMessage(message));
     }
 
@@ -246,7 +253,7 @@ public class CenterListFragment extends MifosBaseFragment
     @Override
     public void showFetchingError() {
         rv_centers.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
                 + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
         mNoCenterText.setText(errorMessage);
