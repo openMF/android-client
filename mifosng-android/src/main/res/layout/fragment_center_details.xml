@@ -3,17 +3,11 @@
 ~ This project is licensed under the open source MPL V2.
 ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
 -->
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rl_center">
 
     <ScrollView style="@style/ScrollView.Base"
                 android:id="@+id/container">
@@ -195,4 +189,20 @@
 
     </ScrollView>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/ll_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_activate_center"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/activate_center"
+            android:background="@color/primary_dark" />
+    </LinearLayout>
+
+</RelativeLayout>

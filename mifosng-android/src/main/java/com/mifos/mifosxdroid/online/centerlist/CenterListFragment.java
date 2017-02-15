@@ -5,7 +5,7 @@
 
 package com.mifos.mifosxdroid.online.centerlist;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -27,9 +27,12 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.CentersActivity;
+import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,18 +74,26 @@ public class CenterListFragment extends MifosBaseFragment
     CentersListAdapter centersListAdapter;
 
     private View rootView;
-    private OnFragmentInteractionListener mListener;
     private List<Center> centers;
     private LinearLayoutManager layoutManager;
 
     @Override
     public void onItemClick(View childView, int position) {
-        mListener.loadCenterDetails(centers.get(position).getId());
+        Intent centerIntent = new Intent(getActivity(), CentersActivity.class);
+        centerIntent.putExtra(Constants.CENTER_ID, centers.get(position).getId());
+        startActivity(centerIntent);
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
         mCenterListPresenter.loadCentersGroupAndMeeting(centers.get(position).getId());
+    }
+
+    public static CenterListFragment newInstance() {
+        CenterListFragment centerListFragment = new CenterListFragment();
+        Bundle args = new Bundle();
+        centerListFragment.setArguments(args);
+        return centerListFragment;
     }
 
     @Override
@@ -215,9 +226,11 @@ public class CenterListFragment extends MifosBaseFragment
             @Override
             public void onDatePicked(String date) {
                 if (centerWithAssociations.getCollectionMeetingCalendar().getId() != null) {
-                    mListener.loadCollectionSheetForCenter(id, date, centerWithAssociations
-                            .getCollectionMeetingCalendar()
-                            .getId());
+                    ((MifosBaseActivity) getActivity())
+                            .replaceFragment(CollectionSheetFragment.newInstance(id, date,
+                                    centerWithAssociations.getCollectionMeetingCalendar().getId()),
+                                    true, R.id.container);
+
                 } else {
                     showMessage(R.string.no_meeting_found);
                 }
@@ -264,29 +277,8 @@ public class CenterListFragment extends MifosBaseFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " +
-                    "OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mCenterListPresenter.detachView();
-    }
-
-
-    public interface OnFragmentInteractionListener {
-        void loadGroupsOfCenter(int centerId);
-
-        void loadCollectionSheetForCenter(int centerId, String collectionDate, int
-                calenderInstanceId);
-
-        void loadCenterDetails(int centerId);
     }
 }

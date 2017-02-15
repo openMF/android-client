@@ -30,6 +30,8 @@ public class FragmentConstants {
 
     public static final String FRAG_CENTER_LIST = "Centers List Fragment";
 
+    public static final String FRAG_CENTER_DETAIL = "Center Details";
+
     public static final String FRAG_GROUP_LIST = "Group List Fragment";
 
     public static final String DFRAG_DATE_PICKER = "Date Picker";

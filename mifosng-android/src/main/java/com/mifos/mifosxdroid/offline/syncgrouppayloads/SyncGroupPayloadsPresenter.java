@@ -5,8 +5,8 @@ import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.ErrorSyncServerMessage;
-import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
+import com.mifos.objects.response.SaveResponse;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class SyncGroupPayloadsPresenter extends BasePresenter<SyncGroupPayloadsM
         mSubscriptions.add(mDataManagerGroups.createGroup(groupPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Group>() {
+                .subscribe(new Subscriber<SaveResponse>() {
                     @Override
                     public void onCompleted() {
 
@@ -100,7 +100,7 @@ public class SyncGroupPayloadsPresenter extends BasePresenter<SyncGroupPayloadsM
                     }
 
                     @Override
-                    public void onNext(Group group) {
+                    public void onNext(SaveResponse group) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showGroupSyncResponse();
                     }

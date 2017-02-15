@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.activateclient;
+package com.mifos.mifosxdroid.online.activate;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,7 +13,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.client.ClientActivate;
+import com.mifos.objects.client.ActivatePayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
@@ -27,29 +27,31 @@ import butterknife.OnClick;
 /**
  * Created by Rajan Maurya on 09/02/17.
  */
-public class ActivateClientFragment extends MifosBaseFragment implements ActivateClientMvpView,
+public class ActivateFragment extends MifosBaseFragment implements ActivateMvpView,
         MFDatePicker.OnDatePickListener {
 
-    public static final String LOG_TAG = ActivateClientFragment.class.getSimpleName();
+    public static final String LOG_TAG = ActivateFragment.class.getSimpleName();
 
-    @BindView(R.id.tv_activation_client_date)
-    TextView tvActivationClientDate;
+    @BindView(R.id.tv_activation_date)
+    TextView tvActivationDate;
 
     @Inject
-    ActivateClientPresenter activateClientPresenter;
+    ActivatePresenter activatePresenter;
 
     View rootView;
 
     private DialogFragment mfDatePicker;
     private String activationDate;
-    private int clientId;
+    private int id;
+    private String activateType;
 
-    public static ActivateClientFragment newInstance(int clientId) {
-        ActivateClientFragment activateClientFragment = new ActivateClientFragment();
+    public static ActivateFragment newInstance(int id, String activationType) {
+        ActivateFragment activateFragment = new ActivateFragment();
         Bundle args = new Bundle();
-        args.putInt(Constants.CLIENT_ID, clientId);
-        activateClientFragment.setArguments(args);
-        return activateClientFragment;
+        args.putInt(Constants.ID, id);
+        args.putString(Constants.ACTIVATE_TYPE, activationType);
+        activateFragment.setArguments(args);
+        return activateFragment;
     }
 
     @Override
@@ -57,7 +59,8 @@ public class ActivateClientFragment extends MifosBaseFragment implements Activat
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
-            clientId = getArguments().getInt(Constants.CLIENT_ID);
+            id = getArguments().getInt(Constants.ID);
+            activateType = getArguments().getString(Constants.ACTIVATE_TYPE);
         }
     }
 
@@ -66,27 +69,28 @@ public class ActivateClientFragment extends MifosBaseFragment implements Activat
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_activate_client, container, false);
         ButterKnife.bind(this, rootView);
-        activateClientPresenter.attachView(this);
+        activatePresenter.attachView(this);
         showUserInterface();
         return rootView;
     }
 
     @Override
     public void showUserInterface() {
+        setToolbarTitle(getString(R.string.activate));
         mfDatePicker = MFDatePicker.newInsance(this);
-        tvActivationClientDate.setText(MFDatePicker.getDatePickedAsString());
-        activationDate = tvActivationClientDate.getText().toString();
+        tvActivationDate.setText(MFDatePicker.getDatePickedAsString());
+        activationDate = tvActivationDate.getText().toString();
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDate)
                 .replace("-", " ");
     }
 
-    @OnClick(R.id.btn_activate_client)
+    @OnClick(R.id.btn_activate)
     void onClickActivationButton() {
-        ClientActivate clientActivate = new ClientActivate(activationDate);
-        activateClientPresenter.activateClient(clientId, clientActivate);
+        ActivatePayload clientActivate = new ActivatePayload(activationDate);
+        activate(clientActivate);
     }
 
-    @OnClick(R.id.tv_activation_client_date)
+    @OnClick(R.id.tv_activation_date)
     void onClickTextViewActivationDate() {
         mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
@@ -94,13 +98,29 @@ public class ActivateClientFragment extends MifosBaseFragment implements Activat
 
     @Override
     public void onDatePicked(String date) {
-        tvActivationClientDate.setText(date);
+        tvActivationDate.setText(date);
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
                 .replace("-", " ");
     }
 
+    public void activate(ActivatePayload clientActivate) {
+        switch (activateType) {
+            case Constants.ACTIVATE_CLIENT:
+                activatePresenter.activateClient(id, clientActivate);
+                break;
+            case Constants.ACTIVATE_CENTER:
+                activatePresenter.activateCenter(id, clientActivate);
+                break;
+            case Constants.ACTIVATE_GROUP:
+                activatePresenter.activateGroup(id, clientActivate);
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
-    public void showClientActivatedSuccessfully() {
+    public void showActivatedSuccessfully(int message) {
         Toast.makeText(getActivity(),
                 R.string.client_activated_successfully, Toast.LENGTH_SHORT).show();
         getActivity().getSupportFragmentManager().popBackStack();
@@ -123,6 +143,6 @@ public class ActivateClientFragment extends MifosBaseFragment implements Activat
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        activateClientPresenter.detachView();
+        activatePresenter.detachView();
     }
 }

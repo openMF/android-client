@@ -76,8 +76,14 @@
     <string name="approve_savings">Approve Savings</string>
     <string name="activate_savings">Activate Savings</string>
     <string name="activate_client">Activate Client</string>
+    <string name="activate_center">Activate Center</string>
+    <string name="activate_group">Activate Group</string>
+    <string name="activate">Activate</string>
     <string name="client_activated_successfully">Client Activated Successfully</string>
+    <string name="center_activated_successfully">Center Activated Successfully</string>
+    <string name="group_created_successfully">Group Activated Successfully</string>
     <string name="loan_disburse_successfully">Loan Successfully Disbursed</string>
+    <string name="center_created_successfully">Center created successfully</string>
     <string name="savings_account_closed">Savings Account Closed</string>
     <string name="savings_account_activated">Savings Account Activated</string>
     <string name="more_info">More client info</string>
@@ -400,6 +406,7 @@
     <string name="error_select_center">Please Select a Center</string>
     <string name="error_client_inactive">Client Inactive</string>
     <string name="error_group_inactive">Group Inactive</string>
+    <string name="error_center_inactive">Center Inactive</string>
     <string name="error_to_activate_savingsaccount">Error To Activate SavingsAccount</string>
     <string name="error_submitting_survey">Error While Submitting Survey.\nPlease Try Again</string>
 

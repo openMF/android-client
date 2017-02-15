@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Rajan Maurya on 09/02/17.
  */
 
-public class ClientActivate implements Parcelable {
+public class ActivatePayload implements Parcelable {
 
     @SerializedName("activationDate")
     String activationDate;
@@ -57,29 +57,29 @@ public class ClientActivate implements Parcelable {
         dest.writeString(this.locale);
     }
 
-    public ClientActivate(String activationDate) {
+    public ActivatePayload(String activationDate) {
         this.activationDate = activationDate;
     }
 
-    public ClientActivate() {
+    public ActivatePayload() {
     }
 
-    protected ClientActivate(Parcel in) {
+    protected ActivatePayload(Parcel in) {
         this.activationDate = in.readString();
         this.dateFormat = in.readString();
         this.locale = in.readString();
     }
 
-    public static final Parcelable.Creator<ClientActivate> CREATOR = new Parcelable
-            .Creator<ClientActivate>() {
+    public static final Parcelable.Creator<ActivatePayload> CREATOR = new Parcelable
+            .Creator<ActivatePayload>() {
         @Override
-        public ClientActivate createFromParcel(Parcel source) {
-            return new ClientActivate(source);
+        public ActivatePayload createFromParcel(Parcel source) {
+            return new ActivatePayload(source);
         }
 
         @Override
-        public ClientActivate[] newArray(int size) {
-            return new ClientActivate[size];
+        public ActivatePayload[] newArray(int size) {
+            return new ActivatePayload[size];
         }
     };
 }

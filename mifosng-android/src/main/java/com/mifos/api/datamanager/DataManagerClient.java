@@ -5,7 +5,7 @@ import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.client.ClientActivate;
+import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.ClientAddressRequest;
 import com.mifos.objects.client.ClientAddressResponse;
 import com.mifos.objects.client.ClientPayload;
@@ -401,7 +401,8 @@ public class DataManagerClient {
      * @param clientId
      * @return GenericResponse
      */
-    public Observable<GenericResponse> activateClient(int clientId, ClientActivate clientActivate) {
+    public Observable<GenericResponse> activateClient(int clientId,
+                                                      ActivatePayload clientActivate) {
         return mBaseApiManager.getClientsApi().activateClient(clientId, clientActivate);
     }
 }

@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.createnewgroup;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.group.Group;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.response.SaveResponse;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface CreateNewGroupMvpView extends MvpView {
 
     void showOffices(List<Office> offices);
 
-    void showGroupCreatedSuccessfully(Group group);
+    void showGroupCreatedSuccessfully(SaveResponse group);
 
     void showFetchingError(String s);
 }

@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.collectionsheet;
 
-import com.mifos.api.model.SaveResponse;
+import com.mifos.objects.response.SaveResponse;
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.db.CollectionSheet;
 
