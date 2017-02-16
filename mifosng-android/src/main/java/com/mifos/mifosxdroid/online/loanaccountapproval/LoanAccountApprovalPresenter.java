@@ -1,15 +1,18 @@
-package com.mifos.mifosxdroid.dialogfragments.loanaccountapproval;
+package com.mifos.mifosxdroid.online.loanaccountapproval;
 
 import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.LoanApproval;
+import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -51,11 +54,23 @@ public class LoanAccountApprovalPresenter extends BasePresenter<LoanAccountAppro
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showLoanApproveFailed("Try Again");
+                        getMvpView().showProgressbar(false);
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showLoanApproveFailed(
+                                        MFErrorParser.parseError(errorMessage)
+                                                .getErrors().get(0).getDefaultUserMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
                     }
 
                     @Override
                     public void onNext(GenericResponse genericResponse) {
+                        getMvpView().showProgressbar(false);
                         getMvpView().showLoanApproveSuccessfully(genericResponse);
                     }
                 });

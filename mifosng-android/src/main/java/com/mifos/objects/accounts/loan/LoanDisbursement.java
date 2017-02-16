@@ -4,14 +4,27 @@
  */
 package com.mifos.objects.accounts.loan;
 
-public class LoanDisbursement {
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    private String locale = "en";
-    private String dateFormat = "dd MMMM yyyy";
-    private String actualDisbursementDate;
-    private String note;
-    private String transactionAmount;
-    private int paymentTypeId;
+import com.google.gson.annotations.SerializedName;
+
+public class LoanDisbursement implements Parcelable {
+
+    @SerializedName("actualDisbursementDate")
+    String actualDisbursementDate;
+
+    @SerializedName("note")
+    String note;
+
+    @SerializedName("transactionAmount")
+    Double transactionAmount;
+
+    @SerializedName("paymentTypeId")
+    Integer paymentTypeId;
+
+    String locale = "en";
+    String dateFormat = "dd MMMM yyyy";
 
     public String getLocale() {
         return locale;
@@ -45,19 +58,60 @@ public class LoanDisbursement {
         this.actualDisbursementDate = actualDisbursementDate;
     }
 
-    public String getTransactionAmount() {
+    public Double getTransactionAmount() {
         return transactionAmount;
     }
 
-    public void setTransactionAmount(String transactionAmount) {
+    public void setTransactionAmount(Double transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
 
-    public int getPaymentId() {
+    public Integer getPaymentId() {
         return paymentTypeId;
     }
 
-    public void setPaymentId(int paymentTypeId) {
+    public void setPaymentId(Integer paymentTypeId) {
         this.paymentTypeId = paymentTypeId;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.actualDisbursementDate);
+        dest.writeString(this.note);
+        dest.writeValue(this.transactionAmount);
+        dest.writeValue(this.paymentTypeId);
+        dest.writeString(this.locale);
+        dest.writeString(this.dateFormat);
+    }
+
+    public LoanDisbursement() {
+    }
+
+    protected LoanDisbursement(Parcel in) {
+        this.actualDisbursementDate = in.readString();
+        this.note = in.readString();
+        this.transactionAmount = (Double) in.readValue(Double.class.getClassLoader());
+        this.paymentTypeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.locale = in.readString();
+        this.dateFormat = in.readString();
+    }
+
+    public static final Parcelable.Creator<LoanDisbursement> CREATOR =
+            new Parcelable.Creator<LoanDisbursement>() {
+        @Override
+        public LoanDisbursement createFromParcel(Parcel source) {
+            return new LoanDisbursement(source);
+        }
+
+        @Override
+        public LoanDisbursement[] newArray(int size) {
+            return new LoanDisbursement[size];
+        }
+    };
 }

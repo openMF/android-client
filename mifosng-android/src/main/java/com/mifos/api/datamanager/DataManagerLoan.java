@@ -1,8 +1,10 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperLoan;
 import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
@@ -10,6 +12,7 @@ import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.LoanTemplate;
+import com.mifos.objects.templates.loans.LoanTransactionTemplate;
 import com.mifos.services.data.LoansPayload;
 import com.mifos.utils.PrefManager;
 
@@ -263,5 +266,28 @@ public class DataManagerLoan {
     public Observable<LoanRepaymentRequest> updateLoanRepaymentTransaction(
             LoanRepaymentRequest loanRepaymentRequest) {
         return mDatabaseHelperLoan.updateLoanRepaymentTransaction(loanRepaymentRequest);
+    }
+
+    /**
+     * This is for fetching the any type of template.
+     * Example:
+     * 1. disburse
+     * 2. repayment
+     * 3. waiver
+     * 4. refundbycash
+     * 5. foreclosure
+     *
+     * @param loanId Loan Id
+     * @param command Template Type
+     * @return
+     */
+    public Observable<LoanTransactionTemplate> getLoanTransactionTemplate(int loanId,
+                                                                          String command) {
+        return mBaseApiManager.getLoanApi().getLoanTransactionTemplate(loanId, command);
+    }
+
+    public Observable<GenericResponse> dispurseLoan(int loanId,
+                                                    LoanDisbursement loanDisbursement) {
+        return mBaseApiManager.getLoanApi().disburseLoan(loanId, loanDisbursement);
     }
 }

@@ -1,22 +1,19 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition;
 
-import com.google.gson.Gson;
 import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -113,19 +110,8 @@ public class SyncLoanRepaymentTransactionPresenter extends
 
                     @Override
                     public void onError(Throwable e) {
-                        try {
-                            if (e instanceof HttpException) {
-                                String errorMessage = ((HttpException) e).response().errorBody()
-                                        .string();
-                                Gson gson = new Gson();
-                                ErrorSyncServerMessage syncErrorMessage = gson.
-                                        fromJson(errorMessage, ErrorSyncServerMessage.class);
-                                getMvpView().showProgressbar(false);
-                                getMvpView().showPaymentFailed(syncErrorMessage);
-                            }
-                        } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
-                        }
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showPaymentFailed(MFErrorParser.errorMessage(e));
                     }
 
                     @Override

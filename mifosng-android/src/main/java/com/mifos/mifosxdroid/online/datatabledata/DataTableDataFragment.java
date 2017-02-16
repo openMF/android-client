@@ -5,24 +5,32 @@
 
 package com.mifos.mifosxdroid.online.datatabledata;
 
-import android.os.Build;
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
 import com.mifos.objects.noncore.DataTable;
+import com.mifos.utils.Constants;
 import com.mifos.utils.DataTableUIBuilder;
 import com.mifos.utils.FragmentConstants;
 
@@ -32,21 +40,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DataTableDataFragment extends ProgressableFragment
-        implements DataTableUIBuilder.DataTableActionListener, DataTableDataMvpView {
-
-    public static final int MEUN_ITEM_ADD_NEW_ENTRY = 1000;
+public class DataTableDataFragment extends MifosBaseFragment
+        implements DataTableUIBuilder.DataTableActionListener, DataTableDataMvpView,
+        SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.linear_layout_datatables)
     LinearLayout linearLayout;
+
+    @BindView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.progressbar_data_table)
+    ProgressBar pbDataTable;
+
+    @BindView(R.id.ll_error)
+    LinearLayout llError;
+
+    @BindView(R.id.tv_error)
+    TextView tvError;
 
     @Inject
     DataTableDataPresenter mDataTableDataPresenter;
 
     private DataTable dataTable;
-
     private int entityId;
-
     private View rootView;
 
 
@@ -74,65 +91,46 @@ public class DataTableDataFragment extends ProgressableFragment
         mDataTableDataPresenter.attachView(this);
 
         setToolbarTitle(dataTable.getRegisteredTableName());
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
+        swipeRefreshLayout.setOnRefreshListener(this);
 
-        inflateView();
+        mDataTableDataPresenter.loadDataTableInfo(dataTable.getRegisteredTableName(), entityId);
 
         return rootView;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.clear();
-        MenuItem menuItemAddNewEntryToDataTable = menu.add(Menu.NONE, MEUN_ITEM_ADD_NEW_ENTRY,
-                Menu.NONE, getString(R.string.add_new));
-        menuItemAddNewEntryToDataTable.setIcon(getResources().getDrawable(R.drawable
-                .ic_action_content_new));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            menuItemAddNewEntryToDataTable.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == MEUN_ITEM_ADD_NEW_ENTRY) {
-            DataTableRowDialogFragment dataTableRowDialogFragment = DataTableRowDialogFragment
-                    .newInstance(dataTable, entityId);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            fragmentTransaction.addToBackStack(FragmentConstants.DFRAG_DATATABLE_ENTRY_FORM);
-            dataTableRowDialogFragment.show(fragmentTransaction, "Document Dialog Fragment");
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void inflateView() {
+    public void onRefresh() {
+        linearLayout.setVisibility(View.GONE);
         mDataTableDataPresenter.loadDataTableInfo(dataTable.getRegisteredTableName(), entityId);
     }
 
     @Override
-    public void onUpdateActionRequested(JsonElement jsonElement) {
-
-    }
-
-    @Override
-    public void onRowDeleted() {
-        inflateView();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mDataTableDataPresenter.detachView();
+    public void showDataTableOptions(final String table, final int entity, final int rowId) {
+        new MaterialDialog.Builder().init(getActivity())
+                .setItems(R.array.datatable_options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                mDataTableDataPresenter.deleteDataTableEntry(table, entity, rowId);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                })
+                .createMaterialDialog()
+                .show();
     }
 
     @Override
     public void showDataTableInfo(JsonArray jsonElements) {
-
         if (jsonElements != null) {
+            linearLayout.setVisibility(View.VISIBLE);
+            llError.setVisibility(View.GONE);
+            linearLayout.removeAllViews();
             linearLayout.invalidate();
             DataTableUIBuilder.DataTableActionListener mListener =
                     (DataTableUIBuilder
@@ -145,12 +143,79 @@ public class DataTableDataFragment extends ProgressableFragment
     }
 
     @Override
-    public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    public void showDataTableDeletedSuccessfully() {
+        mDataTableDataPresenter.loadDataTableInfo(dataTable.getRegisteredTableName(), entityId);
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        showProgress(b);
+    public void showEmptyDataTable() {
+        linearLayout.setVisibility(View.GONE);
+        llError.setVisibility(View.VISIBLE);
+        tvError.setText(R.string.empty_data_table);
+        Toaster.show(rootView, R.string.empty_data_table);
+    }
+
+    @Override
+    public void showFetchingError(int message) {
+        showFetchingError(getString(message));
+    }
+
+    @Override
+    public void showFetchingError(String errorMessage) {
+        linearLayout.setVisibility(View.GONE);
+        llError.setVisibility(View.VISIBLE);
+        tvError.setText(errorMessage);
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgressbar(boolean show) {
+        swipeRefreshLayout.setRefreshing(false);
+        if (show) {
+            linearLayout.setVisibility(View.GONE);
+            pbDataTable.setVisibility(View.VISIBLE);
+        } else {
+            linearLayout.setVisibility(View.VISIBLE);
+            pbDataTable.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_add, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_add) {
+            DataTableRowDialogFragment dataTableRowDialogFragment = DataTableRowDialogFragment
+                    .newInstance(dataTable, entityId);
+            dataTableRowDialogFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.addToBackStack(FragmentConstants.DFRAG_DATATABLE_ENTRY_FORM);
+            dataTableRowDialogFragment.show(fragmentTransaction, "Document Dialog Fragment");
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Constants.DIALOG_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    mDataTableDataPresenter
+                            .loadDataTableInfo(dataTable.getRegisteredTableName(), entityId);
+                }
+                break;
+        }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDataTableDataPresenter.detachView();
     }
 }

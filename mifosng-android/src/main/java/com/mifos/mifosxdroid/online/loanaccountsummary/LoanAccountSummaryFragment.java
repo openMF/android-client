@@ -7,14 +7,12 @@ package com.mifos.mifosxdroid.online.loanaccountsummary;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,20 +23,18 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountApproval;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment;
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment;
+import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
+import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -72,7 +68,6 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     private static final int TRANSACTION_REPAYMENT = 2;
 
     public int loanAccountNumber;
-    public List<DataTable> loanDataTables = new ArrayList<DataTable>();
 
     @BindView(R.id.view_status_indicator)
     View view_status_indicator;
@@ -245,7 +240,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+        menu.add(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
                 .DATA_TABLE_LOAN_NAME);
         menu.add(Menu.NONE, MENU_ITEM_LOAN_TRANSACTIONS, Menu.NONE, getResources().getString(R
                 .string.transactions));
@@ -255,57 +250,32 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
                 .documents));
         menu.add(Menu.NONE, MENU_ITEM_CHARGES, Menu.NONE, getResources().getString(R.string
                 .charges));
-
-        int SUBMENU_ITEM_ID = 0;
-
-        // Create a Sub Menu that holds a link to all data tables
-        SubMenu dataTableSubMenu = menu.findItem(MENU_ITEM_DATA_TABLES).getSubMenu();
-        if (dataTableSubMenu != null && loanDataTables != null && loanDataTables.size() > 0) {
-            Iterator<DataTable> dataTableIterator = loanDataTables.iterator();
-            while (dataTableIterator.hasNext()) {
-                dataTableSubMenu.add(Menu.NONE, SUBMENU_ITEM_ID, Menu.NONE, dataTableIterator
-                        .next().getRegisteredTableName());
-                SUBMENU_ITEM_ID++;
-            }
-        }
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == MENU_ITEM_REPAYMENT_SCHEDULE)
-            mListener.loadRepaymentSchedule(loanAccountNumber);
-
-        if (item.getItemId() == MENU_ITEM_LOAN_TRANSACTIONS)
-            mListener.loadLoanTransactions(loanAccountNumber);
-
         int id = item.getItemId();
-
-        if (id >= 0 && id < loanDataTables.size()) {
-            DataTableDataFragment dataTableDataFragment = DataTableDataFragment.newInstance
-                    (loanDataTables.get(item.getItemId()), loanAccountNumber);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
-            fragmentTransaction.replace(container, dataTableDataFragment);
-            fragmentTransaction.commit();
-        }
-
-        if (item.getItemId() == MENU_ITEM_DOCUMENTS) {
-            loadDocuments();
-        }
-        if (item.getItemId() == MENU_ITEM_CHARGES) {
-            loadloanCharges();
+        switch (id) {
+            case MENU_ITEM_REPAYMENT_SCHEDULE:
+                mListener.loadRepaymentSchedule(loanAccountNumber);
+                break;
+            case MENU_ITEM_LOAN_TRANSACTIONS:
+                mListener.loadLoanTransactions(loanAccountNumber);
+                break;
+            case MENU_ITEM_DOCUMENTS:
+                loadDocuments();
+                break;
+            case MENU_ITEM_CHARGES:
+                loadloanCharges();
+                break;
+            case MENU_ITEM_DATA_TABLES:
+                loadLoanDataTables();
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Use this method to fetch all datatables for client and inflate them as
-     * menu options
-     */
-    public void inflateDataTablesList() {
-        mLoanAccountSummaryPresenter.loadLoanDataTable();
     }
 
     public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {
@@ -369,7 +339,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
                 chargesList);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
         fragmentTransaction.replace(container, loanChargeFragment);
         fragmentTransaction.commit();
     }
@@ -377,7 +347,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     public void approveLoan() {
 
         LoanAccountApproval loanAccountApproval = LoanAccountApproval.newInstance
-                (loanAccountNumber);
+                (loanAccountNumber, clientLoanWithAssociations);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
@@ -387,8 +357,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
 
     public void disburseLoan() {
 
-        LoanAccountDisbursement loanAccountDisbursement = LoanAccountDisbursement.newInstance
-                (loanAccountNumber);
+        LoanAccountDisbursementFragment loanAccountDisbursement =
+                LoanAccountDisbursementFragment.newInstance(loanAccountNumber);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
@@ -397,16 +367,14 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
 
     }
 
-    @Override
-    public void showLoanDataTable(List<DataTable> dataTables) {
-        if (dataTables != null) {
-            Iterator<DataTable> dataTableIterator = dataTables.iterator();
-            loanDataTables.clear();
-            while (dataTableIterator.hasNext()) {
-                DataTable dataTable = dataTableIterator.next();
-                loanDataTables.add(dataTable);
-            }
-        }
+    public void loadLoanDataTables() {
+        DataTableFragment loanAccountFragment = DataTableFragment.newInstance(Constants
+                .DATA_TABLE_NAME_LOANS, loanAccountNumber);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -437,14 +405,14 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             // if Loan is Pending for Approval
             // the Action would be Approve Loan
             view_status_indicator.setBackgroundColor(
-                    ContextCompat.getColor(getActivity(), R.color.blue));
+                    ContextCompat.getColor(getActivity(), R.color.light_yellow));
             bt_processLoanTransaction.setText("Approve Loan");
             processLoanTransactionAction = ACTION_APPROVE_LOAN;
         } else if (loanWithAssociations.getStatus().getWaitingForDisbursal()) {
             // if Loan is Waiting for Disbursal
             // the Action would be Disburse Loan
             view_status_indicator.setBackgroundColor(
-                    ContextCompat.getColor(getActivity(), R.color.light_yellow));
+                    ContextCompat.getColor(getActivity(), R.color.blue));
 
             bt_processLoanTransaction.setText("Disburse Loan");
             processLoanTransactionAction = ACTION_DISBURSE_LOAN;
@@ -465,7 +433,6 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             bt_processLoanTransaction.setEnabled(false);
             bt_processLoanTransaction.setText("Loan Closed");
         }
-        inflateDataTablesList();
     }
 
     @Override
@@ -488,8 +455,6 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putParcelable("LoanWithAssociation", clientLoanWithAssociations);
-        savedInstanceState.putParcelableArrayList("LoanDataTable",
-                (ArrayList<? extends Parcelable>) loanDataTables);
     }
 
     @Override
@@ -498,7 +463,6 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         if (savedInstanceState != null) {
             // Restore last state for checked position.
             clientLoanWithAssociations = savedInstanceState.getParcelable("LoanWithAssociation");
-            loanDataTables = savedInstanceState.getParcelableArrayList("LoanDataTable");
         }
 
     }

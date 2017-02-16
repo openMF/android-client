@@ -26,7 +26,7 @@ public class LoanOfficerOptions implements Parcelable {
     String displayName;
 
     @SerializedName("mobileNo")
-    Double mobileNo;
+    String mobileNo;
 
     @SerializedName("officeId")
     Integer officeId;
@@ -75,11 +75,11 @@ public class LoanOfficerOptions implements Parcelable {
         this.displayName = displayName;
     }
 
-    public Double getMobileNo() {
+    public String getMobileNo() {
         return mobileNo;
     }
 
-    public void setMobileNo(Double mobileNo) {
+    public void setMobileNo(String mobileNo) {
         this.mobileNo = mobileNo;
     }
 
@@ -167,7 +167,7 @@ public class LoanOfficerOptions implements Parcelable {
         this.firstname = in.readString();
         this.lastname = in.readString();
         this.displayName = in.readString();
-        this.mobileNo = (Double) in.readValue(Double.class.getClassLoader());
+        this.mobileNo = (String) in.readValue(String.class.getClassLoader());
         this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.officeName = (String) in.readValue(String.class.getClassLoader());
         this.isLoanOfficer = (Boolean) in.readValue(Boolean.class.getClassLoader());

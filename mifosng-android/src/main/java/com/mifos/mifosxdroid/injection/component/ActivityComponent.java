@@ -6,10 +6,13 @@ import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountapproval.LoanAccountApproval;
-import com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement.LoanAccountDisbursement;
+import com.mifos.mifosxdroid.online.activate.ActivateFragment;
+import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment;
+import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
+import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
-import com.mifos.mifosxdroid.dialogfragments.savingsaccountapproval.SavingsAccountApproval;
+import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment;
 import com.mifos.mifosxdroid.injection.PerActivity;
@@ -25,6 +28,7 @@ import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
+import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment;
 import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
@@ -123,15 +127,17 @@ public interface ActivityComponent {
 
     void inject(DataTableRowDialogFragment dataTableRowDialogFragment);
 
+    void inject(DataTableListFragment dataTableListFragment);
+
     void inject(DocumentDialogFragment documentDialogFragment);
 
     void inject(LoanAccountApproval loanAccountApproval);
 
-    void inject(LoanAccountDisbursement loanAccountDisbursement);
+    void inject(LoanAccountDisbursementFragment loanAccountDisbursement);
 
     void inject(LoanChargeDialogFragment loanChargeDialogFragment);
 
-    void inject(SavingsAccountApproval savingsAccountApproval);
+    void inject(SavingsAccountApprovalFragment savingsAccountApproval);
 
     void inject(SyncClientPayloadsFragment syncPayloadsFragment);
 
@@ -150,4 +156,10 @@ public interface ActivityComponent {
     void inject(IdentifierDialogFragment identifierDialogFragment);
 
     void inject(PathTrackingActivity pathTrackingActivity);
+
+    void inject(CenterDetailsFragment centerDetailsFragment);
+
+    void inject(ActivateFragment activateClientFragment);
+
+    void inject(DataTableFragment dataTableFragment);
 }

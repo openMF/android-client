@@ -8,14 +8,39 @@ package com.mifos.objects.noncore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 /**
  * Created by ishankhanna on 16/06/14.
  */
-public class ColumnValue implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class ColumnValue extends MifosBaseModel implements Parcelable {
 
+    @PrimaryKey
     Integer id;
+
+    @Column
     String value;
+
+    @Column
     Integer score;
+
+    @Column
+    String registeredTableName;
+
+    public String getRegisteredTableName() {
+        return registeredTableName;
+    }
+
+    public void setRegisteredTableName(String registeredTableName) {
+        this.registeredTableName = registeredTableName;
+    }
 
     public Integer getId() {
         return id;

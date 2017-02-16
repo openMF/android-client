@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
+
 /**
  * Created by rajan on 13/3/16.
  */
@@ -24,13 +25,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 public class Options  extends MifosBaseModel implements Parcelable {
 
     @Column
-    String genderOptions;
-
-    @Column
-    String clientTypeOptions;
-
-    @Column
-    String clientClassificationOptions;
+    String optionType;
 
     @PrimaryKey
     int id;
@@ -80,28 +75,12 @@ public class Options  extends MifosBaseModel implements Parcelable {
         this.description = description;
     }
 
-    public String getGenderOptions() {
-        return this.genderOptions;
+    public String getOptionType() {
+        return optionType;
     }
 
-    public void setGenderOptions(String genderOptions) {
-        this.genderOptions = genderOptions;
-    }
-
-    public String getClientTypeOptions() {
-        return this.clientTypeOptions;
-    }
-
-    public void setClientTypeOptions(String clientTypeOptions) {
-        this.clientTypeOptions = clientTypeOptions;
-    }
-
-    public String getClientClassificationOptions() {
-        return this.clientClassificationOptions;
-    }
-
-    public void setClientClassificationOptions(String clientClassificationOptions) {
-        this.clientClassificationOptions = clientClassificationOptions;
+    public void setOptionType(String optionType) {
+        this.optionType = optionType;
     }
 
     public boolean isActiveStatus() {
@@ -115,9 +94,6 @@ public class Options  extends MifosBaseModel implements Parcelable {
     @Override
     public String toString() {
         return "Options{" +
-                "genderOptions='" + genderOptions + '\'' +
-                ", clientTypeOptions='" + clientTypeOptions + '\'' +
-                ", clientClassificationOptions='" + clientClassificationOptions + '\'' +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", position=" + position +
@@ -137,9 +113,6 @@ public class Options  extends MifosBaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.genderOptions);
-        dest.writeString(this.clientTypeOptions);
-        dest.writeString(this.clientClassificationOptions);
         dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeInt(this.position);
@@ -148,9 +121,6 @@ public class Options  extends MifosBaseModel implements Parcelable {
     }
 
     protected Options(Parcel in) {
-        this.genderOptions = in.readString();
-        this.clientTypeOptions = in.readString();
-        this.clientClassificationOptions = in.readString();
         this.id = in.readInt();
         this.name = in.readString();
         this.position = in.readInt();

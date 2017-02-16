@@ -22,7 +22,6 @@ import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
@@ -204,9 +203,9 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     }
 
     @Override
-    public void showGroupSyncFailed(ErrorSyncServerMessage error) {
+    public void showGroupSyncFailed(String errorMessage) {
         GroupPayload groupPayload = groupPayloads.get(mClientSyncIndex);
-        groupPayload.setErrorMessage(error.getDefaultUserMessage());
+        groupPayload.setErrorMessage(errorMessage);
         mSyncGroupPayloadsPresenter.updateGroupPayload(groupPayload);
 
     }

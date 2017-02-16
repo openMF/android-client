@@ -11,6 +11,7 @@ package com.mifos.mifosxdroid.online.createnewcenter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,10 +38,12 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.response.SaveResponse;
 import com.mifos.services.data.CenterPayload;
+import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.ValidationUtil;
@@ -74,6 +78,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @BindView(R.id.btn_submit)
     Button btnSubmit;
+
+    @BindView(R.id.ll_center)
+    LinearLayout llCenter;
 
     int officeId;
     Boolean result = true;
@@ -270,9 +277,18 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     }
 
     @Override
-    public void centerCreatedSuccessfully(Center center) {
-        Toast.makeText(getActivity(), "Center created successfully", Toast
-                .LENGTH_LONG).show();
+    public void centerCreatedSuccessfully(SaveResponse saveResponse) {
+        Toast.makeText(getActivity(), R.string.center_created_successfully,
+                Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStack();
+        Intent intent = new Intent(getActivity(), CentersActivity.class);
+        intent.putExtra(Constants.CENTER_ID, saveResponse.getGroupId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void showFetchingError(int errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -281,11 +297,13 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        if (b) {
-            showMifosProgressDialog();
+    public void showProgressbar(boolean show) {
+        if (show) {
+            llCenter.setVisibility(View.GONE);
+            showMifosProgressBar();
         } else {
-            hideMifosProgressDialog();
+            llCenter.setVisibility(View.VISIBLE);
+            hideMifosProgressBar();
         }
     }
 

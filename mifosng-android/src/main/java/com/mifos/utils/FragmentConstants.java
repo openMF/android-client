@@ -30,6 +30,8 @@ public class FragmentConstants {
 
     public static final String FRAG_CENTER_LIST = "Centers List Fragment";
 
+    public static final String FRAG_CENTER_DETAIL = "Center Details";
+
     public static final String FRAG_GROUP_LIST = "Group List Fragment";
 
     public static final String DFRAG_DATE_PICKER = "Date Picker";
@@ -40,4 +42,6 @@ public class FragmentConstants {
     public static final String DFRAG_DATATABLE_ENTRY_FORM = "Data_Table_Entry_Form";
 
     public static final String FRAG_DATA_TABLE = "Data Table Fragment";
+
+    public static final String DATA_TABLE_LIST = "Associated Datatables";
 }

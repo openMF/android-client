@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.online.createnewclient;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -28,11 +29,13 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
+import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.ValidationUtil;
@@ -99,6 +102,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     CreateNewClientPresenter createNewClientPresenter;
 
     View rootView;
+    private boolean hasDataTables;
     private int officeId;
     private int clientTypeId;
     private int staffId;
@@ -134,7 +138,6 @@ public class CreateNewClientFragment extends ProgressableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         genderOptionsList = new ArrayList<>();
         clientClassificationList = new ArrayList<>();
         clientTypeList = new ArrayList<>();
@@ -146,7 +149,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null);
-
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         ButterKnife.bind(this, rootView);
         createNewClientPresenter.attachView(this);
 
@@ -265,7 +268,6 @@ public class CreateNewClientFragment extends ProgressableFragment
             clientPayload.setClientClassificationId(clientClassificationId);
         }
 
-
         if (!isFirstNameValid()) {
             return;
         }
@@ -273,7 +275,18 @@ public class CreateNewClientFragment extends ProgressableFragment
             return;
         }
         if (isLastNameValid()) {
-            createNewClientPresenter.createClient(clientPayload);
+            if (hasDataTables) {
+                DataTableListFragment fragment = DataTableListFragment.newInstance(
+                        clientsTemplate.getDataTables(),
+                        clientPayload, Constants.CREATE_CLIENT);
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                        .beginTransaction();
+                fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
+                fragmentTransaction.replace(R.id.container, fragment).commit();
+            } else {
+                createNewClientPresenter.createClient(clientPayload);
+            }
         }
     }
 
@@ -294,6 +307,10 @@ public class CreateNewClientFragment extends ProgressableFragment
     @Override
     public void showClientTemplate(ClientsTemplate clientsTemplate) {
         this.clientsTemplate = clientsTemplate;
+
+        if (!clientsTemplate.getDataTables().isEmpty()) {
+            hasDataTables = true;
+        }
 
         genderOptionsList.addAll(
                 createNewClientPresenter.filterOptions(clientsTemplate.getGenderOptions()));
@@ -329,6 +346,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     @Override
     public void showClientCreatedSuccessfully(int message) {
         Toaster.show(rootView, message);
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override

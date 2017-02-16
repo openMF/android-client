@@ -51,6 +51,8 @@ public class Constants {
 
     public static final String CLIENT_ID = "clientId";
 
+    public static final String ID = "id";
+
     public static final String CLIENT = "Client";
 
     public static final String CLIENTS = "clients";
@@ -117,6 +119,18 @@ public class Constants {
 
     public static final String SERVICE_STATUS = "service_status";
 
+    public static final String DATA_TABLE_NAME = "data_table_name";
+    
+    public static final int DIALOG_FRAGMENT = 1;
+
+    public static final String ACTIVATE_CLIENT = "activate_client";
+
+    public static final String ACTIVATE_CENTER = "activate_center";
+
+    public static final String ACTIVATE_GROUP = "activate_group";
+
+    public static final String ACTIVATE_TYPE = "activation_type";
+
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
     public static final int REQUEST_PERMISSION_SETTING = 254;
@@ -163,4 +177,13 @@ public class Constants {
      */
     public static final int USER_ONLINE = 0;
     public static final int USER_OFFLINE = 1;
+
+    /**
+     * Constants to determine in the generic DataTableListFragment, the type of query that
+     * has to be forwarded after showing the datatables and adding the values
+     * to the corresponding payload.
+     */
+    public static final int CREATE_CLIENT = 3001;
+    public static final int CLIENT_LOAN = 3002;
+    public static final int GROUP_LOAN = 3003;
 }

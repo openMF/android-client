@@ -5,7 +5,7 @@
 
 package com.mifos.mifosxdroid.online.centerlist;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -15,8 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -27,9 +27,13 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.CentersActivity;
+import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
+import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +65,8 @@ public class CenterListFragment extends MifosBaseFragment
     @BindView(R.id.noCenterText)
     TextView mNoCenterText;
 
-    @BindView(R.id.ll_error)
-    LinearLayout ll_error;
+    @BindView(R.id.rl_error)
+    RelativeLayout rlError;
 
     @Inject
     CenterListPresenter mCenterListPresenter;
@@ -71,18 +75,26 @@ public class CenterListFragment extends MifosBaseFragment
     CentersListAdapter centersListAdapter;
 
     private View rootView;
-    private OnFragmentInteractionListener mListener;
     private List<Center> centers;
     private LinearLayoutManager layoutManager;
 
     @Override
     public void onItemClick(View childView, int position) {
-        mListener.loadGroupsOfCenter(centers.get(position).getId());
+        Intent centerIntent = new Intent(getActivity(), CentersActivity.class);
+        centerIntent.putExtra(Constants.CENTER_ID, centers.get(position).getId());
+        startActivity(centerIntent);
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
         mCenterListPresenter.loadCentersGroupAndMeeting(centers.get(position).getId());
+    }
+
+    public static CenterListFragment newInstance() {
+        CenterListFragment centerListFragment = new CenterListFragment();
+        Bundle args = new Bundle();
+        centerListFragment.setArguments(args);
+        return centerListFragment;
     }
 
     @Override
@@ -139,6 +151,12 @@ public class CenterListFragment extends MifosBaseFragment
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    @OnClick(R.id.fab_create_center)
+    void onClickCreateNewCenter() {
+        ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewCenterFragment.newInstance(),
+                true, R.id.container);
+    }
+
     /**
      * This Method will be called, whenever user will pull down to RefreshLayout.
      */
@@ -152,7 +170,7 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @OnClick(R.id.noCentersIcon)
     public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
+        rlError.setVisibility(View.GONE);
         rv_centers.setVisibility(View.VISIBLE);
         mCenterListPresenter.loadCenters(false, 0);
     }
@@ -187,7 +205,7 @@ public class CenterListFragment extends MifosBaseFragment
     @Override
     public void showEmptyCenters(int message) {
         rv_centers.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         mNoCenterText.setText(getStringMessage(message));
     }
 
@@ -215,9 +233,11 @@ public class CenterListFragment extends MifosBaseFragment
             @Override
             public void onDatePicked(String date) {
                 if (centerWithAssociations.getCollectionMeetingCalendar().getId() != null) {
-                    mListener.loadCollectionSheetForCenter(id, date, centerWithAssociations
-                            .getCollectionMeetingCalendar()
-                            .getId());
+                    ((MifosBaseActivity) getActivity())
+                            .replaceFragment(CollectionSheetFragment.newInstance(id, date,
+                                    centerWithAssociations.getCollectionMeetingCalendar().getId()),
+                                    true, R.id.container);
+
                 } else {
                     showMessage(R.string.no_meeting_found);
                 }
@@ -233,7 +253,7 @@ public class CenterListFragment extends MifosBaseFragment
     @Override
     public void showFetchingError() {
         rv_centers.setVisibility(View.GONE);
-        ll_error.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
                 + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
         mNoCenterText.setText(errorMessage);
@@ -264,27 +284,8 @@ public class CenterListFragment extends MifosBaseFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " +
-                    "OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mCenterListPresenter.detachView();
-    }
-
-
-    public interface OnFragmentInteractionListener {
-        void loadGroupsOfCenter(int centerId);
-
-        void loadCollectionSheetForCenter(int centerId, String collectionDate, int
-                calenderInstanceId);
     }
 }

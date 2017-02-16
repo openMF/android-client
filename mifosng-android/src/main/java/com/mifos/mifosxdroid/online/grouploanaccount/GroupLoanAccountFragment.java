@@ -307,10 +307,12 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     public void onDatePicked(String date) {
         if (isdisbursementDate) {
             tvDisbursementonDate.setText(date);
+            disbursementon_date = date;
             isdisbursementDate = false;
         }
         if (issubmittedDate) {
             tvSubmittedonDate.setText(date);
+            submittion_date = date;
             issubmittedDate = false;
         }
     }

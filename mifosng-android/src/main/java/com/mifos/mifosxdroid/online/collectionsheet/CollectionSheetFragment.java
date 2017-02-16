@@ -23,7 +23,7 @@ import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.mifos.api.model.BulkRepaymentTransactions;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
-import com.mifos.api.model.SaveResponse;
+import com.mifos.objects.response.SaveResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;

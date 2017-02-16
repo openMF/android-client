@@ -10,5 +10,5 @@ public interface DataTableRowDialogMvpView extends MvpView {
 
     void showDataTableEntrySuccessfully(GenericResponse genericResponse);
 
-    void showError(String s, int response);
+    void showError(String message);
 }

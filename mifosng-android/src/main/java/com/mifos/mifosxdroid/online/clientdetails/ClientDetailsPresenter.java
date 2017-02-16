@@ -5,12 +5,9 @@ import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.zipmodels.ClientAndClientAccounts;
-import com.mifos.utils.Constants;
 
 import java.io.File;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,38 +47,6 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
     public void detachView() {
         super.detachView();
         if (mSubscription != null) mSubscription.unsubscribe();
-    }
-
-    /**
-     * This method load the Client DataTable and Table name is the "m_client"
-     * In Response List of DataTable will returns and displayed on click more info client
-     *
-     */
-    public void loadClientDataTable() {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_CLIENT)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<DataTable>>() {
-                    @Override
-                    public void onCompleted() {
-                        getMvpView().showProgressbar(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load Client DataTable");
-                    }
-
-                    @Override
-                    public void onNext(List<DataTable> dataTables) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showClientDataTable(dataTables);
-                    }
-                });
     }
 
     public void uploadImage(int id, File pngFile) {

@@ -10,6 +10,7 @@ package com.mifos.mifosxdroid.online.createnewgroup;
  */
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -32,13 +33,16 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.response.SaveResponse;
+import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosResponseHandler;
+import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
@@ -277,9 +281,15 @@ public class CreateNewGroupFragment extends ProgressableFragment
     }
 
     @Override
-    public void showGroupCreatedSuccessfully(Group group) {
+    public void showGroupCreatedSuccessfully(SaveResponse saveResponse) {
         Toast.makeText(getActivity(), "Group" + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStack();
+        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+            Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+            groupActivityIntent.putExtra(Constants.GROUP_ID, saveResponse.getGroupId());
+            startActivity(groupActivityIntent);
+        }
     }
 
     @Override

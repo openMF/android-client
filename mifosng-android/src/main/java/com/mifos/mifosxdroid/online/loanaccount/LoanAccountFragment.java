@@ -6,9 +6,9 @@
 package com.mifos.mifosxdroid.online.loanaccount;
 
 import android.R.layout;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +26,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.accounts.loan.AccountLinkingOptions;
 import com.mifos.objects.accounts.loan.Loans;
@@ -144,6 +145,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     String submissionDate;
     String disbursementDate;
 
+    private boolean hasDataTables;
     private DialogFragment mfDatePicker;
     private int productId;
     private int clientId;
@@ -162,6 +164,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     private Integer repaymentFrequencyDayOfWeek;
     private Double interestRatePerPeriod;
     private Integer linkAccountId;
+    private boolean isDisbursebemntDate = false;
+    private boolean isSubmissionDate = false;
 
     List<LoanProducts> mLoanProducts = new ArrayList<>();
     List<RepaymentFrequencyNthDayTypeOptions>
@@ -207,7 +211,6 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
     }
@@ -216,14 +219,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-
-        // Inflate the layout for this fragment
         if (getActivity().getActionBar() != null)
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         rootView = inflater.inflate(R.layout.fragment_add_loan, null);
-
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         ButterKnife.bind(this, rootView);
         mLoanAccountPresenter.attachView(this);
+
 
         inflateSubmissionDate();
         inflateDisbursementDate();
@@ -280,14 +282,36 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                 etNominalInterestRate.getEditableText().toString());
         loansPayload.setInterestRatePerPeriod(interestRatePerPeriod);
 
-        initiateLoanCreation(loansPayload);
+        if (hasDataTables) {
+            DataTableListFragment fragment = DataTableListFragment.newInstance(
+                    mLoanTemplate.getDataTables(),
+                    loansPayload, Constants.CLIENT_LOAN);
+
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
+            fragmentTransaction.replace(R.id.container, fragment).commit();
+
+        } else {
+            initiateLoanCreation(loansPayload);
+        }
+
     }
 
     @Override
     public void onDatePicked(String date) {
-        tvSubmittedOnDate.setText(date);
-        tvDisbursementOnDate.setText(date);
 
+        if (isSubmissionDate) {
+            tvSubmittedOnDate.setText(date);
+            submissionDate = date;
+            isSubmissionDate = false;
+        }
+
+        if (isDisbursebemntDate) {
+            tvDisbursementOnDate.setText(date);
+            disbursementDate = date;
+            isDisbursebemntDate = false;
+        }
     }
 
     private void inflateSpinners() {
@@ -407,6 +431,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @OnClick(R.id.tv_submittedon_date)
     public void setTvSubmittedOnDate() {
+        isSubmissionDate = true;
         mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
@@ -419,6 +444,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @OnClick(R.id.tv_disbursementon_date)
     public void setTvDisbursementOnDate() {
+        isDisbursebemntDate = true;
         mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
@@ -436,6 +462,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @Override
     public void showLoanAccountTemplate(LoanTemplate loanTemplate) {
         mLoanTemplate = loanTemplate;
+
+        hasDataTables = mLoanTemplate.getDataTables().size() > 0;
 
         mListRepaymentFrequencyNthDayTypeOptions.clear();
         mRepaymentFrequencyNthDayTypeOptions = mLoanTemplate
@@ -520,8 +548,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     @Override
     public void showLoanAccountCreatedSuccessfully(Loans loans) {
-        Toast.makeText(getActivity(), "The Loan has been submitted for Approval", Toast
-                .LENGTH_LONG).show();
+        Toast.makeText(getActivity(), R.string.loan_creation_success, Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void showMessage(int messageId) {
+        Toaster.show(rootView, messageId);
     }
 
     @Override
@@ -530,13 +563,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        showProgress(b);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void showProgressbar(boolean show) {
+        showProgress(show);
     }
 
     @Override
@@ -639,15 +667,17 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         interestRatePerPeriod = mLoanTemplate.getInterestRatePerPeriod();
         loanTermFrequencyType = mLoanTemplate.getInterestRateFrequencyType().getId();
         termFrequency = mLoanTemplate.getTermFrequency();
-        etPrincipal.setText(mLoanTemplate.getPrincipal().toString());
-        etNumberOfRepayments.setText(mLoanTemplate.getNumberOfRepayments().toString());
+        etPrincipal.setText(String.valueOf(mLoanTemplate.getPrincipal().toString()));
+        etNumberOfRepayments.setText(String.valueOf(
+                mLoanTemplate.getNumberOfRepayments().toString()));
         tvNominalRatePerYearMonth
                 .setText(mLoanTemplate.getInterestRateFrequencyType().getValue());
-        etNominalInterestRate.setText(mLoanTemplate.getInterestRatePerPeriod().toString());
-        etLoanTerm.setText(termFrequency.toString());
+        etNominalInterestRate.setText(String.valueOf(
+                mLoanTemplate.getInterestRatePerPeriod().toString()));
+        etLoanTerm.setText(String.valueOf(termFrequency.toString()));
         if (mLoanTemplate.getRepaymentEvery() != null) {
             repaymentEvery = mLoanTemplate.getRepaymentEvery();
-            etRepaidEvery.setText(repaymentEvery.toString());
+            etRepaidEvery.setText(String.valueOf(repaymentEvery.toString()));
         }
         if (mLoanTemplate.getFundId() != null) {
             fundId = mLoanTemplate.getFundId();

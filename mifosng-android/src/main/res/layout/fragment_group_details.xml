@@ -1,22 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ This project is licensed under the open source MPL V2.
-  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
-  -->
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/view_flipper"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:inAnimation="@android:anim/fade_in"
-    android:outAnimation="@android:anim/fade_out">
+    android:id="@+id/rl_group">
 
-    <!-- Comment this out when editing the actual content -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <!-- Actual content -->
     <ScrollView style="@style/ScrollView.Base">
 
         <LinearLayout style="@style/LinearLayout.Base">
@@ -151,4 +139,21 @@
 
         </LinearLayout>
     </ScrollView>
-</ViewFlipper>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_activate_group"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/activate_group"
+            android:background="@color/accent" />
+    </LinearLayout>
+
+</RelativeLayout>

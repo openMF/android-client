@@ -1,17 +1,19 @@
-package com.mifos.mifosxdroid.dialogfragments.loanaccountdisbursement;
+package com.mifos.mifosxdroid.online.loanaccountdisbursement;
 
-import com.mifos.api.DataManager;
 import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerLoan;
+import com.mifos.api.model.APIEndPoint;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.LoanDisbursement;
+import com.mifos.objects.templates.loans.LoanTransactionTemplate;
+import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import okhttp3.ResponseBody;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 8/6/16.
@@ -19,12 +21,13 @@ import rx.schedulers.Schedulers;
 public class LoanAccountDisbursementPresenter
         extends BasePresenter<LoanAccountDisbursementMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerLoan dataManagerLoan;
+    private CompositeSubscription subscriptions;
 
     @Inject
-    public LoanAccountDisbursementPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public LoanAccountDisbursementPresenter(DataManagerLoan dataManager) {
+        dataManagerLoan = dataManager;
+        subscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -35,61 +38,58 @@ public class LoanAccountDisbursementPresenter
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        subscriptions.unsubscribe();
     }
 
     public void loadLoanTemplate(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanTemplate(loanId)
+        subscriptions.add(dataManagerLoan.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribe(new Subscriber<LoanTransactionTemplate>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to load LoanTemplate");
+                        getMvpView().showError("s");
                     }
 
                     @Override
-                    public void onNext(ResponseBody response) {
+                    public void onNext(LoanTransactionTemplate loanTransactionTemplate) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showLoanTemplate(response);
+                        getMvpView().showLoanTransactionTemplate(loanTransactionTemplate);
                     }
-                });
+                })
+        );
     }
 
-    public void dispurseLoan(int loanId, LoanDisbursement loanDisbursement) {
+    public void disburseLoan(int loanId, LoanDisbursement loanDisbursement) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.dispurseLoan(loanId, loanDisbursement)
+        subscriptions.add(dataManagerLoan.dispurseLoan(loanId, loanDisbursement)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Try again");
+                        getMvpView().showError(MFErrorParser.errorMessage(e));
                     }
 
                     @Override
                     public void onNext(GenericResponse genericResponse) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showDispurseLoanSuccessfully(genericResponse);
+                        getMvpView().showDisburseLoanSuccessfully(genericResponse);
                     }
-                });
+                }));
     }
 
 }

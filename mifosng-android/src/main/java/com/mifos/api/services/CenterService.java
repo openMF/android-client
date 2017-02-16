@@ -4,10 +4,12 @@
  */
 package com.mifos.api.services;
 
+import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
-import com.mifos.api.model.SaveResponse;
+import com.mifos.objects.client.ActivatePayload;
+import com.mifos.objects.response.SaveResponse;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
 import com.mifos.objects.db.OfflineCenter;
@@ -69,7 +71,7 @@ public interface CenterService {
     void uploadNewClientDetails();*/
 
     @POST(APIEndPoint.CENTERS)
-    Observable<Center> createCenter(@Body CenterPayload centerPayload);
+    Observable<SaveResponse> createCenter(@Body CenterPayload centerPayload);
 
     @GET(APIEndPoint.CENTERS)
     Observable<List<OfflineCenter>> getCenterList(
@@ -78,4 +80,17 @@ public interface CenterService {
             @Query("meetingDate") String meetingDate,
             @Query("officeId") int officeId,
             @Query("staffId") int staffId);
+
+
+    /**
+     * This is the service to activate the center
+     * REST ENT POINT
+     * https://demo.openmf.org/fineract-provider/api/v1/centers/{centerId}?command=activate
+     *
+     * @param centerId
+     * @return GenericResponse
+     */
+    @POST(APIEndPoint.CENTERS + "/{centerId}?command=activate")
+    Observable<GenericResponse> activateCenter(@Path("centerId") int centerId,
+                                               @Body ActivatePayload activatePayload);
 }

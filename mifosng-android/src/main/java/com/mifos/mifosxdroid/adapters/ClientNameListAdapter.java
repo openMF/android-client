@@ -6,7 +6,6 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.SelectableAdapter;
 import com.mifos.objects.client.Client;
-import com.mifos.utils.PrefManager;
+import com.mifos.utils.ImageLoaderUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,35 +63,9 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
 
             // lazy the  load profile picture
             if (client.isImagePresent()) {
-
                 // make the image url
-                String url = PrefManager.getInstanceUrl()
-                        + "clients/"
-                        + client.getId()
-                        + "/images?maxHeight=120&maxWidth=120";
-                GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder()
-                        .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager.getTenant())
-                        .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
-                        .addHeader("Accept", "application/octet-stream")
-                        .build());
-
-                // download the image from the url
-                Glide.with(mContext)
-                        .load(glideUrl)
-                        .asBitmap()
-                        .placeholder(R.drawable.ic_dp_placeholder)
-                        .error(R.drawable.ic_dp_placeholder)
-                        .into(new BitmapImageViewTarget(((ViewHolder) holder).iv_userPicture) {
-                            @Override
-                            protected void setResource(Bitmap result) {
-                                // check a valid bitmap is downloaded
-                                if (result == null || result.getWidth() == 0)
-                                    return;
-
-                                // set to image view
-                                ((ViewHolder) holder).iv_userPicture.setImageBitmap(result);
-                            }
-                        });
+                ImageLoaderUtils.loadImage(mContext, client.getId(),
+                        ((ViewHolder) holder).iv_userPicture);
             } else {
                 ((ViewHolder) holder).iv_userPicture.setImageResource(R.drawable.ic_dp_placeholder);
             }

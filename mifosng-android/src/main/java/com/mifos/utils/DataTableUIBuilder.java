@@ -8,32 +8,22 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.mifos.api.BaseApiManager;
-import com.mifos.api.DataManager;
-import com.mifos.api.GenericResponse;
-import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.DataTable;
 
 import java.util.Iterator;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by ishankhanna on 17/06/14.
@@ -66,6 +56,25 @@ public class DataTableUIBuilder {
          */
         tableIndex = 0;
         while (jsonElementIterator.hasNext()) {
+
+            /*
+             * Creating CardView
+             */
+            CardView cardView = new CardView(context);
+            LinearLayout.LayoutParams params = new LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT
+            );
+            params.setMargins(8, 8, 8, 8);
+            cardView.setLayoutParams(params);
+            cardView.setRadius(8);
+            cardView.setPadding(16, 16, 16, 16);
+            cardView.setCardElevation(2);
+
+
+            /*
+             * Creating TableLayout
+             */
             TableLayout tableLayout = new TableLayout(context);
             tableLayout.setPadding(10, 10, 10, 10);
 
@@ -109,61 +118,28 @@ public class DataTableUIBuilder {
                         .LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layoutParams.setMargins(12, 16, 12, 16);
                 tableLayout.addView(tableRow, layoutParams);
-
                 rowIndex++;
             }
 
-            tableLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    Toast.makeText(context, "Update Row " + tableIndex, Toast.LENGTH_SHORT).show();
-                }
-            });
+            cardView.addView(tableLayout);
 
             tableLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
 
-                    Toast.makeText(context, "Deleting Row " + tableIndex, Toast.LENGTH_SHORT)
-                            .show();
-
-                    BaseApiManager baseApiManager = new BaseApiManager();
-                    DataManager dataManager = new DataManager(baseApiManager);
-                    Observable<GenericResponse> call = dataManager.removeDataTableEntry(
+                    //show DataTableOptions
+                    dataTableActionListener.showDataTableOptions(
                             dataTable.getRegisteredTableName(), entityId,
                             Integer.parseInt(jsonElement.getAsJsonObject()
                                     .get(dataTable.getColumnHeaderData()
                                             .get(0).getColumnName()).toString()));
-                    Subscription subscription = call.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Subscriber<GenericResponse>() {
-                                @Override
-                                public void onCompleted() {
-
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-
-                                }
-
-                                @Override
-                                public void onNext(GenericResponse genericResponse) {
-                                    Toast.makeText(context, "Deleted Row " +
-                                            tableIndex, Toast.LENGTH_SHORT).show();
-                                    dataTableActionListener.onRowDeleted();
-                                }
-                            });
 
                     return true;
                 }
             });
 
             View v = new View(context);
-            v.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
-            parentLayout.addView(tableLayout);
+            parentLayout.addView(cardView);
             parentLayout.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
                     .MATCH_PARENT, 5));
             Log.i("TABLE INDEX", "" + tableIndex);
@@ -173,8 +149,6 @@ public class DataTableUIBuilder {
     }
 
     public interface DataTableActionListener {
-        void onUpdateActionRequested(JsonElement jsonElement);
-
-        void onRowDeleted();
+        void showDataTableOptions(String table, int entity, int rowId);
     }
 }

@@ -75,7 +75,7 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         Date date = calendar.getTime();
-        onDatePickListener.onDatePicked(DateFormat.format("dd-mm-yyyy", date).toString());
+        onDatePickListener.onDatePicked(DateFormat.format("dd-MM-yyyy", date).toString());
 
     }
 
