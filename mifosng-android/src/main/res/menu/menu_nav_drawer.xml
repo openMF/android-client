@@ -8,28 +8,28 @@
         <item
             android:id="@+id/item_dashboard"
             android:checked="true"
-            android:icon="@drawable/ic_dashboard"
+            android:icon="@drawable/ic_dashboard_black_24dp"
             android:title="@string/dashboard"
             />
 
         <item
             android:id="@+id/item_clients"
             android:checked="false"
-            android:icon="@drawable/ic_clients"
+            android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/clients"
             />
 
         <item
             android:id="@+id/item_groups"
             android:checked="false"
-            android:icon="@drawable/ic_groups"
+            android:icon="@drawable/ic_group_black_24dp"
             android:title="@string/groups"
             />
 
         <item
             android:id="@+id/item_centers"
             android:checked="false"
-            android:icon="@drawable/ic_centers"
+            android:icon="@drawable/ic_centers_24dp"
             android:title="@string/centers"
             />
                 

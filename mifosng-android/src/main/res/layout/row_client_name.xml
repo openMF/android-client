@@ -64,13 +64,13 @@
 
         </LinearLayout>
 
-        <com.mifos.mifosxdroid.views.CircularImageView
+        <ImageView
             android:id="@+id/iv_sync_status"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:src="@drawable/ic_assignment_turned_in_black_24dp"
+            android:src="@drawable/ic_done_all_black_24dp"
             />
 
     </LinearLayout>

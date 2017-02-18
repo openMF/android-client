@@ -258,7 +258,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
                 .NONE, getString(R.string.add_new));
         menuItemAddNewDocument.setIcon(
                 ResourcesCompat.getDrawable(getResources(),
-                        R.drawable.ic_action_content_new, null));
+                        R.drawable.ic_add_white_24dp, null));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

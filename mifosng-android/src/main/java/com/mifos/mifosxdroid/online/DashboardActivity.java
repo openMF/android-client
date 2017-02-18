@@ -264,7 +264,7 @@ public class DashboardActivity extends MifosBaseActivity
         // no profile picture credential, using dummy profile picture
         ImageView imageViewUserPicture = ButterKnife
                 .findById(mNavigationHeader, R.id.iv_user_picture);
-        imageViewUserPicture.setImageResource(R.drawable.ic_account_circle);
+        imageViewUserPicture.setImageResource(R.drawable.ic_account_circle_black_24dp);
     }
 
     @Override

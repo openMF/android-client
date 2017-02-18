@@ -12,7 +12,7 @@
     <item
         android:id="@+id/menu_add"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_content_new"
+        android:icon="@drawable/ic_add_white_24dp"
         android:enabled="true"
         tools:ignore="MenuTitle"/>
 
