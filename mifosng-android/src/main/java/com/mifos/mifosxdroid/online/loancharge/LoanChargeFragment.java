@@ -236,7 +236,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
         MenuItem menuItemAddNewLoanCharge = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_LOAN_CHARGES,
                 Menu.NONE, getString(R.string.add_new));
         menuItemAddNewLoanCharge.setIcon(getResources().getDrawable(R.drawable
-                .ic_action_content_new));
+                .ic_add_white_24dp));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewLoanCharge.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

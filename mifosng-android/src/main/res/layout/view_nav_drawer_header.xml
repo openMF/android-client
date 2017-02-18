@@ -19,7 +19,7 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:elevation="2dp"
-            android:src="@drawable/ic_account_circle"
+            android:src="@drawable/ic_account_circle_black_24dp"
             app:border="false"
             />
 
