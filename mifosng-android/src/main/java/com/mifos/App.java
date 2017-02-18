@@ -9,6 +9,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
@@ -20,6 +21,8 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by ishankhanna on 13/03/15.
@@ -48,7 +51,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        //Crashlytics.start(this);
+        Fabric.with(this, new Crashlytics());
 
         Iconify.with(new MaterialModule());
         //Initializing the DBFlow and SQL Cipher Encryption
