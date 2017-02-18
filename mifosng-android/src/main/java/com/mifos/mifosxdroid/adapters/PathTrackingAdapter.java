@@ -60,14 +60,22 @@ public class PathTrackingAdapter extends RecyclerView.Adapter<PathTrackingAdapte
 
         holder.tvAddress.setText(location.getDate() + " from " + location.getStartTime() + " to " +
                 location.getStopTime());
-        holder.mvUserLocation.setTag(userLatLngs.get(0));
+        try {
+            holder.mvUserLocation.setTag(userLatLngs.get(0));
+        } catch (IndexOutOfBoundsException e) {
+            /* Prevents crashing upon calling an item not in the list */
+        }
 
         // Ensure the map has been initialised by the on map ready callback in ViewHolder.
         // If it is not ready yet, it will be initialised with the NamedLocation set as its tag
         // when the callback is received.
         if (holder.map != null) {
             // The map is already ready to be used
-            setMapLocation(holder.map, userLatLngs.get(0));
+            try {
+                setMapLocation(holder.map, userLatLngs.get(0));
+            } catch (IndexOutOfBoundsException e) {
+                /* Prevents crashing upon calling an item not in the list */
+            }
         }
     }
 
