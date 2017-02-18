@@ -1,6 +1,7 @@
 package com.mifos.api.local.databasehelper;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -31,6 +32,7 @@ import com.mifos.objects.templates.clients.Options_Table;
 import com.mifos.objects.templates.clients.SavingProductOptions;
 import com.mifos.objects.templates.clients.StaffOptions;
 import com.mifos.utils.Constants;
+import com.mifos.utils.MapDeserializer;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import java.lang.reflect.Type;
@@ -67,7 +69,10 @@ public class DatabaseHelperClient {
 
     @Inject
     public DatabaseHelperClient() {
-        gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(new TypeToken<HashMap<String, Object>>() {
+                }.getType(), new MapDeserializer());
+        gson = gsonBuilder.create();
         type = new TypeToken<HashMap<String, Object>>() {
         }.getType();
     }
@@ -275,12 +280,9 @@ public class DatabaseHelperClient {
 
                 for (DataTable dataTable : clientsTemplate.getDataTables()) {
 
-                    Delete.table(DataTable.class, DataTable_Table.registeredTableName
-                             .eq(dataTable.getRegisteredTableName()));
-                    Delete.table(ColumnHeader.class, ColumnHeader_Table.registeredTableName.eq
-                            (dataTable.getRegisteredTableName()));
-                    Delete.table(ColumnValue.class, ColumnValue_Table.registeredTableName.eq
-                            (dataTable.getRegisteredTableName()));
+                    Delete.table(DataTable.class);
+                    Delete.table(ColumnHeader.class);
+                    Delete.table(ColumnValue.class);
 
                     dataTable.save();
                     for (ColumnHeader columnHeader : dataTable.getColumnHeaderData()) {
