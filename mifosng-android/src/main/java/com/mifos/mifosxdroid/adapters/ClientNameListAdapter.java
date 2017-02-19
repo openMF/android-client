@@ -6,11 +6,14 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -72,7 +75,8 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
 
             //Changing the Color of Selected Clients
             ((ViewHolder) holder).view_selectedOverlay
-                    .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+                    .setBackgroundColor(isSelected(position) ? ContextCompat.getColor(mContext,
+                            R.color.gray_light) : Color.WHITE);
 
             ((ViewHolder) holder).iv_sync_status
                     .setVisibility(client.isSync() ? View.VISIBLE : View.INVISIBLE);
@@ -108,8 +112,8 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         @BindView(R.id.iv_user_picture)
         ImageView iv_userPicture;
 
-        @BindView(R.id.selected_overlay)
-        View view_selectedOverlay;
+        @BindView(R.id.linearLayout)
+        LinearLayout view_selectedOverlay;
 
         @BindView(R.id.iv_sync_status)
         ImageView iv_sync_status;

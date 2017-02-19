@@ -223,6 +223,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         rv_groups.setLayoutManager(mLayoutManager);
         rv_groups.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_groups.setHasFixedSize(true);
+        mGroupListAdapter.setContext(getActivity());
         rv_groups.setAdapter(mGroupListAdapter);
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
