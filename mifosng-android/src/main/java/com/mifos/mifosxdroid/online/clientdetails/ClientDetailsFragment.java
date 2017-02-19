@@ -228,7 +228,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         if (isClientActive) {
-            menu.addSubMenu(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
+            menu.add(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants
                     .DATA_TABLE_CLIENTS_NAME);
             menu.add(Menu.NONE, MENU_ITEM_PIN_POINT, Menu.NONE, getString(R.string.pinpoint));
             menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges));
