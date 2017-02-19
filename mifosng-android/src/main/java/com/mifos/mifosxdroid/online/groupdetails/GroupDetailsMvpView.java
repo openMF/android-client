@@ -4,7 +4,6 @@ import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.Group;
-import com.mifos.objects.noncore.DataTable;
 
 import java.util.List;
 
@@ -19,8 +18,6 @@ public interface GroupDetailsMvpView extends MvpView {
     void showGroupClients(List<Client> clients);
 
     void showGroupAccounts(GroupAccounts groupAccounts);
-
-    void showGroupDataTable(List<DataTable> dataTables);
 
     void showFetchingError(int errorMessage);
 }

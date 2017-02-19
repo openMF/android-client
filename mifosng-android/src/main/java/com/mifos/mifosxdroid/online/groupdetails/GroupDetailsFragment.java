@@ -28,19 +28,17 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.online.activate.ActivateFragment;
+import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.group.Group;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -105,7 +103,6 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
     private int groupId;
     private AccountAccordion accountAccordion;
     private OnFragmentInteractionListener mListener;
-    public List<DataTable> clientDataTables = new ArrayList<>();
 
     public static GroupDetailsFragment newInstance(int groupId) {
         GroupDetailsFragment fragment = new GroupDetailsFragment();
@@ -134,7 +131,6 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
         mGroupDetailsPresenter.attachView(this);
 
         mGroupDetailsPresenter.loadGroupDetailsAndAccounts(groupId);
-        mGroupDetailsPresenter.loadClientDataTable();
 
         return rootView;
     }
@@ -167,6 +163,16 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
         fragmentTransaction.replace(R.id.container, grouploanAccountFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void loadGroupDataTables() {
+        DataTableFragment dataTableFragment = DataTableFragment.newInstance(Constants
+                .DATA_TABLE_NAME_GROUP, groupId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
+        fragmentTransaction.replace(R.id.container, dataTableFragment);
         fragmentTransaction.commit();
     }
 
@@ -268,17 +274,6 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
     }
 
     @Override
-    public void showGroupDataTable(List<DataTable> dataTables) {
-        if (dataTables != null) {
-            Iterator<DataTable> dataTableIterator = dataTables.iterator();
-            clientDataTables.clear();
-            while (dataTableIterator.hasNext()) {
-                clientDataTables.add(dataTableIterator.next());
-            }
-        }
-    }
-
-    @Override
     public void showFetchingError(int errorMessage) {
         Toast.makeText(getActivity(), getStringMessage(errorMessage), Toast.LENGTH_SHORT).show();
     }
@@ -297,13 +292,16 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.group, menu);
+        inflater.inflate(R.menu.menu_group, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.more_group_info:
+                loadGroupDataTables();
+                break;
             case R.id.documents:
                 loadDocuments();
                 break;
