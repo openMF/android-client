@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
@@ -54,10 +54,6 @@ android {
         test {
             java.srcDir commonTestDir
         }
-    }
-
-    dexOptions {
-        incremental true
     }
 
     signingConfigs {
