@@ -135,6 +135,9 @@ dependencies {
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
     compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
+    // sql-cipher database encryption
+    releaseCompile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:$rootProject.raizLabsDBFlow@aar"
+    releaseCompile "net.zetetic:android-database-sqlcipher:3.5.1"
 
     // App's Support dependencies, including test
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -167,7 +170,7 @@ dependencies {
     compile "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersionLatest"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersionLatest"
     compile "com.squareup.okhttp3:okhttp:$rootProject.okHttp3Version"
-    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttp3Version"
+    debugCompile "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttp3Version"
     compile "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
 
     compile 'javax.annotation:jsr250-api:1.0@jar'
@@ -175,8 +178,9 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.4'
 
-    compile 'com.facebook.stetho:stetho:1.3.1'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
+    //facebook Stetho for Debugging with SQLite Database
+    debugCompile 'com.facebook.stetho:stetho:1.3.1'
+    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
 
 
     compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
