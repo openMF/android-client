@@ -163,7 +163,7 @@ public class DashboardActivity extends MifosBaseActivity
                 super.onDrawerSlide(drawerView, slideOffset);
             }
         };
-        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
         // make an API call to fetch logged in client's details
@@ -264,7 +264,7 @@ public class DashboardActivity extends MifosBaseActivity
         // no profile picture credential, using dummy profile picture
         ImageView imageViewUserPicture = ButterKnife
                 .findById(mNavigationHeader, R.id.iv_user_picture);
-        imageViewUserPicture.setImageResource(R.drawable.ic_account_circle_black_24dp);
+        imageViewUserPicture.setImageResource(R.drawable.ic_dp_placeholder);
     }
 
     @Override
