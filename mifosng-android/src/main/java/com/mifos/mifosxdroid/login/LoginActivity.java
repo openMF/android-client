@@ -13,10 +13,12 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,6 +80,8 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     private String instanceURL;
     private String password;
     private boolean isValidUrl;
+    private ImageView showPassword;
+    boolean isShowingPassword = false;
 
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
@@ -133,6 +137,31 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         et_domain.addTextChangedListener(urlWatcher);
         et_port.addTextChangedListener(urlWatcher);
         urlWatcher.afterTextChanged(null);
+
+        showPassword = (ImageView)findViewById(R.id.show_password);
+        showPassword.setBackgroundResource(R.drawable.ic_visibility_off_black_24dp);
+        showPassword.setOnClickListener(new View.OnClickListener() {
+            int start,end;
+            public void onClick(View v) {
+                if(isShowingPassword==true){
+                    showPassword.setBackgroundResource(R.drawable.ic_visibility_off_black_24dp);
+                    start=et_password.getSelectionStart();
+                    end=et_password.getSelectionEnd();
+                    et_password.setTransformationMethod(new PasswordTransformationMethod());;
+                    et_password.setSelection(start,end);
+
+                    isShowingPassword = false;
+                }else{
+                    showPassword.setBackgroundResource(R.drawable.ic_visibility_black_24dp );
+                    start=et_password.getSelectionStart();
+                    end=et_password.getSelectionEnd();
+                    et_password.setTransformationMethod(null);
+                    et_password.setSelection(start,end);
+                    isShowingPassword = true;
+                }
+
+            }
+        });
     }
 
     public boolean validateUserInputs() {
