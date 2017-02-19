@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
 public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHolder> {
 
     List<Group> groups;
+	private Context mContext;
 
     @Inject
     public GroupNameListAdapter() {
@@ -38,6 +40,7 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
         RecyclerView.ViewHolder vh;
         View v = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.row_group_name, parent, false);
+		mContext =parent.getContext();
         vh = new ViewHolder(v);
         return vh;
     }
@@ -52,7 +55,8 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
 
             //Changing the Color of Selected Groups
             ((ViewHolder) holder).view_selectedOverlay
-                    .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+                    .setBackgroundColor(isSelected(position) ? mContext.getResources().getColor(R.color.gray_light):
+															mContext.getResources().getColor(R.color.white));
 
             ((ViewHolder) holder).iv_sync_status
                     .setVisibility(group.isSync() ? View.VISIBLE : View.INVISIBLE);
@@ -87,7 +91,7 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
         @BindView(R.id.tv_group_id)
         TextView tv_groupsId;
 
-        @BindView(R.id.selected_overlay)
+        @BindView(R.id.linearLayout)
         View view_selectedOverlay;
 
         @BindView(R.id.iv_sync_status)

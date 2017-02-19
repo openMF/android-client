@@ -72,7 +72,8 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
 
             //Changing the Color of Selected Clients
             ((ViewHolder) holder).view_selectedOverlay
-                    .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+					.setBackgroundColor(isSelected(position) ? mContext.getResources().getColor(R.color.gray_light):
+							                                    mContext.getResources().getColor(R.color.white));
 
             ((ViewHolder) holder).iv_sync_status
                     .setVisibility(client.isSync() ? View.VISIBLE : View.INVISIBLE);
@@ -108,7 +109,7 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         @BindView(R.id.iv_user_picture)
         ImageView iv_userPicture;
 
-        @BindView(R.id.selected_overlay)
+        @BindView(R.id.linearLayout)
         View view_selectedOverlay;
 
         @BindView(R.id.iv_sync_status)
