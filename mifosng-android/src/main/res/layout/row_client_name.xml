@@ -12,6 +12,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
     app:cardUseCompatPadding="true" >
 
     <LinearLayout

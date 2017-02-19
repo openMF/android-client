@@ -4,33 +4,40 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
     android:id="@+id/card_view"
-    android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/cardview_shadow_start_color"
-    android:padding="5dp"
-    android:layout_marginBottom="5dp">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    app:cardUseCompatPadding="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="?attr/listPreferredItemHeight"
         android:orientation="horizontal"
+        android:layout_margin="5dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
         <com.mifos.mifosxdroid.views.CircularImageView
-        android:id="@+id/iv_status_indicator"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_weight="1"
-        android:src="@color/light_yellow" />
+            android:id="@+id/iv_status_indicator"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:src="@color/light_yellow"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -40,9 +47,9 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_center_name"
@@ -53,17 +60,17 @@
                     android:lines="1"
                     android:text="@string/medium_text"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <TextView
-                    android:text="@string/small_text"
+                    android:id="@+id/tv_center_id"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tv_center_id"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
                     android:layout_weight="1"
-                    android:gravity="end" />
+                    android:gravity="end"
+                    android:text="@string/small_text"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
             </LinearLayout>
 
             <TextView
@@ -72,65 +79,65 @@
                 android:layout_height="wrap_content"
                 android:text="@string/small_text"
                 android:textColor="@color/gray_dark"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <LinearLayout
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_marginTop="5dp"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp">
-
-                <TextView
-                    android:text="@string/small_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tv_office_name"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:text="@string/small_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tv_staff_name"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:layout_weight="1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginTop="5dp"
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_office_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/small_text"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_staff_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/small_text"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
                     android:paddingLeft="30dp">
 
                     <TextView
-                        android:text="@string/small_text"
+                        android:id="@+id/tv_office_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_office_id"
+                        android:layout_weight="1"
+                        android:text="@string/small_text"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:layout_weight="1" />
+                        android:textSize="14sp"/>
 
                     <TextView
-                        android:text="@string/small_text"
+                        android:id="@+id/tv_staff_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_staff_id"
+                        android:layout_weight="1"
+                        android:text="@string/small_text"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:layout_weight="1" />
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
