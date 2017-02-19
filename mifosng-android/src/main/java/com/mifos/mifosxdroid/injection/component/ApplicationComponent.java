@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerAuth;
 import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.api.datamanager.DataManagerClient;
@@ -64,6 +65,7 @@ public interface ApplicationComponent {
     DataManagerDocument dataManagerDocument();
     DataManagerSearch dataManagerSearch();
     DataManagerRunReport dataManagerRunReport();
+    DataManagerAuth dataManagerAuth();
 
 
     DatabaseHelperClient databaseHelperClient();

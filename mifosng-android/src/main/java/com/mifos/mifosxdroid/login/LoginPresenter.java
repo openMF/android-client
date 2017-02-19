@@ -1,62 +1,76 @@
 package com.mifos.mifosxdroid.login;
 
-import com.mifos.api.DataManager;
-import com.mifos.mifosxdroid.base.Presenter;
+import com.mifos.api.datamanager.DataManagerAuth;
+import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.user.User;
+import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 4/6/16.
  */
-public class LoginPresenter implements Presenter<LoginMvpView> {
+public class LoginPresenter extends BasePresenter<LoginMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
-    private LoginMvpView mLoginMvpView;
+    private final DataManagerAuth dataManagerAuth;
+    private Subscription subscription;
 
     @Inject
-    public LoginPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public LoginPresenter(DataManagerAuth dataManager) {
+        dataManagerAuth = dataManager;
     }
 
     @Override
     public void attachView(LoginMvpView mvpView) {
-        mLoginMvpView = mvpView;
+        super.attachView(mvpView);
     }
+
 
     @Override
     public void detachView() {
-        mLoginMvpView = null;
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (subscription != null) subscription.unsubscribe();
     }
 
-    public void login(String instanceURL, String username, String password) {
-        mLoginMvpView.showProgressbar(true);
-        mSubscription = mDataManager.login(username, password)
+    public void login(String username, String password) {
+        getMvpView().showProgressbar(true);
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+        subscription = dataManagerAuth.login(username, password)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        mLoginMvpView.showProgressbar(false);
+                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mLoginMvpView.showProgressbar(false);
-                        mLoginMvpView.onLoginError(e);
+                        getMvpView().showProgressbar(false);
+                        String errorMessage;
+                        try {
+                            if (e instanceof HttpException) {
+                                errorMessage = ((HttpException) e).response().errorBody().string();
+                                getMvpView().onLoginError( MFErrorParser.parseError(errorMessage)
+                                        .getDeveloperMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
+                        }
                     }
 
                     @Override
                     public void onNext(User user) {
-                        mLoginMvpView.showProgressbar(false);
-                        mLoginMvpView.onLoginSuccessful(user);
+                        getMvpView().showProgressbar(false);
+                        getMvpView().onLoginSuccessful(user);
                     }
                 });
     }
