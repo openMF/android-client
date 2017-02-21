@@ -1,32 +1,22 @@
-package com.mifos.objects.client;
+package com.mifos.objects.templates.clients;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mifos.api.local.MifosBaseModel;
-import com.mifos.api.local.MifosDatabase;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ModelContainer;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
- * Created by Rajan Maurya on 05/07/16.
+ * Created by mayankjindal on 13/12/16.
  */
-@Table(database = MifosDatabase.class)
-@ModelContainer
-public class ChargeTimeType extends MifosBaseModel implements Parcelable {
 
-    @PrimaryKey
+public class ChargeAppliesTo implements Parcelable {
+
     @SerializedName("id")
     Integer id;
 
-    @Column
     @SerializedName("code")
     String code;
 
-    @Column
     @SerializedName("value")
     String value;
 
@@ -54,6 +44,15 @@ public class ChargeTimeType extends MifosBaseModel implements Parcelable {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "ChargeAppliesTo{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
+
 
     @Override
     public int describeContents() {
@@ -67,25 +66,25 @@ public class ChargeTimeType extends MifosBaseModel implements Parcelable {
         dest.writeString(this.value);
     }
 
-    public ChargeTimeType() {
+    public ChargeAppliesTo() {
     }
 
-    protected ChargeTimeType(Parcel in) {
+    protected ChargeAppliesTo(Parcel in) {
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.code = in.readString();
         this.value = in.readString();
     }
 
-    public static final Parcelable.Creator<ChargeTimeType> CREATOR = new Parcelable
-            .Creator<ChargeTimeType>() {
-        @Override
-        public ChargeTimeType createFromParcel(Parcel source) {
-            return new ChargeTimeType(source);
-        }
+    public static final Parcelable.Creator<ChargeAppliesTo> CREATOR =
+            new Parcelable.Creator<ChargeAppliesTo>() {
+                @Override
+                public ChargeAppliesTo createFromParcel(Parcel source) {
+                    return new ChargeAppliesTo(source);
+                }
 
-        @Override
-        public ChargeTimeType[] newArray(int size) {
-            return new ChargeTimeType[size];
-        }
-    };
+                @Override
+                public ChargeAppliesTo[] newArray(int size) {
+                    return new ChargeAppliesTo[size];
+                }
+            };
 }

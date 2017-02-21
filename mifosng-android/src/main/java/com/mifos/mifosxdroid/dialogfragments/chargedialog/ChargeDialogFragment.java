@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.dialogfragments.chargedialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,26 +24,19 @@ import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Charges;
+import com.mifos.objects.templates.clients.ChargeTemplate;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
-import com.mifos.utils.SafeUIBlockingUtility;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
+import butterknife.OnClick;
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -52,36 +44,37 @@ import okhttp3.ResponseBody;
  * Use this Dialog Fragment to Create and/or Update charges
  */
 public class ChargeDialogFragment extends ProgressableDialogFragment implements
-        MFDatePicker.OnDatePickListener, ChargeDialogMvpView {
+        MFDatePicker.OnDatePickListener, ChargeDialogMvpView,
+        AdapterView.OnItemSelectedListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
     @BindView(R.id.sp_charge_name)
-    Spinner sp_charge_name;
+    Spinner spChargeName;
 
     @BindView(R.id.amount_due_charge)
-    EditText et_amout_due;
+    EditText etAmoutDue;
 
     @BindView(R.id.et_date)
-    EditText charge_due_date;
+    EditText etChargeDueDate;
 
     @BindView(R.id.et_charge_locale)
-    EditText charge_locale;
+    EditText etChargeLocale;
 
     @BindView(R.id.bt_save_charge)
-    Button bt_save_charge;
+    Button btnSaveCharge;
 
     @Inject
     ChargeDialogPresenter mChargeDialogPresenter;
 
+    private List<String> chargeNameList = new ArrayList<>();
+    private ArrayAdapter<String> chargeNameAdapter;
+    private ChargeTemplate mChargeTemplate;
     String duedateString;
     private View rootView;
-    private SafeUIBlockingUtility safeUIBlockingUtility;
     private DialogFragment mfDatePicker;
-    private int Id;
+    private int chargeId;
     private int clientId;
-    private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<String, Integer>();
-    private String chargeName;
 
     public static ChargeDialogFragment newInstance(int clientId) {
         ChargeDialogFragment chargeDialogFragment = new ChargeDialogFragment();
@@ -118,33 +111,30 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
         ButterKnife.bind(this, rootView);
         mChargeDialogPresenter.attachView(this);
-
         inflatedueDate();
         inflateChargesSpinner();
+        inflateChargeNameSpinner();
 
-        duedateString = charge_due_date.getText().toString();
+        duedateString = etChargeDueDate.getText().toString();
         duedateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(duedateString)
                 .replace("-", " ");
-
-        bt_save_charge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                ChargesPayload chargesPayload = new ChargesPayload();
-                chargesPayload.setAmount(et_amout_due.getEditableText().toString());
-                chargesPayload.setLocale(charge_locale.getEditableText().toString());
-                chargesPayload.setDueDate(duedateString);
-                chargesPayload.setDateFormat("dd MMMM yyyy");
-                chargesPayload.setChargeId(Id);
-                initiateChargesCreation(chargesPayload);
-            }
-        });
         return rootView;
+    }
+
+    @OnClick(R.id.bt_save_charge)
+    public void saveNewCharge() {
+        ChargesPayload chargesPayload = new ChargesPayload();
+        chargesPayload.setAmount(etAmoutDue.getEditableText().toString());
+        chargesPayload.setLocale(etChargeLocale.getEditableText().toString());
+        chargesPayload.setDueDate(duedateString);
+        chargesPayload.setDateFormat("dd MMMM yyyy");
+        chargesPayload.setChargeId(chargeId);
+        initiateChargesCreation(chargesPayload);
     }
 
     @Override
     public void onDatePicked(String date) {
-        charge_due_date.setText(date);
+        etChargeDueDate.setText(date);
     }
 
     //Charges Fetching API
@@ -159,81 +149,44 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     public void inflatedueDate() {
         mfDatePicker = MFDatePicker.newInsance(this);
-        charge_due_date.setText(MFDatePicker.getDatePickedAsString());
-        charge_due_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
-            }
-        });
+        etChargeDueDate.setText(MFDatePicker.getDatePickedAsString());
+    }
+
+    @OnClick(R.id.et_date)
+    public void inflateDatePicker() {
+        mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                .DFRAG_DATE_PICKER);
+    }
+
+
+    public void inflateChargeNameSpinner() {
+        chargeNameAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, chargeNameList);
+        chargeNameAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spChargeName.setAdapter(chargeNameAdapter);
+        spChargeName.setOnItemSelectedListener(this);
     }
 
     @Override
-    public void showAllChargesV2(ResponseBody result) {
-        /* Activity is null - Fragment has been detached; no need to do anything. */
-        if (getActivity() == null) return;
+    public void showAllChargesV2(ChargeTemplate chargeTemplate) {
+        mChargeTemplate = chargeTemplate;
+        chargeNameList.addAll(mChargeDialogPresenter.filterChargeName
+                (chargeTemplate.getChargeOptions()));
+        chargeNameAdapter.notifyDataSetChanged();
+    }
 
-        Log.d(LOG_TAG, "Charges Loaded Successfully");
-
-        final List<Charges> charges = new ArrayList<>();
-        // you can use this array to populate your spinner
-        final ArrayList<String> chargesNames = new ArrayList<String>();
-        //Try to get response body
-        BufferedReader reader = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-            reader = new BufferedReader(new InputStreamReader(result.byteStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            JSONObject obj = new JSONObject(sb.toString());
-            if (obj.has("chargeOptions")) {
-                JSONArray chargesTypes = obj.getJSONArray("chargeOptions");
-                for (int i = 0; i < chargesTypes.length(); i++) {
-                    JSONObject chargesObject = chargesTypes.getJSONObject(i);
-                    Charges charge = new Charges();
-                    charge.setId(chargesObject.optInt("id"));
-                    charge.setName(chargesObject.optString("name"));
-                    charges.add(charge);
-                    chargesNames.add(chargesObject.optString("name"));
-                    chargeNameIdHashMap.put(charge.getName(), charge.getId());
-                }
-
-            }
-            String stringResult = sb.toString();
-        } catch (Exception e) {
-            Log.e(LOG_TAG, e.getMessage());
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()) {
+            case R.id.sp_charge_name:
+                chargeId = mChargeTemplate.getChargeOptions().get(position).getId();
+                break;
         }
-        final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, chargesNames);
-        chargesAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
-        sp_charge_name.setAdapter(chargesAdapter);
-        sp_charge_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long
-                    l) {
-                Id = chargeNameIdHashMap.get(chargesNames.get(i));
-                Log.d("chargesoptionss" + chargesNames.get(i), String.valueOf(Id));
-                if (Id != -1) {
+    }
 
-
-                } else {
-
-                    Toast.makeText(getActivity(), getString(R.string.error_select_charge)
-                            , Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 

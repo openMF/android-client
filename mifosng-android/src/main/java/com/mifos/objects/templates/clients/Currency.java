@@ -1,52 +1,36 @@
-package com.mifos.objects.client;
+package com.mifos.objects.templates.clients;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mifos.api.local.MifosBaseModel;
-import com.mifos.api.local.MifosDatabase;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ModelContainer;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
- * Created by Rajan Maurya on 05/07/16.
+ * Created by mayankjindal on 13/12/16.
  */
-@Table(database = MifosDatabase.class, name = "ClientChargeCurrency")
-@ModelContainer
-public class Currency extends MifosBaseModel implements Parcelable {
 
+public class Currency implements Parcelable {
 
-    @PrimaryKey
     @SerializedName("code")
-    public String code;
+    String code;
 
-    @Column
     @SerializedName("name")
     String name;
 
-    @Column
     @SerializedName("decimalPlaces")
-    Integer decimalPlaces;
+    Double decimalPlaces;
 
-    @Column
     @SerializedName("inMultiplesOf")
     Integer inMultiplesOf;
 
-    @Column
     @SerializedName("displaySymbol")
     String displaySymbol;
 
-    @Column
     @SerializedName("nameCode")
     String nameCode;
 
-    @Column
     @SerializedName("displayLabel")
     String displayLabel;
-
 
     public String getCode() {
         return code;
@@ -64,11 +48,11 @@ public class Currency extends MifosBaseModel implements Parcelable {
         this.name = name;
     }
 
-    public Integer getDecimalPlaces() {
+    public Double getDecimalPlaces() {
         return decimalPlaces;
     }
 
-    public void setDecimalPlaces(Integer decimalPlaces) {
+    public void setDecimalPlaces(Double decimalPlaces) {
         this.decimalPlaces = decimalPlaces;
     }
 
@@ -117,6 +101,7 @@ public class Currency extends MifosBaseModel implements Parcelable {
                 '}';
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -139,7 +124,7 @@ public class Currency extends MifosBaseModel implements Parcelable {
     protected Currency(Parcel in) {
         this.code = in.readString();
         this.name = in.readString();
-        this.decimalPlaces = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.decimalPlaces = (Double) in.readValue(Double.class.getClassLoader());
         this.inMultiplesOf = (Integer) in.readValue(Integer.class.getClassLoader());
         this.displaySymbol = in.readString();
         this.nameCode = in.readString();

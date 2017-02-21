@@ -7,6 +7,7 @@ package com.mifos.api.services;
 import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.templates.clients.ChargeTemplate;
 import com.mifos.services.data.ChargesPayload;
 
 import okhttp3.ResponseBody;
@@ -26,7 +27,7 @@ public interface ChargeService {
     Observable<ResponseBody> listAllCharges();
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
-    Observable<ResponseBody> getAllChargesS(@Path("clientId") int clientId);
+    Observable<ChargeTemplate> getAllChargesS(@Path("clientId") int clientId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
     Observable<ResponseBody> getAllChargev3(@Path("loanId") int loanId);
