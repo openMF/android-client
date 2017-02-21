@@ -127,6 +127,7 @@
     <string name="empty_client_list">Empty ClientList</string>
     <string name="empty_group_clients">Empty Group ClientList</string>
     <string name="empty_groups_list">Empty GroupList</string>
+    <string name="empty_groups">No group associated with this center</string>
     <string name="empty_center_list">Empty CenterList</string>
     <string name="empty_path_tracking">Empty Path Tracking</string>
     <string name="empty_data_table">Empty DataTable</string>

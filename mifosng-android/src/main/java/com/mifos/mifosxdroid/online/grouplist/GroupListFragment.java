@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupListAdapter;
@@ -36,6 +39,15 @@ public class GroupListFragment extends ProgressableFragment
 
     @BindView(R.id.lv_group_list)
     ListView lv_groupList;
+
+    @BindView(R.id.ll_error)
+    LinearLayout ll_error;
+
+    @BindView(R.id.view_flipper)
+    ViewFlipper viewFlipper;
+
+    @BindView(R.id.noGroupsText)
+    TextView noGroupsText;
 
     @Inject
     GroupListPresenter mGroupListPresenter;
@@ -88,21 +100,22 @@ public class GroupListFragment extends ProgressableFragment
         return rootView;
     }
 
-
     public void inflateGroupList() {
         mGroupListPresenter.loadGroupByCenter(centerId);
     }
-
 
     @Override
     public void showGroupList(CenterWithAssociations centerWithAssociations) {
         if (centerWithAssociations != null) {
 
-            mCenterWithAssociations = centerWithAssociations;
-            mGroupListAdapter = new GroupListAdapter(getActivity(),
-                    centerWithAssociations.getGroupMembers());
-            lv_groupList.setAdapter(mGroupListAdapter);
-
+            if (centerWithAssociations.getGroupMembers().size() == 0) {
+                showEmptyGroups(R.string.empty_groups);
+            } else {
+                mCenterWithAssociations = centerWithAssociations;
+                mGroupListAdapter = new GroupListAdapter(getActivity(),
+                        centerWithAssociations.getGroupMembers());
+                lv_groupList.setAdapter(mGroupListAdapter);
+            }
         }
     }
 
@@ -116,6 +129,13 @@ public class GroupListFragment extends ProgressableFragment
     @Override
     public void showFetchingError(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showEmptyGroups(int message) {
+        viewFlipper.setVisibility(View.GONE);
+        ll_error.setVisibility(View.VISIBLE);
+        noGroupsText.setText(getStringMessage(message));
     }
 
     @Override
