@@ -42,7 +42,9 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/et_document_name" />
+                android:id="@+id/et_document_name"
+                android:maxLines="3"
+                android:scrollbars="vertical"/>
         </TableRow>
 
         <TableRow
@@ -63,7 +65,9 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/et_document_description" />
+                android:id="@+id/et_document_description"
+                android:maxLines="3"
+                android:scrollbars="vertical"/>
         </TableRow>
 
     </TableLayout>
