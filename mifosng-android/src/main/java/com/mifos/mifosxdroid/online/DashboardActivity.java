@@ -103,6 +103,12 @@ public class DashboardActivity extends MifosBaseActivity
                             setMenuCreateCentre(false);
                             setMenuCreateGroup(true);
                         }
+                        else if(fragment instanceof SearchFragment){
+                            setActionBarTitle(R.string.dashboard);
+                            setMenuCreateClient(true);
+                            setMenuCreateCentre(true);
+                            setMenuCreateGroup(true);
+                        }
 
                     }
                 });
