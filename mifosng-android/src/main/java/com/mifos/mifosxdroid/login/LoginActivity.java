@@ -57,7 +57,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     TextView tv_full_url;
 
     @BindView(R.id.bt_connectionSettings)
-    TextView bt_connectionSettings;
+    Button bt_connectionSettings;
 
     @BindView(R.id.et_tenantIdentifier)
     EditText et_tenantIdentifier;

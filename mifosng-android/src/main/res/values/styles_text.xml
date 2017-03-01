@@ -45,13 +45,6 @@
         <item name="android:layout_marginLeft">10dp</item>
     </style>
 
-    <style name="TextView.ConnectionSettings" parent="TextView.Base">
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:text">"Connection settings"</item>
-        <item name="android:textColor">@color/primary</item>
-    </style>
-
     <style name="TextView.Search" parent="TextView.Base">
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
