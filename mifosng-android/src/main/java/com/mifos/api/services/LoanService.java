@@ -36,7 +36,7 @@ import rx.Observable;
  */
 public interface LoanService {
 
-    @GET(APIEndPoint.LOANS + "/{loanId}?associations=all")
+    @GET(APIEndPoint.LOANS + "/{loanId}?associations=all&exclude=guarantors,futureSchedule")
     Observable<LoanWithAssociations> getLoanByIdWithAllAssociations(@Path("loanId") int loanId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")

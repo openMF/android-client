@@ -45,10 +45,10 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
     Double interestPortion;
 
     @Column
-    Integer feeChargesPortion;
+    Double feeChargesPortion;
 
     @Column
-    Integer penaltyChargesPortion;
+    Double penaltyChargesPortion;
 
     List<PaymentTypeOption> paymentTypeOptions = new ArrayList<PaymentTypeOption>();
 
@@ -108,19 +108,19 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
         this.interestPortion = interestPortion;
     }
 
-    public Integer getFeeChargesPortion() {
+    public Double getFeeChargesPortion() {
         return feeChargesPortion;
     }
 
-    public void setFeeChargesPortion(Integer feeChargesPortion) {
+    public void setFeeChargesPortion(Double feeChargesPortion) {
         this.feeChargesPortion = feeChargesPortion;
     }
 
-    public Integer getPenaltyChargesPortion() {
+    public Double getPenaltyChargesPortion() {
         return penaltyChargesPortion;
     }
 
-    public void setPenaltyChargesPortion(Integer penaltyChargesPortion) {
+    public void setPenaltyChargesPortion(Double penaltyChargesPortion) {
         this.penaltyChargesPortion = penaltyChargesPortion;
     }
 
@@ -178,8 +178,8 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
         this.amount = (Double) in.readValue(Double.class.getClassLoader());
         this.principalPortion = (Double) in.readValue(Double.class.getClassLoader());
         this.interestPortion = (Double) in.readValue(Double.class.getClassLoader());
-        this.feeChargesPortion = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.penaltyChargesPortion = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.feeChargesPortion = (Double) in.readValue(Integer.class.getClassLoader());
+        this.penaltyChargesPortion = (Double) in.readValue(Integer.class.getClassLoader());
         this.paymentTypeOptions = in.createTypedArrayList(PaymentTypeOption.CREATOR);
     }
 
