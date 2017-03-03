@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:id="@+id/rl_client">
 
-    <ScrollView style="@style/ScrollView.Base">
+    <ScrollView style="@style/ScrollView.Base"
+        android:id="@+id/top_view">
 
         <LinearLayout style="@style/LinearLayout.Base">
 
@@ -159,7 +160,27 @@
 
         </LinearLayout>
     </ScrollView>
+    <LinearLayout
+        android:id="@+id/ll_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
+        <ImageView
+            android:id="@+id/noClientIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_error_black_24dp"/>
+
+        <TextView
+            android:id="@+id/noClientText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_bottom_panel"
         android:layout_width="match_parent"

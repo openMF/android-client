@@ -593,6 +593,7 @@
     <string name="failed_to_fetch_loan_transaction_template">Failed to fetch loan transaction
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
+    <string name="failed_to_fetch_client_details_account">Failed to fetch client details and account</string>
 
 
     <string-array name="office_ids">

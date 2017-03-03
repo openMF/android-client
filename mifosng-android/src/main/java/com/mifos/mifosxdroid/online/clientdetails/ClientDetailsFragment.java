@@ -25,11 +25,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +61,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.ImageLoaderUtils;
+import com.mifos.utils.Network;
 import com.mifos.utils.Utils;
 
 import java.io.File;
@@ -96,6 +99,15 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     public int clientId;
     List<Charges> chargesList = new ArrayList<>();
+
+    @BindView(R.id.top_view)
+    ScrollView topView;
+
+    @BindView(R.id.noClientIcon)
+    ImageView noClientIcon;
+
+    @BindView(R.id.noClientText)
+    TextView noClientText;
 
     @BindView(R.id.tv_fullName)
     TextView tv_fullName;
@@ -141,6 +153,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     @BindView(R.id.ll_bottom_panel)
     LinearLayout llBottomPanel;
+
+    @BindView(R.id.ll_error)
+    LinearLayout llError;
 
     @BindView(R.id.rl_client)
     RelativeLayout rlClient;
@@ -389,6 +404,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @Override
     public void showClientInformation(Client client) {
         if (client != null) {
+            llError.setVisibility(GONE);
             setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
             isClientActive = client.isActive();
             getActivity().invalidateOptionsMenu();
@@ -552,7 +568,19 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     @Override
     public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        if (!Network.isOnline(getContext())) {
+            topView.setVisibility(GONE);
+            llBottomPanel.setVisibility(GONE);
+            noClientText.setText(R.string.failed_to_fetch_client_details_account);
+        } else {
+            Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick(R.id.noClientIcon)
+    public void reloadOnError() {
+        topView.setVisibility(VISIBLE);
+        inflateClientInformation();
     }
 
     public interface OnFragmentInteractionListener {
