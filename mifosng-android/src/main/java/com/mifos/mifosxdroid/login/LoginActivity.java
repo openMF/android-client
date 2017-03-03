@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,7 +58,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     TextView tv_full_url;
 
     @BindView(R.id.bt_connectionSettings)
-    TextView bt_connectionSettings;
+    Button bt_connectionSettings;
 
     @BindView(R.id.et_tenantIdentifier)
     EditText et_tenantIdentifier;
