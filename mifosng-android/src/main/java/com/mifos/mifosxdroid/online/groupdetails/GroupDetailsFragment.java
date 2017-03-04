@@ -31,6 +31,7 @@ import com.mifos.mifosxdroid.online.activate.ActivateFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
+import com.mifos.mifosxdroid.online.note.NoteFragment;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
@@ -153,6 +154,16 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
         fragmentTransaction.replace(R.id.container, documentListFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void loadNotes() {
+        NoteFragment noteFragment = NoteFragment.newInstance(Constants
+                .ENTITY_TYPE_GROUPS, groupId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, noteFragment);
         fragmentTransaction.commit();
     }
 
@@ -310,6 +321,9 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                 break;
             case R.id.group_clients:
                 mGroupDetailsPresenter.loadGroupAssociateClients(groupId);
+                break;
+            case R.id.group_notes:
+                loadNotes();
                 break;
 
         }

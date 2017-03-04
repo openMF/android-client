@@ -49,6 +49,7 @@ import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
+import com.mifos.mifosxdroid.online.note.NoteFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.views.CircularImageView;
@@ -91,6 +92,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public static final int MENU_ITEM_DOCUMENTS = 1006;
     public static final int MENU_ITEM_IDENTIFIERS = 1007;
     public static final int MENU_ITEM_SURVEYS = 1008;
+    public static final int MENU_ITEM_NOTE = 1009;
+
 
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
@@ -239,6 +242,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
             menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
             menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
+            menu.add(Menu.NONE, MENU_ITEM_NOTE, Menu.NONE, getString(R.string.note));
         }
         super.onPrepareOptionsMenu(menu);
     }
@@ -272,6 +276,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             case MENU_ITEM_SURVEYS:
                 loadSurveys();
                 break;
+            case MENU_ITEM_NOTE:
+                loadNotes();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -304,6 +310,16 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, documentListFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void loadNotes() {
+        NoteFragment noteFragment = NoteFragment.newInstance(Constants
+                .ENTITY_TYPE_CLIENTS, clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, noteFragment);
         fragmentTransaction.commit();
     }
 

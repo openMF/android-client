@@ -4,9 +4,9 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.mifos.mifosxdroid.online.GroupsActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mifos.mifosxdroid.online.GroupsActivity">
 
     <item
         android:id="@+id/more_group_info"
@@ -30,6 +30,12 @@
         android:id="@+id/group_clients"
         android:enabled="true"
         android:title="@string/group_clients"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/group_notes"
+        android:enabled="true"
+        android:title="@string/note"
         app:showAsAction="never" />
 
 </menu>

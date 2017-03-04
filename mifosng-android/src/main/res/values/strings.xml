@@ -645,6 +645,9 @@
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="centerList_account_prefix">Account No: %1$s</string>
     <string name="no_staff">no staff</string>
+    <string name="note">Notes</string>
+    <string name="empty_notes">Empty Notes</string>
+    <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
 
 
 </resources>
