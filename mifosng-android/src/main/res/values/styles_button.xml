@@ -24,4 +24,15 @@
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:text">@string/login</item>
     </style>
+
+    <style name="Button.ConnectionSettings" parent="TextView.Base">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:text">Connection Settings</item>
+        <item name="android:background">#00bafd</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textColor">#5c5454</item>
+    </style>
 </resources>
