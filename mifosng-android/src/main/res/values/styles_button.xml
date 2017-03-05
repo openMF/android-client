@@ -24,4 +24,9 @@
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:text">@string/login</item>
     </style>
+
+    <style name="Button.ConnectionSettings" parent="TextView.Base">
+        <item name="android:text">"Connection settings"</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
