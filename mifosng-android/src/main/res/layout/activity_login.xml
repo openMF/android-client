@@ -33,9 +33,9 @@
                     android:nextFocusDown="@+id/bt_login" />
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/bt_connectionSettings"
-                style="@style/TextView.ConnectionSettings" />
+                style="@style/Button.ConnectionSettings" />
 
             <LinearLayout
                 android:id="@+id/ll_connectionSettings"
