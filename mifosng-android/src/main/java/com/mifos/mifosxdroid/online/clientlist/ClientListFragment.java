@@ -99,6 +99,7 @@ public class ClientListFragment extends MifosBaseFragment
     private ActionMode actionMode;
     private Boolean isParentFragment = false;
     private LinearLayoutManager mLayoutManager;
+    private boolean isRestoredFromBackStack;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -164,6 +165,7 @@ public class ClientListFragment extends MifosBaseFragment
         clientList = new ArrayList<>();
         selectedClients = new ArrayList<>();
         actionModeCallback = new ActionModeCallback();
+        isRestoredFromBackStack = false;
         if (getArguments() != null) {
             clientList = getArguments().getParcelableArrayList(Constants.CLIENTS);
             isParentFragment = getArguments()
@@ -338,6 +340,9 @@ public class ClientListFragment extends MifosBaseFragment
             swipeRefreshLayout.setRefreshing(false);
         } else {
             hideMifosProgressBar();
+            if (isRestoredFromBackStack) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
     }
 
@@ -348,6 +353,7 @@ public class ClientListFragment extends MifosBaseFragment
         mClientListPresenter.detachView();
         //As the Fragment Detach Finish the ActionMode
         if (actionMode != null) actionMode.finish();
+        isRestoredFromBackStack = true;
     }
 
     /**

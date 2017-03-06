@@ -100,6 +100,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     private View rootView;
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
+    private boolean isRestoredFromBackStack;
 
     /**
      * This method will be called, whenever GroupsListFragment will not have Parent Fragment.
@@ -171,6 +172,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
                     .getBoolean(Constants.IS_A_PARENT_FRAGMENT);
         }
         setHasOptionsMenu(true);
+        isRestoredFromBackStack = false;
     }
 
     @Override
@@ -342,6 +344,9 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
             swipeRefreshLayout.setRefreshing(false);
         } else {
             pb_groups.setVisibility(View.GONE);
+            if (isRestoredFromBackStack) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
     }
 
@@ -351,6 +356,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         mGroupsListPresenter.detachView();
         //As the Fragment Detach Finish the ActionMode
         if (actionMode != null) actionMode.finish();
+        isRestoredFromBackStack = true;
     }
 
     /**
