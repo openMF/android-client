@@ -13,3 +13,12 @@
 -dontwarn com.squareup.javawriter.JavaWriter
 # Uncomment this if you use Mockito
 -dontwarn org.mockito.**
+
+-keep class com.mifos.objects.client.**
+
+-keep class com.raizlabs.android.dbflow.config.GeneratedDatabaseHolder
+
+-dontwarn org.codehaus.**
+-dontwarn java.nio.**
+-dontwarn java.lang.invoke.**
+-dontwarn rx.**

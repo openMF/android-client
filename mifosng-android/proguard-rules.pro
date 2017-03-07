@@ -34,6 +34,15 @@
     public <init>(android.content.Context);
 }
 
+# To keep our gson serliazed classes safe from obfuscation.
+-keep class com.mifos.objects.** { *; }
+
+# okio warnings that can be safely ignored
+-dontwarn org.codehaus.**
+-dontwarn java.nio.**
+-dontwarn java.lang.invoke.**
+-dontwarn rx.**
+
 # ButterKnife rules
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
@@ -77,6 +86,7 @@
 
 # DBFlow rules
 -keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
+-keep class com.raizlabs.android.dbflow.config.GeneratedDatabaseHolder
 
 # stetho
 -keep class com.facebook.stetho.** { *; }
@@ -112,7 +122,9 @@
   **[] $VALUES;
   public *;
 }
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+# Below is only needed when we use DexGuard
+# -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 # Iconify
 -keep class com.joanzapata.iconify.** { *; }
