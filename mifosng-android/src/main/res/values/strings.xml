@@ -646,5 +646,5 @@
     <string name="centerList_account_prefix">Account No: %1$s</string>
     <string name="no_staff">no staff</string>
 
-
+    <string name="app_settings_activity_failed">Please open app settings page and grant the permissions manually.</string>
 </resources>
