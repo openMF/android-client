@@ -23,7 +23,7 @@ public class SavingsPayload {
     private String minRequiredOpeningBalance;
     private String nominalAnnualInterestRateOverdraft;
     private String overdraftLimit;
-    private String minOverdraftForInterestCalculation;;
+    private String minOverdraftForInterestCalculation;
 
     public Integer getInterestCompoundingPeriodType() {
         return interestCompoundingPeriodType;
