@@ -254,7 +254,7 @@ public class CenterListFragment extends MifosBaseFragment
     public void showFetchingError() {
         rv_centers.setVisibility(View.GONE);
         rlError.setVisibility(View.VISIBLE);
-        String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
+        String errorMessage = getStringMessage(R.string.failed_to_fetch_centers)
                 + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
         mNoCenterText.setText(errorMessage);
     }

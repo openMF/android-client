@@ -94,7 +94,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
                         if (loadmore) {
-                            getMvpView().showMessage(R.string.failed_to_fetch_center);
+                            getMvpView().showMessage(R.string.failed_to_fetch_centers);
                         } else {
                             getMvpView().showFetchingError();
                         }
