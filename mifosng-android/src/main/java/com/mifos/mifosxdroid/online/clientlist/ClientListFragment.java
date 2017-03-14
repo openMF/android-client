@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
-import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener;
+import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
@@ -188,10 +188,10 @@ public class ClientListFragment extends MifosBaseFragment
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
          */
-        rv_clients.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+        rv_clients.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
-            public void onLoadMore(int current_page) {
-                mClientListPresenter.loadClients(true, clientList.size());
+            public void onLoadMore(int page, int totalItemCount) {
+                mClientListPresenter.loadClients(true, totalItemCount);
             }
         });
 
