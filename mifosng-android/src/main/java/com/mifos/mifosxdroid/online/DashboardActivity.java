@@ -103,31 +103,30 @@ public class DashboardActivity extends MifosBaseActivity
                             setMenuCreateCentre(false);
                             setMenuCreateGroup(true);
                         }
-
                     }
                 });
 
     }
 
-    private void setMenuCreateGroup(boolean visibility) {
+    private void setMenuCreateGroup(boolean isEnabled) {
         if (menu != null) {
             //position of mItem_create_new_group is 2
-            menu.getItem(2).setVisible(visibility);
+            menu.getItem(2).setEnabled(isEnabled);
         }
 
     }
 
-    private void setMenuCreateCentre(boolean visibility) {
+    private void setMenuCreateCentre(boolean isEnabled) {
         if (menu != null) {
             //position of mItem_create_new_centre is 1
-            menu.getItem(1).setVisible(visibility);
+            menu.getItem(1).setEnabled(isEnabled);
         }
     }
 
-    private void setMenuCreateClient(boolean visibility) {
+    private void setMenuCreateClient(boolean isEnabled) {
         if (menu != null) {
             //position of mItem_create_new_client is 0
-            menu.getItem(0).setVisible(visibility);
+            menu.getItem(0).setEnabled(isEnabled);
         }
     }
 
@@ -273,6 +272,9 @@ public class DashboardActivity extends MifosBaseActivity
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else {
+            setMenuCreateClient(true);
+            setMenuCreateCentre(true);
+            setMenuCreateGroup(true);
             super.onBackPressed();
         }
 
