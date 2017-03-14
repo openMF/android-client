@@ -103,6 +103,12 @@ public class DashboardActivity extends MifosBaseActivity
                             setMenuCreateCentre(false);
                             setMenuCreateGroup(true);
                         }
+                        else if(fragment instanceof SearchFragment){
+                            setActionBarTitle(R.string.dashboard);
+                            setMenuCreateClient(true);
+                            setMenuCreateCentre(true);
+                            setMenuCreateGroup(true);
+                        }
 
                     }
                 });
@@ -112,7 +118,7 @@ public class DashboardActivity extends MifosBaseActivity
     private void setMenuCreateGroup(boolean visibility) {
         if (menu != null) {
             //position of mItem_create_new_group is 2
-            menu.getItem(2).setVisible(visibility);
+            menu.getItem(2).setEnabled(visibility);
         }
 
     }
@@ -120,14 +126,14 @@ public class DashboardActivity extends MifosBaseActivity
     private void setMenuCreateCentre(boolean visibility) {
         if (menu != null) {
             //position of mItem_create_new_centre is 1
-            menu.getItem(1).setVisible(visibility);
+            menu.getItem(1).setEnabled(visibility);
         }
     }
 
     private void setMenuCreateClient(boolean visibility) {
         if (menu != null) {
             //position of mItem_create_new_client is 0
-            menu.getItem(0).setVisible(visibility);
+            menu.getItem(0).setEnabled(visibility);
         }
     }
 
