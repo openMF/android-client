@@ -405,7 +405,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 rowExternal.setVisibility(GONE);
 
             try {
-                String dateString = Utils.getStringOfDate(getActivity(),
+                String dateString = Utils.getStringOfDate(
                         client.getActivationDate());
                 tv_activationDate.setText(dateString);
 

@@ -145,8 +145,8 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
         setToolbarTitle(centerWithAssociations.getName());
         if (!centerWithAssociations.getActivationDate().isEmpty()) {
             tvStaffName.setText(centerWithAssociations.getStaffName());
-            tvActivationDate.setText(Utils.getStringOfDate(getContext(),
-                    centerWithAssociations.getActivationDate()));
+            tvActivationDate.setText(Utils.getStringOfDate
+                    (centerWithAssociations.getActivationDate()));
         }
     }
 
@@ -162,9 +162,8 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
                 getView().findViewById(R.id.row_meeting_frequency).setVisibility(View.GONE);
             }
         } else {
-            tvMeetingDate.setText(Utils.getStringOfDate(getContext(),
-                    centerWithAssociations.getCollectionMeetingCalendar()
-                            .getNextTenRecurringDates().get(0)));
+            tvMeetingDate.setText(Utils.getStringOfDate(centerWithAssociations
+                            .getCollectionMeetingCalendar().getNextTenRecurringDates().get(0)));
             if (getView() != null) {
                 getView().findViewById(R.id.row_meeting_frequency).setVisibility(View.VISIBLE);
                 tvMeetingFrequency.setText(centerWithAssociations.getCollectionMeetingCalendar()

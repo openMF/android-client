@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.PaymentTypeOption;
@@ -13,11 +12,10 @@ import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -125,21 +123,19 @@ public class Utils {
     /**
      * This Method Converting the List<Integer> of Activation Date to String.
      *
-     * @param context Context
      * @param dateObj List<Integer> of Date
      * @return
      */
-    public static String getStringOfDate(Context context, List<Integer> dateObj) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy",
-                context.getResources().getConfiguration().locale);
-        Date date = null;
-        try {
-            date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
-        } catch (ParseException e) {
-            Log.d(LOG_TAG, e.getLocalizedMessage());
-        }
+    public static String getStringOfDate(List<Integer> dateObj) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(Calendar.YEAR, dateObj.get(0));
+        //in Calendar months are indexed from 0 to 11
+        calendar.set(Calendar.MONTH, dateObj.get(1) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, dateObj.get(2));
+
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        return df.format(date);
+        return df.format(calendar.getTime());
     }
 
     public static LayerDrawable setCircularBackground(int colorId, Context context) {
