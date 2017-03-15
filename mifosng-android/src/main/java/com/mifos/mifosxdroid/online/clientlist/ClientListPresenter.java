@@ -40,7 +40,6 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     @Inject
     public ClientListPresenter(DataManagerClient dataManagerClient) {
         mDataManagerClient = dataManagerClient;
-        mSubscriptions = new CompositeSubscription();
         mDbClientList = new ArrayList<>();
         mSyncClientList = new ArrayList<>();
     }
@@ -48,6 +47,8 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     @Override
     public void attachView(ClientListMvpView mvpView) {
         super.attachView(mvpView);
+        mSubscriptions = new CompositeSubscription();
+
     }
 
     @Override
