@@ -438,6 +438,7 @@
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
     <string name="failed_to_capture_image">Failed to capture image</string>
+    <string name="failed_to_load_client">Couldn't load client details</string>
     <string name="new_text">New Text</string>
     <string name="small_text">Small Text</string>
     <string name="duedate">Due Date</string>
