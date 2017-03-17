@@ -73,15 +73,15 @@
     </TableLayout>
 
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/choose_file"
-        android:id="@+id/tv_choose_file"
+        android:id="@+id/bt_choose_file"
         android:layout_marginTop="16dp"
         android:layout_below="@+id/tableLayout"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textAllCaps="true"/>
 
     <Button
         android:layout_width="match_parent"
@@ -89,7 +89,7 @@
         android:text="@string/upload"
         android:id="@+id/bt_upload"
         android:enabled="false"
-        android:layout_below="@+id/tv_choose_file"
+        android:layout_below="@+id/bt_choose_file"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp" />
 

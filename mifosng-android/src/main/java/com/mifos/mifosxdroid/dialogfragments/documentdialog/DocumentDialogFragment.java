@@ -64,8 +64,8 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @BindView(R.id.et_document_description)
     EditText et_document_description;
 
-    @BindView(R.id.tv_choose_file)
-    TextView tv_choose_file;
+    @BindView(R.id.bt_choose_file)
+    Button bt_choose_file;
 
     @BindView(R.id.bt_upload)
     Button bt_upload;
@@ -149,7 +149,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         }
     }
 
-    @OnClick(R.id.tv_choose_file)
+    @OnClick(R.id.bt_choose_file)
     public void openFilePicker() {
         checkPermissionAndRequest();
     }
@@ -285,7 +285,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     }
 
                     if (fileChoosen != null) {
-                        tv_choose_file.setText(fileChoosen.getName());
+                        bt_choose_file.setText(fileChoosen.getName());
                     } else {
                         break;
                     }
