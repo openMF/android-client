@@ -16,6 +16,7 @@ import com.mifos.api.services.DataTableService;
 import com.mifos.api.services.DocumentService;
 import com.mifos.api.services.GroupService;
 import com.mifos.api.services.LoanService;
+import com.mifos.api.services.NoteService;
 import com.mifos.api.services.OfficeService;
 import com.mifos.api.services.RunReportsService;
 import com.mifos.api.services.SavingsAccountService;
@@ -54,6 +55,7 @@ public class BaseApiManager {
     private static StaffService staffApi;
     private static SurveyService surveyApi;
     private static RunReportsService runreportsService;
+    private static NoteService noteService;
 
     public BaseApiManager() {
         createService();
@@ -75,6 +77,8 @@ public class BaseApiManager {
         surveyApi = createApi(SurveyService.class);
         chargeApi = createApi(ChargeService.class);
         runreportsService = createApi(RunReportsService.class);
+        noteService = createApi(NoteService.class);
+
     }
 
     private static <T> T createApi(Class<T> clazz) {
@@ -154,5 +158,9 @@ public class BaseApiManager {
 
     public RunReportsService getRunReportsService() {
         return runreportsService;
+    }
+
+    public NoteService getNoteApi() {
+        return noteService;
     }
 }
