@@ -83,13 +83,24 @@
         android:layout_below="@+id/tableLayout"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tv_file_name"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@id/tv_choose_file"
+        android:layout_centerHorizontal="true" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/upload"
         android:id="@+id/bt_upload"
         android:enabled="false"
-        android:layout_below="@+id/tv_choose_file"
+        android:layout_below="@+id/tv_file_name"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp" />
 

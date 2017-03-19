@@ -67,6 +67,9 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @BindView(R.id.tv_choose_file)
     TextView tv_choose_file;
 
+    @BindView(R.id.tv_file_name)
+    TextView tv_file_name;
+
     @BindView(R.id.bt_upload)
     Button bt_upload;
 
@@ -135,7 +138,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         } else if (documentAction == getResources().getString(R.string.upload_document)) {
             tv_document_action.setText(R.string.upload_document);
         }
-
+        tv_file_name.setVisibility(View.GONE);
         return rootView;
     }
 
@@ -278,14 +281,13 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                 if (resultCode == Activity.RESULT_OK) {
                     // Get the Uri of the selected file
                     uri = data.getData();
-
                     filePath = FileUtils.getPathReal(getActivity(), uri);
                     if (filePath != null) {
                         fileChoosen = new File(filePath);
                     }
-
                     if (fileChoosen != null) {
-                        tv_choose_file.setText(fileChoosen.getName());
+                        tv_file_name.setVisibility(View.VISIBLE);
+                        tv_file_name.setText(fileChoosen.getName());
                     } else {
                         break;
                     }
