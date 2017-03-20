@@ -59,6 +59,7 @@ public class DashboardActivity extends MifosBaseActivity
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
     private Menu menu;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -272,10 +273,22 @@ public class DashboardActivity extends MifosBaseActivity
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else {
-            setMenuCreateClient(true);
-            setMenuCreateCentre(true);
-            setMenuCreateGroup(true);
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                setMenuCreateClient(true);
+                setMenuCreateCentre(true);
+                setMenuCreateGroup(true);
+                super.onBackPressed();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
+            new android.os.Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
 
     }
