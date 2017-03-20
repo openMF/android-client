@@ -240,7 +240,7 @@ public class DashboardActivity extends MifosBaseActivity
     }
 
     public void startNavigationClickActivity(final Intent intent) {
-        android.os.Handler handler = new android.os.Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -280,17 +280,15 @@ public class DashboardActivity extends MifosBaseActivity
                 setMenuCreateCentre(true);
                 setMenuCreateGroup(true);
                 super.onBackPressed();
-
                 return;
             }
             this.doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
-
             new Handler().postDelayed(new Runnable() {
 
                 @Override
                 public void run() {
-                    doubleBackToExitPressedOnce=false;
+                    doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
         }
