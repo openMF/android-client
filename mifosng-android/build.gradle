@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
@@ -111,6 +111,7 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+    buildToolsVersion '25.0.0'
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
