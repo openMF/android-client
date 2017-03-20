@@ -24,7 +24,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -292,7 +291,7 @@ public class DashboardActivity extends MifosBaseActivity
                 public void run() {
                     pressBackToExit=false;
                 }
-            }, 3000);
+            },3000);
         }
     }
 
