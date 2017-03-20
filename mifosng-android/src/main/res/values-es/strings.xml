@@ -154,4 +154,5 @@
     <string name="product_name">Nombre del Producto</string>
     <string name="valid">Válido</string>
     <string name="surveyEmpty">Esta encuesta está vacía</string>
+    <string name="press_back_again_to_exit">Presiona de nuevo para salir</string>
 </resources>
