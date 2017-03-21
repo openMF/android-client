@@ -252,7 +252,7 @@ public class CreateNewClientFragment extends ProgressableFragment
             clientPayload.setExternalId(etClientExternalId.getEditableText().toString());
         }
 
-        if (!clientStaff.isEmpty()) {
+        if (!staffList.isEmpty()) {
             clientPayload.setStaffId(staffId);
         }
 
