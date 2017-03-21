@@ -26,6 +26,7 @@ public class DataTablePresenter extends BasePresenter<DataTableMvpView> {
     public DataTablePresenter(DataManagerDataTable dataManagerDataTable) {
         this.dataManagerDataTable = dataManagerDataTable;
         subscriptions = new CompositeSubscription();
+
     }
 
     @Override
@@ -36,7 +37,7 @@ public class DataTablePresenter extends BasePresenter<DataTableMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        subscriptions.clear();
     }
 
     /**

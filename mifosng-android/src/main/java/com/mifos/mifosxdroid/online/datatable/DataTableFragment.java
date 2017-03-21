@@ -99,7 +99,6 @@ public class DataTableFragment extends MifosBaseFragment implements DataTableMvp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             tableName = getArguments().getString(Constants.DATA_TABLE_NAME);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -110,6 +109,7 @@ public class DataTableFragment extends MifosBaseFragment implements DataTableMvp
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
             Bundle savedInstanceState) {
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         rootView = inflater.inflate(R.layout.fragment_datatables, container, false);
         ButterKnife.bind(this, rootView);
         dataTablePresenter.attachView(this);
