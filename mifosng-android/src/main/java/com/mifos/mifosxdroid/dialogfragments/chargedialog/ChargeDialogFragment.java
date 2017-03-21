@@ -130,6 +130,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         chargesPayload.setDateFormat("dd MMMM yyyy");
         chargesPayload.setChargeId(chargeId);
         initiateChargesCreation(chargesPayload);
+        getDialog().dismiss();
     }
 
     @Override
