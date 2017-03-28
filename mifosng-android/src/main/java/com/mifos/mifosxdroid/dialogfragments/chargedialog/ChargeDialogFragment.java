@@ -130,7 +130,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         chargesPayload.setDateFormat("dd MMMM yyyy");
         chargesPayload.setChargeId(chargeId);
         initiateChargesCreation(chargesPayload);
-        getDialog().dismiss();
+      
     }
 
     @Override
@@ -193,6 +193,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     @Override
     public void showChargesCreatedSuccessfully(Charges changes) {
+              getDialog().dismiss();
         Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG)
                 .show();
     }
