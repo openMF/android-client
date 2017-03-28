@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
+import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
@@ -309,7 +311,16 @@ public class DashboardActivity extends MifosBaseActivity
                 setActionBarTitle(R.string.create_group);
                 break;
             case R.id.logout:
-                logout();
+                new MaterialDialog.Builder().init(DashboardActivity.this)
+                    .setMessage(R.string.dialog_action_logout_confirmation)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .createMaterialDialog()
+                    .show();
                 break;
             default: //DO NOTHING
                 break;
