@@ -10,7 +10,9 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+
+        />
 
     <!-- Actual content -->
     <ScrollView
@@ -102,7 +104,6 @@
                 android:id="@+id/sp_gender"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
@@ -140,7 +141,6 @@
                 android:id="@+id/sp_client_type"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
@@ -158,7 +158,6 @@
                 android:id="@+id/sp_client_classification"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
@@ -176,7 +175,6 @@
                 android:id="@+id/sp_offices"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
@@ -194,7 +192,6 @@
                 android:id="@+id/sp_staff"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
