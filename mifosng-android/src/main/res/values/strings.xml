@@ -533,6 +533,8 @@
     <string name="dialog_action_i_am_sure">I\'M Sure</string>
     <string name="dialog_action_re_try">Re-Try</string>
     <string name="dialog_action_app_settings">App Settings</string>
+    <string name="dialog_action_logout_confirmation">Are you sure to logout?</string>
+    <string name="dialog_yes">Yes</string>
 
 
     <!--OnError Message-->
