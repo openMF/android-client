@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.Gravity;
 import android.view.Menu;
@@ -309,7 +311,13 @@ public class DashboardActivity extends MifosBaseActivity
                 setActionBarTitle(R.string.create_group);
                 break;
             case R.id.logout:
-                logout();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                builder.setMessage(R.string.dialog_action_logout_confirmation).setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                    }
+                }).show();
                 break;
             default: //DO NOTHING
                 break;
