@@ -282,7 +282,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     @Override
     public void showGroupCreatedSuccessfully(SaveResponse saveResponse) {
-        Toast.makeText(getActivity(), "Group" + MifosResponseHandler.getResponse(),
+        Toast.makeText(getActivity(), "Group " + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show();
         getActivity().getSupportFragmentManager().popBackStack();
         if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
