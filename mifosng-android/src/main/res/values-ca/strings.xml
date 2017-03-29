@@ -154,4 +154,5 @@
     <string name="product_name">Nom del Producte</string>
     <string name="valid">Vàlid</string>
     <string name="surveyEmpty"> Aquesta enquesta està buida</string>
+    <string name="back_again">Appuyez de nouveau sur la touche pour quitter</string>
 </resources>
