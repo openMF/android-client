@@ -9,15 +9,19 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -224,7 +228,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_start_path_track:
-                if (checkPermissionAndRequest()) {
+                if (checkPermissionAndRequest() && enableLocationServices()) {
                     startService(intentLocationService);
                     PrefManager.putBoolean(Constants.SERVICE_STATUS, true);
                     invalidateOptionsMenu();
@@ -248,6 +252,41 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         menu.findItem(R.id.menu_stop_path_track)
                 .setVisible(PrefManager.getBoolean(Constants.SERVICE_STATUS, false));
         return true;
+    }
+
+    public boolean enableLocationServices() {
+        LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+        boolean status = true;
+        if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            gps_enabled = true;
+        }
+        if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            network_enabled = true;
+        }
+
+        if (!gps_enabled && !network_enabled) {
+            status = false;
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setMessage(R.string.dialog_message_enable_location_services);
+            dialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Open a settings intent to turn On location services
+                    Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(settingsIntent);
+                }
+            });
+            dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+        return status;
     }
 
     public void createNotificationReceiver() {

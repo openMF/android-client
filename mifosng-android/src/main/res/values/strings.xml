@@ -179,6 +179,7 @@
     <string name="unassigned">Unassigned</string>
     <string name="disburse_loan">Disburse Loan</string>
     <string name="logging_in">Logging In</string>
+    <string name="ok">Ok</string>
     <!-- General Terms End Here -->
 
 
@@ -522,6 +523,10 @@
         Permission to access fine location but you had previously checked the Button Never
         Ask Again.
     </string>
+    <string name="dialog_message_enable_location_services">Enable Location
+        Services to access your location
+    </string>
+
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -533,6 +538,9 @@
     <string name="dialog_action_i_am_sure">I\'M Sure</string>
     <string name="dialog_action_re_try">Re-Try</string>
     <string name="dialog_action_app_settings">App Settings</string>
+
+
+
 
 
     <!--OnError Message-->
