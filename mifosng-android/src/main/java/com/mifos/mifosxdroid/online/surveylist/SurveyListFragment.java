@@ -75,6 +75,7 @@ public class SurveyListFragment extends ProgressableFragment implements SurveyLi
         rootView = inflater.inflate(R.layout.fragment_survey_list, container, false);
 
         ButterKnife.bind(this, rootView);
+        setToolbarTitle("Survey List");
         mSurveyListPresenter.attachView(this);
 
         mSurveyListPresenter.loadSurveyList();
