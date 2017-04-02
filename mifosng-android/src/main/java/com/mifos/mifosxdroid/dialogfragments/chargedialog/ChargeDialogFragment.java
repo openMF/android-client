@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
-import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.templates.clients.ChargeTemplate;
@@ -198,7 +197,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     @Override
     public void showFetchingError(String s) {
-        Toaster.show(rootView, s);
+        Toast.makeText(getActivity(), s , Toast.LENGTH_LONG)
+                .show();
     }
 
     @Override
