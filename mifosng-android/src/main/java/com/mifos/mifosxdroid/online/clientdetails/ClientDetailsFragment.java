@@ -166,6 +166,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @BindView(R.id.rl_client)
     RelativeLayout rlClient;
 
+    @BindView(R.id.rl_error)
+    RelativeLayout rlError;
+
     @Inject
     ClientDetailsPresenter mClientDetailsPresenter;
 
@@ -678,6 +681,24 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @Override
     public void showFetchingError(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+
+        //Show the error box
+        showErrorBox(true);
+    }
+
+    public void showErrorBox(boolean show) {
+        if (show) {
+            rlError.setVisibility(VISIBLE);
+        } else {
+            rlError.setVisibility(GONE);
+        }
+    }
+
+    @OnClick(R.id.rl_error)
+    public void onErrorBoxClick() {
+        //Refresh the fragment
+        showErrorBox(false);
+        mClientDetailsPresenter.loadClientDetailsAndClientAccounts(clientId);
     }
 
     public interface OnFragmentInteractionListener {
