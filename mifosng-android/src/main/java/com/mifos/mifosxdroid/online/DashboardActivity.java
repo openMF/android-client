@@ -204,8 +204,7 @@ public class DashboardActivity extends MifosBaseActivity
 
         }
 
-        // close the drawer
-        mDrawerLayout.closeDrawer(Gravity.LEFT);
+        mDrawerLayout.closeDrawer(Gravity.START);
         mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
     }
@@ -270,7 +269,7 @@ public class DashboardActivity extends MifosBaseActivity
     public void onBackPressed() {
         // check if the nav mDrawer is open
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
+            mDrawerLayout.closeDrawer(Gravity.START);
         } else {
             setMenuCreateClient(true);
             setMenuCreateCentre(true);
