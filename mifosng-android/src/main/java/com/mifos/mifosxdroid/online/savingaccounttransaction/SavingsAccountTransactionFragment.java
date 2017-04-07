@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.gson.Gson;
@@ -205,6 +206,20 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
                     .message_field_required)).notifyUserWithToast(getActivity());
             return;
         }
+        // Notify the user if zero is entered in the Amount
+        // field or only "." (Decimal point) is entered.
+        try {
+            if (Float.parseFloat(et_transactionAmount.getEditableText().toString()) == 0) {
+                new RequiredFieldException(getString(R.string.amount), getString(string
+                        .message_cannot_be_zero)).notifyUserWithToast(getActivity());
+                return;
+            }
+        } catch (NumberFormatException e) {
+
+            Toast.makeText(getActivity(), string.error_invalid_amount, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String[] headers = {getResources().getString(string.field),
                 getResources().getString(string.value)};
         String[][] data = {
