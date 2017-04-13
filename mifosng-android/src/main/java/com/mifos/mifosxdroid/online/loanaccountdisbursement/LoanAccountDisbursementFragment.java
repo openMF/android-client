@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.api.GenericResponse;
+import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -118,6 +119,12 @@ public class LoanAccountDisbursementFragment extends MifosBaseFragment implement
 
     @OnClick(R.id.btn_disburse_loan)
     void onSubmitDisburse() {
+        // Notify the user if Amount field is blank
+        if (etDisbursedAmount.getEditableText().toString().isEmpty()) {
+            new RequiredFieldException(getString(R.string.amount), getString(R.string
+                    .message_field_required)).notifyUserWithToast(getActivity());
+            return;
+        }
         LoanDisbursement loanDisbursement = new LoanDisbursement();
         loanDisbursement.setNote(etDisbursementNote.getEditableText().toString());
         loanDisbursement.setActualDisbursementDate(disbursementDates);
