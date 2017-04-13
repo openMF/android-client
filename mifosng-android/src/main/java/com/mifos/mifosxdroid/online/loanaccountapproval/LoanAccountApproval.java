@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.api.GenericResponse;
+import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -115,6 +116,14 @@ public class LoanAccountApproval extends MifosBaseFragment
         LoanApproval loanApproval = new LoanApproval();
         loanApproval.setNote(et_approval_note.getEditableText().toString());
         loanApproval.setApprovedOnDate(approvalDate);
+        /* Notify the user if Approved Amount &
+         * Transaction Amount field is blank */
+        if (et_approved_amount.getEditableText().toString().isEmpty()
+                || et_transaction_amount.getEditableText().toString().isEmpty()) {
+            new RequiredFieldException(getString(R.string.amount), getString(R.string
+                    .message_field_required)).notifyUserWithToast(getActivity());
+            return;
+        }
         loanApproval.setApprovedLoanAmount(et_approved_amount.getEditableText().toString());
         loanApproval.setExpectedDisbursementDate(disbursementDate);
         initiateLoanApproval(loanApproval);
