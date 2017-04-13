@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -58,6 +59,9 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
     @BindView(R.id.noChargesText)
     TextView mNoChargesText;
+
+    @BindView(R.id.noChargesIcon)
+    ImageView mNoChargesIcon;
 
     @BindView(R.id.ll_error)
     LinearLayout ll_error;
@@ -216,6 +220,14 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
                 Toaster.show(rootView, "No more Charges Available");
         }
 
+    }
+
+
+    @Override
+    public void showEmptyCharges() {
+        ll_error.setVisibility(View.VISIBLE);
+        mNoChargesText.setText(getResources().getString(R.string.message_no_charges_available));
+        mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
     }
 
     @Override

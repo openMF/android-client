@@ -12,4 +12,6 @@ public interface ClientChargeMvpView extends MvpView {
     void showChargesList(Page<Charges> chargesPage);
 
     void showFetchingErrorCharges(String s);
+
+    void showEmptyCharges();
 }
