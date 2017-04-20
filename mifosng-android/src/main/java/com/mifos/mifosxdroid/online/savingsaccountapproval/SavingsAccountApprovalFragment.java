@@ -25,6 +25,7 @@ import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
 import com.mifos.utils.SafeUIBlockingUtility;
 
 import javax.inject.Inject;
@@ -110,10 +111,16 @@ public class SavingsAccountApprovalFragment extends MifosBaseFragment implements
 
     @OnClick(R.id.btn_approve_savings)
     void onClickApproveSavings() {
-        SavingsApproval savingsApproval = new SavingsApproval();
-        savingsApproval.setNote(etSavingsApprovalReason.getEditableText().toString());
-        savingsApproval.setApprovedOnDate(approvaldate);
-        initiateSavingsApproval(savingsApproval);
+        if (Network.isOnline(getContext())) {
+            SavingsApproval savingsApproval = new SavingsApproval();
+            savingsApproval.setNote(etSavingsApprovalReason.getEditableText().toString());
+            savingsApproval.setApprovedOnDate(approvaldate);
+            initiateSavingsApproval(savingsApproval);
+        } else {
+            Toast.makeText(getContext(),
+                    getResources().getString(R.string.error_network_not_available),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @OnClick(R.id.tv_approval_date)
