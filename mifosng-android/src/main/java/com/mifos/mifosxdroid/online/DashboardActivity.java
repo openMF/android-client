@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
@@ -239,7 +240,7 @@ public class DashboardActivity extends MifosBaseActivity
     }
 
     public void startNavigationClickActivity(final Intent intent) {
-        android.os.Handler handler = new android.os.Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -283,7 +284,7 @@ public class DashboardActivity extends MifosBaseActivity
             }
             this.doubleBackToExitPressedOnce = true;
             Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
-            new android.os.Handler().postDelayed(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     doubleBackToExitPressedOnce = false;
