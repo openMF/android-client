@@ -8,11 +8,14 @@ package com.mifos.mifosxdroid.online.clientlist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +36,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
+import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
@@ -209,6 +213,27 @@ public class ClientListFragment extends MifosBaseFragment
         mClientListPresenter.loadDatabaseClients();
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    FragmentTransaction transaction = getActivity()
+                            .getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container, new SearchFragment(),
+                            "com.mifos.mifosxdroid.online.search.SearchFragment");
+                    transaction.commit();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 
