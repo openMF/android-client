@@ -477,6 +477,13 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 }
             });
             //inflateClientsAccounts();
+        }else{
+            Toaster.show(getView(),R.string.failed_to_load_client);
+            iv_clientImage.setImageDrawable(
+                    ResourcesCompat.getDrawable(getResources(), R.drawable
+                            .ic_launcher, null));
+
+            pb_imageProgressBar.setVisibility(GONE);
         }
     }
 
