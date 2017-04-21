@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
@@ -59,6 +61,7 @@ public class DashboardActivity extends MifosBaseActivity
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
     private Menu menu;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -237,7 +240,7 @@ public class DashboardActivity extends MifosBaseActivity
     }
 
     public void startNavigationClickActivity(final Intent intent) {
-        android.os.Handler handler = new android.os.Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -272,12 +275,22 @@ public class DashboardActivity extends MifosBaseActivity
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else {
-            setMenuCreateClient(true);
-            setMenuCreateCentre(true);
-            setMenuCreateGroup(true);
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                setMenuCreateClient(true);
+                setMenuCreateCentre(true);
+                setMenuCreateGroup(true);
+                super.onBackPressed();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
-
     }
 
     @Override
