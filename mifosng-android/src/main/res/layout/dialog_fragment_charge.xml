@@ -70,12 +70,10 @@
 
                 <EditText
                     android:id="@+id/amount_due_charge"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/light_grey"
-                    android:inputType="numberDecimal"/>
-            </TableRow>
+                    android:inputType="numberDecimal"
+                    style="@style/DialogFragmentChargeEditText"/>
+
+</TableRow>
 
             <TableRow
                 android:id="@+id/tableRow3"
@@ -93,11 +91,8 @@
 
                 <EditText
                     android:id="@+id/et_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/light_grey"
-                    android:focusable="false"/>
+                    android:focusable="false"
+                    style="@style/DialogFragmentChargeEditText"/>
 
             </TableRow>
 
