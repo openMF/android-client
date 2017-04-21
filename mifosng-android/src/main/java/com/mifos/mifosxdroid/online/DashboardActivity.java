@@ -50,6 +50,9 @@ public class DashboardActivity extends MifosBaseActivity
 
     public static final String TAG = DashboardActivity.class.getSimpleName();
 
+    public static boolean fragmentBackStackEmpty = true;
+    public static String lastNonBackStackFragment = "";
+
     @BindView(R.id.navigation_view)
     NavigationView mNavigationView;
 
@@ -275,6 +278,33 @@ public class DashboardActivity extends MifosBaseActivity
             setMenuCreateCentre(true);
             setMenuCreateGroup(true);
             super.onBackPressed();
+
+            String[] nonBackStackFragmentNames = {
+                    SearchFragment.class.getName(),
+                    ClientListFragment.class.getName(),
+                    GroupsListFragment.class.getName()
+            };
+
+            if (!fragmentBackStackEmpty) {
+                for (String fragmentName : nonBackStackFragmentNames) {
+                    if (!lastNonBackStackFragment.equals("")
+                            && fragmentName == lastNonBackStackFragment) {
+                        Fragment fragment = getSupportFragmentManager()
+                                .findFragmentByTag(fragmentName);
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .remove(fragment)
+                                .commit();
+                        lastNonBackStackFragment = "";
+                        break;
+                    }
+                }
+            }
+
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                fragmentBackStackEmpty = true;
+            }
+
         }
 
     }
