@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
@@ -22,7 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -59,6 +60,9 @@ public class DashboardActivity extends MifosBaseActivity
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
     private Menu menu;
+
+    //boolean to check back press
+    boolean pressBackToExit = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -274,10 +278,22 @@ public class DashboardActivity extends MifosBaseActivity
             setMenuCreateClient(true);
             setMenuCreateCentre(true);
             setMenuCreateGroup(true);
-            super.onBackPressed();
+            if(pressBackToExit){
+               super.onBackPressed();
+               return;
+            }else{
+                Toast.makeText(this,getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show();
+            }
+            this.pressBackToExit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pressBackToExit=false;
+                }
+            },3000);
         }
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
