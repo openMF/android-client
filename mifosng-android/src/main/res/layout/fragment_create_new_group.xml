@@ -72,7 +72,7 @@
                     android:gravity="start"
                     android:hint="@string/external_id"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:paddingBottom="16dp"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
