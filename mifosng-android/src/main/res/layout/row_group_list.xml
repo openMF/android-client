@@ -6,11 +6,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:minHeight="?attr/listPreferredItemHeight"
-              android:orientation="vertical"
-              android:padding="8dp">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:minHeight="?attr/listPreferredItemHeight"
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="name"
+            tools:text="name"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView
@@ -31,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
-            android:text="office"
+            tools:text="office"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     </LinearLayout>
@@ -49,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="4dp"
             android:layout_weight="1"
-            android:text="status"
+            tools:text="status"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <View

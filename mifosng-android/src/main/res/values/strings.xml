@@ -179,6 +179,14 @@
     <string name="unassigned">Unassigned</string>
     <string name="disburse_loan">Disburse Loan</string>
     <string name="logging_in">Logging In</string>
+    <string name="survey_name">survey_name</string>
+    <string name="Thanks_for_taking_survey">Thanks for taking Survey </string>
+    <string name="next">Next</string>
+    <string name="title">Title</string>
+    <string name="purpose">Purpose</string>
+    <string name="instance_URL">Instance URL</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
     <!-- General Terms End Here -->
 
 
@@ -275,6 +283,7 @@
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <string name="saving_min_required_balance">Enforce Minimum Required Balance</string>
     <string name="saving_overdraft_allowed">Overdraft Allowed</string>
+    <string name="savings_submission_date">Submission Date :</string>
     <!-- Savings Account Related Terminologies End Here -->
 
 
@@ -317,9 +326,9 @@
     <string name="no_more_clients_available">No more Clients Available</string>
     <string name="no_more_groups_available">No more Groups Available</string>
     <string name="no_more_centers_available">No more Centers Available</string>
-
+    <string name="select_a_client_from_the_list">Select a Client from the list</string>
     <string name="numberofrepayments">Number of repayments</string>
-
+    <string name="select_clients_date_of_birth">Select client\'s date of birth :</string>
     <string name="days_in_year">Days in year</string>
 
     <!-- Create Center Terms -->
@@ -418,6 +427,7 @@
     <string name="error_center_inactive">Center Inactive</string>
     <string name="error_to_activate_savingsaccount">Error To Activate SavingsAccount</string>
     <string name="error_submitting_survey">Error While Submitting Survey.\nPlease Try Again</string>
+    <string name="error_select_one_of_the_survey">Please select one of the Survey"</string>
 
     <!-- DropDown Defaults -->
     <string name="spinner_office">Select Office</string>
@@ -484,6 +494,7 @@
     <string name="total_sync_progress">Total Sync Progress</string>
     <string name="sync_clients_full_information"> Sync Clients All Information </string>
     <string name="sync_groups_full_information">Sync Groups All Information</string>
+    <string name="payload_name">Payload Name</string>
 
     <!--Material Dialog Titles-->
     <string name="sync_previous_transaction">Sync Previous Transaction</string>
@@ -594,6 +605,11 @@
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
 
+
+    <!--Miscellaneous-->
+    <string name="dialog_fragment_charge_miscellaneous">en</string>
+    <string name="row_sync_payload_error_message">Error Message</string>
+    <!--End of Miscellaneous-->
 
     <string-array name="office_ids">
         <item>Head Office</item>

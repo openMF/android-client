@@ -117,7 +117,7 @@
                     android:layout_weight="1"
                     android:background="@color/light_grey"
                     android:focusable="false"
-                    android:text="en" />
+                    android:text="@string/dialog_fragment_charge_miscellaneous" />
 
             </TableRow>
 
