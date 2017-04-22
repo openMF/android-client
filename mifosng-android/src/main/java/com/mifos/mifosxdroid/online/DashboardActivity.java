@@ -288,7 +288,7 @@ public class DashboardActivity extends MifosBaseActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        hideKeyboard(mDrawerLayout);
+        //hideKeyboard(mDrawerLayout);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -298,14 +298,17 @@ public class DashboardActivity extends MifosBaseActivity
             case R.id.mItem_create_new_client:
                 setActionBarTitle(R.string.create_client);
                 openCreateClient();
+		item.setEnabled(false);
                 break;
             case R.id.mItem_create_new_center:
                 setActionBarTitle(R.string.create_center);
                 openCreateCenter();
+		item.setEnabled(false);
                 break;
             case R.id.mItem_create_new_group:
                 openCreateGroup();
                 setActionBarTitle(R.string.create_group);
+		item.setEnabled(false);
                 break;
             case R.id.logout:
                 logout();
