@@ -1,6 +1,7 @@
 package com.mifos.utils;
 
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MaterialDialog;
@@ -26,6 +29,7 @@ import com.mifos.mifosxdroid.core.MaterialDialog;
  */
 public class CheckSelfPermissionAndRequest {
 
+    private static final String TAG = CheckSelfPermissionAndRequest.class.getName();
 
     /**
      * This Method Check the Permission is granted or not to the App. If the Permission granted,
@@ -128,8 +132,18 @@ public class CheckSelfPermissionAndRequest {
                                                 R.string.package_name), activity.getPackageName()
                                                 , null);
                                         intent.setData(uri);
-                                        activity.startActivityForResult(intent,
-                                                Constants.REQUEST_PERMISSION_SETTING);
+                                        PackageManager packageManager = activity
+                                                .getPackageManager();
+                                        if (intent.resolveActivity(packageManager) != null) {
+                                            activity.startActivityForResult(intent,
+                                                    Constants.REQUEST_PERMISSION_SETTING);
+                                        } else {
+                                            Toast.makeText(activity,
+                                                    R.string.app_settings_activity_failed
+                                                    , Toast.LENGTH_SHORT)
+                                                    .show();
+                                            Log.d(TAG, "cant find activity with name");
+                                        }
                                     }
                                 })
                         .createMaterialDialog()
