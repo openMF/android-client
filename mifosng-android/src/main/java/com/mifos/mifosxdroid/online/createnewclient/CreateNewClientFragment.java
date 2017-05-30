@@ -285,6 +285,7 @@ public class CreateNewClientFragment extends ProgressableFragment
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
                 fragmentTransaction.replace(R.id.container, fragment).commit();
             } else {
+                clientPayload.setDatatables(null);
                 createNewClientPresenter.createClient(clientPayload);
             }
         }
