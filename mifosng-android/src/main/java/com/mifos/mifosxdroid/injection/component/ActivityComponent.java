@@ -49,6 +49,7 @@ import com.mifos.mifosxdroid.online.note.NoteFragment;
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
+import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateFragment;
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalFragment;
 import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
@@ -165,4 +166,6 @@ public interface ActivityComponent {
     void inject(DataTableFragment dataTableFragment);
 
     void inject(NoteFragment noteFragment);
+
+    void inject(SavingsAccountActivateFragment savingsAccountActivateFragment);
 }

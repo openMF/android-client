@@ -272,6 +272,7 @@
     <string name="approval_savings_date">Select Approval Date:</string>
     <string name="approval_disbursement_date">Expected disbursement on</string>
     <string name="approved_on">Approved On*</string>
+    <string name="activated_on">Activated On*</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <string name="saving_min_required_balance">Enforce Minimum Required Balance</string>
     <string name="saving_overdraft_allowed">Overdraft Allowed</string>

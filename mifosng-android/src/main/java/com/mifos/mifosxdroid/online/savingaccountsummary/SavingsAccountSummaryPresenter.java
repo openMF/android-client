@@ -1,14 +1,10 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.utils.Constants;
-import com.mifos.utils.MFErrorParser;
-
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -72,28 +68,5 @@ public class SavingsAccountSummaryPresenter extends BasePresenter<SavingsAccount
     }
 
 
-    public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
-        checkViewAttached();
-        getMvpView().showProgressbar(false);
-        mSubscriptions.add(mDataManagerSavings.activateSavings(savingsAccountId, request)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
-                    @Override
-                    public void onCompleted() {
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError(MFErrorParser.errorMessage(e));
-                    }
-
-                    @Override
-                    public void onNext(GenericResponse genericResponse) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showSavingsActivatedSuccessfully(genericResponse);
-                    }
-                }));
-    }
 }

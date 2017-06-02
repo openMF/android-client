@@ -29,17 +29,16 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
+import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateFragment;
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalFragment;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.accounts.savings.Status;
 import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.utils.Constants;
-import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -302,12 +301,13 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     }
 
     public void activateSavings() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("dateFormat", "dd MMMM yyyy");
-        hashMap.put("activatedOnDate", DateHelper.getCurrentDateAsNewDateFormat());
-        hashMap.put("locale", "en");
-
-        mSavingAccountSummaryPresenter.activateSavings(savingsAccountNumber, hashMap);
+        SavingsAccountActivateFragment savingsAccountApproval = SavingsAccountActivateFragment
+                .newInstance(savingsAccountNumber, savingsAccountType);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY);
+        fragmentTransaction.replace(R.id.container, savingsAccountApproval);
+        fragmentTransaction.commit();
     }
 
     public void loadSavingsDataTables() {
