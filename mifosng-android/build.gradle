@@ -111,6 +111,11 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+    externalNativeBuild {
+        cmake {
+            path 'CMakeLists.txt'
+        }
+    }
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
