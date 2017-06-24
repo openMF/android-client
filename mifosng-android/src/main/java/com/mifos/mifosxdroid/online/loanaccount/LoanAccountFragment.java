@@ -409,6 +409,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                 .setDropDownViewResource(layout.simple_spinner_dropdown_item);
         spRepaymentFreqDayOfWeek.setAdapter(mRepaymentFrequencyDayOfWeekTypeOptionsAdapter);
         spRepaymentFreqDayOfWeek.setOnItemSelectedListener(this);
+        spRepaymentFreqNthDay.setSelection(mListRepaymentFrequencyNthDayTypeOptions.size() - 1);
+        spRepaymentFreqDayOfWeek.setSelection(
+                mListRepaymentFrequencyDayOfWeekTypeOptions.size() - 1);
     }
 
     private void inflateLoansProductSpinner() {
@@ -471,6 +474,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         for (RepaymentFrequencyNthDayTypeOptions options : mRepaymentFrequencyNthDayTypeOptions) {
             mListRepaymentFrequencyNthDayTypeOptions.add(options.getValue());
         }
+        mListRepaymentFrequencyNthDayTypeOptions.add(
+                getResources().getString(R.string.select_week_hint));
 
         mListRepaymentFrequencyDayOfWeekTypeOptions.clear();
         mRepaymentFrequencyDaysOfWeekTypeOptions = mLoanTemplate
@@ -479,6 +484,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                 : mRepaymentFrequencyDaysOfWeekTypeOptions) {
             mListRepaymentFrequencyDayOfWeekTypeOptions.add(options.getValue());
         }
+        mListRepaymentFrequencyDayOfWeekTypeOptions.add(
+                getResources().getString(R.string.select_day_hint));
 
         mListLoanPurposeOptions.clear();
         for (com.mifos.objects.templates.loans.LoanPurposeOptions loanPurposeOptions :
@@ -619,15 +626,25 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                 }
                 break;
             case R.id.sp_repayment_freq_nth_day:
-                repaymentFrequencyNthDayType = mLoanTemplate
-                        .getRepaymentFrequencyNthDayTypeOptions()
-                        .get(position).getId();
+                if (mListRepaymentFrequencyNthDayTypeOptions.get(position)
+                        .equals(getResources().getString(R.string.select_week_hint))) {
+                    repaymentFrequencyNthDayType = null;
+                } else {
+                    repaymentFrequencyNthDayType = mLoanTemplate
+                            .getRepaymentFrequencyNthDayTypeOptions()
+                            .get(position).getId();
+                }
                 break;
 
             case R.id.sp_repayment_freq_day_of_week:
-                repaymentFrequencyDayOfWeek = mLoanTemplate
-                        .getRepaymentFrequencyDaysOfWeekTypeOptions()
-                        .get(position).getId();
+                if (mListRepaymentFrequencyDayOfWeekTypeOptions.get(position)
+                        .equals(getResources().getString(R.string.select_day_hint))) {
+                    repaymentFrequencyDayOfWeek = null;
+                } else {
+                    repaymentFrequencyDayOfWeek = mLoanTemplate
+                            .getRepaymentFrequencyDaysOfWeekTypeOptions()
+                            .get(position).getId();
+                }
                 break;
 
             case R.id.sp_fund :
