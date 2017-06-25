@@ -33,6 +33,7 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.GroupPayload;
@@ -42,6 +43,7 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosResponseHandler;
+import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
@@ -163,20 +165,22 @@ public class CreateNewGroupFragment extends ProgressableFragment
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Network.isOnline(getContext())) {
+                    GroupPayload groupPayload = new GroupPayload();
 
-                GroupPayload groupPayload = new GroupPayload();
+                    groupPayload.setName(et_groupName.getEditableText().toString());
+                    groupPayload.setExternalId(et_groupexternalId.getEditableText().toString());
+                    groupPayload.setActive(cb_groupActiveStatus.isChecked());
+                    groupPayload.setActivationDate(activationdateString);
+                    groupPayload.setSubmissionDate(dateofsubmissionstring);
+                    groupPayload.setOfficeId(officeId);
+                    groupPayload.setDateFormat("dd MMMM yyyy");
+                    groupPayload.setLocale("en");
 
-                groupPayload.setName(et_groupName.getEditableText().toString());
-                groupPayload.setExternalId(et_groupexternalId.getEditableText().toString());
-                groupPayload.setActive(cb_groupActiveStatus.isChecked());
-                groupPayload.setActivationDate(activationdateString);
-                groupPayload.setSubmissionDate(dateofsubmissionstring);
-                groupPayload.setOfficeId(officeId);
-                groupPayload.setDateFormat("dd MMMM yyyy");
-                groupPayload.setLocale("en");
-
-                initiateGroupCreation(groupPayload);
-
+                    initiateGroupCreation(groupPayload);
+                } else {
+                    Toaster.show(rootView, R.string.error_network_not_available, Toaster.LONG);
+                }
             }
         });
 
