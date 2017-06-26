@@ -32,6 +32,7 @@ import com.mifos.services.data.SavingsPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,33 +198,36 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
     @OnClick(R.id.btn_submit)
     void submitSavingsAccount() {
+        if (Network.isOnline(getContext())) {
+            SavingsPayload savingsPayload = new SavingsPayload();
+            savingsPayload.setExternalId(etClientExternalId.getEditableText().toString());
+            savingsPayload.setLocale("en");
+            savingsPayload.setSubmittedOnDate(submission_date);
+            savingsPayload.setDateFormat("dd MMMM yyyy");
+            if (isGroupAccount) {
+                savingsPayload.setGroupId(groupId);
+            } else {
+                savingsPayload.setClientId(clientId);
+            }
+            savingsPayload.setProductId(productId);
+            savingsPayload.setFieldOfficerId(fieldOfficerId);
+            savingsPayload.setNominalAnnualInterestRate(etNominalAnnual.getEditableText()
+                    .toString());
+            savingsPayload.setAllowOverdraft(cbOverdraftAllowed.isChecked());
+            savingsPayload.setNominalAnnualInterestRateOverdraft(etNominalAnnualOverdraft.
+                    getEditableText().toString());
+            savingsPayload.setOverdraftLimit(etMaxOverdraftAmount.getEditableText()
+                    .toString());
+            savingsPayload.setMinOverdraftForInterestCalculation(etMinOverdraftRequired.
+                    getEditableText().toString());
+            savingsPayload.setEnforceMinRequiredBalance(cbEnforceRequiredBalance.isChecked());
+            savingsPayload.setMinRequiredOpeningBalance(etMinRequiredBalance.getEditableText()
+                    .toString());
 
-        SavingsPayload savingsPayload = new SavingsPayload();
-        savingsPayload.setExternalId(etClientExternalId.getEditableText().toString());
-        savingsPayload.setLocale("en");
-        savingsPayload.setSubmittedOnDate(submission_date);
-        savingsPayload.setDateFormat("dd MMMM yyyy");
-        if (isGroupAccount) {
-            savingsPayload.setGroupId(groupId);
+            mSavingsAccountPresenter.createSavingsAccount(savingsPayload);
         } else {
-            savingsPayload.setClientId(clientId);
+            Toaster.show(rootView, R.string.error_network_not_available);
         }
-        savingsPayload.setProductId(productId);
-        savingsPayload.setFieldOfficerId(fieldOfficerId);
-        savingsPayload.setNominalAnnualInterestRate(etNominalAnnual.getEditableText()
-                .toString());
-        savingsPayload.setAllowOverdraft(cbOverdraftAllowed.isChecked());
-        savingsPayload.setNominalAnnualInterestRateOverdraft(etNominalAnnualOverdraft.
-                getEditableText().toString());
-        savingsPayload.setOverdraftLimit(etMaxOverdraftAmount.getEditableText()
-                .toString());
-        savingsPayload.setMinOverdraftForInterestCalculation(etMinOverdraftRequired.
-                getEditableText().toString());
-        savingsPayload.setEnforceMinRequiredBalance(cbEnforceRequiredBalance.isChecked());
-        savingsPayload.setMinRequiredOpeningBalance(etMinRequiredBalance.getEditableText()
-                .toString());
-
-        mSavingsAccountPresenter.createSavingsAccount(savingsPayload);
     }
 
     @Override
