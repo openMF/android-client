@@ -150,6 +150,8 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
 
     @Override
     public void showError() {
+        this.userLocations.clear();
+        pathTrackingAdapter.notifyDataSetChanged();
         llError.setVisibility(View.VISIBLE);
         tvNoPathTracker.setText(getString(R.string.failed_to_fetch_path_tracking_details));
         ivNoPathTracker.setImageResource(R.drawable.ic_error_black_24dp);
