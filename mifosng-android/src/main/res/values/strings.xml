@@ -354,6 +354,8 @@
     <string name="loan_disbursement_date">Disbursement Date</string>
     <string name="loan_account_linking_option_label">Link Savings</string>
     <string name="select_linkage_account_hint">Select Account</string>
+    <string name="select_week_hint">Select Week</string>
+    <string name="select_day_hint">Select Day</string>
     <string name="savings_interest_earned">Interest Earned</string>
     <string name="sync">Sync</string>
     <string name="enter_center_id">Center Id</string>
