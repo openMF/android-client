@@ -91,40 +91,42 @@
 
             <LinearLayout style="@style/LinearLayout.Width">
 
-                <TextView style="@style/TextView.Base.Weight"
-                    android:layout_weight="0.5"
+                <TextView
+                    style="@style/TextView.Base.Weight"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:text="@string/loan_submission_date"/>
+                    android:layout_weight="0.5"
+                    android:text="@string/loan_submission_date" />
 
                 <TextView
-                    android:layout_weight="0.5"
                     android:id="@+id/tv_submittedon_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:textSize="20sp"
-                    android:background="@color/gray_light"/>
+                    android:layout_weight="0.5"
+                    android:background="@color/gray_light"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout style="@style/LinearLayout.Width">
 
-                <TextView style="@style/TextView.Base.Weight"
-                    android:layout_weight="0.5"
+                <TextView
+                    style="@style/TextView.Base.Weight"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/loan_disbursement_date"/>
+                    android:layout_weight="0.5"
+                    android:text="@string/loan_disbursement_date" />
 
                 <TextView
-                    android:layout_weight="0.5"
                     android:id="@+id/tv_disbursementon_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:textSize="20sp"
-                    android:background="@color/gray_light"/>
+                    android:layout_weight="0.5"
+                    android:background="@color/gray_light"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
@@ -190,13 +192,13 @@
 
                     <EditText
                         android:id="@+id/et_nominal_interest_rate"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="start"
                         android:hint="@string/nominal_interest_rate"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
-                        android:paddingBottom="16dp"/>
+                        android:paddingBottom="16dp" />
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
@@ -204,7 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="start"/>
+                    android:gravity="start" />
 
             </LinearLayout>
 
@@ -222,47 +224,48 @@
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout style="@style/LinearLayout.Width">
+
                 <Spinner
                     android:id="@+id/sp_payment_periods"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="0.3"
                     android:background="@color/light_grey"
                     android:paddingTop="10dp"
-                    android:spinnerMode="dropdown"
-                    android:layout_weight="0.3"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginEnd="3dp"/>
+                    android:spinnerMode="dropdown" />
 
                 <TextView
                     android:id="@+id/tv_repaid_nthfreq_label_on"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/repaidevery_nthfreq"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    android:visibility="gone"/>
+                    android:layout_marginRight="3dp"
+                    android:text="@string/repaidevery_nthfreq"
+                    android:visibility="gone" />
 
                 <Spinner
                     android:id="@+id/sp_repayment_freq_nth_day"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="0.3"
                     android:background="@color/light_grey"
                     android:paddingTop="10dp"
                     android:spinnerMode="dropdown"
-                    android:layout_weight="0.3"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginEnd="3dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <Spinner
                     android:id="@+id/sp_repayment_freq_day_of_week"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
                     android:background="@color/light_grey"
                     android:paddingTop="10dp"
                     android:spinnerMode="dropdown"
-                    android:layout_weight="0.3"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
 
             <TextView
@@ -271,18 +274,36 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold" />
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <LinearLayout style="@style/LinearLayout.Width">
 
-                <EditText
-                    android:id="@+id/et_loanterm"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/loanterm"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:paddingBottom="16dp"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInput.Base.Weight"
+                    android:layout_weight="0.5">
+
+                    <EditText
+                        android:id="@+id/et_loanterm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:hint="@string/loanterm"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/sp_loan_term_periods"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/light_grey"
+                    android:paddingTop="10dp"
+                    android:spinnerMode="dropdown"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_amortization"

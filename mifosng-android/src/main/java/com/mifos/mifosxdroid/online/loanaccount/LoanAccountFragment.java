@@ -103,6 +103,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @BindView(R.id.sp_repayment_freq_nth_day)
     Spinner spRepaymentFreqNthDay;
 
+    @BindView(R.id.sp_loan_term_periods)
+    Spinner spLoanTermFrequencyType;
+
     @BindView(R.id.sp_repayment_freq_day_of_week)
     Spinner spRepaymentFreqDayOfWeek;
 
@@ -181,6 +184,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     List<String> mListInterestCalculationPeriodTypeOptions  = new ArrayList<>();
     List<String> mListTransactionProcessingStrategyOptions = new ArrayList<>();
     List<String> mListTermFrequencyTypeOptions = new ArrayList<>();
+    List<String> mListLoanTermFrequencyTypeOptions = new ArrayList<>();
     List<String> mListRepaymentFrequencyNthDayTypeOptions = new ArrayList<>();
     List<String> mListRepaymentFrequencyDayOfWeekTypeOptions = new ArrayList<>();
     List<String> mListLoanFundOptions = new ArrayList<>();
@@ -194,6 +198,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     ArrayAdapter<String> mInterestCalculationPeriodTypeOptionsAdapter;
     ArrayAdapter<String> mTransactionProcessingStrategyOptionsAdapter;
     ArrayAdapter<String> mTermFrequencyTypeOptionsAdapter;
+    ArrayAdapter<String> mLoanTermFrequencyTypeAdapter;
     ArrayAdapter<String> mRepaymentFrequencyNthDayTypeOptionsAdapter;
     ArrayAdapter<String> mRepaymentFrequencyDayOfWeekTypeOptionsAdapter;
     ArrayAdapter<String> mLoanFundOptionsAdapter;
@@ -369,6 +374,14 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         spPaymentPeriods.setAdapter(mTermFrequencyTypeOptionsAdapter);
         spPaymentPeriods.setOnItemSelectedListener(this);
 
+        //Inflate LoanTerm Frequency Type adapter
+        mLoanTermFrequencyTypeAdapter = new ArrayAdapter<>(getActivity(),
+                layout.simple_spinner_item, mListLoanTermFrequencyTypeOptions);
+        mLoanTermFrequencyTypeAdapter.setDropDownViewResource(
+                layout.simple_spinner_dropdown_item);
+        spLoanTermFrequencyType.setAdapter(mLoanTermFrequencyTypeAdapter);
+        spLoanTermFrequencyType.setOnItemSelectedListener(this);
+
         //Inflate FondOptions Spinner
         mLoanFundOptionsAdapter = new ArrayAdapter<>(getActivity(),
                 layout.simple_spinner_item, mListLoanFundOptions);
@@ -531,6 +544,13 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         }
         mTermFrequencyTypeOptionsAdapter.notifyDataSetChanged();
 
+        mListLoanTermFrequencyTypeOptions.clear();
+        for (com.mifos.objects.templates.loans.TermFrequencyTypeOptions termFrequencyTypeOptions :
+                mLoanTemplate.getTermFrequencyTypeOptions()) {
+            mListLoanTermFrequencyTypeOptions.add(termFrequencyTypeOptions.getValue());
+        }
+        mLoanTermFrequencyTypeAdapter.notifyDataSetChanged();
+
         mListLoanFundOptions.clear();
         for (FundOptions fundOptions : mLoanTemplate.getFundOptions()) {
             mListLoanFundOptions.add(fundOptions.getName());
@@ -614,9 +634,11 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                         .getTransactionProcessingStrategyOptions().get(position).getId();
                 break;
 
+            //LoanTermFrequencyType must be same as the RepaidFrequencyType
             case R.id.sp_payment_periods :
                 loanTermFrequency = mLoanTemplate.getTermFrequencyTypeOptions().get(position)
                         .getId();
+                spLoanTermFrequencyType.setSelection(loanTermFrequency);
                 if (loanTermFrequency == 2) {
                     // Show and inflate Nth day and week spinners
                     showHideRepaidMonthSpinners(View.VISIBLE);
@@ -625,6 +647,20 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                     showHideRepaidMonthSpinners(View.GONE);
                 }
                 break;
+
+            case R.id.sp_loan_term_periods:
+                loanTermFrequency = mLoanTemplate.getTermFrequencyTypeOptions().get(position)
+                        .getId();
+                spPaymentPeriods.setSelection(loanTermFrequency);
+                if (loanTermFrequency == 2) {
+                    // Show and inflate Nth day and week spinners
+                    showHideRepaidMonthSpinners(View.VISIBLE);
+                    inflateRepaidMonthSpinners();
+                } else {
+                    showHideRepaidMonthSpinners(View.GONE);
+                }
+                break;
+
             case R.id.sp_repayment_freq_nth_day:
                 if (mListRepaymentFrequencyNthDayTypeOptions.get(position)
                         .equals(getResources().getString(R.string.select_week_hint))) {
