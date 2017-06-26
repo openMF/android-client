@@ -31,6 +31,7 @@ import com.mifos.objects.templates.loans.LoanTransactionTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
 import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
@@ -119,19 +120,23 @@ public class LoanAccountDisbursementFragment extends MifosBaseFragment implement
 
     @OnClick(R.id.btn_disburse_loan)
     void onSubmitDisburse() {
-        // Notify the user if Amount field is blank
-        if (etDisbursedAmount.getEditableText().toString().isEmpty()) {
-            new RequiredFieldException(getString(R.string.amount), getString(R.string
-                    .message_field_required)).notifyUserWithToast(getActivity());
-            return;
+        if (Network.isOnline(getContext())) {
+            // Notify the user if Amount field is blank
+            if (etDisbursedAmount.getEditableText().toString().isEmpty()) {
+                new RequiredFieldException(getString(R.string.amount), getString(R.string
+                        .message_field_required)).notifyUserWithToast(getActivity());
+                return;
+            }
+            LoanDisbursement loanDisbursement = new LoanDisbursement();
+            loanDisbursement.setNote(etDisbursementNote.getEditableText().toString());
+            loanDisbursement.setActualDisbursementDate(disbursementDates);
+            loanDisbursement.setTransactionAmount(
+                    Double.valueOf(etDisbursedAmount.getEditableText().toString()));
+            loanDisbursement.setPaymentId(paymentTypeId);
+            loanAccountDisbursementPresenter.disburseLoan(loanAccountNumber, loanDisbursement);
+        } else {
+            Toaster.show(rootView, R.string.error_network_not_available, Toaster.LONG);
         }
-        LoanDisbursement loanDisbursement = new LoanDisbursement();
-        loanDisbursement.setNote(etDisbursementNote.getEditableText().toString());
-        loanDisbursement.setActualDisbursementDate(disbursementDates);
-        loanDisbursement.setTransactionAmount(
-                Double.valueOf(etDisbursedAmount.getEditableText().toString()));
-        loanDisbursement.setPaymentId(paymentTypeId);
-        loanAccountDisbursementPresenter.disburseLoan(loanAccountNumber, loanDisbursement);
     }
 
     @Override
