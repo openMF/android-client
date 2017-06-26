@@ -79,10 +79,12 @@ public class SurveySubmitFragment extends MifosBaseFragment implements
     public void passScoreCardData(Scorecard scorecard, int surveyId) {
         mScorecard = scorecard;
         mSurveyId = surveyId;
-        String submitText = getResources().getString(R.string.attempt_question) +
-                mScorecard.getScorecardValues().size();
-        tv_submit.setText(submitText);
-        btn_submit.setText(getResources().getString(R.string.submit_survey));
+        if ((isAdded())) {
+            String submitText = getResources().getString(R.string.attempt_question) +
+                    mScorecard.getScorecardValues().size();
+            tv_submit.setText(submitText);
+            btn_submit.setText(getResources().getString(R.string.submit_survey));
+        }
     }
 
     @OnClick(R.id.btn_submit)
