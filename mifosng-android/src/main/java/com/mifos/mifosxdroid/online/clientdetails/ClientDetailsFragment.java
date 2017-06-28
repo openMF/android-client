@@ -51,6 +51,7 @@ import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
 import com.mifos.mifosxdroid.online.note.NoteFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
+import com.mifos.mifosxdroid.online.sign.SignatureFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.accounts.ClientAccounts;
@@ -90,6 +91,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public static final int MENU_ITEM_ADD_SAVINGS_ACCOUNT = 1004;
     public static final int MENU_ITEM_ADD_LOAN_ACCOUNT = 1005;
     public static final int MENU_ITEM_DOCUMENTS = 1006;
+    public static final int MENU_ITEM_UPLOAD_SIGN = 1010;
     public static final int MENU_ITEM_IDENTIFIERS = 1007;
     public static final int MENU_ITEM_SURVEYS = 1008;
     public static final int MENU_ITEM_NOTE = 1009;
@@ -240,6 +242,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
                     getString(R.string.add_loan));
             menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
+            menu.add(Menu.NONE, MENU_ITEM_UPLOAD_SIGN, Menu.NONE, R.string.upload_sign);
             menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
             menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
             menu.add(Menu.NONE, MENU_ITEM_NOTE, Menu.NONE, getString(R.string.note));
@@ -255,6 +258,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 break;
             case MENU_ITEM_DOCUMENTS:
                 loadDocuments();
+                break;
+            case MENU_ITEM_UPLOAD_SIGN:
+                loadSignUpload();
                 break;
             case MENU_ITEM_CLIENT_CHARGES:
                 loadClientCharges();
@@ -389,6 +395,18 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, loanAccountFragment);
         fragmentTransaction.commit();
+    }
+
+    public void loadSignUpload() {
+        SignatureFragment fragment = new SignatureFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.CLIENT_ID, clientId);
+        fragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, fragment).commit();
+
     }
 
     @Override
