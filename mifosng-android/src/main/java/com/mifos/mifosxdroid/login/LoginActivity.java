@@ -24,7 +24,9 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.DashboardActivity;
+import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.objects.user.User;
+import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
@@ -180,7 +182,13 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         Toast.makeText(this, getString(R.string.toast_welcome) + " " + user.getUsername(),
                 Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(this, DashboardActivity.class));
+        if (PrefManager.getPassCodeStatus()) {
+            startActivity(new Intent(this, DashboardActivity.class));
+        } else {
+            Intent intent = new Intent(this, PassCodeActivity.class);
+            intent.putExtra(Constants.INTIAL_LOGIN, true);
+            startActivity(intent);
+        }
         finish();
     }
 

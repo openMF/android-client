@@ -686,6 +686,23 @@
     <string name="empty_notes">Empty Notes</string>
     <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
     <string name="title_activity_sync_client_payload">SyncClientPayloadActivity</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="zero">0</string>
+    <string name="skip">Skip</string>
+    <string name="passcode_setup">Setup a passcode to login</string>
+    <string name="pass_code">Pass Code</string>
+    <string name="forgot_passcode">Forgot passcode, login manually</string>
+    <string name="incorrect_passcode">Incorrect Passcode</string>
+    <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times</string>
+    <string name="error_passcode">Passcode should be of 4 digit</string>
 
 
 </resources>
