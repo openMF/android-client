@@ -19,6 +19,7 @@ import com.joanzapata.iconify.fonts.MaterialModule;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
+import com.mifos.utils.ForegroundChecker;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -65,6 +66,7 @@ public class App extends MultiDexApplication {
                 .detectFileUriExposure()
                 .build();
         StrictMode.setVmPolicy(policy);
+        ForegroundChecker.init();
     }
 
     public ApplicationComponent getComponent() {

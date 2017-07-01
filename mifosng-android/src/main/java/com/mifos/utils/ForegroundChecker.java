@@ -8,7 +8,7 @@ import android.os.Handler;
 
 public class ForegroundChecker {
     public static final long CHECK_DELAY = 500;
-    public static final int MIN_BACKGROUND_THRESHOLD = 120;
+    public static final int MIN_BACKGROUND_THRESHOLD = 60;
     public static final String TAG = ForegroundChecker.class.getName();
 
     public interface Listener {
@@ -31,9 +31,6 @@ public class ForegroundChecker {
     }
 
     public static ForegroundChecker get() {
-        if (instance == null) {
-            init();
-        }
         return instance;
     }
 
@@ -64,10 +61,10 @@ public class ForegroundChecker {
         if (wasBackground) {
 
             int secondsInBackground = (int) ((System.currentTimeMillis() - backgroundTimeStart) /
-                    1000) % 60;
+                    1000);
 
             if (backgroundTimeStart != -1 && secondsInBackground >= MIN_BACKGROUND_THRESHOLD &&
-                    listener != null) {
+                    listener != null && PrefManager.getPassCodeStatus()) {
                 listener.onBecameForeground();
             }
 

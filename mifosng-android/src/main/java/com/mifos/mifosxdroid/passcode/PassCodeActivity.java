@@ -8,15 +8,15 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EncryptionUtil;
-import com.mifos.utils.Network;
 import com.mifos.utils.PassCodeView;
 import com.mifos.utils.PrefManager;
 
@@ -24,13 +24,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PassCodeActivity extends MifosBaseActivity {
+public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.PassCodeListener {
 
     @BindView(R.id.cl_rootview)
     NestedScrollView clRootview;
-
-    @BindView(R.id.btn_login)
-    AppCompatButton btnLogin;
 
     @BindView(R.id.btn_forgot_passcode)
     AppCompatButton btnForgotPasscode;
@@ -66,8 +63,9 @@ public class PassCodeActivity extends MifosBaseActivity {
             btnSkip.setVisibility(View.GONE);
             btnSave.setVisibility(View.GONE);
             tvPasscodeIntro.setVisibility(View.GONE);
-            btnLogin.setVisibility(View.VISIBLE);
             btnForgotPasscode.setVisibility(View.VISIBLE);
+            //enabling passCodeListener only when user has already setup PassCode
+            passCodeView.setPassCodeListener(this);
         }
     }
 
@@ -84,23 +82,20 @@ public class PassCodeActivity extends MifosBaseActivity {
         }
     }
 
-    @OnClick(R.id.btn_login)
-    public void loginUsingPassCode() {
-
-        if (!isInternetAvailable()) {
-            return;
-        }
-
-        if (counter == 3) {
-            Toaster.show(clRootview, R.string.incorrect_passcode_more_than_three);
+    @Override
+    public void passCodeEntered(String passcode) {
+        String passwordEntered = EncryptionUtil.getHash(passCodeView.getPasscode());
+        boolean isPassCodeCorrect = PrefManager.getPassCode().equals(passwordEntered);
+        if (counter == 3  && !isPassCodeCorrect) {
+            Toast.makeText(getApplicationContext(), R.string.incorrect_passcode_more_than_three,
+                    Toast.LENGTH_SHORT).show();
             PrefManager.clearPrefs();
-            startLoginActivity();
+            startSplashActivity();
             return;
         }
 
         if (isPassCodeLengthCorrect()) {
-            String passwordEntered = EncryptionUtil.getHash(passCodeView.getPasscode());
-            if (PrefManager.getPassCode().equals(passwordEntered)) {
+            if (isPassCodeCorrect) {
                 startDashBoardActivity();
             } else {
                 counter++;
@@ -113,16 +108,7 @@ public class PassCodeActivity extends MifosBaseActivity {
     @OnClick(R.id.btn_forgot_passcode)
     public void forgotPassCode() {
         PrefManager.clearPrefs();
-        startLoginActivity();
-    }
-
-    private boolean isInternetAvailable() {
-        if (Network.isOnline(this)) {
-            return true;
-        } else {
-            Toaster.show(clRootview, getString(R.string.error_not_connected_internet));
-            return false;
-        }
+        startSplashActivity();
     }
 
     @OnClick(R.id.btn_one)
@@ -204,8 +190,8 @@ public class PassCodeActivity extends MifosBaseActivity {
         finish();
     }
 
-    private void startLoginActivity() {
-        Intent i = new Intent(PassCodeActivity.this, LoginActivity.class);
+    private void startSplashActivity() {
+        Intent i = new Intent(PassCodeActivity.this, SplashScreenActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
