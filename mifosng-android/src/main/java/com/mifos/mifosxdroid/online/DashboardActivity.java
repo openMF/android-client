@@ -204,6 +204,10 @@ public class DashboardActivity extends MifosBaseActivity
             case R.id.item_offline:
                 replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container);
                 break;
+            case R.id.individual_collection_sheet:
+                intent.setClass(this, GenerateCollectionSheetActivity.class);
+                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL);
+                startActivity(intent);
 
         }
 
