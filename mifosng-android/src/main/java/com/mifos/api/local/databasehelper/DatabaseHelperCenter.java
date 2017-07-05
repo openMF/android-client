@@ -5,13 +5,20 @@ import android.support.annotation.Nullable;
 
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
+import com.mifos.objects.response.SaveResponse;
+import com.mifos.services.data.CenterPayload;
+import com.mifos.services.data.CenterPayload_Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func0;
 
 /**
  * Created by Rajan Maurya on 28/6/16.
@@ -69,4 +76,56 @@ public class DatabaseHelperCenter {
 
     }
 
+    public Observable<SaveResponse> saveCenterPayload(final CenterPayload centerPayload) {
+        return Observable.defer(new Func0<Observable<SaveResponse>>() {
+            @Override
+            public Observable<SaveResponse> call() {
+                centerPayload.save();
+                return Observable.just(new SaveResponse());
+            }
+        });
+    }
+
+    public Observable<List<CenterPayload>> readAllCenterPayload() {
+        return Observable.defer(new Func0<Observable<List<CenterPayload>>>() {
+            @Override
+            public Observable<List<CenterPayload>> call() {
+                List<CenterPayload> centerPayloads = SQLite.select()
+                        .from(CenterPayload.class)
+                        .queryList();
+                return Observable.just(centerPayloads);
+            }
+        });
+    }
+
+    /**
+     * This Method for deleting the center payload from the Database according to Id and
+     * again fetch the center List from the Database CenterPayload_Table
+     * @param id is Id of the Center Payload in which reference center was saved into Database
+     * @return List<CenterPayload></>
+     */
+    public Observable<List<CenterPayload>> deleteAndUpdateCenterPayloads(final int id) {
+        return Observable.defer(new Func0<Observable<List<CenterPayload>>>() {
+            @Override
+            public Observable<List<CenterPayload>> call() {
+                Delete.table(CenterPayload.class, CenterPayload_Table.id.eq(id));
+
+                List<CenterPayload> groupPayloads = SQLite.select()
+                        .from(CenterPayload.class)
+                        .queryList();
+                return Observable.just(groupPayloads);
+            }
+        });
+    }
+
+    public Observable<CenterPayload> updateDatabaseCenterPayload(
+            final CenterPayload centerPayload) {
+        return Observable.defer(new Func0<Observable<CenterPayload>>() {
+            @Override
+            public Observable<CenterPayload> call() {
+                centerPayload.update();
+                return Observable.just(centerPayload);
+            }
+        });
+    }
 }

@@ -10,7 +10,6 @@ package com.mifos.mifosxdroid.online.createnewcenter;
  */
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -36,14 +35,13 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.response.SaveResponse;
 import com.mifos.services.data.CenterPayload;
-import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosResponseHandler;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
@@ -253,12 +251,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @Override
     public void centerCreatedSuccessfully(SaveResponse saveResponse) {
-        Toast.makeText(getActivity(), R.string.center_created_successfully,
+        Toast.makeText(getActivity(), "Center " + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show();
         getActivity().getSupportFragmentManager().popBackStack();
-        Intent intent = new Intent(getActivity(), CentersActivity.class);
-        intent.putExtra(Constants.CENTER_ID, saveResponse.getGroupId());
-        startActivity(intent);
     }
 
     @Override

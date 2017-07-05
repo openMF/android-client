@@ -470,6 +470,7 @@
     <string name="error_message">Server Sync Error</string>
     <string name="sync_clients">Clients</string>
     <string name="sync_groups">Groups</string>
+    <string name="sync_centers">Centers</string>
     <string name="sync_loanrepayments">LoanRepayments</string>
     <string name="sync_savingsaccounttransactions">SavingsAccountTransaction</string>
     <string name="payloads_count">Payloads : </string>
@@ -478,10 +479,12 @@
     <string name="no_repayment_to_sync">There is No LoanRepayment to Sync</string>
     <string name="no_group_payload_to_sync">There is No Group Payload to Sync</string>
     <string name="no_client_payload_to_sync">There is No Client Payload to Sync</string>
+    <string name="no_center_payload_to_sync">There is No Center Payload to Sync</string>
     <string name="no_transaction_to_sync">here is No Transaction to Sync</string>
     <string name="no_more_clients_to_sync">No More Clients To Sync</string>
     <string name="all_repayment_synced">All LoanRepayment have been Sync</string>
     <string name="all_groups_synced">All Groups have been Sync</string>
+    <string name="all_centers_synced">All Centers have been Sync</string>
     <string name="all_clients_synced">All Clients have been Sync</string>
     <string name="click_to_refresh">\n Click to Refresh</string>
     <string name="syncing_client">Syncing Client</string>
@@ -543,6 +546,7 @@
     <!--OnError Message-->
     <string name="failed_to_load_clientpayload">Failed to load ClientPayload</string>
     <string name="failed_to_load_grouppayload">Failed to load GroupPayload</string>
+    <string name="failed_to_load_centerpayload">Failed to load CenterPayload</string>
     <string name="failed_to_load_loanrepayment">Failed to load LoanRepayment</string>
     <string name="failed_to_update_list">Failed Update List</string>
     <string name="failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
@@ -653,6 +657,7 @@
     <string name="note">Notes</string>
     <string name="empty_notes">Empty Notes</string>
     <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
+    <string name="title_activity_sync_client_payload">SyncClientPayloadActivity</string>
 
 
 </resources>

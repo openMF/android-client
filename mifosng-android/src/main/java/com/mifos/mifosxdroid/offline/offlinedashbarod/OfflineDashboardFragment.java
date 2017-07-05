@@ -20,6 +20,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadActivity;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivity;
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsActivity;
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity;
@@ -30,6 +31,7 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
+import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.ItemOffsetDecoration;
 
 import java.util.ArrayList;
@@ -90,14 +92,16 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     OfflineDashboardAdapter mOfflineDashboardAdapter;
 
     // update mPayloadIndex to number of request is going to fetch data in Presenter;
-    private int mPayloadIndex = 4;
+    private int mPayloadIndex = 5;
 
     private static final int GRID_COUNT = 2;
 
     private List<Class> mPayloadClasses;
 
     public static final int[] SYNC_CARD_UI_NAMES = {R.string.sync_clients,
-            R.string.sync_groups, R.string.sync_loanrepayments,
+            R.string.sync_groups,
+            R.string.sync_centers,
+            R.string.sync_loanrepayments,
             R.string.sync_savingsaccounttransactions};
 
 
@@ -155,10 +159,11 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         super.onStart();
         mOfflineDashboardAdapter.removeAllCards();
         mPayloadClasses.clear();
-        mPayloadIndex = 4;
+        mPayloadIndex = 5;
 
         mOfflineDashboardPresenter.loadDatabaseClientPayload();
         mOfflineDashboardPresenter.loadDatabaseGroupPayload();
+        mOfflineDashboardPresenter.loadDatabaseCenterPayload();
         mOfflineDashboardPresenter.loadDatabaseLoanRepaymentTransactions();
         mOfflineDashboardPresenter.loadDatabaseSavingsAccountTransactions();
     }
@@ -203,6 +208,25 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         }
     }
 
+    /**
+     * This method set the response of DataManager from DatabaseHelper that if List<CenterPayload>
+     * Size is zero, then decrease the value of mPayloadIndex by 1 and if size is not equal to zero
+     * the update the adapter and add the Card UI name and size() of the List to sync.
+     *
+     * @param centerPayloads List<CenterPayload> from DatabaseHelperGroup
+     */
+    @Override
+    public void showCenters(List<CenterPayload> centerPayloads) {
+        if (centerPayloads.size() != 0) {
+            mOfflineDashboardAdapter.showCard(getActivity()
+                    .getResources().getString(R.string.payloads_count) +
+                    centerPayloads.size(), SYNC_CARD_UI_NAMES[2]);
+            mPayloadClasses.add(SyncCenterPayloadActivity.class);
+        } else {
+            mPayloadIndex = mPayloadIndex - 1;
+            showNoPayloadToShow();
+        }
+    }
 
     /**
      * This method set the response of DataManager from DatabaseHelper that if
@@ -217,7 +241,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         if (loanRepaymentRequests.size() != 0) {
             mOfflineDashboardAdapter.showCard(getActivity().getResources()
                     .getString(R.string.transactions_count) +
-                    loanRepaymentRequests.size(), SYNC_CARD_UI_NAMES[2]);
+                    loanRepaymentRequests.size(), SYNC_CARD_UI_NAMES[3]);
             mPayloadClasses.add(SyncLoanRepaymentTransactionActivity.class);
         } else {
             mPayloadIndex = mPayloadIndex - 1;
@@ -238,7 +262,7 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         if (transactions.size() != 0) {
             mOfflineDashboardAdapter.showCard(getActivity().getResources()
                     .getString(R.string.transactions_count) +
-                    transactions.size(), SYNC_CARD_UI_NAMES[3]);
+                    transactions.size(), SYNC_CARD_UI_NAMES[4]);
             mPayloadClasses.add(SyncSavingsAccountTransactionActivity.class);
         } else {
             mPayloadIndex = mPayloadIndex - 1;
