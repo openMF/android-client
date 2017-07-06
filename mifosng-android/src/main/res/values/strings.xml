@@ -527,6 +527,9 @@
         Permission to access fine location but you had previously checked the Button Never
         Ask Again.
     </string>
+    <string name="msg_setting_activity_not_found">Something went wrong finding Settings activity.
+        \nGo to \'Settings\' and grant permission manually.
+    </string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
