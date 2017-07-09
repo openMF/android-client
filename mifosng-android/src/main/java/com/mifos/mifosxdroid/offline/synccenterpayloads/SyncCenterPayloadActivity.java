@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncclientpayloads;
+package com.mifos.mifosxdroid.offline.synccenterpayloads;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,16 +6,13 @@ import android.support.annotation.Nullable;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 
-/**
- * Created by Rajan Maurya on 21/07/16.
- */
-public class SyncClientPayloadActivity extends MifosBaseActivity {
+public class SyncCenterPayloadActivity extends MifosBaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
         showBackButton();
-        replaceFragment(SyncClientPayloadsFragment.newInstance(), false, R.id.container);
+        replaceFragment(SyncCenterPayloadsFragment.newInstance(), false, R.id.container);
     }
 }

@@ -63,7 +63,7 @@ public class DataManagerCenter {
                 /**
                  * Return All Centers List from DatabaseHelperCenter only one time.
                  * If offset is zero this means this is first request and
-                 * return all clients from DatabaseHelperCenter
+                 * return all centers from DatabaseHelperCenter
                  */
                 if (offset == 0)
                     return mDatabaseHelperCenter.readAllCenters();
@@ -88,11 +88,53 @@ public class DataManagerCenter {
     }
 
     public Observable<SaveResponse> createCenter(CenterPayload centerPayload) {
-        return mBaseApiManager.getCenterApi().createCenter(centerPayload);
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getCenterApi().createCenter(centerPayload);
+            case 1:
+                /**
+                 * Save CenterPayload in Database table.
+                 */
+                return mDatabaseHelperCenter.saveCenterPayload(centerPayload);
+
+            default:
+                return Observable.just(new SaveResponse());
+        }
     }
 
     public Observable<List<Office>> getOffices() {
         return mBaseApiManager.getOfficeApi().getAllOffices();
+    }
+
+    /**
+     * This method loading the all CenterPayloads from the Database.
+     *
+     * @return List<CenterPayload>
+     */
+    public Observable<List<CenterPayload>> getAllDatabaseCenterPayload() {
+        return mDatabaseHelperCenter.readAllCenterPayload();
+    }
+
+    /**
+     * This method will called when user is syncing the Database center.
+     * whenever a center is synced then request goes to Database to delete that center form
+     * Database and reload the list from Database and update the list in UI
+     *
+     * @param id of the centerPayload in Database
+     * @return List<CenterPayload></>
+     */
+    public Observable<List<CenterPayload>> deleteAndUpdateCenterPayloads(int id) {
+        return mDatabaseHelperCenter.deleteAndUpdateCenterPayloads(id);
+    }
+
+    /**
+     * This Method updating the CenterPayload in Database and return the same CenterPayload
+     *
+     * @param centerPayload CenterPayload
+     * @return CenterPayload
+     */
+    public Observable<CenterPayload> updateCenterPayload(CenterPayload centerPayload) {
+        return mDatabaseHelperCenter.updateDatabaseCenterPayload(centerPayload);
     }
 
     /**

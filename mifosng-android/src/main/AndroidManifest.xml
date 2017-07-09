@@ -112,16 +112,20 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".offline.syncclientpayloads.SyncClientPayloadActivity"
-                  android:label="@string/sync_clients"
-                  android:screenOrientation="portrait" />
+            android:label="@string/sync_clients"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".offline.syncgrouppayloads.SyncGroupPayloadsActivity"
-                  android:label="@string/sync_groups"
-                  android:screenOrientation="portrait" />
+            android:label="@string/sync_groups"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".offline.synccenterpayloads.SyncCenterPayloadActivity"
+            android:label="@string/sync_centers"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity"
-                  android:label="@string/sync_loanrepayments"
-                  android:screenOrientation="portrait" />
+            android:label="@string/sync_loanrepayments"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity"
@@ -130,7 +134,7 @@
 
 
         <service android:name=".activity.pathtracking.PathTrackingService"
-                 android:exported="false"/>
+            android:exported="false"/>
 
     </application>
 
