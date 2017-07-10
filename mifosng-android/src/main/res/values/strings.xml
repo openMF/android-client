@@ -6,12 +6,12 @@
 <resources>
 
     <!-- General Terms Begin Here -->
-    <string name="app_name">MifosXDroid</string>
+    <string name="app_name" translatable="false">MifosXDroid</string>
     <string name="datatables">DataTable</string>
     <string name="associated_datatables">Associated Datatables</string>
     <string name="login">Login</string>
     <string name="login_successfully">Login Successfully</string>
-    <string name="test_ip">10.0.2.2</string>
+    <string name="test_ip" translatable="false">10.0.2.2</string>
     <string name="search">Search</string>
     <string name="group_name">Group Name</string>
     <string name="staff_name">Staff Name</string>
@@ -108,7 +108,7 @@
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
     <string name="hide">Hide</string>
-    <string name="colon">" : "</string>
+    <string name="colon" translatable="false">" : "</string>
     <string name="backspace_slash">\</string>
     <string name="slash">/</string>
     <string name="space">" "</string>
