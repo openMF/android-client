@@ -3,8 +3,15 @@ package com.mifos.api.local.databasehelper;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
+import com.mifos.objects.accounts.CenterAccounts;
+import com.mifos.objects.accounts.loan.LoanAccount;
+import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
+import com.mifos.objects.group.CenterDate;
+import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.Group;
+import com.mifos.objects.group.Group_Table;
 import com.mifos.objects.response.SaveResponse;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.CenterPayload_Table;
@@ -99,6 +106,53 @@ public class DatabaseHelperCenter {
     }
 
     /**
+     * This Method Fetch the Groups that are attached to the Center.
+     * @param centerId Center Id
+     * @return CenterWithAssociations
+     */
+
+    public Observable<CenterWithAssociations> getCenterAssociateGroups(final int centerId) {
+        return Observable.defer(new Func0<Observable<CenterWithAssociations>>() {
+            @Override
+            public Observable<CenterWithAssociations> call() {
+
+                List<Group> groups = SQLite.select()
+                        .from(Group.class)
+                        .where(Group_Table.centerId.eq(centerId))
+                        .queryList();
+                CenterWithAssociations centerWithAssociations = new CenterWithAssociations();
+                centerWithAssociations.setGroupMembers(groups);
+
+                return Observable.just(centerWithAssociations);
+            }
+        });
+    }
+
+    /**
+     * This Method Saving the Single Center in the Database
+     *
+     * @param center
+     * @return Observable.just(Center)
+     */
+    public Observable<Center> saveCenter(final Center center) {
+        return Observable.defer(new Func0<Observable<Center>>() {
+            @Override
+            public Observable<Center> call() {
+
+                if (center.getActivationDate().size() != 0) {
+                    CenterDate centerDate = new CenterDate(center.getId(), 0,
+                            center.getActivationDate().get(0),
+                            center.getActivationDate().get(1),
+                            center.getActivationDate().get(2));
+                    center.setCenterDate(centerDate);
+                }
+                center.save();
+                return Observable.just(center);
+            }
+        });
+    }
+
+    /**
      * This Method for deleting the center payload from the Database according to Id and
      * again fetch the center List from the Database CenterPayload_Table
      * @param id is Id of the Center Payload in which reference center was saved into Database
@@ -125,6 +179,44 @@ public class DatabaseHelperCenter {
             public Observable<CenterPayload> call() {
                 centerPayload.update();
                 return Observable.just(centerPayload);
+            }
+        });
+    }
+
+    /**
+     * This Method  write the CenterAccounts in tho DB. According to Schema Defined in Model
+     *
+     * @param centerAccounts Model of List of LoanAccount and SavingAccount
+     * @param centerId       Center Id
+     * @return CenterAccounts
+     */
+    public Observable<CenterAccounts> saveCenterAccounts(final CenterAccounts centerAccounts,
+                                                         final int centerId) {
+
+        return Observable.defer(new Func0<Observable<CenterAccounts>>() {
+            @Override
+            public Observable<CenterAccounts> call() {
+
+                List<LoanAccount> loanAccounts = centerAccounts.getLoanAccounts();
+                List<SavingsAccount> savingsAccounts = centerAccounts.getSavingsAccounts();
+                List<LoanAccount> memberLoanAccounts = centerAccounts.getMemberLoanAccounts();
+
+                for (LoanAccount loanAccount : loanAccounts) {
+                    loanAccount.setCenterId(centerId);
+                    loanAccount.save();
+                }
+
+                for (SavingsAccount savingsAccount : savingsAccounts) {
+                    savingsAccount.setCenterId(centerId);
+                    savingsAccount.save();
+                }
+
+                for (LoanAccount memberLoanAccount : memberLoanAccounts) {
+                    memberLoanAccount.setCenterId(centerId);
+                    memberLoanAccount.save();
+                }
+
+                return Observable.just(centerAccounts);
             }
         });
     }
