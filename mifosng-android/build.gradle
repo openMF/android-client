@@ -36,6 +36,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
+        multiDexEnabled true
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6
@@ -67,8 +68,10 @@ android {
         }
     }
 
-    productFlavors {
-    }
+    /*productFlavors {
+        Keep it and the 'useProguard' attribute in the release config commented to prevent
+        "Build-in class shrinker and multidex are not supported yet." error while enabling multidex
+    }*/
 
     buildTypes {
 
@@ -76,14 +79,14 @@ android {
             minifyEnabled false
             // TODO  Uses new built-in shrinker, To Enable update buils tools to 2.2
             // TODO http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+            //useProguard false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
         release {
             minifyEnabled false
-            useProguard false
+            //useProguard false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
@@ -128,6 +131,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.1'
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
 
@@ -206,23 +210,23 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
 
 }
-    /*
-    Resolves dependency versions across test and production APKs, specifically, transitive
-    dependencies. This is required since Espresso internally has a dependency on support-annotations.
-    */
-    configurations.all {
-        resolutionStrategy.force "com.android.support:support-annotations:23.1.1"
-    }
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:23.1.1"
+}
 
-    /*
-    All direct/transitive dependencies shared between your test and production APKs need to be
-    excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
-    excluding these dependencies from your test configuration will result in an dex pre-verifier error
-    at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
-    */
-    configurations.compile.dependencies.each { compileDependency ->
-        println "Excluding compile dependency: ${compileDependency.getName()}"
-        configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
-            configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
-        }
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
     }
+}
