@@ -5,9 +5,9 @@
 
 package com.mifos;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
@@ -27,7 +27,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by ishankhanna on 13/03/15.
  */
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     public static final Map<Integer, Typeface> typefaceManager = new HashMap<>();
 
