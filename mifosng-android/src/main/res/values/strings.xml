@@ -72,6 +72,7 @@
     <string name="file_name">File Name</string>
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
+    <string name="upload_sign">Upload Signature</string>
     <string name="no_document_to_show">There is No Documents to Show</string>
     <string name="no_identifier_to_show">There is No Identifier to Show</string>
     <string name="approve_savings">Approve Savings</string>
@@ -187,6 +188,16 @@
     <string name="active">Active</string>
     <string name="inactive">InActive</string>
     <!-- Group Terms End Here -->
+
+    <!-- Signature Related Strings -->
+    <string name="reset">Reset</string>
+    <string name="from_gallery">From Gallery</string>
+    <string name="sign_uploaded_success_msg">Signature uploaded successfully!</string>
+    <string name="signature_image_directory">/mifos/documents/sign/</string>
+    <string name="sign_dir_not_created_msg">Something went wrong. Couldn\'t create directory.</string>
+    <string name="sign_saved_success_msg">File saved successfully in </string>
+    <string name="uploading_sign_msg">Uploading signature %#8230</string>
+    <!-- Signature Related Strings Ends -->
 
 
     <!--RunTime User Permission Here-->

@@ -36,6 +36,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
+        multiDexEnabled true
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6
@@ -67,8 +68,10 @@ android {
         }
     }
 
-    productFlavors {
-    }
+    /*productFlavors {
+        Keep it and the 'useProguard' attribute in the release config commented to prevent
+        "Build-in class shrinker and multidex are not supported yet." error while enabling multidex
+    }*/
 
     buildTypes {
 
@@ -76,14 +79,14 @@ android {
             minifyEnabled false
             // TODO  Uses new built-in shrinker, To Enable update buils tools to 2.2
             // TODO http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+            //useProguard false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
         release {
             minifyEnabled false
-            useProguard false
+            //useProguard false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
@@ -128,6 +131,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.1'
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
 

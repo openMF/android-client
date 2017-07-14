@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/btn_reset_sign"
+        android:title="@string/reset"
+        android:checkable="false"
+        android:icon="@android:drawable/ic_delete"/>
+
+    <item
+        android:id="@+id/btn_from_gallery"
+        android:title="@string/from_gallery"
+        android:checkable="false"
+        android:icon="@android:drawable/ic_menu_gallery"/>
+
+</menu>
