@@ -209,10 +209,15 @@ public class DashboardActivity extends MifosBaseActivity
                 intent.setClass(this, GenerateCollectionSheetActivity.class);
                 intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL);
                 startActivity(intent);
+                break;
+            case R.id.collection_sheet:
+                intent.setClass(this, GenerateCollectionSheetActivity.class);
+                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION);
+                startActivity(intent);
+                break;
             case R.id.item_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
-
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);

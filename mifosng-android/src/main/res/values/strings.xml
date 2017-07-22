@@ -226,6 +226,15 @@
     <string name="routing_code">Routing Code</string>
     <string name="receipt_number">Receipt Number</string>
     <string name="bank_number">Bank Number</string>
+    <string name="branch_name">Branch Name</string>
+    <string name="meeting_calender">Meeting Calender</string>
+    <string name="productive_collection_sheet">Productive CollectionSheet</string>
+    <string name="attendance">Attendance</string>
+    <string name="collection_loan_product">Loan:%1$s</string>
+    <string name="collection_saving_product">Saving:%1$s</string>
+    <string name="collection_heading_charges">%1$s/Charges</string>
+
+
 
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>

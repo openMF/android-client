@@ -109,6 +109,10 @@ public class Constants {
 
     public static final String LOCALE = "locale";
 
+    public static final String LOCALE_EN = "en";
+
+    public static final String DATE_FORMAT_LONG = "dd MMMM yyyy";
+
     public static final String TRANSACTIONS = "transactions";
 
     public static final String SURVEYS = "surveys";

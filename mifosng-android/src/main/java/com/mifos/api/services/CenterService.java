@@ -55,7 +55,6 @@ public interface CenterService {
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
     Observable<CenterWithAssociations> getAllGroupsForCenter(@Path("centerId") int centerId);
 
-
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
     Observable<CollectionSheet> getCollectionSheet(@Path("centerId") long centerId,
                                                    @Body Payload payload);

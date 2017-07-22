@@ -16,6 +16,26 @@ public class ClientCollectionSheet implements Parcelable {
 
     private ArrayList<LoanCollectionSheet> loans;
 
+    private AttendanceTypeOption attendanceType;
+
+    private ArrayList<SavingsCollectionSheet> savings = new ArrayList<>();
+
+    public ArrayList<SavingsCollectionSheet> getSavings() {
+        return savings;
+    }
+
+    public void setSavings(ArrayList<SavingsCollectionSheet> savings) {
+        this.savings = savings;
+    }
+
+    public AttendanceTypeOption getAttendanceType() {
+        return attendanceType;
+    }
+
+    public void setAttendanceType(AttendanceTypeOption attendanceType) {
+        this.attendanceType = attendanceType;
+    }
+
     public int getClientId() {
         return clientId;
     }
@@ -50,7 +70,9 @@ public class ClientCollectionSheet implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.clientId);
         dest.writeString(this.clientName);
-        dest.writeList(this.loans);
+        dest.writeTypedList(this.loans);
+        dest.writeParcelable(this.attendanceType, flags);
+        dest.writeTypedList(this.savings);
     }
 
     public ClientCollectionSheet() {
@@ -59,12 +81,13 @@ public class ClientCollectionSheet implements Parcelable {
     protected ClientCollectionSheet(Parcel in) {
         this.clientId = in.readInt();
         this.clientName = in.readString();
-        this.loans = new ArrayList<LoanCollectionSheet>();
-        in.readList(this.loans, LoanCollectionSheet.class.getClassLoader());
+        this.loans = in.createTypedArrayList(LoanCollectionSheet.CREATOR);
+        this.attendanceType = in.readParcelable(AttendanceTypeOption.class.getClassLoader());
+        this.savings = in.createTypedArrayList(SavingsCollectionSheet.CREATOR);
     }
 
-    public static final Parcelable.Creator<ClientCollectionSheet> CREATOR = new
-            Parcelable.Creator<ClientCollectionSheet>() {
+    public static final Creator<ClientCollectionSheet> CREATOR = new
+            Creator<ClientCollectionSheet>() {
         @Override
         public ClientCollectionSheet createFromParcel(Parcel source) {
             return new ClientCollectionSheet(source);
