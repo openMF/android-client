@@ -8,6 +8,7 @@ import com.mifos.api.datamanager.DataManagerAuth;
 import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerCollectionSheet;
 import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.api.datamanager.DataManagerGroups;
@@ -69,6 +70,7 @@ public interface ApplicationComponent {
     DataManagerRunReport dataManagerRunReport();
     DataManagerAuth dataManagerAuth();
     DataManagerNote dataManagerNote();
+    DataManagerCollectionSheet dataManagerCollectionSheet();
 
 
     DatabaseHelperClient databaseHelperClient();

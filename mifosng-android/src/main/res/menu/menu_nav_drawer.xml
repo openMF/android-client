@@ -32,6 +32,12 @@
             android:icon="@drawable/ic_centers_24dp"
             android:title="@string/centers"
             />
+
+        <item
+            android:id="@+id/individual_collection_sheet"
+            android:checked="false"
+            android:title="@string/individual_collection_sheet"
+            />
                 
         <item
             android:id="@+id/item_path_tracker"

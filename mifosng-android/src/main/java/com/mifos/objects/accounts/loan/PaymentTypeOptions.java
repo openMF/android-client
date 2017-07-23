@@ -4,15 +4,15 @@ package com.mifos.objects.accounts.loan;
  * Created by nellyk on 3/3/2016.
  */
 public class PaymentTypeOptions {
-    int Id;
+    int id;
     String name;
 
     public int getId() {
-        return Id;
+        return id;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public void setId(int i) {
+        id = i;
     }
 
     public String getName() {
@@ -21,5 +21,10 @@ public class PaymentTypeOptions {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "id" + id + " name:" + name;
     }
 }

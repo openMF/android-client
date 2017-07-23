@@ -27,6 +27,7 @@ import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
+import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
@@ -174,4 +175,7 @@ public interface ActivityComponent {
     void inject(SavingsAccountActivateFragment savingsAccountActivateFragment);
 
     void inject(SignatureFragment signatureFragment);
+
+    void inject(IndividualCollectionSheetFragment individualCollectionSheetFragment);
+
 }

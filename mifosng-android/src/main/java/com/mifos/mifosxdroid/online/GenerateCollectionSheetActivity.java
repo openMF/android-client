@@ -10,7 +10,9 @@ import android.view.Menu;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment;
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment;
+import com.mifos.utils.Constants;
 
 
 public class GenerateCollectionSheetActivity extends MifosBaseActivity {
@@ -19,12 +21,22 @@ public class GenerateCollectionSheetActivity extends MifosBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
-        replaceFragment(GenerateCollectionSheetFragment.newInstance(), false, R.id.container);
+        String fragmentToOpen;
+        if (getIntent() != null) {
+            fragmentToOpen = getIntent().getStringExtra(Constants.COLLECTION_TYPE);
+            if (fragmentToOpen.equals(Constants.EXTRA_COLLECTION_INDIVIDUAL)) {
+                replaceFragment(IndividualCollectionSheetFragment.newInstance(),
+                        false, R.id.container);
+            } else if (fragmentToOpen.equals(Constants.EXTRA_COLLECTION_COLLECTION)) {
+                replaceFragment(GenerateCollectionSheetFragment.newInstance(),
+                        false, R.id.container);
+            }
+        }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.generate_collection_sheet, menu);
         return true;
     }
 }

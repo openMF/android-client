@@ -96,6 +96,7 @@
     <string name="savings_account">Add Savings Account</string>
     <string name="savings_account_id">Savings Account Id</string>
     <string name="collection_sheet">Collection Sheet</string>
+    <string name="individual_collection_sheet">Individual Collection Sheet</string>
     <string name="title_activity_generate_collection_sheet" translatable="false">GenerateCollectionSheet</string>
     <string name="meeting_date">Meeting Date</string>
     <string name="center">Center</string>
@@ -209,6 +210,18 @@
     <string name="permission_denied_to_access_fine_location">Permission Denied to Access
         Fine Location</string>
 
+    <!-- Collectionsheet related strings -->
+    <string name="collectionsheet_submit_success">Collectionsheet submitted successfully.</string>
+    <string name="no_collectionsheet_found">No collectionsheet found for the given combination.</string>
+    <string name="error_generate_sheet_first">Please generate collectionsheet first!</string>
+    <string name="loan_account_num">Loan Account #</string>
+    <string name="action">Action</string>
+    <string name="due_collection">Due Collections</string>
+    <string name="additional_details">Additional Details</string>
+    <string name="cheque_number">Cheque Number</string>
+    <string name="routing_code">Routing Code</string>
+    <string name="receipt_number">Receipt Number</string>
+    <string name="bank_number">Bank Number</string>
 
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
@@ -250,6 +263,7 @@
     <string name="loan_rejected_message">Loan was Rejected</string>
     <string name="loan_creation_success">Loan application submitted successfully.</string>
     <string name="repayment">Repayment</string>
+    <string name="repayment_date">Repayment Date</string>
     <string name="complete">Complete</string>
     <string name="pending">Pending</string>
     <string name="overdue">Overdue</string>

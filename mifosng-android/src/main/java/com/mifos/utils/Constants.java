@@ -99,6 +99,8 @@ public class Constants {
 
     public static final String DATE_OF_COLLECTION = "dateOfCollection";
 
+    public static final String REPAYMENT_DATE = "repaymentDate";
+
     public static final String DATE_FORMAT = "dateFormat";
 
     public static final String CALENDAR_INSTANCE_ID = "calendarInstanceId";
@@ -186,4 +188,12 @@ public class Constants {
     public static final int CREATE_CLIENT = 3001;
     public static final int CLIENT_LOAN = 3002;
     public static final int GROUP_LOAN = 3003;
+
+    /**
+     * Constant to identify whether Simple Collection Sheet fragment has to be opened
+     * or the Individual Collection Sheet.
+     */
+    public static final String COLLECTION_TYPE = "collection_type";
+    public static final String EXTRA_COLLECTION_INDIVIDUAL = "individual";
+    public static final String EXTRA_COLLECTION_COLLECTION = "collection";
 }
