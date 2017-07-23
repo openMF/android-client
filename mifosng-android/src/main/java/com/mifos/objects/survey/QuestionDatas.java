@@ -6,21 +6,54 @@
 
 package com.mifos.objects.survey;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
-public class QuestionDatas {
+@Table(database = MifosDatabase.class)
+public class QuestionDatas extends MifosBaseModel implements Parcelable {
 
-    private String componentKey;
-    private Integer id;
-    private String key;
-    private String text;
-    private String description;
-    private Integer sequenceNo;
-    private List<ResponseDatas> responseDatas = new ArrayList<ResponseDatas>();
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    transient int surveyId;
+
+    @Column
+    String componentKey;
+
+    @Column
+    String key;
+
+    @Column
+    String text;
+
+    @Column
+    String description;
+
+    @Column
+    int sequenceNo;
+
+    List<ResponseDatas> responseDatas = new ArrayList<ResponseDatas>();
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getComponentKey() {
         return componentKey;
@@ -36,6 +69,14 @@ public class QuestionDatas {
 
     public void setResponseDatas(List<ResponseDatas> responseDatas) {
         this.responseDatas = responseDatas;
+    }
+
+    public int getSurveyId() {
+        return surveyId;
+    }
+
+    public void setSurveyId(int surveyId) {
+        this.surveyId = surveyId;
     }
 
     public String getKey() {
@@ -90,4 +131,46 @@ public class QuestionDatas {
                 ", responseDatas=" + responseDatas +
                 '}';
     }
+
+    public QuestionDatas() {
+    }
+
+    protected QuestionDatas(Parcel in) {
+        this.id = in.readInt();
+        this.componentKey = in.readString();
+        this.key = in.readString();
+        this.text = in.readString();
+        this.description = in.readString();
+        this.sequenceNo = in.readInt();
+        this.responseDatas = in.createTypedArrayList(ResponseDatas.CREATOR);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.componentKey);
+        dest.writeString(this.key);
+        dest.writeString(this.text);
+        dest.writeString(this.description);
+        dest.writeInt(this.sequenceNo);
+        dest.writeTypedList(this.responseDatas);
+    }
+
+    public static final Parcelable.Creator<QuestionDatas> CREATOR =
+            new Parcelable.Creator<QuestionDatas>() {
+        @Override
+        public QuestionDatas createFromParcel(Parcel source) {
+            return new QuestionDatas(source);
+        }
+
+        @Override
+        public QuestionDatas[] newArray(int size) {
+            return new QuestionDatas[size];
+        }
+    };
 }

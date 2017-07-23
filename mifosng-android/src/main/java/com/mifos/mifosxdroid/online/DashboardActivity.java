@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.SettingsActivity;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
@@ -208,6 +209,9 @@ public class DashboardActivity extends MifosBaseActivity
                 intent.setClass(this, GenerateCollectionSheetActivity.class);
                 intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL);
                 startActivity(intent);
+            case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
 
         }
 

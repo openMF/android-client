@@ -2,9 +2,13 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperSurveys;
+import com.mifos.objects.survey.QuestionDatas;
+import com.mifos.objects.survey.ResponseDatas;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
+import com.mifos.utils.PrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,7 +44,45 @@ public class DataManagerSurveys {
      * @return Observable<List<Survey>>
      */
     public Observable<List<Survey>> getAllSurvey() {
-        return mBaseApiManager.getSurveyApi().getAllSurveys();
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getSurveyApi().getAllSurveys();
+            case 1:
+                return mDatabaseHelperSurveys.readAllSurveys();
+            default:
+                List<Survey> defaultSurveyList = new ArrayList<Survey>();
+                return Observable.just(defaultSurveyList);
+        }
+    }
+
+    /**
+     * This method call the DatabaseHelperSurveys Helper and mDatabaseHelperSurveys.readAllSurveys()
+     * read the all Surveys from the Database Survey table and returns the List<Survey>.
+     *
+     * @return List<Survey>
+     */
+    public Observable<List<Survey>> getDatabaseSurveys() {
+        return mDatabaseHelperSurveys.readAllSurveys();
+    }
+
+    /**
+     * This method call the DatabaseHelperSurveys Helper and
+     * mDatabaseHelperSurveys.getQuestionDatas() read the all QuestionDatas
+     * from the Database QuestionDatas table and returns the List<QuestionDatas>.
+     * @return List<QuestionDatas>
+     */
+    public Observable<List<QuestionDatas>> getDatabaseQuestionDatas(int surveyId) {
+        return mDatabaseHelperSurveys.getQuestionDatas(surveyId);
+    }
+
+    /**
+     * This method call the DatabaseHelperSurveys Helper and
+     * mDatabaseHelperSurveys.getResponseDatas() read the all ResponseDatas
+     * from the Database ResponseDatas table and returns the List<ResponseDatas>.
+     * @return List<ResponseDatas>
+     */
+    public Observable<List<ResponseDatas>> getDatabaseResponseDatas(int questionId) {
+        return mDatabaseHelperSurveys.getResponseDatas(questionId);
     }
 
 
@@ -57,5 +99,37 @@ public class DataManagerSurveys {
 
     public Observable<Survey> getSurvey(int surveyId) {
         return mBaseApiManager.getSurveyApi().getSurvey(surveyId);
+    }
+
+    /**
+     * This method save the single Survey in Database.
+     *
+     * @param survey Survey
+     * @return Survey
+     */
+    public Observable<Survey> syncSurveyInDatabase(Survey survey) {
+        return mDatabaseHelperSurveys.saveSurvey(survey);
+    }
+
+    /**
+     * This method save the single QuestionDatas in Database.
+     *
+     * @param questionDatas QuestionDatas
+     * @return QuestionDatas
+     */
+    public Observable<QuestionDatas> syncQuestionDataInDatabase(int surveyId,
+                                                                QuestionDatas questionDatas) {
+        return mDatabaseHelperSurveys.saveQuestionData(surveyId, questionDatas);
+    }
+
+    /**
+     * This method save the single ResponseDatas in Database.
+     *
+     * @param responseDatas ResponseDatas
+     * @return ResponseDatas
+     */
+    public Observable<ResponseDatas> syncResponseDataInDatabase(int questionId,
+                                                                ResponseDatas responseDatas) {
+        return mDatabaseHelperSurveys.saveResponseData(questionId, responseDatas);
     }
 }

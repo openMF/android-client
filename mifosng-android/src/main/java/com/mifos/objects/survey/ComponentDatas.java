@@ -5,22 +5,41 @@
 
 package com.mifos.objects.survey;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 /**
  * Created by Rajan Maurya on 28/3/16.
  */
-public class ComponentDatas {
+@Table(database = MifosDatabase.class)
+public class ComponentDatas extends MifosBaseModel implements Parcelable {
 
-    private int id;
-    private String key;
-    private String text;
-    private String description;
-    private int sequenceNo;
+    @PrimaryKey
+    Integer id;
 
-    public int getId() {
+    @Column
+    String key;
+
+    @Column
+    String text;
+
+    @Column
+    String description;
+
+    @Column
+    int sequenceNo;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -66,4 +85,42 @@ public class ComponentDatas {
                 ", sequenceNo=" + sequenceNo +
                 '}';
     }
+
+    public ComponentDatas() {
+    }
+
+    protected ComponentDatas(Parcel in) {
+        this.id = in.readInt();
+        this.key = in.readString();
+        this.text = in.readString();
+        this.description = in.readString();
+        this.sequenceNo = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.key);
+        dest.writeString(this.text);
+        dest.writeString(this.description);
+        dest.writeInt(this.sequenceNo);
+    }
+
+    public static final Parcelable.Creator<ComponentDatas> CREATOR =
+            new Parcelable.Creator<ComponentDatas>() {
+        @Override
+        public ComponentDatas createFromParcel(Parcel source) {
+            return new ComponentDatas(source);
+        }
+
+        @Override
+        public ComponentDatas[] newArray(int size) {
+            return new ComponentDatas[size];
+        }
+    };
 }
