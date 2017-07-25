@@ -21,8 +21,6 @@ public interface CenterListMvpView extends MvpView {
 
     void showMessage(int message);
 
-    void unregisterSwipeAndScrollListener();
-
     void showCentersGroupAndMeeting(CenterWithAssociations centerWithAssociations, int id);
 
     void showFetchingError();
