@@ -135,6 +135,8 @@ public class Constants {
 
     public static final String ACTIVATE_TYPE = "activation_type";
 
+    public static final String INTIAL_LOGIN = "initial_login";
+
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
     public static final int REQUEST_PERMISSION_SETTING = 254;

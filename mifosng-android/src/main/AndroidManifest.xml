@@ -132,6 +132,10 @@
             android:label="@string/sync_savingsaccounttransactions"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".passcode.PassCodeActivity"
+            android:label="@string/pass_code"
+            android:screenOrientation="portrait" />
 
         <service android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false"/>

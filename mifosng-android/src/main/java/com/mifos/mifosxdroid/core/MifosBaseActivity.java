@@ -24,13 +24,16 @@ import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.injection.component.ActivityComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
+import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.utils.Constants;
+import com.mifos.utils.ForegroundChecker;
 import com.mifos.utils.PrefManager;
 
 /**
  * @author fomenkoo
  */
-public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback {
+public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback,
+        ForegroundChecker.Listener {
 
     protected Toolbar toolbar;
     private ActivityComponent mActivityComponent;
@@ -128,8 +131,12 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
     @Override
     public void logout() {
-        PrefManager.clearPrefs();
-        startActivity(new Intent(this, SplashScreenActivity.class));
+        if (PrefManager.getPassCodeStatus()) {
+            startActivity(new Intent(this, PassCodeActivity.class));
+        } else {
+            PrefManager.clearPrefs();
+            startActivity(new Intent(this, SplashScreenActivity.class));
+        }
         finish();
     }
 
@@ -157,5 +164,25 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
             int backStackId = getSupportFragmentManager().getBackStackEntryAt(i).getId();
             fm.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ForegroundChecker.get().addListener(this);
+        ForegroundChecker.get().onActivityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ForegroundChecker.get().onActivityPaused();
+    }
+
+    @Override
+    public void onBecameForeground() {
+        Intent intent = new Intent(this, PassCodeActivity.class);
+        intent.putExtra(Constants.INTIAL_LOGIN, false);
+        startActivity(intent);
     }
 }

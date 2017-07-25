@@ -58,6 +58,7 @@ import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprova
 import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment;
+import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 
 import dagger.Component;
 
@@ -70,6 +71,8 @@ import dagger.Component;
 public interface ActivityComponent {
 
     void inject(LoginActivity loginActivity);
+
+    void inject(PassCodeActivity passCodeActivity);
 
     void inject(CenterListFragment centerListFragment);
 
