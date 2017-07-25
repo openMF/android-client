@@ -22,6 +22,7 @@ public class User {
     private String officeName;
     private List<Role> roles = new ArrayList<Role>();
     private List<String> permissions = new ArrayList<String>();
+    private boolean isTwoFactorAuthenticationRequired;
 
     //{"username":"User1","userId":1,"base64EncodedAuthenticationKey":"VXNlcjE6dGVjaDRtZg\u003d
     // \u003d",
@@ -90,6 +91,14 @@ public class User {
 
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
+    }
+
+    public boolean twoFactorAuthenticationRequired() {
+        return isTwoFactorAuthenticationRequired;
+    }
+
+    public void setTwoFactorAuthenticationRequired(boolean twoFactorAuthenticationRequired) {
+        isTwoFactorAuthenticationRequired = twoFactorAuthenticationRequired;
     }
 
     @Override

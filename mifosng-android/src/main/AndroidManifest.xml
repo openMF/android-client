@@ -51,6 +51,10 @@
             android:label="@string/mifos_account"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".twofactor.TwoFactorActivity"
+            android:label="@string/twofactor"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".online.DashboardActivity"
             android:label="@string/dashboard"
             android:theme="@style/TraslucentActionBarTheme"

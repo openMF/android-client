@@ -731,6 +731,19 @@
     <string name="incorrect_passcode">Incorrect Passcode</string>
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
+    <string name="twofactor">Two-Factor Verification</string>
+    <string name="request_otp">Request Token</string>
+    <string name="select_delivery">Please select a token delivery method:</string>
+    <string name="otp_token">Token</string>
+    <string name="loading">Loading</string>
+    <string name="tfa_token_info">Please enter the token you received:</string>
+    <string name="tfa_invalid_token">Invalid token provided</string>
+    <string name="tfa_invalid_token_length">Invalid token length</string>
+    <string name="tfa_delivery_fetch_error">An error occurred while fetching delivery methods</string>
+    <string name="tfa_otp_request_error">An error occurred while requesting a token</string>
+    <string name="tfa_sms_text">Via SMS to %1$s</string>
+    <string name="tfa_email_text">Via  E-mail to %1$s</string>
+    <string name="tfa_unknown_text">Via %1$s to %2$s</string>
 
 
 </resources>

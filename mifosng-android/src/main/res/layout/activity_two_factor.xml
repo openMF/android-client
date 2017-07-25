@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/RelativeLayout.Base">
+
+    <include
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        style="@style/ScrollView.Login"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            style="@style/LinearLayout.Base"
+            android:layout_gravity="center_vertical">
+            <LinearLayout
+                android:id="@+id/tfa_delivery"
+                style="@style/LinearLayout.Base">
+
+                <TextView style="@style/TextView.BaseWidth"
+                    android:text="@string/select_delivery" />
+
+                <RadioGroup
+                    android:id="@+id/tfa_deliveryMethodsList"
+                    style="@style/LinearLayout.Base"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp">
+                </RadioGroup>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/bt_tfa_request_otp"
+                    style="@style/Button.Base"
+                    android:text="@string/request_otp"
+                    android:enabled="false"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tfa_otp"
+                style="@style/LinearLayout.Base"
+                android:visibility="gone">
+
+                <TextView style="@style/TextView.BaseWidth"
+                    android:text="@string/tfa_token_info" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/tokenWrapper"
+                    style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_tfa_token"
+                        style="@style/EditText.BaseWidth"
+                        android:hint="@string/otp_token"
+                        android:imeOptions="actionDone"
+                        android:imeActionLabel="@string/login"
+                        android:nextFocusDown="@+id/bt_tfa_login" />
+
+                </android.support.design.widget.TextInputLayout>
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/bt_tfa_login"
+                    style="@style/Button.Login" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

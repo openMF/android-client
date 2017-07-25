@@ -18,6 +18,8 @@ public class PrefManager {
 
     private static final String USER_ID = "preferences_user_id";
     private static final String TOKEN = "preferences_token";
+    private static final String TFA_TOKEN = "preferences_tfa_token";
+    private static final String TFA_TOKEN_EXPIRY_TIME = "preferences_tfa_token_expire_time";
     private static final String TENANT = "preferences_tenant";
     private static final String INSTANCE_URL = "preferences_instance";
     private static final String INSTANCE_DOMAIN = "preferences_domain";
@@ -26,6 +28,9 @@ public class PrefManager {
     private static final String USER_DETAILS = "user_details";
     private static final String PASSCODE = "passcode";
     private static final String PASSCODE_STATUS = "passcode_status";
+
+    // 2 hours
+    private static final long TOKEN_NEAR_EXPIRY_THRESHOLD = 7200000;
 
     private static Gson gson = new Gson();
 
@@ -110,6 +115,35 @@ public class PrefManager {
 
     public static String getToken() {
         return getString(TOKEN, "");
+    }
+
+    public static void saveTwoFactorToken(String accessToken) {
+        putString(TFA_TOKEN, accessToken);
+    }
+
+    public static void clearTwoFactorToken() {
+        putString(TFA_TOKEN, "");
+    }
+
+    public static String getTwoFactorToken() {
+        return getString(TFA_TOKEN, "");
+    }
+
+    public static void saveTwoFactorTokenExpiryTime(long tokenExpiryTime) {
+        putLong(TFA_TOKEN_EXPIRY_TIME, tokenExpiryTime);
+    }
+
+    public static long getTwoFactorTokenExpiryTime() {
+        return getLong(TFA_TOKEN_EXPIRY_TIME, 0);
+    }
+
+    public static boolean isTwoFactorTokenNearExpiry() {
+        long tokenLiveTime = getTwoFactorTokenExpiryTime() - System.currentTimeMillis();
+        return !getTwoFactorToken().isEmpty() && tokenLiveTime < TOKEN_NEAR_EXPIRY_THRESHOLD;
+    }
+
+    public static void clearTwoFactorExpiryTime() {
+        putLong(TFA_TOKEN_EXPIRY_TIME, 0);
     }
 
     public static boolean isAuthenticated() {

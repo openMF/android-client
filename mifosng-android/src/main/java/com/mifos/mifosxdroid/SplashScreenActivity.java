@@ -11,6 +11,7 @@ import android.os.Bundle;
 import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.twofactor.TwoFactorActivity;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.utils.PrefManager;
 
@@ -29,7 +30,12 @@ public class SplashScreenActivity extends MifosBaseActivity {
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {
-            startActivity(new Intent(SplashScreenActivity.this, PassCodeActivity.class));
+            // Show Two factor actvity if twofactor auth is required and token is near expiry.
+            if (PrefManager.isTwoFactorTokenNearExpiry()) {
+                startActivity(new Intent(SplashScreenActivity.this, TwoFactorActivity.class));
+            } else {
+                startActivity(new Intent(SplashScreenActivity.this, PassCodeActivity.class));
+            }
         }
         finish();
     }

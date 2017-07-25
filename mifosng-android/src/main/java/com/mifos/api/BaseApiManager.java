@@ -24,6 +24,7 @@ import com.mifos.api.services.SavingsAccountService;
 import com.mifos.api.services.SearchService;
 import com.mifos.api.services.StaffService;
 import com.mifos.api.services.SurveyService;
+import com.mifos.api.services.TwoFactorService;
 import com.mifos.utils.JsonDateSerializer;
 import com.mifos.utils.PrefManager;
 
@@ -58,6 +59,7 @@ public class BaseApiManager {
     private static RunReportsService runreportsService;
     private static NoteService noteService;
     private static CollectionSheetService collectionSheetService;
+    private static TwoFactorService twoFactorService;
 
     public BaseApiManager() {
         createService();
@@ -81,6 +83,7 @@ public class BaseApiManager {
         runreportsService = createApi(RunReportsService.class);
         noteService = createApi(NoteService.class);
         collectionSheetService = createApi(CollectionSheetService.class);
+        twoFactorService = createApi(TwoFactorService.class);
     }
 
     private static <T> T createApi(Class<T> clazz) {
@@ -168,5 +171,9 @@ public class BaseApiManager {
 
     public CollectionSheetService getCollectionSheetApi() {
         return collectionSheetService;
+    }
+
+    public TwoFactorService getTwoFactorService() {
+        return twoFactorService;
     }
 }

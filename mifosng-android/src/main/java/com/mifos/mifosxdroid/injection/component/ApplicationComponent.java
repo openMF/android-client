@@ -20,6 +20,7 @@ import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.api.datamanager.DataManagerSearch;
 import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.api.datamanager.DataManagerSurveys;
+import com.mifos.api.datamanager.DataManagerTwoFactor;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
 import com.mifos.api.local.databasehelper.DatabaseHelperCharge;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
@@ -71,6 +72,7 @@ public interface ApplicationComponent {
     DataManagerAuth dataManagerAuth();
     DataManagerNote dataManagerNote();
     DataManagerCollectionSheet dataManagerCollectionSheet();
+    DataManagerTwoFactor dataManagerTwoFactor();
 
 
     DatabaseHelperClient databaseHelperClient();

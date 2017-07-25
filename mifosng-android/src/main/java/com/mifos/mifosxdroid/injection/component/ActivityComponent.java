@@ -60,6 +60,7 @@ import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
+import com.mifos.mifosxdroid.twofactor.TwoFactorActivity;
 
 import dagger.Component;
 
@@ -187,4 +188,5 @@ public interface ActivityComponent {
 
     void inject(IndividualCollectionSheetFragment individualCollectionSheetFragment);
 
+    void inject(TwoFactorActivity twoFactorActivity);
 }

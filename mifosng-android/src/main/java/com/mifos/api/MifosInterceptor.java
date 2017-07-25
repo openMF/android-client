@@ -21,6 +21,7 @@ public class MifosInterceptor implements Interceptor {
 
     public static final String HEADER_TENANT = "Fineract-Platform-TenantId";
     public static final String HEADER_AUTH = "Authorization";
+    public static final String HEADER_TWO_FACTOR_TOKEN = "Fineract-Platform-TFA-Token";
 
     public MifosInterceptor() {
     }
@@ -33,6 +34,11 @@ public class MifosInterceptor implements Interceptor {
 
         if (PrefManager.isAuthenticated())
             builder.header(HEADER_AUTH, PrefManager.getToken());
+
+        String twoFactorToken = PrefManager.getTwoFactorToken();
+        if (!twoFactorToken.isEmpty()) {
+            builder.header(HEADER_TWO_FACTOR_TOKEN, twoFactorToken);
+        }
 
         Request request = builder.build();
         return chain.proceed(request);
