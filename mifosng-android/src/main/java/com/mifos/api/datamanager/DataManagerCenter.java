@@ -3,6 +3,7 @@ package com.mifos.api.datamanager;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
+import com.mifos.objects.accounts.CenterAccounts;
 import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server
@@ -74,6 +76,34 @@ public class DataManagerCenter {
     }
 
     /**
+     * This method save the single Center in Database.
+     *
+     * @param center Center
+     * @return Center
+     */
+    public Observable<Center> syncCenterInDatabase(Center center) {
+        return mDatabaseHelperCenter.saveCenter(center);
+    }
+
+    /**
+     * This Method Fetching the Center Accounts (Loan, saving, etc Accounts ) from REST API
+     * and then Saving all Accounts into the Database and then returns the Center Group Accounts
+     *
+     * @param centerId Center Id
+     * @return CenterAccounts
+     */
+    public Observable<CenterAccounts> syncCenterAccounts(final int centerId) {
+        return mBaseApiManager.getCenterApi().getCenterAccounts(centerId)
+                .concatMap(new Func1<CenterAccounts, Observable<? extends CenterAccounts>>() {
+                    @Override
+                    public Observable<? extends CenterAccounts> call(CenterAccounts
+                                                                             centerAccounts) {
+                        return mDatabaseHelperCenter.saveCenterAccounts(centerAccounts, centerId);
+                    }
+                });
+    }
+
+    /**
      * Method Fetching CollectionSheet of the Center from :
      * demo.openmf.org/fineract-provider/api/v1/centers/{centerId}
      * ?associations=groupMembers,collectionMeetingCalendar
@@ -100,6 +130,36 @@ public class DataManagerCenter {
             default:
                 return Observable.just(new SaveResponse());
         }
+    }
+
+    /**
+     * This Method Fetch the Groups that are attached to the Centers.
+     * @param centerId Center Id
+     * @return CenterWithAssociations
+     */
+    public Observable<CenterWithAssociations> getCenterWithAssociations(int centerId) {
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager.getCenterApi().getAllGroupsForCenter(centerId);
+            case 1:
+                /**
+                 * Return Groups from DatabaseHelperGroups.
+                 */
+                return mDatabaseHelperCenter.getCenterAssociateGroups(centerId);
+
+            default:
+                return Observable.just(new CenterWithAssociations());
+        }
+    }
+
+    /**
+     * This Method Request to the DatabaseHelperCenter and DatabaseHelperCenter Read the All
+     * centers from Center_Table and give the response Page of List of Center
+     *
+     * @return Page of Center List
+     */
+    public Observable<Page<Center>> getAllDatabaseCenters() {
+        return mDatabaseHelperCenter.readAllCenters();
     }
 
     public Observable<List<Office>> getOffices() {

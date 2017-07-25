@@ -7,6 +7,7 @@ import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDial
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment;
 import com.mifos.mifosxdroid.injection.PerActivity;
@@ -159,6 +160,8 @@ public interface ActivityComponent {
     void inject(SyncSavingsAccountTransactionFragment syncSavingsAccountTransactionFragment);
 
     void inject(SyncGroupsDialogFragment syncGroupsDialogFragment);
+
+    void inject(SyncCentersDialogFragment syncCentersDialogFragment);
 
     void inject(IdentifierDialogFragment identifierDialogFragment);
 

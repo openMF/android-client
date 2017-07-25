@@ -85,6 +85,8 @@ public class Constants {
 
     public static final String GROUP_ACCOUNT = "isGroupAccount";
 
+    public static final String CENTER = "center";
+
     public static final String ENTITY_TYPE = "entityType";
 
     public static final String ENTITY_ID = "entityId";

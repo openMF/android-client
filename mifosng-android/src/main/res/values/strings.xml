@@ -507,16 +507,19 @@
     <string name="no_center_payload_to_sync">There is No Center Payload to Sync</string>
     <string name="no_transaction_to_sync">here is No Transaction to Sync</string>
     <string name="no_more_clients_to_sync">No More Clients To Sync</string>
-    <string name="all_repayment_synced">All LoanRepayment have been Sync</string>
-    <string name="all_groups_synced">All Groups have been Sync</string>
-    <string name="all_centers_synced">All Centers have been Sync</string>
-    <string name="all_clients_synced">All Clients have been Sync</string>
+    <string name="all_repayment_synced">All LoanRepayment have been Synced</string>
+    <string name="all_groups_synced">All Groups have been Synced</string>
+    <string name="all_centers_synced">All Centers have been Synced</string>
+    <string name="all_clients_synced">All Clients have been Synced</string>
     <string name="click_to_refresh">\n Click to Refresh</string>
     <string name="syncing_client">Syncing Client</string>
     <string name="syncing_group">Syncing Group</string>
+    <string name="syncing_center">Syncing Center</string>
     <string name="total_sync_progress">Total Sync Progress</string>
     <string name="sync_clients_full_information"> Sync Clients All Information </string>
     <string name="sync_groups_full_information">Sync Groups All Information</string>
+    <string name="sync_centers_full_information">Sync Centers All Information</string>
+
 
     <!--Material Dialog Titles-->
     <string name="sync_previous_transaction">Sync Previous Transaction</string>
@@ -584,6 +587,7 @@
     <string name="failed_to_sync_client_and_accounts">Failed to load Client and their
         Accounts</string>
     <string name="failed_to_sync_clientaccounts">ClientAccounts Sync Failed</string>
+    <string name="failed_to_sync_centeraccounts">CenterAccounts Sync Failed</string>
     <string name="failed_to_sync_loan">Failed to Sync Loan</string>
     <string name="failed_to_sync_loanrepayment">Failed to Sync LoanRepayment</string>
     <string name="failed_to_load_client">Failed To Load Clients</string>
@@ -597,6 +601,7 @@
     <string name="failed_to_create_survey_scorecard">Failed to create Survey Score Card</string>
     <string name="failed_to_load_db_clients">Failed to load Database Clients</string>
     <string name="failed_to_load_db_groups">Failed to load Database Groups</string>
+    <string name="failed_to_load_db_centers">Failed to load Database Centers</string>
     <string name="failed_to_load_savings_products_and_template">Failed to load SavingProducts and
         Template</string>
     <string name="failed_to_add_savings_account">Failed to add SavingsAccount</string>

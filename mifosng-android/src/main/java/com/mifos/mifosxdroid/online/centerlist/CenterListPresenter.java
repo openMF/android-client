@@ -7,6 +7,7 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,15 +25,20 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
     private final DataManagerCenter mDataManagerCenter;
     private CompositeSubscription mSubscriptions;
 
+    private List<Center> mDbCenterList;
     private List<Center> mSyncCenterList;
 
     private int limit = 100;
     private Boolean loadmore = false;
+    private Boolean mRestApiCenterSyncStatus = false;
+    private Boolean mDatabaseCenterSyncStatus = false;
 
     @Inject
     public CenterListPresenter(DataManagerCenter dataManagerCenter) {
         mDataManagerCenter = dataManagerCenter;
         mSubscriptions = new CompositeSubscription();
+        mDbCenterList = new ArrayList<>();
+        mSyncCenterList = new ArrayList<>();
     }
 
 
@@ -45,7 +51,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.clear();
+        mSubscriptions.unsubscribe();
     }
 
 
@@ -73,6 +79,15 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
         }
     }
 
+    /**
+     * Setting CenterSync Status True when mRestApiCenterSyncStatus && mDatabaseCenterSyncStatus
+     * are true.
+     */
+    public void setAlreadyCenterSyncStatus() {
+        if (mRestApiCenterSyncStatus && mDatabaseCenterSyncStatus) {
+            showCenters(checkCenterAlreadySyncedOrNot(mSyncCenterList));
+        }
+    }
 
     /**
      * @param paged  True Enabling the Pagination of the API
@@ -106,10 +121,13 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
 
                         if (mSyncCenterList.size() == 0 && !loadmore) {
                             getMvpView().showEmptyCenters(R.string.empty_center_list);
+                            getMvpView().unregisterSwipeAndScrollListener();
                         } else if (mSyncCenterList.size() == 0 && loadmore) {
                             getMvpView().showMessage(R.string.no_more_centers_available);
                         } else {
                             showCenters(mSyncCenterList);
+                            mRestApiCenterSyncStatus = true;
+                            setAlreadyCenterSyncStatus();
                         }
                         getMvpView().showProgressbar(false);
                     }
@@ -138,5 +156,57 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                         getMvpView().showCentersGroupAndMeeting(centerWithAssociations, id);
                     }
                 }));
+    }
+
+    /**
+     * This Method Loading the Center From Database. It request Observable to DataManagerCenter
+     * and DataManagerCenter Request to DatabaseHelperCenter to load the Center List Page from the
+     * Center_Table and As the Center List Page is loaded DataManagerCenter gives the Center List
+     * Page after getting response from DatabaseHelperCenter
+     */
+    public void loadDatabaseCenters() {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerCenter.getAllDatabaseCenters()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<Page<Center>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showMessage(R.string.failed_to_load_db_centers);
+                    }
+
+                    @Override
+                    public void onNext(Page<Center> centerPage) {
+                        mDatabaseCenterSyncStatus = true;
+                        mDbCenterList = centerPage.getPageItems();
+                        setAlreadyCenterSyncStatus();
+                    }
+                })
+        );
+    }
+
+    /**
+     * This Method Filtering the Centers Loaded from Server is already sync or not. If yes the
+     * put the center.setSync(true) and view will show those centers as sync already to user
+     *
+     * @param
+     * @return Page<Center>
+     */
+    public List<Center> checkCenterAlreadySyncedOrNot(List<Center> centers) {
+        if (mDbCenterList.size() != 0) {
+            for (Center dbCenter : mDbCenterList) {
+                for (Center syncCenter : centers) {
+                    if (dbCenter.getId().equals(syncCenter.getId())) {
+                        syncCenter.setSync(true);
+                        break;
+                    }
+                }
+            }
+        }
+        return centers;
     }
 }
