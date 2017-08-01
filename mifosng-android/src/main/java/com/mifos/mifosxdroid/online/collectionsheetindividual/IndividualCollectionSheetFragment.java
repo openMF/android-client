@@ -190,15 +190,17 @@ public class IndividualCollectionSheetFragment extends MifosBaseFragment impleme
     }
 
     @Override
-    public void onShowSheetMandatoryItem(BulkRepaymentTransactions transaction, int position) {
+    public void onShowSheetMandatoryItem(BulkRepaymentTransactions bulkRepaymentTransactions,
+                                         int position) {
         //Add the data as received
-        payload.getBulkRepaymentTransactions().set(position, transaction);
+        payload.getBulkRepaymentTransactions().set(position, bulkRepaymentTransactions);
     }
 
     @Override
-    public void onSaveAdditionalItem(BulkRepaymentTransactions transaction, int position) {
+    public void onSaveAdditionalItem(BulkRepaymentTransactions bulkRepaymentTransactions,
+                                     int position) {
         //Add or amend the data as changed by the user
-        payload.getBulkRepaymentTransactions().set(position, transaction);
+        payload.getBulkRepaymentTransactions().set(position, bulkRepaymentTransactions);
     }
 
 
@@ -216,12 +218,15 @@ public class IndividualCollectionSheetFragment extends MifosBaseFragment impleme
         //methods.
 
         payload = new IndividualCollectionSheetPayload();
-        for (LoanAndClientName l : presenter.filterLoanAndClientNames(sheet.getClients())) {
-            LoanCollectionSheet loan = l.getLoan();
+        for (LoanAndClientName loanAndClientName :
+                presenter.filterLoanAndClientNames(sheet.getClients())) {
+            LoanCollectionSheet loanCollectionSheet = loanAndClientName.getLoan();
             payload.getBulkRepaymentTransactions().add(new BulkRepaymentTransactions(
-                    loan.getLoanId(),
-                    loan.getChargesDue() == null ? loan.getTotalDue() :
-                            loan.getTotalDue() + loan.getChargesDue()));
+                    loanCollectionSheet.getLoanId(),
+                    loanCollectionSheet.getChargesDue() == null ?
+                            loanCollectionSheet.getTotalDue() :
+                            loanCollectionSheet.getTotalDue() +
+                                    loanCollectionSheet.getChargesDue()));
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -250,8 +255,8 @@ public class IndividualCollectionSheetFragment extends MifosBaseFragment impleme
 
 
     @Override
-    public void setOfficeSpinner(List<Office> list) {
-        officeList = list;
+    public void setOfficeSpinner(List<Office> offices) {
+        officeList = offices;
         officeNameList.clear();
         officeNameList.addAll(presenter.filterOffices(officeList));
         officeNameList.add(getString(R.string.spinner_office));
@@ -277,10 +282,10 @@ public class IndividualCollectionSheetFragment extends MifosBaseFragment impleme
 
 
     @Override
-    public void setStaffSpinner(List<Staff> list) {
+    public void setStaffSpinner(List<Staff> staffs) {
 
         spStaff.setOnItemSelectedListener(this);
-        staffList = list;
+        staffList = staffs;
         staffNameList.clear();
         staffNameList.addAll(presenter.filterStaff(staffList));
         staffNameList.add(getString(R.string.spinner_staff));
@@ -318,8 +323,8 @@ public class IndividualCollectionSheetFragment extends MifosBaseFragment impleme
     }
 
     @Override
-    public void showSheet(IndividualCollectionSheet collectionSheet) {
-        sheet = collectionSheet;
+    public void showSheet(IndividualCollectionSheet individualCollectionSheet) {
+        sheet = individualCollectionSheet;
         if (recyclerSheets.getVisibility() == View.GONE) {
             recyclerSheets.setVisibility(View.VISIBLE);
         }
