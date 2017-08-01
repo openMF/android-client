@@ -62,10 +62,12 @@ public class IndividualCollectionSheetPresenter
         }
     }
 
-    void submitIndividualCollectionSheet(IndividualCollectionSheetPayload payload) {
+    void submitIndividualCollectionSheet(IndividualCollectionSheetPayload
+                                                 individualCollectionSheetPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManagerCollection.saveIndividualCollectionSheet(payload)
+        mSubscription.add(mDataManagerCollection
+                .saveIndividualCollectionSheet(individualCollectionSheetPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
@@ -90,18 +92,20 @@ public class IndividualCollectionSheetPresenter
                     }
 
                     @Override
-                    public void onNext(GenericResponse response) {
+                    public void onNext(GenericResponse genericResponse) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showSuccess();
                     }
                 }));
     }
 
-    void fetchIndividualCollectionSheet(RequestCollectionSheetPayload payload) {
+    void fetchIndividualCollectionSheet(RequestCollectionSheetPayload
+                                                requestCollectionSheetPayload) {
 
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManagerCollection.getIndividualCollectionSheet(payload)
+        mSubscription.add(mDataManagerCollection
+                .getIndividualCollectionSheet(requestCollectionSheetPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<IndividualCollectionSheet>() {
@@ -129,10 +133,10 @@ public class IndividualCollectionSheetPresenter
                     }
 
                     @Override
-                    public void onNext(IndividualCollectionSheet collectionSheet) {
+                    public void onNext(IndividualCollectionSheet individualCollectionSheet) {
                         getMvpView().showProgressbar(false);
-                        if (collectionSheet.getClients().size() > 0) {
-                            getMvpView().showSheet(collectionSheet);
+                        if (individualCollectionSheet.getClients().size() > 0) {
+                            getMvpView().showSheet(individualCollectionSheet);
                         } else {
                             getMvpView().showNoSheetFound();
                         }
@@ -222,9 +226,9 @@ public class IndividualCollectionSheetPresenter
         return officesList;
     }
 
-    List<String> filterStaff(List<Staff> staff) {
+    List<String> filterStaff(List<Staff> staffs) {
         final List<String> staffList = new ArrayList<>();
-        Observable.from(staff)
+        Observable.from(staffs)
                 .subscribe(new Action1<Staff>() {
                     @Override
                     public void call(Staff staff) {
@@ -246,16 +250,20 @@ public class IndividualCollectionSheetPresenter
         return paymentList;
     }
 
-    List<LoanAndClientName> filterLoanAndClientNames(List<ClientCollectionSheet> clients) {
+    List<LoanAndClientName> filterLoanAndClientNames(List<ClientCollectionSheet>
+                                                             clientCollectionSheets) {
         final List<LoanAndClientName> loansAndClientNames = new ArrayList<>();
-        Observable.from(clients)
+        Observable.from(clientCollectionSheets)
                 .subscribe(new Action1<ClientCollectionSheet>() {
                     @Override
-                    public void call(ClientCollectionSheet client) {
-                        for (LoanCollectionSheet loan :
-                                client.getLoans()) {
-                            loansAndClientNames.add(new
-                                    LoanAndClientName(loan, client.getClientName()));
+                    public void call(ClientCollectionSheet clientCollectionSheet) {
+                        if (clientCollectionSheet.getLoans() != null) {
+                            for (LoanCollectionSheet loanCollectionSheet :
+                                    clientCollectionSheet.getLoans()) {
+                                loansAndClientNames.add(new
+                                        LoanAndClientName(loanCollectionSheet,
+                                        clientCollectionSheet.getClientName()));
+                            }
                         }
                     }
                 });

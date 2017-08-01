@@ -37,7 +37,7 @@ public class IndividualCollectionSheetAdapter extends
         RecyclerView.Adapter<IndividualCollectionSheetAdapter.ViewHolder> {
 
     private List<String> paymentTypeList;
-    private List<LoanAndClientName> loans;
+    private List<LoanAndClientName> loanAndClientNames;
     private List<PaymentTypeOptions> paymentTypeOptionsList;
     private Context c;
 
@@ -61,8 +61,8 @@ public class IndividualCollectionSheetAdapter extends
         this.paymentTypeList.add(c.getString(R.string.payment_type));
     }
 
-    public void setLoans(List<LoanAndClientName> loans) {
-        this.loans = loans;
+    public void setLoans(List<LoanAndClientName> loanAndClientNameList) {
+        this.loanAndClientNames = loanAndClientNameList;
     }
 
 
@@ -81,33 +81,39 @@ public class IndividualCollectionSheetAdapter extends
                                  int position) {
         if (holder != null) {
 
-            LoanAndClientName item = loans.get(position);
-            final LoanCollectionSheet loanItem = item.getLoan();
-            holder.tvClientName.setText(item.getClientName());
+            LoanAndClientName loanAndClientNameItem = loanAndClientNames.get(position);
+            final LoanCollectionSheet loanCollectionSheetItem = loanAndClientNameItem.getLoan();
+            holder.tvClientName.setText(loanAndClientNameItem.getClientName());
 
-            holder.tvProductCode.setText(concatProductWithAccount(loanItem.getProductShortName()
-                    , loanItem.getAccountId()));
+            holder.tvProductCode.setText(concatProductWithAccount(loanCollectionSheetItem
+                    .getProductShortName(), loanCollectionSheetItem.getAccountId()));
 
-            if (loanItem.getChargesDue() != null) {
+            if (loanCollectionSheetItem.getChargesDue() != null) {
                 holder.etCharges.setText(
-                        String.format(Locale.getDefault(), "%f", loanItem.getChargesDue()));
+                        String.format(Locale.getDefault(), "%f",
+                                loanCollectionSheetItem.getChargesDue()));
             }
 
-            if (loanItem.getTotalDue() != null) {
+            if (loanCollectionSheetItem.getTotalDue() != null) {
                 holder.etTotalDues.setText(
-                        String.format(Locale.getDefault(), "%f", loanItem.getTotalDue()));
+                        String.format(Locale.getDefault(), "%f",
+                                loanCollectionSheetItem.getTotalDue()));
             }
 
 
             //Add default value of transaction irrespective of they are 'saved' or 'cancelled'
             // manually by the user.
-            BulkRepaymentTransactions singleTransaction = new BulkRepaymentTransactions();
-            singleTransaction.setLoanId(loanItem.getLoanId());
-            singleTransaction.setTransactionAmount(loanItem.getChargesDue() != null ?
-                    loanItem.getChargesDue() + loanItem.getTotalDue() :
-                    loanItem.getTotalDue());
+            BulkRepaymentTransactions defaultBulkRepaymentTransaction = new
+                    BulkRepaymentTransactions();
+            defaultBulkRepaymentTransaction.setLoanId(loanCollectionSheetItem.getLoanId());
+            defaultBulkRepaymentTransaction.setTransactionAmount(
+                    loanCollectionSheetItem.getChargesDue() != null ?
+                            loanCollectionSheetItem.getChargesDue() +
+                                    loanCollectionSheetItem.getTotalDue() :
+                            loanCollectionSheetItem.getTotalDue());
 
-            sheetItemClickListener.onShowSheetMandatoryItem(singleTransaction, position);
+            sheetItemClickListener.onShowSheetMandatoryItem(defaultBulkRepaymentTransaction,
+                    position);
         }
     }
 
@@ -117,7 +123,7 @@ public class IndividualCollectionSheetAdapter extends
 
     @Override
     public int getItemCount() {
-        return loans.size();
+        return loanAndClientNames.size();
     }
 
     @Override
@@ -128,7 +134,7 @@ public class IndividualCollectionSheetAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             Spinner.OnItemSelectedListener {
         int position;
-        BulkRepaymentTransactions transaction = new BulkRepaymentTransactions();
+        BulkRepaymentTransactions bulkRepaymentTransaction = new BulkRepaymentTransactions();
 
         public ViewHolder(View v) {
             super(v);
@@ -140,9 +146,9 @@ public class IndividualCollectionSheetAdapter extends
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
             if (i != paymentTypeList.size() - 1) {
-                transaction.setPaymentTypeId(paymentTypeOptionsList.get(i).getId());
+                bulkRepaymentTransaction.setPaymentTypeId(paymentTypeOptionsList.get(i).getId());
             } else {
-                transaction.setPaymentTypeId(null);
+                bulkRepaymentTransaction.setPaymentTypeId(null);
             }
         }
 
@@ -179,33 +185,35 @@ public class IndividualCollectionSheetAdapter extends
          */
         private void saveAdditional() {
 
-            transaction.setLoanId(loans.get(position).getLoan().getLoanId());
-            transaction.setTransactionAmount((!etCharges.getText().toString().isEmpty() ?
+            bulkRepaymentTransaction.setLoanId(loanAndClientNames.get(position)
+                    .getLoan().getLoanId());
+            bulkRepaymentTransaction.setTransactionAmount((!etCharges
+                    .getText().toString().isEmpty() ?
                     Double.parseDouble(etCharges.getText().toString()) : 0)
                     + (!etTotalDues.getText().toString().isEmpty() ?
                     Double.parseDouble(etTotalDues.getText().toString()) : 0));
 
             if (!etAccountNumber.getText().toString().isEmpty()) {
-                transaction.setAccountNumber(etAccountNumber.getText().toString());
+                bulkRepaymentTransaction.setAccountNumber(etAccountNumber.getText().toString());
             }
 
             if (!etChequeNumber.getText().toString().isEmpty()) {
-                transaction.setCheckNumber(etChequeNumber.getText().toString());
+                bulkRepaymentTransaction.setCheckNumber(etChequeNumber.getText().toString());
             }
 
             if (!etRoutingCode.getText().toString().isEmpty()) {
-                transaction.setRoutingCode(etRoutingCode.getText().toString());
+                bulkRepaymentTransaction.setRoutingCode(etRoutingCode.getText().toString());
             }
 
             if (!etReceiptNumber.getText().toString().isEmpty()) {
-                transaction.setReceiptNumber(etReceiptNumber.getText().toString());
+                bulkRepaymentTransaction.setReceiptNumber(etReceiptNumber.getText().toString());
             }
 
             if (!etBankNumber.getText().toString().isEmpty()) {
-                transaction.setBankNumber(etBankNumber.getText().toString());
+                bulkRepaymentTransaction.setBankNumber(etBankNumber.getText().toString());
             }
 
-            sheetItemClickListener.onSaveAdditionalItem(transaction, position);
+            sheetItemClickListener.onSaveAdditionalItem(bulkRepaymentTransaction, position);
             tableAdditional.setVisibility(View.GONE);
         }
 
@@ -214,20 +222,22 @@ public class IndividualCollectionSheetAdapter extends
          * the EditTexts and sets the remaining fields to null.
          */
         private void cancelAdditional() {
-            transaction.setLoanId(loans.get(position).getLoan().getLoanId());
-            transaction.setTransactionAmount((!etCharges.getText().toString().isEmpty() ?
+            bulkRepaymentTransaction.setLoanId(loanAndClientNames.get(position)
+                    .getLoan().getLoanId());
+            bulkRepaymentTransaction.setTransactionAmount((!etCharges.getText()
+                    .toString().isEmpty() ?
                     Double.parseDouble(etCharges.getText().toString()) : 0)
                     + (!etTotalDues.getText().toString().isEmpty() ?
                     Double.parseDouble(etTotalDues.getText().toString()) : 0));
 
             tableAdditional.setVisibility(View.GONE);
-            transaction.setPaymentTypeId(null);
-            transaction.setAccountNumber(null);
-            transaction.setCheckNumber(null);
-            transaction.setRoutingCode(null);
-            transaction.setReceiptNumber(null);
-            transaction.setBankNumber(null);
-            sheetItemClickListener.onSaveAdditionalItem(transaction, position);
+            bulkRepaymentTransaction.setPaymentTypeId(null);
+            bulkRepaymentTransaction.setAccountNumber(null);
+            bulkRepaymentTransaction.setCheckNumber(null);
+            bulkRepaymentTransaction.setRoutingCode(null);
+            bulkRepaymentTransaction.setReceiptNumber(null);
+            bulkRepaymentTransaction.setBankNumber(null);
+            sheetItemClickListener.onSaveAdditionalItem(bulkRepaymentTransaction, position);
         }
 
         private void showAdditional() {
