@@ -5,8 +5,11 @@
 
 package com.mifos;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
@@ -47,6 +50,7 @@ public class App extends MultiDexApplication {
         return (App) context.getApplicationContext();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,6 +61,10 @@ public class App extends MultiDexApplication {
         //Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(new FlowConfig.Builder(this).build());
         Stetho.initializeWithDefaults(this);
+        StrictMode.VmPolicy policy = new StrictMode.VmPolicy.Builder()
+                .detectFileUriExposure()
+                .build();
+        StrictMode.setVmPolicy(policy);
     }
 
     public ApplicationComponent getComponent() {

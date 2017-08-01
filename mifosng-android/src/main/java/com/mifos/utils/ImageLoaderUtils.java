@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.mifos.api.MifosInterceptor;
 import com.mifos.mifosxdroid.R;
 
@@ -37,6 +38,7 @@ public class ImageLoaderUtils {
                 .asBitmap()
                 .placeholder(R.drawable.ic_dp_placeholder)
                 .error(R.drawable.ic_dp_placeholder)
+                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                 .into(new BitmapImageViewTarget(imageView) {
                     @Override
                     protected void setResource(Bitmap result) {
