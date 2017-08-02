@@ -11,8 +11,7 @@ import android.os.Bundle;
 import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.login.LoginActivity;
-import com.mifos.mifosxdroid.online.DashboardActivity;
-import com.mifos.utils.ForegroundChecker;
+import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.utils.PrefManager;
 
 
@@ -25,13 +24,12 @@ public class SplashScreenActivity extends MifosBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ForegroundChecker.init();
         if (!PrefManager.isAuthenticated()) {
             PrefManager.setInstanceUrl(BaseUrl.PROTOCOL_HTTPS
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {
-            startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
+            startActivity(new Intent(SplashScreenActivity.this, PassCodeActivity.class));
         }
         finish();
     }

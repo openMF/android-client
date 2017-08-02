@@ -706,7 +706,7 @@
     <string name="pass_code">Pass Code</string>
     <string name="forgot_passcode">Forgot passcode, login manually</string>
     <string name="incorrect_passcode">Incorrect Passcode</string>
-    <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times</string>
+    <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
 
 
