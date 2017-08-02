@@ -204,4 +204,12 @@ public class Constants {
     public static final String COLLECTION_TYPE = "collection_type";
     public static final String EXTRA_COLLECTION_INDIVIDUAL = "individual";
     public static final String EXTRA_COLLECTION_COLLECTION = "collection";
+
+    /**
+     * Constants related to RunReports
+     */
+    public static final String REPORT_NAME = "report_name";
+    public static final String REPORT_ID = "report_id";
+    public static final String CLIENT_REPORT_ITEM = "client_report_item";
+    public static final String CLIENT_REPORT = "client_report";
 }

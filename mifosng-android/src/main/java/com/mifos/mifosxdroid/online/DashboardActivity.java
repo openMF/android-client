@@ -218,6 +218,10 @@ public class DashboardActivity extends MifosBaseActivity
             case R.id.item_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.runreport:
+                intent.setClass(this, RunReportsActivity.class);
+                startActivity(intent);
+                break;
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);

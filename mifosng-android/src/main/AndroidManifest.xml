@@ -88,6 +88,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".online.DashboardActivity" />
         </activity>
+
+        <activity android:name=".online.RunReportsActivity"
+            android:label="@string/run_report"
+            android:parentActivityName=".online.DashboardActivity">
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".online.DashboardActivity"/>
+        </activity>
         <activity
             android:name=".ClientListActivity"
             android:label="@string/clients"

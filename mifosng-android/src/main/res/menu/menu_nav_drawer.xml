@@ -43,6 +43,12 @@
             android:id ="@+id/collection_sheet"
             android:checked="false"
             android:title="@string/collection_sheet"/>
+
+        <item
+            android:id="@+id/runreport"
+            android:checked="false"
+            android:title="@string/run_report"
+            />
                 
         <item
             android:id="@+id/item_path_tracker"
