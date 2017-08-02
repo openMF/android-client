@@ -242,6 +242,7 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @Override
     public void onRefresh() {
+        showUserInterface();
         mClientListPresenter.loadClients(false, 0);
         mClientListPresenter.loadDatabaseClients();
         if (actionMode != null) actionMode.finish();
