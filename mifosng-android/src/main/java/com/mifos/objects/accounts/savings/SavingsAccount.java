@@ -27,9 +27,6 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
     @Column
     transient long groupId;
 
-    @Column
-    long centerId;
-
     @PrimaryKey
     Integer id;
 
@@ -85,14 +82,6 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
     public void setClientId(long clientId) {
         this.clientId = clientId;
-    }
-
-    public long getCenterId() {
-        return this.centerId;
-    }
-
-    public void setCenterId(long centerId) {
-        this.centerId = centerId;
     }
 
     public Integer getId() {

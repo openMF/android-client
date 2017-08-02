@@ -6,18 +6,13 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.core.SelectableAdapter;
 import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.group.Center;
 import com.mifos.utils.Utils;
@@ -33,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 11/03/14.
  */
-public class CentersListAdapter extends SelectableAdapter<RecyclerView.ViewHolder> {
+public class CentersListAdapter extends RecyclerView.Adapter<CentersListAdapter.ViewHolder> {
 
     private List<Center> centers;
     private Context context;
@@ -51,38 +46,28 @@ public class CentersListAdapter extends SelectableAdapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ViewHolder) {
-            Center center = centers.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Center center = centers.get(position);
 
-            ((ViewHolder) holder).tvAccountNumber.setText(String.format(context.
-                    getString(R.string.centerList_account_prefix), center.getAccountNo()));
-            ((ViewHolder) holder).tvCenterId.setText(String.valueOf(center.getId()));
-            ((ViewHolder) holder).tvCenterName.setText(center.getName());
-            if (center.getStaffId() != null) {
-                ((ViewHolder) holder).tvStaffId.setText(String.valueOf(center.getStaffId()));
-                ((ViewHolder) holder).tvStaffName.setText(center.getStaffName());
-            } else {
-                ((ViewHolder) holder).tvStaffId.setText("");
-                ((ViewHolder) holder).tvStaffName.setText(R.string.no_staff);
-            }
-            ((ViewHolder) holder).tvOfficeId.setText(String.valueOf(center.getOfficeId()));
-            ((ViewHolder) holder).tvOfficeName.setText(center.getOfficeName());
-            if (center.getActive()) {
-                ((ViewHolder) holder).ivStatusIndicator.setImageDrawable(
-                        Utils.setCircularBackground(R.color.light_green, context));
-            } else {
-                ((ViewHolder) holder).ivStatusIndicator.setImageDrawable(
-                        Utils.setCircularBackground(R.color.light_red, context));
-            }
-
-            //Changing the Color of Selected Centers
-            ((ViewHolder) holder).viewSelectedOverlay
-                    .setBackgroundColor(isSelected(position) ? ContextCompat.getColor(context,
-                            R.color.gray_light) : Color.WHITE);
-
-            ((ViewHolder) holder).ivSyncStatus
-                    .setVisibility(center.isSync() ? View.VISIBLE : View.INVISIBLE);
+        holder.tvAccountNumber.setText(String.format(context.
+                getString(R.string.centerList_account_prefix), center.getAccountNo()));
+        holder.tvCenterId.setText(String.valueOf(center.getId()));
+        holder.tvCenterName.setText(center.getName());
+        if (center.getStaffId() != null) {
+            holder.tvStaffId.setText(String.valueOf(center.getStaffId()));
+            holder.tvStaffName.setText(center.getStaffName());
+        } else {
+            holder.tvStaffId.setText("");
+            holder.tvStaffName.setText(R.string.no_staff);
+        }
+        holder.tvOfficeId.setText(String.valueOf(center.getOfficeId()));
+        holder.tvOfficeName.setText(center.getOfficeName());
+        if (center.getActive()) {
+            holder.ivStatusIndicator.setImageDrawable(
+                    Utils.setCircularBackground(R.color.light_green, context));
+        } else {
+            holder.ivStatusIndicator.setImageDrawable(
+                    Utils.setCircularBackground(R.color.light_red, context));
         }
     }
 
@@ -135,12 +120,6 @@ public class CentersListAdapter extends SelectableAdapter<RecyclerView.ViewHolde
 
         @BindView(R.id.tv_office_id)
         TextView tvOfficeId;
-
-        @BindView(R.id.linearLayout)
-        LinearLayout viewSelectedOverlay;
-
-        @BindView(R.id.iv_sync_status)
-        ImageView ivSyncStatus;
 
         public ViewHolder(View v) {
             super(v);
