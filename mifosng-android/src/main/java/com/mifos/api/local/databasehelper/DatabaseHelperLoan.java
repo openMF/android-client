@@ -1,6 +1,7 @@
 package com.mifos.api.local.databasehelper;
 
 import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.accounts.loan.ActualDisbursementDate;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest_Table;
@@ -10,9 +11,11 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations_Table;
 import com.mifos.objects.accounts.loan.Timeline;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate_Table;
+import com.mifos.utils.Constants;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Func0;
 
 /**
@@ -105,6 +109,43 @@ public class DatabaseHelperLoan {
                 }
 
                 return Observable.just(loanWithAssociations);
+            }
+        });
+    }
+
+    public Observable<List<SearchedEntity>> readAllLoansByQuery(
+            final String query, final Boolean exactMatch) {
+
+        return Observable.create(new Observable.OnSubscribe<List<SearchedEntity>>() {
+            @Override
+            public void call(Subscriber<? super List<SearchedEntity>> subscriber) {
+                List<LoanWithAssociations> loanList;
+                List<SearchedEntity> searchedEntities = new ArrayList<SearchedEntity>();
+                if (exactMatch) {
+                    loanList = SQLite.select()
+                            .from(LoanWithAssociations.class)
+                            .where(LoanWithAssociations_Table.loanProductName.like(query))
+                            .queryList();
+                } else {
+                    loanList = SQLite.select()
+                            .from(LoanWithAssociations.class)
+                            .where(LoanWithAssociations_Table.loanProductName.like(
+                                    ("%" + query + "%")))
+                            .queryList();
+                }
+                for (LoanWithAssociations loan : loanList) {
+                    SearchedEntity searchedEntity = new SearchedEntity();
+                    searchedEntity.setEntityId(loan.getId());
+                    searchedEntity.setEntityAccountNo(loan.getAccountNo());
+                    searchedEntity.setEntityType(Constants.SEARCH_ENTITY_LOAN);
+                    searchedEntity.setEntityName(loan.getLoanProductName());
+                    searchedEntity.setParentId(loan.getClientId());
+                    searchedEntity.setParentName(loan.getClientName());
+                    searchedEntities.add(searchedEntity);
+                }
+
+                subscriber.onNext(searchedEntities);
+                subscriber.onCompleted();
             }
         });
     }

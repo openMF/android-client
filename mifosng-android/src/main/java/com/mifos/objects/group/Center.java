@@ -56,6 +56,8 @@ public class Center extends MifosBaseModel implements Parcelable {
     @Column
     String hierarchy;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Status status;
 
     @Column

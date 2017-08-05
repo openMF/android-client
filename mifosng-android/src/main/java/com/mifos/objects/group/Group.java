@@ -41,6 +41,8 @@ public class Group extends MifosBaseModel implements Parcelable {
     @Column
     String name;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Status status;
 
     @Column

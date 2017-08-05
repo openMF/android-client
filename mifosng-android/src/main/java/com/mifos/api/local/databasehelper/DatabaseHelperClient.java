@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanAccount_Table;
@@ -36,6 +37,7 @@ import com.mifos.utils.MapDeserializer;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -120,6 +122,48 @@ public class DatabaseHelperClient {
             }
         });
 
+    }
+
+    public Observable<List<SearchedEntity>> readAllClientsByQuery(
+            final String query, final Boolean exactMatch) {
+
+        return Observable.create(new Observable.OnSubscribe<List<SearchedEntity>>() {
+            @Override
+            public void call(Subscriber<? super List<SearchedEntity>> subscriber) {
+                List<Client> clientList;
+                List<SearchedEntity> searchedEntities = new ArrayList<SearchedEntity>();
+                if (exactMatch) {
+                    clientList = select()
+                            .from(Client.class)
+                            .where(Client_Table.displayName.like(query))
+                            .queryList();
+                } else {
+                    clientList = select()
+                            .from(Client.class)
+                            .where(Client_Table.displayName.like(("%" + query + "%")))
+                            .queryList();
+                }
+                for (Client client : clientList) {
+                    SearchedEntity searchedEntity = new SearchedEntity();
+                    com.mifos.objects.common.InterestType interestType =
+                            new com.mifos.objects.common.InterestType();
+                    searchedEntity.setEntityId(client.getId());
+                    searchedEntity.setEntityAccountNo(client.getAccountNo());
+                    searchedEntity.setEntityType(Constants.SEARCH_ENTITY_CLIENT);
+                    searchedEntity.setEntityName(client.getDisplayName());
+                    searchedEntity.setParentId(client.getOfficeId());
+                    searchedEntity.setParentName(client.getOfficeName());
+                    interestType.setId(client.getStatus().getId());
+                    interestType.setCode(client.getStatus().getCode());
+                    interestType.setValue(client.getStatus().getValue());
+                    searchedEntity.setEntityStatus(interestType);
+                    searchedEntities.add(searchedEntity);
+                }
+
+                subscriber.onNext(searchedEntities);
+                subscriber.onCompleted();
+            }
+        });
     }
 
     public Observable<GroupWithAssociations> getGroupAssociateClients(final int groupId) {
