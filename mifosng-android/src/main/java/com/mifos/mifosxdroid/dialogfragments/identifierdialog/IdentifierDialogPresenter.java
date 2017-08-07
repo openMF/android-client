@@ -1,15 +1,17 @@
 package com.mifos.mifosxdroid.dialogfragments.identifierdialog;
 
-import com.mifos.api.GenericResponse;
+
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.noncore.DocumentType;
+import com.mifos.objects.noncore.IdentifierCreationResponse;
 import com.mifos.objects.noncore.IdentifierPayload;
 import com.mifos.objects.noncore.IdentifierTemplate;
-import com.mifos.objects.noncore.IdentifierType;
 import com.mifos.utils.MFErrorParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -81,7 +83,7 @@ public class IdentifierDialogPresenter extends BasePresenter<IdentifierDialogMvp
         mSubscriptions.add(mDataManagerClient.createClientIdentifier(clientId, identifierPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribe(new Subscriber<IdentifierCreationResponse>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -93,7 +95,7 @@ public class IdentifierDialogPresenter extends BasePresenter<IdentifierDialogMvp
                             if (e instanceof HttpException) {
                                 String errorMessage = ((HttpException) e).response().errorBody()
                                         .string();
-                                getMvpView().showMessage(MFErrorParser.parseError(errorMessage)
+                                getMvpView().showErrorMessage(MFErrorParser.parseError(errorMessage)
                                         .getErrors().get(0).getDefaultUserMessage());
                             }
                         } catch (Throwable throwable) {
@@ -102,23 +104,40 @@ public class IdentifierDialogPresenter extends BasePresenter<IdentifierDialogMvp
                     }
 
                     @Override
-                    public void onNext(GenericResponse genericResponse) {
+                    public void onNext(IdentifierCreationResponse identifierCreationResponse) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showIdentifierCreatedSuccessfully();
+                        getMvpView().showIdentifierCreatedSuccessfully(identifierCreationResponse);
                     }
                 })
         );
     }
 
-    public List<String> getIdentifierDocumentTypeNames(List<IdentifierType> identifierTypes) {
-        final ArrayList<String> documentType = new ArrayList<>();
-        Observable.from(identifierTypes)
-                .subscribe(new Action1<IdentifierType>() {
+    public List<String> getIdentifierDocumentTypeNames(List<DocumentType> documentTypes) {
+        final ArrayList<String> documentTypeList = new ArrayList<>();
+        Observable.from(documentTypes)
+                .subscribe(new Action1<DocumentType>() {
                     @Override
-                    public void call(IdentifierType identifierType) {
-                        documentType.add(identifierType.getName());
+                    public void call(DocumentType documentType) {
+                        documentTypeList.add(documentType.getName());
                     }
                 });
-        return documentType;
+        return documentTypeList;
+    }
+
+    /**
+     * Method to map Document Type with the corresponding name.
+     * @param documentTypeList List of DocumentType
+     * @return HashMap of <Name,DocumentType>
+     */
+    HashMap<String, DocumentType> mapDocumentTypesWithName(List<DocumentType> documentTypeList) {
+        final HashMap<String, DocumentType> hashMap = new HashMap<>();
+        Observable.from(documentTypeList)
+                .subscribe(new Action1<DocumentType>() {
+                    @Override
+                    public void call(DocumentType documentType) {
+                        hashMap.put(documentType.getName(), documentType);
+                    }
+                });
+        return hashMap;
     }
 }

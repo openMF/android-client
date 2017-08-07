@@ -11,6 +11,7 @@ import com.mifos.objects.client.ClientAddressResponse;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.noncore.IdentifierCreationResponse;
 import com.mifos.objects.noncore.IdentifierPayload;
 import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -316,10 +317,10 @@ public class DataManagerClient {
      *
      * @param clientId          Client Id
      * @param identifierPayload IdentifierPayload
-     * @return GenericResponse
+     * @return IdentifierCreationResponse
      */
-    public Observable<GenericResponse> createClientIdentifier(int clientId,
-                                                              IdentifierPayload identifierPayload) {
+    public Observable<IdentifierCreationResponse> createClientIdentifier(
+            int clientId, IdentifierPayload identifierPayload) {
         return mBaseApiManager.getClientsApi().createClientIdentifier(clientId, identifierPayload);
     }
 

@@ -27,6 +27,28 @@ public class DocumentType implements Parcelable {
     @SerializedName("mandatory")
     Boolean mandatory;
 
+    @SerializedName("description")
+    String description;
+
+    @SerializedName("position")
+    Integer position;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     public Boolean getActive() {
         return active;
     }
@@ -60,6 +82,9 @@ public class DocumentType implements Parcelable {
     }
 
 
+    public DocumentType() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -71,9 +96,8 @@ public class DocumentType implements Parcelable {
         dest.writeString(this.name);
         dest.writeValue(this.active);
         dest.writeValue(this.mandatory);
-    }
-
-    public DocumentType() {
+        dest.writeString(this.description);
+        dest.writeValue(this.position);
     }
 
     protected DocumentType(Parcel in) {
@@ -81,10 +105,11 @@ public class DocumentType implements Parcelable {
         this.name = in.readString();
         this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.mandatory = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.description = in.readString();
+        this.position = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<DocumentType> CREATOR = new Parcelable
-            .Creator<DocumentType>() {
+    public static final Creator<DocumentType> CREATOR = new Creator<DocumentType>() {
         @Override
         public DocumentType createFromParcel(Parcel source) {
             return new DocumentType(source);
