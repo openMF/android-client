@@ -1,6 +1,8 @@
 package com.mifos.mifosxdroid.online.grouplist;
 
 import com.mifos.api.DataManager;
+import com.mifos.api.datamanager.DataManagerCenter;
+import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
@@ -18,11 +20,17 @@ import rx.schedulers.Schedulers;
 public class GroupListPresenter extends BasePresenter<GroupListMvpView> {
 
     private final DataManager mDataManager;
+    private final DataManagerCenter mDataManagerCenter;
+    private final DataManagerGroups mDataManagerGroup;
     private Subscription mSubscription;
 
     @Inject
-    public GroupListPresenter(DataManager dataManager) {
+    public GroupListPresenter(DataManager dataManager,
+                              DataManagerCenter dataManagerCenter,
+                              DataManagerGroups dataManagerGroups) {
         mDataManager = dataManager;
+        mDataManagerCenter = dataManagerCenter;
+        mDataManagerGroup = dataManagerGroups;
     }
 
 
@@ -41,7 +49,7 @@ public class GroupListPresenter extends BasePresenter<GroupListMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getGroupsByCenter(id)
+        mSubscription = mDataManagerCenter.getCenterWithAssociations(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<CenterWithAssociations>() {
@@ -68,7 +76,7 @@ public class GroupListPresenter extends BasePresenter<GroupListMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getGroups(groupid)
+        mSubscription = mDataManagerGroup.getGroupWithAssociations(groupid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GroupWithAssociations>() {

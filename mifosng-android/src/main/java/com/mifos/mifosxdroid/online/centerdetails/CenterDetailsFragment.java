@@ -174,14 +174,16 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
 
     @Override
     public void showSummaryInfo(List<CenterInfo> centerInfos) {
-        CenterInfo centerInfo = centerInfos.get(0);
-        tvActiveClients.setText(String.valueOf(centerInfo.getActiveClients()));
-        tvActiveGroupLoans.setText(String.valueOf(centerInfo.getActiveGroupLoans()));
-        tvActiveClientLoans.setText(String.valueOf(centerInfo.getActiveClientLoans()));
-        tvActiveClientBorrowers.setText(String.valueOf(centerInfo.getActiveClientBorrowers()));
-        tvActiveGroupBorrowers.setText(String.valueOf(centerInfo.getActiveGroupBorrowers()));
-        tvActiveOverdueClientLoans.setText(String.valueOf(centerInfo.getOverdueClientLoans()));
-        tvActiveOverdueGroupLoans.setText(String.valueOf(centerInfo.getOverdueGroupLoans()));
+        if (centerInfos.size() > 0) {
+            CenterInfo centerInfo = centerInfos.get(0);
+            tvActiveClients.setText(String.valueOf(centerInfo.getActiveClients()));
+            tvActiveGroupLoans.setText(String.valueOf(centerInfo.getActiveGroupLoans()));
+            tvActiveClientLoans.setText(String.valueOf(centerInfo.getActiveClientLoans()));
+            tvActiveClientBorrowers.setText(String.valueOf(centerInfo.getActiveClientBorrowers()));
+            tvActiveGroupBorrowers.setText(String.valueOf(centerInfo.getActiveGroupBorrowers()));
+            tvActiveOverdueClientLoans.setText(String.valueOf(centerInfo.getOverdueClientLoans()));
+            tvActiveOverdueGroupLoans.setText(String.valueOf(centerInfo.getOverdueGroupLoans()));
+        }
     }
 
     @Override

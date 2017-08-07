@@ -4,6 +4,7 @@ import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.group.Center;
+import com.mifos.objects.group.Group;
 import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.SQLiteType;
 import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration;
@@ -54,6 +55,21 @@ public class MigrationVersion2 {
             addColumn(SQLiteType.INTEGER, "centerDate_day");
             addColumn(SQLiteType.INTEGER, "centerDate_month");
             addColumn(SQLiteType.INTEGER, "centerDate_year");
+        }
+    }
+
+    @Migration(version = MifosDatabase.VERSION, database = MifosDatabase.class)
+    public static class Migration4 extends AlterTableMigration<Group> {
+
+        public Migration4(Class<Group> table) {
+            super(table);
+        }
+
+        @Override
+        public void onPreMigrate() {
+            addColumn(SQLiteType.INTEGER, "status_id");
+            addColumn(SQLiteType.TEXT, "status_code");
+            addColumn(SQLiteType.TEXT, "status_value");
         }
     }
 }

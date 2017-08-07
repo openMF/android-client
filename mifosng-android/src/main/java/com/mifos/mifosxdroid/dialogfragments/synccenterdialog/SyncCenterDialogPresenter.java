@@ -4,6 +4,7 @@ import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerLoan;
+import com.mifos.api.datamanager.DataManagerRunReport;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
@@ -15,6 +16,7 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.group.CenterInfo;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.Center;
@@ -52,6 +54,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
     private final DataManagerSavings mDataManagerSavings;
     private final DataManagerGroups mDataManagerGroups;
     private final DataManagerClient mDataManagerClient;
+    private final DataManagerRunReport mDataManagerRunReport;
     private List<LoanAccount> mLoanAccountList;
     private List<SavingsAccount> mSavingsAccountList;
     private List<LoanAccount> mMemberLoanAccountsList;
@@ -73,12 +76,14 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
                                     DataManagerLoan dataManagerLoan,
                                      DataManagerSavings dataManagerSavings,
                                      DataManagerGroups dataManagerGroups,
-                                     DataManagerClient dataManagerClient) {
+                                     DataManagerClient dataManagerClient,
+                                     DataManagerRunReport dataManagerRunReport) {
         mDataManagerCenter = dataManagerCenter;
         mDataManagerLoan = dataManagerLoan;
         mDataManagerSavings = dataManagerSavings;
         mDataManagerGroups = dataManagerGroups;
         mDataManagerClient = dataManagerClient;
+        mDataManagerRunReport = dataManagerRunReport;
         mSubscriptions = new CompositeSubscription();
         mCenterList = new ArrayList<>();
         mFailedSyncCenter = new ArrayList<>();
@@ -183,7 +188,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
      *
      * @param centerId Center Id
      */
-    public void syncCenterAccounts(int centerId) {
+    public void syncCenterAccounts(final int centerId) {
         checkViewAttached();
         mSubscriptions.add(mDataManagerCenter.syncCenterAccounts(centerId)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -215,6 +220,80 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
                         //Updating UI
                         getMvpView().setMaxSingleSyncCenterProgressBar(mLoanAccountList.size() +
                                 mSavingsAccountList.size() + mMemberLoanAccountsList.size());
+                        syncCentersGroupAndMeeting(centerId);
+                    }
+                })
+        );
+    }
+
+    /**
+     * Sync the CenterWithAssociations. This method fetching the CenterWithAssociations from the
+     * REST API using retrofit 2 and saving these info to Database with DatabaseHelperCenter
+     * and then DataManagerCenter returns the CenterWithAssociations to Presenter.
+     * <p>
+     * <p>
+     * @param centerId Center Id
+     */
+    public void syncCentersGroupAndMeeting(final int centerId) {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerCenter.syncCentersGroupAndMeeting(centerId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<CenterWithAssociations>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showError(R.string.failed_to_sync_centeraccounts);
+
+                        //Updating UI
+                        mFailedSyncCenter.add(mCenterList.get(mCenterSyncIndex));
+                        getMvpView().showSyncedFailedCenters(mFailedSyncCenter.size());
+                        mCenterSyncIndex = mCenterSyncIndex + 1;
+                        checkNetworkConnectionAndSyncCenter();
+                    }
+
+                    @Override
+                    public void onNext(CenterWithAssociations centerWithAssociations) {
+                        syncCenterSummaryInfo(centerId);
+                    }
+                })
+        );
+    }
+
+    /**
+     * Sync the CenterInfo. This method fetching the CenterInfo from the
+     * REST API using retrofit 2 and saving these info to Database with DatabaseHelperCenter
+     * and then DataManagerCenter returns the List of CenterInfo to Presenter.
+     * <p>
+     * <p>
+     * @param centerId Center Id
+     */
+    public void syncCenterSummaryInfo(int centerId) {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerRunReport.syncCenterSummaryInfo(centerId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<List<CenterInfo>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showError(R.string.failed_to_sync_centeraccounts);
+
+                        //Updating UI
+                        mFailedSyncCenter.add(mCenterList.get(mCenterSyncIndex));
+                        getMvpView().showSyncedFailedCenters(mFailedSyncCenter.size());
+                        mCenterSyncIndex = mCenterSyncIndex + 1;
+                        checkNetworkConnectionAndSyncCenter();
+                    }
+
+                    @Override
+                    public void onNext(List<CenterInfo> centerInfos) {
                         checkAccountsSyncStatusAndSyncAccounts();
                     }
                 })
@@ -559,7 +638,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
 
                     @Override
                     public void onNext(GroupWithAssociations groupWithAssociations) {
-                        mClients = groupWithAssociations.getClientMembers();
+                        mClients = Utils.getActiveClients(groupWithAssociations.getClientMembers());
                         mClientSyncIndex = 0;
                         resetIndexes();
                         if (mClients.size() != 0) {
@@ -644,7 +723,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
                     public void onNext(ClientAccounts clientAccounts) {
                         mLoanAccountList = Utils.getActiveLoanAccounts(clientAccounts
                                 .getLoanAccounts());
-                        mSavingsAccountList = Utils.getActiveSavingsAccounts(clientAccounts
+                        mSavingsAccountList = Utils.getSyncableSavingsAccounts(clientAccounts
                                 .getSavingsAccounts());
 
                         checkAccountsSyncStatusAndSyncClientAccounts();
@@ -823,7 +902,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
      *
      * @param loanId Loan Id
      */
-    private void syncClientLoanAndLoanRepayment(int loanId) {
+    private void syncClientLoanAndLoanRepayment(final int loanId) {
         checkViewAttached();
         mSubscriptions.add(getLoanAndLoanRepayment(loanId)
                 .subscribe(new Subscriber<LoanAndLoanRepayment>() {
@@ -839,6 +918,34 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
 
                     @Override
                     public void onNext(LoanAndLoanRepayment loanAndLoanRepayment) {
+                        syncLoanDetails(loanId);
+                    }
+                })
+        );
+    }
+
+    /**
+     * This Method Syncing the Loan Information.
+     * @param loanId Loan Id
+     */
+    private void syncLoanDetails(int loanId) {
+        checkViewAttached();
+        mSubscriptions.add(mDataManagerLoan.syncLoanById(loanId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<LoanWithAssociations>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showError(R.string.failed_to_sync_client);
+                    }
+
+                    @Override
+                    public void onNext(LoanWithAssociations loanWithAssociations) {
                         mLoanAndRepaymentSyncIndex = mLoanAndRepaymentSyncIndex + 1;
                         if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size()) {
                             syncClientLoanAndLoanRepayment(
@@ -847,6 +954,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
                             setLoanAccountSyncStatusTrue();
                             checkAccountsSyncStatusAndSyncClientAccounts();
                         }
+
                     }
                 })
         );

@@ -112,9 +112,42 @@ public class DataManagerCenter {
      * @return Collection Sheet
      */
     public Observable<CenterWithAssociations> getCentersGroupAndMeeting(int id) {
-        return mBaseApiManager
-                .getCenterApi()
-                .getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
+        switch (PrefManager.getUserStatus()) {
+            case 0:
+                return mBaseApiManager
+                        .getCenterApi()
+                        .getCenterWithGroupMembersAndCollectionMeetingCalendar(id);
+            case 1:
+                /**
+                 * Return Center details from DatabaseHelperCenter.
+                 */
+                return mDatabaseHelperCenter.getCentersGroupAndMeeting(id);
+
+            default:
+                return Observable.just(new CenterWithAssociations());
+        }
+    }
+
+    /**
+     * This Method Fetching the Center Details from REST API
+     * and then Saving all details into the Database and then returns the Center Details
+     *
+     * @param centerId Center Id
+     * @return CenterWithAssociations
+     */
+    public Observable<CenterWithAssociations> syncCentersGroupAndMeeting(
+            final int centerId) {
+        return mBaseApiManager.getCenterApi().
+                getCenterWithGroupMembersAndCollectionMeetingCalendar(centerId)
+                .concatMap(new Func1<CenterWithAssociations, Observable<? extends
+                        CenterWithAssociations>>() {
+                    @Override
+                    public Observable<? extends CenterWithAssociations> call(
+                            CenterWithAssociations centerWithAssociations) {
+                        return mDatabaseHelperCenter.saveCentersGroupAndMeeting(
+                                centerWithAssociations);
+                    }
+                });
     }
 
     public Observable<SaveResponse> createCenter(CenterPayload centerPayload) {

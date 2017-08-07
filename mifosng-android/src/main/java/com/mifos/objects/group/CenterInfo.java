@@ -4,42 +4,70 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
  * Created by Rajan Maurya on 05/02/17.
  */
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class CenterInfo extends MifosBaseModel implements Parcelable {
 
-public class CenterInfo implements Parcelable {
-
+    @PrimaryKey
     @SerializedName("activeClients")
     Integer activeClients;
 
+    @Column
+    transient int id;
+
+    @Column
     @SerializedName("activeLoans")
     Integer activeLoans;
 
+    @Column
     @SerializedName("activeClientLoans")
     Integer activeClientLoans;
 
+    @Column
     @SerializedName("activeGroupLoans")
     Integer activeGroupLoans;
 
+    @Column
     @SerializedName("activeBorrowers")
     Integer activeBorrowers;
 
+    @Column
     @SerializedName("activeClientBorrowers")
     Integer activeClientBorrowers;
 
+    @Column
     @SerializedName("activeGroupBorrowers")
     Integer activeGroupBorrowers;
 
+    @Column
     @SerializedName("overdueLoans")
     Integer overdueLoans;
 
+    @Column
     @SerializedName("overdueClientLoans")
     Integer overdueClientLoans;
 
+    @Column
     @SerializedName("overdueGroupLoans")
     Integer overdueGroupLoans;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Integer getActiveClients() {
         return activeClients;

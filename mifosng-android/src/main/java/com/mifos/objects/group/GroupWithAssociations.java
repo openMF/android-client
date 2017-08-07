@@ -9,9 +9,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.Timeline;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Status;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,41 +26,55 @@ import java.util.List;
 /**
  * Created by ishankhanna on 29/06/14.
  */
-public class GroupWithAssociations implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class GroupWithAssociations extends MifosBaseModel implements Parcelable {
 
+    @PrimaryKey
     @SerializedName("id")
     Integer id;
 
+    @Column
     @SerializedName("accountNo")
     String accountNo;
 
+    @Column
     @SerializedName("name")
     String name;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     @SerializedName("status")
     Status status;
 
+    @Column
     @SerializedName("active")
     Boolean active;
 
     @SerializedName("activationDate")
     List<Integer> activationDate = new ArrayList<>();
 
+    @Column
     @SerializedName("officeId")
     Integer officeId;
 
+    @Column
     @SerializedName("officeName")
     String officeName;
 
+    @Column
     @SerializedName("staffId")
     Integer staffId;
 
+    @Column
     @SerializedName("staffName")
     String staffName;
 
+    @Column
     @SerializedName("hierarchy")
     String hierarchy;
 
+    @Column
     @SerializedName("groupLevel")
     Integer groupLevel;
 

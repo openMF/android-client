@@ -10,6 +10,7 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterDate;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.CenterWithAssociations_Table;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.Group_Table;
 import com.mifos.objects.response.SaveResponse;
@@ -18,6 +19,8 @@ import com.mifos.services.data.CenterPayload_Table;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -148,6 +151,79 @@ public class DatabaseHelperCenter {
                 }
                 center.save();
                 return Observable.just(center);
+            }
+        });
+    }
+
+    /**
+     * This Method  write the Center Information in tho DB. According to Schema Defined in Model
+     * @param centerWithAssociations Model of Center Information
+     * @return CenterWithAssociations
+     */
+    public Observable<CenterWithAssociations> saveCentersGroupAndMeeting(
+            final CenterWithAssociations centerWithAssociations) {
+        return Observable.defer(new Func0<Observable<CenterWithAssociations>>() {
+            @Override
+            public Observable<CenterWithAssociations> call() {
+                if (centerWithAssociations.getActivationDate().size() != 0) {
+                    CenterDate centerDate = new CenterDate(centerWithAssociations.getId(), 0,
+                            centerWithAssociations.getActivationDate().get(0),
+                            centerWithAssociations.getActivationDate().get(1),
+                            centerWithAssociations.getActivationDate().get(2));
+                    centerWithAssociations.setCenterDate(centerDate);
+
+                    List<List<Integer>> nextTenRecurringDates = centerWithAssociations.
+                            getCollectionMeetingCalendar().getNextTenRecurringDates();
+                    if (nextTenRecurringDates.size() > 0) {
+                        CenterDate centerMeetingDate =
+                                new CenterDate(centerWithAssociations.getId(), 0,
+                                nextTenRecurringDates.get(0).get(0),
+                                nextTenRecurringDates.get(0).get(1),
+                                nextTenRecurringDates.get(0).get(2));
+                        centerWithAssociations.getCollectionMeetingCalendar().
+                                setCenterDate(centerMeetingDate);
+                    }
+
+                }
+                centerWithAssociations.save();
+                return Observable.just(centerWithAssociations);
+            }
+        });
+    }
+
+    /**
+     * This Method Fetch the Center Info that are attached to the Center.
+     * @param centerId Center Id
+     * @return CenterWithAssociations
+     */
+    public Observable<CenterWithAssociations> getCentersGroupAndMeeting(final int centerId) {
+        return Observable.defer(new Func0<Observable<CenterWithAssociations>>() {
+            @Override
+            public Observable<CenterWithAssociations> call() {
+
+                CenterWithAssociations centerWithAssociations = SQLite.select()
+                        .from(CenterWithAssociations.class)
+                        .where(CenterWithAssociations_Table.id.eq(centerId))
+                        .querySingle();
+
+                if (centerWithAssociations != null) {
+                    CenterDate centerDate = centerWithAssociations.getCenterDate();
+                        centerWithAssociations.setActivationDate(Arrays.asList(centerDate.getDay(),
+                                centerDate.getMonth(), centerDate.getYear()));
+                        CenterDate nextMeeting = centerWithAssociations.
+                                getCollectionMeetingCalendar().getCenterDate();
+                        if (nextMeeting != null) {
+                            List<List<Integer>> nextTenRecurringDates =
+                                    new ArrayList<List<Integer>>();
+                            nextTenRecurringDates.add(0, (Arrays.asList(nextMeeting.getDay(),
+                                    nextMeeting.getMonth(), nextMeeting.getYear())));
+
+                            centerWithAssociations.getCollectionMeetingCalendar()
+                                    .setNextTenRecurringDates(nextTenRecurringDates);
+                    }
+                }
+
+                return Observable.just(centerWithAssociations);
             }
         });
     }

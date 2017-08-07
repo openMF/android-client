@@ -8,9 +8,16 @@ package com.mifos.objects.group;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.client.Status;
 import com.mifos.objects.Timeline;
 import com.mifos.objects.collectionsheet.CollectionMeetingCalendar;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,23 +25,55 @@ import java.util.List;
 /**
  * Created by ishankhanna on 28/06/14.
  */
-public class CenterWithAssociations implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class CenterWithAssociations extends MifosBaseModel implements Parcelable {
 
-    private Integer id;
-    private String accountNo;
-    private String name;
-    private String externalId;
-    private Integer officeId;
-    private String officeName;
-    private Integer staffId;
-    private String staffName;
-    private String hierarchy;
-    private Status status;
-    private Boolean active;
-    private List<Integer> activationDate = new ArrayList<Integer>();
-    private Timeline timeline;
-    private List<Group> groupMembers = new ArrayList<Group>();
-    private CollectionMeetingCalendar collectionMeetingCalendar = new CollectionMeetingCalendar();
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    String accountNo;
+
+    @Column
+    String name;
+
+    @Column
+    String externalId;
+
+    @Column
+    Integer officeId;
+
+    @Column
+    String officeName;
+
+    @Column
+    Integer staffId;
+
+    @Column
+    String staffName;
+
+    @Column
+    String hierarchy;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    Status status;
+
+    @Column
+    Boolean active;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    transient CenterDate centerDate;
+
+    List<Integer> activationDate = new ArrayList<Integer>();
+    Timeline timeline;
+    List<Group> groupMembers = new ArrayList<Group>();
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    CollectionMeetingCalendar collectionMeetingCalendar = new CollectionMeetingCalendar();
 
 
     public Integer getId() {
@@ -45,6 +84,22 @@ public class CenterWithAssociations implements Parcelable {
         this.id = id;
     }
 
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public CenterDate getCenterDate() {
+
+        return centerDate;
+    }
+
+    public void setCenterDate(CenterDate centerDate) {
+        this.centerDate = centerDate;
+    }
     public String getName() {
         return name;
     }

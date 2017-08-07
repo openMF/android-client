@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.Timeline;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.Status;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -41,6 +42,8 @@ public class Group extends MifosBaseModel implements Parcelable {
     @Column
     String name;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     Status status;
 
     @Column
@@ -76,6 +79,8 @@ public class Group extends MifosBaseModel implements Parcelable {
     @Column
     int groupLevel;
 
+    List<Client> clientMembers = new ArrayList<>();
+
     Timeline timeline;
 
     String externalId;
@@ -86,6 +91,14 @@ public class Group extends MifosBaseModel implements Parcelable {
 
     public void setGroupDate(GroupDate groupDate) {
         this.groupDate = groupDate;
+    }
+
+    public List<Client> getClientMembers() {
+        return clientMembers;
+    }
+
+    public void setClientMembers(List<Client> clientMembers) {
+        this.clientMembers = clientMembers;
     }
 
     public boolean isSync() {

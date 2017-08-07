@@ -8,14 +8,27 @@ package com.mifos.objects.collectionsheet;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 /**
  * Created by ishankhanna on 16/07/14.
  */
-public class EntityType implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class EntityType extends MifosBaseModel implements Parcelable {
 
-    private Integer id;
-    private String code;
-    private String value;
+    @PrimaryKey
+    Integer id;
+
+    @PrimaryKey
+    String code;
+
+    @PrimaryKey
+    String value;
 
     public Integer getId() {
         return id;

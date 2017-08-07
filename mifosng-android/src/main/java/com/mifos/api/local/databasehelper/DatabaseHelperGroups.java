@@ -48,7 +48,6 @@ public class DatabaseHelperGroups {
         return Observable.defer(new Func0<Observable<Group>>() {
             @Override
             public Observable<Group> call() {
-
                 if (group.getActivationDate().size() != 0) {
                     GroupDate groupDate = new GroupDate(group.getId(), 0,
                             group.getActivationDate().get(0),
@@ -96,9 +95,9 @@ public class DatabaseHelperGroups {
                         .where(Group_Table.id.eq(groupId))
                         .querySingle();
 
-                if (group != null) {
-                    group.setActivationDate(Arrays.asList(group.getGroupDate().getDay(),
-                            group.getGroupDate().getMonth(), group.getGroupDate().getYear()));
+                if (group != null && group.getGroupDate() != null) {
+                        group.setActivationDate(Arrays.asList(group.getGroupDate().getDay(),
+                                group.getGroupDate().getMonth(), group.getGroupDate().getYear()));
                 }
 
                 return Observable.just(group);

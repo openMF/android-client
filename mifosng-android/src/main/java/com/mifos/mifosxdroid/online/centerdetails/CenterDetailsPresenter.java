@@ -71,10 +71,10 @@ public class CenterDetailsPresenter extends BasePresenter<CenterDetailsMvpView> 
                 }));
     }
 
-    public void loadSummaryInfo(int centerId) {
+    public void loadSummaryInfo(final int centerId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerRunReport.getCenterSummarInfo(centerId, false)
+        subscriptions.add(dataManagerRunReport.getCenterSummaryInfo(centerId, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<CenterInfo>>() {

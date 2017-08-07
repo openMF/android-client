@@ -9,6 +9,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mifos.api.local.MifosBaseModel;
+import com.mifos.api.local.MifosDatabase;
+import com.mifos.objects.group.CenterDate;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ModelContainer;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,39 +24,92 @@ import java.util.List;
 /**
  * Created by ishankhanna on 16/07/14.
  */
-public class CollectionMeetingCalendar implements Parcelable {
+@Table(database = MifosDatabase.class)
+@ModelContainer
+public class CollectionMeetingCalendar extends MifosBaseModel implements Parcelable {
 
-    private Integer id;
-    private Integer calendarInstanceId;
-    private Integer entityId;
-    private EntityType entityType;
-    private String title;
+    @PrimaryKey
+    Integer id;
+
+    @Column
+    Integer calendarInstanceId;
+
+    @Column
+    Integer entityId;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    EntityType entityType;
+
+    @Column
+    String title;
+
     private List<Integer> startDate = new ArrayList<Integer>();
-    private Integer duration;
-    private EntityType type;
-    private Boolean repeating;
-    private String recurrence;
 
+    @Column
+    Integer duration;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    EntityType type;
+
+    @Column
+    Boolean repeating;
+
+    @Column
+    String recurrence;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     @SerializedName("frequency")
-    private EntityType frequency;
+    EntityType frequency;
 
-    private Integer interval;
+    @Column
+    Integer interval;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     @SerializedName("repeatsOnNthDayOfMonth")
-    private EntityType repeatsOnDay;
+    EntityType repeatsOnDay;
 
-    private Integer firstReminder;
-    private Integer secondReminder;
+    @Column
+    Integer firstReminder;
+
+    @Column
+    Integer secondReminder;
     private List<List<Integer>> recurringDates = new ArrayList<>();
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    transient CenterDate centerDate;
+
     private List<List<Integer>> nextTenRecurringDates = new ArrayList<>();
-    private String humanReadable;
+
+    @Column
+    String humanReadable;
     private List<Integer> recentEligibleMeetingDate = new ArrayList<Integer>();
     private List<Integer> createdDate = new ArrayList<Integer>();
     private List<Integer> lastUpdatedDate = new ArrayList<Integer>();
-    private Integer createdByUserId;
-    private String createdByUsername;
-    private Integer lastUpdatedByUserId;
-    private String lastUpdatedByUsername;
+
+    @Column
+    Integer createdByUserId;
+
+    @Column
+    String createdByUsername;
+
+    @Column
+    Integer lastUpdatedByUserId;
+
+    @Column
+    String lastUpdatedByUsername;
+
+    public CenterDate getCenterDate() {
+        return centerDate;
+    }
+
+    public void setCenterDate(CenterDate centerDate) {
+        this.centerDate = centerDate;
+    }
 
     public void setFrequency(EntityType frequency) {
         this.frequency = frequency;
