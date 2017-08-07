@@ -10,6 +10,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
+import com.mifos.objects.client.Client;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -107,6 +108,47 @@ public class Utils {
                     @Override
                     public Boolean call(SavingsAccount savingsAccount) {
                         return (savingsAccount.getStatus().getActive() &&
+                                !savingsAccount.isRecurring());
+                    }
+                })
+                .subscribe(new Action1<SavingsAccount>() {
+                    @Override
+                    public void call(SavingsAccount savingsAccount) {
+                        accounts.add(savingsAccount)
+                        ;
+                    }
+                });
+        return accounts;
+    }
+
+    public static List<Client> getActiveClients(List<Client> clients) {
+        final List<Client> accounts = new ArrayList<>();
+        Observable.from(clients)
+                .filter(new Func1<Client, Boolean>() {
+                    @Override
+                    public Boolean call(Client client) {
+                        return (client.isActive());
+                    }
+                })
+                .subscribe(new Action1<Client>() {
+                    @Override
+                    public void call(Client client) {
+                        accounts.add(client)
+                        ;
+                    }
+                });
+        return accounts;
+    }
+
+    public static List<SavingsAccount> getSyncableSavingsAccounts(List<SavingsAccount>
+                                                                        savingsAccounts) {
+        final List<SavingsAccount> accounts = new ArrayList<>();
+        Observable.from(savingsAccounts)
+                .filter(new Func1<SavingsAccount, Boolean>() {
+                    @Override
+                    public Boolean call(SavingsAccount savingsAccount) {
+                        return (savingsAccount.getDepositType().getValue().equals("Savings") &&
+                                savingsAccount.getStatus().getActive() &&
                                 !savingsAccount.isRecurring());
                     }
                 })

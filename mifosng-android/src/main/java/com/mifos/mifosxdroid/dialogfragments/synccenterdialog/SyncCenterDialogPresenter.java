@@ -559,7 +559,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
 
                     @Override
                     public void onNext(GroupWithAssociations groupWithAssociations) {
-                        mClients = groupWithAssociations.getClientMembers();
+                        mClients = Utils.getActiveClients(groupWithAssociations.getClientMembers());
                         mClientSyncIndex = 0;
                         resetIndexes();
                         if (mClients.size() != 0) {
@@ -644,7 +644,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
                     public void onNext(ClientAccounts clientAccounts) {
                         mLoanAccountList = Utils.getActiveLoanAccounts(clientAccounts
                                 .getLoanAccounts());
-                        mSavingsAccountList = Utils.getActiveSavingsAccounts(clientAccounts
+                        mSavingsAccountList = Utils.getSyncableSavingsAccounts(clientAccounts
                                 .getSavingsAccounts());
 
                         checkAccountsSyncStatusAndSyncClientAccounts();
