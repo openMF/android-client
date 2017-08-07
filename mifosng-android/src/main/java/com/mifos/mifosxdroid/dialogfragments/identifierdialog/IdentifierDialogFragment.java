@@ -14,12 +14,15 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
-import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
+import com.mifos.objects.noncore.DocumentType;
+import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.noncore.IdentifierCreationResponse;
 import com.mifos.objects.noncore.IdentifierPayload;
 import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,16 +56,21 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
     @Inject
     IdentifierDialogPresenter mIdentifierDialogPresenter;
 
-    View rootView;
+    @Nullable
+    private ClientIdentifierCreationListener clientIdentifierCreationListener;
+
+    private View rootView;
     private int clientId;
     private IdentifierTemplate identifierTemplate;
     private int identifierDocumentTypeId;
     private String status;
+    private Identifier identifier;
+    private HashMap<String, DocumentType> documentTypeHashMap;
 
-    List<String> mListIdentifierType = new ArrayList<>();
+    private List<String> mListIdentifierType = new ArrayList<>();
 
-    ArrayAdapter<String> mIdentifierTypeAdapter;
-    ArrayAdapter<String> mIdentifierStatusAdapter;
+    private ArrayAdapter<String> mIdentifierTypeAdapter;
+    private ArrayAdapter<String> mIdentifierStatusAdapter;
 
     public static IdentifierDialogFragment newInstance(int clientId) {
         IdentifierDialogFragment documentDialogFragment = new IdentifierDialogFragment();
@@ -130,6 +138,14 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
             identifierPayload.setDocumentKey(et_unique_id.getText().toString());
             identifierPayload.setDescription(et_description.getText().toString());
 
+            // Add the values in the identifier. It'll be sent to the calling Fragment
+            // if the request is successful.
+            identifier = new Identifier();
+            identifier.setDescription(et_description.getText().toString());
+            identifier.setDocumentKey(et_unique_id.getText().toString());
+            identifier.setDocumentType(documentTypeHashMap
+                    .get(sp_identifier_type.getSelectedItem().toString()));
+
             mIdentifierDialogPresenter.createClientIdentifier(clientId, identifierPayload);
         }
     }
@@ -140,20 +156,31 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
         this.identifierTemplate = identifierTemplate;
         mListIdentifierType.addAll(mIdentifierDialogPresenter.getIdentifierDocumentTypeNames
                 (identifierTemplate.getAllowedDocumentTypes()));
+        documentTypeHashMap = mIdentifierDialogPresenter
+                .mapDocumentTypesWithName(identifierTemplate.getAllowedDocumentTypes());
         mIdentifierTypeAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void showIdentifierCreatedSuccessfully() {
+    public void showIdentifierCreatedSuccessfully(
+            IdentifierCreationResponse identifierCreationResponse) {
         Toast.makeText(getActivity(), R.string.identifier_created_successfully,
                 Toast.LENGTH_SHORT).show();
+        identifier.setClientId(identifierCreationResponse.getClientId());
+        identifier.setId(identifierCreationResponse.getResourceId());
+        if (clientIdentifierCreationListener != null) {
+            clientIdentifierCreationListener.onClientIdentifierCreationSuccess(identifier);
+        }
         getDialog().dismiss();
-        ((ClientIdentifiersFragment) getTargetFragment()).doRefresh();
     }
 
     @Override
-    public void showMessage(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    public void showErrorMessage(String message) {
+        if (clientIdentifierCreationListener != null) {
+            clientIdentifierCreationListener.onClientIdentifierCreationFailure(message);
+        } else {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -188,5 +215,10 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public void setOnClientIdentifierCreationListener(
+            @Nullable ClientIdentifierCreationListener listener) {
+        clientIdentifierCreationListener = listener;
     }
 }

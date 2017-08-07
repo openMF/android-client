@@ -14,6 +14,7 @@ import com.mifos.objects.client.ClientAddressResponse;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.noncore.IdentifierCreationResponse;
 import com.mifos.objects.noncore.IdentifierPayload;
 import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -92,11 +93,12 @@ public interface ClientService {
      *
      * @param clientId          Client Id
      * @param identifierPayload IdentifierPayload
-     * @return GenericResponse
+     * @return IdentifierCreationResponse
      */
     @POST(APIEndPoint.CLIENTS + "/{clientId}/identifiers")
-    Observable<GenericResponse> createClientIdentifier(@Path("clientId") int clientId,
-                                                       @Body IdentifierPayload identifierPayload);
+    Observable<IdentifierCreationResponse> createClientIdentifier(
+            @Path("clientId") int clientId,
+            @Body IdentifierPayload identifierPayload);
 
 
     /**
