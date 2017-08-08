@@ -99,6 +99,7 @@ public class ClientListFragment extends MifosBaseFragment
     private ActionMode actionMode;
     private Boolean isParentFragment = false;
     private LinearLayoutManager mLayoutManager;
+    private Integer clickedPosition = -1;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -108,6 +109,7 @@ public class ClientListFragment extends MifosBaseFragment
             Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
             clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
             startActivity(clientActivityIntent);
+            clickedPosition = position;
         }
     }
 
@@ -160,7 +162,6 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         clientList = new ArrayList<>();
         selectedClients = new ArrayList<>();
         actionModeCallback = new ActionModeCallback();
@@ -169,13 +170,14 @@ public class ClientListFragment extends MifosBaseFragment
             isParentFragment = getArguments()
                     .getBoolean(Constants.IS_A_PARENT_FRAGMENT);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client, container, false);
-        setHasOptionsMenu(true);
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         setToolbarTitle(getResources().getString(R.string.clients));
 
         ButterKnife.bind(this, rootView);
@@ -211,6 +213,13 @@ public class ClientListFragment extends MifosBaseFragment
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (clickedPosition != -1) {
+            mClientNameListAdapter.updateItem(clickedPosition);
+        }
+    }
 
     /**
      * This method initializes the all Views.
