@@ -101,6 +101,10 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         pageItems = clients;
     }
 
+    public void updateItem(int position) {
+        notifyItemChanged(position);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_clientName)
