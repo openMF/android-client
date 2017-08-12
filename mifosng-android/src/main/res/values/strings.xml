@@ -708,6 +708,7 @@
     <string name="incorrect_passcode">Incorrect Passcode</string>
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
+    <string name="title_activity_notification_detail">Notification Details</string>
 
 
 </resources>

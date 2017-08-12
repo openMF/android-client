@@ -200,4 +200,12 @@ public class Constants {
     public static final String COLLECTION_TYPE = "collection_type";
     public static final String EXTRA_COLLECTION_INDIVIDUAL = "individual";
     public static final String EXTRA_COLLECTION_COLLECTION = "collection";
+
+    /**
+     * Constant to identify the various parts of notification
+     */
+    public static final String NOTIFICATION_SUBJECT = "subject";
+    public static final String NOTIFICATION_OBJECT = "object";
+    public static final String NOTIFICATION_ACTION = "action";
+    public static final String NOTIFICATION_ACTOR = "actor";
 }
