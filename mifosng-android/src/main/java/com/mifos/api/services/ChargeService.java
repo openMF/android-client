@@ -5,6 +5,7 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.client.ChargeCreationResponse;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.templates.clients.ChargeTemplate;
@@ -38,15 +39,15 @@ public interface ChargeService {
                                                @Query("limit") int limit);
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
-    Observable<Charges> createCharges(@Path("clientId") int clientId,
-                                      @Body ChargesPayload chargesPayload);
+    Observable<ChargeCreationResponse> createCharges(@Path("clientId") int clientId,
+                                                     @Body ChargesPayload chargesPayload);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges")
     Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
-    Observable<Charges> createLoanCharges(@Path("loanId") int loanId,
+    Observable<ChargeCreationResponse> createLoanCharges(@Path("loanId") int loanId,
                                           @Body ChargesPayload chargesPayload);
 
 }
