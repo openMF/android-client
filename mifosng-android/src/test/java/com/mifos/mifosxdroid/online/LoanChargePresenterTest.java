@@ -76,7 +76,6 @@ public class LoanChargePresenterTest {
 
         mLoanChargePresenter.loadLoanChargesList(loanId);
 
-        verify(mLoanChargeMvpView).showFetchingError("Failed to load Charges");
         verify(mLoanChargeMvpView, never()).showLoanChargesList(chargesList);
     }
 }
