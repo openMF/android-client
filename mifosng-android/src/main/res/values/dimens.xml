@@ -18,6 +18,6 @@
     <dimen name="login_height">72dp</dimen>
     <dimen name="text_large">20sp</dimen>
     <dimen name="text_medium">16sp</dimen>
-
+    <dimen name="layout_padding_30dp">30dp</dimen>
     <dimen name="datatable_name_heading">18sp</dimen>
 </resources>
