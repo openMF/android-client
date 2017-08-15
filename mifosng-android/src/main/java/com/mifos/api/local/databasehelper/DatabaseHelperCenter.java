@@ -3,6 +3,7 @@ package com.mifos.api.local.databasehelper;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
+import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.accounts.CenterAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
@@ -10,14 +11,17 @@ import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterDate;
 import com.mifos.objects.group.CenterWithAssociations;
+import com.mifos.objects.group.Center_Table;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.Group_Table;
 import com.mifos.objects.response.SaveResponse;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.CenterPayload_Table;
+import com.mifos.utils.Constants;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -81,6 +85,42 @@ public class DatabaseHelperCenter {
             }
         });
 
+    }
+
+    public Observable<List<SearchedEntity>> readAllCentersByQuery(
+            final String query, final Boolean exactMatch) {
+
+        return Observable.create(new Observable.OnSubscribe<List<SearchedEntity>>() {
+            @Override
+            public void call(Subscriber<? super List<SearchedEntity>> subscriber) {
+                List<Center> centerList;
+                List<SearchedEntity> searchedEntities = new ArrayList<SearchedEntity>();
+                if (exactMatch) {
+                    centerList = SQLite.select()
+                            .from(Center.class)
+                            .where(Center_Table.name.like(query))
+                            .queryList();
+                } else {
+                    centerList = SQLite.select()
+                            .from(Center.class)
+                            .where(Center_Table.name.like(("%" + query + "%")))
+                            .queryList();
+                }
+                for (Center center : centerList) {
+                    SearchedEntity searchedEntity = new SearchedEntity();
+                    searchedEntity.setEntityId(center.getId());
+                    searchedEntity.setEntityAccountNo(center.getAccountNo());
+                    searchedEntity.setEntityType(Constants.SEARCH_ENTITY_CENTER);
+                    searchedEntity.setEntityName(center.getName());
+                    searchedEntity.setParentId(center.getOfficeId());
+                    searchedEntity.setParentName(center.getOfficeName());
+                    searchedEntities.add(searchedEntity);
+                }
+
+                subscriber.onNext(searchedEntities);
+                subscriber.onCompleted();
+            }
+        });
     }
 
     public Observable<SaveResponse> saveCenterPayload(final CenterPayload centerPayload) {

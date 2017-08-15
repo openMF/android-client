@@ -1,6 +1,7 @@
 package com.mifos.api.local.databasehelper;
 
 import com.mifos.objects.PaymentTypeOption;
+import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest_Table;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
@@ -11,9 +12,11 @@ import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.objects.accounts.savings.Transaction_Table;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate_Table;
+import com.mifos.utils.Constants;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +24,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func0;
 
@@ -123,6 +127,43 @@ public class DatabaseHelperSavings {
         });
     }
 
+    public Observable<List<SearchedEntity>> readAllSavingsByQuery(
+            final String query, final Boolean exactMatch) {
+
+        return Observable.create(new Observable.OnSubscribe<List<SearchedEntity>>() {
+            @Override
+            public void call(Subscriber<? super List<SearchedEntity>> subscriber) {
+                List<SavingsAccountWithAssociations> savingList;
+                List<SearchedEntity> searchedEntities = new ArrayList<SearchedEntity>();
+                if (exactMatch) {
+                    savingList = SQLite.select()
+                            .from(SavingsAccountWithAssociations.class)
+                            .where(SavingsAccountWithAssociations_Table.savingsProductName.like(
+                                    query))
+                            .queryList();
+                } else {
+                    savingList = SQLite.select()
+                            .from(SavingsAccountWithAssociations.class)
+                            .where(SavingsAccountWithAssociations_Table.savingsProductName.like(
+                                    ("%" + query + "%")))
+                            .queryList();
+                }
+                for (SavingsAccountWithAssociations saving : savingList) {
+                    SearchedEntity searchedEntity = new SearchedEntity();
+                    searchedEntity.setEntityId(saving.getId());
+                    searchedEntity.setEntityAccountNo(saving.getAccountNo());
+                    searchedEntity.setEntityType(Constants.SEARCH_ENTITY_SAVING);
+                    searchedEntity.setEntityName(saving.getSavingsProductName());
+                    searchedEntity.setParentId(saving.getClientId());
+                    searchedEntity.setParentName(saving.getClientName());
+                    searchedEntities.add(searchedEntity);
+                }
+
+                subscriber.onNext(searchedEntities);
+                subscriber.onCompleted();
+            }
+        });
+    }
 
     /**
      * This Method is Saving the SavingsAccountTransactionTemplate into Database.

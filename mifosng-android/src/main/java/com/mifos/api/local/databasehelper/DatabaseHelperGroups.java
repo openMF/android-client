@@ -1,5 +1,6 @@
 package com.mifos.api.local.databasehelper;
 
+import com.mifos.objects.SearchedEntity;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.loan.LoanAccount_Table;
@@ -12,9 +13,11 @@ import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupPayload_Table;
 import com.mifos.objects.group.Group_Table;
 import com.mifos.objects.response.SaveResponse;
+import com.mifos.utils.Constants;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Func0;
 
 /**
@@ -80,6 +84,47 @@ public class DatabaseHelperGroups {
         });
     }
 
+    public Observable<List<SearchedEntity>> readAllGroupsByQuery(
+            final String query, final Boolean exactMatch) {
+
+        return Observable.create(new Observable.OnSubscribe<List<SearchedEntity>>() {
+            @Override
+            public void call(Subscriber<? super List<SearchedEntity>> subscriber) {
+                List<Group> groupList;
+                List<SearchedEntity> searchedEntities = new ArrayList<SearchedEntity>();
+                if (exactMatch) {
+                    groupList = SQLite.select()
+                            .from(Group.class)
+                            .where(Group_Table.name.like(query))
+                            .queryList();
+                } else {
+                    groupList = SQLite.select()
+                            .from(Group.class)
+                            .where(Group_Table.name.like(("%" + query + "%")))
+                            .queryList();
+                }
+                for (Group group : groupList) {
+                    SearchedEntity searchedEntity = new SearchedEntity();
+                    com.mifos.objects.common.InterestType interestType =
+                            new com.mifos.objects.common.InterestType();
+                    searchedEntity.setEntityId(group.getId());
+                    searchedEntity.setEntityAccountNo(group.getAccountNo());
+                    searchedEntity.setEntityType(Constants.SEARCH_ENTITY_GROUP);
+                    searchedEntity.setEntityName(group.getName());
+                    searchedEntity.setParentId(group.getOfficeId());
+                    searchedEntity.setParentName(group.getOfficeName());
+                    interestType.setId(group.getStatus().getId());
+                    interestType.setCode(group.getStatus().getCode());
+                    interestType.setValue(group.getStatus().getValue());
+                    searchedEntity.setEntityStatus(interestType);
+                    searchedEntities.add(searchedEntity);
+                }
+
+                subscriber.onNext(searchedEntities);
+                subscriber.onCompleted();
+            }
+        });
+    }
     /**
      * This Method Retrieving the Group from the Local Database.
      *

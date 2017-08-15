@@ -97,7 +97,6 @@ public class DataManagerClient {
         return mDatabaseHelperClient.readAllClients();
     }
 
-
     /**
      * This Method
      *
