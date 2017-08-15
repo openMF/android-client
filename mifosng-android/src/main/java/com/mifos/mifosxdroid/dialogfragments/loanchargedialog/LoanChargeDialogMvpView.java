@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.loanchargedialog;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.ChargeCreationResponse;
 
 import okhttp3.ResponseBody;
 
@@ -12,7 +12,9 @@ public interface LoanChargeDialogMvpView extends MvpView {
 
     void showAllChargesV3(ResponseBody response);
 
-    void showLoanChargesCreatedSuccessfully(Charges charges);
+    void showLoanChargesCreatedSuccessfully(ChargeCreationResponse chargeCreationResponse);
 
-    void showError(String s);
+    void showChargeCreatedFailure(String errorMessage);
+
+    void showError(String errorMessage);
 }

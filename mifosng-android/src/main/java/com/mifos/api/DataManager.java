@@ -6,6 +6,7 @@ import com.mifos.api.model.Payload;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
+import com.mifos.objects.client.ChargeCreationResponse;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
@@ -100,7 +101,7 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().getAllChargesS(clientId);
     }
 
-    public Observable<Charges> createCharges(int clientId, ChargesPayload payload) {
+    public Observable<ChargeCreationResponse> createCharges(int clientId, ChargesPayload payload) {
         return mBaseApiManager.getChargeApi().createCharges(clientId, payload);
     }
 
@@ -108,7 +109,8 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().getAllChargev3(loanId);
     }
 
-    public Observable<Charges> createLoanCharges(int loanId, ChargesPayload chargesPayload) {
+    public Observable<ChargeCreationResponse> createLoanCharges(int loanId,
+                                                                ChargesPayload chargesPayload) {
         return mBaseApiManager.getChargeApi().createLoanCharges(loanId, chargesPayload);
     }
 

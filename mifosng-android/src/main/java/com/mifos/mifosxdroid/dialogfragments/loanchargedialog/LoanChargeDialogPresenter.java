@@ -2,15 +2,18 @@ package com.mifos.mifosxdroid.dialogfragments.loanchargedialog;
 
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.client.Charges;
+import com.mifos.objects.client.ChargeCreationResponse;
 import com.mifos.services.data.ChargesPayload;
+import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -53,7 +56,17 @@ public class LoanChargeDialogPresenter extends BasePresenter<LoanChargeDialogMvp
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to load Charges");
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showError(MFErrorParser
+                                        .parseError(errorMessage)
+                                        .getErrors().get(0).getDefaultUserMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
                     }
 
                     @Override
@@ -71,7 +84,7 @@ public class LoanChargeDialogPresenter extends BasePresenter<LoanChargeDialogMvp
         mSubscription = mDataManager.createLoanCharges(loanId, chargesPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Charges>() {
+                .subscribe(new Subscriber<ChargeCreationResponse>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -80,13 +93,23 @@ public class LoanChargeDialogPresenter extends BasePresenter<LoanChargeDialogMvp
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError("Failed to CreateLoanCharges");
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showChargeCreatedFailure(MFErrorParser
+                                        .parseError(errorMessage)
+                                        .getErrors().get(0).getDefaultUserMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
                     }
 
                     @Override
-                    public void onNext(Charges charges) {
+                    public void onNext(ChargeCreationResponse chargeCreationResponse) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showLoanChargesCreatedSuccessfully(charges);
+                        getMvpView().showLoanChargesCreatedSuccessfully(chargeCreationResponse);
                     }
                 });
     }

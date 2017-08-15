@@ -65,7 +65,6 @@ public class ClientChargePresenterTest {
         mClientChargePresenter.loadCharges(clientId, offset, limit);
 
         verify(mClientChargeMvpView).showChargesList(chargesPage);
-        verify(mClientChargeMvpView, never()).showFetchingErrorCharges("Failed to Load Charges");
     }
 
     @Test
