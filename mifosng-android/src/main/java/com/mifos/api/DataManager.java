@@ -3,6 +3,7 @@ package com.mifos.api;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
+import com.mifos.objects.NotificationTemplate;
 import com.mifos.objects.accounts.loan.LoanApproval;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
@@ -177,5 +178,9 @@ public class DataManager {
 
     public Observable<Page<Charges>> getListOfCharges(int clientId) {
         return mBaseApiManager.getLoanApi().getListOfCharges(clientId);
+    }
+
+    public Observable<NotificationTemplate> getNotification() {
+        return mBaseApiManager.getNotificationApi().getNotification();
     }
 }

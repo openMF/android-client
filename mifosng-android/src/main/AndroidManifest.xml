@@ -140,6 +140,14 @@
         <service android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false"/>
 
+        <activity
+            android:name=".online.notification.NotificationDetailActivity"
+            android:label="@string/title_activity_notification_detail"
+            android:screenOrientation="portrait"/>
+
+        <service
+            android:name=".online.notification.NotificationFetchService"
+            android:exported="false"/>
     </application>
 
 </manifest>
