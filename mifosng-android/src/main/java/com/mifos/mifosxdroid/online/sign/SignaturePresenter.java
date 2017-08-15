@@ -1,9 +1,9 @@
 package com.mifos.mifosxdroid.online.sign;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.client.DocumentRelatedResponse;
 
 import java.io.File;
 
@@ -49,7 +49,7 @@ public class SignaturePresenter extends BasePresenter<SignatureMvpView> {
                 .createDocument(type, id, name, desc, getRequestFileBody(file))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribe(new Subscriber<DocumentRelatedResponse>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -62,9 +62,9 @@ public class SignaturePresenter extends BasePresenter<SignatureMvpView> {
                     }
 
                     @Override
-                    public void onNext(GenericResponse genericResponse) {
+                    public void onNext(DocumentRelatedResponse documentCreateResponse) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showSignatureUploadedSuccessfully(genericResponse);
+                        getMvpView().showSignatureUploadedSuccessfully(documentCreateResponse);
                     }
                 }));
     }

@@ -75,8 +75,8 @@
     <string name="file_location">Location</string>
     <string name="documents">Documents</string>
     <string name="upload_sign">Upload Signature</string>
-    <string name="no_document_to_show">There is No Documents to Show</string>
-    <string name="no_identifier_to_show">There is No Identifier to Show</string>
+    <string name="no_document_to_show">There is no documents to be shown.</string>
+    <string name="no_identifier_to_show">There is no identifier to be shown.</string>
     <string name="approve_savings">Approve Savings</string>
     <string name="activate_savings">Activate Savings</string>
     <string name="activate_client">Activate Client</string>

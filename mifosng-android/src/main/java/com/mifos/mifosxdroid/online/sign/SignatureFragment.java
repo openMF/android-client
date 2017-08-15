@@ -17,12 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.SignatureView;
+import com.mifos.objects.client.DocumentRelatedResponse;
 import com.mifos.utils.AndroidVersionUtil;
 import com.mifos.utils.CheckSelfPermissionAndRequest;
 import com.mifos.utils.Constants;
@@ -236,7 +236,8 @@ public class SignatureFragment extends MifosBaseFragment implements
     }
 
     @Override
-    public void showSignatureUploadedSuccessfully(GenericResponse response) {
+    public void showSignatureUploadedSuccessfully(DocumentRelatedResponse
+                                                              documentCreateResponse) {
         showProgressbar(false);
         Toaster.show(rootView, R.string.sign_uploaded_success_msg);
     }

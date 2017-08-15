@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.objects.client.DocumentRelatedResponse;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AndroidVersionUtil;
 import com.mifos.utils.CheckSelfPermissionAndRequest;
@@ -73,11 +73,12 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @Inject
     DocumentDialogPresenter mDocumentDialogPresenter;
 
-    View rootView;
+    private View rootView;
 
-    SafeUIBlockingUtility safeUIBlockingUtility;
+    private SafeUIBlockingUtility safeUIBlockingUtility;
 
-    private OnDialogFragmentInteractionListener mListener;
+    @Nullable
+    private OnDocumentChangedListener onDocumentChangedListener;
 
     private String documentName;
     private String documentDescription;
@@ -88,6 +89,8 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     private int entityId;
     private File fileChoosen;
     private Uri uri;
+    private Document createdDocument;
+    private Document updatedDocument;
 
     public static DocumentDialogFragment newInstance(String entityType, int entityId,
                                                      String documentAction,
@@ -175,13 +178,35 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     getString(R.string.message_field_required));
 
         //Start Uploading Document
-        if (documentAction == getResources().getString(R.string.update_document)) {
+        if (documentAction.equals(getResources().getString(R.string.update_document))) {
+            updatedDocument = document;
+            addBasicInfo(updatedDocument, documentName,
+                    documentDescription, fileChoosen.getName(), fileChoosen.length());
+
             mDocumentDialogPresenter.updateDocument(entityType, entityId, document.getId(),
                     documentName, documentDescription, fileChoosen);
-        } else if (documentAction == getResources().getString(R.string.upload_document)) {
+
+        } else if (documentAction.equals(getResources().getString(R.string.upload_document))) {
+            createdDocument = new Document();
+            addBasicInfo(createdDocument, documentName,
+                    documentDescription, fileChoosen.getName(), fileChoosen.length());
+            createdDocument.setParentEntityType(entityType);
+            createdDocument.setParentEntityId(entityId);
+
             mDocumentDialogPresenter.createDocument(entityType, entityId,
                     documentName, documentDescription, fileChoosen);
         }
+    }
+
+    /**
+     * Method to add basic information to the document.
+     */
+    private void addBasicInfo(Document document, String documentName, String documentDescription,
+                              String fileName, Long size) {
+        document.setName(documentName);
+        document.setDescription(documentDescription);
+        document.setFileName(fileName);
+        document.setSize(size);
     }
 
     /**
@@ -299,25 +324,50 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
 
     @Override
-    public void showDocumentedCreatedSuccessfully(GenericResponse genericResponse) {
-        Toast.makeText(getActivity(), String.format(getString(R.string
-                        .uploaded_successfully), fileChoosen.getName()),
-                Toast.LENGTH_SHORT).show();
+    public void showDocumentedCreatedSuccessfully(DocumentRelatedResponse
+                                                          documentCreationResponse) {
+        if (onDocumentChangedListener != null) {
+            createdDocument.setId(documentCreationResponse.getResourceId());
+            onDocumentChangedListener.onDocumentCreationSuccess(createdDocument);
+        } else {
+            Toaster.show(rootView, String.format(getString(R.string.uploaded_successfully),
+                    fileChoosen.getName()));
+        }
         getDialog().dismiss();
     }
 
     @Override
-    public void showDocumentUpdatedSuccessfully() {
-        Toast.makeText(getActivity(), String.format(getString(R.string
-                        .document_updated_successfully), fileChoosen.getName()),
-                Toast.LENGTH_SHORT).show();
+    public void showDocumentUpdatedSuccessfully(DocumentRelatedResponse
+                                                        documentUpdateResponse) {
+        if (onDocumentChangedListener != null) {
+            updatedDocument.setId(documentUpdateResponse.getResourceId());
+            onDocumentChangedListener.onDocumentUpdateSuccess(updatedDocument);
+        } else {
+            Toaster.show(rootView, String.format(getString(R.string.document_updated_successfully),
+                    fileChoosen.getName()));
+        }
         getDialog().dismiss();
     }
 
     @Override
-    public void showError(int errorMessage) {
-        Toast.makeText(getActivity(), getString(errorMessage), Toast.LENGTH_SHORT).show();
+    public void showCreationError(String errorMessage) {
+        if (onDocumentChangedListener != null) {
+            onDocumentChangedListener.onDocumentChangeFailure(errorMessage,
+                    Constants.DOCUMENT_CREATE);
+        } else {
+            Toaster.show(rootView, errorMessage);
+        }
         getDialog().dismiss();
+    }
+
+    @Override
+    public void showUpdationError(String errorMessage) {
+        if (onDocumentChangedListener != null) {
+            onDocumentChangedListener.onDocumentChangeFailure(errorMessage,
+                    Constants.DOCUMENT_UPDATE);
+        } else {
+            Toaster.show(rootView, errorMessage);
+        }
     }
 
     @Override
@@ -335,7 +385,8 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         mDocumentDialogPresenter.detachView();
     }
 
-    public interface OnDialogFragmentInteractionListener {
-        void initiateFileUpload(String name, String description);
+    public void setOnDocumentChangedListener(@Nullable OnDocumentChangedListener
+                                                     onDocumentChangedListener) {
+        this.onDocumentChangedListener = onDocumentChangedListener;
     }
 }

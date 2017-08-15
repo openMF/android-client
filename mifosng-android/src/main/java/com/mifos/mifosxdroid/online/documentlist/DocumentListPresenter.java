@@ -1,10 +1,11 @@
 package com.mifos.mifosxdroid.online.documentlist;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.client.DocumentRelatedResponse;
 import com.mifos.objects.noncore.Document;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.List;
 
@@ -67,7 +68,6 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
                         } else {
                             getMvpView().showEmptyDocuments();
                         }
-
                     }
                 }));
     }
@@ -105,7 +105,7 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
         mSubscriptions.add(mDataManagerDocument.removeDocument(entityType, entityId, documentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribe(new Subscriber<DocumentRelatedResponse>() {
                     @Override
                     public void onCompleted() {
 
@@ -114,11 +114,11 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError(R.string.failed_to_remove_document);
+                        getMvpView().showErrorMessage(MFErrorParser.errorMessage(e));
                     }
 
                     @Override
-                    public void onNext(GenericResponse genericResponse) {
+                    public void onNext(DocumentRelatedResponse documentRemoveResponse) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showDocumentRemovedSuccessfully();
                     }

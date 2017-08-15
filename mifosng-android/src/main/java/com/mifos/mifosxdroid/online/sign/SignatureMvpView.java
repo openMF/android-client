@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.sign;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.client.DocumentRelatedResponse;
 
 /**
  * Created by Tarun on 29-06-2017.
@@ -9,7 +9,7 @@ import com.mifos.mifosxdroid.base.MvpView;
 
 public interface SignatureMvpView extends MvpView {
 
-    void showSignatureUploadedSuccessfully(GenericResponse response);
+    void showSignatureUploadedSuccessfully(DocumentRelatedResponse response);
 
     void saveAndUploadSignature();
 

@@ -31,4 +31,6 @@ public interface DocumentListMvpView extends MvpView {
     void showEmptyDocuments();
 
     void showFetchingError(int errorMessage);
+
+    void showErrorMessage(String errorMessage);
 }

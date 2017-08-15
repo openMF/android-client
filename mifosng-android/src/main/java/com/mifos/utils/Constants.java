@@ -169,6 +169,13 @@ public class Constants {
     public static final int DATA_TABLES_SAVINGS_ACCOUNTS = 2003;
 
     /**
+     * Constants to specify whether the error occurred while creating the document
+     * or while updating the document.
+     */
+    public static final int DOCUMENT_CREATE = 0;
+    public static final int DOCUMENT_UPDATE = 1;
+
+    /**
      * Constants to for Data Table Menu Names
      */
     public static final String DATA_TABLE_CLIENTS_NAME = "More Client Info";

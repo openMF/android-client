@@ -4,8 +4,8 @@
  */
 package com.mifos.api.services;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.client.DocumentRelatedResponse;
 import com.mifos.objects.noncore.Document;
 
 import java.util.List;
@@ -40,11 +40,11 @@ public interface DocumentService {
      */
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     @Multipart
-    Observable<GenericResponse> createDocument(@Path("entityType") String entityType,
-                                               @Path("entityId") int entityId,
-                                               @Part("name") String nameOfDocument,
-                                               @Part("description") String description,
-                                               @Part() MultipartBody.Part typedFile);
+    Observable<DocumentRelatedResponse> createDocument(@Path("entityType") String entityType,
+                                                       @Path("entityId") int entityId,
+                                                       @Part("name") String nameOfDocument,
+                                                       @Part("description") String description,
+                                                       @Part() MultipartBody.Part typedFile);
 
 
     /**
@@ -74,10 +74,10 @@ public interface DocumentService {
      *                                or Savings etc)
      * @param entityId      - Id of Entity
      * @param documentId    - Document Id
-     * @return
+     * @return DocumentRelatedResponse
      */
     @DELETE("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
-    Observable<GenericResponse> removeDocument(@Path("entityType") String entityType,
+    Observable<DocumentRelatedResponse> removeDocument(@Path("entityType") String entityType,
                                                @Path("entityId") int entityId,
                                                @Path("documentId") int documentId);
 
@@ -98,10 +98,10 @@ public interface DocumentService {
      */
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
     @Multipart
-    Observable<GenericResponse> updateDocument(@Path("entityType") String entityType,
-                                               @Path("entityId") int entityId,
-                                               @Path("documentId") int documentId,
-                                               @Part("name") String nameOfDocument,
-                                               @Part("description") String description,
-                                               @Part() MultipartBody.Part typedFile);
+    Observable<DocumentRelatedResponse> updateDocument(@Path("entityType") String entityType,
+                                                       @Path("entityId") int entityId,
+                                                       @Path("documentId") int documentId,
+                                                       @Part("name") String nameOfDocument,
+                                                       @Part("description") String description,
+                                                       @Part() MultipartBody.Part typedFile);
 }

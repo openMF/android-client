@@ -1,7 +1,7 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
-import com.mifos.api.GenericResponse;
+import com.mifos.objects.client.DocumentRelatedResponse;
 import com.mifos.objects.noncore.Document;
 
 import java.util.List;
@@ -50,10 +50,10 @@ public class DataManagerDocument {
      * @param name       Name of Document
      * @param desc       Description of Document
      * @param file       Document File
-     * @return GenericResponse
+     * @return DocumentRelatedResponse
      */
-    public Observable<GenericResponse> createDocument(String entityType, int entityId, String name,
-                                                      String desc, MultipartBody.Part file) {
+    public Observable<DocumentRelatedResponse> createDocument(
+            String entityType, int entityId, String name, String desc, MultipartBody.Part file) {
         return mBaseApiManager
                 .getDocumentApi()
                 .createDocument(entityType, entityId, name, desc, file);
@@ -85,9 +85,9 @@ public class DataManagerDocument {
      * @param entityType Entity Type
      * @param entityId   Entity Id
      * @param documentId Document Id
-     * @return GenericResponse
+     * @return DocumentRelatedResponse
      */
-    public Observable<GenericResponse> removeDocument(String entityType, int entityId,
+    public Observable<DocumentRelatedResponse> removeDocument(String entityType, int entityId,
                                                       int documentId) {
         return mBaseApiManager.getDocumentApi().removeDocument(entityType, entityId, documentId);
     }
@@ -105,9 +105,9 @@ public class DataManagerDocument {
      * @param name       Name of Document
      * @param desc       Description of Document
      * @param file       Document File
-     * @return GenericResponse
+     * @return DocumentRelatedResponse
      */
-    public Observable<GenericResponse> updateDocument(String entityType, int entityId, int
+    public Observable<DocumentRelatedResponse> updateDocument(String entityType, int entityId, int
             documentId, String name, String desc, MultipartBody.Part file) {
         return mBaseApiManager.getDocumentApi()
                 .updateDocument(entityType, entityId, documentId, name, desc, file);

@@ -36,6 +36,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.documentdialog.OnDocumentChangedListener;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.CheckSelfPermissionAndRequest;
 import com.mifos.utils.Constants;
@@ -54,7 +55,8 @@ import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
 public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView,
-        RecyclerItemClickListener.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+        RecyclerItemClickListener.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener,
+        OnDocumentChangedListener {
 
     public static final int MENU_ITEM_ADD_NEW_DOCUMENT = 1000;
 
@@ -86,7 +88,8 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     private int entityId;
     private Document document;
     private ResponseBody documentBody;
-    private List<Document> mDocumentList;
+    private List<Document> documentList;
+    private int selectedDocumentPosition;
 
     public static DocumentListFragment newInstance(String entityType, int entiyId) {
         DocumentListFragment fragment = new DocumentListFragment();
@@ -99,8 +102,9 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
 
     @Override
     public void onItemClick(View childView, int position) {
-        document = mDocumentList.get(position);
-        showDocumentActions(mDocumentList.get(position).getId());
+        selectedDocumentPosition = position;
+        document = documentList.get(position);
+        showDocumentActions(documentList.get(position).getId());
     }
 
     @Override
@@ -112,7 +116,7 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        mDocumentList = new ArrayList<>();
+        documentList = new ArrayList<>();
         if (getArguments() != null) {
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -146,12 +150,6 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
 
     @Override
     public void onRefresh() {
-        mDocumentListPresenter.loadDocumentList(entityType, entityId);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
     }
 
@@ -221,8 +219,8 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
 
     @Override
     public void showDocumentList(final List<Document> documents) {
-        mDocumentList = documents;
-        mDocumentListAdapter.setDocuments(mDocumentList);
+        documentList = documents;
+        mDocumentListAdapter.setDocuments(documentList);
     }
 
     @Override
@@ -282,13 +280,18 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     @Override
     public void showDocumentRemovedSuccessfully() {
         Toaster.show(rootView, getResources().getString(R.string.document_remove_successfully));
-        mDocumentListPresenter.loadDocumentList(entityType, entityId);
+        documentList.remove(selectedDocumentPosition);
+        mDocumentListAdapter.notifyItemRemoved(selectedDocumentPosition);
+        if (documentList.size() == 0) {
+            showEmptyDocuments();
+        }
     }
 
     @Override
     public void showDocumentDialog(String documentAction) {
         DocumentDialogFragment documentDialogFragment =
                 DocumentDialogFragment.newInstance(entityType, entityId, documentAction, document);
+        documentDialogFragment.setOnDocumentChangedListener(this);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST);
@@ -312,7 +315,41 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
         } else {
             Toaster.show(rootView, getStringMessage(message));
         }
+    }
 
+    @Override
+    public void onDocumentUpdateSuccess(Document document) {
+        documentList.get(selectedDocumentPosition).setId(document.getId());
+        documentList.get(selectedDocumentPosition).setName(document.getName());
+        documentList.get(selectedDocumentPosition).setDescription(document.getDescription());
+        mDocumentListAdapter.notifyItemChanged(selectedDocumentPosition);
+    }
+
+    @Override
+    public void onDocumentCreationSuccess(Document document) {
+        documentList.add(document);
+        mDocumentListAdapter.notifyItemInserted(documentList.size() - 1);
+        if (ll_error.getVisibility() == View.VISIBLE) {
+            ll_error.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onDocumentChangeFailure(String errorMessage, int type) {
+        switch (type) {
+            case Constants.DOCUMENT_CREATE:     // Document Creation Error
+                Toaster.show(rootView, getString(R.string.failed_to_upload_document));
+                break;
+
+            case Constants.DOCUMENT_UPDATE:     // Document Update Error
+                Toaster.show(rootView, getString(R.string.failed_to_update_document));
+                break;
+        }
+    }
+
+    @Override
+    public void showErrorMessage(String errorMessage) {
+        Toaster.show(rootView, errorMessage);
     }
 
     @Override

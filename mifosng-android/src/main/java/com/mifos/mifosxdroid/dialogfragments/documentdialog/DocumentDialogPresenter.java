@@ -1,9 +1,9 @@
 package com.mifos.mifosxdroid.dialogfragments.documentdialog;
 
-import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerDocument;
-import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.objects.client.DocumentRelatedResponse;
+import com.mifos.utils.MFErrorParser;
 
 import java.io.File;
 
@@ -49,7 +49,7 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                 .createDocument(type, id, name, desc, getRequestFileBody(file))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribe(new Subscriber<DocumentRelatedResponse>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -58,13 +58,13 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError(R.string.failed_to_upload_document);
+                        getMvpView().showCreationError(MFErrorParser.errorMessage(e));
                     }
 
                     @Override
-                    public void onNext(GenericResponse genericResponse) {
+                    public void onNext(DocumentRelatedResponse documentCreationResponse) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showDocumentedCreatedSuccessfully(genericResponse);
+                        getMvpView().showDocumentedCreatedSuccessfully(documentCreationResponse);
                     }
                 }));
     }
@@ -77,7 +77,7 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                 name, desc, getRequestFileBody(file))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribe(new Subscriber<DocumentRelatedResponse>() {
                     @Override
                     public void onCompleted() {
 
@@ -86,13 +86,13 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError(R.string.failed_to_update_document);
+                        getMvpView().showUpdationError(MFErrorParser.errorMessage(e));
                     }
 
                     @Override
-                    public void onNext(GenericResponse genericResponse) {
+                    public void onNext(DocumentRelatedResponse documentUpdateResponse) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showDocumentUpdatedSuccessfully();
+                        getMvpView().showDocumentUpdatedSuccessfully(documentUpdateResponse);
                     }
                 })
         );
