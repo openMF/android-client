@@ -48,7 +48,7 @@
         </activity>
         <activity
             android:name=".login.LoginActivity"
-            android:label="@string/login"
+            android:label="@string/mifos_account"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.DashboardActivity"

@@ -7,6 +7,8 @@
 
     <!-- General Terms Begin Here -->
     <string name="app_name">MifosXDroid</string>
+    <string name="mifos_account">Mifos Account</string>
+    <string name="enter_credentials"><b>Please enter your credentials.</b></string>
     <string name="datatables">DataTable</string>
     <string name="associated_datatables">Associated Datatables</string>
     <string name="login">Login</string>
@@ -376,6 +378,7 @@
     <!-- Menu Item Names Begin Here -->
     <string name="action_settings">Settings</string>
     <string name="logout">Logout</string>
+    <string name="connection_settings">Connection Settings</string>
     <string name="action_save_location">Save location</string>
     <string name="loan_disbursement_date">Disbursement Date</string>
     <string name="loan_account_linking_option_label">Link Savings</string>

@@ -1,15 +1,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/RelativeLayout.Base">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/RelativeLayout.Base"
+
+    >
 
     <include layout="@layout/toolbar" />
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         style="@style/ScrollView.Login"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:padding="@dimen/layout_padding_30dp"
 
-        <LinearLayout style="@style/LinearLayout.Base">
+        >
 
-            <TextView style="@style/TextView.AppTitle" />
+        <LinearLayout style="@style/LinearLayout.Base"
+            >
+
+            <ImageView
+
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:src="@drawable/mifos_logo"/>
+            <TextView
+                style="@style/TextView.Login"
+                android:text="@string/enter_credentials"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/userWrapper"
@@ -25,7 +39,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/passwordWrapper"
-                style="@style/TextInput.Base">
+                style="@style/TextInput.Base"
+                app:passwordToggleEnabled="true">
 
                 <EditText
                     android:id="@+id/et_password"
@@ -33,9 +48,7 @@
                     android:nextFocusDown="@+id/bt_login" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/bt_connectionSettings"
-                style="@style/Button.ConnectionSettings" />
+
 
             <LinearLayout
                 android:id="@+id/ll_connectionSettings"
@@ -102,6 +115,6 @@
                 style="@style/Button.Login" />
 
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>
