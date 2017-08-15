@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
-import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
@@ -406,19 +405,12 @@ public class CreateNewClientFragment extends ProgressableFragment
                 throw new RequiredFieldException(getResources().getString(R.string.first_name),
                         getResources().getString(R.string.error_cannot_be_empty));
             }
-            if (etClientFirstName.getEditableText().toString().trim().length() < 4 &&
-                    etClientFirstName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
-            }
             if (!ValidationUtil.isNameValid(etClientFirstName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.first_name),
                         getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
             e.notifyUserWithToast(getActivity());
             result = false;
         } catch (RequiredFieldException e) {
@@ -454,21 +446,12 @@ public class CreateNewClientFragment extends ProgressableFragment
                         getResources().getString(R.string.error_cannot_be_empty));
             }
 
-            if (etClientLastName.getEditableText().toString().trim().length() < 4 &&
-                    etClientFirstName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.last_name), 4);
-            }
-
             if (!ValidationUtil.isNameValid(etClientLastName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.last_name),
                         getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
             }
-
         } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
             e.notifyUserWithToast(getActivity());
             result = false;
         } catch (RequiredFieldException e) {
