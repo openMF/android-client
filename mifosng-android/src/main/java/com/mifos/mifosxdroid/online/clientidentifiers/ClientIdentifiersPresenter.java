@@ -61,9 +61,8 @@ public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersM
                     @Override
                     public void onNext(List<Identifier> identifiers) {
                         getMvpView().showProgressbar(false);
-                        if (!identifiers.isEmpty()) {
                             getMvpView().showClientIdentifiers(identifiers);
-                        } else {
+                        if (identifiers.isEmpty()) {
                             getMvpView().showEmptyClientIdentifier();
                         }
                     }

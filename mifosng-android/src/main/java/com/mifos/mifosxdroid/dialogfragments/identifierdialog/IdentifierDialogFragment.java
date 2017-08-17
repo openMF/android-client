@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
+import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.objects.noncore.IdentifierPayload;
 import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.utils.Constants;
@@ -147,6 +148,7 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
         Toast.makeText(getActivity(), R.string.identifier_created_successfully,
                 Toast.LENGTH_SHORT).show();
         getDialog().dismiss();
+        ((ClientIdentifiersFragment) getTargetFragment()).doRefresh();
     }
 
     @Override
