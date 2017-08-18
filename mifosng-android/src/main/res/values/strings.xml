@@ -60,6 +60,7 @@
     <string name="create_savings_account">Add Savings Account</string>
     <string name="create_loan_account">Loan Application</string>
     <string name="create_loan_terms">Loan Terms</string>
+    <string name="create_sharing_account">Sharing Application</string>
     <string name="create_center">Create Center</string>
     <string name="create_group">Create Group</string>
     <string name="create_identifier">Create Identifier</string>
@@ -96,6 +97,7 @@
     <string name="charges">Charges </string>
     <string name="add_loan">Add Loan Account</string>
     <string name="savings_account">Add Savings Account</string>
+    <string name="sharing_account">Add Sharing Account</string>
     <string name="savings_account_id">Savings Account Id</string>
     <string name="collection_sheet">Collection Sheet</string>
     <string name="individual_collection_sheet">Individual Collection Sheet</string>
@@ -139,6 +141,8 @@
     <string name="empty_data_table">Empty DataTable</string>
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
+    <string name="sharing_account_submitted_for_approval">The Sharing Account has been submitted for
+        Approval</string>
     <string name="package_name">Package Name</string>
     <string name="document_directory">/mifos/documents/</string>
     <string name="open_document">Open Document</string>
@@ -160,6 +164,12 @@
     <string name="group_clients">Group Clients</string>
     <string name="identifier_deleted_successfully">Identifier deleted Successfully</string>
     <string name="exact_match">Exact Match</string>
+    <string name="share_charges">Charges</string>
+    <string name="requested_shares">Shares</string>
+    <string name="lockin_period_frequency">Lock In Period Frequency</string>
+    <string name="lockin_period">Lock In Period</string>
+    <string name="min_active_period_frequency">Minimum Active Period Frequency</string>
+    <string name="min_active_period">Minimum Active Period</string>
     <string name="no_search_result_found">No results found for entered query</string>
     <string name="no_search_query_entered">No Search Query Entered!</string>
     <string name="client_created_successfully">Client Created Successfully</string>
@@ -392,6 +402,7 @@
     <string name="connection_settings">Connection Settings</string>
     <string name="action_save_location">Save location</string>
     <string name="loan_disbursement_date">Disbursement Date</string>
+    <string name="application_date">Application Date</string>
     <string name="loan_account_linking_option_label">Link Savings</string>
     <string name="select_linkage_account_hint">Select Account</string>
     <string name="select_week_hint">Select Week</string>
@@ -633,6 +644,8 @@
     <string name="failed_to_remove_document">Failed  to remove document</string>
     <string name="failed_to_upload_document">Failed to upload document</string>
     <string name="failed_to_update_document">Failed to update document</string>
+    <string name="failed_to_load_sharing_products_and_template">Failed to load SharingProducts and
+        Template</string>
     <string name="failed_to_fetch_identifier_template">Failed to Fetch Identifier Template</string>
     <string name="failed_to_create_identifier">Failed to Create Identifier</string>
     <string name="failed_to_fetch_identifier">Failed to fetch identifiers</string>

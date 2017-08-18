@@ -14,6 +14,7 @@ import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialog
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.online.sharingaccount.SharingAccountFragment;
 import com.mifos.mifosxdroid.online.sign.SignatureFragment;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsFragment;
@@ -118,6 +119,8 @@ public interface ActivityComponent {
     void inject(LoanTransactionsFragment loanTransactionsFragment);
 
     void inject(SavingsAccountFragment savingsAccountFragment);
+
+    void inject(SharingAccountFragment sharingAccountFragment);
 
     void inject(LoanRepaymentFragment loanRepaymentFragment);
 

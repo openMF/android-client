@@ -89,31 +89,31 @@ public interface SavingsAccountService {
             @Body SavingsAccountTransactionRequest savingsAccountTransactionRequest);
 
 
-    @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}/?command=activate")
+    @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}/?command=activate")
     Observable<GenericResponse> activateSavings(@Path("savingsAccountId") int savingsAccountId,
                                                 @Body HashMap<String, Object> genericRequest);
 
-    @POST(APIEndPoint.CREATESAVINGSACCOUNTS + "/{savingsAccountId}?command=approve")
+    @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}?command=approve")
     Observable<GenericResponse> approveSavingsApplication(
             @Path("savingsAccountId") int savingsAccountId,
             @Body SavingsApproval savingsApproval);
 
 
-    @GET(APIEndPoint.CREATESAVINGSPRODUCTS)
+    @GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS)
     Observable<List<ProductSavings>> getAllSavingsAccounts();
 
-    @POST(APIEndPoint.CREATESAVINGSACCOUNTS)
+    @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS)
     Observable<Savings> createSavingsAccount(@Body SavingsPayload savingsPayload);
 
-    @GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
+    @GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS + "/template")
     Observable<SavingProductsTemplate> getSavingsAccountTemplate();
 
-    @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template")
+    @GET(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/template")
     Observable<SavingProductsTemplate>
             getClientSavingsAccountTemplateByProduct(@Query("clientId") int clientId,
                                              @Query("productId") int productId);
 
-    @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template")
+    @GET(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/template")
     Observable<SavingProductsTemplate>
             getGroupSavingsAccountTemplateByProduct(@Query("groupId") int groupId,
                                             @Query("productId") int productId);

@@ -1,0 +1,239 @@
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
+
+    <!-- Comment this out when editing the actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <!-- Actual content -->
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/LinearLayout.Base">
+
+            <TextView
+                style="@style/TextView.CreateSharingAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/product"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_product"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:spinnerMode="dropdown" />
+
+
+            <LinearLayout style="@style/LinearLayout.Width">
+
+                <TextView
+                    android:id="@+id/tv_charges"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:text="@string/share_charges"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/sp_charges"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.6"
+                    android:background="@color/light_grey" />
+
+                <ImageView
+                    android:id="@+id/img_add"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/ic_add_black_24dp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recycler_charges"
+                android:layout_gravity="center" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_client_external_id"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/external_id"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_requested_shares"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/requested_shares"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout style="@style/LinearLayout.Width">
+
+                <TextView
+                    style="@style/TextView.Base.Weight"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.5"
+                    android:text="@string/loan_submission_date" />
+
+                <TextView
+                    android:id="@+id/tv_submittedon_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/gray_light"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/LinearLayout.Width">
+
+                <TextView
+                    style="@style/TextView.Base.Weight"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="0.5"
+                    android:text="@string/application_date" />
+
+                <TextView
+                    android:id="@+id/tv_application_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/gray_light"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_lockin_period"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/lockin_period_frequency"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_lockin_period"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/lockin_period"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_lockin_period"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_min_active_period"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/min_active_period_frequency"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_min_active_period"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/min_active_period"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_min_active_period"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/savingsAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/savingsAccount"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_savings_account"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <CheckBox
+                android:id="@+id/cb_allow_dividend_calculation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:paddingTop="10dp"
+                android:text="@string/saving_min_required_balance" />
+
+            <Button
+                android:id="@+id/btn_submit"
+                style="@style/Button.Base"
+                android:layout_marginTop="10dp"
+                android:text="@string/submit" />
+        </LinearLayout>
+    </ScrollView>
+</ViewFlipper>

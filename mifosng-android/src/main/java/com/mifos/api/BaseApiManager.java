@@ -5,6 +5,8 @@
 
 package com.mifos.api;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mifos.api.services.AuthService;
@@ -22,6 +24,7 @@ import com.mifos.api.services.OfficeService;
 import com.mifos.api.services.RunReportsService;
 import com.mifos.api.services.SavingsAccountService;
 import com.mifos.api.services.SearchService;
+import com.mifos.api.services.SharingService;
 import com.mifos.api.services.StaffService;
 import com.mifos.api.services.SurveyService;
 import com.mifos.utils.JsonDateSerializer;
@@ -48,6 +51,7 @@ public class BaseApiManager {
     private static DataTableService dataTableApi;
     private static LoanService loanApi;
     private static SavingsAccountService savingsApi;
+    private static SharingService sharingApi;
     private static ChargeService chargeApi;
     private static SearchService searchApi;
     private static GroupService groupApi;
@@ -71,6 +75,7 @@ public class BaseApiManager {
         dataTableApi = createApi(DataTableService.class);
         loanApi = createApi(LoanService.class);
         savingsApi = createApi(SavingsAccountService.class);
+        sharingApi = createApi(SharingService.class);
         searchApi = createApi(SearchService.class);
         groupApi = createApi(GroupService.class);
         documentApi = createApi(DocumentService.class);
@@ -128,6 +133,11 @@ public class BaseApiManager {
 
     public SavingsAccountService getSavingsApi() {
         return savingsApi;
+    }
+
+    @NonNull
+    public SharingService getSharingApi() {
+        return sharingApi;
     }
 
     public SearchService getSearchApi() {

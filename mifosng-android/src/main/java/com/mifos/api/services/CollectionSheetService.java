@@ -28,11 +28,11 @@ import rx.Observable;
 public interface CollectionSheetService {
 
 
-    @POST(APIEndPoint.COLLECTIONSHEET + "?command=generateCollectionSheet")
+    @POST(APIEndPoint.COLLECTION_SHEET + "?command=generateCollectionSheet")
     Observable<IndividualCollectionSheet> getIndividualCollectionSheet(
             @Body RequestCollectionSheetPayload payload);
 
-    @POST(APIEndPoint.COLLECTIONSHEET + "?command=saveCollectionSheet")
+    @POST(APIEndPoint.COLLECTION_SHEET + "?command=saveCollectionSheet")
     Observable<GenericResponse> saveindividualCollectionSheet(
             @Body IndividualCollectionSheetPayload payload);
 

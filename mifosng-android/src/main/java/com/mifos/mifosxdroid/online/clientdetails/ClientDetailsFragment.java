@@ -51,6 +51,7 @@ import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
 import com.mifos.mifosxdroid.online.note.NoteFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
+import com.mifos.mifosxdroid.online.sharingaccount.SharingAccountFragment;
 import com.mifos.mifosxdroid.online.sign.SignatureFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.views.CircularImageView;
@@ -90,6 +91,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public static final int MENU_ITEM_CLIENT_CHARGES = 1003;
     public static final int MENU_ITEM_ADD_SAVINGS_ACCOUNT = 1004;
     public static final int MENU_ITEM_ADD_LOAN_ACCOUNT = 1005;
+    public static final int MENU_ITEM_ADD_SHARING_ACCOUNT = 1002;
     public static final int MENU_ITEM_DOCUMENTS = 1006;
     public static final int MENU_ITEM_UPLOAD_SIGN = 1010;
     public static final int MENU_ITEM_IDENTIFIERS = 1007;
@@ -241,6 +243,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                     .savings_account));
             menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
                     getString(R.string.add_loan));
+            menu.add(Menu.NONE, MENU_ITEM_ADD_SHARING_ACCOUNT, Menu.NONE,
+                    getString(R.string.sharing_account));
             menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
             menu.add(Menu.NONE, MENU_ITEM_UPLOAD_SIGN, Menu.NONE, R.string.upload_sign);
             menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
@@ -270,6 +274,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 break;
             case MENU_ITEM_ADD_LOAN_ACCOUNT:
                 addloanaccount();
+                break;
+            case MENU_ITEM_ADD_SHARING_ACCOUNT:
+                addsharingaccount();
                 break;
             case MENU_ITEM_IDENTIFIERS:
                 loadIdentifiers();
@@ -374,6 +381,16 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void addsharingaccount() {
+        SharingAccountFragment sharingAccountFragment = SharingAccountFragment.newInstance(
+                clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, sharingAccountFragment);
         fragmentTransaction.commit();
     }
 

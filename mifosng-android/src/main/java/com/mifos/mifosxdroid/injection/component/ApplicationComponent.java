@@ -18,6 +18,7 @@ import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.api.datamanager.DataManagerRunReport;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.api.datamanager.DataManagerSearch;
+import com.mifos.api.datamanager.DataManagerSharing;
 import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.api.datamanager.DataManagerSurveys;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
@@ -64,6 +65,7 @@ public interface ApplicationComponent {
     DataManagerStaff dataManagerStaff();
     DataManagerLoan dataManagerLoan();
     DataManagerSavings dataManagerSavings();
+    DataManagerSharing dataManagerSharing();
     DataManagerSurveys dataManagerSurveys();
     DataManagerDocument dataManagerDocument();
     DataManagerSearch dataManagerSearch();

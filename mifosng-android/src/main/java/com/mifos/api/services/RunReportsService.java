@@ -14,7 +14,7 @@ import rx.Observable;
  */
 public interface RunReportsService {
 
-    @GET(APIEndPoint.RUNREPORTS + "/GroupSummaryCounts")
+    @GET(APIEndPoint.RUN_REPORTS + "/GroupSummaryCounts")
     Observable<List<CenterInfo>> getCenterSummaryInfo(
             @Query("R_groupId") int centerId,
             @Query("genericResultSet") boolean genericResultSet);
