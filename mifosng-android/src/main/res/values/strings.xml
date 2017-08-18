@@ -108,6 +108,8 @@
     <string name="clients">Clients</string>
     <string name="groups">Groups</string>
     <string name="centers">Centers</string>
+    <string name="settings">Settings</string>
+    <string name="surveys">Surveys</string>
     <string name="path_tracker">Path Tracker</string>
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
@@ -522,6 +524,10 @@
     <string name="sync_clients_full_information"> Sync Clients All Information </string>
     <string name="sync_groups_full_information">Sync Groups All Information</string>
     <string name="sync_centers_full_information">Sync Centers All Information</string>
+    <string name="syncing_survey">Syncing Surveys</string>
+    <string name="syncing_question">Syncing Question</string>
+    <string name="syncing_response">Syncing Response</string>
+    <string name="sync_survey">Sync Surveys</string>
 
 
     <!--Material Dialog Titles-->
@@ -607,6 +613,7 @@
     <string name="failed_to_load_db_centers">Failed to load Database Centers</string>
     <string name="failed_to_load_savings_products_and_template">Failed to load SavingProducts and
         Template</string>
+    <string name="failed_to_sync_survey">Survey Sync Failed</string>
     <string name="failed_to_add_savings_account">Failed to add SavingsAccount</string>
     <string name="failed_to_fetch_documents">Failed to fetch documents</string>
     <string name="failed_to_fetch_groups">Failed to Fetch Groups</string>
@@ -631,6 +638,10 @@
     <string name="failed_to_update_pinpoint_location">Failed to update pinpoint location</string>
     <string name="failed_to_fetch_path_tracking_details">Failed to fetch path tracking
         details</string>
+    <string name="sync_surveys_full_information">Sync Surveys All Information</string>
+    <string name="failed_to_load_db_surveys">Failed to load Database Surveys</string>
+    <string name="failed_to_load_db_question_datas">Failed to load Database Question Datas</string>
+    <string name="failed_to_load_db_response_datas">Failed to load Database Response Datas</string>
     <string name="failed_to_fetch_loan_products">Failed to fetch LoanProducts</string>
     <string name="failed_to_fetch_loan_template">Failed to fetch Loan Template</string>
     <string name="failed_to_fetch_center_info">Failed to fetch center info</string>

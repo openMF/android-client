@@ -10,6 +10,7 @@ import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFr
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment;
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
@@ -165,6 +166,8 @@ public interface ActivityComponent {
     void inject(SyncGroupsDialogFragment syncGroupsDialogFragment);
 
     void inject(SyncCentersDialogFragment syncCentersDialogFragment);
+
+    void inject(SyncSurveysDialogFragment syncSurveysDialogFragment);
 
     void inject(IdentifierDialogFragment identifierDialogFragment);
 

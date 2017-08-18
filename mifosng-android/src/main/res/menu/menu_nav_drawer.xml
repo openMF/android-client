@@ -46,6 +46,13 @@
             android:title="@string/path_tracker"
             />
 
+        <item
+            android:id="@+id/item_settings"
+            android:checked="false"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/settings"
+            />
+
     </group>
        
     <group android:checkableBehavior="single"
