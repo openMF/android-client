@@ -21,6 +21,7 @@ public class GenerateCollectionSheetActivity extends MifosBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
+        showBackButton();
         String fragmentToOpen;
         if (getIntent() != null) {
             fragmentToOpen = getIntent().getStringExtra(Constants.COLLECTION_TYPE);
