@@ -207,7 +207,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public void onNext(ClientAccounts clientAccounts) {
                         mLoanAccountList = Utils.getActiveLoanAccounts(clientAccounts
                                 .getLoanAccounts());
-                        mSavingsAccountList = Utils.getActiveSavingsAccounts(clientAccounts
+                        mSavingsAccountList = Utils.getSyncableSavingsAccounts(clientAccounts
                                 .getSavingsAccounts());
 
                         //Updating UI
