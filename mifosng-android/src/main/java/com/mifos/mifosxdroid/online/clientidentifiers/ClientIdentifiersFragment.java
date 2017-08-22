@@ -55,7 +55,7 @@ public class ClientIdentifiersFragment extends MifosBaseFragment implements
     TextView mNoIdentifierText;
 
     @BindView(R.id.ll_error)
-    LinearLayout ll_error;
+    LinearLayout llError;
 
     @BindView(R.id.noIdentifierIcon)
     ImageView mNoIdentifierIcon;
@@ -128,13 +128,16 @@ public class ClientIdentifiersFragment extends MifosBaseFragment implements
 
     @Override
     public void showClientIdentifiers(List<Identifier> identifiers) {
+        if (llError.getVisibility() == View.VISIBLE) {
+            llError.setVisibility(View.GONE);
+        }
         this.identifiers = identifiers;
         identifierListAdapter.setIdentifiers(identifiers);
     }
 
     @Override
     public void showEmptyClientIdentifier() {
-        ll_error.setVisibility(View.VISIBLE);
+        llError.setVisibility(View.VISIBLE);
         mNoIdentifierText.setText(getResources().getString(R.string.no_identifier_to_show));
         mNoIdentifierIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
     }
@@ -206,6 +209,7 @@ public class ClientIdentifiersFragment extends MifosBaseFragment implements
             case R.id.menu_add:
                 IdentifierDialogFragment identifierDialogFragment =
                         IdentifierDialogFragment.newInstance(clientId);
+                identifierDialogFragment.setTargetFragment(this, 1);
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                         .beginTransaction();
                 fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST);
@@ -220,5 +224,9 @@ public class ClientIdentifiersFragment extends MifosBaseFragment implements
         super.onDestroyView();
         mClientIdentifiersPresenter.detachView();
         hideMifosProgressBar();
+    }
+
+    public void doRefresh() {
+        loadIdentifiers();
     }
 }
