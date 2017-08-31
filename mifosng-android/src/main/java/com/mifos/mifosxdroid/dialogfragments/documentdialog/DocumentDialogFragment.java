@@ -128,11 +128,11 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         ButterKnife.bind(this, rootView);
         mDocumentDialogPresenter.attachView(this);
 
-        if (documentAction == getResources().getString(R.string.update_document)) {
+        if (getResources().getString(R.string.update_document).equals(documentAction)) {
             tv_document_action.setText(R.string.update_document);
             et_document_name.setText(document.getName());
             et_document_description.setText(document.getDescription());
-        } else if (documentAction == getResources().getString(R.string.upload_document)) {
+        } else if (getResources().getString(R.string.upload_document).equals(documentAction)) {
             tv_document_action.setText(R.string.upload_document);
         }
 
