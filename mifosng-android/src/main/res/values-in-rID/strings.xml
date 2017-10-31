@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MifosXDroid</string>
+    <string name="mifos_account">Akun Mifos</string>
+    <string name="enter_credentials"><b>Silahkan masukan kredensial Anda</b></string>
+    <string name="datatables">Tabel Data</string>
+    <string name="associated_datatables">Asosiasi Tabel Data</string>
+    <string name="login">Masuk</string>
+    <string name="login_successfully">Berhasil Masuk</string>
+    <string name="test_ip">10.0.2.2</string>
+    <string name="search">Cari</string>
+    <string name="group_name">Nama Grup</string>
+    <string name="staff_name">Nama Staf</string>
+    <string name="level_name">Nama Level</string>
+    <string name="offline">Sinkronisasi Offline *</string>
+    <string name="search_hint">Nama atau Nomor Akun atau ID Eksternal</string>
+    <string name="search_results">Hasil Pencarian</string>
+    <string name="client_search">Pencarian Klien</string>
+    <string name="total">Total</string>
+    <string name="client_name">Nama Klien</string>
+    <string name="client">Klien</string>
+    <string name="save">Simpan</string>
+    <string name="due_date">Batas tanggal terakhir</string>
+    <string name="locale">Lokal</string>
+    <string name="confirm_delete_client_image">Apakah Anda setuju untuk menghapus foto klien?</string>
+    <string name="default_instance_url" translatable="false">demo.openmf.org</string>
+    <string name="review_transaction">Tinjau Transaksi</string>
+    <string name="amount">Jumlah</string>
+    <string name="date">Tanggal</string>
+    <string name="payment_type">Tipe Pembayaran</string>
+    <string name="mifos_instance_domain">Contoh Mifos Domain</string>
+    <string name="username">Nama Pengguna</string>
+    <string name="password">Kata Sandi</string>
+    <string name="mifos" translatable="false">Mifos</string>
+    <string name="full_name">Nama</string>
+    <string name="account_number">Nomor Akun</string>
+    <string name="external_id">ID Eksternal</string>
+    <string name="loanproduct">Produk Pinjaman</string>
+    <string name="loantype">Tipe Pinjaman</string>
+    <string name="principal">Kepala Sekolah</string>
+    <string name="loanterm">Istilah Pinjaman</string>
+    <string name="loanterm_month">Pilih Istilah Pinjaman</string>
+    <string name="nominal">Bunga tahunan nominal</string>
+    <string name="submittedon">Dikirim di</string>
+    <string name="activation_date">Tanggal Aktivasi</string>
+    <string name="office">Kantor</string>
+    <string name="group">Grup</string>
+    <string name="cancel">Batal</string>
+    <string name="review_payment">Tinjauan pembayaran</string>
+    <string name="survey">Survei</string>
+    <string name="center_name">Nama Tengah</string>
+    <string name="center_id">ID Tengah</string>
+    <string name="create_client">Buat Klien</string>
+    <string name="create_savings_account">Buat akun tabungan</string>
+    <string name="create_loan_account">Buat Aplikasi pinjaman</string>
+    <string name="create_loan_terms">Buat istilah pinjaman</string>
+    <string name="create_center">Buat Pusat</string>
+    <string name="create_group">Buat Grup</string>
+    <string name="create_identifier">Buat Pengenal</string>
+    <string name="staff_id">ID Staf</string>
+    <string name="office_id">ID Kantor</string>
+    <string name="id">ID</string>
+    <string name="charge_id">ID Biaya</string>
+    <string name="transactions">Transaksi</string>
+    <string name="name">Nama</string>
+    <string name="charge_name">Nama Biaya</string>
+    <string name="description">Deskripsi</string>
+    <string name="file_name">Nama File</string>
+    <string name="file_location">Lokasi</string>
+    <string name="documents">Dokumen</string>
+    <string name="upload_sign">Unggah Tanda Tangan</string>
+    <string name="no_document_to_show">Tidak ada dokumen yang ditampilkan</string>
+    <string name="no_identifier_to_show">Tidak ada pengenal yang ditampilkan</string>
+    <string name="approve_savings">Setujui Tabungan</string>
+    <string name="activate_savings">Aktifkan Tabungan</string>
+    <string name="activate_client">Aktifkan Klien</string>
+    <string name="activate_center">Aktifkan Pusat</string>
+    <string name="activate_group">Aktifkan Grup</string>
+    <string name="activate">Aktifkan</string>
+    <string name="client_activated_successfully">Klien Berhasil Diaktifkan</string>
+    <string name="center_activated_successfully">Pusat Berhasil Diaktifkan</string>
+    <string name="group_created_successfully">Grup Berhasil Dibuat</string>
+    <string name="loan_disburse_successfully">Pinjaman Berhasil Dicairkan</string>
+    <string name="center_created_successfully">Pusat Berhasil Dibuat</string>
+    <string name="savings_account_closed">Rekening Tabungan Tertutup</string>
+    <string name="savings_account_activated">Akun Tabungan Diaktifkan</string>
+    <string name="more_info">Info Klien</string>
+    <string name="more_group_info">Grup Info</string>
+    <string name="pinpoint">Lokasi Tepat</string>
+    <string name="charges">Biaya </string>
+    <string name="add_loan">Tambah akun tabungan</string>
+    <string name="savings_account">Tambah akun tabungan</string>
+    <string name="savings_account_id">ID Akun Tabungan</string>
+    <string name="collection_sheet">Lembar Koleksi</string>
+    <string name="individual_collection_sheet">Lembar Koleksi Pribadi</string>
+    <string name="title_activity_generate_collection_sheet" translatable="false">MenghasilkanLembarKoleksi</string>
+    <string name="meeting_date">Tanggal Pertemuan</string>
+    <string name="center">Pusat</string>
+    <string name="generate_collection_sheet">Hasilkan Lembar Koleksi</string>
+    <string name="clear_data">Bersihkan Data</string>
+    <string name="branch_id">ID Cabang</string>
+    <string name="clients">Klien</string>
+    <string name="groups">Grup</string>
+    <string name="centers">Pusat</string>
+    <string name="settings">Pengaturan</string>
+    <string name="surveys">Survei</string>
+    <string name="path_tracker">Jalur Pelacak</string>
+    <string name="open_drawer">Buka Drawer</string>
+    <string name="close_drawer">Tutup Drawer</string>
+    <string name="hide">Sembunyikan</string>
+    <string name="colon">" : "</string>
+    <string name="backspace_slash">\</string>
+    <string name="slash">/</string>
+    <string name="space">" "</string>
+    <string name="new_line">\n</string>
+    <string name="field">Bidang</string>
+    <string name="value">Nilai</string>
+    <string name="survey_subtitle">0/0</string>
+    <string name="submit_survey">Kirim Survei</string>
+    <string name="question">Pertanyaan</string>
+    <string name="submitting_surveys">Mengirim Survei</string>
+    <string name="scorecard_created_successfully">Scorecard berhasil dibuat</string>
+    <string name="survey_successfully_submitted">Survei Berhasil Dikirim !
+        \n Terimakasih telah mengisi survei </string>
+    <string name="please_attempt_atleast_one_question">Silakan Mencoba Minimal Satu Pertanyaan </string>
+    <string name="attempt_question">Mencoba Pertanyaan : </string>
+    <string name="empty_client_list">Daftar Klien Kosong</string>
+    <string name="empty_group_clients">Daftar Grup Klien Kosong</string>
+    <string name="empty_groups_list">Daftar Grup Kosong</string>
+    <string name="empty_groups">Tidak ada grup yang terkait dengan pusat ini</string>
+    <string name="empty_center_list">Daftar Pusat Kosong</string>
+    <string name="empty_path_tracking">Pelacakan Jalur Kosong</string>
+    <string name="empty_data_table">Tabel Data Kosong</string>
+    <string name="savings_account_submitted_for_approval">Rekening Tabungan telah dikirim
+         Persetujuan</string>
+    <string name="package_name">Nama Paket</string>
+    <string name="document_directory">/mifos/documents/</string>
+    <string name="open_document">Buka Dokumen</string>
+    <string name="document_remove_successfully">Dokumen Berhasil Dihapus</string>
+    <string name="document_fetch_successfully">Dokumen Berhasil Didapatkan</string>
+    <string name="update_document">Perbaharui Dokument</string>
+    <string name="document_updated_successfully">%1$s Dokumen Berhasil Diperbaharui</string>
+    <string name="document_dialog">"Dokumen Dialog</string>
+    <string name="document_type">Tipe Dokumen</string>
+    <string name="status">Status</string>
+    <string name="unique_id">ID Unik</string>
+    <string name="identifier_created_successfully">Pengenal Berhasil Dibuat</string>
+    <string name="empty_identifier_document_type">Tipe ID Pengenal Dokumen kosong \ n
+         Mungkin, Template Pengenal gagal untuk diambil. Silahkan cek koneksi internet anda</string>
+    <string name="data_table_entry_added">Entri Tabel Data berhasil ditambahkan</string>
+    <string name="unique_id_required">ID Unik Dibutuhkan!</string>
+    <string name="update">Perbaharui</string>
+    <string name="group_clients">Klien Grup</string>
+    <string name="identifier_deleted_successfully">Pengenal berhasil dihapus</string>
+    <string name="exact_match">Benar-benar sesuai</string>
+    <string name="no_search_result_found">Tidak ditemukan hasil untuk kueri yang dimasukkan</string>
+    <string name="no_search_query_entered">Tidak ada kueri pencarian yang dimasukkan</string>
+    <string name="client_created_successfully">Klien berhasil dibuat</string>
+    <string name="no_staff_associated_with_office">Tidak ada staf yang terkait dengan kantor ini</string>
+    <string name="adding_client_address">Menambahkan Alamat Klien</string>
+    <string name="updating_client_address">Memperbaharui Alamat Klien</string>
+    <string name="deleting_client_address">Menghapus Alamat Klien</string>
+    <string name="address_added_successfully">Alamat berhasil ditambahkan</string>
+    <string name="address_deleted_successfully">Alamat berhasil dihapus</string>
+    <string name="address_updated_successfully">Alamat berhasil diperbaharui</string>
+    <string name="google_play_services_not_available">Google Play Services tidak tersedia
+        .</string>
+    <string name="empty_client_address">Alamat Klien Kosong</string>
+    <string name="mifos_path_tracker">jalur Pelacak Mifos</string>
+    <string name="description_location_tracking">Pelacak lokasi dimulai</string>
+    <string name="stop_tracking">Berhentikan Pelacak</string>
+    <string name="start_tracking">Mulai Pelacak</string>
+    <string name="tracks_submitted">Lokasi anda berhasil dikirim</string>
+    <string name="minbalance">Saldo yang Diperlukan Minimum </string>
+    <string name="maxoverdraft">Jumlah cerukan maksimum </string>
+    <string name="min_overdraft">Overdraft Minimum untuk Perhitungan Bunga </string>
+    <string name="nominal_overdraft">Bunga nominal tahunan untuk cerukan </string>
+    <string name="unassigned">Belum ditetapkan</string>
+    <string name="disburse_loan">Mencairkan Pinjaman</string>
+    <string name="logging_in">Memasuki</string>
+    <string name="back_again">Silakan tekan kembali lagi untuk keluar</string>
+    <!-- General Terms End Here -->
+
+
+    <!-- Group Terms Begin Here -->
+    <string name="active">Actif</string>
+    <string name="inactive">Tidak Aktif</string>
+    <!-- Group Terms End Here -->
+
+    <!-- Signature Related Strings -->
+    <string name="reset">Setel Ulang</string>
+    <string name="from_gallery">Dari Galeri</string>
+    <string name="sign_uploaded_success_msg">Tanda tangan berhasil diunggah</string>
+    <string name="signature_image_directory">/mifos/documents/sign/</string>
+    <string name="sign_dir_not_created_msg">Ada yang salah. Tidak bisa membuat direktori.</string>
+    <string name="sign_saved_success_msg">File berhasil disimpan di </string>
+    <string name="uploading_sign_msg">Mengunggah tanda tangan %#8230</string>
+    <!-- Signature Related Strings Ends -->
+
+
+    <!--RunTime User Permission Here-->
+    <string name="permission_denied">Izin ditolak</string>
+    <string name="permission_denied_to_read_external_document">Izin ditolak untuk membaca dokumen eksternal</string>
+    <string name="permission_denied_to_write_external_document">Izin ditolak untuk menulsi dokumen eksternal</string>
+    <string name="permission_denied_to_access_fine_location">Izin ditolak untuk mengakses lokasi</string>
+
+    <!-- Collectionsheet related strings -->
+    <string name="collectionsheet_submit_success">Collectionsheet berhasil dikirim.</string>
+    <string name="no_collectionsheet_found">Tidak ada lembar koleksi yang ditemukan untuk kombinasi yang diberikan.</string>
+    <string name="error_generate_sheet_first">Tolong buat collectionsheet dulu!</string>
+    <string name="loan_account_num">Akun Pinjaman #</string>
+    <string name="action">Aksi</string>
+    <string name="due_collection">Batas Koleksi</string>
+    <string name="additional_details">Rincian Tambahan</string>
+    <string name="cheque_number">Nomor cek</string>
+    <string name="routing_code">Kode routing</string>
+    <string name="receipt_number">Nomor Resep</string>
+    <string name="bank_number">Nomor Bank</string>
+    <string name="branch_name">Nama cabang</string>
+    <string name="meeting_calender">Tanggal pertemuan</string>
+    <string name="productive_collection_sheet">CollectionSheet Produktif</string>
+    <string name="attendance">Kehadiran</string>
+    <string name="collection_loan_product">Pinjaman:%1$s</string>
+    <string name="collection_saving_product">Tabungan:%1$s</string>
+    <string name="collection_heading_charges">%1$s/Biaya</string>
+
+
+
+    <!-- Loan Related Terminologies Begin Here -->
+    <string name="loan_officer">Kantor Pinjaman</string>
+    <string name="loan_purposes">Tujuan Pinjaman</string>
+    <string name="loan_fund">Dana</string>
+    <string name="staff">Staf</string>
+    <string name="loan_cycle">Siklus Pinjaman</string>
+    <string name="loan_status">Status</string>
+    <string name="loan_in_arrears">Tunggakan</string>
+    <string name="loan_id">ID Pinjaman</string>
+    <string name="loan_account_id">ID Akun</string>
+    <string name="loan_account_status_id">Status ID Akun</string>
+    <string name="loan_product_short_name">Nama Pendek Produk</string>
+    <string name="loan_amount_disbursed">Jumlah Dicairkan</string>
+    <string name="loan_principal_due">Pinjaman Pokok</string>
+    <string name="loan_principal_paid">Kepala sekolah yang dibayar</string>
+    <string name="loan_interest_due">Bunga jatuh tempo</string>
+    <string name="loan_interest_paid">Bunga Dibayar</string>
+    <string name="loan_interest_type">Metode Jenis Bunga</string>
+    <string name="loan_charges_due">Batas Biaya</string>
+    <string name="loan_total_due">Batas Total</string>
+    <string name="summary">Rincian</string>
+    <string name="loan">Pinjaman</string>
+    <string name="amount_paid">Total Dibayar</string>
+    <string name="balance">Keseimbangan</string>
+    <string name="loan_principal">Kepala Sekolah</string>
+    <string name="loan_interest">Bunga</string>
+    <string name="loan_fees">Biaya</string>
+    <string name="loan_penalty">Penalti</string>
+    <string name="loan_amount_due">Batas Total</string>
+    <string name="loan_repayment_date">Tanggal Bayar Ulang</string>
+    <string name="loan_transaction_date">Tanggal transaksi pinjaman</string>
+    <string name="additional_payment">Biaya Tambahan</string>
+    <string name="break_down">Kerusakan</string>
+    <string name="loanAccounts">Akun Pinjaman</string>
+    <string name="loanAccountSummary">Rincian Akun Pinjaman</string>
+    <string name="loanAccountSummaryStatus">Status Rincian Akun Pinjaman</string>
+    <string name="loan_repayment_schedule">Jadwal pembayaran ulang pinjaman</string>
+    <string name="loan_rejected_message">Pinjaman ditolak</string>
+    <string name="loan_creation_success">Pinjaman berhasil dibuat.</string>
+    <string name="repayment">Pembayaran ulang</string>
+    <string name="repayment_date">Tanggal Pembayaran ulang</string>
+    <string name="complete">Selesai</string>
+    <string name="pending">Tertunda</string>
+    <string name="overdue">Terlambat</string>
+    <string name="process_loan_transaction">Proses Transaksi Pinjaman</string>
+    <string name="transaction_action_not_set">TINDAKAN TRANSAKSI TIDAK SET</string>
+    <string name="review_transaction_details">Tinjau detail pembayaran</string>
+    <string name="process_transaction">Proses Transaksi</string>
+    <string name="transaction_date">Tanggal Transaksi</string>
+    <string name="transaction_body">Isi Transaksi</string>
+    <string name="transaction_failed">Transaksi Gagal</string>
+    <string name="transaction_saved_in_db">Transaksi disimpan di database</string>
+    <string name="payment_failed">Pembayaran gagal</string>
+    <string name="transaction_type">Tipe transaksi</string>
+    <string name="loan_submission_date">Tanggal pengiriman</string>
+
+</resources>
