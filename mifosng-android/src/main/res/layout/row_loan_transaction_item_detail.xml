@@ -8,6 +8,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/transaction_detail_bg">
 
@@ -40,8 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:gravity="right"
-                android:text="09214"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                tools:text="09214" />
 
         </TableRow>
 
