@@ -13,7 +13,7 @@
     <string name="associated_datatables">Associated Datatables</string>
     <string name="login">Login</string>
     <string name="login_successfully">Login Successfully</string>
-    <string name="test_ip">10.0.2.2</string>
+    <string name="test_ip" translatable="false">10.0.2.2</string>
     <string name="search">Search</string>
     <string name="group_name">Group Name</string>
     <string name="staff_name">Staff Name</string>
@@ -114,14 +114,14 @@
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
     <string name="hide">Hide</string>
-    <string name="colon">" : "</string>
-    <string name="backspace_slash">\</string>
-    <string name="slash">/</string>
-    <string name="space">" "</string>
-    <string name="new_line">\n</string>
+    <string name="colon" translatable="false">" : "</string>
+    <string name="backspace_slash" translatable="false">\</string>
+    <string name="slash" translatable="false">/</string>
+    <string name="space" translatable="false">" "</string>
+    <string name="new_line" translatable="false">\n</string>
     <string name="field">Field</string>
     <string name="value">Value</string>
-    <string name="survey_subtitle">0/0</string>
+    <string name="survey_subtitle" translatable="false">0/0</string>
     <string name="submit_survey">Submit Survey</string>
     <string name="question">Question</string>
     <string name="submitting_surveys">Submitting Survey</string>
@@ -525,7 +525,7 @@
     <string name="all_groups_synced">All Groups have been Synced</string>
     <string name="all_centers_synced">All Centers have been Synced</string>
     <string name="all_clients_synced">All Clients have been Synced</string>
-    <string name="click_to_refresh">\n Click to Refresh</string>
+    <string name="click_to_refresh" translatable="false">\n Click to Refresh</string>
     <string name="syncing_client">Syncing Client</string>
     <string name="syncing_group">Syncing Group</string>
     <string name="syncing_center">Syncing Center</string>
@@ -714,16 +714,16 @@
     <string name="empty_notes">Empty Notes</string>
     <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
     <string name="title_activity_sync_client_payload">SyncClientPayloadActivity</string>
-    <string name="one">1</string>
-    <string name="two">2</string>
-    <string name="three">3</string>
-    <string name="four">4</string>
-    <string name="five">5</string>
-    <string name="six">6</string>
-    <string name="seven">7</string>
-    <string name="eight">8</string>
-    <string name="nine">9</string>
-    <string name="zero">0</string>
+    <string name="one" translatable="false">1</string>
+    <string name="two" translatable="false">2</string>
+    <string name="three" translatable="false">3</string>
+    <string name="four" translatable="false">4</string>
+    <string name="five" translatable="false">5</string>
+    <string name="six" translatable="false">6</string>
+    <string name="seven" translatable="false">7</string>
+    <string name="eight" translatable="false">8</string>
+    <string name="nine" translatable="false">9</string>
+    <string name="zero" translatable="false">0</string>
     <string name="skip">Skip</string>
     <string name="passcode_setup">Setup a passcode to login</string>
     <string name="pass_code">Pass Code</string>
