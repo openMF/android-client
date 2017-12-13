@@ -45,8 +45,8 @@
             app:showText="false"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:textOn="On"
-            android:textOff="Off"/>
+            android:textOn="@string/on"
+            android:textOff="@string/off"/>
 
     </LinearLayout>
 </LinearLayout>

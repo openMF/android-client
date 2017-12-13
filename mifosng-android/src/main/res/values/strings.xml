@@ -731,6 +731,18 @@
     <string name="incorrect_passcode">Incorrect Passcode</string>
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
-
-
+    <string name="button_next">Next</string>
+    <string name="hint_locale_charge">en</string>
+    <string name="text_loan_purpose">Purpose</string>
+    <string name="hint_savings_submission_date">Submission Date:</string>
+    <string name="hint_client_choose_title">Select a client from the list</string>
+    <string name="hint_client_new_date_of_birth">Select client\'s date of birth :</string>
+    <string name="hint_login_instance_url">Instance URL</string>
+    <string name="hint_login_instance_port">Port</string>
+    <string name="text_survey_submit">Thanks for taking Survey</string>
+    <string name="button_survey_submit">Submit Survey</string>
+    <string name="text_survey_list_name">Please select one of the Survey</string>
+    <string name="text_pinpoint_location_address">Title</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
 </resources>

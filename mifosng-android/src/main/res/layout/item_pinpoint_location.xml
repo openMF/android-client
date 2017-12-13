@@ -35,7 +35,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start"
             android:layout_margin="@dimen/text_padding_normal"
-            android:text="Title"
+            android:text="@string/text_pinpoint_location_address"
             android:textAlignment="inherit"
             android:textColor="@color/black"
             android:textSize="16sp"
