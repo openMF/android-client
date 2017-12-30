@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.core;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,7 +39,6 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     protected Toolbar toolbar;
     private ActivityComponent mActivityComponent;
     private ProgressDialog progress;
-
 
     @Override
     public void setContentView(int layoutResID) {
@@ -131,13 +131,21 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
 
     @Override
     public void logout() {
-        if (PrefManager.getPassCodeStatus()) {
-            startActivity(new Intent(this, PassCodeActivity.class));
-        } else {
-            PrefManager.clearPrefs();
-            startActivity(new Intent(this, SplashScreenActivity.class));
-        }
-        finish();
+        new MaterialDialog.Builder().init(MifosBaseActivity.this)
+                .setMessage(R.string.dialog_logout)
+                .setPositiveButton(getString(R.string.logout),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PrefManager.clearPrefs();
+                                startActivity(new Intent(MifosBaseActivity.this,
+                                        SplashScreenActivity.class));
+                                finish();
+                            }
+                        })
+                .setNegativeButton(getString(R.string.cancel))
+                .createMaterialDialog()
+                .show();
     }
 
     public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {

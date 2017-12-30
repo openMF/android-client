@@ -97,6 +97,7 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
         if (isPassCodeLengthCorrect()) {
             if (isPassCodeCorrect) {
                 startDashBoardActivity();
+                finish();
             } else {
                 counter++;
                 passCodeView.clearPasscodeField();
