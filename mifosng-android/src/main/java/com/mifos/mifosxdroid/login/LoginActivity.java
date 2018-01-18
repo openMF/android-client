@@ -15,10 +15,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -32,6 +34,7 @@ import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -215,6 +218,13 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @OnClick(R.id.bt_login)
     public void onLoginClick() {
+        // Hide Keyboard
+        try {
+            InputMethodManager inputManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception e) {
+            // Handle Exception: like whenever keyboard  not open but if we tries to hide it then app will crash
+        }
         login();
     }
 
