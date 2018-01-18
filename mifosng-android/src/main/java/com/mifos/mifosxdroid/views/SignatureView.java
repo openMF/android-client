@@ -141,4 +141,12 @@ public class SignatureView extends View {
         destroyDrawingCache();
         invalidate();
     }
+
+    public int getXCoordinateSize() {
+        return mXCoordinateList.size();
+    }
+
+    public int getYCoordinateSize() {
+        return mYCoordinateList.size();
+    }
 }

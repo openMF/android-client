@@ -202,6 +202,7 @@
     <string name="sign_dir_not_created_msg">Something went wrong. Couldn\'t create directory.</string>
     <string name="sign_saved_success_msg">File saved successfully in </string>
     <string name="uploading_sign_msg">Uploading signature %#8230</string>
+    <string name="empty_signature">No Signature Recorded</string>
     <!-- Signature Related Strings Ends -->
 
 
