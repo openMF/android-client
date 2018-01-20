@@ -287,21 +287,34 @@ public class DashboardActivity extends MifosBaseActivity
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(Gravity.START);
         } else {
-            if (doubleBackToExitPressedOnce) {
-                setMenuCreateClient(true);
-                setMenuCreateCentre(true);
-                setMenuCreateGroup(true);
-                super.onBackPressed();
-                return;
-            }
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentById(R.id.container);
+            if (fragment instanceof SearchFragment) {
+                if (doubleBackToExitPressedOnce) {
+                    setMenuCreateClient(true);
+                    setMenuCreateCentre(true);
+                    setMenuCreateGroup(true);
+                    super.onBackPressed();
+                    return;
                 }
-            }, 2000);
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
+            } else if (fragment instanceof ClientListFragment ||
+                    fragment instanceof GroupsListFragment ||
+                    fragment instanceof CenterListFragment ||
+                    fragment instanceof OfflineDashboardFragment) {
+                replaceFragment(new SearchFragment(), false, R.id.container);
+                mNavigationView.setCheckedItem(R.id.item_dashboard);
+                clearFragmentBackStack();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
