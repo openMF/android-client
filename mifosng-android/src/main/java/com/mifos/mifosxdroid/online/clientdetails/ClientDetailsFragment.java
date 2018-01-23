@@ -84,6 +84,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     // Intent response codes. Each response code must be a unique integer.
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    private Client client_reference;
 
     public static final int MENU_ITEM_DATA_TABLES = 1000;
     public static final int MENU_ITEM_PIN_POINT = 1001;
@@ -421,7 +422,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     }
 
     @Override
-    public void showClientInformation(Client client) {
+    public void showClientInformation(final Client client) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
             isClientActive = client.isActive();
@@ -466,12 +467,16 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 pb_imageProgressBar.setVisibility(GONE);
             }
 
+            client_reference = client;
             iv_clientImage.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     PopupMenu menu = new PopupMenu(getActivity(), view);
                     menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
                             .getMenu());
+                    if (!client.isImagePresent()) {
+                        menu.getMenu().findItem(R.id.client_image_remove).setVisible(false);
+                    }
                     menu.setOnMenuItemClickListener(
                             new PopupMenu.OnMenuItemClickListener() {
                                 @Override
@@ -502,6 +507,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public void showUploadImageSuccessfully(ResponseBody response, String imagePath) {
         Toaster.show(rootView, R.string.client_image_updated);
         iv_clientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+        client_reference.setImagePresent(true);
     }
 
     @Override
@@ -530,6 +536,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         Toaster.show(rootView, "Image deleted");
         iv_clientImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable
                 .ic_launcher));
+        client_reference.setImagePresent(false);
     }
 
     @Override
