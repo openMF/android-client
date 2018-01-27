@@ -5,13 +5,16 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
+import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment;
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleFragment;
@@ -24,6 +27,7 @@ import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.survey.Survey;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import butterknife.ButterKnife;
 
@@ -31,7 +35,8 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
         .OnFragmentInteractionListener,
         LoanAccountSummaryFragment.OnFragmentInteractionListener,
         SavingsAccountSummaryFragment.OnFragmentInteractionListener,
-        SurveyListFragment.OnFragmentInteractionListener {
+        SurveyListFragment.OnFragmentInteractionListener,
+        DocumentDialogFragment.UpdateDocumentListUI {
 
     private int clientId = 0, loanAccountNumber = 0, savingsAccountNumber = 0;
 
@@ -145,5 +150,16 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
         myIntent.putExtra(Constants.SURVEYS, (new Gson()).toJson(survey));
         myIntent.putExtra(Constants.CLIENT_ID, clientId);
         startActivity(myIntent);
+    }
+
+    @Override
+    public void updateUI() {
+        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
+                .ENTITY_TYPE_CLIENTS, clientId);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, documentListFragment);
+        fragmentTransaction.commit();
     }
 }

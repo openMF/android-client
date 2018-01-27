@@ -9,6 +9,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -88,6 +89,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     private int entityId;
     private File fileChoosen;
     private Uri uri;
+    UpdateDocumentListUI mCallback;
 
     public static DocumentDialogFragment newInstance(String entityType, int entityId,
                                                      String documentAction,
@@ -112,6 +114,21 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
             entityId = getArguments().getInt(Constants.ENTITY_ID);
             documentAction = getArguments().getString(Constants.DOCUMENT_ACTIONS);
             document = getArguments().getParcelable(Constants.DOCUMENT);
+        }
+    }
+
+    public interface UpdateDocumentListUI {
+        void updateUI();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (UpdateDocumentListUI) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement UpdateDocumentListUI");
         }
     }
 
@@ -297,12 +314,12 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
     @Override
     public void showDocumentedCreatedSuccessfully(GenericResponse genericResponse) {
         Toast.makeText(getActivity(), String.format(getString(R.string
                         .uploaded_successfully), fileChoosen.getName()),
                 Toast.LENGTH_SHORT).show();
+        mCallback.updateUI();
         getDialog().dismiss();
     }
 
@@ -311,6 +328,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         Toast.makeText(getActivity(), String.format(getString(R.string
                         .document_updated_successfully), fileChoosen.getName()),
                 Toast.LENGTH_SHORT).show();
+        mCallback.updateUI();
         getDialog().dismiss();
     }
 
