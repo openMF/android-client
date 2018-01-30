@@ -45,6 +45,7 @@ import com.mifos.utils.MifosResponseHandler;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -222,7 +223,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             officeList.add(office.getName());
             officeNameIdHashMap.put(office.getName(), office.getId());
         }
-
+        Collections.sort(officeList);
         ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, officeList);
         officeAdapter.setDropDownViewResource(android.R.layout
