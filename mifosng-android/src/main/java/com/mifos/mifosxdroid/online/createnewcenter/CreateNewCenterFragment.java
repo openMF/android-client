@@ -222,6 +222,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             officeList.add(office.getName());
             officeNameIdHashMap.put(office.getName(), office.getId());
         }
+
         ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, officeList);
         officeAdapter.setDropDownViewResource(android.R.layout
