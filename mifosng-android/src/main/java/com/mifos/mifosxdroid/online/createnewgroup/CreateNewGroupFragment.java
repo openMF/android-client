@@ -48,6 +48,7 @@ import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -281,6 +282,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
         for (Office office : offices) {
             mListOffices.add(office.getName());
         }
+        Collections.sort(mListOffices);
         mOfficesAdapter.notifyDataSetChanged();
     }
 
