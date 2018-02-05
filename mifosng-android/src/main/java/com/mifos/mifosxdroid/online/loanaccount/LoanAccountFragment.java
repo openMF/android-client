@@ -150,6 +150,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     private boolean hasDataTables;
     private DialogFragment mfDatePicker;
+    private DialogFragment mfDatePick;
     private int productId;
     private int clientId;
     private int loanPurposeId;
@@ -453,7 +454,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
     public void inflateDisbursementDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePick = MFDatePicker.newInstance(this, 1);
 
         tvDisbursementOnDate.setText(MFDatePicker.getDatePickedAsString());
     }
@@ -461,7 +462,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @OnClick(R.id.tv_disbursementon_date)
     public void setTvDisbursementOnDate() {
         isDisbursebemntDate = true;
-        mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+
+        mfDatePick.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
 

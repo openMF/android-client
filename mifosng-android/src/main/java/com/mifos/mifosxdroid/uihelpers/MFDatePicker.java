@@ -21,6 +21,10 @@ import java.util.Date;
  */
 public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
+    private static final String DATE_KEY = "date_present";
+    private static final int set_max_date = 0;
+    private static final int set_min_date = 1;
+
     public static final String TAG = "MFDatePicker";
     static String dateSet;
     static Calendar calendar;
@@ -53,19 +57,37 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
         return mfDatePicker;
     }
 
+    public static MFDatePicker newInstance(Fragment fragment, Integer id) {
+        MFDatePicker mfDatePicker = new MFDatePicker();
+        Bundle args = new Bundle();
+        args.putInt(DATE_KEY, id);
+        mfDatePicker.setArguments(args);
+        mfDatePicker.onDatePickListener = (OnDatePickListener) fragment;
+        return mfDatePicker;
+    }
+
     public static String getDatePickedAsString() {
         return dateSet;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+        int param = 0;
+        if (getArguments() != null) {
+            param = getArguments().getInt(DATE_KEY);
+        }
         DatePickerDialog dialog = new DatePickerDialog(getActivity(),
                 this, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
-
-        dialog.getDatePicker().setMaxDate(new Date().getTime());
+        switch (param) {
+            case set_max_date:
+                dialog.getDatePicker().setMaxDate(new Date().getTime());
+                break;
+            case set_min_date:
+                dialog.getDatePicker().setMinDate(new Date().getTime());
+                break;
+        }
         return dialog;
     }
 
