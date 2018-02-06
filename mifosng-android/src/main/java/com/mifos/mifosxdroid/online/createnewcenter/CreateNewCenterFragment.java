@@ -34,7 +34,7 @@ import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.response.SaveResponse;
@@ -54,7 +54,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class CreateNewCenterFragment extends MifosBaseFragment
+public class CreateNewCenterFragment extends ProgressableFragment
         implements MFDatePicker.OnDatePickListener, CreateNewCenterMvpView {
 
 
@@ -268,13 +268,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @Override
     public void showProgressbar(boolean show) {
-        if (show) {
-            llCenter.setVisibility(View.GONE);
-            showMifosProgressBar();
-        } else {
-            llCenter.setVisibility(View.VISIBLE);
-            hideMifosProgressBar();
-        }
+        showProgress(show);
     }
 
     @SuppressWarnings("deprecation")
