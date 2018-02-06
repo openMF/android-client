@@ -83,6 +83,7 @@
         <activity
             android:name=".online.GenerateCollectionSheetActivity"
             android:label="@string/title_activity_generate_collection_sheet"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:parentActivityName=".online.DashboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
