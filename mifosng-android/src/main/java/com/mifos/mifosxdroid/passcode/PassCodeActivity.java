@@ -186,7 +186,9 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
     }
 
     private void startDashBoardActivity() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        if (isInitialScreen) {
+            startActivity(new Intent(PassCodeActivity.this, DashboardActivity.class));
+        }
         finish();
     }
 
