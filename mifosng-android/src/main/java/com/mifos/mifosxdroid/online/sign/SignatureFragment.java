@@ -258,6 +258,10 @@ public class SignatureFragment extends MifosBaseFragment implements
 
     @Override
     public void saveAndUploadSignature() {
-        signView.saveSignature(mClientId);
+        if (signView.getXCoordinateSize() > 0 && signView.getYCoordinateSize() > 0) {
+            signView.saveSignature(mClientId);
+        } else {
+            Toaster.show(rootView, R.string.empty_signature);
+        }
     }
 }
