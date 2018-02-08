@@ -17,6 +17,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EncryptionUtil;
+import com.mifos.utils.Network;
 import com.mifos.utils.PassCodeView;
 import com.mifos.utils.PrefManager;
 
@@ -96,7 +97,12 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
 
         if (isPassCodeLengthCorrect()) {
             if (isPassCodeCorrect) {
-                startDashBoardActivity();
+                if(Network.getConnectivityStatus(this) != Network.TYPE_NOT_CONNECTED) {
+                    startDashBoardActivity();
+                    finish();
+                } else {
+                    Toaster.show(clRootview,R.string.error_network_not_available);
+                }
             } else {
                 counter++;
                 passCodeView.clearPasscodeField();
