@@ -52,7 +52,8 @@
                     android:id="@+id/iv_visibility"
                     android:layout_marginLeft="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
-                    app:srcCompat="@drawable/ic_visibility_48px"/>
+                    app:srcCompat="@drawable/ic_visibility_48px"
+                    android:tint="@color/light_grey"/>
             </LinearLayout>
             <TableLayout
                 android:layout_width="wrap_content"
