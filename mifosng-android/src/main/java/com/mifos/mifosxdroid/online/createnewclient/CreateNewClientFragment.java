@@ -37,6 +37,7 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
@@ -217,75 +218,81 @@ public class CreateNewClientFragment extends ProgressableFragment
     @OnClick(R.id.btn_submit)
     public void onClickSubmitButton() {
 
-        submissionDateString = tvSubmissionDate.getText().toString();
-        submissionDateString = DateHelper
-                .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
-                .replace("-", " ");
-        dateOfBirthString = tvDateOfBirth.getText().toString();
-        dateOfBirthString = DateHelper.getDateAsStringUsedForDateofBirth(dateOfBirthString)
-                .replace("-", " ");
+        if (Network.getConnectivityStatus(getActivity()) == Network.TYPE_NOT_CONNECTED) {
+            Toaster.show(rootView, getString(R.string.error_not_connected_internet), Toaster.LONG);
+        } else {
+            submissionDateString = tvSubmissionDate.getText().toString();
+            submissionDateString = DateHelper
+                    .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
+                    .replace("-", " ");
+            dateOfBirthString = tvDateOfBirth.getText().toString();
+            dateOfBirthString = DateHelper.getDateAsStringUsedForDateofBirth(dateOfBirthString)
+                    .replace("-", " ");
 
-        ClientPayload clientPayload = new ClientPayload();
+            ClientPayload clientPayload = new ClientPayload();
 
-        //Mandatory Fields
-        clientPayload.setFirstname(etClientFirstName.getEditableText().toString());
-        clientPayload.setLastname(etClientLastName.getEditableText().toString());
-        clientPayload.setOfficeId(officeId);
+            //Mandatory Fields
+            clientPayload.setFirstname(etClientFirstName.getEditableText().toString());
+            clientPayload.setLastname(etClientLastName.getEditableText().toString());
+            clientPayload.setOfficeId(officeId);
 
-        //Optional Fields, we do not need to add any check because these fields carry some
-        // default values
-        clientPayload.setActive(cbClientActiveStatus.isChecked());
-        clientPayload.setActivationDate(submissionDateString);
-        clientPayload.setDateOfBirth(dateOfBirthString);
+            //Optional Fields, we do not need to add any check because these fields carry some
+            // default values
+            clientPayload.setActive(cbClientActiveStatus.isChecked());
+            clientPayload.setActivationDate(submissionDateString);
+            clientPayload.setDateOfBirth(dateOfBirthString);
 
-        //Optional Fields
-        if (!TextUtils.isEmpty(etClientMiddleName.getEditableText().toString())) {
-            clientPayload.setMiddlename(etClientMiddleName.getEditableText().toString());
-        }
+            //Optional Fields
+            if (!TextUtils.isEmpty(etClientMiddleName.getEditableText().toString())) {
+                clientPayload.setMiddlename(etClientMiddleName.getEditableText().toString());
+            }
 
-        if (PhoneNumberUtils.isGlobalPhoneNumber(etClientMobileNo.getEditableText().toString())) {
-            clientPayload.setMobileNo(etClientMobileNo.getEditableText().toString());
-        }
+            if (PhoneNumberUtils.isGlobalPhoneNumber(etClientMobileNo.getEditableText()
+                    .toString())) {
+                clientPayload.setMobileNo(etClientMobileNo.getEditableText().toString());
+            }
 
-        if (!TextUtils.isEmpty(etClientExternalId.getEditableText().toString())) {
-            clientPayload.setExternalId(etClientExternalId.getEditableText().toString());
-        }
+            if (!TextUtils.isEmpty(etClientExternalId.getEditableText().toString())) {
+                clientPayload.setExternalId(etClientExternalId.getEditableText().toString());
+            }
 
-        if (!clientStaff.isEmpty()) {
-            clientPayload.setStaffId(staffId);
-        }
+            if (!clientStaff.isEmpty()) {
+                clientPayload.setStaffId(staffId);
+            }
 
-        if (!genderOptionsList.isEmpty()) {
-            clientPayload.setGenderId(genderId);
-        }
+            if (!genderOptionsList.isEmpty()) {
+                clientPayload.setGenderId(genderId);
+            }
 
-        if (!clientTypeList.isEmpty()) {
-            clientPayload.setClientTypeId(clientTypeId);
-        }
+            if (!clientTypeList.isEmpty()) {
+                clientPayload.setClientTypeId(clientTypeId);
+            }
 
-        if (!clientClassificationList.isEmpty()) {
-            clientPayload.setClientClassificationId(clientClassificationId);
-        }
+            if (!clientClassificationList.isEmpty()) {
+                clientPayload.setClientClassificationId(clientClassificationId);
+            }
 
-        if (!isFirstNameValid()) {
-            return;
-        }
-        if (!isMiddleNameValid()) {
-            return;
-        }
-        if (isLastNameValid()) {
-            if (hasDataTables) {
-                DataTableListFragment fragment = DataTableListFragment.newInstance(
-                        clientsTemplate.getDataTables(),
-                        clientPayload, Constants.CREATE_CLIENT);
+            if (!isFirstNameValid()) {
+                return;
+            }
+            if (!isMiddleNameValid()) {
+                return;
+            }
+            if (isLastNameValid()) {
+                if (hasDataTables) {
+                    DataTableListFragment fragment = DataTableListFragment.newInstance(
+                            clientsTemplate.getDataTables(),
+                            clientPayload, Constants.CREATE_CLIENT);
 
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
-                fragmentTransaction.replace(R.id.container, fragment).commit();
-            } else {
-                clientPayload.setDatatables(null);
-                createNewClientPresenter.createClient(clientPayload);
+                    FragmentTransaction fragmentTransaction = getActivity()
+                            .getSupportFragmentManager()
+                            .beginTransaction();
+                    fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
+                    fragmentTransaction.replace(R.id.container, fragment).commit();
+                } else {
+                    clientPayload.setDatatables(null);
+                    createNewClientPresenter.createClient(clientPayload);
+                }
             }
         }
     }
