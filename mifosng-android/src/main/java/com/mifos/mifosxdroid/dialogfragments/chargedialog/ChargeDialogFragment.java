@@ -194,6 +194,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
     public void showChargesCreatedSuccessfully(Charges changes) {
         Toast.makeText(getActivity(), "Charge created successfully", Toast.LENGTH_LONG)
                 .show();
+        getDialog().dismiss();
     }
 
     @Override
