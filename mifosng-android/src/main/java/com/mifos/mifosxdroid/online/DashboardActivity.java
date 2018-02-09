@@ -233,7 +233,10 @@ public class DashboardActivity extends MifosBaseActivity
     public void setupUserStatusToggle() {
         userStatusToggle
                 = (SwitchCompat) mNavigationHeader.findViewById(R.id.user_status_toggle);
+        final TextView user_status = ButterKnife.
+                findById(mNavigationHeader, R.id.user_status_toggle);
         if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+            user_status.setText(R.string.offline_mode);
             userStatusToggle.setChecked(true);
         }
 
@@ -242,9 +245,11 @@ public class DashboardActivity extends MifosBaseActivity
             public void onClick(View v) {
                 if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
                     PrefManager.setUserStatus(Constants.USER_ONLINE);
+                    user_status.setText(R.string.online_mode);
                     userStatusToggle.setChecked(false);
                 } else {
                     PrefManager.setUserStatus(Constants.USER_OFFLINE);
+                    user_status.setText(R.string.offline_mode);
                     userStatusToggle.setChecked(true);
                 }
             }

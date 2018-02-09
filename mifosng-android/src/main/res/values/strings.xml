@@ -507,6 +507,7 @@
 
     <!--Offline sync Terms-->
     <string name="offline_mode">Offline Mode</string>
+    <string name="online_mode">Online Mode</string>
     <string name="submit_date">Submit Date</string>
     <string name="error_message">Server Sync Error</string>
     <string name="sync_clients">Clients</string>
