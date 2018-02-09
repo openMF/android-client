@@ -733,6 +733,7 @@
     <string name="incorrect_passcode">Incorrect Passcode</string>
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
-
-
+    <string name="passcode_does_not_match">Passcode does not match</string>
+    <string name="reenter_passcode">Please re-enter your passcode</string>
+    <string name="proceed">Proceed</string>
 </resources>

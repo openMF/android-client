@@ -49,6 +49,9 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
 
     private int counter = 0;
     private boolean isInitialScreen;
+    private boolean isPassCodeVerified;
+    private String strPassCodeEntered;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,8 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
         ButterKnife.bind(this);
 
         isInitialScreen = getIntent().getBooleanExtra(Constants.INTIAL_LOGIN, false);
+        isPassCodeVerified = false;
+        strPassCodeEntered = "";
 
         if (PrefManager.getPassCodeStatus()) {
             btnSkip.setVisibility(View.GONE);
@@ -77,8 +82,32 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
     @OnClick(R.id.btn_save)
     public void savePassCode() {
         if (isPassCodeLengthCorrect()) {
-            PrefManager.setPassCode(EncryptionUtil.getHash(passCodeView.getPasscode()));
-            startDashBoardActivity();
+            if (isPassCodeVerified) {
+                if (strPassCodeEntered.compareTo(passCodeView.getPasscode()) == 0) {
+                    PrefManager.setPassCode(EncryptionUtil.getHash(passCodeView.getPasscode()));
+                    startDashBoardActivity();
+                } else {
+                    if (counter == 3) {
+                        Toast.makeText(getApplicationContext(),
+                                R.string.incorrect_passcode_more_than_three,
+                                Toast.LENGTH_SHORT).show();
+                        PrefManager.clearPrefs();
+                        startSplashActivity();
+                        return;
+                    }
+                    counter++;
+                    Toaster.show(clRootview, getString(R.string.passcode_does_not_match));
+                    passCodeView.clearPasscodeField();
+                }
+            } else {
+                btnSkip.setVisibility(View.INVISIBLE);
+                btnSave.setText(getString(R.string.save));
+                tvPasscodeIntro.setText(getString(R.string.reenter_passcode));
+                strPassCodeEntered = passCodeView.getPasscode();
+                passCodeView.clearPasscodeField();
+                isPassCodeVerified = true;
+            }
+
         }
     }
 
