@@ -33,7 +33,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Rajan Maurya on 19/07/16.
@@ -110,6 +109,10 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (ll_error.getVisibility() == View.VISIBLE) {
+                    ll_error.setVisibility(View.GONE);
+                    rv_payload_group.setVisibility(View.VISIBLE);
+                }
 
                 mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
 
@@ -121,16 +124,6 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
         mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
 
         return rootView;
-    }
-
-    /**
-     * Show when Database response is null or failed to fetch the client payload
-     * Onclick Send Fresh Request for Client Payload.
-     */
-    @OnClick(R.id.noPayloadIcon)
-    public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
-        mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload();
     }
 
 
@@ -175,7 +168,8 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     @Override
     public void showError(int stringId) {
         ll_error.setVisibility(View.VISIBLE);
-        String message = stringId + getResources().getString(R.string.click_to_refresh);
+        rv_payload_group.setVisibility(View.GONE);
+        String message = stringId + getResources().getString(R.string.swipe_to_refresh);
         mNoPayloadText.setText(message);
         Toaster.show(rootView, stringId);
     }

@@ -238,27 +238,20 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     /**
      * This Method will be called. Whenever user will swipe down to refresh the group list.
+     * This Method also refresh the page at time off error.
      */
     @Override
     public void onRefresh() {
+        if (rlError.getVisibility() == View.VISIBLE) {
+            rlError.setVisibility(View.GONE);
+            rv_groups.setVisibility(View.VISIBLE);
+        }
         mGroupsListPresenter.loadGroups(false, 0);
         mGroupsListPresenter.loadDatabaseGroups();
         if (actionMode != null) actionMode.finish();
     }
 
-    /**
-     * This method will be called, whenever first time error occurred during the fetching group
-     * list from REST API.
-     * As the error will occurred. user is able to see the error message and ability to reload
-     * groupList.
-     */
-    @OnClick(R.id.noGroupsIcon)
-    public void reloadOnError() {
-        rlError.setVisibility(View.GONE);
-        rv_groups.setVisibility(View.VISIBLE);
-        mGroupsListPresenter.loadGroups(false, 0);
-        mGroupsListPresenter.loadDatabaseGroups();
-    }
+
 
     /**
      * Setting GroupList to the Adapter and updating the Adapter.
@@ -323,7 +316,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         rv_groups.setVisibility(View.GONE);
         rlError.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
-                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
+                 + getStringMessage(R.string.swipe_to_refresh);
         mNoGroupsText.setText(errorMessage);
     }
 

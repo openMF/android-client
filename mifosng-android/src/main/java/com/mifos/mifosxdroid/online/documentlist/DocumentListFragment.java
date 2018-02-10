@@ -50,7 +50,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
 public class DocumentListFragment extends MifosBaseFragment implements DocumentListMvpView,
@@ -146,18 +145,16 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
 
     @Override
     public void onRefresh() {
+        if (ll_error.getVisibility() == View.VISIBLE) {
+            ll_error.setVisibility(View.GONE);
+        }
+
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mDocumentListPresenter.loadDocumentList(entityType, entityId);
-    }
-
-    @OnClick(R.id.noDocumentIcon)
-    public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
     }
 
@@ -306,8 +303,8 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     public void showFetchingError(int message) {
         if (mDocumentListAdapter.getItemCount() == 0) {
             ll_error.setVisibility(View.VISIBLE);
-            String errorMessage = getStringMessage(message) + getStringMessage(R.string.new_line) +
-                    getStringMessage(R.string.click_to_refresh);
+            String errorMessage = getStringMessage(message)  +
+                    getStringMessage(R.string.swipe_to_refresh);
             mNoChargesText.setText(errorMessage);
         } else {
             Toaster.show(rootView, getStringMessage(message));

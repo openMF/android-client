@@ -527,7 +527,7 @@
     <string name="all_groups_synced">All Groups have been Synced</string>
     <string name="all_centers_synced">All Centers have been Synced</string>
     <string name="all_clients_synced">All Clients have been Synced</string>
-    <string name="click_to_refresh">\n Click to Refresh</string>
+    <string name="swipe_to_refresh">\nSwipe to Refresh</string>
     <string name="syncing_client">Syncing Client</string>
     <string name="syncing_group">Syncing Group</string>
     <string name="syncing_center">Syncing Center</string>

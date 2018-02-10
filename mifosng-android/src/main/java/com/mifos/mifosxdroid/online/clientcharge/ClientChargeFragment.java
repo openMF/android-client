@@ -44,7 +44,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ClientChargeFragment extends MifosBaseFragment implements ClientChargeMvpView,
         RecyclerItemClickListener.OnItemClickListener {
@@ -151,6 +150,11 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
             public void onRefresh() {
 
                 mApiRestCounter = 1;
+                if (ll_error.getVisibility() == View.VISIBLE) {
+                    ll_error.setVisibility(View.GONE);
+                    rv_charges.setVisibility(View.VISIBLE);
+                }
+
 
                 mClientChargePresenter.loadCharges(clientId, 0, limit);
 
@@ -176,16 +180,6 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
         });
 
         return rootView;
-    }
-
-    /**
-     * Shows When mApiRestValue is 1 and Server Response is Null.
-     * Onclick Send Fresh Request for Center list.
-     */
-    @OnClick(R.id.noChargesIcon)
-    public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
-        mClientChargePresenter.loadCharges(clientId, 0, limit);
     }
 
 
@@ -234,8 +228,9 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
     public void showFetchingErrorCharges(String s) {
 
         if (mApiRestCounter == 1) {
+            rv_charges.setVisibility(View.GONE);
             ll_error.setVisibility(View.VISIBLE);
-            mNoChargesText.setText(s + "\n Click to Refresh ");
+            mNoChargesText.setText(s + getString(R.string.swipe_to_refresh));
         }
 
         Toaster.show(rootView, s);

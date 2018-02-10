@@ -33,7 +33,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
         SyncCenterPayloadsMvpView, DialogInterface.OnClickListener {
@@ -108,6 +107,10 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
             @Override
             public void onRefresh() {
 
+                if (llError.getVisibility() == View.VISIBLE) {
+                    llError.setVisibility(View.GONE);
+                    rvPayloadCenter.setVisibility(View.VISIBLE);
+                }
                 mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload();
 
                 if (swipeRefreshLayout.isRefreshing())
@@ -120,15 +123,6 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
         return rootView;
     }
 
-    /**
-     * Show when Database response is null or failed to fetch the center payload
-     * Onclick Send Fresh Request for Center Payload.
-     */
-    @OnClick(R.id.noPayloadIcon)
-    public void reloadOnError() {
-        llError.setVisibility(View.GONE);
-        mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload();
-    }
 
     @Override
     public void showCenterSyncResponse() {
@@ -170,7 +164,8 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
     @Override
     public void showError(int stringId) {
         llError.setVisibility(View.VISIBLE);
-        String message = stringId + getResources().getString(R.string.click_to_refresh);
+        rvPayloadCenter.setVisibility(View.GONE);
+        String message = stringId + getResources().getString(R.string.swipe_to_refresh);
         mNoPayloadText.setText(message);
         Toaster.show(rootView, stringId);
     }
