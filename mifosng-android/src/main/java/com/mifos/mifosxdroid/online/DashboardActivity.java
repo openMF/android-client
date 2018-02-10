@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -358,6 +359,14 @@ public class DashboardActivity extends MifosBaseActivity
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
 
