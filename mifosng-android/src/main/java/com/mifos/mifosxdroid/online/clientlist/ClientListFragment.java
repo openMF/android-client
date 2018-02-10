@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -76,6 +77,9 @@ public class ClientListFragment extends MifosBaseFragment
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.progressbar_client)
+    ProgressBar pbCenter;
 
     @BindView(R.id.noClientText)
     TextView mNoClientText;
@@ -344,10 +348,10 @@ public class ClientListFragment extends MifosBaseFragment
     public void showProgressbar(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
         if (show && mClientNameListAdapter.getItemCount() == 0) {
-            showMifosProgressBar();
+            pbCenter.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
         } else {
-            hideMifosProgressBar();
+            pbCenter.setVisibility(View.GONE);
         }
     }
 
