@@ -106,6 +106,10 @@ public class DashboardActivity extends MifosBaseActivity
                             setMenuCreateClient(true);
                             setMenuCreateCentre(false);
                             setMenuCreateGroup(true);
+                        } else {
+                            setMenuCreateClient(true);
+                            setMenuCreateCentre(true);
+                            setMenuCreateGroup(true);
                         }
                     }
                 });
