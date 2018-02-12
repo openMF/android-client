@@ -6,6 +6,8 @@
 package com.mifos.utils;
 
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.mifos.objects.mifoserror.MifosError;
 
@@ -29,6 +31,11 @@ public class MFErrorParser {
                 errorMessage = ((HttpException) throwableError).response().errorBody().string();
                 errorMessage =  MFErrorParser.parseError(errorMessage).getErrors()
                         .get(0).getDefaultUserMessage();
+            }
+            else
+            {
+                Log.v("elseErrorMessage",throwableError.toString());
+                errorMessage=throwableError.toString();
             }
         } catch (Throwable throwable) {
             RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
