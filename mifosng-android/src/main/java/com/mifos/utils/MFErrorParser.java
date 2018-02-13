@@ -34,8 +34,7 @@ public class MFErrorParser {
             }
             else
             {
-                Log.v("elseErrorMessage",throwableError.toString());
-                errorMessage=throwableError.toString();
+                errorMessage = throwableError.toString();
             }
         } catch (Throwable throwable) {
             RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
