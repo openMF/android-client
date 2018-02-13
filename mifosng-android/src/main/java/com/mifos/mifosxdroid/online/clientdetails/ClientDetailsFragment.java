@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
@@ -153,6 +154,15 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @Inject
     ClientDetailsPresenter mClientDetailsPresenter;
 
+    @BindView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.ll_error)
+    LinearLayout llError;
+
+    @BindView(R.id.noClientText)
+    TextView tvNoClient;
+
     private View rootView;
     private OnFragmentInteractionListener mListener;
     private File capturedClientImageFile;
@@ -194,6 +204,24 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         mClientDetailsPresenter.attachView(this);
 
         inflateClientInformation();
+        swipeRefreshLayout.setColorSchemeColors(getActivity()
+                .getResources().getIntArray(R.array.swipeRefreshColors));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                inflateClientInformation();
+
+                if (llError.getVisibility() == VISIBLE) {
+                    llError.setVisibility(GONE);
+                    rlClient.setVisibility(VISIBLE);
+                }
+
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
 
         return rootView;
     }
@@ -586,6 +614,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     @Override
     public void showFetchingError(String s) {
+        llError.setVisibility(VISIBLE);
+        rlClient.setVisibility(GONE);
+        tvNoClient.setText(s);
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
