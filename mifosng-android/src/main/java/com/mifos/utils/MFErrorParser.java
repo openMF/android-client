@@ -32,8 +32,7 @@ public class MFErrorParser {
                 errorMessage =  MFErrorParser.parseError(errorMessage).getErrors()
                         .get(0).getDefaultUserMessage();
             }
-            else
-            {
+            else {
                 errorMessage = throwableError.toString();
             }
         } catch (Throwable throwable) {
