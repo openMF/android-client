@@ -266,6 +266,9 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
 
             case R.id.sp_groups:
                 groupId = groupNameIdHashMap.get(groupNames.get(i));
+                if (groupId == -1) {
+                    Toaster.show(rootView, getString(R.string.error_select_group));
+                }
                 break;
 
         }
