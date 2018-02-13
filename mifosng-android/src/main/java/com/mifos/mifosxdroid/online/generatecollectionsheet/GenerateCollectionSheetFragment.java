@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -266,6 +267,10 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
 
             case R.id.sp_groups:
                 groupId = groupNameIdHashMap.get(groupNames.get(i));
+                if (groupId == -1) {
+
+                    Toaster.show(rootView, getString(R.string.error_select_group));
+                }
                 break;
 
         }
