@@ -1,13 +1,15 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/ll_center"
-                  style="@style/LinearLayout.Base">
+        android:id="@+id/ll_center"
+        style="@style/LinearLayout.Base">
+
         <TextView style="@style/TextView.CreateCenter" />
+
         <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
             <EditText
                 android:id="@+id/et_center_name"
                 style="@style/EditText.BaseWidth"
@@ -16,9 +18,11 @@
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:paddingBottom="16dp"
-                android:singleLine="true"/>
+                android:singleLine="true" />
+
             <requestFocus />
         </android.support.design.widget.TextInputLayout>
+
         <TextView
             android:id="@+id/tv_office"
             android:layout_width="match_parent"
@@ -33,20 +37,19 @@
             android:id="@+id/sp_center_offices"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@color/light_grey"
             android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-        </android.support.design.widget.TextInputLayout>
+            android:spinnerMode="dropdown" />
+
+        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base"></android.support.design.widget.TextInputLayout>
+
         <CheckBox
             android:id="@+id/cb_center_active_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:checked="false"
-            android:paddingTop="10dp"
-            android:text="@string/center_active"
-            />
+            android:text="@string/center_active" />
 
         <TextView
             android:id="@+id/tv_center_activationDate"
@@ -54,8 +57,8 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:paddingBottom="10dp"
-            android:textSize="20sp"
             android:text="@string/center_activation_date"
+            android:textSize="20sp"
             android:visibility="gone"
 
             />
@@ -65,8 +68,7 @@
             android:id="@+id/btn_submit"
             style="@style/Button.Base"
             android:layout_marginTop="10dp"
-            android:text="@string/submit"
-            />
+            android:text="@string/submit" />
 
 
     </LinearLayout>
