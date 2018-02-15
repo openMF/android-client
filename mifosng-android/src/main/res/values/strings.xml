@@ -733,6 +733,12 @@
     <string name="incorrect_passcode">Incorrect Passcode</string>
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
+    <string name="gps_network_not_enabled">GPS network is disabled</string>
+    <string name="open_location_settings">Open location settings</string>
+    <string name="location_services_disabled">Location services disabled</string>
+    <string name="gps_network_not_available">Gps and network are not available</string>
+    <string name="enable_location">To continue, let your device turn on location</string>
+    <string name="location_services_unavailable">Location services unavailable</string>
 
 
 </resources>
