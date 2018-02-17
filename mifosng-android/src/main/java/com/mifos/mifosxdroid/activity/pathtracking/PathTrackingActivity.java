@@ -120,8 +120,11 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         pathTrackingAdapter.setContext(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
         rvPathTracker.setLayoutManager(mLayoutManager);
-        rvPathTracker.setHasFixedSize(true);
+        rvPathTracker.setHasFixedSize(false);
+        rvPathTracker.scrollToPosition(0);
         rvPathTracker.setAdapter(pathTrackingAdapter);
         rvPathTracker.addOnItemTouchListener(new RecyclerItemClickListener(this, this));
         swipeRefreshLayout.setColorSchemeColors(this
