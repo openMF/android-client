@@ -26,6 +26,14 @@
         android:paddingRight="16dp"
         android:id="@+id/linearLayout">
 
+        <com.mifos.mifosxdroid.views.CircularImageView
+            android:id="@+id/iv_status_indicator"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:src="@color/light_yellow"/>
 
         <com.mifos.mifosxdroid.views.CircularImageView
             android:id="@+id/iv_user_picture"

@@ -18,8 +18,10 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.SelectableAdapter;
+import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.ImageLoaderUtils;
+import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +75,13 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
                 ((ViewHolder) holder).iv_userPicture.setImageResource(R.drawable.ic_dp_placeholder);
             }
 
+            if (client.isActive()) {
+                ((ViewHolder) holder).ivStatusIndicator.setImageDrawable(
+                        Utils.setCircularBackground(R.color.light_green, mContext));
+            } else {
+                ((ViewHolder) holder).ivStatusIndicator.setImageDrawable(
+                        Utils.setCircularBackground(R.color.light_red, mContext));
+            }
             //Changing the Color of Selected Clients
             ((ViewHolder) holder).view_selectedOverlay
                     .setBackgroundColor(isSelected(position) ? ContextCompat.getColor(mContext,
@@ -106,6 +115,9 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.iv_status_indicator)
+        CircularImageView ivStatusIndicator;
 
         @BindView(R.id.tv_clientName)
         TextView tv_clientName;

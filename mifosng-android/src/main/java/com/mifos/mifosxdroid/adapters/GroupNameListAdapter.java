@@ -18,7 +18,9 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.SelectableAdapter;
+import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.group.Group;
+import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,13 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
             ((ViewHolder) holder).tv_groupsName.setText(group.getName());
             ((ViewHolder) holder).tv_groupsId.setText(String.valueOf(group.getId()));
 
+            if (group.isActive()) {
+                ((ViewHolder) holder).ivStatusIndicator.setImageDrawable(
+                        Utils.setCircularBackground(R.color.light_green, context));
+            } else {
+                ((ViewHolder) holder).ivStatusIndicator.setImageDrawable(
+                        Utils.setCircularBackground(R.color.light_red, context));
+            }
             //Changing the Color of Selected Groups
             ((ViewHolder) holder).view_selectedOverlay
                     .setBackgroundColor(isSelected(position) ? ContextCompat.getColor(context,
@@ -90,6 +99,9 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.iv_status_indicator)
+        CircularImageView ivStatusIndicator;
 
         @BindView(R.id.tv_group_name)
         TextView tv_groupsName;
