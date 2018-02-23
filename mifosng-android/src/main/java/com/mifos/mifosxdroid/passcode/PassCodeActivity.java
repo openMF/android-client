@@ -47,7 +47,7 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
     @BindView(R.id.iv_visibility)
     ImageView ivVisibility;
 
-    private int counter = 0;
+    private int counter = 1;
     private boolean isInitialScreen;
 
     @Override
