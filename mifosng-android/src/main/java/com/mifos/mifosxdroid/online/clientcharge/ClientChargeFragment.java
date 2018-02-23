@@ -206,6 +206,10 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
          * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
          */
         if (mApiRestCounter == 1) {
+            if (chargesPage.getPageItems().isEmpty()) {
+                showEmptyCharges();
+                return;
+            }
             chargesList = chargesPage.getPageItems();
             mChargesNameListAdapter = new ChargeNameListAdapter(getActivity(),
                     chargesList, clientId);
