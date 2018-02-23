@@ -431,6 +431,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
     @Override
     public void showFetchingError(int s) {
+        disableButtons();
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
 
     }
@@ -449,6 +450,12 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     public void onDestroyView() {
         super.onDestroyView();
         mSavingAccountSummaryPresenter.detachView();
+    }
+
+    public void disableButtons() {
+        bt_approve_saving.setEnabled(false);
+        bt_deposit.setEnabled(false);
+        bt_withdrawal.setEnabled(false);
     }
 
     public interface OnFragmentInteractionListener {
