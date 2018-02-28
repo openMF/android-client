@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,12 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
     @BindView(R.id.bt_upload)
     Button bt_upload;
+
+    @BindView(R.id.til_document_name)
+    TextInputLayout til_document_name;
+
+    @BindView(R.id.til_document_description)
+    TextInputLayout til_document_description;
 
     @Inject
     DocumentDialogPresenter mDocumentDialogPresenter;
@@ -163,16 +170,22 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public void validateInput() throws RequiredFieldException {
 
         documentName = et_document_name.getEditableText().toString();
-
-        if (documentName.length() == 0 || documentName.equals(""))
-            throw new RequiredFieldException(getResources().getString(R.string.name),
-                    getString(R.string.message_field_required));
-
         documentDescription = et_document_description.getEditableText().toString();
 
-        if (documentDescription.length() == 0 || documentDescription.equals(""))
+        if (documentName.length() == 0 || documentName.equals("")) {
+            til_document_name.setError(getResources().getString(R.string.mandatory));
+            throw new RequiredFieldException(getResources().getString(R.string.name),
+                    getResources().getString(R.string.message_field_required));
+        } else {
+            til_document_name.setError(null);
+        }
+        if (documentDescription.length() == 0 || documentDescription.equals("")) {
+            til_document_description.setError(getResources().getString(R.string.mandatory));
             throw new RequiredFieldException(getResources().getString(R.string.description),
-                    getString(R.string.message_field_required));
+                    getResources().getString(R.string.message_field_required));
+        } else {
+            til_document_description.setError(null);
+        }
 
         //Start Uploading Document
         if (documentAction == getResources().getString(R.string.update_document)) {
