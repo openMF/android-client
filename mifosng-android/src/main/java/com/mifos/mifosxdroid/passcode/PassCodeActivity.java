@@ -101,7 +101,8 @@ public class PassCodeActivity extends MifosBaseActivity implements PassCodeView.
             } else {
                 counter++;
                 passCodeView.clearPasscodeField();
-                Toaster.show(clRootview, R.string.incorrect_passcode);
+                Toaster.show(clRootview, getResources().getString(R.string.incorrect_passcode,
+                        4 - counter), Toaster.SHORT);
             }
         }
     }
