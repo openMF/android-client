@@ -68,4 +68,8 @@
     <style name="MaterialDatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/primary</item>
     </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background</item>
+    </style>
 </resources>
