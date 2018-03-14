@@ -51,6 +51,8 @@ public class Constants {
 
     public static final String CLIENT_ID = "clientId";
 
+    public static final String ID = "id";
+
     public static final String CLIENT = "Client";
 
     public static final String CLIENTS = "clients";
@@ -83,6 +85,8 @@ public class Constants {
 
     public static final String GROUP_ACCOUNT = "isGroupAccount";
 
+    public static final String CENTER = "center";
+
     public static final String ENTITY_TYPE = "entityType";
 
     public static final String ENTITY_ID = "entityId";
@@ -97,11 +101,17 @@ public class Constants {
 
     public static final String DATE_OF_COLLECTION = "dateOfCollection";
 
+    public static final String REPAYMENT_DATE = "repaymentDate";
+
     public static final String DATE_FORMAT = "dateFormat";
 
     public static final String CALENDAR_INSTANCE_ID = "calendarInstanceId";
 
     public static final String LOCALE = "locale";
+
+    public static final String LOCALE_EN = "en";
+
+    public static final String DATE_FORMAT_LONG = "dd MMMM yyyy";
 
     public static final String TRANSACTIONS = "transactions";
 
@@ -112,6 +122,24 @@ public class Constants {
     public static final String QUESTION_DATA = "question data";
 
     public static final String IS_A_PARENT_FRAGMENT = "isAParentFragment";
+
+    public static final String STOP_TRACKING = "stop_tracking";
+
+    public static final String SERVICE_STATUS = "service_status";
+
+    public static final String DATA_TABLE_NAME = "data_table_name";
+    
+    public static final int DIALOG_FRAGMENT = 1;
+
+    public static final String ACTIVATE_CLIENT = "activate_client";
+
+    public static final String ACTIVATE_CENTER = "activate_center";
+
+    public static final String ACTIVATE_GROUP = "activate_group";
+
+    public static final String ACTIVATE_TYPE = "activation_type";
+
+    public static final String INTIAL_LOGIN = "initial_login";
 
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
@@ -124,13 +152,14 @@ public class Constants {
      */
     public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
-
+    public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 3;
 
     /**
      * String Constant of Permissions in SharedPreference
      */
     public static final String READ_EXTERNAL_STORAGE_STATUS = "read_external_storage_status";
     public static final String WRITE_EXTERNAL_STORAGE_STATUS = "write_external_storage_status";
+    public static final String ACCESS_FINE_LOCATION_STATUS = "access_fine_location_status";
 
     /**
      * Constants to identify which Data Tables have to be shown
@@ -158,4 +187,21 @@ public class Constants {
      */
     public static final int USER_ONLINE = 0;
     public static final int USER_OFFLINE = 1;
+
+    /**
+     * Constants to determine in the generic DataTableListFragment, the type of query that
+     * has to be forwarded after showing the datatables and adding the values
+     * to the corresponding payload.
+     */
+    public static final int CREATE_CLIENT = 3001;
+    public static final int CLIENT_LOAN = 3002;
+    public static final int GROUP_LOAN = 3003;
+
+    /**
+     * Constant to identify whether Simple Collection Sheet fragment has to be opened
+     * or the Individual Collection Sheet.
+     */
+    public static final String COLLECTION_TYPE = "collection_type";
+    public static final String EXTRA_COLLECTION_INDIVIDUAL = "individual";
+    public static final String EXTRA_COLLECTION_COLLECTION = "collection";
 }

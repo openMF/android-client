@@ -1,0 +1,19 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=2F:8C:E9:C7:28:AC:F6:B9:C5:07:50:B3:28:74:2D:53:91:C0:B3:03%3Bcom.mifos.mifosxdroid.activity.pinpointclient
+
+    You can also add your credentials to an existing key, using this line:
+    2F:8C:E9:C7:28:AC:F6:B9:C5:07:50:B3:28:74:2D:53:91:C0:B3:03;com.mifos.mifosxdroid.activity.pinpointclient
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAZTZqvDGyyw21z2Ee7N-dE_WuZQwKL0bs</string>
+</resources>

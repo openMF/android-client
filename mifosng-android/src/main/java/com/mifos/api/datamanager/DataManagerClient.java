@@ -3,11 +3,15 @@ package com.mifos.api.datamanager;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
-import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.accounts.ClientAccounts;
 import com.mifos.objects.client.Client;
+import com.mifos.objects.client.ActivatePayload;
+import com.mifos.objects.client.ClientAddressRequest;
+import com.mifos.objects.client.ClientAddressResponse;
+import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.noncore.Identifier;
+import com.mifos.objects.noncore.IdentifierCreationResponse;
 import com.mifos.objects.noncore.IdentifierPayload;
 import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -192,7 +196,7 @@ public class DataManagerClient {
      * The response of the updating the client image can be true or false its depends upon the
      * network and right choice image file.
      *
-     * @param id  Client Id
+     * @param id   Client Id
      * @param file MultipartBody of the Image file
      * @return ResponseBody is the Retrofit 2 response
      */
@@ -268,6 +272,7 @@ public class DataManagerClient {
 
     /**
      * Loading All Client payload from database to sync to the server
+     *
      * @return List<ClientPayload></>
      */
     public Observable<List<ClientPayload>> getAllDatabaseClientPayload() {
@@ -278,11 +283,13 @@ public class DataManagerClient {
      * This method will called when user is syncing the client created from Database.
      * whenever a client is synced then request goes to Database to delete that client form
      * Database and reload the list from Database and update the list in UI
+     *
      * @param id of the clientPayload in Database
      * @return List<ClientPayload></>
      */
-    public Observable<List<ClientPayload>> deleteAndUpdatePayloads(int id) {
-        return mDatabaseHelperClient.deleteAndUpdatePayloads(id);
+    public Observable<List<ClientPayload>> deleteAndUpdatePayloads(int id,
+                                                                   long clientCreationTIme) {
+        return mDatabaseHelperClient.deleteAndUpdatePayloads(id, clientCreationTIme);
     }
 
     /**
@@ -308,12 +315,12 @@ public class DataManagerClient {
     /**
      * This Method is, for creating the Client Identifier.
      *
-     * @param clientId Client Id
+     * @param clientId          Client Id
      * @param identifierPayload IdentifierPayload
-     * @return GenericResponse
+     * @return IdentifierCreationResponse
      */
-    public Observable<GenericResponse> createClientIdentifier(int clientId,
-                                                              IdentifierPayload identifierPayload) {
+    public Observable<IdentifierCreationResponse> createClientIdentifier(
+            int clientId, IdentifierPayload identifierPayload) {
         return mBaseApiManager.getClientsApi().createClientIdentifier(clientId, identifierPayload);
     }
 
@@ -330,11 +337,73 @@ public class DataManagerClient {
     /**
      * This Method is for deleting the Client Identifier.
      *
-     * @param clientId Client Id
+     * @param clientId     Client Id
      * @param identifierId Identifier Id
      * @return GenericResponse
      */
     public Observable<GenericResponse> deleteClientIdentifier(int clientId, int identifierId) {
         return mBaseApiManager.getClientsApi().deleteClientIdentifier(clientId, identifierId);
+    }
+
+    /**
+     * This Method is fetching the Client Pinpoint location from the DataTable
+     * "client_pinpoint_location"
+     *
+     * @param clientId Client Id
+     * @return ClientAddressResponse
+     */
+    public Observable<List<ClientAddressResponse>> getClientPinpointLocations(int clientId) {
+        return mBaseApiManager.getClientsApi().getClientPinpointLocations(clientId);
+    }
+
+    /**
+     * This Method is adding the new address in the DataTable "client_pinpoint_location"
+     *
+     * @param clientId Client Id
+     * @param address  Client Address
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> addClientPinpointLocation(int clientId,
+                                                                 ClientAddressRequest address) {
+        return mBaseApiManager.getClientsApi().addClientPinpointLocation(clientId, address);
+    }
+
+    /**
+     * This Method is deleting the client address from the DataTable "client_pinpoint_location"
+     *
+     * @param apptableId
+     * @param datatableId
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> deleteClientAddressPinpointLocation(int apptableId,
+                                                                           int datatableId) {
+        return mBaseApiManager.getClientsApi()
+                .deleteClientPinpointLocation(apptableId, datatableId);
+    }
+
+    /**
+     * This Method is updating the client address from the DataTable "client_pinpoint_location"
+     *
+     * @param apptableId
+     * @param datatableId
+     * @param address     Client Address
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> updateClientPinpointLocation(int apptableId,
+                                                                    int datatableId,
+                                                                    ClientAddressRequest address) {
+        return mBaseApiManager.getClientsApi().updateClientPinpointLocation(
+                apptableId, datatableId, address);
+    }
+
+    /**
+     * This method is activating the client
+     *
+     * @param clientId
+     * @return GenericResponse
+     */
+    public Observable<GenericResponse> activateClient(int clientId,
+                                                      ActivatePayload clientActivate) {
+        return mBaseApiManager.getClientsApi().activateClient(clientId, clientActivate);
     }
 }

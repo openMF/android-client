@@ -61,16 +61,19 @@ public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersM
                     @Override
                     public void onNext(List<Identifier> identifiers) {
                         getMvpView().showProgressbar(false);
-                        if (!identifiers.isEmpty()) {
-                            getMvpView().showClientIdentifiers(identifiers);
-                        } else {
-                            getMvpView().showEmptyClientIdentifier();
-                        }
+                        getMvpView().showClientIdentifiers(identifiers);
                     }
                 }));
     }
 
-    public void deleteIdentifier(final int clientId, int identifierId) {
+    /**
+     * Method to call Identifier Delete endpoint to remove an identifier.
+     * @param clientId ClientID whose identifier has to be removed
+     * @param identifierId Id of the identifier to be removed
+     * @param position Position of the identifier to be removed. This will be sent on successful
+     *                 request to notify that identifier at this position has been removed.
+     */
+    public void deleteIdentifier(final int clientId, int identifierId, final int position) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerClient.deleteClientIdentifier(clientId, identifierId)
@@ -90,7 +93,7 @@ public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersM
 
                     @Override
                     public void onNext(GenericResponse genericResponse) {
-                        getMvpView().identifierDeletedSuccessfully();
+                        getMvpView().identifierDeletedSuccessfully(position);
                         getMvpView().showProgressbar(false);
                     }
                 }));

@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
+import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerLoan;
@@ -10,6 +11,7 @@ import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.objects.group.GroupPayload;
+import com.mifos.services.data.CenterPayload;
 
 import java.util.List;
 
@@ -29,17 +31,20 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
     private CompositeSubscription mSubscriptions;
     private final DataManagerClient mDataManagerClient;
     private final DataManagerGroups mDataManagerGroups;
+    private final DataManagerCenter mDataManagerCenters;
     private final DataManagerLoan mDataManagerLoan;
     private final DataManagerSavings mDataManagerSavings;
 
     @Inject
     public OfflineDashboardPresenter(DataManagerClient dataManagerClient,
                                      DataManagerGroups dataManagerGroups,
+                                     DataManagerCenter dataManagerCenter,
                                      DataManagerLoan dataManagerLoan,
                                      DataManagerSavings dataManagerSavings) {
         mSubscriptions = new CompositeSubscription();
         mDataManagerClient = dataManagerClient;
         mDataManagerGroups = dataManagerGroups;
+        mDataManagerCenters = dataManagerCenter;
         mDataManagerLoan = dataManagerLoan;
         mDataManagerSavings = dataManagerSavings;
     }
@@ -64,7 +69,6 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                 .subscribe(new Subscriber<List<ClientPayload>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
@@ -90,7 +94,6 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                 .subscribe(new Subscriber<List<GroupPayload>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
@@ -107,6 +110,31 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                 }));
     }
 
+    public void loadDatabaseCenterPayload() {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerCenters.getAllDatabaseCenterPayload()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<List<CenterPayload>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showError(R.string.failed_to_load_centerpayload);
+                    }
+
+                    @Override
+                    public void onNext(List<CenterPayload> centerPayloads) {
+                        getMvpView().showCenters(centerPayloads);
+                        getMvpView().showProgressbar(false);
+                    }
+                }));
+    }
+
     public void loadDatabaseLoanRepaymentTransactions() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
@@ -116,7 +144,6 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                 .subscribe(new Subscriber<List<LoanRepaymentRequest>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
@@ -142,7 +169,6 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                 .subscribe(new Subscriber<List<SavingsAccountTransactionRequest>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
@@ -160,5 +186,4 @@ public class OfflineDashboardPresenter extends BasePresenter<OfflineDashboardMvp
                 })
         );
     }
-
 }

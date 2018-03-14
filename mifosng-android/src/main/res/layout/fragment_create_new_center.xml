@@ -4,7 +4,8 @@
     android:layout_height="fill_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/LinearLayout.Base">
+                  android:id="@+id/ll_center"
+                  style="@style/LinearLayout.Base">
         <TextView style="@style/TextView.CreateCenter" />
         <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
             <EditText
@@ -23,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:text="@string/office_name"
+            android:text="@string/office_name_mandatory"
             android:textSize="16sp"
 
             />
@@ -61,7 +62,7 @@
 
 
         <Button
-            android:id="@+id/bt_submit"
+            android:id="@+id/btn_submit"
             style="@style/Button.Base"
             android:layout_marginTop="10dp"
             android:text="@string/submit"

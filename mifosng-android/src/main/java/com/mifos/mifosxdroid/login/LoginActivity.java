@@ -5,8 +5,6 @@
 
 package com.mifos.mifosxdroid.login;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -14,33 +12,32 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.mifos.api.BaseApiManager;
-import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.DashboardActivity;
-import com.mifos.objects.User;
+import com.mifos.mifosxdroid.passcode.PassCodeActivity;
+import com.mifos.objects.user.User;
+import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import javax.inject.Inject;
-import javax.net.ssl.SSLHandshakeException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 
 import static android.view.View.GONE;
-import static android.view.View.OnClickListener;
 import static android.view.View.VISIBLE;
 
 /**
@@ -60,9 +57,6 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     @BindView(R.id.tv_constructed_instance_url)
     TextView tv_full_url;
 
-    @BindView(R.id.bt_connectionSettings)
-    TextView bt_connectionSettings;
-
     @BindView(R.id.et_tenantIdentifier)
     EditText et_tenantIdentifier;
 
@@ -74,10 +68,12 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @Inject
     LoginPresenter mLoginPresenter;
+
     private String username;
     private String instanceURL;
     private String password;
-    private boolean isValidUrl;
+    private String domain;
+    private boolean isValidUrl = false;
 
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
@@ -97,11 +93,16 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             instanceURL = ValidationUtil.getInstanceUrl(et_domain.getText().toString(), port);
             isValidUrl = ValidationUtil.isValidUrl(instanceURL);
             tv_full_url.setText(instanceURL);
+
+            domain = et_domain.getEditableText().toString();
+
+            if (domain.length() == 0 || domain.contains(" ")) {
+                isValidUrl = false;
+            }
+
             tv_full_url.setTextColor(isValidUrl ?
-                    ContextCompat.getColor(getApplicationContext(),
-                            R.color.green_light) :
-                    ContextCompat.getColor(getApplicationContext(),
-                            R.color.red_light));
+                    ContextCompat.getColor(getApplicationContext(), R.color.green_light) :
+                    ContextCompat.getColor(getApplicationContext(), R.color.red_light));
 
         }
     };
@@ -121,43 +122,63 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             et_port.setText(PrefManager.getPort());
 
         et_domain.setText(PrefManager.getInstanceDomain());
-
-        bt_connectionSettings.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ll_connectionSettings.setVisibility(
-                        ll_connectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
-            }
-        });
-
         et_domain.addTextChangedListener(urlWatcher);
         et_port.addTextChangedListener(urlWatcher);
         urlWatcher.afterTextChanged(null);
     }
 
     public boolean validateUserInputs() {
+        domain = et_domain.getEditableText().toString();
+        if (domain.length() == 0 || domain.contains(" ")) {
+            showToastMessage(getString(R.string.error_invalid_url));
+            return false;
+        }
         if (!isValidUrl) {
-            Toaster.show(findViewById(android.R.id.content), "Invalid connection Data");
+            showToastMessage(getString(R.string.error_invalid_connection));
             return false;
         }
         username = et_username.getEditableText().toString();
         if (username.length() < 5) {
-            Toaster.show(findViewById(android.R.id.content), "Invalid username length");
+            showToastMessage(getString(R.string.error_username_length));
             return false;
         }
         password = et_password.getEditableText().toString();
         if (password.length() < 6) {
-            Toaster.show(findViewById(android.R.id.content), "Invalid password length");
+            showToastMessage(getString(R.string.error_password_length));
             return false;
         }
         return true;
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_login, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.mItem_connection_settings:
+                ll_connectionSettings.setVisibility(
+                        ll_connectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
+
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 
     @Override
+    public void showToastMessage(String message) {
+        Toaster.show(findViewById(android.R.id.content), message, Toaster.INDEFINITE);
+    }
+
+    @Override
     public void onLoginSuccessful(User user) {
-        Toaster.show(findViewById(android.R.id.content), getString(R.string.toast_welcome) + " "
-                + user.getUsername());
         // Saving userID
         PrefManager.setUserId(user.getUserId());
         // Saving user's token
@@ -165,72 +186,42 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         // Saving user
         PrefManager.saveUser(user);
 
-        startActivity(new Intent(this, DashboardActivity.class));
+        Toast.makeText(this, getString(R.string.toast_welcome) + " " + user.getUsername(),
+                Toast.LENGTH_SHORT).show();
+
+        if (PrefManager.getPassCodeStatus()) {
+            startActivity(new Intent(this, DashboardActivity.class));
+        } else {
+            Intent intent = new Intent(this, PassCodeActivity.class);
+            intent.putExtra(Constants.INTIAL_LOGIN, true);
+            startActivity(intent);
+        }
         finish();
     }
 
     @Override
-    public void onLoginError(Throwable throwable) {
-        try {
-
-            if (throwable.getCause() instanceof SSLHandshakeException) {
-                promptUserToByPassTheSSLHandshake();
-            } /*else if (throwable.getResponse().getStatus() ==
-                    org.apache.http.HttpStatus.SC_UNAUTHORIZED) {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string
-                        .error_login_failed));
-            } else if (retrofitError.getResponse().getStatus() ==
-                    org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                Toaster.show(findViewById(android.R.id.content), "Internal server error");
-            }*/
-        } catch (NullPointerException e) {
-            if (Network.getConnectivityStatusString(this).equals("Not connected to " +
-                    "Internet")) {
-                Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
-            } else {
-                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
-            }
-        }
+    public void onLoginError(String errorMessage) {
+        showToastMessage(errorMessage);
     }
 
     @Override
     public void showProgressbar(boolean show) {
         if (show) {
-            showProgress("Logging In");
+            showProgress(getString(R.string.logging_in));
         } else {
             hideProgress();
         }
     }
 
-    /**
-     * This method should show a dialog box and ask the user
-     * if he wants to use and unsafe connection. If he agrees
-     * we must update our rest adapter to use an unsafe OkHttpClient
-     * that trusts any damn thing.
-     */
-    private void promptUserToByPassTheSSLHandshake() {
-        new AlertDialog.Builder(this)
-                .setTitle("SSL Certificate Problem")
-                .setMessage("There is a problem with your SSLCertificate, would you like to " +
-                        "continue? This connection would be unsafe.")
-                .setIcon(android.R.drawable.stat_sys_warning)
-                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        login(true);
-                    }
-                })
-                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .create().show();
+    @OnClick(R.id.bt_login)
+    public void onLoginClick() {
+        login();
     }
 
-    @OnClick(R.id.bt_login)
-    public void onLoginClick(Button button) {
+    private void login() {
+        if (!validateUserInputs()) {
+            return;
+        }
         // Saving tenant
         PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
         // Saving InstanceURL for next usages
@@ -240,24 +231,19 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         // Saving port
         PrefManager.setPort(et_port.getEditableText().toString());
         // Updating Services
-        if (!PrefManager.getInstanceDomain().equals(BaseUrl.API_ENDPOINT)) {
-            BaseApiManager.createService();
+        BaseApiManager.createService();
+
+        if (Network.isOnline(this)) {
+            mLoginPresenter.login(username, password);
+        } else {
+            showToastMessage(getString(R.string.error_not_connected_internet));
         }
-
-        login(false);
-    }
-
-    private void login(boolean shouldByPassSSLSecurity) {
-        if (!validateUserInputs())
-            return;
-
-        mLoginPresenter.login(instanceURL, username, password);
     }
 
     @OnEditorAction(R.id.et_password)
     public boolean passwordSubmitted(KeyEvent keyEvent) {
         if (keyEvent != null && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            login(false);
+            login();
             return true;
         }
         return false;

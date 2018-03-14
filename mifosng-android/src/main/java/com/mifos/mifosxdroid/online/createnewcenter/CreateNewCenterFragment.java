@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,11 +36,12 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.group.Center;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.response.SaveResponse;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.MifosResponseHandler;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
@@ -70,8 +72,11 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     @BindView(R.id.sp_center_offices)
     Spinner sp_offices;
 
-    @BindView(R.id.bt_submit)
+    @BindView(R.id.btn_submit)
     Button bt_submit;
+
+    @BindView(R.id.ll_center)
+    LinearLayout llCenter;
 
     int officeId;
     Boolean result = true;
@@ -245,9 +250,15 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     }
 
     @Override
-    public void centerCreatedSuccessfully(Center center) {
-        Toast.makeText(getActivity(), "Center created successfully", Toast
-                .LENGTH_LONG).show();
+    public void centerCreatedSuccessfully(SaveResponse saveResponse) {
+        Toast.makeText(getActivity(), "Center " + MifosResponseHandler.getResponse(),
+                Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void showFetchingError(int errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -256,11 +267,13 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     }
 
     @Override
-    public void showProgressbar(boolean b) {
-        if (b) {
-            showMifosProgressDialog();
+    public void showProgressbar(boolean show) {
+        if (show) {
+            llCenter.setVisibility(View.GONE);
+            showMifosProgressBar();
         } else {
-            hideMifosProgressDialog();
+            llCenter.setVisibility(View.VISIBLE);
+            hideMifosProgressBar();
         }
     }
 

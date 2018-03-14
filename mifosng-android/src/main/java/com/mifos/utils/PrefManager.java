@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.mifos.App;
 import com.mifos.api.BaseUrl;
-import com.mifos.objects.User;
+import com.mifos.objects.user.User;
 
 import java.util.Set;
 
@@ -24,6 +24,8 @@ public class PrefManager {
     private static final String PORT = "preferences_port";
     private static final String USER_STATUS = "user_status";
     private static final String USER_DETAILS = "user_details";
+    private static final String PASSCODE = "passcode";
+    private static final String PASSCODE_STATUS = "passcode_status";
 
     private static Gson gson = new Gson();
 
@@ -159,6 +161,15 @@ public class PrefManager {
             putString(PORT, port);
     }
 
+    public static String getPassCode() {
+        return getString(PASSCODE, "");
+    }
+
+    public static void setPassCode(String passCode) {
+        putString(PASSCODE, passCode);
+        setPassCodeStatus(true);
+    }
+
     /**
      * Set User Status,
      * If O then user is Online
@@ -175,6 +186,21 @@ public class PrefManager {
     public static int getUserStatus() {
         return getInt(USER_STATUS, 0);
     }
+
+    /**
+     * Set Pass Code Status,
+     * If false then pass code is not set
+     * If true then pass code is set
+     */
+    public static void setPassCodeStatus(boolean statusCode) {
+        putBoolean(PASSCODE_STATUS, true);
+    }
+
+    /**
+     * @return the Pref value of pass code status.
+     * default is false(pass code is not set)
+     */
+    public static Boolean getPassCodeStatus() {
+        return getBoolean(PASSCODE_STATUS, false);
+    }
 }
-
-

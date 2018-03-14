@@ -1,17 +1,12 @@
 package com.mifos.mifosxdroid.online.groupdetails;
 
-import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
-import com.mifos.objects.noncore.DataTable;
 import com.mifos.objects.zipmodels.GroupAndGroupAccounts;
-import com.mifos.utils.Constants;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -28,14 +23,11 @@ import rx.subscriptions.CompositeSubscription;
 public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
 
     private final DataManagerGroups mDataManagerGroups;
-    private final DataManagerDataTable mDataManagerDataTable;
     private CompositeSubscription mSubscriptions;
 
     @Inject
-    public GroupDetailsPresenter(DataManagerGroups dataManagerGroups,
-                                 DataManagerDataTable dataManagerDataTable) {
+    public GroupDetailsPresenter(DataManagerGroups dataManagerGroups) {
         mDataManagerGroups = dataManagerGroups;
-        mDataManagerDataTable = dataManagerDataTable;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -110,29 +102,6 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
                     }
                 })
         );
-    }
-
-
-    public void loadClientDataTable() {
-        checkViewAttached();
-        mSubscriptions.add(mDataManagerDataTable.getDataTable(Constants.DATA_TABLE_NAME_GROUP)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<DataTable>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showFetchingError(R.string.failed_to_fetch_datatable);
-                    }
-
-                    @Override
-                    public void onNext(List<DataTable> dataTables) {
-                        getMvpView().showGroupDataTable(dataTables);
-                    }
-                }));
     }
 
 }

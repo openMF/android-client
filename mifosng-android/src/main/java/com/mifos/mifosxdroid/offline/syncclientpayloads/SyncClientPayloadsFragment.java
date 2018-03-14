@@ -22,7 +22,6 @@ import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
@@ -179,7 +178,8 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     @Override
     public void showSyncResponse() {
         mSyncPayloadsPresenter.deleteAndUpdateClientPayload(clientPayloads
-                .get(mClientSyncIndex).getId());
+                .get(mClientSyncIndex).getId(),
+                clientPayloads.get(mClientSyncIndex).getClientCreationTime());
     }
 
     /**
@@ -189,9 +189,9 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
      * the mClientSyncIndex by one and sync the next client payload
      */
     @Override
-    public void showClientSyncFailed(ErrorSyncServerMessage error) {
+    public void showClientSyncFailed(String errorMessage) {
         ClientPayload clientPayload = clientPayloads.get(mClientSyncIndex);
-        clientPayload.setErrorMessage(error.getDefaultUserMessage());
+        clientPayload.setErrorMessage(errorMessage);
         mSyncPayloadsPresenter.updateClientPayload(clientPayload);
 
     }

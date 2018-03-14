@@ -10,6 +10,7 @@ package com.mifos.mifosxdroid.online.createnewgroup;
  */
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -32,13 +33,18 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
-import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.organisation.Office;
+import com.mifos.objects.response.SaveResponse;
+import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.MifosResponseHandler;
+import com.mifos.utils.Network;
+import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
@@ -76,7 +82,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
     @BindView(R.id.sp_group_offices)
     Spinner sp_offices;
 
-    @BindView(R.id.bt_submit)
+    @BindView(R.id.btn_submit)
     Button bt_submit;
 
     @Inject
@@ -159,20 +165,22 @@ public class CreateNewGroupFragment extends ProgressableFragment
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Network.isOnline(getContext())) {
+                    GroupPayload groupPayload = new GroupPayload();
 
-                GroupPayload groupPayload = new GroupPayload();
+                    groupPayload.setName(et_groupName.getEditableText().toString());
+                    groupPayload.setExternalId(et_groupexternalId.getEditableText().toString());
+                    groupPayload.setActive(cb_groupActiveStatus.isChecked());
+                    groupPayload.setActivationDate(activationdateString);
+                    groupPayload.setSubmissionDate(dateofsubmissionstring);
+                    groupPayload.setOfficeId(officeId);
+                    groupPayload.setDateFormat("dd MMMM yyyy");
+                    groupPayload.setLocale("en");
 
-                groupPayload.setName(et_groupName.getEditableText().toString());
-                groupPayload.setExternalId(et_groupexternalId.getEditableText().toString());
-                groupPayload.setActive(cb_groupActiveStatus.isChecked());
-                groupPayload.setActivationDate(activationdateString);
-                groupPayload.setSubmissionDate(dateofsubmissionstring);
-                groupPayload.setOfficeId(officeId);
-                groupPayload.setDateFormat("dd MMMM yyyy");
-                groupPayload.setLocale("en");
-
-                initiateGroupCreation(groupPayload);
-
+                    initiateGroupCreation(groupPayload);
+                } else {
+                    Toaster.show(rootView, R.string.error_network_not_available, Toaster.LONG);
+                }
             }
         });
 
@@ -277,9 +285,15 @@ public class CreateNewGroupFragment extends ProgressableFragment
     }
 
     @Override
-    public void showGroupCreatedSuccessfully(Group group) {
-        Toast.makeText(getActivity(), "Group" + MifosResponseHandler.getResponse(),
+    public void showGroupCreatedSuccessfully(SaveResponse saveResponse) {
+        Toast.makeText(getActivity(), "Group " + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStack();
+        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+            Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
+            groupActivityIntent.putExtra(Constants.GROUP_ID, saveResponse.getGroupId());
+            startActivity(groupActivityIntent);
+        }
     }
 
     @Override

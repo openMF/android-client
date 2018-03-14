@@ -5,10 +5,13 @@
 
 package com.mifos.utils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ishankhanna on 30/05/14.
@@ -19,6 +22,8 @@ public class DateHelper {
 
 
     public static final String DATE_FORMAT_VALUE = "dd MMM yyyy";
+    public static final String DATE_TIME_FORMAT_VALUE = "dd MMMM yyyy HH:mm";
+    public static final String TIME_FORMAT_VALUE = "HH:mm a";
 
     /**
      * @return current date formatted as day - month - year where month is a number from 1 to 12
@@ -130,6 +135,19 @@ public class DateHelper {
 
         return date;
 
+    }
+
+    /**
+     * This method returns the String of date and time. Just need to pass the format in which you
+     * want. Example Pass the format "dd MMMM yyyy HH:mm" and you will get the date and time in
+     * this format "24 January 2017 18:32".
+     *
+     * @param format Format of Date and Time
+     * @return String of Date and Time
+     */
+    public static String getCurrentDateTime(String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format, Locale.ENGLISH);
+        return dateFormat.format(new Date());
     }
 
 
@@ -261,5 +279,80 @@ public class DateHelper {
         }
 
         return dateList;
+    }
+
+    /**
+     * Method to convert a given date in dd MMM YYYY format to [dd, mm, yyyy] format.
+     *
+     * @param date Date String. e.g. "20 Aug 2017"
+     * @return List of Integers. e.g. [20, 08, 2017]
+     */
+    public static List<Integer> convertDateAsListOfInteger(String date) {
+        String[] splitDate = date.split(" ");
+        List<Integer> dateList = new ArrayList<>();
+        dateList.add(Integer.parseInt(splitDate[0]));
+        dateList.add(getMonthNumberFromName(splitDate[1]));
+        dateList.add(Integer.parseInt(splitDate[2]));
+
+        return dateList;
+    }
+
+    /**
+     * Method to convert a date in dd MMM YYYY format to [yyyy, mm, dd] format.
+     *
+     * @param date Date String; e.g. "20 Aug 2017"
+     * @return List of Integers in reverse order; e.g. [2017, 08, 20]
+     */
+    public static List<Integer> convertDateAsReverseInteger(String date) {
+        String[] splitDate = date.split(" ");
+        List<Integer> dateList = new ArrayList<>();
+        dateList.add(Integer.parseInt(splitDate[2]));
+        dateList.add(getMonthNumberFromName(splitDate[1]));
+        dateList.add(Integer.parseInt(splitDate[0]));
+
+        return dateList;
+    }
+
+    public static int getMonthNumberFromName(String month) {
+        switch (month) {
+            case "Jan":
+                return 1;
+
+            case "Feb":
+                return 2;
+
+            case "Mar":
+                return 3;
+
+            case "Apr":
+                return 4;
+
+            case "May":
+                return 5;
+
+            case "Jun":
+                return 6;
+
+            case "Jul":
+                return 7;
+
+            case "Aug":
+                return 8;
+
+            case "Sep":
+                return 9;
+
+            case "Oct":
+                return 10;
+
+            case "Nov":
+                return 11;
+
+            case "Dec":
+                return 12;
+
+            default:
+                return -1;
+        }
     }
 }

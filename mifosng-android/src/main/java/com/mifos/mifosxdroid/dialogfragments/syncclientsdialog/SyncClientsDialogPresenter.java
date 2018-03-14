@@ -91,6 +91,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     public void syncClientAndUpdateUI() {
         mLoanAndRepaymentSyncIndex = 0;
         mSavingsAndTransactionSyncIndex = 0;
+        mLoanAccountSyncStatus = false;
         updateTotalSyncProgressBarAndCount();
         if (mClientSyncIndex != mClientList.size()) {
             updateClientName();
@@ -206,7 +207,7 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
                     public void onNext(ClientAccounts clientAccounts) {
                         mLoanAccountList = Utils.getActiveLoanAccounts(clientAccounts
                                 .getLoanAccounts());
-                        mSavingsAccountList = Utils.getActiveSavingsAccounts(clientAccounts
+                        mSavingsAccountList = Utils.getSyncableSavingsAccounts(clientAccounts
                                 .getSavingsAccounts());
 
                         //Updating UI

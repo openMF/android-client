@@ -10,3 +10,4 @@ mifosng-android/src/main/assets/crashlytics-build.properties
 android-client.iml
 mifosng-android/mifosng-android.iml
 *.hprof
+android-client.iml

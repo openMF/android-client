@@ -5,7 +5,7 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
-import com.mifos.objects.User;
+import com.mifos.objects.user.User;
 
 import retrofit2.http.POST;
 import retrofit2.http.Query;

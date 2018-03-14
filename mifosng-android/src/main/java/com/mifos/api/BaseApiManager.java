@@ -12,12 +12,14 @@ import com.mifos.api.services.CenterService;
 import com.mifos.api.services.ChargeService;
 import com.mifos.api.services.ClientAccountsService;
 import com.mifos.api.services.ClientService;
+import com.mifos.api.services.CollectionSheetService;
 import com.mifos.api.services.DataTableService;
 import com.mifos.api.services.DocumentService;
-import com.mifos.api.services.GpsCoordinatesService;
 import com.mifos.api.services.GroupService;
 import com.mifos.api.services.LoanService;
+import com.mifos.api.services.NoteService;
 import com.mifos.api.services.OfficeService;
+import com.mifos.api.services.RunReportsService;
 import com.mifos.api.services.SavingsAccountService;
 import com.mifos.api.services.SearchService;
 import com.mifos.api.services.StaffService;
@@ -48,12 +50,14 @@ public class BaseApiManager {
     private static SavingsAccountService savingsApi;
     private static ChargeService chargeApi;
     private static SearchService searchApi;
-    private static GpsCoordinatesService gpsApi;
     private static GroupService groupApi;
     private static DocumentService documentApi;
     private static OfficeService officeApi;
     private static StaffService staffApi;
     private static SurveyService surveyApi;
+    private static RunReportsService runreportsService;
+    private static NoteService noteService;
+    private static CollectionSheetService collectionSheetService;
 
     public BaseApiManager() {
         createService();
@@ -68,13 +72,15 @@ public class BaseApiManager {
         loanApi = createApi(LoanService.class);
         savingsApi = createApi(SavingsAccountService.class);
         searchApi = createApi(SearchService.class);
-        gpsApi = createApi(GpsCoordinatesService.class);
         groupApi = createApi(GroupService.class);
         documentApi = createApi(DocumentService.class);
         officeApi = createApi(OfficeService.class);
         staffApi = createApi(StaffService.class);
         surveyApi = createApi(SurveyService.class);
         chargeApi = createApi(ChargeService.class);
+        runreportsService = createApi(RunReportsService.class);
+        noteService = createApi(NoteService.class);
+        collectionSheetService = createApi(CollectionSheetService.class);
     }
 
     private static <T> T createApi(Class<T> clazz) {
@@ -128,10 +134,6 @@ public class BaseApiManager {
         return searchApi;
     }
 
-    public GpsCoordinatesService getGpsApi() {
-        return gpsApi;
-    }
-
     public GroupService getGroupApi() {
         return groupApi;
     }
@@ -154,5 +156,17 @@ public class BaseApiManager {
 
     public ChargeService getChargeApi() {
         return chargeApi;
+    }
+
+    public RunReportsService getRunReportsService() {
+        return runreportsService;
+    }
+
+    public NoteService getNoteApi() {
+        return noteService;
+    }
+
+    public CollectionSheetService getCollectionSheetApi() {
+        return collectionSheetService;
     }
 }

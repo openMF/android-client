@@ -107,4 +107,14 @@ public interface SavingsAccountService {
 
     @GET(APIEndPoint.CREATESAVINGSPRODUCTS + "/template")
     Observable<SavingProductsTemplate> getSavingsAccountTemplate();
+
+    @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template")
+    Observable<SavingProductsTemplate>
+            getClientSavingsAccountTemplateByProduct(@Query("clientId") int clientId,
+                                             @Query("productId") int productId);
+
+    @GET(APIEndPoint.CREATESAVINGSACCOUNTS + "/template")
+    Observable<SavingProductsTemplate>
+            getGroupSavingsAccountTemplateByProduct(@Query("groupId") int groupId,
+                                            @Query("productId") int productId);
 }

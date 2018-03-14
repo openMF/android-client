@@ -1,18 +1,22 @@
 package com.mifos.utils;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
 
+import com.mifos.mifosxdroid.R;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
+import com.mifos.objects.client.Client;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -117,23 +121,69 @@ public class Utils {
         return accounts;
     }
 
+    public static List<Client> getActiveClients(List<Client> clients) {
+        final List<Client> accounts = new ArrayList<>();
+        Observable.from(clients)
+                .filter(new Func1<Client, Boolean>() {
+                    @Override
+                    public Boolean call(Client client) {
+                        return (client.isActive());
+                    }
+                })
+                .subscribe(new Action1<Client>() {
+                    @Override
+                    public void call(Client client) {
+                        accounts.add(client)
+                        ;
+                    }
+                });
+        return accounts;
+    }
+
+    public static List<SavingsAccount> getSyncableSavingsAccounts(List<SavingsAccount>
+                                                                        savingsAccounts) {
+        final List<SavingsAccount> accounts = new ArrayList<>();
+        Observable.from(savingsAccounts)
+                .filter(new Func1<SavingsAccount, Boolean>() {
+                    @Override
+                    public Boolean call(SavingsAccount savingsAccount) {
+                        return (savingsAccount.getDepositType().getValue().equals("Savings") &&
+                                savingsAccount.getStatus().getActive() &&
+                                !savingsAccount.isRecurring());
+                    }
+                })
+                .subscribe(new Action1<SavingsAccount>() {
+                    @Override
+                    public void call(SavingsAccount savingsAccount) {
+                        accounts.add(savingsAccount)
+                        ;
+                    }
+                });
+        return accounts;
+    }
+
     /**
      * This Method Converting the List<Integer> of Activation Date to String.
      *
-     * @param context Context
      * @param dateObj List<Integer> of Date
      * @return
      */
-    public static String getStringOfDate(Context context, List<Integer> dateObj) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy",
-                context.getResources().getConfiguration().locale);
-        Date date = null;
-        try {
-            date = simpleDateFormat.parse(DateHelper.getDateAsString(dateObj));
-        } catch (ParseException e) {
-            Log.d(LOG_TAG, e.getLocalizedMessage());
-        }
+    public static String getStringOfDate(List<Integer> dateObj) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(Calendar.YEAR, dateObj.get(0));
+        //in Calendar months are indexed from 0 to 11
+        calendar.set(Calendar.MONTH, dateObj.get(1) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, dateObj.get(2));
+
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        return df.format(date);
+        return df.format(calendar.getTime());
+    }
+
+    public static LayerDrawable setCircularBackground(int colorId, Context context) {
+        Drawable color = new ColorDrawable(ContextCompat.getColor(context, colorId));
+        Drawable image = ContextCompat.getDrawable(context, R.drawable.circular_background);
+        LayerDrawable ld = new LayerDrawable(new Drawable[]{image, color});
+        return ld;
     }
 }

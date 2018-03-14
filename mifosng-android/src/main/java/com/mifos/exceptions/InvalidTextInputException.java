@@ -9,7 +9,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 public class InvalidTextInputException extends Exception {
-    public static final String TYPE_ALPHABETS = "ALPHABETS";
+    public static final String TYPE_ALPHABETS = "Alphabets";
     private String fieldInput;
     private String localisedErrorMessage;
     private String inputType;
@@ -23,7 +23,7 @@ public class InvalidTextInputException extends Exception {
 
     @Override
     public String toString() {
-        return fieldInput + "" + localisedErrorMessage + inputType;
+        return fieldInput + " " + localisedErrorMessage + " " + inputType;
     }
 
 

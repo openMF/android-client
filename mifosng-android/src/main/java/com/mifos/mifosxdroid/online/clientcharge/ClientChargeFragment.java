@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.utils.Constants;
@@ -46,7 +48,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ClientChargeFragment extends MifosBaseFragment implements ClientChargeMvpView,
-        RecyclerItemClickListener.OnItemClickListener {
+        RecyclerItemClickListener.OnItemClickListener, OnChargeCreateListener {
 
     public static final int MENU_ITEM_ADD_NEW_CHARGES = 2000;
 
@@ -58,6 +60,9 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
     @BindView(R.id.noChargesText)
     TextView mNoChargesText;
+
+    @BindView(R.id.noChargesIcon)
+    ImageView mNoChargesIcon;
 
     @BindView(R.id.ll_error)
     LinearLayout ll_error;
@@ -155,13 +160,18 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
             }
         });
 
+        loadMore(layoutManager);
 
-        /**
-         * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
-         * is shown on the Screen.
-         * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
-         * and offset(mCenterList.size()) and limit(100).
-         */
+        return rootView;
+    }
+
+    /**
+     * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
+     * is shown on the Screen.
+     * Increase the mApiRestCounter by 1 and Send Api Request to Server with Paged(True)
+     * and offset(mCenterList.size()) and limit(100).
+     */
+    private void loadMore(LinearLayoutManager layoutManager) {
         rv_charges.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int current_page) {
@@ -170,8 +180,6 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
                 mClientChargePresenter.loadCharges(clientId, chargesList.size(), limit);
             }
         });
-
-        return rootView;
     }
 
     /**
@@ -213,9 +221,37 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
             // Clients Available for fetch
             if (chargesPage.getPageItems().size() == 0 &&
                     (chargesPage.getTotalFilteredRecords() == chargesList.size()))
-                Toaster.show(rootView, "No more Charges Available");
+                Toaster.show(rootView, getString(R.string.message_no_more_charge));
         }
 
+    }
+
+    @Override
+    public void onChargeCreatedSuccess(Charges charge) {
+        chargesList.add(charge);
+        Toaster.show(rootView, getString(R.string.message_charge_created_success));
+        if (ll_error.getVisibility() == View.VISIBLE) {
+            ll_error.setVisibility(View.GONE);
+        }
+        //If the adapter has not been initialized, there were 0 charge items earlier. Initialize it.
+        if (mChargesNameListAdapter == null) {
+            mChargesNameListAdapter = new ChargeNameListAdapter(getActivity(),
+                    chargesList, clientId);
+            rv_charges.setAdapter(mChargesNameListAdapter);
+        }
+        mChargesNameListAdapter.notifyItemInserted(chargesList.size() - 1);
+    }
+
+    @Override
+    public void onChargeCreatedFailure(String errorMessage) {
+        Toaster.show(rootView, errorMessage);
+    }
+
+    @Override
+    public void showEmptyCharges() {
+        ll_error.setVisibility(View.VISIBLE);
+        mNoChargesText.setText(getResources().getString(R.string.message_no_charges_available));
+        mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
     }
 
     @Override
@@ -258,7 +294,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
                 .NONE, getString(R.string.add_new));
         menuItemAddNewDocument.setIcon(
                 ResourcesCompat.getDrawable(getResources(),
-                        R.drawable.ic_action_content_new, null));
+                        R.drawable.ic_add_white_24dp, null));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -270,6 +306,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
         int id = item.getItemId();
         if (id == MENU_ITEM_ADD_NEW_CHARGES) {
             ChargeDialogFragment chargeDialogFragment = ChargeDialogFragment.newInstance(clientId);
+            chargeDialogFragment.setOnChargeCreatedListener(this);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                     .beginTransaction();
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST);

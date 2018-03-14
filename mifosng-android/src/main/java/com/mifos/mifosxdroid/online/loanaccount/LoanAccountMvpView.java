@@ -18,5 +18,7 @@ public interface LoanAccountMvpView extends MvpView {
 
     void showLoanAccountCreatedSuccessfully(Loans loans);
 
+    void showMessage(int messageId);
+
     void showFetchingError(String s);
 }

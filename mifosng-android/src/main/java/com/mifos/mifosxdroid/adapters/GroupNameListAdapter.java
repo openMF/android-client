@@ -5,11 +5,15 @@
 
 package com.mifos.mifosxdroid.adapters;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -26,7 +30,8 @@ import butterknife.ButterKnife;
 
 public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHolder> {
 
-    List<Group> groups;
+    private List<Group> groups;
+    private Context context;
 
     @Inject
     public GroupNameListAdapter() {
@@ -52,7 +57,8 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
 
             //Changing the Color of Selected Groups
             ((ViewHolder) holder).view_selectedOverlay
-                    .setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+                    .setBackgroundColor(isSelected(position) ? ContextCompat.getColor(context,
+                            R.color.gray_light) : Color.WHITE);
 
             ((ViewHolder) holder).iv_sync_status
                     .setVisibility(group.isSync() ? View.VISIBLE : View.INVISIBLE);
@@ -63,6 +69,10 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
     public void setGroups(List<Group> groups) {
         this.groups = groups;
         notifyDataSetChanged();
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -87,8 +97,8 @@ public class GroupNameListAdapter extends SelectableAdapter<RecyclerView.ViewHol
         @BindView(R.id.tv_group_id)
         TextView tv_groupsId;
 
-        @BindView(R.id.selected_overlay)
-        View view_selectedOverlay;
+        @BindView(R.id.linearLayout)
+        LinearLayout view_selectedOverlay;
 
         @BindView(R.id.iv_sync_status)
         ImageView iv_sync_status;

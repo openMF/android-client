@@ -16,10 +16,12 @@ public class GroupLoanPayload {
     String dateFormat;
     String expectedDisbursementDate;
     int interestCalculationPeriodType;
-    int interestRatePerPeriod;
+    Double interestRatePerPeriod;
     int interestType;
     int loanTermFrequency;
     int loanTermFrequencyType;
+    Integer repaymentFrequencyDayOfWeekType;
+    Integer repaymentFrequencyNthDayType;
     String loanType;
     String locale;
     String numberOfRepayments;
@@ -30,6 +32,31 @@ public class GroupLoanPayload {
     String submittedOnDate;
     int transactionProcessingStrategyId;
     int loanPurposeId;
+    Integer linkAccountId;
+
+    public Integer getLinkAccountId() {
+        return linkAccountId;
+    }
+
+    public void setLinkAccountId(Integer linkAccountId) {
+        this.linkAccountId = linkAccountId;
+    }
+
+    public Integer getRepaymentFrequencyDayOfWeekType() {
+        return repaymentFrequencyDayOfWeekType;
+    }
+
+    public void setRepaymentFrequencyDayOfWeekType(Integer repaymentFrequencyDayOfWeekType) {
+        this.repaymentFrequencyDayOfWeekType = repaymentFrequencyDayOfWeekType;
+    }
+
+    public Integer getRepaymentFrequencyNthDayType() {
+        return repaymentFrequencyNthDayType;
+    }
+
+    public void setRepaymentFrequencyNthDayType(Integer repaymentFrequencyNthDayType) {
+        this.repaymentFrequencyNthDayType = repaymentFrequencyNthDayType;
+    }
 
     public int getGroupId() {
         return groupId;
@@ -89,11 +116,11 @@ public class GroupLoanPayload {
         this.interestCalculationPeriodType = interestCalculationPeriodType;
     }
 
-    public int getInterestRatePerPeriod() {
+    public Double getInterestRatePerPeriod() {
         return interestRatePerPeriod;
     }
 
-    public void setInterestRatePerPeriod(int interestRatePerPeriod) {
+    public void setInterestRatePerPeriod(Double interestRatePerPeriod) {
         this.interestRatePerPeriod = interestRatePerPeriod;
     }
 

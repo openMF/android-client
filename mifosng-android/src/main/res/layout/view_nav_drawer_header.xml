@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="@drawable/drawer_profile_header"
-    android:gravity="center_vertical|bottom"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="30dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
 
         <com.mifos.mifosxdroid.views.CircularImageView
             android:id="@+id/iv_user_picture"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:elevation="2dp"
-            android:src="@drawable/ic_account_circle"
+            android:src="@drawable/ic_account_circle_black_24dp"
             app:border="false"
             />
 
@@ -27,9 +29,6 @@
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/iv_user_picture"
             android:layout_marginLeft="15dp"
             android:ellipsize="end"
             android:lines="1"
@@ -37,29 +36,17 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"/>
 
-    </RelativeLayout>
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="bottom">
-
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/user_status_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/offline_mode"
             android:textColor="@color/white"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
             app:showText="false"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textOn="On"
-            android:textOff="Off"
-            android:layout_alignParentStart="true"/>
-    </RelativeLayout>
+            android:textOff="Off"/>
 
-
-</RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,18 +1,12 @@
 package com.mifos.api;
 
-import com.google.gson.JsonArray;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.CollectionSheetPayload;
-import com.mifos.api.model.GpsCoordinatesRequest;
-import com.mifos.api.model.GpsCoordinatesResponse;
 import com.mifos.api.model.Payload;
-import com.mifos.api.model.SaveResponse;
-import com.mifos.objects.User;
 import com.mifos.objects.accounts.loan.LoanApproval;
-import com.mifos.objects.accounts.loan.LoanDisbursement;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.accounts.loan.Loans;
-import com.mifos.objects.accounts.loan.SavingsApproval;
+import com.mifos.objects.client.ChargeCreationResponse;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.db.CollectionSheet;
@@ -24,8 +18,9 @@ import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
+import com.mifos.objects.response.SaveResponse;
+import com.mifos.objects.templates.clients.ChargeTemplate;
 import com.mifos.objects.templates.loans.GroupLoanTemplate;
-import com.mifos.services.data.CenterPayload;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
 
@@ -62,15 +57,6 @@ public class DataManager {
     }
 
     /**
-     * @param username Username
-     * @param password Password
-     * @return Basic OAuth
-     */
-    public Observable<User> login(String username, String password) {
-        return mBaseApiManager.getAuthApi().authenticate(username, password);
-    }
-
-    /**
      * Center API
      */
 
@@ -80,10 +66,6 @@ public class DataManager {
 
     public Observable<List<Center>> getCentersInOffice(int id, Map<String, Object> params) {
         return mBaseApiManager.getCenterApi().getAllCentersInOffice(id, params);
-    }
-
-    public Observable<Center> createCenter(CenterPayload centerPayload) {
-        return mBaseApiManager.getCenterApi().createCenter(centerPayload);
     }
 
     public Observable<CollectionSheet> getCollectionSheet(long id, Payload payload) {
@@ -115,11 +97,11 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit);
     }
 
-    public Observable<ResponseBody> getAllChargesV2(int clientId) {
+    public Observable<ChargeTemplate> getAllChargesV2(int clientId) {
         return mBaseApiManager.getChargeApi().getAllChargesS(clientId);
     }
 
-    public Observable<Charges> createCharges(int clientId, ChargesPayload payload) {
+    public Observable<ChargeCreationResponse> createCharges(int clientId, ChargesPayload payload) {
         return mBaseApiManager.getChargeApi().createCharges(clientId, payload);
     }
 
@@ -127,7 +109,8 @@ public class DataManager {
         return mBaseApiManager.getChargeApi().getAllChargev3(loanId);
     }
 
-    public Observable<Charges> createLoanCharges(int loanId, ChargesPayload chargesPayload) {
+    public Observable<ChargeCreationResponse> createLoanCharges(int loanId,
+                                                                ChargesPayload chargesPayload) {
         return mBaseApiManager.getChargeApi().createLoanCharges(loanId, chargesPayload);
     }
 
@@ -162,24 +145,6 @@ public class DataManager {
     }
 
     /**
-     * DataTable API
-     */
-    public Observable<JsonArray> getDataTableInfo(String table, int entityId) {
-        return mBaseApiManager.getDataTableApi().getDataOfDataTable(table, entityId);
-    }
-
-    public Observable<GenericResponse> addDataTableEntry(
-            String table, int entityId, Map<String, Object> payload) {
-        return mBaseApiManager.getDataTableApi()
-                .createEntryInDataTable(table, entityId, payload);
-    }
-
-    public Observable<GenericResponse> removeDataTableEntry(String table, int entity, int rowId) {
-        return mBaseApiManager.getDataTableApi().deleteEntryOfDataTableManyToMany(
-                table, entity, rowId);
-    }
-
-    /**
      * Loans API
      */
 
@@ -208,15 +173,6 @@ public class DataManager {
         return mBaseApiManager.getLoanApi().approveLoanApplication(loanId, loanApproval);
     }
 
-    public Observable<ResponseBody> getLoanTemplate(int loanId) {
-        return mBaseApiManager.getLoanApi().getLoanTemplate(loanId);
-    }
-
-    public Observable<GenericResponse> dispurseLoan(int loanId,
-                                                    LoanDisbursement loanDisbursement) {
-        return mBaseApiManager.getLoanApi().disburseLoan(loanId, loanDisbursement);
-    }
-
     public Observable<List<Charges>> getListOfLoanCharges(int loanId) {
         return mBaseApiManager.getLoanApi().getListOfLoanCharges(loanId);
     }
@@ -224,30 +180,4 @@ public class DataManager {
     public Observable<Page<Charges>> getListOfCharges(int clientId) {
         return mBaseApiManager.getLoanApi().getListOfCharges(clientId);
     }
-
-
-    /**
-     * Savings API
-     */
-    public Observable<GenericResponse> approveSavingsApplication(int savingsAccountId,
-                                                                 SavingsApproval savingsApproval) {
-        return mBaseApiManager.getSavingsApi().approveSavingsApplication(
-                savingsAccountId, savingsApproval);
-    }
-
-
-    /**
-     * GPS API
-     */
-    public Observable<GpsCoordinatesResponse> sendGpsData(
-            int clientId, GpsCoordinatesRequest gpsCoordinatesRequest) {
-        return mBaseApiManager.getGpsApi().setGpsCoordinates(clientId, gpsCoordinatesRequest);
-    }
-
-    public Observable<GpsCoordinatesResponse> updateGpsData(int client,
-                                                            GpsCoordinatesRequest request) {
-        return mBaseApiManager.getGpsApi().updateGpsCoordinates(client, request);
-    }
-
-
 }

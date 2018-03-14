@@ -3,6 +3,7 @@ package com.mifos.objects.client;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -19,24 +20,31 @@ public class Currency extends MifosBaseModel implements Parcelable {
 
 
     @PrimaryKey
+    @SerializedName("code")
     public String code;
 
     @Column
+    @SerializedName("name")
     String name;
 
     @Column
+    @SerializedName("decimalPlaces")
     Integer decimalPlaces;
 
     @Column
+    @SerializedName("inMultiplesOf")
     Integer inMultiplesOf;
 
     @Column
+    @SerializedName("displaySymbol")
     String displaySymbol;
 
     @Column
+    @SerializedName("nameCode")
     String nameCode;
 
     @Column
+    @SerializedName("displayLabel")
     String displayLabel;
 
 

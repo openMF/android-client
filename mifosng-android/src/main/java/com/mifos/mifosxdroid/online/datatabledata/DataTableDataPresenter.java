@@ -1,27 +1,31 @@
 package com.mifos.mifosxdroid.online.datatabledata;
 
 import com.google.gson.JsonArray;
-import com.mifos.api.DataManager;
+import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerDataTable;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 7/6/16.
  */
 public class DataTableDataPresenter extends BasePresenter<DataTableDataMvpView> {
 
-    private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private final DataManagerDataTable dataManagerDataTable;
+    private CompositeSubscription subscriptions;
 
     @Inject
-    public DataTableDataPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public DataTableDataPresenter(DataManagerDataTable dataManager) {
+        dataManagerDataTable = dataManager;
+        subscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -32,14 +36,13 @@ public class DataTableDataPresenter extends BasePresenter<DataTableDataMvpView> 
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        subscriptions.unsubscribe();
     }
 
     public void loadDataTableInfo(String table, int entityId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getDataTableInfo(table, entityId)
+        subscriptions.add(dataManagerDataTable.getDataTableInfo(table, entityId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<JsonArray>() {
@@ -51,14 +54,45 @@ public class DataTableDataPresenter extends BasePresenter<DataTableDataMvpView> 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch DataTableInfo");
+                        getMvpView().showFetchingError(R.string.failed_to_fetch_datatable_info);
                     }
 
                     @Override
                     public void onNext(JsonArray jsonElements) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showDataTableInfo(jsonElements);
+                        if (jsonElements.size() == 0) {
+                            getMvpView().showEmptyDataTable();
+                        } else {
+                            getMvpView().showDataTableInfo(jsonElements);
+                        }
                     }
-                });
+                }));
+    }
+
+    public void deleteDataTableEntry(String table, int entity, int rowId) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        subscriptions.add(dataManagerDataTable.deleteDataTableEntry(table, entity, rowId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<GenericResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showFetchingError(MFErrorParser.errorMessage(e));
+                    }
+
+                    @Override
+                    public void onNext(GenericResponse genericResponse) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showDataTableDeletedSuccessfully();
+                    }
+                })
+        );
     }
 }

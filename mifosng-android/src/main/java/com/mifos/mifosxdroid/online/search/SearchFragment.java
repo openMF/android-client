@@ -99,7 +99,7 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         searchOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_search.setAdapter(searchOptionsAdapter);
         sp_search.setOnItemSelectedListener(this);
-
+        et_search.requestFocus();
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_search.setLayoutManager(layoutManager);

@@ -340,7 +340,7 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
                 .NONE, getString(R.string.add_new));
         menuItemAddNewDocument
                 .setIcon(ContextCompat
-                        .getDrawable(getActivity(), R.drawable.ic_action_content_new));
+                        .getDrawable(getActivity(), R.drawable.ic_add_white_24dp));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

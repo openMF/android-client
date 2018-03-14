@@ -4,7 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mifos.objects.accounts.loan.AccountLinkingOptions;
+import com.mifos.objects.noncore.DataTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,46 +103,55 @@ public class LoanTemplate implements Parcelable {
     Timeline timeline;
 
     @SerializedName("productOptions")
-    List<ProductOptions> productOptions;
+    List<ProductOptions> productOptions = new ArrayList<>();
+
+    @SerializedName("datatables")
+    ArrayList<DataTable> dataTables = new ArrayList<>();
 
     @SerializedName("loanOfficerOptions")
-    List<LoanOfficerOptions> loanOfficerOptions;
+    List<LoanOfficerOptions> loanOfficerOptions = new ArrayList<>();
 
     @SerializedName("loanPurposeOptions")
-    List<LoanPurposeOptions> loanPurposeOptions;
+    List<LoanPurposeOptions> loanPurposeOptions = new ArrayList<>();
 
     @SerializedName("fundOptions")
-    List<FundOptions> fundOptions;
+    List<FundOptions> fundOptions = new ArrayList<>();
 
     @SerializedName("termFrequencyTypeOptions")
-    List<TermFrequencyTypeOptions> termFrequencyTypeOptions;
+    List<TermFrequencyTypeOptions> termFrequencyTypeOptions = new ArrayList<>();
 
     @SerializedName("repaymentFrequencyTypeOptions")
-    List<RepaymentFrequencyTypeOptions> repaymentFrequencyTypeOptions;
+    List<RepaymentFrequencyTypeOptions> repaymentFrequencyTypeOptions = new ArrayList<>();
 
     @SerializedName("repaymentFrequencyNthDayTypeOptions")
-    List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyNthDayTypeOptions;
+    List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyNthDayTypeOptions =
+            new ArrayList<>();
+
+    @SerializedName("repaymentFrequencyDaysOfWeekTypeOptions")
+    List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions =
+            new ArrayList<>();
 
     @SerializedName("interestRateFrequencyTypeOptions")
-    List<InterestRateFrequencyTypeOptions> interestRateFrequencyTypeOptions;
+    List<InterestRateFrequencyTypeOptions> interestRateFrequencyTypeOptions = new ArrayList<>();
 
     @SerializedName("amortizationTypeOptions")
-    List<AmortizationTypeOptions> amortizationTypeOptions;
+    List<AmortizationTypeOptions> amortizationTypeOptions = new ArrayList<>();
 
     @SerializedName("interestTypeOptions")
-    List<InterestTypeOptions> interestTypeOptions;
+    List<InterestTypeOptions> interestTypeOptions = new ArrayList<>();
 
     @SerializedName("interestCalculationPeriodTypeOptions")
-    List<InterestCalculationPeriodType> interestCalculationPeriodTypeOptions;
+    List<InterestCalculationPeriodType> interestCalculationPeriodTypeOptions = new ArrayList<>();
 
     @SerializedName("transactionProcessingStrategyOptions")
-    List<TransactionProcessingStrategyOptions> transactionProcessingStrategyOptions;
+    List<TransactionProcessingStrategyOptions> transactionProcessingStrategyOptions =
+            new ArrayList<>();
 
     @SerializedName("chargeOptions")
-    List<ChargeOptions> chargeOptions;
+    List<ChargeOptions> chargeOptions = new ArrayList<>();
 
     @SerializedName("loanCollateralOptions")
-    List<LoanCollateralOptions> loanCollateralOptions;
+    List<LoanCollateralOptions> loanCollateralOptions = new ArrayList<>();
 
     @SerializedName("multiDisburseLoan")
     Boolean multiDisburseLoan;
@@ -170,6 +182,17 @@ public class LoanTemplate implements Parcelable {
 
     @SerializedName("maximumGap")
     Integer maximumGap;
+
+    @SerializedName("accountLinkingOptions")
+    List<AccountLinkingOptions> accountLinkingOptions = new ArrayList<>();
+
+    public List<AccountLinkingOptions> getAccountLinkingOptions() {
+        return accountLinkingOptions;
+    }
+
+    public void setAccountLinkingOptions(List<AccountLinkingOptions> accountLinkingOptions) {
+        this.accountLinkingOptions = accountLinkingOptions;
+    }
 
     public Integer getClientId() {
         return clientId;
@@ -413,6 +436,14 @@ public class LoanTemplate implements Parcelable {
         this.productOptions = productOptions;
     }
 
+    public ArrayList<DataTable> getDataTables() {
+        return dataTables;
+    }
+
+    public void setDataTables(ArrayList<DataTable> dataTables) {
+        this.dataTables = dataTables;
+    }
+
     public List<LoanOfficerOptions> getLoanOfficerOptions() {
         return loanOfficerOptions;
     }
@@ -462,6 +493,16 @@ public class LoanTemplate implements Parcelable {
     public void setRepaymentFrequencyNthDayTypeOptions(
             List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyNthDayTypeOptions) {
         this.repaymentFrequencyNthDayTypeOptions = repaymentFrequencyNthDayTypeOptions;
+    }
+
+    public List<RepaymentFrequencyDaysOfWeekTypeOptions>
+            getRepaymentFrequencyDaysOfWeekTypeOptions() {
+        return repaymentFrequencyDaysOfWeekTypeOptions;
+    }
+
+    public void setRepaymentFrequencyDaysOfWeekTypeOptions(
+            List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions) {
+        this.repaymentFrequencyDaysOfWeekTypeOptions = repaymentFrequencyDaysOfWeekTypeOptions;
     }
 
     public List<InterestRateFrequencyTypeOptions> getInterestRateFrequencyTypeOptions() {
@@ -603,6 +644,20 @@ public class LoanTemplate implements Parcelable {
         this.maximumGap = maximumGap;
     }
 
+    /**
+     * Required to set default value to the Fund spinner
+     *
+     * @param fundId The value received from the Template for that particular loanProduct
+     * @return Returns the index of the fundOption list where the specified fundId is located
+     */
+    public int getFundNameFromId(int fundId) {
+        for (int i = 0; i < fundOptions.size(); i++) {
+            if (fundOptions.get(i).getId() == fundId) {
+                return i;
+            }
+        }
+        return 0;
+    }
 
     @Override
     public int describeContents() {
@@ -641,12 +696,14 @@ public class LoanTemplate implements Parcelable {
         dest.writeValue(this.graceOnArrearsAgeing);
         dest.writeParcelable(this.timeline, flags);
         dest.writeTypedList(this.productOptions);
+        dest.writeTypedList(this.dataTables);
         dest.writeTypedList(this.loanOfficerOptions);
         dest.writeTypedList(this.loanPurposeOptions);
         dest.writeTypedList(this.fundOptions);
         dest.writeTypedList(this.termFrequencyTypeOptions);
         dest.writeTypedList(this.repaymentFrequencyTypeOptions);
         dest.writeTypedList(this.repaymentFrequencyNthDayTypeOptions);
+        dest.writeTypedList(this.repaymentFrequencyDaysOfWeekTypeOptions);
         dest.writeTypedList(this.interestRateFrequencyTypeOptions);
         dest.writeTypedList(this.amortizationTypeOptions);
         dest.writeTypedList(this.interestTypeOptions);
@@ -664,6 +721,7 @@ public class LoanTemplate implements Parcelable {
         dest.writeValue(this.isVariableInstallmentsAllowed);
         dest.writeValue(this.minimumGap);
         dest.writeValue(this.maximumGap);
+        dest.writeTypedList(this.accountLinkingOptions);
     }
 
     public LoanTemplate() {
@@ -707,6 +765,7 @@ public class LoanTemplate implements Parcelable {
         this.graceOnArrearsAgeing = (Integer) in.readValue(Integer.class.getClassLoader());
         this.timeline = in.readParcelable(Timeline.class.getClassLoader());
         this.productOptions = in.createTypedArrayList(ProductOptions.CREATOR);
+        this.dataTables = in.createTypedArrayList(DataTable.CREATOR);
         this.loanOfficerOptions = in.createTypedArrayList(LoanOfficerOptions.CREATOR);
         this.loanPurposeOptions = in.createTypedArrayList(LoanPurposeOptions.CREATOR);
         this.fundOptions = in.createTypedArrayList(FundOptions.CREATOR);
@@ -715,6 +774,8 @@ public class LoanTemplate implements Parcelable {
                 (RepaymentFrequencyTypeOptions.CREATOR);
         this.repaymentFrequencyNthDayTypeOptions = in.createTypedArrayList
                 (RepaymentFrequencyNthDayTypeOptions.CREATOR);
+        this.repaymentFrequencyDaysOfWeekTypeOptions = in.createTypedArrayList
+                (RepaymentFrequencyDaysOfWeekTypeOptions.CREATOR);
         this.interestRateFrequencyTypeOptions = in.createTypedArrayList
                 (InterestRateFrequencyTypeOptions.CREATOR);
         this.amortizationTypeOptions = in.createTypedArrayList(AmortizationTypeOptions.CREATOR);
@@ -724,6 +785,7 @@ public class LoanTemplate implements Parcelable {
         this.transactionProcessingStrategyOptions = in.createTypedArrayList
                 (TransactionProcessingStrategyOptions.CREATOR);
         this.chargeOptions = in.createTypedArrayList(ChargeOptions.CREATOR);
+        this.accountLinkingOptions = in.createTypedArrayList(AccountLinkingOptions.CREATOR);
         this.loanCollateralOptions = in.createTypedArrayList(LoanCollateralOptions.CREATOR);
         this.multiDisburseLoan = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.canDefineInstallmentAmount = (Boolean) in.readValue(Boolean.class.getClassLoader());

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
@@ -63,16 +64,22 @@ public class SurveyListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
         final Survey survey = listSurvey.get(i);
-        viewHolder.tv_survey_name.setText(survey.getName());
-        viewHolder.tv_description.setText(survey.getDescription());
+        viewHolder.tvSurveyName.setText(survey.getName());
+        viewHolder.tvDescription.setText(survey.getDescription());
+        viewHolder.ivSyncStatus
+                .setVisibility(survey.isSync() ? View.VISIBLE : View.INVISIBLE);
         return view;
     }
 
     public static class ViewHolder {
         @BindView(R.id.tv_survey_name)
-        TextView tv_survey_name;
+        TextView tvSurveyName;
+
         @BindView(R.id.tv_description)
-        TextView tv_description;
+        TextView tvDescription;
+
+        @BindView(R.id.iv_sync_status)
+        ImageView ivSyncStatus;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

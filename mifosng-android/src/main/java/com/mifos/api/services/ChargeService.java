@@ -5,8 +5,10 @@
 package com.mifos.api.services;
 
 import com.mifos.api.model.APIEndPoint;
+import com.mifos.objects.client.ChargeCreationResponse;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.templates.clients.ChargeTemplate;
 import com.mifos.services.data.ChargesPayload;
 
 import okhttp3.ResponseBody;
@@ -26,7 +28,7 @@ public interface ChargeService {
     Observable<ResponseBody> listAllCharges();
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
-    Observable<ResponseBody> getAllChargesS(@Path("clientId") int clientId);
+    Observable<ChargeTemplate> getAllChargesS(@Path("clientId") int clientId);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
     Observable<ResponseBody> getAllChargev3(@Path("loanId") int loanId);
@@ -37,15 +39,15 @@ public interface ChargeService {
                                                @Query("limit") int limit);
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
-    Observable<Charges> createCharges(@Path("clientId") int clientId,
-                                      @Body ChargesPayload chargesPayload);
+    Observable<ChargeCreationResponse> createCharges(@Path("clientId") int clientId,
+                                                     @Body ChargesPayload chargesPayload);
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges")
     Observable<Page<Charges>> getListOfLoanCharges(@Path("loanId") int loanId);
 
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
-    Observable<Charges> createLoanCharges(@Path("loanId") int loanId,
+    Observable<ChargeCreationResponse> createLoanCharges(@Path("loanId") int loanId,
                                           @Body ChargesPayload chargesPayload);
 
 }

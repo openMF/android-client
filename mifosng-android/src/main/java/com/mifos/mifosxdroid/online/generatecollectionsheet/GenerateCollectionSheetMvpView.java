@@ -1,6 +1,8 @@
 package com.mifos.mifosxdroid.online.generatecollectionsheet;
 
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.collectionsheet.CenterDetail;
+import com.mifos.objects.collectionsheet.CollectionSheetResponse;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
@@ -24,5 +26,11 @@ public interface GenerateCollectionSheetMvpView extends MvpView {
 
     void showGroupByCenter(CenterWithAssociations centerWithAssociations);
 
-    void showFetchingError(String s);
+    void showError(String s);
+
+    void onCenterLoadSuccess(List<CenterDetail> centerDetails);
+
+    void showProductive(CollectionSheetResponse sheet);
+
+    void showCollection(CollectionSheetResponse sheet);
 }

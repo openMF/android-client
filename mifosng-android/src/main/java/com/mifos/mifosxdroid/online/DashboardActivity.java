@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
@@ -22,18 +23,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.activity.PathTrackingActivity;
+import com.mifos.mifosxdroid.SettingsActivity;
+import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
+import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
-import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
-import com.mifos.objects.User;
+import com.mifos.mifosxdroid.online.search.SearchFragment;
+import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
@@ -58,6 +62,7 @@ public class DashboardActivity extends MifosBaseActivity
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
     private Menu menu;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,31 +107,30 @@ public class DashboardActivity extends MifosBaseActivity
                             setMenuCreateCentre(false);
                             setMenuCreateGroup(true);
                         }
-
                     }
                 });
 
     }
 
-    private void setMenuCreateGroup(boolean visibility) {
+    private void setMenuCreateGroup(boolean isEnabled) {
         if (menu != null) {
             //position of mItem_create_new_group is 2
-            menu.getItem(2).setVisible(visibility);
+            menu.getItem(2).setEnabled(isEnabled);
         }
 
     }
 
-    private void setMenuCreateCentre(boolean visibility) {
+    private void setMenuCreateCentre(boolean isEnabled) {
         if (menu != null) {
             //position of mItem_create_new_centre is 1
-            menu.getItem(1).setVisible(visibility);
+            menu.getItem(1).setEnabled(isEnabled);
         }
     }
 
-    private void setMenuCreateClient(boolean visibility) {
+    private void setMenuCreateClient(boolean isEnabled) {
         if (menu != null) {
             //position of mItem_create_new_client is 0
-            menu.getItem(0).setVisible(visibility);
+            menu.getItem(0).setEnabled(isEnabled);
         }
     }
 
@@ -162,7 +166,7 @@ public class DashboardActivity extends MifosBaseActivity
                 super.onDrawerSlide(drawerView, slideOffset);
             }
         };
-        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
         // make an API call to fetch logged in client's details
@@ -179,6 +183,7 @@ public class DashboardActivity extends MifosBaseActivity
         }*/
 
         // select which activity to open
+        clearFragmentBackStack();
         final Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.item_dashboard:
@@ -191,8 +196,7 @@ public class DashboardActivity extends MifosBaseActivity
                 replaceFragment(GroupsListFragment.newInstance(), false, R.id.container);
                 break;
             case R.id.item_centers:
-                intent.setClass(getApplicationContext(), CentersActivity.class);
-                startNavigationClickActivity(intent);
+                replaceFragment(CenterListFragment.newInstance(), false, R.id.container);
                 break;
             case R.id.item_path_tracker:
                 intent.setClass(getApplicationContext(), PathTrackingActivity.class);
@@ -201,11 +205,22 @@ public class DashboardActivity extends MifosBaseActivity
             case R.id.item_offline:
                 replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container);
                 break;
-
+            case R.id.individual_collection_sheet:
+                intent.setClass(this, GenerateCollectionSheetActivity.class);
+                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL);
+                startActivity(intent);
+                break;
+            case R.id.collection_sheet:
+                intent.setClass(this, GenerateCollectionSheetActivity.class);
+                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION);
+                startActivity(intent);
+                break;
+            case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
         }
 
-        // close the drawer
-        mDrawerLayout.closeDrawer(Gravity.LEFT);
+        mDrawerLayout.closeDrawer(Gravity.START);
         mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
     }
@@ -237,7 +252,7 @@ public class DashboardActivity extends MifosBaseActivity
     }
 
     public void startNavigationClickActivity(final Intent intent) {
-        android.os.Handler handler = new android.os.Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -263,18 +278,31 @@ public class DashboardActivity extends MifosBaseActivity
         // no profile picture credential, using dummy profile picture
         ImageView imageViewUserPicture = ButterKnife
                 .findById(mNavigationHeader, R.id.iv_user_picture);
-        imageViewUserPicture.setImageResource(R.drawable.ic_account_circle);
+        imageViewUserPicture.setImageResource(R.drawable.ic_dp_placeholder);
     }
 
     @Override
     public void onBackPressed() {
         // check if the nav mDrawer is open
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
+            mDrawerLayout.closeDrawer(Gravity.START);
         } else {
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                setMenuCreateClient(true);
+                setMenuCreateCentre(true);
+                setMenuCreateGroup(true);
+                super.onBackPressed();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
-
     }
 
     @Override

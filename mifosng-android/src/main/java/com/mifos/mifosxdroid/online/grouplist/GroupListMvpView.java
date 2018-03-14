@@ -13,5 +13,7 @@ public interface GroupListMvpView extends MvpView {
 
     void showFetchingError(String s);
 
+    void showEmptyGroups(int messageId);
+
     void showGroups(GroupWithAssociations groupWithAssociations);
 }

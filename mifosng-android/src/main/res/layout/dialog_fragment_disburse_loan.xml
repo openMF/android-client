@@ -6,25 +6,27 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LinearLayout.Base">
+    style="@style/LinearLayout.Base"
+    android:id="@+id/ll_disburse">
+
     <TextView
-        android:id="@+id/tv_loand"
+        android:id="@+id/tv_disburse_on"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:paddingTop="16dp"
         android:text="@string/approval_disbursement_date"
         android:textSize="16sp"/>
+
     <TextView
         android:id="@+id/tv_loan_disbursement_dates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:imeOptions="actionNext"
         android:paddingBottom="16dp"
         android:paddingTop="10dp"
         android:textSize="20sp"
-        android:enabled="false"
         android:background="@color/light_grey" />
+
     <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
         <EditText
@@ -35,8 +37,9 @@
             android:imeOptions="actionNext"
             android:inputType="number"
             android:paddingBottom="16dp"
-            android:singleLine="true"/>
+            android:maxLines="1"/>
     </android.support.design.widget.TextInputLayout>
+
     <TextView
         android:id="@+id/tv_payment_type"
         android:layout_width="match_parent"
@@ -52,7 +55,6 @@
         android:spinnerMode="dropdown"
         android:background="@color/light_grey"/>
 
-
     <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
         <EditText
@@ -63,10 +65,11 @@
             android:imeOptions="actionNext"
             android:inputType="text"
             android:paddingBottom="16dp"
-            android:singleLine="true"/>
+            />
     </android.support.design.widget.TextInputLayout>
+
     <Button
-        android:id="@+id/bt_disburse_loan"
+        android:id="@+id/btn_disburse_loan"
         style="@style/Button.Base"
         android:layout_marginTop="10dp"
         android:text="@string/submit"

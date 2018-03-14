@@ -11,6 +11,7 @@ import com.mifos.objects.group.GroupDate;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupPayload_Table;
 import com.mifos.objects.group.Group_Table;
+import com.mifos.objects.response.SaveResponse;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -169,12 +170,12 @@ public class DatabaseHelperGroups {
         });
     }
 
-    public Observable<Group> saveGroupPayload(final GroupPayload groupPayload) {
-        return Observable.defer(new Func0<Observable<Group>>() {
+    public Observable<SaveResponse> saveGroupPayload(final GroupPayload groupPayload) {
+        return Observable.defer(new Func0<Observable<SaveResponse>>() {
             @Override
-            public Observable<Group> call() {
+            public Observable<SaveResponse> call() {
                 groupPayload.save();
-                return Observable.just(new Group());
+                return Observable.just(new SaveResponse());
             }
         });
     }

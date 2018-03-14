@@ -1,11 +1,13 @@
 package com.mifos.mifosxdroid.online.loanaccount;
 
 import com.mifos.api.datamanager.DataManagerLoan;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.accounts.loan.Loans;
 import com.mifos.objects.organisation.LoanProducts;
 import com.mifos.objects.templates.loans.LoanTemplate;
 import com.mifos.services.data.LoansPayload;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load LoanProducts");
+                        getMvpView().showMessage(R.string.failed_to_fetch_loan_products);
                     }
 
                     @Override
@@ -82,7 +84,7 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load AccountTemplate");
+                        getMvpView().showMessage(R.string.failed_to_fetch_loan_template);
                     }
 
                     @Override
@@ -108,7 +110,7 @@ public class LoanAccountPresenter extends BasePresenter<LoanAccountMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Try Again");
+                        getMvpView().showFetchingError(MFErrorParser.errorMessage(e));
                     }
 
                     @Override

@@ -6,12 +6,12 @@
 buildscript {
     repositories {
         mavenCentral()
-        //maven { url 'http://download.crashlytics.com/maven' }
+        maven { url 'https://maven.fabric.io/public' }
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
-        //classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
     }
@@ -19,14 +19,14 @@ buildscript {
 
 repositories {
     mavenCentral()
-    //maven { url 'http://download.crashlytics.com/maven' }
+    maven { url 'https://maven.fabric.io/public' }
     jcenter()
     maven { url "https://jitpack.io" }
     maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 }
 
 apply plugin: 'com.android.application'
-//apply plugin: 'crashlytics'
+apply plugin: 'io.fabric'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.triplet.play'
@@ -36,8 +36,11 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
+        multiDexEnabled true
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 6
+        versionName "1.0.1"
         // A test runner provided by https://code.google.com/p/android-test-kit/
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -56,10 +59,6 @@ android {
         }
     }
 
-    dexOptions {
-        incremental true
-    }
-
     signingConfigs {
         release {
             storeFile file("../default_key_store.jks")
@@ -69,8 +68,10 @@ android {
         }
     }
 
-    productFlavors {
-    }
+    /*productFlavors {
+        Keep it and the 'useProguard' attribute in the release config commented to prevent
+        "Build-in class shrinker and multidex are not supported yet." error while enabling multidex
+    }*/
 
     buildTypes {
 
@@ -78,14 +79,14 @@ android {
             minifyEnabled false
             // TODO  Uses new built-in shrinker, To Enable update buils tools to 2.2
             // TODO http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+            //useProguard false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
         release {
             minifyEnabled false
-            useProguard false
+            //useProguard false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
@@ -113,6 +114,26 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'x86', 'x86_64'
+            universalApk false
+        }
+    }
+}
+ext.abiCodes = ['arm64-v8a':'1', 'armeabi':'2', 'armeabi-v7a':'3', 'mips':'4', 'mips64':'5',
+                'x86':'6', 'x86_64':'7']
+import com.android.build.OutputFile
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        def baseVersionCode = project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+        if (baseVersionCode != null) {
+            output.versionCodeOverride = Integer.valueOf(baseVersionCode + variant.versionCode)
+        }
+    }
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
@@ -130,6 +151,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.1'
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
 
@@ -146,7 +168,9 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.google.android.gms:play-services-places:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
     compile "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
 
@@ -182,7 +206,9 @@ dependencies {
 
 
     compile 'com.joanzapata.iconify:android-iconify-material:2.1.1' // (v2.0.0)
-    //compile 'com.crashlytics.android:crashlytics:1.+'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+        transitive = true;
+    }
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
@@ -204,23 +230,23 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
 
 }
-    /*
-    Resolves dependency versions across test and production APKs, specifically, transitive
-    dependencies. This is required since Espresso internally has a dependency on support-annotations.
-    */
-    configurations.all {
-        resolutionStrategy.force "com.android.support:support-annotations:23.1.1"
-    }
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:23.1.1"
+}
 
-    /*
-    All direct/transitive dependencies shared between your test and production APKs need to be
-    excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
-    excluding these dependencies from your test configuration will result in an dex pre-verifier error
-    at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
-    */
-    configurations.compile.dependencies.each { compileDependency ->
-        println "Excluding compile dependency: ${compileDependency.getName()}"
-        configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
-            configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
-        }
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
     }
+}

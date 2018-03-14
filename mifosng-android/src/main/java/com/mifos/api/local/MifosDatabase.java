@@ -12,5 +12,5 @@ public class MifosDatabase {
     public static final String NAME = "Mifos";
 
     //Always Increase the Version Number
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 }

@@ -1,27 +1,24 @@
 package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction;
 
-import com.google.gson.Gson;
 import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -119,10 +116,10 @@ public class SyncSavingsAccountTransactionPresenter extends
      *
      * @param errorMessage Server Error Message
      */
-    public void showTransactionSyncFailed(ErrorSyncServerMessage errorMessage) {
+    public void showTransactionSyncFailed(String errorMessage) {
         SavingsAccountTransactionRequest transaction = mSavingsAccountTransactionRequests
                 .get(mTransactionIndex);
-        transaction.setErrorMessage(errorMessage.getErrors().get(0).getDefaultUserMessage());
+        transaction.setErrorMessage(errorMessage);
         updateSavingsAccountTransaction(transaction);
     }
 
@@ -282,19 +279,8 @@ public class SyncSavingsAccountTransactionPresenter extends
 
                     @Override
                     public void onError(Throwable e) {
-                        try {
-                            if (e instanceof HttpException) {
-                                String errorMessage = ((HttpException) e).response().errorBody()
-                                        .string();
-                                Gson gson = new Gson();
-                                ErrorSyncServerMessage syncErrorMessage = gson.
-                                        fromJson(errorMessage, ErrorSyncServerMessage.class);
-                                getMvpView().showProgressbar(false);
-                                showTransactionSyncFailed(syncErrorMessage);
-                            }
-                        } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
-                        }
+                        getMvpView().showProgressbar(false);
+                        showTransactionSyncFailed(MFErrorParser.errorMessage(e));
                     }
 
                     @Override

@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="@string/office_name"
+                android:text="@string/office_name_mandatory"
                 android:textSize="16sp"
 
                 />
@@ -110,7 +110,7 @@
                 />
 
             <Button
-                android:id="@+id/bt_submit"
+                android:id="@+id/btn_submit"
                 style="@style/Button.Base"
                 android:layout_marginTop="10dp"
                 android:text="@string/submit" />

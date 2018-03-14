@@ -1,22 +1,19 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
-import com.google.gson.Gson;
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.ErrorSyncServerMessage;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -86,19 +83,8 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
 
                     @Override
                     public void onError(Throwable e) {
-                        try {
-                            if (e instanceof HttpException) {
-                                String errorMessage = ((HttpException) e).response().errorBody()
-                                        .string();
-                                Gson gson = new Gson();
-                                ErrorSyncServerMessage syncErrorMessage = gson.
-                                        fromJson(errorMessage, ErrorSyncServerMessage.class);
-                                getMvpView().showProgressbar(false);
-                                getMvpView().showClientSyncFailed(syncErrorMessage);
-                            }
-                        } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
-                        }
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showClientSyncFailed(MFErrorParser.errorMessage(e));
                     }
 
                     @Override
@@ -110,10 +96,10 @@ public class SyncClientPayloadsPresenter extends BasePresenter<SyncClientPayload
     }
 
 
-    public void deleteAndUpdateClientPayload(int id) {
+    public void deleteAndUpdateClientPayload(int id, long clientCreationTIme) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.deleteAndUpdatePayloads(id)
+        mSubscriptions.add(mDataManagerClient.deleteAndUpdatePayloads(id, clientCreationTIme)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<ClientPayload>>() {

@@ -102,7 +102,7 @@ public class CenterListPresenterTest {
 
         verify(mCenterListMvpView).showProgressbar(true);
         verify(mCenterListMvpView).showMoreCenters(centerPage.getPageItems());
-        verify(mCenterListMvpView, never()).showMessage(R.string.failed_to_fetch_center);
+        verify(mCenterListMvpView, never()).showMessage(R.string.failed_to_fetch_centers);
         verify(mCenterListMvpView).showProgressbar(false);
     }
 
@@ -114,7 +114,7 @@ public class CenterListPresenterTest {
         centerListPresenter.loadCenters(true, offset);
 
         verify(mCenterListMvpView).showProgressbar(true);
-        verify(mCenterListMvpView).showMessage(R.string.failed_to_fetch_center);
+        verify(mCenterListMvpView).showMessage(R.string.failed_to_fetch_centers);
         verify(mCenterListMvpView, never()).showFetchingError();
         verify(mCenterListMvpView).showProgressbar(false);
     }

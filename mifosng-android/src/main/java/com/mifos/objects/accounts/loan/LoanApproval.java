@@ -4,13 +4,32 @@
  */
 package com.mifos.objects.accounts.loan;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LoanApproval {
 
-    private String locale = "en";
-    private String dateFormat = "dd MMMM yyyy";
-    private String approvedOnDate;
-    private String note;
-    private String approvedLoanAmount;
+    @SerializedName("approvedOnDate")
+    String approvedOnDate;
+
+    @SerializedName("approvedLoanAmount")
+    String approvedLoanAmount;
+
+    @SerializedName("expectedDisbursementDate")
+    String expectedDisbursementDate;
+
+    @SerializedName("note")
+    String note;
+
+    String locale = "en";
+    String dateFormat = "dd MMMM yyyy";
+
+    public String getExpectedDisbursementDate() {
+        return expectedDisbursementDate;
+    }
+
+    public void setExpectedDisbursementDate(String expectedDisbursementDate) {
+        this.expectedDisbursementDate = expectedDisbursementDate;
+    }
 
     public String getLocale() {
         return locale;

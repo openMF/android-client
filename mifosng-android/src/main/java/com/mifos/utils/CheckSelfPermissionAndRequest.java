@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MaterialDialog;
@@ -128,8 +129,16 @@ public class CheckSelfPermissionAndRequest {
                                                 R.string.package_name), activity.getPackageName()
                                                 , null);
                                         intent.setData(uri);
-                                        activity.startActivityForResult(intent,
-                                                Constants.REQUEST_PERMISSION_SETTING);
+                                        PackageManager pm = activity.getPackageManager();
+                                        if (intent.resolveActivity(pm) != null) {
+                                            activity.startActivityForResult(intent,
+                                                    Constants.REQUEST_PERMISSION_SETTING);
+                                        } else {
+                                            Toast.makeText(activity,
+                                                    activity.getString(
+                                                            R.string.msg_setting_activity_not_found)
+                                                    , Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                 })
                         .createMaterialDialog()

@@ -12,7 +12,6 @@ import java.util.List;
 import retrofit2.http.GET;
 import rx.Observable;
 
-;
 
 /**
  * @author fomenkoo

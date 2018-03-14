@@ -36,6 +36,8 @@ public class Client extends MifosBaseModel implements Parcelable {
     @Column
     String accountNo;
 
+    Integer clientId;
+
     @Column
     @ForeignKey(saveForeignKeyModel = true)
     Status status;
@@ -91,6 +93,14 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     @Column
     private String externalId;
+
+    public Integer getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
+    }
 
     public int getGroupId() {
         return groupId;

@@ -111,7 +111,7 @@ public class GroupLoanTemplate implements Parcelable {
     List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyNthDayTypeOptions;
 
     @SerializedName("repaymentFrequencyDaysOfWeekTypeOptions")
-    List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions;
+    List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions;
 
     @SerializedName("interestRateFrequencyTypeOptions")
     List<InterestRateFrequencyTypeOptions> interestRateFrequencyTypeOptions;
@@ -445,12 +445,13 @@ public class GroupLoanTemplate implements Parcelable {
         this.repaymentFrequencyNthDayTypeOptions = repaymentFrequencyNthDayTypeOptions;
     }
 
-    public List<RepaymentFrequencyNthDayTypeOptions> getRepaymentFrequencyDaysOfWeekTypeOptions() {
+    public List<RepaymentFrequencyDaysOfWeekTypeOptions>
+            getRepaymentFrequencyDaysOfWeekTypeOptions() {
         return repaymentFrequencyDaysOfWeekTypeOptions;
     }
 
     public void setRepaymentFrequencyDaysOfWeekTypeOptions(
-            List<RepaymentFrequencyNthDayTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions) {
+            List<RepaymentFrequencyDaysOfWeekTypeOptions> repaymentFrequencyDaysOfWeekTypeOptions) {
         this.repaymentFrequencyDaysOfWeekTypeOptions = repaymentFrequencyDaysOfWeekTypeOptions;
     }
 
@@ -623,6 +624,15 @@ public class GroupLoanTemplate implements Parcelable {
 
     public void setMaximumGap(Integer maximumGap) {
         this.maximumGap = maximumGap;
+    }
+
+    public int getFundNameFromId(int fundId) {
+        for (int i = 0; i < fundOptions.size(); i++) {
+            if (fundOptions.get(i).getId() == fundId) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     @Override
