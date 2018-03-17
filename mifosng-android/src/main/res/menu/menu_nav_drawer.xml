@@ -36,12 +36,14 @@
         <item
             android:id="@+id/individual_collection_sheet"
             android:checked="false"
+            android:icon="@drawable/ic_assignment_black_24dp"
             android:title="@string/individual_collection_sheet"
             />
 
         <item
             android:id ="@+id/collection_sheet"
             android:checked="false"
+            android:icon="@drawable/ic_assignment_black_24dp"
             android:title="@string/collection_sheet"/>
                 
         <item
