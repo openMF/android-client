@@ -20,14 +20,21 @@ public class FormNumericEditText extends FormWidget {
     protected EditText input;
     protected int priority;
 
-    public FormNumericEditText(Context context, String property) {
+    public enum FormInputTypes {
+        INTEGER, DECIMAL
+    }
+
+    public FormNumericEditText(Context context, String property, FormInputTypes formInputTypes) {
         super(context, property);
+
+        int inputType = formInputTypes == FormInputTypes.INTEGER ?
+            InputType.TYPE_CLASS_NUMBER : InputType.TYPE_CLASS_PHONE;
 
         label = new TextView(context);
         label.setText(getDisplayText());
 
         input = new EditText(context);
-        input.setInputType(InputType.TYPE_CLASS_PHONE);
+        input.setInputType(inputType);
         input.setImeOptions(EditorInfo.IME_ACTION_DONE);
         input.setLayoutParams(FormWidget.defaultLayoutParams);
 
