@@ -18,7 +18,6 @@ public class FormNumericEditText extends FormWidget {
 
     protected TextView label;
     protected EditText input;
-    protected int priority;
 
     public FormNumericEditText(Context context, String property) {
         super(context, property);
