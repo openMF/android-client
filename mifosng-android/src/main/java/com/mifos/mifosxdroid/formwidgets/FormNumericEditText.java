@@ -6,10 +6,17 @@
 package com.mifos.mifosxdroid.formwidgets;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.text.InputType;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.lang.annotation.Retention;
+
+import static com.mifos.mifosxdroid.formwidgets.FormNumericEditText.FormInputType.TYPE_DOUBLE;
+import static com.mifos.mifosxdroid.formwidgets.FormNumericEditText.FormInputType.TYPE_INTEGER;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
  * Created by ishankhanna on 01/08/14.
@@ -20,14 +27,24 @@ public class FormNumericEditText extends FormWidget {
     protected EditText input;
     protected int priority;
 
-    public FormNumericEditText(Context context, String property) {
+    @Retention(SOURCE)
+    @IntDef({TYPE_INTEGER, TYPE_DOUBLE})
+    public @interface FormInputType {
+        int TYPE_INTEGER = 0;
+        int TYPE_DOUBLE = 1;
+    }
+
+    public FormNumericEditText(Context context, String property, @FormInputType int formInputType) {
         super(context, property);
+
+        int inputType = formInputType == FormInputType.TYPE_DOUBLE ?
+                InputType.TYPE_CLASS_PHONE : InputType.TYPE_CLASS_NUMBER;
 
         label = new TextView(context);
         label.setText(getDisplayText());
 
         input = new EditText(context);
-        input.setInputType(InputType.TYPE_CLASS_PHONE);
+        input.setInputType(inputType);
         input.setImeOptions(EditorInfo.IME_ACTION_DONE);
         input.setLayoutParams(FormWidget.defaultLayoutParams);
 
