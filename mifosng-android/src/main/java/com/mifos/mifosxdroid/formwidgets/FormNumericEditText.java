@@ -28,7 +28,7 @@ public class FormNumericEditText extends FormWidget {
     protected int priority;
 
     @Retention(SOURCE)
-    @IntDef({TYPE_INTEGER, TYPE_DOUBLE})
+    @IntDef({TYPE_INTEGER,TYPE_DOUBLE})
     public @interface FormInputType {
         int TYPE_INTEGER = 0;
         int TYPE_DOUBLE = 1;
