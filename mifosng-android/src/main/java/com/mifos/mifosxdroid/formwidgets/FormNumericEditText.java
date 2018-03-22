@@ -5,6 +5,8 @@
 
 package com.mifos.mifosxdroid.formwidgets;
 
+import static com.mifos.mifosxdroid.formwidgets.FormNumericEditText.InputTypes.TYPE_INTEGER;
+
 import android.content.Context;
 import android.text.InputType;
 import android.view.inputmethod.EditorInfo;
@@ -20,14 +22,19 @@ public class FormNumericEditText extends FormWidget {
     protected EditText input;
     protected int priority;
 
-    public FormNumericEditText(Context context, String property) {
+    public enum InputTypes {
+        TYPE_INTEGER, TYPE_DECIMAL
+    }
+
+    public FormNumericEditText(Context context, String property,  InputTypes inputType) {
         super(context, property);
 
         label = new TextView(context);
         label.setText(getDisplayText());
 
         input = new EditText(context);
-        input.setInputType(InputType.TYPE_CLASS_PHONE);
+        input.setInputType((inputType == TYPE_INTEGER) ? InputType.TYPE_CLASS_NUMBER
+                : InputType.TYPE_CLASS_PHONE);
         input.setImeOptions(EditorInfo.IME_ACTION_DONE);
         input.setLayoutParams(FormWidget.defaultLayoutParams);
 

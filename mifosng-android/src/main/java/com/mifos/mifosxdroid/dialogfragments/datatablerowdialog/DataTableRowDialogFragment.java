@@ -127,7 +127,8 @@ public class DataTableRowDialogFragment extends DialogFragment
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_INT)) {
 
                     FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity
-                            (), columnHeader.getColumnName());
+                            (), columnHeader.getColumnName(),
+                            FormNumericEditText.InputTypes.TYPE_INTEGER);
                     formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_INT);
                     formWidgets.add(formNumericEditText);
                     linearLayout.addView(formNumericEditText.getView());
@@ -137,7 +138,8 @@ public class DataTableRowDialogFragment extends DialogFragment
                         .SCHEMA_KEY_DECIMAL)) {
 
                     FormNumericEditText formNumericEditText = new FormNumericEditText(getActivity
-                            (), columnHeader.getColumnName());
+                            (), columnHeader.getColumnName(),
+                            FormNumericEditText.InputTypes.TYPE_DECIMAL);
                     formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_DECIMAL);
                     formWidgets.add(formNumericEditText);
                     linearLayout.addView(formNumericEditText.getView());
