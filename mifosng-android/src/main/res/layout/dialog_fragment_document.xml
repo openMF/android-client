@@ -6,7 +6,8 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -36,15 +37,23 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/name"
-                android:id="@+id/textView2" />
+                android:id="@+id/textView2"
+                android:layout_gravity="center_vertical"/>
 
-            <EditText
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_document_name"
+                android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/et_document_name"
-                android:maxLines="3"
-                android:scrollbars="vertical"/>
+                app:errorEnabled="true">
+                <EditText
+                    android:id="@+id/et_document_name"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:maxLines="3"
+                    android:scrollbars="vertical"/>
+            </android.support.design.widget.TextInputLayout>
+
         </TableRow>
 
         <TableRow
@@ -59,15 +68,22 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/description"
-                android:id="@+id/textView3" />
+                android:id="@+id/textView3"
+                android:layout_gravity="center_vertical"/>
 
-            <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_document_description"
                 android:layout_height="wrap_content"
-                android:id="@+id/et_document_description"
-                android:maxLines="3"
-                android:scrollbars="vertical"/>
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                app:errorEnabled="true">
+                <EditText
+                    android:id="@+id/et_document_description"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:maxLines="3"
+                    android:scrollbars="vertical"/>
+            </android.support.design.widget.TextInputLayout>
         </TableRow>
 
     </TableLayout>
@@ -88,7 +104,7 @@
         android:layout_height="wrap_content"
         android:text="@string/upload"
         android:id="@+id/bt_upload"
-        android:enabled="false"
+        android:enabled="true"
         android:layout_below="@+id/tv_choose_file"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp" />

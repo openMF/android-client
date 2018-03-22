@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.dialogfragments.documentdialog;
 
 import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerDocument;
+import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 
@@ -42,7 +43,8 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
         mSubscriptions.clear();
     }
 
-    public void createDocument(String type, int id, String name, String desc, File file) {
+    public void createDocument(String type, int id, String name, String desc, File file)
+            throws RequiredFieldException {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerDocument
@@ -70,7 +72,7 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
     }
 
     public void updateDocument(String entityType, int entityId, int documentId,
-                               String name, String desc, File file) {
+                               String name, String desc, File file) throws RequiredFieldException {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerDocument.updateDocument(entityType, entityId, documentId,
@@ -99,7 +101,11 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
     }
 
 
-    private Part getRequestFileBody(File file) {
+    private Part getRequestFileBody(File file) throws RequiredFieldException {
+        if (file == null) {
+            getMvpView().showProgressbar(false);
+            throw new RequiredFieldException("Document", "not chosen");
+        }
         // create RequestBody instance from file
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
