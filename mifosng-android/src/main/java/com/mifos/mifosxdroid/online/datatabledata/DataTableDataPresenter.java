@@ -9,10 +9,10 @@ import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 7/6/16.
@@ -20,12 +20,12 @@ import rx.subscriptions.CompositeSubscription;
 public class DataTableDataPresenter extends BasePresenter<DataTableDataMvpView> {
 
     private final DataManagerDataTable dataManagerDataTable;
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public DataTableDataPresenter(DataManagerDataTable dataManager) {
         dataManagerDataTable = dataManager;
-        subscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -36,18 +36,18 @@ public class DataTableDataPresenter extends BasePresenter<DataTableDataMvpView> 
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loadDataTableInfo(String table, int entityId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerDataTable.getDataTableInfo(table, entityId)
+        compositeDisposable.add(dataManagerDataTable.getDataTableInfo(table, entityId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<JsonArray>() {
+                .subscribeWith(new DisposableObserver<JsonArray>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -72,12 +72,12 @@ public class DataTableDataPresenter extends BasePresenter<DataTableDataMvpView> 
     public void deleteDataTableEntry(String table, int entity, int rowId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerDataTable.deleteDataTableEntry(table, entity, rowId)
+        compositeDisposable.add(dataManagerDataTable.deleteDataTableEntry(table, entity, rowId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

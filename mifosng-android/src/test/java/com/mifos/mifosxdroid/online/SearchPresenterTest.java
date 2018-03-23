@@ -19,8 +19,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Action1;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -208,10 +209,10 @@ public class SearchPresenterTest {
         query = "Madenge Pimbi";
         resources = "clients";
         final List<SearchedEntity> exactSearch = new ArrayList<>();
-        Observable.from(searchedEntities)
-                .subscribe(new Action1<SearchedEntity>() {
+        Observable.fromIterable(searchedEntities)
+                .subscribe(new Consumer<SearchedEntity>() {
                     @Override
-                    public void call(SearchedEntity searchedEntity) {
+                    public void accept(SearchedEntity searchedEntity) {
                         if (searchedEntity.getEntityName().equals("Madenge Pimbi")) {
                             exactSearch.add(searchedEntity);
                         }
@@ -260,10 +261,10 @@ public class SearchPresenterTest {
 
     public List<SearchedEntity> filterEntities(final String entityType) {
         final List<SearchedEntity> search = new ArrayList<>();
-        Observable.from(searchedEntities)
-                .subscribe(new Action1<SearchedEntity>() {
+        Observable.fromIterable(searchedEntities)
+                .subscribe(new Consumer<SearchedEntity>() {
                     @Override
-                    public void call(SearchedEntity searchedEntity) {
+                    public void accept(SearchedEntity searchedEntity) {
                         if (searchedEntity.getEntityType().equals(entityType)) {
                             search.add(searchedEntity);
                         }

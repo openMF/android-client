@@ -18,9 +18,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+
 
 /**
  * Created by Rajan Maurya on 18/08/16.
@@ -39,17 +42,18 @@ public class Utils {
      */
     public static List<String> getPaymentTypeOptions(List<PaymentTypeOption> paymentTypeOptions) {
         final List<String> paymentOptions = new ArrayList<>();
-        Observable.from(paymentTypeOptions)
-                .flatMap(new Func1<PaymentTypeOption, Observable<String>>() {
+        Observable.fromIterable(paymentTypeOptions)
+                .flatMap(new Function<PaymentTypeOption, ObservableSource<?>>() {
+
                     @Override
-                    public Observable<String> call(PaymentTypeOption paymentTypeOption) {
+                    public Observable<String> apply(PaymentTypeOption paymentTypeOption) {
                         return Observable.just(paymentTypeOption.getName());
                     }
                 })
-                .subscribe(new Action1<String>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void call(String s) {
-                        paymentOptions.add(s);
+                    public void accept(Object o) throws Exception {
+
                     }
                 });
         return paymentOptions;
@@ -66,16 +70,16 @@ public class Utils {
     public static String getPaymentTypeName(final int paymentId,
                                      List<PaymentTypeOption> paymentTypeOptions) {
         final String[] paymentTypeName = new String[1];
-        Observable.from(paymentTypeOptions)
-                .filter(new Func1<PaymentTypeOption, Boolean>() {
+        Observable.fromIterable(paymentTypeOptions)
+                .filter(new Predicate<PaymentTypeOption>() {
                     @Override
-                    public Boolean call(PaymentTypeOption paymentTypeOption) {
+                    public boolean test(PaymentTypeOption paymentTypeOption) throws Exception {
                         return (paymentTypeOption.getId() == paymentId);
                     }
                 })
-                .subscribe(new Action1<PaymentTypeOption>() {
+                .subscribe(new Consumer<PaymentTypeOption>() {
                     @Override
-                    public void call(PaymentTypeOption paymentTypeOption) {
+                    public void accept(PaymentTypeOption paymentTypeOption) {
                         paymentTypeName[0] = paymentTypeOption.getName();
                     }
                 });
@@ -84,16 +88,16 @@ public class Utils {
 
     public static List<LoanAccount> getActiveLoanAccounts(List<LoanAccount> loanAccountList) {
         final List<LoanAccount> loanAccounts = new ArrayList<>();
-        Observable.from(loanAccountList)
-                .filter(new Func1<LoanAccount, Boolean>() {
+        Observable.fromIterable(loanAccountList)
+                .filter(new Predicate<LoanAccount>() {
                     @Override
-                    public Boolean call(LoanAccount loanAccount) {
+                    public boolean test(LoanAccount loanAccount) throws Exception {
                         return loanAccount.getStatus().getActive();
                     }
                 })
-                .subscribe(new Action1<LoanAccount>() {
+                .subscribe(new Consumer<LoanAccount>() {
                     @Override
-                    public void call(LoanAccount loanAccount) {
+                    public void accept(LoanAccount loanAccount) throws Exception {
                         loanAccounts.add(loanAccount);
                     }
                 });
@@ -103,17 +107,17 @@ public class Utils {
     public static List<SavingsAccount> getActiveSavingsAccounts(List<SavingsAccount>
                                                                         savingsAccounts) {
         final List<SavingsAccount> accounts = new ArrayList<>();
-        Observable.from(savingsAccounts)
-                .filter(new Func1<SavingsAccount, Boolean>() {
+        Observable.fromIterable(savingsAccounts)
+                .filter(new Predicate<SavingsAccount>() {
                     @Override
-                    public Boolean call(SavingsAccount savingsAccount) {
+                    public boolean test(SavingsAccount savingsAccount) throws Exception {
                         return (savingsAccount.getStatus().getActive() &&
                                 !savingsAccount.isRecurring());
                     }
                 })
-                .subscribe(new Action1<SavingsAccount>() {
+                .subscribe(new Consumer<SavingsAccount>() {
                     @Override
-                    public void call(SavingsAccount savingsAccount) {
+                    public void accept(SavingsAccount savingsAccount) {
                         accounts.add(savingsAccount)
                         ;
                     }
@@ -123,18 +127,17 @@ public class Utils {
 
     public static List<Client> getActiveClients(List<Client> clients) {
         final List<Client> accounts = new ArrayList<>();
-        Observable.from(clients)
-                .filter(new Func1<Client, Boolean>() {
+        Observable.fromIterable(clients)
+                .filter(new Predicate<Client>() {
                     @Override
-                    public Boolean call(Client client) {
+                    public boolean test(Client client) throws Exception {
                         return (client.isActive());
                     }
                 })
-                .subscribe(new Action1<Client>() {
+                .subscribe(new Consumer<Client>() {
                     @Override
-                    public void call(Client client) {
-                        accounts.add(client)
-                        ;
+                    public void accept(Client client) throws Exception {
+                        accounts.add(client);
                     }
                 });
         return accounts;
@@ -143,18 +146,18 @@ public class Utils {
     public static List<SavingsAccount> getSyncableSavingsAccounts(List<SavingsAccount>
                                                                         savingsAccounts) {
         final List<SavingsAccount> accounts = new ArrayList<>();
-        Observable.from(savingsAccounts)
-                .filter(new Func1<SavingsAccount, Boolean>() {
+        Observable.fromIterable(savingsAccounts)
+                .filter(new Predicate<SavingsAccount>() {
                     @Override
-                    public Boolean call(SavingsAccount savingsAccount) {
+                    public boolean test(SavingsAccount savingsAccount) throws Exception {
                         return (savingsAccount.getDepositType().getValue().equals("Savings") &&
                                 savingsAccount.getStatus().getActive() &&
                                 !savingsAccount.isRecurring());
                     }
                 })
-                .subscribe(new Action1<SavingsAccount>() {
+                .subscribe(new Consumer<SavingsAccount>() {
                     @Override
-                    public void call(SavingsAccount savingsAccount) {
+                    public void accept(SavingsAccount savingsAccount) throws Exception {
                         accounts.add(savingsAccount)
                         ;
                     }

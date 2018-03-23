@@ -8,10 +8,10 @@ import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 09/06/16.
@@ -19,7 +19,7 @@ import rx.schedulers.Schedulers;
 public class SavingsAccountApprovalPresenter extends BasePresenter<SavingsAccountApprovalMvpView> {
 
     private final DataManagerSavings dataManagerSavings;
-    private Subscription mSubscription;
+    private DisposableObserver<GenericResponse> disposableObserver;
 
     @Inject
     public SavingsAccountApprovalPresenter(DataManagerSavings dataManager) {
@@ -34,26 +34,28 @@ public class SavingsAccountApprovalPresenter extends BasePresenter<SavingsAccoun
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (disposableObserver != null) disposableObserver.dispose();
     }
 
     public void approveSavingsApplication(int savingsAccountId, SavingsApproval savingsApproval) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = dataManagerSavings
+        if (disposableObserver != null) disposableObserver.dispose();
+        disposableObserver = dataManagerSavings
                 .approveSavingsApplication(savingsAccountId, savingsApproval)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showError(MFErrorParser.errorMessage(e));
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
 
                     @Override

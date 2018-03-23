@@ -19,7 +19,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import rx.Observable;
+
+import io.reactivex.Observable;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;

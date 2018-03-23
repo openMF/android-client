@@ -9,10 +9,11 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Tarun on 01/06/17.
@@ -20,12 +21,12 @@ import rx.subscriptions.CompositeSubscription;
 public class SavingsAccountActivatePresenter extends BasePresenter<SavingsAccountActivateMvpView> {
 
     private final DataManagerSavings mDataManagerSavings;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public SavingsAccountActivatePresenter(DataManagerSavings dataManager) {
         mDataManagerSavings = dataManager;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -36,18 +37,18 @@ public class SavingsAccountActivatePresenter extends BasePresenter<SavingsAccoun
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.clear();
+        compositeDisposable.clear();
     }
 
     public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
         checkViewAttached();
         getMvpView().showProgressbar(false);
-        mSubscriptions.add(mDataManagerSavings.activateSavings(savingsAccountId, request)
+        compositeDisposable.add(mDataManagerSavings.activateSavings(savingsAccountId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

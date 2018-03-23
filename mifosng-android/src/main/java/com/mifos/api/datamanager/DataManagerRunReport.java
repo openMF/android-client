@@ -8,7 +8,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by Rajan Maurya on 05/02/17.

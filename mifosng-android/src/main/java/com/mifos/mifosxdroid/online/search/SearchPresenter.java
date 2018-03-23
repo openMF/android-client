@@ -9,10 +9,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
 public class SearchPresenter extends BasePresenter<SearchMvpView> {
 
     private final DataManagerSearch dataManagerSearch;
-    private Subscription mSubscription;
+    private DisposableObserver<List<SearchedEntity>> disposableObserver;
 
     @Inject
     public SearchPresenter(DataManagerSearch dataManager) {
@@ -35,19 +35,19 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (disposableObserver != null) disposableObserver.dispose();
     }
 
     public void searchResources(String query, String resources, Boolean exactMatch) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = dataManagerSearch.searchResources(query, resources, exactMatch)
+        if (disposableObserver != null) disposableObserver.dispose();
+        disposableObserver = dataManagerSearch.searchResources(query, resources, exactMatch)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<SearchedEntity>>() {
+                .subscribeWith(new DisposableObserver<List<SearchedEntity>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

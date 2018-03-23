@@ -9,12 +9,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.plugins.RxJavaPlugins;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
+
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -22,7 +23,7 @@ import rx.schedulers.Schedulers;
 public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeDisposable mSubscription;
 
     @Inject
     public LoanChargePresenter(DataManager dataManager) {
@@ -37,19 +38,19 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (mSubscription != null) mSubscription.clear();
     }
 
     public void loadLoanChargesList(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (mSubscription != null) mSubscription.clear();
         mSubscription = mDataManager.getListOfLoanCharges(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Charges>>() {
+                .subscribeWith(new DisposableObserver<List<Charges>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -64,7 +65,7 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
                                         .getErrors().get(0).getDefaultUserMessage());
                             }
                         } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                            RxJavaPlugins.getErrorHandler();
                         }
                     }
 

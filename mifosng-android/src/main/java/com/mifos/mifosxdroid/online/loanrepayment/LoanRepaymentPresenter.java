@@ -9,10 +9,10 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 8/6/16.
@@ -22,12 +22,12 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     public final String LOG_TAG = getClass().getSimpleName();
 
     private final DataManagerLoan mDataManagerLoan;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public LoanRepaymentPresenter(DataManagerLoan dataManagerLoan) {
         mDataManagerLoan = dataManagerLoan;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -38,18 +38,18 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loanLoanRepaymentTemplate(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerLoan.getLoanRepayTemplate(loanId)
+        compositeDisposable.add(mDataManagerLoan.getLoanRepayTemplate(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanRepaymentTemplate>() {
+                .subscribeWith(new DisposableObserver<LoanRepaymentTemplate>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -70,12 +70,12 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     public void submitPayment(int loanId, LoanRepaymentRequest request) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerLoan.submitPayment(loanId, request)
+        compositeDisposable.add(mDataManagerLoan.submitPayment(loanId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanRepaymentResponse>() {
+                .subscribeWith(new DisposableObserver<LoanRepaymentResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -96,12 +96,12 @@ public class LoanRepaymentPresenter extends BasePresenter<LoanRepaymentMvpView> 
     public void checkDatabaseLoanRepaymentByLoanId(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
+        compositeDisposable.add(mDataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanRepaymentRequest>() {
+                .subscribeWith(new DisposableObserver<LoanRepaymentRequest>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

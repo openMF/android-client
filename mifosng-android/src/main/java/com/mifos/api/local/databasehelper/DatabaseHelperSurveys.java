@@ -8,12 +8,14 @@ import com.mifos.objects.survey.ResponseDatas_Table;
 import com.mifos.objects.survey.Survey;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func0;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 
 import static com.raizlabs.android.dbflow.sql.language.SQLite.select;
 
@@ -35,7 +37,7 @@ public class DatabaseHelperSurveys {
      * @return saved Survey
      */
     public Observable<Survey> saveSurvey(final Survey survey) {
-        return Observable.defer(new Func0<Observable<Survey>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Survey>>() {
             @Override
             public Observable<Survey> call() {
                 //Saving Survey in Database
@@ -53,7 +55,7 @@ public class DatabaseHelperSurveys {
      */
     public Observable<QuestionDatas> saveQuestionData(final int surveyId,
                                                       final QuestionDatas questionDatas) {
-        return Observable.defer(new Func0<Observable<QuestionDatas>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends QuestionDatas>>() {
             @Override
             public Observable<QuestionDatas> call() {
                 //Saving QuestionDatas in Database
@@ -72,7 +74,7 @@ public class DatabaseHelperSurveys {
      */
     public Observable<ResponseDatas> saveResponseData(final int questionId,
                                                       final ResponseDatas responseDatas) {
-        return Observable.defer(new Func0<Observable<ResponseDatas>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends ResponseDatas>>() {
             @Override
             public Observable<ResponseDatas> call() {
                 //Saving ResponseDatas in Database
@@ -89,7 +91,7 @@ public class DatabaseHelperSurveys {
      * @return List Of Surveys
      */
     public Observable<List<Survey>> readAllSurveys() {
-        return Observable.defer(new Func0<Observable<List<Survey>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<Survey>>>() {
             @Override
             public Observable<List<Survey>> call() {
                 List<Survey> surveyList = select()
@@ -106,7 +108,7 @@ public class DatabaseHelperSurveys {
      * @return List Of QuestionDatas
      */
     public Observable<List<QuestionDatas>> getQuestionDatas(final int surveyId) {
-        return Observable.defer(new Func0<Observable<List<QuestionDatas>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<QuestionDatas>>>() {
             @Override
             public Observable<List<QuestionDatas>> call() {
                 List<QuestionDatas> questionDatas = select()
@@ -126,7 +128,7 @@ public class DatabaseHelperSurveys {
      * @return List Of ResponseDatas
      */
     public Observable<List<ResponseDatas>> getResponseDatas(final int questionId) {
-        return Observable.defer(new Func0<Observable<List<ResponseDatas>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<ResponseDatas>>>() {
             @Override
             public Observable<List<ResponseDatas>> call() {
                 List<ResponseDatas> responseDatas = select()

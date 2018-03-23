@@ -12,10 +12,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 08/06/16.
@@ -23,14 +24,14 @@ import rx.subscriptions.CompositeSubscription;
 public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
 
     private final DataManagerSurveys mDataManagerSurveys;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
     private List<Survey> mDbSurveyList;
     private List<Survey> mSyncSurveyList;
 
     @Inject
     public SurveyListPresenter(DataManagerSurveys dataManagerSurveys) {
         mDataManagerSurveys = dataManagerSurveys;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -41,18 +42,18 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscriptions != null) mSubscriptions.clear();
+        if (compositeDisposable != null) compositeDisposable.clear();
     }
 
     public void loadSurveyList() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSurveys.getAllSurvey()
+        compositeDisposable.add(mDataManagerSurveys.getAllSurvey()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Survey>>() {
+                .subscribeWith(new DisposableObserver<List<Survey>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -73,12 +74,12 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
 
     public void loadDatabaseSurveys() {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerSurveys.getDatabaseSurveys()
+        compositeDisposable.add(mDataManagerSurveys.getDatabaseSurveys()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Survey>>() {
+                .subscribeWith(new DisposableObserver<List<Survey>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         setAlreadySurveySyncStatus(mSyncSurveyList);
                         getMvpView().showAllSurvey(mSyncSurveyList);
                     }
@@ -103,12 +104,12 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
 
     public void loadDatabaseQuestionDatas(int surveyId, final Survey survey) {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerSurveys.getDatabaseQuestionDatas(surveyId)
+        compositeDisposable.add(mDataManagerSurveys.getDatabaseQuestionDatas(surveyId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<QuestionDatas>>() {
+                .subscribeWith(new DisposableObserver<List<QuestionDatas>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -129,12 +130,12 @@ public class SurveyListPresenter extends BasePresenter<SurveyListMvpView> {
 
     public void loadDatabaseResponseDatas(int questionId, final QuestionDatas questionDatas) {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerSurveys.getDatabaseResponseDatas(questionId)
+        compositeDisposable.add(mDataManagerSurveys.getDatabaseResponseDatas(questionId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<ResponseDatas>>() {
+                .subscribeWith(new DisposableObserver<List<ResponseDatas>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

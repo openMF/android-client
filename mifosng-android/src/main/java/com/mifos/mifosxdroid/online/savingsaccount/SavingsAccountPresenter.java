@@ -17,13 +17,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func2;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 8/6/16.
@@ -31,12 +32,12 @@ import rx.subscriptions.CompositeSubscription;
 public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView> {
 
     private final DataManagerSavings mDataManagerSavings;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public SavingsAccountPresenter(DataManagerSavings dataManagerSavings) {
         mDataManagerSavings = dataManagerSavings;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -47,28 +48,28 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loadSavingsAccountsAndTemplate() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(Observable.combineLatest(
+        compositeDisposable.add(Observable.combineLatest(
                 mDataManagerSavings.getSavingsAccounts(),
                 mDataManagerSavings.getSavingsAccountTemplate(),
-                new Func2<List<ProductSavings>, SavingProductsTemplate,
-                        SavingProductsAndTemplate>() {
+                new BiFunction<List<ProductSavings>, SavingProductsTemplate,
+                                        SavingProductsAndTemplate>() {
                     @Override
-                    public SavingProductsAndTemplate call(List<ProductSavings> productSavings,
+                    public SavingProductsAndTemplate apply(List<ProductSavings> productSavings,
                                                           SavingProductsTemplate template) {
                         return new SavingProductsAndTemplate(productSavings, template);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingProductsAndTemplate>() {
+                .subscribeWith(new DisposableObserver<SavingProductsAndTemplate>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -92,13 +93,13 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     public void loadClientSavingAccountTemplateByProduct(int clientId, int productId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.
+        compositeDisposable.add(mDataManagerSavings.
                 getClientSavingsAccountTemplateByProduct(clientId, productId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingProductsTemplate>() {
+                .subscribeWith(new DisposableObserver<SavingProductsTemplate>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -120,13 +121,13 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     public void loadGroupSavingAccountTemplateByProduct(int groupId, int productId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.
+        compositeDisposable.add(mDataManagerSavings.
                 getGroupSavingsAccountTemplateByProduct(groupId, productId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingProductsTemplate>() {
+                .subscribeWith(new DisposableObserver<SavingProductsTemplate>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -148,12 +149,12 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
     public void createSavingsAccount(SavingsPayload savingsPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.createSavingsAccount(savingsPayload)
+        compositeDisposable.add(mDataManagerSavings.createSavingsAccount(savingsPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Savings>() {
+                .subscribeWith(new DisposableObserver<Savings>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -172,10 +173,10 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
 
     public List<String> filterSpinnerOptions(List<InterestType> interestTypes) {
         final ArrayList<String> interestNameList = new ArrayList<>();
-        Observable.from(interestTypes)
-                .subscribe(new Action1<InterestType>() {
+        Observable.fromIterable(interestTypes)
+                .subscribe(new Consumer<InterestType>() {
                     @Override
-                    public void call(InterestType interestType) {
+                    public void accept(InterestType interestType) {
                         interestNameList.add(interestType.getValue());
                     }
                 });
@@ -184,10 +185,10 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
 
     public List<String> filterSavingProductsNames(List<ProductSavings> productSavings) {
         final ArrayList<String> productsNames = new ArrayList<>();
-        Observable.from(productSavings)
-                .subscribe(new Action1<ProductSavings>() {
+        Observable.fromIterable(productSavings)
+                .subscribe(new Consumer<ProductSavings>() {
                     @Override
-                    public void call(ProductSavings product) {
+                    public void accept(ProductSavings product) {
                         productsNames.add(product.getName());
                     }
                 });
@@ -196,10 +197,10 @@ public class SavingsAccountPresenter extends BasePresenter<SavingsAccountMvpView
 
     public List<String> filterFieldOfficerNames(List<FieldOfficerOptions> fieldOfficerOptions) {
         final ArrayList<String> fieldOfficerNames = new ArrayList<>();
-        Observable.from(fieldOfficerOptions)
-                .subscribe(new Action1<FieldOfficerOptions>() {
+        Observable.fromIterable(fieldOfficerOptions)
+                .subscribe(new Consumer<FieldOfficerOptions>() {
                     @Override
-                    public void call(FieldOfficerOptions fieldOfficerOptions) {
+                    public void accept(FieldOfficerOptions fieldOfficerOptions) {
                         fieldOfficerNames.add(fieldOfficerOptions.getDisplayName());
                     }
                 });

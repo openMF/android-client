@@ -12,6 +12,8 @@ ext {
     buildToolsVersion = '24.0.2'
 
     // App dependencies
+    rxJavaVersion = '2.0.1'
+    rxAndroidVersion = '2.0.1'
     supportLibraryVersion = '25.1.1'
     playServicesVersion = '10.0.1'
     mapUtilsServices = '0.4.2'
@@ -20,7 +22,7 @@ ext {
     espressoVersion = '2.2.1'
     runnerVersion = '0.4.1'
     rulesVersion = '0.4.1'
-    retrofitVersionLatest = '2.1.0'
+    retrofitVersionLatest = '2.3.0'
     okHttp3Version = '3.3.1'
     flipTableVersion = '1.0.1'
     butterKnifeVersion = '8.0.1'

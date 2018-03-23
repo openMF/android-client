@@ -13,7 +13,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * This DataManager is for Managing DataTable API, In which Request is going to Server

@@ -12,10 +12,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -23,12 +24,12 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpView> {
 
     private final DataManagerCenter dataManagerCenter;
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public CreateNewCenterPresenter(DataManagerCenter dataManager) {
         dataManagerCenter = dataManager;
-        subscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -39,19 +40,19 @@ public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpVi
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
 
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerCenter.getOffices()
+        compositeDisposable.add(dataManagerCenter.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Office>>() {
+                .subscribeWith(new DisposableObserver<List<Office>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -72,12 +73,12 @@ public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpVi
     public void createCenter(CenterPayload centerPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerCenter.createCenter(centerPayload)
+        compositeDisposable.add(dataManagerCenter.createCenter(centerPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SaveResponse>() {
+                .subscribeWith(new DisposableObserver<SaveResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 

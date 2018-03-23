@@ -9,7 +9,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * This DataManager is for Managing Notes API, In which Request is going to Server

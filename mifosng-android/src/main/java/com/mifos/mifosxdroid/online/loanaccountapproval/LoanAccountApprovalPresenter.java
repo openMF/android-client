@@ -8,12 +8,13 @@ import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.plugins.RxJavaPlugins;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
+
 
 /**
  * Created by Rajan Maurya on 8/6/16.
@@ -21,7 +22,7 @@ import rx.schedulers.Schedulers;
 public class LoanAccountApprovalPresenter extends BasePresenter<LoanAccountApprovalMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public LoanAccountApprovalPresenter(DataManager dataManager) {
@@ -36,19 +37,19 @@ public class LoanAccountApprovalPresenter extends BasePresenter<LoanAccountAppro
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (compositeDisposable != null) compositeDisposable.clear();
     }
 
     public void approveLoan(int loanId, LoanApproval loanApproval) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.approveLoan(loanId, loanApproval)
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = mDataManager.approveLoan(loanId, loanApproval)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -64,7 +65,7 @@ public class LoanAccountApprovalPresenter extends BasePresenter<LoanAccountAppro
                                                 .getErrors().get(0).getDefaultUserMessage());
                             }
                         } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                            RxJavaPlugins.getErrorHandler();
                         }
                     }
 

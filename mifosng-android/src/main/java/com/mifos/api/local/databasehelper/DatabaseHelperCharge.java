@@ -10,12 +10,14 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+
 
 /**
  * Created by Rajan Maurya on 4/7/16.
@@ -67,9 +69,9 @@ public class DatabaseHelperCharge {
      * @return Page of Charges
      */
     public Observable<Page<Charges>> readClientCharges(final int clientId) {
-        return Observable.create(new Observable.OnSubscribe<Page<Charges>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Page<Charges>>>() {
             @Override
-            public void call(Subscriber<? super Page<Charges>> subscriber) {
+            public ObservableSource<? extends Page<Charges>> call() throws Exception {
 
                 //Loading All charges from Charges_Table as reference to client id
                 List<Charges> chargesList = SQLite.select()
@@ -87,9 +89,9 @@ public class DatabaseHelperCharge {
 
                 Page<Charges> chargePage = new Page<Charges>();
                 chargePage.setPageItems(chargesList);
-                subscriber.onNext(chargePage);
-
+                return Observable.just(chargePage);
             }
+
         });
 
     }

@@ -8,10 +8,11 @@ import com.mifos.utils.Constants;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -19,12 +20,12 @@ import rx.subscriptions.CompositeSubscription;
 public class SavingsAccountSummaryPresenter extends BasePresenter<SavingsAccountSummaryMvpView> {
 
     private final DataManagerSavings mDataManagerSavings;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public SavingsAccountSummaryPresenter(DataManagerSavings dataManagerSavings) {
         mDataManagerSavings = dataManagerSavings;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -35,20 +36,20 @@ public class SavingsAccountSummaryPresenter extends BasePresenter<SavingsAccount
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     //This Method will hit end point ?associations=transactions
     public void loadSavingAccount(String type, int accountId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings
+        compositeDisposable.add(mDataManagerSavings
                 .getSavingsAccount(type, accountId, Constants.TRANSACTIONS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingsAccountWithAssociations>() {
+                .subscribeWith(new DisposableObserver<SavingsAccountWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 

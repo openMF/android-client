@@ -20,9 +20,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func0;
+import io.reactivex.Observable;
+
 
 /**
  * Created by Rajan Maurya on 17/08/16.

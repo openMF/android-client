@@ -18,8 +18,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+
 
 /**
  * This DataManager is for Managing Groups API, In which Request is going to Server
@@ -171,9 +173,10 @@ public class DataManagerGroups {
      */
     public Observable<GroupAccounts> syncGroupAccounts(final int groupId) {
         return mBaseApiManager.getGroupApi().getGroupAccounts(groupId)
-                .concatMap(new Func1<GroupAccounts, Observable<? extends GroupAccounts>>() {
+                .concatMap(new Function<GroupAccounts, ObservableSource<?
+                        extends GroupAccounts>>() {
                     @Override
-                    public Observable<? extends GroupAccounts> call(GroupAccounts
+                    public Observable<? extends GroupAccounts> apply(GroupAccounts
                                                                             groupAccounts) {
                         return mDatabaseHelperGroups.saveGroupAccounts(groupAccounts, groupId);
                     }

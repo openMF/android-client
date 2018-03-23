@@ -8,14 +8,16 @@ import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.zipmodels.GroupAndGroupAccounts;
 
+
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func2;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -23,12 +25,12 @@ import rx.subscriptions.CompositeSubscription;
 public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
 
     private final DataManagerGroups mDataManagerGroups;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public GroupDetailsPresenter(DataManagerGroups dataManagerGroups) {
         mDataManagerGroups = dataManagerGroups;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -39,26 +41,26 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.clear();
+        compositeDisposable.clear();
     }
 
     public void loadGroupDetailsAndAccounts(int groupId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(Observable.combineLatest(
+        compositeDisposable.add(Observable.combineLatest(
                 mDataManagerGroups.getGroup(groupId),
                 mDataManagerGroups.getGroupAccounts(groupId),
-                new Func2<Group, GroupAccounts, GroupAndGroupAccounts>() {
+                new BiFunction<Group, GroupAccounts, Object>() {
                     @Override
-                    public GroupAndGroupAccounts call(Group group, GroupAccounts groupAccounts) {
+                    public GroupAndGroupAccounts apply(Group group, GroupAccounts groupAccounts) {
                         return new GroupAndGroupAccounts(group, groupAccounts);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GroupAndGroupAccounts>() {
+                .subscribe(new DisposableObserver<GroupAndGroupAccounts>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -80,12 +82,12 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
     public void loadGroupAssociateClients(int groupId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerGroups.getGroupWithAssociations(groupId)
+        compositeDisposable.add(mDataManagerGroups.getGroupWithAssociations(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GroupWithAssociations>() {
+                .subscribeWith(new DisposableObserver<GroupWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

@@ -6,13 +6,17 @@ import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.organisation.Staff_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import org.reactivestreams.Subscriber;
+
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+
 
 /**
  * Created by Rajan Maurya on 7/7/16.
@@ -44,17 +48,15 @@ public class DatabaseHelperStaff {
 
 
     public Observable<List<Staff>> readAllStaffOffices(final int officeId) {
-        return Observable.create(new Observable.OnSubscribe<List<Staff>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<Staff>>>() {
             @Override
-            public void call(Subscriber<? super List<Staff>> subscriber) {
-
+            public ObservableSource<? extends List<Staff>> call() throws Exception {
                 List<Staff> staffs = SQLite.select()
                         .from(Staff.class)
                         .where(Staff_Table.officeId.eq(officeId))
                         .queryList();
 
-                subscriber.onNext(staffs);
-
+                return Observable.just(staffs);
             }
         });
     }

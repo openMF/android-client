@@ -20,12 +20,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 08/06/16.
@@ -33,12 +33,12 @@ import rx.subscriptions.CompositeSubscription;
 public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvpView> {
 
     private final DataManager mDataManager;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public GroupLoanAccountPresenter(DataManager dataManager) {
         mDataManager = dataManager;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
 
@@ -50,18 +50,18 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.clear();
+        compositeDisposable.clear();
     }
 
     public void loadAllLoans() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getAllLoans()
+        compositeDisposable.add(mDataManager.getAllLoans()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<LoanProducts>>() {
+                .subscribeWith(new DisposableObserver<List<LoanProducts>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -83,12 +83,12 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     public void loadGroupLoansAccountTemplate(int groupId, int productId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.getGroupLoansAccountTemplate(groupId, productId)
+        compositeDisposable.add(mDataManager.getGroupLoansAccountTemplate(groupId, productId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GroupLoanTemplate>() {
+                .subscribeWith(new DisposableObserver<GroupLoanTemplate>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -113,12 +113,12 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     public void createGroupLoanAccount(GroupLoanPayload loansPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManager.createGroupLoansAccount(loansPayload)
+        compositeDisposable.add(mDataManager.createGroupLoansAccount(loansPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Loans>() {
+                .subscribeWith(new DisposableObserver<Loans>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -140,10 +140,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     public List<String> filterAmortizations(final List<AmortizationTypeOptions>
                                                                amortizationTypeOptions) {
         final ArrayList<String> amortizationNameList = new ArrayList<>();
-        Observable.from(amortizationTypeOptions)
-                .subscribe(new Action1<AmortizationTypeOptions>() {
+        Observable.fromIterable(amortizationTypeOptions)
+                .subscribe(new Consumer<AmortizationTypeOptions>() {
                     @Override
-                    public void call(AmortizationTypeOptions amortizationTypeOptions) {
+                    public void accept(AmortizationTypeOptions amortizationTypeOptions) {
                         amortizationNameList.add(amortizationTypeOptions.getValue());
                     }
                 });
@@ -155,10 +155,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
                                                                     <InterestCalculationPeriodType>
                                                                interestCalculationPeriodType) {
         final ArrayList<String> interestCalculationPeriodNameList = new ArrayList<>();
-        Observable.from(interestCalculationPeriodType)
-                .subscribe(new Action1<InterestCalculationPeriodType>() {
+        Observable.fromIterable(interestCalculationPeriodType)
+                .subscribe(new Consumer<InterestCalculationPeriodType>() {
                     @Override
-                    public void call(InterestCalculationPeriodType interestCalculationPeriodType) {
+                    public void accept(InterestCalculationPeriodType interestCalculationPeriodType) {
                         interestCalculationPeriodNameList.add(
                                 interestCalculationPeriodType.getValue());
                     }
@@ -170,10 +170,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
              List<TransactionProcessingStrategyOptions>
               transactionProcessingStrategyOptions) {
         final ArrayList<String> transactionProcessingStrategyNameList = new ArrayList<>();
-        Observable.from(transactionProcessingStrategyOptions)
-                .subscribe(new Action1<TransactionProcessingStrategyOptions>() {
+        Observable.fromIterable(transactionProcessingStrategyOptions)
+                .subscribe(new Consumer<TransactionProcessingStrategyOptions>() {
                     @Override
-                    public void call(TransactionProcessingStrategyOptions
+                    public void accept(TransactionProcessingStrategyOptions
                                              transactionProcessingStrategyOptions) {
                         transactionProcessingStrategyNameList.add(
                                 transactionProcessingStrategyOptions.getName());
@@ -185,10 +185,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
 
     public List<String> filterLoanProducts(final List<LoanProducts> loanProducts) {
         final ArrayList<String> loanProductsNameList = new ArrayList<>();
-        Observable.from(loanProducts)
-                .subscribe(new Action1<LoanProducts>() {
+        Observable.fromIterable(loanProducts)
+                .subscribe(new Consumer<LoanProducts>() {
                     @Override
-                    public void call(LoanProducts loanProducts) {
+                    public void accept(LoanProducts loanProducts) {
                         loanProductsNameList.add(loanProducts.getName());
                     }
                 });
@@ -198,10 +198,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     public List<String> filterTermFrequencyTypes(final List<TermFrequencyTypeOptions>
                                                                     termFrequencyTypeOptions) {
         final ArrayList<String> termFrequencyNameList = new ArrayList<>();
-        Observable.from(termFrequencyTypeOptions)
-                .subscribe(new Action1<TermFrequencyTypeOptions>() {
+        Observable.fromIterable(termFrequencyTypeOptions)
+                .subscribe(new Consumer<TermFrequencyTypeOptions>() {
                     @Override
-                    public void call(TermFrequencyTypeOptions termFrequencyTypeOptions) {
+                    public void accept(TermFrequencyTypeOptions termFrequencyTypeOptions) {
                         termFrequencyNameList.add(termFrequencyTypeOptions.getValue());
                     }
                 });
@@ -211,10 +211,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     public List<String> filterLoanPurposeTypes(final List<LoanPurposeOptions>
                                                                   loanPurposeOptions) {
         final ArrayList<String> loanPurposeNameList = new ArrayList<>();
-        Observable.from(loanPurposeOptions)
-                .subscribe(new Action1<LoanPurposeOptions>() {
+        Observable.fromIterable(loanPurposeOptions)
+                .subscribe(new Consumer<LoanPurposeOptions>() {
                     @Override
-                    public void call(LoanPurposeOptions loanPurposeOptions) {
+                    public void accept(LoanPurposeOptions loanPurposeOptions) {
                         loanPurposeNameList.add(loanPurposeOptions.getName());
                     }
                 });
@@ -224,10 +224,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     public List<String> filterInterestTypeOptions(final List<InterestTypeOptions>
                                                                       interestTypeOptions) {
         final ArrayList<String> interestTypeNameList = new ArrayList<>();
-        Observable.from(interestTypeOptions)
-                .subscribe(new Action1<InterestTypeOptions>() {
+        Observable.fromIterable(interestTypeOptions)
+                .subscribe(new Consumer<InterestTypeOptions>() {
                     @Override
-                    public void call(InterestTypeOptions interestTypeOptions) {
+                    public void accept(InterestTypeOptions interestTypeOptions) {
                         interestTypeNameList.add(interestTypeOptions.getValue());
                     }
                 });
@@ -237,10 +237,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     public List<String> filterLoanOfficers(final List<LoanOfficerOptions>
                                                               loanOfficerOptions) {
         final ArrayList<String> loanOfficerNameList = new ArrayList<>();
-        Observable.from(loanOfficerOptions)
-                .subscribe(new Action1<LoanOfficerOptions>() {
+        Observable.fromIterable(loanOfficerOptions)
+                .subscribe(new Consumer<LoanOfficerOptions>() {
                     @Override
-                    public void call(LoanOfficerOptions loanOfficerOptions) {
+                    public void accept(LoanOfficerOptions loanOfficerOptions) {
                         loanOfficerNameList.add(loanOfficerOptions.getDisplayName());
                     }
                 });
@@ -249,10 +249,10 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
 
     public List<String> filterFunds(final List<FundOptions> fundOptions) {
         final ArrayList<String> fundNameList = new ArrayList<>();
-        Observable.from(fundOptions)
-                .subscribe(new Action1<FundOptions>() {
+        Observable.fromIterable(fundOptions)
+                .subscribe(new Consumer<FundOptions>() {
                     @Override
-                    public void call(FundOptions fundOptions) {
+                    public void accept(FundOptions fundOptions) {
                         fundNameList.add(fundOptions.getName());
                     }
                 });

@@ -17,12 +17,14 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func0;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
@@ -45,7 +47,7 @@ public class DatabaseHelperGroups {
      * @return Observable.just(Group)
      */
     public Observable<Group> saveGroup(final Group group) {
-        return Observable.defer(new Func0<Observable<Group>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Group>>() {
             @Override
             public Observable<Group> call() {
 
@@ -68,7 +70,7 @@ public class DatabaseHelperGroups {
      * @return List Of Groups
      */
     public Observable<Page<Group>> readAllGroups() {
-        return Observable.defer(new Func0<Observable<Page<Group>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Page<Group>>>() {
             @Override
             public Observable<Page<Group>> call() {
                 Page<Group> groupPage = new Page<>();
@@ -87,7 +89,7 @@ public class DatabaseHelperGroups {
      * @return Group
      */
     public Observable<Group> getGroup(final int groupId) {
-        return Observable.defer(new Func0<Observable<Group>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Group>>() {
             @Override
             public Observable<Group> call() {
 
@@ -116,7 +118,7 @@ public class DatabaseHelperGroups {
     public Observable<GroupAccounts> saveGroupAccounts(final GroupAccounts groupAccounts,
                                                         final int groupId) {
 
-        return Observable.defer(new Func0<Observable<GroupAccounts>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends GroupAccounts>>() {
             @Override
             public Observable<GroupAccounts> call() {
 
@@ -147,7 +149,7 @@ public class DatabaseHelperGroups {
      * @return the GroupAccounts according to Group Id
      */
     public Observable<GroupAccounts> readGroupAccounts(final int groupId) {
-        return Observable.defer(new Func0<Observable<GroupAccounts>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends GroupAccounts>>() {
             @Override
             public Observable<GroupAccounts> call() {
 
@@ -171,7 +173,7 @@ public class DatabaseHelperGroups {
     }
 
     public Observable<SaveResponse> saveGroupPayload(final GroupPayload groupPayload) {
-        return Observable.defer(new Func0<Observable<SaveResponse>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends SaveResponse>>() {
             @Override
             public Observable<SaveResponse> call() {
                 groupPayload.save();
@@ -182,7 +184,7 @@ public class DatabaseHelperGroups {
 
 
     public Observable<List<GroupPayload>> realAllGroupPayload() {
-        return Observable.defer(new Func0<Observable<List<GroupPayload>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<GroupPayload>>>() {
             @Override
             public Observable<List<GroupPayload>> call() {
 
@@ -202,7 +204,7 @@ public class DatabaseHelperGroups {
      * @return List<ClientPayload></>
      */
     public Observable<List<GroupPayload>> deleteAndUpdateGroupPayloads(final int id) {
-        return Observable.defer(new Func0<Observable<List<GroupPayload>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<GroupPayload>>>() {
             @Override
             public Observable<List<GroupPayload>> call() {
 
@@ -219,7 +221,7 @@ public class DatabaseHelperGroups {
 
 
     public Observable<GroupPayload> updateDatabaseGroupPayload(final GroupPayload groupPayload) {
-        return Observable.defer(new Func0<Observable<GroupPayload>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends GroupPayload>>() {
             @Override
             public Observable<GroupPayload> call() {
                 groupPayload.update();

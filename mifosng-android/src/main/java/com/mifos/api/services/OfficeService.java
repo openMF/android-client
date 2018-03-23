@@ -9,8 +9,8 @@ import com.mifos.objects.organisation.Office;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
-import rx.Observable;
 
 
 /**

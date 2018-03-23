@@ -12,10 +12,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 6/6/16.
@@ -27,7 +28,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     private static final String LOG_TAG = ClientListPresenter.class.getSimpleName();
 
     private final DataManagerClient mDataManagerClient;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mCompositeDisposable;
 
     private List<Client> mDbClientList;
     private List<Client> mSyncClientList;
@@ -40,7 +41,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     @Inject
     public ClientListPresenter(DataManagerClient dataManagerClient) {
         mDataManagerClient = dataManagerClient;
-        mSubscriptions = new CompositeSubscription();
+        mCompositeDisposable = new CompositeDisposable();
         mDbClientList = new ArrayList<>();
         mSyncClientList = new ArrayList<>();
     }
@@ -53,7 +54,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        mCompositeDisposable.clear();
     }
 
     /**
@@ -118,13 +119,10 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
         EspressoIdlingResource.increment(); // App is busy until further notice.
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.getAllClients(paged, offset, limit)
+        mCompositeDisposable.add(mDataManagerClient.getAllClients(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Client>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+                .subscribeWith(new DisposableObserver<Page<Client>>() {
 
                     @Override
                     public void onError(Throwable e) {
@@ -137,6 +135,11 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                         }
 
                         EspressoIdlingResource.decrement(); // App is idle.
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
 
@@ -170,12 +173,12 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      */
     public void loadDatabaseClients() {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerClient.getAllDatabaseClients()
+        mCompositeDisposable.add(mDataManagerClient.getAllDatabaseClients()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Client>>() {
+                .subscribeWith(new DisposableObserver<Page<Client>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

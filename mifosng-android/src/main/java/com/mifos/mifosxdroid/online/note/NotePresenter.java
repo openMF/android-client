@@ -9,10 +9,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by rahul on 4/3/17.
@@ -20,12 +20,12 @@ import rx.subscriptions.CompositeSubscription;
 public class NotePresenter extends BasePresenter<NoteMvpView> {
 
     private final DataManagerNote dataManagerNote;
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public NotePresenter(DataManagerNote dataManagerNote) {
         this.dataManagerNote = dataManagerNote;
-        subscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class NotePresenter extends BasePresenter<NoteMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     /**
@@ -47,12 +47,12 @@ public class NotePresenter extends BasePresenter<NoteMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         getMvpView().showResetVisibility();
-        subscriptions.add(dataManagerNote.getNotes(type, id)
+        compositeDisposable.add(dataManagerNote.getNotes(type, id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Note>>() {
+                .subscribeWith(new DisposableObserver<List<Note>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

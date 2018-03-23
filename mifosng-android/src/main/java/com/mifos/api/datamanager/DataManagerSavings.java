@@ -20,8 +20,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+
 
 /**
  * Created by Rajan Maurya on 17/08/16.
@@ -94,10 +96,10 @@ public class DataManagerSavings {
             String type, int savingsAccountId, String association) {
         return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(type,
                 savingsAccountId, association)
-                .concatMap(new Func1<SavingsAccountWithAssociations,
-                        Observable<? extends SavingsAccountWithAssociations>>() {
+                .concatMap(new Function<SavingsAccountWithAssociations, ObservableSource<?
+                        extends SavingsAccountWithAssociations>>() {
                     @Override
-                    public Observable<? extends SavingsAccountWithAssociations> call
+                    public Observable<? extends SavingsAccountWithAssociations> apply
                             (SavingsAccountWithAssociations savingsAccountWithAssociations) {
                         return mDatabaseHelperSavings.saveSavingsAccount(
                                 savingsAccountWithAssociations);
@@ -161,10 +163,10 @@ public class DataManagerSavings {
             String savingsAccountType, int savingsAccountId, String transactionType) {
         return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate
                 (savingsAccountType, savingsAccountId, transactionType)
-                .concatMap(new Func1<SavingsAccountTransactionTemplate,
-                        Observable<? extends SavingsAccountTransactionTemplate>>() {
+                .concatMap(new Function<SavingsAccountTransactionTemplate, ObservableSource<?
+                        extends SavingsAccountTransactionTemplate>>() {
                     @Override
-                    public Observable<? extends SavingsAccountTransactionTemplate> call
+                    public Observable<? extends SavingsAccountTransactionTemplate> apply
                             (SavingsAccountTransactionTemplate savingsAccountTransactionTemplate) {
                         return mDatabaseHelperSavings.saveSavingsAccountTransactionTemplate(
                                 savingsAccountTransactionTemplate);

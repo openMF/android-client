@@ -41,7 +41,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -237,7 +237,6 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         }
     }
 
-    @Override
     public void showFailedToSaveCollectionSheet(HttpException response) {
         if (response != null) {
             if ((response.code() == 400) || (response.code() == 403)) {

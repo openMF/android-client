@@ -19,7 +19,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
+
+import io.reactivex.Observable;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;

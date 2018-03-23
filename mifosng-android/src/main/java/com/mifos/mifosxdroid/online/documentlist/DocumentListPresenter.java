@@ -10,11 +10,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -23,12 +23,12 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
 
 
     private final DataManagerDocument mDataManagerDocument;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public DocumentListPresenter(DataManagerDocument dataManagerDocument) {
         mDataManagerDocument = dataManagerDocument;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -39,18 +39,18 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.clear();
+        compositeDisposable.clear();
     }
 
     public void loadDocumentList(String type, int id) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerDocument.getDocumentsList(type, id)
+        compositeDisposable.add(mDataManagerDocument.getDocumentsList(type, id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Document>>() {
+                .subscribeWith(new DisposableObserver<List<Document>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -75,12 +75,12 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
     public void downloadDocument(String entityType, int entityId, int documentId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerDocument.downloadDocument(entityType, entityId, documentId)
+        compositeDisposable.add(mDataManagerDocument.downloadDocument(entityType, entityId, documentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribeWith(new DisposableObserver<ResponseBody>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -102,12 +102,12 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
     public void removeDocument(String entityType, int entityId, int documentId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerDocument.removeDocument(entityType, entityId, documentId)
+        compositeDisposable.add(mDataManagerDocument.removeDocument(entityType, entityId, documentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

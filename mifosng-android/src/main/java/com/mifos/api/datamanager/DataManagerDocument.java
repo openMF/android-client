@@ -9,9 +9,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
-import rx.Observable;
 
 /**
  * This DataManager Class for Handling the every request regarding the Document.

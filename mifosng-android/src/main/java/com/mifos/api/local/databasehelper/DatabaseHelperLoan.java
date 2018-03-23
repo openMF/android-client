@@ -15,12 +15,14 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func0;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -43,7 +45,7 @@ public class DatabaseHelperLoan {
      */
     public Observable<LoanWithAssociations> saveLoanById(final LoanWithAssociations
                                                                  loanWithAssociations) {
-        return Observable.defer(new Func0<Observable<LoanWithAssociations>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends LoanWithAssociations>>() {
             @Override
             public Observable<LoanWithAssociations> call() {
 
@@ -83,7 +85,7 @@ public class DatabaseHelperLoan {
      * @return LoanWithAssociation
      */
     public Observable<LoanWithAssociations> getLoanById(final int loanId) {
-        return Observable.defer(new Func0<Observable<LoanWithAssociations>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends LoanWithAssociations>>() {
             @Override
             public Observable<LoanWithAssociations> call() {
 
@@ -120,7 +122,7 @@ public class DatabaseHelperLoan {
     public Observable<LoanRepaymentResponse> saveLoanRepaymentTransaction(
             final int loanId, final LoanRepaymentRequest loanRepaymentRequest) {
 
-        return Observable.defer(new Func0<Observable<LoanRepaymentResponse>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends LoanRepaymentResponse>>() {
             @Override
             public Observable<LoanRepaymentResponse> call() {
 
@@ -143,7 +145,7 @@ public class DatabaseHelperLoan {
      * @return List<LoanRepaymentRequest>
      */
     public Observable<List<LoanRepaymentRequest>> readAllLoanRepaymentTransaction() {
-        return Observable.defer(new Func0<Observable<List<LoanRepaymentRequest>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<LoanRepaymentRequest>>>() {
             @Override
             public Observable<List<LoanRepaymentRequest>> call() {
 
@@ -170,7 +172,7 @@ public class DatabaseHelperLoan {
      * @return LoanRepaymentRequest by Loan Id
      */
     public Observable<LoanRepaymentRequest> getDatabaseLoanRepaymentByLoanId(final int loanId) {
-        return Observable.defer(new Func0<Observable<LoanRepaymentRequest>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends LoanRepaymentRequest>>() {
             @Override
             public Observable<LoanRepaymentRequest> call() {
 
@@ -195,7 +197,7 @@ public class DatabaseHelperLoan {
     public Observable<LoanRepaymentTemplate> saveLoanRepaymentTemplate(
             final int loanId, final LoanRepaymentTemplate loanRepaymentTemplate) {
 
-        return Observable.defer(new Func0<Observable<LoanRepaymentTemplate>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends LoanRepaymentTemplate>>() {
             @Override
             public Observable<LoanRepaymentTemplate> call() {
 
@@ -223,7 +225,7 @@ public class DatabaseHelperLoan {
      * @return LoanRepaymentTemplate from Database Query.
      */
     public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(final int loanId) {
-        return Observable.defer(new Func0<Observable<LoanRepaymentTemplate>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends LoanRepaymentTemplate>>() {
             @Override
             public Observable<LoanRepaymentTemplate> call() {
 
@@ -253,7 +255,7 @@ public class DatabaseHelperLoan {
      * @return List<PaymentTypeOption>
      */
     public Observable<List<PaymentTypeOption>> getPaymentTypeOption() {
-        return Observable.defer(new Func0<Observable<List<PaymentTypeOption>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<PaymentTypeOption>>>() {
             @Override
             public Observable<List<PaymentTypeOption>> call() {
 
@@ -275,7 +277,7 @@ public class DatabaseHelperLoan {
      * @return List<LoanRepaymentRequest>
      */
     public Observable<List<LoanRepaymentRequest>> deleteAndUpdateLoanRepayments(final int loanId) {
-        return Observable.defer(new Func0<Observable<List<LoanRepaymentRequest>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<LoanRepaymentRequest>>>() {
             @Override
             public Observable<List<LoanRepaymentRequest>> call() {
 
@@ -302,7 +304,7 @@ public class DatabaseHelperLoan {
      */
     public Observable<LoanRepaymentRequest> updateLoanRepaymentTransaction(
             final LoanRepaymentRequest loanRepaymentRequest) {
-        return Observable.defer(new Func0<Observable<LoanRepaymentRequest>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends LoanRepaymentRequest>>() {
             @Override
             public Observable<LoanRepaymentRequest> call() {
                 loanRepaymentRequest.update();

@@ -6,10 +6,10 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 08/06/16.
@@ -17,7 +17,7 @@ import rx.schedulers.Schedulers;
 public class LoanRepaymentSchedulePresenter extends BasePresenter<LoanRepaymentScheduleMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public LoanRepaymentSchedulePresenter(DataManager dataManager) {
@@ -32,19 +32,19 @@ public class LoanRepaymentSchedulePresenter extends BasePresenter<LoanRepaymentS
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (compositeDisposable != null) compositeDisposable.clear();
     }
 
     public void loadLoanRepaySchedule(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getLoanRepaySchedule(loanId)
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = mDataManager.getLoanRepaySchedule(loanId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanWithAssociations>() {
+                .subscribeWith(new DisposableObserver<LoanWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 

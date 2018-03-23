@@ -6,7 +6,8 @@ import com.mifos.objects.user.User;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by Rajan Maurya on 19/02/17.

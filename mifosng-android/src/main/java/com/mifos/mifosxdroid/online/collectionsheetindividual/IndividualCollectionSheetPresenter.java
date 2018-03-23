@@ -21,14 +21,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.plugins.RxJavaPlugins;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
+
 
 /**
  * Created by Tarun on 05-07-2017.
@@ -39,14 +40,14 @@ public class IndividualCollectionSheetPresenter
 
     private DataManager mDataManager;
     private DataManagerCollectionSheet mDataManagerCollection;
-    private CompositeSubscription mSubscription;
+    private CompositeDisposable mCompositeDisposable;
 
     @Inject
     IndividualCollectionSheetPresenter(DataManager manager,
                                        DataManagerCollectionSheet managerCollectionSheet) {
         mDataManager = manager;
         mDataManagerCollection = managerCollectionSheet;
-        mSubscription = new CompositeSubscription();
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -57,8 +58,8 @@ public class IndividualCollectionSheetPresenter
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) {
-            mSubscription.unsubscribe();
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.clear();
         }
     }
 
@@ -66,13 +67,13 @@ public class IndividualCollectionSheetPresenter
                                                  individualCollectionSheetPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManagerCollection
+        mCompositeDisposable.add(mDataManagerCollection
                 .saveIndividualCollectionSheet(individualCollectionSheetPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -87,7 +88,7 @@ public class IndividualCollectionSheetPresenter
                                         .getErrors().get(0).getDefaultUserMessage());
                             }
                         } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                            RxJavaPlugins.getErrorHandler();
                         }
                     }
 
@@ -104,13 +105,13 @@ public class IndividualCollectionSheetPresenter
 
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManagerCollection
+        mCompositeDisposable.add(mDataManagerCollection
                 .getIndividualCollectionSheet(requestCollectionSheetPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<IndividualCollectionSheet>() {
+                .subscribeWith(new DisposableObserver<IndividualCollectionSheet>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -124,7 +125,7 @@ public class IndividualCollectionSheetPresenter
                                 getMvpView().showError(MFErrorParser.parseError(errorMessage)
                                         .getErrors().get(0).getDefaultUserMessage());
                             } catch (Throwable throwable) {
-                                RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                                RxJavaPlugins.getErrorHandler();
                             }
                         } else {
                             getMvpView().showError(e.getLocalizedMessage());
@@ -147,12 +148,12 @@ public class IndividualCollectionSheetPresenter
     void fetchOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManager.getOffices()
+        mCompositeDisposable.add(mDataManager.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Office>>() {
+                .subscribeWith(new DisposableObserver<List<Office>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -167,7 +168,7 @@ public class IndividualCollectionSheetPresenter
                                         .getErrors().get(0).getDefaultUserMessage());
                             }
                         } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                            RxJavaPlugins.getErrorHandler();
                         }
                     }
 
@@ -182,12 +183,12 @@ public class IndividualCollectionSheetPresenter
     void fetchStaff(int officeId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManager.getStaffInOffice(officeId)
+        mCompositeDisposable.add(mDataManager.getStaffInOffice(officeId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Staff>>() {
+                .subscribeWith(new DisposableObserver<List<Staff>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -202,7 +203,7 @@ public class IndividualCollectionSheetPresenter
                                         .getErrors().get(0).getDefaultUserMessage());
                             }
                         } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                            RxJavaPlugins.getErrorHandler();
                         }
                     }
 
@@ -216,10 +217,10 @@ public class IndividualCollectionSheetPresenter
 
     List<String> filterOffices(List<Office> offices) {
         final List<String> officesList = new ArrayList<>();
-        Observable.from(offices)
-                .subscribe(new Action1<Office>() {
+        Observable.fromIterable(offices)
+                .subscribe(new Consumer<Office>() {
                     @Override
-                    public void call(Office office) {
+                    public void accept(Office office) {
                         officesList.add(office.getName());
                     }
                 });
@@ -228,10 +229,10 @@ public class IndividualCollectionSheetPresenter
 
     List<String> filterStaff(List<Staff> staffs) {
         final List<String> staffList = new ArrayList<>();
-        Observable.from(staffs)
-                .subscribe(new Action1<Staff>() {
+        Observable.fromIterable(staffs)
+                .subscribe(new Consumer<Staff>() {
                     @Override
-                    public void call(Staff staff) {
+                    public void accept(Staff staff) {
                         staffList.add(staff.getDisplayName());
                     }
                 });
@@ -240,10 +241,10 @@ public class IndividualCollectionSheetPresenter
 
     List<String> filterPaymentTypeOptions(List<PaymentTypeOptions> paymentTypeOptionsList) {
         final List<String> paymentList = new ArrayList<>();
-        Observable.from(paymentTypeOptionsList)
-                .subscribe(new Action1<PaymentTypeOptions>() {
+        Observable.fromIterable(paymentTypeOptionsList)
+                .subscribe(new Consumer<PaymentTypeOptions>() {
                     @Override
-                    public void call(PaymentTypeOptions paymentTypeOption) {
+                    public void accept(PaymentTypeOptions paymentTypeOption) {
                         paymentList.add(paymentTypeOption.getName());
                     }
                 });
@@ -253,10 +254,10 @@ public class IndividualCollectionSheetPresenter
     List<LoanAndClientName> filterLoanAndClientNames(List<ClientCollectionSheet>
                                                              clientCollectionSheets) {
         final List<LoanAndClientName> loansAndClientNames = new ArrayList<>();
-        Observable.from(clientCollectionSheets)
-                .subscribe(new Action1<ClientCollectionSheet>() {
+        Observable.fromIterable(clientCollectionSheets)
+                .subscribe(new Consumer<ClientCollectionSheet>() {
                     @Override
-                    public void call(ClientCollectionSheet clientCollectionSheet) {
+                    public void accept(ClientCollectionSheet clientCollectionSheet) {
                         if (clientCollectionSheet.getLoans() != null) {
                             for (LoanCollectionSheet loanCollectionSheet :
                                     clientCollectionSheet.getLoans()) {

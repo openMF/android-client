@@ -39,14 +39,14 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action1;
-import rx.functions.Func0;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 
 import static com.raizlabs.android.dbflow.sql.language.SQLite.select;
 
@@ -84,7 +84,7 @@ public class DatabaseHelperClient {
      * @return saved Client
      */
     public Observable<Client> saveClient(final Client client) {
-        return Observable.defer(new Func0<Observable<Client>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Client>>() {
             @Override
             public Observable<Client> call() {
                 //Saving Client in Database
@@ -107,23 +107,23 @@ public class DatabaseHelperClient {
     //TODO Implement Observable Transaction to load Client List
     public Observable<Page<Client>> readAllClients() {
 
-        return Observable.create(new Observable.OnSubscribe<Page<Client>>() {
+        return Observable.defer(new Callable<Observable<Page<Client>>>() {
             @Override
-            public void call(Subscriber<? super Page<Client>> subscriber) {
+            public Observable<Page<Client>> call() throws Exception {
 
                 Page<Client> clientPage = new Page<>();
                 clientPage.setPageItems(select()
                         .from(Client.class)
                         .queryList());
-                subscriber.onNext(clientPage);
-                subscriber.onCompleted();
+                return Observable.just(clientPage);
             }
+
         });
 
     }
 
     public Observable<GroupWithAssociations> getGroupAssociateClients(final int groupId) {
-        return Observable.defer(new Func0<Observable<GroupWithAssociations>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends GroupWithAssociations>>() {
             @Override
             public Observable<GroupWithAssociations> call() {
 
@@ -146,9 +146,9 @@ public class DatabaseHelperClient {
      * @return Client
      */
     public Observable<Client> getClient(final int clientId) {
-        return Observable.create(new Observable.OnSubscribe<Client>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Client>>() {
             @Override
-            public void call(Subscriber<? super Client> subscriber) {
+            public ObservableSource<? extends Client> call() throws Exception {
 
                 Client client = select()
                         .from(Client.class)
@@ -159,8 +159,7 @@ public class DatabaseHelperClient {
                     client.setActivationDate(Arrays.asList(client.getClientDate().getDay(),
                             client.getClientDate().getMonth(), client.getClientDate().getYear()));
                 }
-
-                subscriber.onNext(client);
+                return Observable.just(client);
 
             }
         });
@@ -177,7 +176,7 @@ public class DatabaseHelperClient {
     public Observable<ClientAccounts> saveClientAccounts(final ClientAccounts clientAccounts,
                                                          final int clientId) {
 
-        return Observable.defer(new Func0<Observable<ClientAccounts>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends ClientAccounts>>() {
             @Override
             public Observable<ClientAccounts> call() {
 
@@ -208,9 +207,9 @@ public class DatabaseHelperClient {
      * @return Return the ClientAccount according to client Id
      */
     public Observable<ClientAccounts> realClientAccounts(final int clientId) {
-        return Observable.create(new Observable.OnSubscribe<ClientAccounts>() {
+        return Observable.create(new Callable<Observable<ClientAccounts>>() {
             @Override
-            public void call(Subscriber<? super ClientAccounts> subscriber) {
+            public Observable<ClientAccounts> call() throws Exception {
 
                 List<LoanAccount> loanAccounts = select()
                         .from(LoanAccount.class)
@@ -226,7 +225,7 @@ public class DatabaseHelperClient {
                 clientAccounts.setLoanAccounts(loanAccounts);
                 clientAccounts.setSavingsAccounts(savingsAccounts);
 
-                subscriber.onNext(clientAccounts);
+                return Observable.just(clientAccounts);
 
             }
         });
@@ -240,7 +239,7 @@ public class DatabaseHelperClient {
      * @return void
      */
     public Observable<ClientsTemplate> saveClientTemplate(final ClientsTemplate clientsTemplate) {
-        return Observable.defer(new Func0<Observable<ClientsTemplate>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends ClientsTemplate>>() {
             @Override
             public Observable<ClientsTemplate> call() {
                 //saving clientTemplate into DB;
@@ -307,7 +306,7 @@ public class DatabaseHelperClient {
      * @return ClientTemplate
      */
     public Observable<ClientsTemplate> readClientTemplate() {
-        return Observable.defer(new Func0<Observable<ClientsTemplate>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends ClientsTemplate>>() {
             @Override
             public Observable<ClientsTemplate> call() {
 
@@ -399,7 +398,7 @@ public class DatabaseHelperClient {
      * @return Client
      */
     public Observable<Client> saveClientPayloadToDB(final ClientPayload clientPayload) {
-        return Observable.defer(new Func0<Observable<Client>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends Client>>() {
             @Override
             public Observable<Client> call() {
                 final long currentTime = System.currentTimeMillis();
@@ -430,7 +429,7 @@ public class DatabaseHelperClient {
      * @return List<ClientPayload></>
      */
     public Observable<List<ClientPayload>> readAllClientPayload() {
-        return Observable.defer(new Func0<Observable<List<ClientPayload>>>() {
+        return Observable.defer(new Callable<ObservableSource<? extends List<ClientPayload>>>() {
             @Override
             public Observable<List<ClientPayload>> call() {
                 List<ClientPayload> clientPayloads = select()

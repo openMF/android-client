@@ -21,8 +21,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -84,10 +86,10 @@ public class DataManagerLoan {
     public Observable<LoanWithAssociations> syncLoanById(int loanId) {
         return mBaseApiManager.getLoanApi()
                 .getLoanByIdWithAllAssociations(loanId)
-                .concatMap(new Func1<LoanWithAssociations, Observable<? extends
-                        LoanWithAssociations>>() {
+                .concatMap(new Function<LoanWithAssociations, ObservableSource<?
+                        extends LoanWithAssociations>>() {
                     @Override
-                    public Observable<? extends LoanWithAssociations> call
+                    public Observable<? extends LoanWithAssociations> apply
                             (LoanWithAssociations loanWithAssociations) {
                         return mDatabaseHelperLoan.saveLoanById(loanWithAssociations);
                     }
@@ -155,10 +157,10 @@ public class DataManagerLoan {
      */
     public Observable<LoanRepaymentTemplate> syncLoanRepaymentTemplate(final int loanId) {
         return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId)
-                .concatMap(new Func1<LoanRepaymentTemplate, Observable<? extends
-                        LoanRepaymentTemplate>>() {
+                .concatMap(new Function<LoanRepaymentTemplate, ObservableSource<?
+                        extends LoanRepaymentTemplate>>() {
                     @Override
-                    public Observable<? extends LoanRepaymentTemplate> call
+                    public Observable<? extends LoanRepaymentTemplate> apply
                             (LoanRepaymentTemplate loanRepaymentTemplate) {
                         return mDatabaseHelperLoan.saveLoanRepaymentTemplate(loanId,
                                 loanRepaymentTemplate);
@@ -185,10 +187,10 @@ public class DataManagerLoan {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getLoanApi().submitPayment(loanId, request)
-                        .concatMap(new Func1<LoanRepaymentResponse, Observable<? extends
-                                LoanRepaymentResponse>>() {
+                        .concatMap(new Function<LoanRepaymentResponse, ObservableSource<?
+                                extends LoanRepaymentResponse>>() {
                             @Override
-                            public Observable<? extends LoanRepaymentResponse> call
+                            public Observable<? extends LoanRepaymentResponse> apply
                                     (LoanRepaymentResponse loanRepaymentResponse) {
                                 return Observable.just(loanRepaymentResponse);
                             }

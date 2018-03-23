@@ -11,16 +11,17 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody.Part;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func2;
-import rx.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -29,8 +30,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
 
     private final DataManagerDataTable  mDataManagerDataTable;
     private final DataManagerClient mDataManagerClient;
-    private Subscription mSubscription;
-
+    private CompositeDisposable compositeDisposable;
     @Inject
     public ClientDetailsPresenter(DataManagerDataTable dataManagerDataTable,
                                   DataManagerClient dataManagerClient) {
@@ -46,7 +46,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (compositeDisposable != null) compositeDisposable.clear();
     }
 
     public void uploadImage(int id, File pngFile) {
@@ -61,13 +61,13 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
         Part body = Part.createFormData("file", pngFile.getName(), requestFile);
 
         getMvpView().showUploadImageProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManagerClient.uploadClientImage(id, body)
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = mDataManagerClient.uploadClientImage(id, body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribeWith(new DisposableObserver<ResponseBody>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showUploadImageProgressbar(false);
                     }
 
@@ -86,13 +86,13 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
 
     public void deleteClientImage(int clientId) {
         checkViewAttached();
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManagerClient.deleteClientImage(clientId)
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = mDataManagerClient.deleteClientImage(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribeWith(new DisposableObserver<ResponseBody>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -111,13 +111,13 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
     public void loadClientDetailsAndClientAccounts(int clientId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = Observable.zip(
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = Observable.zip(
                 mDataManagerClient.getClientAccounts(clientId),
                 mDataManagerClient.getClient(clientId),
-                new Func2<ClientAccounts, Client, ClientAndClientAccounts>() {
+                new BiFunction<ClientAccounts, Client, Object>() {
                     @Override
-                    public ClientAndClientAccounts call(ClientAccounts clientAccounts, Client
+                    public ClientAndClientAccounts apply(ClientAccounts clientAccounts, Client
                             client) {
                         ClientAndClientAccounts clientAndClientAccounts
                                 = new ClientAndClientAccounts();
@@ -128,9 +128,9 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<ClientAndClientAccounts>() {
+                .subscribeWith(new DisposableObserver<Object>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

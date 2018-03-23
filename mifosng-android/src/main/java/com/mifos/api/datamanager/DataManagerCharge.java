@@ -9,8 +9,10 @@ import com.mifos.utils.PrefManager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+
 
 /**
  * This DataManager is for Managing Charge API, In which Request is going to Server
@@ -48,9 +50,9 @@ public class DataManagerCharge {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit)
-                        .concatMap(new Func1<Page<Charges>, Observable<? extends Page<Charges>>>() {
+                        .concatMap(new Function<Page<Charges>, ObservableSource<? extends Page<Charges>>>() {
                             @Override
-                            public Observable<? extends Page<Charges>> call(Page<Charges>
+                            public Observable<? extends Page<Charges>> apply(Page<Charges>
                                                                                     chargesPage) {
                                 mDatabaseHelperCharge.saveClientCharges(chargesPage, clientId);
                                 return Observable.just(chargesPage);

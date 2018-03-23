@@ -11,10 +11,11 @@ import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 09/02/17.
@@ -25,7 +26,7 @@ public class ActivatePresenter extends BasePresenter<ActivateMvpView> {
     private final DataManagerClient dataManagerClient;
     private final DataManagerCenter dataManagerCenter;
     private final DataManagerGroups dataManagerGroups;
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public ActivatePresenter(DataManagerClient dataManagerClient,
@@ -34,7 +35,7 @@ public class ActivatePresenter extends BasePresenter<ActivateMvpView> {
         this.dataManagerClient = dataManagerClient;
         this.dataManagerCenter = dataManagerCenter;
         this.dataManagerGroups = dataManagerGroups;
-        subscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -45,18 +46,18 @@ public class ActivatePresenter extends BasePresenter<ActivateMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void activateClient(int clientId, ActivatePayload clientActivate) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerClient.activateClient(clientId, clientActivate)
+        compositeDisposable.add(dataManagerClient.activateClient(clientId, clientActivate)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -78,12 +79,12 @@ public class ActivatePresenter extends BasePresenter<ActivateMvpView> {
     public void activateCenter(int centerId, ActivatePayload activatePayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerCenter.activateCenter(centerId, activatePayload)
+        compositeDisposable.add(dataManagerCenter.activateCenter(centerId, activatePayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -106,12 +107,12 @@ public class ActivatePresenter extends BasePresenter<ActivateMvpView> {
     public void activateGroup(int groupId, ActivatePayload activatePayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerGroups.activateGroup(groupId, activatePayload)
+        compositeDisposable.add(dataManagerGroups.activateGroup(groupId, activatePayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

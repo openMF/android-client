@@ -18,14 +18,17 @@ import com.mifos.services.data.CenterPayload_Table;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import org.reactivestreams.Subscriber;
+
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func0;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+
 
 /**
  * Created by Rajan Maurya on 28/6/16.
@@ -68,23 +71,21 @@ public class DatabaseHelperCenter {
     //TODO Implement Observable Transaction to load Center List
     public Observable<Page<Center>> readAllCenters() {
 
-        return Observable.create(new Observable.OnSubscribe<Page<Center>>() {
+        return Observable.defer(new Callable<Observable<? extends Page<Center>>>() {
             @Override
-            public void call(Subscriber<? super Page<Center>> subscriber) {
-
+            public Observable<? extends Page<Center>> call() throws Exception {
                 Page<Center> centerPage = new Page<>();
                 centerPage.setPageItems(SQLite.select()
                         .from(Center.class)
                         .queryList());
-                subscriber.onNext(centerPage);
-                subscriber.onCompleted();
+                return Observable.just(centerPage);
             }
         });
 
     }
 
     public Observable<SaveResponse> saveCenterPayload(final CenterPayload centerPayload) {
-        return Observable.defer(new Func0<Observable<SaveResponse>>() {
+        return Observable.defer(new Callable<Observable<SaveResponse>>() {
             @Override
             public Observable<SaveResponse> call() {
                 centerPayload.save();
@@ -94,7 +95,7 @@ public class DatabaseHelperCenter {
     }
 
     public Observable<List<CenterPayload>> readAllCenterPayload() {
-        return Observable.defer(new Func0<Observable<List<CenterPayload>>>() {
+        return Observable.defer(new Callable<Observable<List<CenterPayload>>>() {
             @Override
             public Observable<List<CenterPayload>> call() {
                 List<CenterPayload> centerPayloads = SQLite.select()
@@ -112,7 +113,7 @@ public class DatabaseHelperCenter {
      */
 
     public Observable<CenterWithAssociations> getCenterAssociateGroups(final int centerId) {
-        return Observable.defer(new Func0<Observable<CenterWithAssociations>>() {
+        return Observable.defer(new Callable<Observable<CenterWithAssociations>>() {
             @Override
             public Observable<CenterWithAssociations> call() {
 
@@ -135,7 +136,7 @@ public class DatabaseHelperCenter {
      * @return Observable.just(Center)
      */
     public Observable<Center> saveCenter(final Center center) {
-        return Observable.defer(new Func0<Observable<Center>>() {
+        return Observable.defer(new Callable<Observable<Center>>() {
             @Override
             public Observable<Center> call() {
 
@@ -159,7 +160,7 @@ public class DatabaseHelperCenter {
      * @return List<CenterPayload></>
      */
     public Observable<List<CenterPayload>> deleteAndUpdateCenterPayloads(final int id) {
-        return Observable.defer(new Func0<Observable<List<CenterPayload>>>() {
+        return Observable.defer(new Callable<Observable<List<CenterPayload>>>() {
             @Override
             public Observable<List<CenterPayload>> call() {
                 Delete.table(CenterPayload.class, CenterPayload_Table.id.eq(id));
@@ -174,7 +175,7 @@ public class DatabaseHelperCenter {
 
     public Observable<CenterPayload> updateDatabaseCenterPayload(
             final CenterPayload centerPayload) {
-        return Observable.defer(new Func0<Observable<CenterPayload>>() {
+        return Observable.defer(new Callable<Observable<CenterPayload>>() {
             @Override
             public Observable<CenterPayload> call() {
                 centerPayload.update();
@@ -193,7 +194,7 @@ public class DatabaseHelperCenter {
     public Observable<CenterAccounts> saveCenterAccounts(final CenterAccounts centerAccounts,
                                                          final int centerId) {
 
-        return Observable.defer(new Func0<Observable<CenterAccounts>>() {
+        return Observable.defer(new Callable<Observable<CenterAccounts>>() {
             @Override
             public Observable<CenterAccounts> call() {
 

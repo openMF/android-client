@@ -9,13 +9,14 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+
 
 /**
  * Created by Tarun on 29-06-2017.
@@ -23,12 +24,12 @@ import rx.subscriptions.CompositeSubscription;
 
 public class SignaturePresenter extends BasePresenter<SignatureMvpView> {
     private final DataManagerDocument mDataManagerDocument;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public SignaturePresenter(DataManagerDocument dataManagerDocument) {
         mDataManagerDocument = dataManagerDocument;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -39,19 +40,19 @@ public class SignaturePresenter extends BasePresenter<SignatureMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.clear();
+        compositeDisposable.clear();
     }
 
     public void createDocument(String type, int id, String name, String desc, File file) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerDocument
+        compositeDisposable.add(mDataManagerDocument
                 .createDocument(type, id, name, desc, getRequestFileBody(file))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 

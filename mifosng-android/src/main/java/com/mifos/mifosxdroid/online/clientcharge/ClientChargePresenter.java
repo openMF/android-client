@@ -8,12 +8,13 @@ import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.plugins.RxJavaPlugins;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
+
 
 /**
  * Created by Rajan Maurya on 5/6/16.
@@ -22,7 +23,7 @@ public class ClientChargePresenter extends BasePresenter<ClientChargeMvpView> {
 
 
     private final DataManagerCharge mDataManagerCharge;
-    private Subscription mSubscription;
+    private CompositeDisposable mCompositeDisposable;
 
     @Inject
     public ClientChargePresenter(DataManagerCharge dataManagerCharge) {
@@ -39,18 +40,18 @@ public class ClientChargePresenter extends BasePresenter<ClientChargeMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (mCompositeDisposable != null) mCompositeDisposable.clear();
     }
 
     public void loadCharges(int clientId, int offset, int limit) {
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManagerCharge.getClientCharges(clientId, offset, limit)
+        if (mCompositeDisposable != null) mCompositeDisposable.clear();
+        mDataManagerCharge.getClientCharges(clientId, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Charges>>() {
+                .subscribe(new DisposableObserver<Page<Charges>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -66,7 +67,7 @@ public class ClientChargePresenter extends BasePresenter<ClientChargeMvpView> {
                                         .getErrors().get(0).getDefaultUserMessage());
                             }
                         } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                            RxJavaPlugins.getErrorHandler();
                         }
                     }
 

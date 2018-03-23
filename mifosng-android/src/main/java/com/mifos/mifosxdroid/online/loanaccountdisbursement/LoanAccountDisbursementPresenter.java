@@ -10,10 +10,10 @@ import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 8/6/16.
@@ -22,12 +22,12 @@ public class LoanAccountDisbursementPresenter
         extends BasePresenter<LoanAccountDisbursementMvpView> {
 
     private final DataManagerLoan dataManagerLoan;
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public LoanAccountDisbursementPresenter(DataManagerLoan dataManager) {
         dataManagerLoan = dataManager;
-        subscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -38,18 +38,18 @@ public class LoanAccountDisbursementPresenter
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loadLoanTemplate(int loanId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerLoan.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
+        compositeDisposable.add(dataManagerLoan.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanTransactionTemplate>() {
+                .subscribeWith(new DisposableObserver<LoanTransactionTemplate>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -70,12 +70,12 @@ public class LoanAccountDisbursementPresenter
     public void disburseLoan(int loanId, LoanDisbursement loanDisbursement) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerLoan.dispurseLoan(loanId, loanDisbursement)
+        compositeDisposable.add(dataManagerLoan.dispurseLoan(loanId, loanDisbursement)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

@@ -11,10 +11,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 05/02/17.
@@ -24,14 +25,14 @@ public class CenterDetailsPresenter extends BasePresenter<CenterDetailsMvpView> 
 
     private final DataManagerCenter dataManagerCenter;
     private final DataManagerRunReport dataManagerRunReport;
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public CenterDetailsPresenter(DataManagerCenter dataManagerCenter,
                                   DataManagerRunReport dataManagerRunReport) {
         this.dataManagerCenter = dataManagerCenter;
         this.dataManagerRunReport = dataManagerRunReport;
-        subscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -42,18 +43,18 @@ public class CenterDetailsPresenter extends BasePresenter<CenterDetailsMvpView> 
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.clear();
+        compositeDisposable.clear();
     }
 
     public void loadCentersGroupAndMeeting(final int centerId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerCenter.getCentersGroupAndMeeting(centerId)
+        compositeDisposable.add(dataManagerCenter.getCentersGroupAndMeeting(centerId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<CenterWithAssociations>() {
+                .subscribeWith(new DisposableObserver<CenterWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -74,12 +75,12 @@ public class CenterDetailsPresenter extends BasePresenter<CenterDetailsMvpView> 
     public void loadSummaryInfo(int centerId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerRunReport.getCenterSummarInfo(centerId, false)
+        compositeDisposable.add(dataManagerRunReport.getCenterSummarInfo(centerId, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<CenterInfo>>() {
+                .subscribeWith(new DisposableObserver<List<CenterInfo>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

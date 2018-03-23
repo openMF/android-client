@@ -9,8 +9,9 @@ package com.mifos.utils;
 import com.google.gson.Gson;
 import com.mifos.objects.mifoserror.MifosError;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.plugins.RxJavaPlugins;
+import io.reactivex.plugins.RxJavaPlugins;
+import retrofit2.HttpException;
+
 
 public class MFErrorParser {
 
@@ -31,7 +32,7 @@ public class MFErrorParser {
                         .get(0).getDefaultUserMessage();
             }
         } catch (Throwable throwable) {
-            RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
+            RxJavaPlugins.getErrorHandler();
         }
         return errorMessage;
     }

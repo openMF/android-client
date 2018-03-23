@@ -9,11 +9,10 @@ import com.mifos.objects.db.CollectionSheet;
 
 import javax.inject.Inject;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 /**
  * Created by Rajan Maurya on 7/6/16.
@@ -21,7 +20,8 @@ import rx.schedulers.Schedulers;
 public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private DisposableObserver<CollectionSheet> loaddisposabl1eObserver;
+    private DisposableObserver<SaveResponse> savedisposabl1eObserver;
 
     @Inject
     public CollectionSheetPresenter(DataManager dataManager) {
@@ -36,18 +36,18 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (loaddisposabl1eObserver != null) loaddisposabl1eObserver.dispose();
     }
 
     public void loadCollectionSheet(long id, Payload payload) {
         checkViewAttached();
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getCollectionSheet(id, payload)
+        if (loaddisposabl1eObserver != null) loaddisposabl1eObserver.dispose();
+        loaddisposabl1eObserver = mDataManager.getCollectionSheet(id, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<CollectionSheet>() {
+                .subscribeWith(new DisposableObserver<CollectionSheet>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -65,13 +65,13 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
 
     public void saveCollectionSheet(int id, CollectionSheetPayload payload) {
         checkViewAttached();
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.saveCollectionSheetAsync(id, payload)
+        if (savedisposabl1eObserver != null) savedisposabl1eObserver.dispose();
+        savedisposabl1eObserver = mDataManager.saveCollectionSheetAsync(id, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SaveResponse>() {
+                .subscribeWith(new DisposableObserver<SaveResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

@@ -10,10 +10,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -21,12 +21,12 @@ import rx.subscriptions.CompositeSubscription;
 public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersMvpView> {
 
     private final DataManagerClient mDataManagerClient;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public ClientIdentifiersPresenter(DataManagerClient dataManagerClient) {
         mDataManagerClient = dataManagerClient;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -37,18 +37,18 @@ public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersM
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.clear();
+        compositeDisposable.clear();
     }
 
     public void loadIdentifiers(int clientId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.getClientIdentifiers(clientId)
+        compositeDisposable.add(mDataManagerClient.getClientIdentifiers(clientId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Identifier>>() {
+                .subscribeWith(new DisposableObserver<List<Identifier>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -76,12 +76,12 @@ public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersM
     public void deleteIdentifier(final int clientId, int identifierId, final int position) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerClient.deleteClientIdentifier(clientId, identifierId)
+        compositeDisposable.add(mDataManagerClient.deleteClientIdentifier(clientId, identifierId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 

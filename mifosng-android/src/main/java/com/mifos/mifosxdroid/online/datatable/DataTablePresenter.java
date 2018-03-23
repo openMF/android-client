@@ -9,10 +9,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 12/02/17.
@@ -20,12 +21,12 @@ import rx.subscriptions.CompositeSubscription;
 public class DataTablePresenter extends BasePresenter<DataTableMvpView> {
 
     private final DataManagerDataTable dataManagerDataTable;
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public DataTablePresenter(DataManagerDataTable dataManagerDataTable) {
         this.dataManagerDataTable = dataManagerDataTable;
-        subscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -36,7 +37,7 @@ public class DataTablePresenter extends BasePresenter<DataTableMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     /**
@@ -57,12 +58,12 @@ public class DataTablePresenter extends BasePresenter<DataTableMvpView> {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         getMvpView().showResetVisibility();
-        subscriptions.add(dataManagerDataTable.getDataTable(tableName)
+        compositeDisposable.add(dataManagerDataTable.getDataTable(tableName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<DataTable>>() {
+                .subscribeWith(new DisposableObserver<List<DataTable>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

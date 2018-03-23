@@ -28,12 +28,13 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -42,7 +43,7 @@ public class GenerateCollectionSheetPresenter
         extends BasePresenter<GenerateCollectionSheetMvpView> {
 
     private final DataManager mDataManager;
-    private CompositeSubscription mSubscription;
+    private CompositeDisposable compositeDisposable;
     private DataManagerCollectionSheet collectionDataManager;
     private Context c;
 
@@ -53,7 +54,7 @@ public class GenerateCollectionSheetPresenter
         mDataManager = dataManager;
         collectionDataManager = sheetManager;
         c = context;
-        mSubscription = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
 
     }
 
@@ -65,18 +66,18 @@ public class GenerateCollectionSheetPresenter
     @Override
     public void detachView() {
         super.detachView();
-        mSubscription.clear();
+        compositeDisposable.clear();
     }
 
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManager.getOffices()
+        compositeDisposable.add(mDataManager.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Office>>() {
+                .subscribeWith(new DisposableObserver<List<Office>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -97,12 +98,12 @@ public class GenerateCollectionSheetPresenter
     public void loadStaffInOffice(final int officeId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManager.getStaffInOffice(officeId)
+        compositeDisposable.add(mDataManager.getStaffInOffice(officeId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Staff>>() {
+                .subscribeWith(new DisposableObserver<List<Staff>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -122,12 +123,12 @@ public class GenerateCollectionSheetPresenter
     public void loadCentersInOffice(int id, Map<String, Object> params) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManager.getCentersInOffice(id, params)
+        compositeDisposable.add(mDataManager.getCentersInOffice(id, params)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Center>>() {
+                .subscribeWith(new DisposableObserver<List<Center>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -147,12 +148,12 @@ public class GenerateCollectionSheetPresenter
     public void loadGroupsInOffice(int office, Map<String, Object> params) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManager.getGroupsByOffice(office, params)
+        compositeDisposable.add(mDataManager.getGroupsByOffice(office, params)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Group>>() {
+                .subscribeWith(new DisposableObserver<List<Group>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -173,12 +174,12 @@ public class GenerateCollectionSheetPresenter
     public void loadGroupByCenter(int centerId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(collectionDataManager.fetchGroupsAssociatedWithCenter(centerId)
+        compositeDisposable.add(collectionDataManager.fetchGroupsAssociatedWithCenter(centerId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<CenterWithAssociations>() {
+                .subscribeWith(new DisposableObserver<CenterWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -204,13 +205,13 @@ public class GenerateCollectionSheetPresenter
                                   int officeId, int staffId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(collectionDataManager.fetchCenterDetails(format, locale,
+        compositeDisposable.add(collectionDataManager.fetchCenterDetails(format, locale,
                 meetingDate, officeId, staffId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<CenterDetail>>() {
+                .subscribeWith(new DisposableObserver<List<CenterDetail>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -235,12 +236,12 @@ public class GenerateCollectionSheetPresenter
                                               CollectionSheetRequestPayload payload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(collectionDataManager.fetchProductiveCollectionSheet(centerId, payload)
+        compositeDisposable.add(collectionDataManager.fetchProductiveCollectionSheet(centerId, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<CollectionSheetResponse>() {
+                .subscribeWith(new DisposableObserver<CollectionSheetResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -262,12 +263,12 @@ public class GenerateCollectionSheetPresenter
                                               CollectionSheetRequestPayload payload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(collectionDataManager.fetchCollectionSheet(groupId, payload)
+        compositeDisposable.add(collectionDataManager.fetchCollectionSheet(groupId, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<CollectionSheetResponse>() {
+                .subscribeWith(new DisposableObserver<CollectionSheetResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -291,12 +292,12 @@ public class GenerateCollectionSheetPresenter
     public void submitProductiveSheet(int centerId, ProductiveCollectionSheetPayload payload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(collectionDataManager.submitProductiveSheet(centerId, payload)
+        compositeDisposable.add(collectionDataManager.submitProductiveSheet(centerId, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -321,12 +322,12 @@ public class GenerateCollectionSheetPresenter
     public void submitCollectionSheet(int groupId, CollectionSheetPayload payload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscription.add(collectionDataManager.submitCollectionSheet(groupId, payload)
+        compositeDisposable.add(collectionDataManager.submitCollectionSheet(groupId, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
+                .subscribeWith(new DisposableObserver<GenericResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -359,10 +360,10 @@ public class GenerateCollectionSheetPresenter
         officeMap.put(c.getResources().getString(R.string.spinner_office), -1);
         officeNames.clear();
         officeNames.add(c.getResources().getString(R.string.spinner_office));
-        Observable.from(offices)
-                .subscribe(new Action1<Office>() {
+        Observable.fromIterable(offices)
+                .subscribe(new Consumer<Office>() {
                     @Override
-                    public void call(Office office) {
+                    public void accept(Office office) {
                         officeMap.put(office.getName(), office.getId());
                         officeNames.add(office.getName());
                     }
@@ -383,10 +384,10 @@ public class GenerateCollectionSheetPresenter
         staffMap.put(c.getResources().getString(R.string.spinner_staff), -1);
         staffNames.clear();
         staffNames.add(c.getResources().getString(R.string.spinner_staff));
-        Observable.from(staffs)
-                .subscribe(new Action1<Staff>() {
+        Observable.fromIterable(staffs)
+                .subscribe(new Consumer<Staff>() {
                     @Override
-                    public void call(Staff staff) {
+                    public void accept(Staff staff) {
                         staffMap.put(staff.getDisplayName(), staff.getId());
                         staffNames.add(staff.getDisplayName());
                     }
@@ -408,10 +409,10 @@ public class GenerateCollectionSheetPresenter
         centerMap.put(c.getResources().getString(R.string.spinner_center), -1);
         centerNames.clear();
         centerNames.add(c.getResources().getString(R.string.spinner_center));
-        Observable.from(centers)
-                .subscribe(new Action1<Center>() {
+        Observable.fromIterable(centers)
+                .subscribe(new Consumer<Center>() {
                     @Override
-                    public void call(Center center) {
+                    public void accept(Center center) {
                         centerMap.put(center.getName(), center.getId());
                         centerNames.add(center.getName());
                     }
@@ -432,10 +433,10 @@ public class GenerateCollectionSheetPresenter
         groupMap.put(c.getResources().getString(R.string.spinner_group), -1);
         groupNames.clear();
         groupNames.add(c.getResources().getString(R.string.spinner_group));
-        Observable.from(groups)
-                .subscribe(new Action1<Group>() {
+        Observable.fromIterable(groups)
+                .subscribe(new Consumer<Group>() {
                     @Override
-                    public void call(Group group) {
+                    public void accept(Group group) {
                         groupMap.put(group.getName(), group.getId());
                         groupNames.add(group.getName());
                     }
@@ -446,10 +447,10 @@ public class GenerateCollectionSheetPresenter
     HashMap<String, Integer> filterAttendanceTypes (final List<AttendanceTypeOption> attendance,
                                                    final List<String> attendanceTypeNames) {
         final HashMap<String, Integer> options = new HashMap<>();
-        Observable.from(attendance)
-                .subscribe(new Action1<AttendanceTypeOption>() {
+        Observable.fromIterable(attendance)
+                .subscribe(new Consumer<AttendanceTypeOption>() {
                     @Override
-                    public void call(AttendanceTypeOption attendanceTypeOption) {
+                    public void accept(AttendanceTypeOption attendanceTypeOption) {
                         options.put(attendanceTypeOption.getValue(), attendanceTypeOption.getId());
                         attendanceTypeNames.add(attendanceTypeOption.getValue());
                     }
@@ -463,10 +464,10 @@ public class GenerateCollectionSheetPresenter
         paymentMap.put(c.getResources().getString(R.string.payment_type), -1);
         paymentTypeNames.clear();
         paymentTypeNames.add(c.getResources().getString(R.string.payment_type));
-        Observable.from(paymentTypeOptions)
-                .subscribe(new Action1<PaymentTypeOption>() {
+        Observable.fromIterable(paymentTypeOptions)
+                .subscribe(new Consumer<PaymentTypeOption>() {
                     @Override
-                    public void call(PaymentTypeOption paymentTypeOption) {
+                    public void accept(PaymentTypeOption paymentTypeOption) {
                         paymentMap.put(paymentTypeOption.getName(), paymentTypeOption.getId());
                         paymentTypeNames.add(paymentTypeOption.getName());
                     }

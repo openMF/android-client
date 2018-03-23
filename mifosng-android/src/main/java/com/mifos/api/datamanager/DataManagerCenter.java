@@ -18,8 +18,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server
@@ -94,9 +96,9 @@ public class DataManagerCenter {
      */
     public Observable<CenterAccounts> syncCenterAccounts(final int centerId) {
         return mBaseApiManager.getCenterApi().getCenterAccounts(centerId)
-                .concatMap(new Func1<CenterAccounts, Observable<? extends CenterAccounts>>() {
+                .concatMap(new Function<CenterAccounts, ObservableSource<? extends CenterAccounts>>() {
                     @Override
-                    public Observable<? extends CenterAccounts> call(CenterAccounts
+                    public Observable<? extends CenterAccounts> apply(CenterAccounts
                                                                              centerAccounts) {
                         return mDatabaseHelperCenter.saveCenterAccounts(centerAccounts, centerId);
                     }

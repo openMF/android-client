@@ -11,10 +11,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 7/6/16.
@@ -23,7 +24,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
 
 
     private final DataManagerGroups mDataManagerGroups;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     private List<Group> mDbGroupList;
     private List<Group> mSyncGroupList;
@@ -36,7 +37,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
     @Inject
     public GroupsListPresenter(DataManagerGroups dataManagerGroups) {
         mDataManagerGroups = dataManagerGroups;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
         mDbGroupList = new ArrayList<>();
         mSyncGroupList = new ArrayList<>();
     }
@@ -49,7 +50,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loadGroups(Boolean loadmore, int offset) {
@@ -100,12 +101,12 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
     public void loadGroups(boolean paged, int offset, int limit) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerGroups.getGroups(paged, offset, limit)
+        compositeDisposable.add(mDataManagerGroups.getGroups(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Group>>() {
+                .subscribeWith(new DisposableObserver<Page<Group>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -140,12 +141,12 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
 
     public void loadDatabaseGroups() {
         checkViewAttached();
-        mSubscriptions.add(mDataManagerGroups.getDatabaseGroups()
+        compositeDisposable.add(mDataManagerGroups.getDatabaseGroups()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Page<Group>>() {
+                .subscribeWith(new DisposableObserver<Page<Group>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

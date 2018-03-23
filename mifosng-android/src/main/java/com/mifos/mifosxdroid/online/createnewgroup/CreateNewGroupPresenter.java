@@ -12,10 +12,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -24,14 +24,14 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
 
     private final DataManagerOffices mDataManagerOffices;
     private final DataManagerGroups mDataManagerGroups;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public CreateNewGroupPresenter(DataManagerOffices dataManagerOffices,
                                    DataManagerGroups dataManagerGroups) {
         mDataManagerOffices = dataManagerOffices;
         mDataManagerGroups = dataManagerGroups;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -42,18 +42,18 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerOffices.getOffices()
+        compositeDisposable.add(mDataManagerOffices.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Office>>() {
+                .subscribeWith(new DisposableObserver<List<Office>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -74,12 +74,12 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
     public void createGroup(GroupPayload groupPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerGroups.createGroup(groupPayload)
+        compositeDisposable.add(mDataManagerGroups.createGroup(groupPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SaveResponse>() {
+                .subscribeWith(new DisposableObserver<SaveResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 

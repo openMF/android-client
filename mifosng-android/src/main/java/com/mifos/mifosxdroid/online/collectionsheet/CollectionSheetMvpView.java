@@ -4,7 +4,8 @@ import com.mifos.objects.response.SaveResponse;
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.db.CollectionSheet;
 
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
+
 
 /**
  * Created by Rajan Maurya on 7/6/16.

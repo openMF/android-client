@@ -7,10 +7,11 @@ import com.mifos.objects.group.GroupWithAssociations;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 06/06/16.
@@ -18,7 +19,7 @@ import rx.schedulers.Schedulers;
 public class GroupListPresenter extends BasePresenter<GroupListMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public GroupListPresenter(DataManager dataManager) {
@@ -34,19 +35,19 @@ public class GroupListPresenter extends BasePresenter<GroupListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (compositeDisposable != null) compositeDisposable.clear();
     }
 
     public void loadGroupByCenter(int id) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getGroupsByCenter(id)
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = mDataManager.getGroupsByCenter(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<CenterWithAssociations>() {
+                .subscribeWith(new DisposableObserver<CenterWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 
@@ -67,13 +68,13 @@ public class GroupListPresenter extends BasePresenter<GroupListMvpView> {
     public void loadGroups(int groupid) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getGroups(groupid)
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = mDataManager.getGroups(groupid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GroupWithAssociations>() {
+                .subscribeWith(new DisposableObserver<GroupWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         getMvpView().showProgressbar(false);
                     }
 

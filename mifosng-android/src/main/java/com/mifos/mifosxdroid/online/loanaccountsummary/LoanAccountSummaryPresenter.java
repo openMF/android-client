@@ -6,10 +6,11 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -17,12 +18,12 @@ import rx.subscriptions.CompositeSubscription;
 public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummaryMvpView> {
 
     private final DataManagerLoan mDataManagerLoan;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public LoanAccountSummaryPresenter(DataManagerLoan dataManagerLoan) {
         mDataManagerLoan = dataManagerLoan;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -33,18 +34,18 @@ public class LoanAccountSummaryPresenter extends BasePresenter<LoanAccountSummar
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loadLoanById(int loanAccountNumber) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerLoan.getLoanById(loanAccountNumber)
+        compositeDisposable.add(mDataManagerLoan.getLoanById(loanAccountNumber)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<LoanWithAssociations>() {
+                .subscribeWith(new DisposableObserver<LoanWithAssociations>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

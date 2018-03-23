@@ -9,10 +9,11 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 07/06/16.
@@ -21,12 +22,12 @@ public class SavingsAccountTransactionPresenter
         extends BasePresenter<SavingsAccountTransactionMvpView> {
 
     private final DataManagerSavings mDataManagerSavings;
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public SavingsAccountTransactionPresenter(DataManagerSavings dataManagerSavings) {
         mDataManagerSavings = dataManagerSavings;
-        mSubscriptions = new CompositeSubscription();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -37,19 +38,19 @@ public class SavingsAccountTransactionPresenter
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        compositeDisposable.clear();
     }
 
     public void loadSavingAccountTemplate(String type, int accountId, String transactionType) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings
+        compositeDisposable.add(mDataManagerSavings
                 .getSavingsAccountTransactionTemplate(type, accountId, transactionType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingsAccountTransactionTemplate>() {
+                .subscribeWith(new DisposableObserver<SavingsAccountTransactionTemplate>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -71,13 +72,13 @@ public class SavingsAccountTransactionPresenter
                                    SavingsAccountTransactionRequest request) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings
+        compositeDisposable.add(mDataManagerSavings
                 .processTransaction(type, accountId, transactionType, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingsAccountTransactionResponse>() {
+                .subscribeWith(new DisposableObserver<SavingsAccountTransactionResponse>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override
@@ -99,12 +100,12 @@ public class SavingsAccountTransactionPresenter
     public void checkInDatabaseSavingAccountTransaction(int savingAccountId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        mSubscriptions.add(mDataManagerSavings.getSavingsAccountTransaction(savingAccountId)
+        compositeDisposable.add(mDataManagerSavings.getSavingsAccountTransaction(savingAccountId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<SavingsAccountTransactionRequest>() {
+                .subscribeWith(new DisposableObserver<SavingsAccountTransactionRequest>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

@@ -7,10 +7,10 @@ import com.mifos.objects.survey.Scorecard;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by Rajan Maurya on 08/06/16.
@@ -18,7 +18,7 @@ import rx.schedulers.Schedulers;
 public class SurveySubmitPresenter extends BasePresenter<SurveySubmitMvpView> {
 
     private final DataManagerSurveys mDataManagerSurveys;
-    private Subscription mSubscription;
+    private DisposableObserver<Scorecard> disposableObserver;
 
     @Inject
     public SurveySubmitPresenter(DataManagerSurveys dataManagerSurveys) {
@@ -33,19 +33,19 @@ public class SurveySubmitPresenter extends BasePresenter<SurveySubmitMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (disposableObserver != null) disposableObserver.dispose();
     }
 
     public void submitSurvey(int survey, Scorecard scorecardPayload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManagerSurveys.submitScore(survey, scorecardPayload)
+        if (disposableObserver != null) disposableObserver.dispose();
+        disposableObserver = mDataManagerSurveys.submitScore(survey, scorecardPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Scorecard>() {
+                .subscribeWith(new DisposableObserver<Scorecard>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                     }
 
                     @Override

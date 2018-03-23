@@ -22,10 +22,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.functions.Func1;
+
 
 /**
  * This DataManager is for Managing Client API, In which Request is going to Server
@@ -66,9 +68,9 @@ public class DataManagerClient {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getAllClients(paged, offset, limit)
-                        .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
+                        .concatMap(new Function<Page<Client>, ObservableSource<? extends Page<Client>>>() {
                             @Override
-                            public Observable<? extends Page<Client>> call(Page<Client>
+                            public Observable<? extends Page<Client>> apply(Page<Client>
                                                                                    clientPage) {
                                 return Observable.just(clientPage);
                             }
@@ -109,9 +111,9 @@ public class DataManagerClient {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getClient(clientId)
-                        .concatMap(new Func1<Client, Observable<? extends Client>>() {
+                        .concatMap(new Function<Client, Observable<? extends Client>>() {
                             @Override
-                            public Observable<? extends Client> call(Client client) {
+                            public Observable<? extends Client> apply(Client client) {
                                 return Observable.just(client);
                             }
                         });
@@ -168,9 +170,9 @@ public class DataManagerClient {
      */
     public Observable<ClientAccounts> syncClientAccounts(final int clientId) {
         return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
-                .concatMap(new Func1<ClientAccounts, Observable<? extends ClientAccounts>>() {
+                .concatMap(new Function<ClientAccounts, Observable<? extends ClientAccounts>>() {
                     @Override
-                    public Observable<? extends ClientAccounts> call(ClientAccounts
+                    public Observable<? extends ClientAccounts> apply(ClientAccounts
                                                                              clientAccounts) {
                         return mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId);
                     }
@@ -217,11 +219,11 @@ public class DataManagerClient {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getClientTemplate()
-                        .concatMap(new Func1<ClientsTemplate, Observable<? extends
+                        .concatMap(new Function<ClientsTemplate, Observable<? extends
                                 ClientsTemplate>>() {
                             @Override
                             public Observable<? extends
-                                    ClientsTemplate> call(ClientsTemplate clientsTemplate) {
+                                    ClientsTemplate> apply(ClientsTemplate clientsTemplate) {
                                 return mDatabaseHelperClient.saveClientTemplate(clientsTemplate);
                             }
                         });
@@ -251,9 +253,9 @@ public class DataManagerClient {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().createClient(clientPayload)
-                        .concatMap(new Func1<Client, Observable<? extends Client>>() {
+                        .concatMap(new Function<Client, Observable<? extends Client>>() {
                             @Override
-                            public Observable<? extends Client> call(Client client) {
+                            public Observable<? extends Client> apply(Client client) {
                                 return Observable.just(client);
                             }
                         });

@@ -11,8 +11,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+
 
 /**
  * Created by Rajan Maurya on 7/7/16.
@@ -39,9 +41,10 @@ public class DataManagerStaff {
         switch (PrefManager.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getStaffApi().getStaffForOffice(officeId)
-                        .concatMap(new Func1<List<Staff>, Observable<? extends List<Staff>>>() {
+                        .concatMap(new Function<List<Staff>, ObservableSource<?
+                                extends List<Staff>>>() {
                             @Override
-                            public Observable<? extends List<Staff>> call(List<Staff> staffs) {
+                            public Observable<? extends List<Staff>> apply(List<Staff> staffs) {
                                 mDatabaseHelperStaff.saveAllStaffOfOffices(staffs);
                                 return Observable.just(staffs);
                             }
