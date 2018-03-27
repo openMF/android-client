@@ -274,7 +274,6 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
 
     @Override
     public void showProgressbar(boolean show) {
-        swipeRefreshLayout.setRefreshing(show);
         if (show && userLocations.size() == 0) {
             progressBar.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
