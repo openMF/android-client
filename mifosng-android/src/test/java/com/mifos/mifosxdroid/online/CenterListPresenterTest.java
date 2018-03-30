@@ -1,5 +1,9 @@
 package com.mifos.mifosxdroid.online;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.R;
@@ -20,10 +24,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import rx.Observable;
-
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Rajan Maurya on 19/6/16.
@@ -127,7 +127,7 @@ public class CenterListPresenterTest {
         centerListPresenter.loadCenters(false, offset);
 
         verify(mCenterListMvpView).showProgressbar(true);
-        verify(mCenterListMvpView).showEmptyCenters(R.string.empty_center_list);
+        verify(mCenterListMvpView).showEmptyCenters(R.string.center);
         verify(mCenterListMvpView, never()).showFetchingError();
         verify(mCenterListMvpView).showProgressbar(false);
     }

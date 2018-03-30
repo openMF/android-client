@@ -89,7 +89,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
     public void showParentClients(List<Client> clients) {
         getMvpView().unregisterSwipeAndScrollListener();
         if (clients.size() == 0) {
-            getMvpView().showEmptyClientList(R.string.empty_group_clients);
+            getMvpView().showEmptyClientList(R.string.client);
         } else {
             mRestApiClientSyncStatus = true;
             mSyncClientList = clients;
@@ -146,7 +146,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                         mSyncClientList = clientPage.getPageItems();
 
                         if (mSyncClientList.size() == 0 && !loadmore) {
-                            getMvpView().showEmptyClientList(R.string.empty_client_list);
+                            getMvpView().showEmptyClientList(R.string.client);
                             getMvpView().unregisterSwipeAndScrollListener();
                         } else if (mSyncClientList.size() == 0 && loadmore) {
                             getMvpView().showMessage(R.string.no_more_clients_available);
