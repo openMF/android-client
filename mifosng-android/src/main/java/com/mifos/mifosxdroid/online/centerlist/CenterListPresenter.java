@@ -120,7 +120,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
                         mSyncCenterList = centerPage.getPageItems();
 
                         if (mSyncCenterList.size() == 0 && !loadmore) {
-                            getMvpView().showEmptyCenters(R.string.empty_center_list);
+                            getMvpView().showEmptyCenters(R.string.center);
                             getMvpView().unregisterSwipeAndScrollListener();
                         } else if (mSyncCenterList.size() == 0 && loadmore) {
                             getMvpView().showMessage(R.string.no_more_centers_available);
