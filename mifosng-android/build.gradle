@@ -195,7 +195,7 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$rootProject.okHttp3Version"
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttp3Version"
     compile "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
-
+    compile 'com.github.therajanmaurya:Sweet-Error:1.0.0'
     compile 'javax.annotation:jsr250-api:1.0@jar'
 
     compile 'io.reactivex:rxandroid:1.1.0'

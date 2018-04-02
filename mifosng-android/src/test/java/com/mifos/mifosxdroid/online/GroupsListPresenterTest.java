@@ -1,5 +1,9 @@
 package com.mifos.mifosxdroid.online;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.R;
@@ -19,10 +23,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import rx.Observable;
-
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Rajan Maurya on 28/6/16.
@@ -129,7 +129,7 @@ public class GroupsListPresenterTest {
         mGroupsListPresenter.loadGroups(false, offset);
 
         verify(mGroupsListMvpView).showProgressbar(true);
-        verify(mGroupsListMvpView).showEmptyGroups(R.string.empty_groups_list);
+        verify(mGroupsListMvpView).showEmptyGroups(R.string.group);
         verify(mGroupsListMvpView).unregisterSwipeAndScrollListener();
         verify(mGroupsListMvpView, never()).showFetchingError();
         verify(mGroupsListMvpView).showProgressbar(false);

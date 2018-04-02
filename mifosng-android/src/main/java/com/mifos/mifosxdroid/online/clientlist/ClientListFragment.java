@@ -18,10 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
@@ -77,14 +75,8 @@ public class ClientListFragment extends MifosBaseFragment
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    @BindView(R.id.noClientText)
-    TextView mNoClientText;
-
-    @BindView(R.id.rl_error)
-    RelativeLayout rlError;
-
-    @BindView(R.id.noClientIcon)
-    ImageView mNoClientIcon;
+    @BindView(R.id.layout_error)
+    View errorView;
 
     @Inject
     ClientNameListAdapter mClientNameListAdapter;
@@ -100,6 +92,7 @@ public class ClientListFragment extends MifosBaseFragment
     private Boolean isParentFragment = false;
     private LinearLayoutManager mLayoutManager;
     private Integer clickedPosition = -1;
+    private SweetUIErrorHandler sweetUIErrorHandler;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -236,6 +229,7 @@ public class ClientListFragment extends MifosBaseFragment
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
     }
 
     @OnClick(R.id.fab_create_client)
@@ -265,7 +259,6 @@ public class ClientListFragment extends MifosBaseFragment
     public void unregisterSwipeAndScrollListener() {
         rv_clients.clearOnScrollListeners();
         swipeRefreshLayout.setEnabled(false);
-        mNoClientIcon.setEnabled(false);
     }
 
     /**
@@ -281,10 +274,9 @@ public class ClientListFragment extends MifosBaseFragment
     /**
      * Onclick Send Fresh Request for Client list.
      */
-    @OnClick(R.id.noClientIcon)
+    @OnClick(R.id.btn_try_again)
     public void reloadOnError() {
-        rlError.setVisibility(View.GONE);
-        rv_clients.setVisibility(View.VISIBLE);
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(rv_clients, errorView);
         mClientListPresenter.loadClients(false, 0);
         mClientListPresenter.loadDatabaseClients();
     }
@@ -317,9 +309,8 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @Override
     public void showEmptyClientList(int message) {
-        rv_clients.setVisibility(View.GONE);
-        rlError.setVisibility(View.VISIBLE);
-        mNoClientText.setText(getStringMessage(message));
+        sweetUIErrorHandler.showSweetEmptyUI(getString(R.string.client),
+                getString(message), R.drawable.ic_error_black_24dp, rv_clients, errorView);
     }
 
     /**
@@ -328,11 +319,9 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @Override
     public void showError() {
-        rv_clients.setVisibility(View.GONE);
-        rlError.setVisibility(View.VISIBLE);
-        String errorMessage = getStringMessage(R.string.failed_to_load_client)
-                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
-        mNoClientText.setText(errorMessage);
+        String errorMessage = getStringMessage(R.string.failed_to_load_client);
+        sweetUIErrorHandler.showSweetErrorUI(errorMessage, R.drawable.ic_error_black_24dp,
+                rv_clients, errorView);
     }
 
 
