@@ -34,7 +34,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Rajan Maurya on 28/07/16.
@@ -110,6 +109,11 @@ public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment impl
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                
+                if (ll_error.getVisibility() == View.VISIBLE) {
+                    ll_error.setVisibility(View.GONE);
+                    rv_loan_repayment.setVisibility(View.VISIBLE);
+                }
 
                 //Loading LoanRepayment Transactions and PaymentTypeOptions From Database
                 mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions();
@@ -127,15 +131,6 @@ public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment impl
         return rootView;
     }
 
-    /**
-     * Show when Database response is null or failed to fetch the List<LoanRepayment>
-     * Onclick Send Fresh Request for List<LoanRepayment>.
-     */
-    @OnClick(R.id.noPayloadIcon)
-    public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
-        mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions();
-    }
 
     @Override
     public void showOfflineModeDialog() {
@@ -232,8 +227,9 @@ public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment impl
     @Override
     public void showError(int stringId) {
         ll_error.setVisibility(View.VISIBLE);
+        rv_loan_repayment.setVisibility(View.GONE);
         String message =
-                stringId + getActivity().getResources().getString(R.string.click_to_refresh);
+                stringId + getActivity().getResources().getString(R.string.swipe_to_refresh);
         mNoPayloadText.setText(message);
         Toaster.show(rootView, stringId);
     }

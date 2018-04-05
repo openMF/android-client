@@ -251,7 +251,11 @@ public class ClientListFragment extends MifosBaseFragment
      */
     @Override
     public void onRefresh() {
-        showUserInterface();
+
+        if (rlError.getVisibility() == View.VISIBLE) {
+            rlError.setVisibility(View.GONE);
+            rv_clients.setVisibility(View.VISIBLE);
+        }
         mClientListPresenter.loadClients(false, 0);
         mClientListPresenter.loadDatabaseClients();
         if (actionMode != null) actionMode.finish();
@@ -278,16 +282,6 @@ public class ClientListFragment extends MifosBaseFragment
         Toaster.show(rootView, getStringMessage(message));
     }
 
-    /**
-     * Onclick Send Fresh Request for Client list.
-     */
-    @OnClick(R.id.noClientIcon)
-    public void reloadOnError() {
-        rlError.setVisibility(View.GONE);
-        rv_clients.setVisibility(View.VISIBLE);
-        mClientListPresenter.loadClients(false, 0);
-        mClientListPresenter.loadDatabaseClients();
-    }
 
     /**
      * Setting ClientList to the Adapter and updating the Adapter.
@@ -331,7 +325,7 @@ public class ClientListFragment extends MifosBaseFragment
         rv_clients.setVisibility(View.GONE);
         rlError.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_load_client)
-                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
+                 + getStringMessage(R.string.swipe_to_refresh);
         mNoClientText.setText(errorMessage);
     }
 

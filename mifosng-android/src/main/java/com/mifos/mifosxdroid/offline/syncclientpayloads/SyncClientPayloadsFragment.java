@@ -33,7 +33,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * This Class for Syncing the clients that is created in offline mode.
@@ -112,6 +111,11 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
             @Override
             public void onRefresh() {
 
+                if (ll_error.getVisibility() == View.VISIBLE) {
+                    ll_error.setVisibility(View.GONE);
+                    rv_payload_clients.setVisibility(View.VISIBLE);
+                }
+
                 mSyncPayloadsPresenter.loadDatabaseClientPayload();
 
                 if (swipeRefreshLayout.isRefreshing())
@@ -120,16 +124,6 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         });
 
         return rootView;
-    }
-
-    /**
-     * Show when Database response is null or failed to fetch the client payload
-     * Onclick Send Fresh Request for Client Payload.
-     */
-    @OnClick(R.id.noPayloadIcon)
-    public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
-        mSyncPayloadsPresenter.loadDatabaseClientPayload();
     }
 
 
@@ -163,8 +157,9 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     @Override
     public void showError(int stringId) {
         ll_error.setVisibility(View.VISIBLE);
+        rv_payload_clients.setVisibility(View.GONE);
         String message =
-                stringId + getActivity().getResources().getString(R.string.click_to_refresh);
+                stringId + getActivity().getResources().getString(R.string.swipe_to_refresh);
         mNoPayloadText.setText(message);
         Toaster.show(rootView, getResources().getString(stringId));
     }

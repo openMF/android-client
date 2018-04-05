@@ -186,20 +186,14 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void onRefresh() {
+        if (rlError.getVisibility() == View.VISIBLE) {
+            rlError.setVisibility(View.GONE);
+            rvCenters.setVisibility(View.VISIBLE);
+        }
+
         mCenterListPresenter.loadCenters(false, 0);
         mCenterListPresenter.loadDatabaseCenters();
         if (actionMode != null) actionMode.finish();
-    }
-
-    /**
-     * OnClick Error Image icon, reload the centers
-     */
-    @OnClick(R.id.noCentersIcon)
-    public void reloadOnError() {
-        rlError.setVisibility(View.GONE);
-        rvCenters.setVisibility(View.VISIBLE);
-        mCenterListPresenter.loadCenters(false, 0);
-        mCenterListPresenter.loadDatabaseCenters();
     }
 
     /**
@@ -283,7 +277,7 @@ public class CenterListFragment extends MifosBaseFragment
         rvCenters.setVisibility(View.GONE);
         rlError.setVisibility(View.VISIBLE);
         String errorMessage = getStringMessage(R.string.failed_to_fetch_centers)
-                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
+                 + getStringMessage(R.string.swipe_to_refresh);
         mNoCenterText.setText(errorMessage);
     }
 
