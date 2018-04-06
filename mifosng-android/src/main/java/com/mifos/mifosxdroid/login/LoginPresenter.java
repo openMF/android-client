@@ -49,7 +49,6 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressbar(false);
                     }
 
                     @Override

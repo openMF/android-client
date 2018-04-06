@@ -11,6 +11,7 @@ import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.mifoserror.MifosError;
 import com.mifos.objects.noncore.Document;
+import com.mifos.objects.user.User;
 
 import java.util.List;
 
@@ -40,6 +41,11 @@ public class FakeRemoteDataSource {
     public static CenterWithAssociations getCentersGroupAndMeeting() {
         return mTestDataFactory.getObjectTypePojo(CenterWithAssociations.class,
                 FakeJsonName.CENTER_WITH_ASSOCIATIONS_JSON);
+    }
+
+    public static User getUser() {
+        return mTestDataFactory.getObjectTypePojo(User.class,
+                FakeJsonName.USER_JSON);
     }
 
     public static Page<Charges> getClientCharges() {
