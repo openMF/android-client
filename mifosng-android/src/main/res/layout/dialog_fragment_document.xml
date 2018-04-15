@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/et_document_name"
                 android:maxLines="3"
+                android:inputType="text"
                 android:scrollbars="vertical"/>
         </TableRow>
 
@@ -67,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/et_document_description"
                 android:maxLines="3"
+                android:inputType="text"
                 android:scrollbars="vertical"/>
         </TableRow>
 

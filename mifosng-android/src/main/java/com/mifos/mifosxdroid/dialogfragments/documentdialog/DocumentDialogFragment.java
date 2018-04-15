@@ -175,10 +175,10 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     getString(R.string.message_field_required));
 
         //Start Uploading Document
-        if (documentAction == getResources().getString(R.string.update_document)) {
+        if (documentAction.equals(getResources().getString(R.string.update_document))) {
             mDocumentDialogPresenter.updateDocument(entityType, entityId, document.getId(),
                     documentName, documentDescription, fileChoosen);
-        } else if (documentAction == getResources().getString(R.string.upload_document)) {
+        } else if (documentAction.equals(getResources().getString(R.string.upload_document))) {
             mDocumentDialogPresenter.createDocument(entityType, entityId,
                     documentName, documentDescription, fileChoosen);
         }
