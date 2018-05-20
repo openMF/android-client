@@ -285,6 +285,7 @@ public class CreateNewClientFragment extends ProgressableFragment
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                         .beginTransaction();
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
                 fragmentTransaction.replace(R.id.container, fragment).commit();
             } else {
