@@ -43,6 +43,7 @@ android {
         versionName "1.0.1"
         // A test runner provided by https://code.google.com/p/android-test-kit/
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     sourceSets {

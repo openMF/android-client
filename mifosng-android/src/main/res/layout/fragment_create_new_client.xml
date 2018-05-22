@@ -1,4 +1,5 @@
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_flipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -89,6 +90,10 @@
                     android:paddingBottom="16dp"
                     android:maxLines="1"/>
             </android.support.design.widget.TextInputLayout>
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_client_gender"
@@ -96,108 +101,159 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="16dp"
                 android:text="@string/gender"
-                android:textSize="16sp" />
+                android:textSize="12sp"
+                style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_gender"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:layout_width="match_parent"
+                android:spinnerMode="dropdown"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
+                android:backgroundTint="@color/gray_dark"/>
 
-            <TextView
-                android:id="@+id/tv_client_dateofbirth"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="16dp">
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:baselineAlignBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_width="30dp"
+                    app:srcCompat="@drawable/ic_event_black_24dp"/>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Base.TextAppearance.AppCompat.Small"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@string/dob"/>
+
+                    <TextView
+                        android:id="@+id/tv_dateofbirth"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                android:background="@color/gray_dark"
+                android:layout_height="0.2dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"/>
+
+        </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingTop="16dp"
-                android:text="@string/dob"
-                android:textSize="16sp" />
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_client_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:text="@string/client_type"
+                    android:textSize="12sp"
+                    style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-            <TextView
-                android:id="@+id/tv_dateofbirth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:hint="select client's date of birth :"
-                android:imeOptions="actionNext"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
-                android:textSize="20sp" />
+                <android.support.v7.widget.AppCompatSpinner
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:id="@+id/sp_client_type"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:spinnerMode="dropdown"
+                    android:paddingTop="10dp"
+                    android:backgroundTint="@color/gray_dark"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_client_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:text="@string/client_type"
-                android:textSize="16sp"
-
-                />
-
-            <Spinner
-                android:id="@+id/sp_client_type"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_client_classification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:text="@string/client_classification"
-                android:textSize="16sp"
+                android:textSize="12sp"
+                style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-                />
-
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_client_classification"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:layout_width="match_parent"
+                android:spinnerMode="dropdown"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
+                android:backgroundTint="@color/gray_dark"/>
 
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_office"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:text="@string/office_name_mandatory"
-                android:textSize="16sp"
+                android:textSize="12sp"
+                style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-                />
-
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_offices"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:layout_width="match_parent"
+                android:spinnerMode="dropdown"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
+                android:backgroundTint="@color/gray_dark"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_staff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:text="@string/staff_names"
-                android:textSize="16sp"
-
-                />
-
-            <Spinner
+                android:textSize="12sp"
+                style="@style/Base.TextAppearance.AppCompat.Small"/>
+            <android.support.v7.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_staff"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:layout_width="match_parent"
+                android:spinnerMode="dropdown"
                 android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
-
+                android:backgroundTint="@color/gray_dark"/>
+        </LinearLayout>
             <CheckBox
                 android:id="@+id/cb_client_active_status"
                 android:layout_width="match_parent"
@@ -207,24 +263,62 @@
                 android:paddingTop="10dp"
                 android:text="@string/client_active" />
 
-            <TextView
-                android:id="@+id/tv_submission_date"
+            <LinearLayout
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
-                android:textSize="20sp"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
                 android:visibility="gone"
+                android:id="@+id/layout_submission">
 
-                />
+                <LinearLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:baselineAlignBottom="true"
+                        android:layout_gravity="center"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_width="30dp"
+                        app:srcCompat="@drawable/ic_event_black_24dp"/>
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Base.TextAppearance.AppCompat.Small"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:textSize="12sp"
+                            android:text="@string/loan_submission_date"/>
+
+                        <TextView
+                            android:id="@+id/tv_submission_date"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <View
+                    android:background="@color/gray_dark"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_submit"
                 style="@style/Button.Base"
                 android:layout_marginTop="10dp"
                 android:text="@string/submit" />
-
 
         </LinearLayout>
     </ScrollView>
