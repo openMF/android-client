@@ -78,6 +78,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     @BindView(R.id.ll_center)
     LinearLayout llCenter;
 
+    @BindView(R.id.layout_submission)
+    LinearLayout layout_submission;
+
     int officeId;
     Boolean result = true;
     @Inject
@@ -114,9 +117,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    tv_activationDate.setVisibility(View.VISIBLE);
+                    layout_submission.setVisibility(View.VISIBLE);
                 } else {
-                    tv_activationDate.setVisibility(View.GONE);
+                    layout_submission.setVisibility(View.GONE);
                 }
 
             }

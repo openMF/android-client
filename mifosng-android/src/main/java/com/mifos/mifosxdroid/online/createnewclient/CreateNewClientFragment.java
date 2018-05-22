@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,6 +97,9 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @BindView(R.id.sp_client_classification)
     Spinner spClientClassification;
+
+    @BindView(R.id.layout_submission)
+    LinearLayout layout_submission;
 
     @Inject
     CreateNewClientPresenter createNewClientPresenter;
@@ -292,7 +296,7 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @OnCheckedChanged(R.id.cb_client_active_status)
     public void onClickActiveCheckBox() {
-        tvSubmissionDate.setVisibility(cbClientActiveStatus.isChecked()
+        layout_submission.setVisibility(cbClientActiveStatus.isChecked()
                 ? View.VISIBLE : View.GONE);
     }
 

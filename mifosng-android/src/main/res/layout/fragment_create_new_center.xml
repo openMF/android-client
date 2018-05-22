@@ -1,7 +1,7 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/ll_center"
@@ -19,23 +19,28 @@
                 android:singleLine="true"/>
             <requestFocus />
         </android.support.design.widget.TextInputLayout>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/tv_office"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:text="@string/office_name_mandatory"
-            android:textSize="16sp"
-
+            android:textSize="12sp"
+            style="@style/Base.TextAppearance.AppCompat.Small"
             />
-
-        <Spinner
+        <android.support.v7.widget.AppCompatSpinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
             android:id="@+id/sp_center_offices"
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_width="match_parent"
             android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
+            android:paddingTop="10dp"
+            android:backgroundTint="@color/gray_dark"/>
+    </LinearLayout>
         <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
         </android.support.design.widget.TextInputLayout>
         <CheckBox
@@ -48,17 +53,56 @@
             android:text="@string/center_active"
             />
 
-        <TextView
-            android:id="@+id/tv_center_activationDate"
+        <LinearLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="date"
-            android:paddingBottom="10dp"
-            android:textSize="20sp"
-            android:text="@string/center_activation_date"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
             android:visibility="gone"
+            android:id="@+id/layout_submission">
 
-            />
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:baselineAlignBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_width="30dp"
+                    app:srcCompat="@drawable/ic_event_black_24dp"/>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Base.TextAppearance.AppCompat.Small"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@string/loan_submission_date"/>
+
+                    <TextView
+                        android:id="@+id/tv_center_activationDate"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                android:background="@color/gray_dark"
+                android:layout_height="0.2dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"/>
+
+        </LinearLayout>
 
 
         <Button
