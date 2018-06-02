@@ -214,6 +214,10 @@ dependencies {
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
+
+    //mifos passcode
+    compile "com.mifos.mobile:mifos-passcode:$mifosPasscodeVersion"
+
     // Android Testing Support Library's runner and rules
     androidTestCompile "com.android.support.test:runner:$rootProject.runnerVersion"
     androidTestCompile "com.android.support.test:rules:$rootProject.rulesVersion"

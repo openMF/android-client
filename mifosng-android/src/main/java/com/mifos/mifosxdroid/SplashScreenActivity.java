@@ -12,6 +12,7 @@ import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
+import com.mifos.mobile.passcode.utils.PassCodeConstants;
 import com.mifos.utils.PrefManager;
 
 
@@ -29,7 +30,10 @@ public class SplashScreenActivity extends MifosBaseActivity {
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {
-            startActivity(new Intent(SplashScreenActivity.this, PassCodeActivity.class));
+            Intent intent = new Intent(SplashScreenActivity.this,
+                    PassCodeActivity.class);
+            intent.putExtra(PassCodeConstants.PASSCODE_INITIAL_LOGIN, true);
+            startActivity(intent);
         }
         finish();
     }
