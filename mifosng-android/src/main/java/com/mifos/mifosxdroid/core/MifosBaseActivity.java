@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -26,15 +25,14 @@ import com.mifos.mifosxdroid.injection.component.ActivityComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
+import com.mifos.mobile.passcode.BasePassCodeActivity;
 import com.mifos.utils.Constants;
-import com.mifos.utils.ForegroundChecker;
 import com.mifos.utils.PrefManager;
 
 /**
  * @author fomenkoo
  */
-public class MifosBaseActivity extends AppCompatActivity implements BaseActivityCallback,
-        ForegroundChecker.Listener {
+public class MifosBaseActivity extends BasePassCodeActivity implements BaseActivityCallback {
 
     protected Toolbar toolbar;
     private ActivityComponent mActivityComponent;
@@ -175,22 +173,7 @@ public class MifosBaseActivity extends AppCompatActivity implements BaseActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        ForegroundChecker.get().addListener(this);
-        ForegroundChecker.get().onActivityResumed();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        ForegroundChecker.get().onActivityPaused();
-    }
-
-    @Override
-    public void onBecameForeground() {
-        Intent intent = new Intent(this, PassCodeActivity.class);
-        intent.putExtra(Constants.INTIAL_LOGIN, false);
-        startActivity(intent);
+    public Class getPassCodeClass() {
+        return PassCodeActivity.class;
     }
 }
