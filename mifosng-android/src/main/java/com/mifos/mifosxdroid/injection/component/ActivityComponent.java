@@ -14,6 +14,8 @@ import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialog
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.online.runreports.clientreportcategory.ClientReportCategoryFragment;
+import com.mifos.mifosxdroid.online.runreports.clientreportdetail.ClientReportDetailFragment;
 import com.mifos.mifosxdroid.online.sign.SignatureFragment;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsFragment;
@@ -186,5 +188,12 @@ public interface ActivityComponent {
     void inject(SignatureFragment signatureFragment);
 
     void inject(IndividualCollectionSheetFragment individualCollectionSheetFragment);
+
+    void inject(ClientReportCategoryFragment clientReportCategoryFragment);
+
+    void inject(ClientReportDetailFragment clientReportDetailFragment);
+
+    void inject(com.mifos.mifosxdroid.online.runreports.clientreport.ClientReportFragment
+                        clientReportFragment);
 
 }

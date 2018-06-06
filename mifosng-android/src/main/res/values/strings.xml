@@ -238,6 +238,21 @@
 
 
 
+    <!-- RunReport relates Strings -->
+    <string name="run_report">RunReports</string>
+    <string name="menu_run_report">Run Report</string>
+    <string name="menu_export_csv">Export CSV</string>
+    <string name="msg_report_empty">No data retrieved for the chosen report!</string>
+    <string-array name="array_runreport">
+        <item>Client</item>
+        <item>Loan</item>
+        <item>Savings</item>
+        <item>Fund</item>
+        <item>Accounting</item>
+        <item>XBRL</item>
+        <item>ALL</item>
+    </string-array>
+
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
     <string name="loan_purposes">Loan Purposes</string>
