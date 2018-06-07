@@ -59,6 +59,19 @@ public interface RunReportsService {
             @Query("parameterType") boolean parameterType
     );
 
+    @GET(APIEndPoint.RUNREPORTS + "/{path}")
+    Observable<FullParameterListResponse> getReportOffice(
+            @Path("path") String parameterName,
+            @Query("R_officeId") int office,
+            @Query("parameterType") boolean parameterType
+    );
+
+    @GET(APIEndPoint.RUNREPORTS + "/{path}")
+    Observable<FullParameterListResponse> getReportProduct(
+            @Path("path") String parameterName,
+            @Query("R_currencyId") String currency,
+            @Query("parameterType") boolean parameterType
+    );
     /**
      * Endpoint to retrieve final Report based on the parameters.
      * @param reportName Report's Name

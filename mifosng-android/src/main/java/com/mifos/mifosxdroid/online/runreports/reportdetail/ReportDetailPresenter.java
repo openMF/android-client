@@ -1,10 +1,12 @@
-package com.mifos.mifosxdroid.online.runreports.clientreportdetail;
+package com.mifos.mifosxdroid.online.runreports.reportdetail;
 
 import com.mifos.api.datamanager.DataManagerRunReport;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.runreports.DataRow;
 import com.mifos.objects.runreports.FullParameterListResponse;
 import com.mifos.utils.MFErrorParser;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,19 +28,19 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Tarun on 04-08-17.
  */
 
-public class ClientReportDetailPresenter extends BasePresenter<ClientReportDetailMvpView> {
+public class ReportDetailPresenter extends BasePresenter<ReportDetailMvpView> {
 
     private DataManagerRunReport dataManager;
     private CompositeSubscription subscription;
 
     @Inject
-    public ClientReportDetailPresenter(DataManagerRunReport dataManager) {
+    public ReportDetailPresenter(DataManagerRunReport dataManager) {
         this.dataManager = dataManager;
         subscription = new CompositeSubscription();
     }
 
     @Override
-    public void attachView(ClientReportDetailMvpView mvpView) {
+    public void attachView(ReportDetailMvpView mvpView) {
         super.attachView(mvpView);
     }
 
@@ -69,6 +71,7 @@ public class ClientReportDetailPresenter extends BasePresenter<ClientReportDetai
                             if (e instanceof HttpException) {
                                 String errorMessage = ((HttpException) e).response().errorBody()
                                         .string();
+
                                 // Default User message is null in these queries most of the times.
                                 // Hence, show Developer message.
                                 getMvpView().showError(MFErrorParser.parseError(errorMessage)
@@ -122,10 +125,10 @@ public class ClientReportDetailPresenter extends BasePresenter<ClientReportDetai
                 }));
     }
 
-    public void fetchRunReportWithQuery(String reportName, Map<String, String> options) {
+    public void fetchOffices(final String parameterName, int officeId, boolean parameterType) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscription.add(dataManager.getRunReportWithQuery(reportName, options)
+        subscription.add(dataManager.getRunReportOffices(parameterName, officeId, parameterType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<FullParameterListResponse>() {
@@ -143,6 +146,75 @@ public class ClientReportDetailPresenter extends BasePresenter<ClientReportDetai
                                         .string();
                                 getMvpView().showError(MFErrorParser.parseError(errorMessage)
                                         .getErrors().get(0).getDeveloperMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(FullParameterListResponse response) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showOffices(response, parameterName);
+                    }
+                }));
+    }
+
+    public void fetchProduct(final String parameterName, String currencyId, boolean parameterType) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        subscription.add(dataManager.getRunReportProduct(parameterName, currencyId, parameterType)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<FullParameterListResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showError(MFErrorParser.parseError(errorMessage)
+                                        .getErrors().get(0).getDeveloperMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(FullParameterListResponse response) {
+                        getMvpView().showProgressbar(false);
+                        getMvpView().showProduct(response, parameterName);
+                    }
+                }));
+    }
+
+    public void fetchRunReportWithQuery(String reportName, Map<String, String> options) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        subscription.add(dataManager.getRunReportWithQuery(reportName, options)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<FullParameterListResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showError(new JSONObject(errorMessage)
+                                        .getString("developerMessage"));
                             }
                         } catch (Throwable throwable) {
                             RxJavaPlugins.getInstance().getErrorHandler().handleError(e);

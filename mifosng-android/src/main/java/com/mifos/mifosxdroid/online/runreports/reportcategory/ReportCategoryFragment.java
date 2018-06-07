@@ -1,5 +1,9 @@
-package com.mifos.mifosxdroid.online.runreports.clientreportcategory;
+package com.mifos.mifosxdroid.online.runreports.reportcategory;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -16,7 +20,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.online.runreports.clientreportdetail.ClientReportDetailFragment;
+import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
 import com.mifos.objects.runreports.client.ClientReportTypeItem;
 import com.mifos.utils.Constants;
 
@@ -31,26 +35,36 @@ import butterknife.ButterKnife;
  * Created by Tarun on 02-08-17.
  */
 
-public class ClientReportCategoryFragment extends MifosBaseFragment
-        implements ClientReportCategoryMvpView,
+public class ReportCategoryFragment extends MifosBaseFragment
+        implements ReportCategoryMvpView,
         RecyclerItemClickListener.OnItemClickListener {
 
     @BindView(R.id.recycler_report)
     RecyclerView rvReports;
 
     @Inject
-    ClientReportCategoryPresenter presenter;
+    ReportCategoryPresenter presenter;
 
     @Inject
     ClientReportAdapter reportAdapter;
 
     private View rootView;
     private List<ClientReportTypeItem> reportTypeItems;
+    private String reportCategory;
+    BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            reportCategory = intent.getStringExtra(Constants.REPORT_CATEGORY);
+            presenter.fetchCategories(reportCategory, false, true);
+        }
+    };
 
-    public ClientReportCategoryFragment() {}
 
-    public static ClientReportCategoryFragment newInstance() {
-        ClientReportCategoryFragment fragment = new ClientReportCategoryFragment();
+    public ReportCategoryFragment() {
+    }
+
+    public static ReportCategoryFragment newInstance() {
+        ReportCategoryFragment fragment = new ReportCategoryFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
         return fragment;
@@ -60,6 +74,8 @@ public class ClientReportCategoryFragment extends MifosBaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
+        getActivity().registerReceiver(this.broadCastNewMessage,
+                new IntentFilter(Constants.ACTION_REPORT));
     }
 
     @Nullable
@@ -70,8 +86,7 @@ public class ClientReportCategoryFragment extends MifosBaseFragment
         setHasOptionsMenu(true);
         ButterKnife.bind(this, rootView);
         presenter.attachView(this);
-
-        presenter.fetchCategories("Client", false, true);
+        presenter.fetchCategories(reportCategory, false, true);
 
         return rootView;
     }
@@ -114,7 +129,7 @@ public class ClientReportCategoryFragment extends MifosBaseFragment
                 .getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack("ClientCategory");
         fragmentTransaction.replace(R.id.container,
-                ClientReportDetailFragment.newInstance(bundle)).commit();
+                ReportDetailFragment.newInstance(bundle)).commit();
     }
 
     @Override

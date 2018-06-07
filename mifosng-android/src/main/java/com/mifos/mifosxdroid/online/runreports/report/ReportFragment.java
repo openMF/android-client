@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.runreports.clientreport;
+package com.mifos.mifosxdroid.online.runreports.report;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.objects.runreports.ColumnHeader;
 import com.mifos.objects.runreports.DataRow;
 import com.mifos.objects.runreports.FullParameterListResponse;
@@ -32,22 +32,22 @@ import butterknife.ButterKnife;
  * Created by Tarun on 05-08-17.
  */
 
-public class ClientReportFragment extends MifosBaseFragment implements ClientReportMvpView {
+public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
 
     @BindView(R.id.table_report)
     TableLayout tableReport;
 
     @Inject
-    ClientReportPresenter presenter;
+    ReportPresenter presenter;
 
     private View rootView;
     private FullParameterListResponse report;
 
-    public ClientReportFragment() {
+    public ReportFragment() {
     }
 
-    public static ClientReportFragment newInstance(Bundle args) {
-        ClientReportFragment fragment = new ClientReportFragment();
+    public static ReportFragment newInstance(Bundle args) {
+        ReportFragment fragment = new ReportFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,7 +80,7 @@ public class ClientReportFragment extends MifosBaseFragment implements ClientRep
         if (report.getData().size() > 0) {
             setUpValues();
         } else {
-            Toaster.show(rootView, getString(R.string.msg_report_empty));
+            Toast.makeText(getActivity(), getString(R.string.msg_report_empty), Toast.LENGTH_SHORT);
         }
         showProgressbar(false);
     }

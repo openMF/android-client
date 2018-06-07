@@ -56,4 +56,16 @@ public class DataManagerRunReport {
         return mBaseApiManager.getRunReportsService()
                 .getCenterSummaryInfo(centerId, genericResultSet);
     }
+
+    public Observable<FullParameterListResponse> getRunReportOffices(
+            String parameterName, int officeId, boolean parameterType) {
+        return mBaseApiManager.getRunReportsService().
+                getReportOffice(parameterName, officeId, parameterType);
+    }
+
+    public Observable<FullParameterListResponse> getRunReportProduct(
+            String parameterName, String currency, boolean parameterType) {
+        return mBaseApiManager.getRunReportsService().
+                getReportProduct(parameterName, currency, parameterType);
+    }
 }
