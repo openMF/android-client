@@ -373,7 +373,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY);
-        fragmentTransaction.replace(R.id.container, loanAccountFragment);
+        fragmentTransaction.replace(container, loanAccountFragment);
         fragmentTransaction.commit();
     }
 

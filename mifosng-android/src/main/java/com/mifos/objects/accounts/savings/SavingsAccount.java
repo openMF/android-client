@@ -195,7 +195,7 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
     }
 
     public boolean isRecurring() {
-        return this.getDepositType() == null ? false : this.getDepositType().isRecurring();
+        return this.getDepositType() != null && this.getDepositType().isRecurring();
     }
 
     @Override
