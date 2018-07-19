@@ -30,6 +30,11 @@ import com.mifos.mifosxdroid.SettingsActivity;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncCenter;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncClient;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncGroup;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncLoanRepayment;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncSavingsAccount;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
@@ -70,7 +75,7 @@ public class DashboardActivity extends MifosBaseActivity
         setContentView(R.layout.activity_dashboard);
 
         ButterKnife.bind(this);
-
+        runJobs();
         replaceFragment(new SearchFragment(), false, R.id.container);
 
         // setup navigation drawer and Navigation Toggle click and Offline Mode SwitchButton
@@ -79,6 +84,14 @@ public class DashboardActivity extends MifosBaseActivity
         //addOnBackStackChangedListener
         //to change title after Back Stack Changed
         addOnBackStackChangedListener();
+    }
+
+    private void runJobs() {
+        OfflineSyncCenter.schedulePeriodic();
+        OfflineSyncGroup.schedulePeriodic();
+        OfflineSyncClient.schedulePeriodic();
+        OfflineSyncSavingsAccount.schedulePeriodic();
+        OfflineSyncLoanRepayment.schedulePeriodic();
     }
 
     private void addOnBackStackChangedListener() {

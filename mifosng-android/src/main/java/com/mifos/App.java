@@ -12,12 +12,14 @@ import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
+import com.evernote.android.job.JobManager;
 import com.facebook.stetho.Stetho;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
+import com.mifos.mifosxdroid.offlinejobs.OfflineJobCreator;
 import com.mifos.mobile.passcode.utils.ForegroundChecker;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -57,6 +59,7 @@ public class App extends MultiDexApplication {
         Fabric.with(this, new Crashlytics());
 
         Iconify.with(new MaterialModule());
+        JobManager.create(this).addJobCreator(new OfflineJobCreator());
         //Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(new FlowConfig.Builder(this).build());
         Stetho.initializeWithDefaults(this);

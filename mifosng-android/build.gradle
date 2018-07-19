@@ -217,6 +217,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'
 
+    //Android-Jobs
+    implementation 'com.evernote:android-job:1.2.6'
 }
 /*
 Resolves dependency versions across test and production APKs, specifically, transitive
