@@ -49,6 +49,7 @@
         <item
             android:id="@+id/runreport"
             android:checked="false"
+            android:icon="@drawable/ic_report_item"
             android:title="@string/run_report"
             />
                 
