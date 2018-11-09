@@ -11,6 +11,7 @@ package com.mifos.mifosxdroid.online.createnewcenter;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -52,6 +53,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 public class CreateNewCenterFragment extends MifosBaseFragment
@@ -78,13 +80,13 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     @BindView(R.id.ll_center)
     LinearLayout llCenter;
 
-    @BindView(R.id.layout_submission)
-    LinearLayout layout_submission;
-
+    private Unbinder unbinder;
     int officeId;
     Boolean result = true;
+
     @Inject
     CreateNewCenterPresenter mCreateNewCenterPresenter;
+
     private View rootView;
     private String activationdateString;
     private DialogFragment newDatePicker;
@@ -104,9 +106,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_create_new_center, null);
+        rootView = inflater.inflate(R.layout.fragment_create_new_center, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         mCreateNewCenterPresenter.attachView(this);
 
         inflateOfficeSpinner();
@@ -115,14 +117,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton
                 .OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    layout_submission.setVisibility(View.VISIBLE);
-                } else {
-                    layout_submission.setVisibility(View.GONE);
-                }
-
-            }
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) { }
         });
 
         activationdateString = tv_activationDate.getText().toString();
@@ -154,14 +149,12 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         mCreateNewCenterPresenter.loadOffices();
     }
 
-
     private void initiateCenterCreation(CenterPayload centerPayload) {
 
         if (isCenterNameValid()) {
             mCreateNewCenterPresenter.createCenter(centerPayload);
         }
     }
-
 
     public void inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this);
@@ -215,7 +208,6 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         }
         return result;
     }
-
 
     @Override
     public void showOffices(List<Office> offices) {
@@ -280,6 +272,11 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         }
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
@@ -290,6 +287,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     public void onDestroyView() {
         super.onDestroyView();
         mCreateNewCenterPresenter.detachView();
+        unbinder.unbind();
     }
 
     @Override
