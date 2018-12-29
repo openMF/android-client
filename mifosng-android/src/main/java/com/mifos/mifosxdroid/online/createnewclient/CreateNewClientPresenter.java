@@ -68,6 +68,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
+                        loadOffices();
                     }
 
                     @Override
@@ -119,7 +120,6 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                 .subscribe(new Subscriber<List<Staff>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override

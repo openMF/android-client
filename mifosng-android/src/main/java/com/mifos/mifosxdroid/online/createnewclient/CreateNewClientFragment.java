@@ -159,7 +159,6 @@ public class CreateNewClientFragment extends ProgressableFragment
         showUserInterface();
 
         createNewClientPresenter.loadClientTemplate();
-        createNewClientPresenter.loadOffices();
 
         return rootView;
     }
