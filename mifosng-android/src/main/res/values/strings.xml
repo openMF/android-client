@@ -471,6 +471,7 @@
     <string name="group_list">Group List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
+    <string name="error_select_group">Please Select a Group</string>
     <string name="error_select_payment">Please Select Payment Type</string>
     <string name="error_select_fund">Please Select Fund</string>
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
