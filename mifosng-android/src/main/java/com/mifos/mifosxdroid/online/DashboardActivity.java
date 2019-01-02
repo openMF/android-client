@@ -190,6 +190,9 @@ public class DashboardActivity extends MifosBaseActivity
             return false;
         }*/
 
+        item.setCheckable(true);
+        item.setChecked(true);
+
         // select which activity to open
         clearFragmentBackStack();
         final Intent intent = new Intent();
@@ -207,6 +210,8 @@ public class DashboardActivity extends MifosBaseActivity
                 replaceFragment(CenterListFragment.newInstance(), false, R.id.container);
                 break;
             case R.id.item_path_tracker:
+                item.setCheckable(false);
+                item.setChecked(false);
                 intent.setClass(getApplicationContext(), PathTrackingActivity.class);
                 startNavigationClickActivity(intent);
                 break;
@@ -214,26 +219,33 @@ public class DashboardActivity extends MifosBaseActivity
                 replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container);
                 break;
             case R.id.individual_collection_sheet:
+                item.setCheckable(false);
+                item.setChecked(false);
                 intent.setClass(this, GenerateCollectionSheetActivity.class);
                 intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL);
                 startActivity(intent);
                 break;
             case R.id.collection_sheet:
+                item.setCheckable(false);
+                item.setChecked(false);
                 intent.setClass(this, GenerateCollectionSheetActivity.class);
                 intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION);
                 startActivity(intent);
                 break;
             case R.id.item_settings:
+                item.setCheckable(false);
+                item.setChecked(false);
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.runreport:
+                item.setCheckable(false);
+                item.setChecked(false);
                 intent.setClass(this, RunReportsActivity.class);
                 startActivity(intent);
                 break;
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);
-        mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
     }
 
