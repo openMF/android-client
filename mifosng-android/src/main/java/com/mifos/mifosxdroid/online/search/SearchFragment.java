@@ -5,18 +5,21 @@
 
 package com.mifos.mifosxdroid.online.search;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -44,9 +47,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
-        RecyclerItemClickListener.OnItemClickListener, AdapterView.OnItemSelectedListener {
+        RecyclerItemClickListener.OnItemClickListener, AdapterView.OnItemSelectedListener,
+        View.OnTouchListener {
 
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
+
+    @BindView(R.id.mainSurface)
+    LinearLayout mainSurface;
 
     @BindView(R.id.et_search)
     EditText et_search;
@@ -92,6 +99,7 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         return rootView;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void showUserInterface() {
         searchOptionsAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -100,6 +108,11 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         sp_search.setAdapter(searchOptionsAdapter);
         sp_search.setOnItemSelectedListener(this);
         et_search.requestFocus();
+        mainSurface.setOnTouchListener(this);
+        et_search.setOnTouchListener(this);
+        sp_search.setOnTouchListener(this);
+        rv_search.setOnTouchListener(this);
+        cb_exactMatch.setOnTouchListener(this);
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_search.setLayoutManager(layoutManager);
@@ -248,6 +261,15 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
                 et_search.setText(queryString);
             }
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v.getId() != R.id.et_search) {
+            hideKeyboard(et_search);
+        }
+        return false;
     }
 
 }
