@@ -181,15 +181,22 @@ public class SignatureFragment extends MifosBaseFragment implements
 
     @Override
     public void getDocumentFromGallery() {
-        Intent intentDocument;
-        if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
-            intentDocument = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        if (CheckSelfPermissionAndRequest.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Intent intentDocument;
+            if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
+                intentDocument = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            } else {
+                intentDocument = new Intent(Intent.ACTION_GET_CONTENT);
+            }
+            intentDocument.addCategory(Intent.CATEGORY_OPENABLE);
+            intentDocument.setType("image/*");
+            startActivityForResult(intentDocument, FILE_SELECT_CODE);
+
         } else {
-            intentDocument = new Intent(Intent.ACTION_GET_CONTENT);
+            requestPermission();
         }
-        intentDocument.addCategory(Intent.CATEGORY_OPENABLE);
-        intentDocument.setType("image/*");
-        startActivityForResult(intentDocument, FILE_SELECT_CODE);
+
     }
 
     @Override
