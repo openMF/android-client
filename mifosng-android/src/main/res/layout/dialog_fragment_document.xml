@@ -15,6 +15,10 @@
     android:scrollbars="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
         <TextView
             style="@style/Base.TextAppearance.AppCompat.Large"
@@ -86,6 +90,9 @@
                     android:scrollbars="vertical"/>
             </android.support.design.widget.TextInputLayout>
 
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
