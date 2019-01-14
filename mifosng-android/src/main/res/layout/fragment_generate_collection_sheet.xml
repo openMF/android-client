@@ -99,7 +99,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/productive_collection_sheet" />
+                android:text= "@string/productive_collection_sheet" />
 
             <LinearLayout
                 android:layout_width="match_parent"

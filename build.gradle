@@ -9,7 +9,7 @@ ext {
     minSdkVersion = 15
     targetSdkVersion = 27
     compileSdkVersion = 27
-    buildToolsVersion = '27.0.3'
+    buildToolsVersion = '28.0.3'
 
     // App dependencies
     supportLibraryVersion = '27.1.1'
@@ -26,4 +26,18 @@ ext {
     butterKnifeVersion = '8.0.1'
     mifosPasscodeVersion = '0.3.0'
 
+}
+buildscript {
+    ext.kotlin_version = '1.2.51'
+    repositories {
+        jcenter()
+        google() // Gradle 4.0+
+        maven { url "https://maven.google.com" } // Gradle < 4.0
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:3.2.1"
+    }
 }
