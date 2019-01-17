@@ -22,7 +22,9 @@
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"
             android:layout_weight="1"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"/>
 
 
     </android.support.v4.widget.SwipeRefreshLayout>
