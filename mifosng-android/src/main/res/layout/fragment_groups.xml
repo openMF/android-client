@@ -21,7 +21,10 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"
-            android:layout_weight="1"/>
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:fadeScrollbars="false"
+            android:scrollbars="vertical"/>
 
 
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -35,30 +38,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
 
-    <RelativeLayout
-        android:id="@+id/rl_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/noGroupsIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity='center'
-            android:src="@drawable/ic_error_black_24dp" />
-
-        <TextView
-            android:id="@+id/noGroupsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_below="@id/noGroupsIcon" />
-
-    </RelativeLayout>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_create_group"
         android:layout_width="wrap_content"
@@ -66,5 +45,10 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"/>
+
+    <include
+        layout="@layout/layout_sweet_exception_handler"
+        android:visibility="gone"
+        android:id="@+id/layout_error"/>
 
 </android.support.design.widget.CoordinatorLayout>
