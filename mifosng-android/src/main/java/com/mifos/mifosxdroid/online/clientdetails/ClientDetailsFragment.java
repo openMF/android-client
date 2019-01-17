@@ -629,6 +629,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
             private final int sectionId;
             private final int textViewStringId;
+            private double mListViewCount;
 
             Section(int sectionId, int textViewStringId) {
                 this.sectionId = sectionId;
@@ -673,7 +674,12 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             public void open(Activity context) {
                 IconTextView iconView = getIconView(context);
                 iconView.setText("{" + LIST_CLOSED_ICON.key() + "}");
-                getListView(context).setVisibility(VISIBLE);
+                mListViewCount = Double.valueOf(getCountView(context)
+                        .getText()
+                        .toString());
+                ListView listView = getListView(context);
+                resizeListView(context, listView);
+                listView.setVisibility(VISIBLE);
             }
 
             public void close(Activity context) {
@@ -720,6 +726,22 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 }
                 // initialize section in closed state
                 close(context);
+            }
+
+            private void resizeListView(Activity context, ListView listView) {
+                if (mListViewCount < 4) {
+                    //default listview height is 200dp,which displays 4 listview items.
+                    // This calculates the required listview height
+                    // if listview items are less than 4
+                    double heightInDp = (mListViewCount / 4) * 200;
+                    double heightInPx = heightInDp * context.getResources()
+                            .getDisplayMetrics()
+                            .density;
+                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+                    params.height = (int) heightInPx;
+                    listView.setLayoutParams(params);
+                    listView.requestLayout();
+                }
             }
         }
     }
