@@ -15,7 +15,8 @@
 
         <TextView
             android:id="@+id/tv_search"
-            style="@style/TextView.Search"/>
+            style="@style/TextView.Search"
+            android:layout_weight="10" />
 
         <Spinner
             android:id="@+id/sp_search"
@@ -24,7 +25,9 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="50dp"
             android:gravity="end"
-            android:layout_marginTop="10dp"/>
+            android:textAlignment="center"
+            android:layout_marginTop="10dp"
+            android:layout_weight="2"/>
     </LinearLayout>
 
     <android.support.design.widget.TextInputLayout
