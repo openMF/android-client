@@ -232,7 +232,7 @@
     <string name="bank_number">Bank Number</string>
     <string name="branch_name">Branch Name</string>
     <string name="meeting_calender">Meeting Calendar</string>
-    <string name="productive_collection_sheet">Productive CollectionSheet</string>
+    <string name="productive_collection_sheet">Productive Collection Sheet</string>
     <string name="attendance">Attendance</string>
     <string name="collection_loan_product">Loan:%1$s</string>
     <string name="collection_saving_product">Saving:%1$s</string>
