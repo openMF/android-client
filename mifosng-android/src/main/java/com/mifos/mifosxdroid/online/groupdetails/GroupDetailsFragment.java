@@ -32,6 +32,7 @@ import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
 import com.mifos.mifosxdroid.online.note.NoteFragment;
+import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
@@ -164,6 +165,16 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, noteFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void addGroupSavingsAccount() {
+        SavingsAccountFragment savingsAccountFragment =
+                SavingsAccountFragment.newInstance(groupId, true);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
+        fragmentTransaction.replace(R.id.container, savingsAccountFragment);
         fragmentTransaction.commit();
     }
 
@@ -315,6 +326,9 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                 break;
             case R.id.documents:
                 loadDocuments();
+                break;
+            case R.id.add_group_savings_account:
+                addGroupSavingsAccount();
                 break;
             case R.id.add_group_loan:
                 addGroupLoanAccount();
