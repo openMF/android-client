@@ -280,4 +280,79 @@ public class DateHelper {
 
         return dateList;
     }
+
+    /**
+     * Method to convert a given date in dd MMM YYYY format to [dd, mm, yyyy] format.
+     *
+     * @param date Date String. e.g. "20 Aug 2017"
+     * @return List of Integers. e.g. [20, 08, 2017]
+     */
+    public static List<Integer> convertDateAsListOfInteger(String date) {
+        String[] splitDate = date.split(" ");
+        List<Integer> dateList = new ArrayList<>();
+        dateList.add(Integer.parseInt(splitDate[0]));
+        dateList.add(getMonthNumberFromName(splitDate[1]));
+        dateList.add(Integer.parseInt(splitDate[2]));
+
+        return dateList;
+    }
+
+    /**
+     * Method to convert a date in dd MMM YYYY format to [yyyy, mm, dd] format.
+     *
+     * @param date Date String; e.g. "20 Aug 2017"
+     * @return List of Integers in reverse order; e.g. [2017, 08, 20]
+     */
+    public static List<Integer> convertDateAsReverseInteger(String date) {
+        String[] splitDate = date.split(" ");
+        List<Integer> dateList = new ArrayList<>();
+        dateList.add(Integer.parseInt(splitDate[2]));
+        dateList.add(getMonthNumberFromName(splitDate[1]));
+        dateList.add(Integer.parseInt(splitDate[0]));
+
+        return dateList;
+    }
+
+    public static int getMonthNumberFromName(String month) {
+        switch (month) {
+            case "Jan":
+                return 1;
+
+            case "Feb":
+                return 2;
+
+            case "Mar":
+                return 3;
+
+            case "Apr":
+                return 4;
+
+            case "May":
+                return 5;
+
+            case "Jun":
+                return 6;
+
+            case "Jul":
+                return 7;
+
+            case "Aug":
+                return 8;
+
+            case "Sep":
+                return 9;
+
+            case "Oct":
+                return 10;
+
+            case "Nov":
+                return 11;
+
+            case "Dec":
+                return 12;
+
+            default:
+                return -1;
+        }
+    }
 }

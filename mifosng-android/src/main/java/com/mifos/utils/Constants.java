@@ -85,6 +85,8 @@ public class Constants {
 
     public static final String GROUP_ACCOUNT = "isGroupAccount";
 
+    public static final String CENTER = "center";
+
     public static final String ENTITY_TYPE = "entityType";
 
     public static final String ENTITY_ID = "entityId";
@@ -99,11 +101,17 @@ public class Constants {
 
     public static final String DATE_OF_COLLECTION = "dateOfCollection";
 
+    public static final String REPAYMENT_DATE = "repaymentDate";
+
     public static final String DATE_FORMAT = "dateFormat";
 
     public static final String CALENDAR_INSTANCE_ID = "calendarInstanceId";
 
     public static final String LOCALE = "locale";
+
+    public static final String LOCALE_EN = "en";
+
+    public static final String DATE_FORMAT_LONG = "dd MMMM yyyy";
 
     public static final String TRANSACTIONS = "transactions";
 
@@ -130,6 +138,8 @@ public class Constants {
     public static final String ACTIVATE_GROUP = "activate_group";
 
     public static final String ACTIVATE_TYPE = "activation_type";
+
+    public static final String INTIAL_LOGIN = "initial_login";
 
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
@@ -186,4 +196,60 @@ public class Constants {
     public static final int CREATE_CLIENT = 3001;
     public static final int CLIENT_LOAN = 3002;
     public static final int GROUP_LOAN = 3003;
+
+    /**
+     * Constant to identify whether Simple Collection Sheet fragment has to be opened
+     * or the Individual Collection Sheet.
+     */
+    public static final String COLLECTION_TYPE = "collection_type";
+    public static final String EXTRA_COLLECTION_INDIVIDUAL = "individual";
+    public static final String EXTRA_COLLECTION_COLLECTION = "collection";
+
+    /**
+     * Constants related to RunReports
+     */
+    public static final String REPORT_NAME = "report_name";
+    public static final String REPORT_ID = "report_id";
+    public static final String CLIENT_REPORT_ITEM = "client_report_item";
+    public static final String CLIENT_REPORT = "client_report";
+    public static final String REPORT_CATEGORY = "report_category";
+    public static final String LOAN = "Loan";
+    public static final String ACCOUNTING = "Accounting";
+    public static final String FUND = "Fund";
+    public static final String SAVINGS = "Savings";
+    public static final String LOAN_OFFICER_ID_SELECT = "loanOfficerIdSelectAll";
+    public static final String LOAN_PRODUCT_ID_SELECT = "loanProductIdSelectAll";
+    public static final String LOAN_PURPOSE_ID_SELECT = "loanPurposeIdSelectAll";
+    public static final String FUND_ID_SELECT = "fundIdSelectAll";
+    public static final String CURRENCY_ID_SELECT = "currencyIdSelectAll";
+    public static final String OFFICE_ID_SELECT = "OfficeIdSelectOne";
+    public static final String PAR_TYPE_SELECT = "parTypeSelect";
+    public static final String SAVINGS_ACCOUNT_SUB_STATUS = "SavingsAccountSubStatus";
+    public static final String SELECT_GL_ACCOUNT_NO = "SelectGLAccountNO";
+    public static final String OBLIG_DATE_TYPE_SELECT = "obligDateTypeSelect";
+    public static final String R_LOAN_OFFICER_ID = "R_loanOfficerId";
+    public static final String R_LOAN_PRODUCT_ID = "R_loanProductId";
+    public static final String R_LOAN_PURPOSE_ID = "R_loanPurposeId";
+    public static final String R_FUND_ID = "R_fundId";
+    public static final String R_CURRENCY_ID = "R_currencyId";
+    public static final String R_OFFICE_ID = "R_officeId";
+    public static final String R_PAR_TYPE = "R_parType";
+    public static final String R_SUB_STATUS = "R_subStatus";
+    public static final String R_ACCOUNT = "R_account";
+    public static final String R_OBLIG_DATE_TYPE = "R_obligDateType";
+    public static final String START_DATE_SELECT = "startDateSelect";
+    public static final String END_DATE_SELECT = "endDateSelect";
+    public static final String SELECT_ACCOUNT = "selectAccount";
+    public static final String FROM_X_SELECT = "fromXSelect";
+    public static final String TO_Y_SELECT = "toYSelect";
+    public static final String OVERDUE_X_SELECT = "overdueXSelect";
+    public static final String OVERDUE_Y_SELECT = "overdueYSelect";
+    public static final String R_START_DATE = "R_startDate";
+    public static final String R_END_DATE = "R_endDate";
+    public static final String R_ACCOUNT_NO = "R_accountNo";
+    public static final String R_FROM_X = "R_fromX";
+    public static final String R_TO_Y = "R_toY";
+    public static final String R_OVERDUE_X = "R_overdueX";
+    public static final String R_OVERDUE_Y = "R_overdueY";
+    public static final String ACTION_REPORT = "report";
 }

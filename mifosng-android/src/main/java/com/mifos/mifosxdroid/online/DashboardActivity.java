@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.SettingsActivity;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
@@ -62,6 +63,7 @@ public class DashboardActivity extends MifosBaseActivity
     SwitchCompat userStatusToggle;
     private Menu menu;
     private boolean doubleBackToExitPressedOnce = false;
+    private boolean itemClient = true, itemCenter = true, itemGroup = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,19 +94,26 @@ public class DashboardActivity extends MifosBaseActivity
                         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
                         if (fragment instanceof CreateNewClientFragment) {
                             setActionBarTitle(R.string.create_client);
-                            setMenuCreateClient(false);
-                            setMenuCreateCentre(true);
-                            setMenuCreateGroup(true);
+                            itemClient = false;
+                            itemGroup = true;
+                            itemCenter = true;
+                            invalidateOptionsMenu();
                         } else if (fragment instanceof CreateNewGroupFragment) {
                             setActionBarTitle(R.string.create_group);
-                            setMenuCreateClient(true);
-                            setMenuCreateCentre(true);
-                            setMenuCreateGroup(false);
+                            itemClient = true;
+                            itemGroup = false;
+                            itemCenter = true;
+                            invalidateOptionsMenu();
                         } else if (fragment instanceof CreateNewCenterFragment) {
                             setActionBarTitle(R.string.create_center);
-                            setMenuCreateClient(true);
-                            setMenuCreateCentre(false);
-                            setMenuCreateGroup(true);
+                            itemClient = true;
+                            itemGroup = true;
+                            itemCenter = false;
+                            invalidateOptionsMenu();
+                        } else {
+                            itemClient = true;
+                            itemGroup = true;
+                            itemCenter = true;
                         }
                     }
                 });
@@ -204,7 +213,23 @@ public class DashboardActivity extends MifosBaseActivity
             case R.id.item_offline:
                 replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container);
                 break;
-
+            case R.id.individual_collection_sheet:
+                intent.setClass(this, GenerateCollectionSheetActivity.class);
+                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL);
+                startActivity(intent);
+                break;
+            case R.id.collection_sheet:
+                intent.setClass(this, GenerateCollectionSheetActivity.class);
+                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION);
+                startActivity(intent);
+                break;
+            case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.runreport:
+                intent.setClass(this, RunReportsActivity.class);
+                startActivity(intent);
+                break;
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);
@@ -302,6 +327,9 @@ public class DashboardActivity extends MifosBaseActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         hideKeyboard(mDrawerLayout);
+        menu.getItem(0).setEnabled(itemClient);
+        menu.getItem(1).setEnabled(itemCenter);
+        menu.getItem(2).setEnabled(itemGroup);
         return super.onPrepareOptionsMenu(menu);
     }
 

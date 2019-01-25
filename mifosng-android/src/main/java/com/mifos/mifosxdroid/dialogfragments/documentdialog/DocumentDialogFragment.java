@@ -56,19 +56,19 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     private final String LOG_TAG = getClass().getSimpleName();
 
     @BindView(R.id.tv_document_action)
-    TextView tv_document_action;
+    TextView tvDocumentAction;
 
     @BindView(R.id.et_document_name)
-    EditText et_document_name;
+    EditText etDocumentName;
 
     @BindView(R.id.et_document_description)
-    EditText et_document_description;
+    EditText etDocumentDescription;
 
     @BindView(R.id.tv_choose_file)
-    TextView tv_choose_file;
+    TextView tvChooseFile;
 
     @BindView(R.id.bt_upload)
-    Button bt_upload;
+    Button btUpload;
 
     @Inject
     DocumentDialogPresenter mDocumentDialogPresenter;
@@ -124,16 +124,14 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
-
         ButterKnife.bind(this, rootView);
         mDocumentDialogPresenter.attachView(this);
-
-        if (documentAction == getResources().getString(R.string.update_document)) {
-            tv_document_action.setText(R.string.update_document);
-            et_document_name.setText(document.getName());
-            et_document_description.setText(document.getDescription());
-        } else if (documentAction == getResources().getString(R.string.upload_document)) {
-            tv_document_action.setText(R.string.upload_document);
+        if (getResources().getString(R.string.update_document).equals(documentAction)) {
+            tvDocumentAction.setText(R.string.update_document);
+            etDocumentName.setText(document.getName());
+            etDocumentDescription.setText(document.getDescription());
+        } else if (getResources().getString(R.string.upload_document).equals(documentAction)) {
+            tvDocumentAction.setText(R.string.upload_document);
         }
 
         return rootView;
@@ -149,7 +147,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         }
     }
 
-    @OnClick(R.id.tv_choose_file)
+    @OnClick(R.id.btn_browse_document)
     public void openFilePicker() {
         checkPermissionAndRequest();
     }
@@ -162,23 +160,23 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
      */
     public void validateInput() throws RequiredFieldException {
 
-        documentName = et_document_name.getEditableText().toString();
+        documentName = etDocumentName.getEditableText().toString();
 
         if (documentName.length() == 0 || documentName.equals(""))
             throw new RequiredFieldException(getResources().getString(R.string.name),
                     getString(R.string.message_field_required));
 
-        documentDescription = et_document_description.getEditableText().toString();
+        documentDescription = etDocumentDescription.getEditableText().toString();
 
         if (documentDescription.length() == 0 || documentDescription.equals(""))
             throw new RequiredFieldException(getResources().getString(R.string.description),
                     getString(R.string.message_field_required));
 
         //Start Uploading Document
-        if (documentAction == getResources().getString(R.string.update_document)) {
+        if (documentAction.equals(getResources().getString(R.string.update_document))) {
             mDocumentDialogPresenter.updateDocument(entityType, entityId, document.getId(),
                     documentName, documentDescription, fileChoosen);
-        } else if (documentAction == getResources().getString(R.string.upload_document)) {
+        } else if (documentAction.equals(getResources().getString(R.string.upload_document))) {
             mDocumentDialogPresenter.createDocument(entityType, entityId,
                     documentName, documentDescription, fileChoosen);
         }
@@ -285,11 +283,11 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     }
 
                     if (fileChoosen != null) {
-                        tv_choose_file.setText(fileChoosen.getName());
+                        tvChooseFile.setText(fileChoosen.getName());
                     } else {
                         break;
                     }
-                    bt_upload.setEnabled(true);
+                    btUpload.setEnabled(true);
 
                 }
                 break;
@@ -338,4 +336,5 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public interface OnDialogFragmentInteractionListener {
         void initiateFileUpload(String name, String description);
     }
+
 }

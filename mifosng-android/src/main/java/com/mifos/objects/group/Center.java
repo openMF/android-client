@@ -13,6 +13,7 @@ import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.Timeline;
 import com.mifos.objects.client.Status;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -32,7 +33,7 @@ public class Center extends MifosBaseModel implements Parcelable {
     Integer id;
 
     @Column
-    transient Boolean sync;
+    transient boolean sync;
 
     @Column
     String accountNo;
@@ -60,13 +61,25 @@ public class Center extends MifosBaseModel implements Parcelable {
     @Column
     Boolean active;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    transient CenterDate centerDate;
+
     List<Integer> activationDate = new ArrayList<Integer>();
 
     Timeline timeline;
 
     String externalId;
 
-    public Boolean getSync() {
+    public CenterDate getCenterDate() {
+        return centerDate;
+    }
+
+    public void setCenterDate(CenterDate centerDate) {
+        this.centerDate = centerDate;
+    }
+
+    public boolean isSync() {
         return sync;
     }
 

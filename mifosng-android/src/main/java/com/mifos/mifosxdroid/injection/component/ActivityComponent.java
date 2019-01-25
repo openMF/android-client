@@ -7,11 +7,17 @@ import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDial
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment;
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.online.runreports.report.ReportFragment;
+import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment;
+import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
+import com.mifos.mifosxdroid.online.sign.SignatureFragment;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsFragment;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsFragment;
@@ -26,6 +32,7 @@ import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
+import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
@@ -55,6 +62,7 @@ import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprova
 import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment;
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment;
+import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 
 import dagger.Component;
 
@@ -67,6 +75,8 @@ import dagger.Component;
 public interface ActivityComponent {
 
     void inject(LoginActivity loginActivity);
+
+    void inject(PassCodeActivity passCodeActivity);
 
     void inject(CenterListFragment centerListFragment);
 
@@ -158,6 +168,10 @@ public interface ActivityComponent {
 
     void inject(SyncGroupsDialogFragment syncGroupsDialogFragment);
 
+    void inject(SyncCentersDialogFragment syncCentersDialogFragment);
+
+    void inject(SyncSurveysDialogFragment syncSurveysDialogFragment);
+
     void inject(IdentifierDialogFragment identifierDialogFragment);
 
     void inject(PathTrackingActivity pathTrackingActivity);
@@ -171,4 +185,16 @@ public interface ActivityComponent {
     void inject(NoteFragment noteFragment);
 
     void inject(SavingsAccountActivateFragment savingsAccountActivateFragment);
+
+    void inject(SignatureFragment signatureFragment);
+
+    void inject(IndividualCollectionSheetFragment individualCollectionSheetFragment);
+
+    void inject(ReportCategoryFragment reportCategoryFragment);
+
+    void inject(ReportDetailFragment reportDetailFragment);
+
+    void inject(ReportFragment
+                        clientReportFragment);
+
 }

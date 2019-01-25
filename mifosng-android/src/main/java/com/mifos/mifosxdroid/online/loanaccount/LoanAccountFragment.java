@@ -270,10 +270,10 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         loansPayload.setLoanPurposeId(loanPurposeId);
         loansPayload.setLoanTermFrequency(
                 Integer.parseInt(etLoanTerm.getEditableText().toString()));
-        loansPayload.setLoanTermFrequencyType(loanTermFrequencyType);
+        loansPayload.setLoanTermFrequencyType(loanTermFrequency);
 
         //loanTermFrequencyType and repaymentFrequencyType should be the same.
-        loansPayload.setRepaymentFrequencyType(loanTermFrequencyType);
+        loansPayload.setRepaymentFrequencyType(loanTermFrequency);
         loansPayload.setRepaymentFrequencyDayOfWeekType(
                 repaymentFrequencyDayOfWeek != null ? repaymentFrequencyDayOfWeek : null);
         loansPayload.setRepaymentFrequencyNthDayType(
@@ -718,7 +718,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
     private void showDefaultValues() {
         interestRatePerPeriod = mLoanTemplate.getInterestRatePerPeriod();
-        loanTermFrequencyType = mLoanTemplate.getInterestRateFrequencyType().getId();
+        loanTermFrequency = mLoanTemplate.getTermPeriodFrequencyType().getId();
         termFrequency = mLoanTemplate.getTermFrequency();
         etPrincipal.setText(String.valueOf(mLoanTemplate.getPrincipal().toString()));
         etNumberOfRepayments.setText(String.valueOf(

@@ -15,13 +15,13 @@ import java.util.List;
 public class IdentifierTemplate implements Parcelable {
 
     @SerializedName("allowedDocumentTypes")
-    List<IdentifierType> allowedDocumentTypes = new ArrayList<>();
+    List<DocumentType> allowedDocumentTypes = new ArrayList<>();
 
-    public List<IdentifierType> getAllowedDocumentTypes() {
+    public List<DocumentType> getAllowedDocumentTypes() {
         return allowedDocumentTypes;
     }
 
-    public void setAllowedDocumentTypes(List<IdentifierType> allowedDocumentTypes) {
+    public void setAllowedDocumentTypes(List<DocumentType> allowedDocumentTypes) {
         this.allowedDocumentTypes = allowedDocumentTypes;
     }
 
@@ -40,7 +40,7 @@ public class IdentifierTemplate implements Parcelable {
     }
 
     protected IdentifierTemplate(Parcel in) {
-        this.allowedDocumentTypes = in.createTypedArrayList(IdentifierType.CREATOR);
+        this.allowedDocumentTypes = in.createTypedArrayList(DocumentType.CREATOR);
     }
 
     public static final Parcelable.Creator<IdentifierTemplate> CREATOR = new Parcelable

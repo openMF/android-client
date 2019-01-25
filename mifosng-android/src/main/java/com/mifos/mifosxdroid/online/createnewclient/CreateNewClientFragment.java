@@ -18,13 +18,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
-import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
@@ -98,6 +98,9 @@ public class CreateNewClientFragment extends ProgressableFragment
     @BindView(R.id.sp_client_classification)
     Spinner spClientClassification;
 
+    @BindView(R.id.layout_submission)
+    LinearLayout layout_submission;
+
     @Inject
     CreateNewClientPresenter createNewClientPresenter;
 
@@ -156,7 +159,6 @@ public class CreateNewClientFragment extends ProgressableFragment
         showUserInterface();
 
         createNewClientPresenter.loadClientTemplate();
-        createNewClientPresenter.loadOffices();
 
         return rootView;
     }
@@ -282,6 +284,7 @@ public class CreateNewClientFragment extends ProgressableFragment
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                         .beginTransaction();
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
                 fragmentTransaction.replace(R.id.container, fragment).commit();
             } else {
@@ -293,7 +296,7 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @OnCheckedChanged(R.id.cb_client_active_status)
     public void onClickActiveCheckBox() {
-        tvSubmissionDate.setVisibility(cbClientActiveStatus.isChecked()
+        layout_submission.setVisibility(cbClientActiveStatus.isChecked()
                 ? View.VISIBLE : View.GONE);
     }
 
@@ -406,19 +409,12 @@ public class CreateNewClientFragment extends ProgressableFragment
                 throw new RequiredFieldException(getResources().getString(R.string.first_name),
                         getResources().getString(R.string.error_cannot_be_empty));
             }
-            if (etClientFirstName.getEditableText().toString().trim().length() < 4 &&
-                    etClientFirstName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.first_name), 4);
-            }
             if (!ValidationUtil.isNameValid(etClientFirstName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.first_name),
                         getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
             }
         } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
             e.notifyUserWithToast(getActivity());
             result = false;
         } catch (RequiredFieldException e) {
@@ -454,21 +450,12 @@ public class CreateNewClientFragment extends ProgressableFragment
                         getResources().getString(R.string.error_cannot_be_empty));
             }
 
-            if (etClientLastName.getEditableText().toString().trim().length() < 4 &&
-                    etClientFirstName.getEditableText().toString().trim().length() > 0) {
-                throw new ShortOfLengthException(getResources().getString(R.string.last_name), 4);
-            }
-
             if (!ValidationUtil.isNameValid(etClientLastName.getEditableText().toString())) {
                 throw new InvalidTextInputException(getResources().getString(R.string.last_name),
                         getResources().getString(R.string.error_should_contain_only),
                         InvalidTextInputException.TYPE_ALPHABETS);
             }
-
         } catch (InvalidTextInputException e) {
-            e.notifyUserWithToast(getActivity());
-            result = false;
-        } catch (ShortOfLengthException e) {
             e.notifyUserWithToast(getActivity());
             result = false;
         } catch (RequiredFieldException e) {

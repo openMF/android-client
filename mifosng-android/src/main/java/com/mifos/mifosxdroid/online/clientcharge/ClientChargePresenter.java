@@ -4,12 +4,15 @@ import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Charges;
 import com.mifos.objects.client.Page;
+import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -54,14 +57,23 @@ public class ClientChargePresenter extends BasePresenter<ClientChargeMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView()
-                                .showFetchingErrorCharges("Failed to Load Charges");
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showFetchingErrorCharges(MFErrorParser
+                                        .parseError(errorMessage)
+                                        .getErrors().get(0).getDefaultUserMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
                     }
 
                     @Override
                     public void onNext(Page<Charges> chargesPage) {
                         getMvpView().showProgressbar(false);
-                        if (!chargesPage.getPageItems().isEmpty()) {
+                        if (chargesPage.getPageItems().size() > 0) {
                             getMvpView().showChargesList(chargesPage);
                         } else {
                             getMvpView().showEmptyCharges();

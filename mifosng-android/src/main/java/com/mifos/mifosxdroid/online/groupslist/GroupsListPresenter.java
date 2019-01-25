@@ -79,7 +79,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
     public void showParentClients(List<Group> groups) {
         getMvpView().unregisterSwipeAndScrollListener();
         if (groups.size() == 0) {
-            getMvpView().showEmptyGroups(R.string.empty_groups_list);
+            getMvpView().showEmptyGroups(R.string.group);
         } else {
             mRestApiGroupSyncStatus = true;
             mSyncGroupList = groups;
@@ -125,7 +125,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
                         mSyncGroupList = groupPage.getPageItems();
 
                         if (mSyncGroupList.size() == 0 && !loadmore) {
-                            getMvpView().showEmptyGroups(R.string.empty_groups_list);
+                            getMvpView().showEmptyGroups(R.string.group);
                             getMvpView().unregisterSwipeAndScrollListener();
                         } else if (mSyncGroupList.size() == 0 && loadmore) {
                             getMvpView().showMessage(R.string.no_more_groups_available);

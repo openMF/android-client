@@ -7,18 +7,20 @@ package com.mifos.mifosxdroid.online.centerlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
@@ -27,6 +29,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.RecyclerItemClickListener.OnItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
@@ -34,6 +37,7 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.utils.Constants;
+import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,19 +58,16 @@ public class CenterListFragment extends MifosBaseFragment
         implements CenterListMvpView, OnItemClickListener, OnRefreshListener {
 
     @BindView(R.id.rv_center_list)
-    RecyclerView rv_centers;
+    RecyclerView rvCenters;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.progressbar_center)
-    ProgressBar pb_center;
+    ProgressBar pbCenter;
 
-    @BindView(R.id.noCenterText)
-    TextView mNoCenterText;
-
-    @BindView(R.id.rl_error)
-    RelativeLayout rlError;
+    @BindView(R.id.layout_error)
+    View layoutError;
 
     @Inject
     CenterListPresenter mCenterListPresenter;
@@ -76,18 +77,30 @@ public class CenterListFragment extends MifosBaseFragment
 
     private View rootView;
     private List<Center> centers;
+    private List<Center> selectedCenters;
     private LinearLayoutManager layoutManager;
+    private ActionModeCallback actionModeCallback;
+    private ActionMode actionMode;
+    private SweetUIErrorHandler sweetUIErrorHandler;
 
     @Override
     public void onItemClick(View childView, int position) {
-        Intent centerIntent = new Intent(getActivity(), CentersActivity.class);
-        centerIntent.putExtra(Constants.CENTER_ID, centers.get(position).getId());
-        startActivity(centerIntent);
+        if (actionMode != null) {
+            toggleSelection(position);
+        } else {
+            Intent centerIntent = new Intent(getActivity(), CentersActivity.class);
+            centerIntent.putExtra(Constants.CENTER_ID, centers.get(position).getId());
+            startActivity(centerIntent);
+        }
     }
 
     @Override
     public void onItemLongPress(View childView, int position) {
-        mCenterListPresenter.loadCentersGroupAndMeeting(centers.get(position).getId());
+        if (actionMode == null) {
+            actionMode = ((MifosBaseActivity) getActivity()).startSupportActionMode
+                    (actionModeCallback);
+        }
+        toggleSelection(position);
     }
 
     public static CenterListFragment newInstance() {
@@ -102,6 +115,8 @@ public class CenterListFragment extends MifosBaseFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         centers = new ArrayList<>();
+        selectedCenters = new ArrayList<>();
+        actionModeCallback = new ActionModeCallback();
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
     }
 
@@ -117,18 +132,20 @@ public class CenterListFragment extends MifosBaseFragment
         showUserInterface();
 
         //Fetching Centers
-        mCenterListPresenter.loadCenters(false, 0);
 
         /**
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * will shown on the Screen.
          */
-        rv_centers.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+        rvCenters.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mCenterListPresenter.loadCenters(true, totalItemsCount);
             }
         });
+
+        mCenterListPresenter.loadCenters(false, 0);
+        mCenterListPresenter.loadDatabaseCenters();
 
         return rootView;
     }
@@ -141,14 +158,15 @@ public class CenterListFragment extends MifosBaseFragment
         setToolbarTitle(getResources().getString(R.string.title_activity_centers));
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_centers.setLayoutManager(layoutManager);
-        rv_centers.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
-        rv_centers.setHasFixedSize(true);
+        rvCenters.setLayoutManager(layoutManager);
+        rvCenters.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
+        rvCenters.setHasFixedSize(true);
         centersListAdapter.setContext(getActivity());
-        rv_centers.setAdapter(centersListAdapter);
+        rvCenters.setAdapter(centersListAdapter);
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
     }
 
     @OnClick(R.id.fab_create_center)
@@ -163,16 +181,18 @@ public class CenterListFragment extends MifosBaseFragment
     @Override
     public void onRefresh() {
         mCenterListPresenter.loadCenters(false, 0);
+        mCenterListPresenter.loadDatabaseCenters();
+        if (actionMode != null) actionMode.finish();
     }
 
     /**
      * OnClick Error Image icon, reload the centers
      */
-    @OnClick(R.id.noCentersIcon)
+    @OnClick(R.id.btn_try_again)
     public void reloadOnError() {
-        rlError.setVisibility(View.GONE);
-        rv_centers.setVisibility(View.VISIBLE);
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(rvCenters, layoutError);
         mCenterListPresenter.loadCenters(false, 0);
+        mCenterListPresenter.loadDatabaseCenters();
     }
 
     /**
@@ -184,6 +204,7 @@ public class CenterListFragment extends MifosBaseFragment
     public void showCenters(List<Center> centers) {
         this.centers = centers;
         centersListAdapter.setCenters(centers);
+        centersListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -204,9 +225,8 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showEmptyCenters(int message) {
-        rv_centers.setVisibility(View.GONE);
-        rlError.setVisibility(View.VISIBLE);
-        mNoCenterText.setText(getStringMessage(message));
+        sweetUIErrorHandler.showSweetEmptyUI(getString(R.string.center), getString(message),
+                R.drawable.ic_error_black_24dp, rvCenters, layoutError);
     }
 
     /**
@@ -227,7 +247,7 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showCentersGroupAndMeeting(final CenterWithAssociations centerWithAssociations,
-                                           final int id) {
+            final int id) {
         MFDatePicker mfDatePicker = new MFDatePicker();
         mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
             @Override
@@ -252,11 +272,9 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showFetchingError() {
-        rv_centers.setVisibility(View.GONE);
-        rlError.setVisibility(View.VISIBLE);
-        String errorMessage = getStringMessage(R.string.failed_to_fetch_centers)
-                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
-        mNoCenterText.setText(errorMessage);
+        String errorMessage = getStringMessage(R.string.failed_to_fetch_centers);
+        sweetUIErrorHandler.showSweetErrorUI(errorMessage,
+                R.drawable.ic_error_black_24dp, rvCenters, layoutError);
     }
 
     /**
@@ -269,11 +287,21 @@ public class CenterListFragment extends MifosBaseFragment
     public void showProgressbar(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
         if (show && centersListAdapter.getItemCount() == 0) {
-            pb_center.setVisibility(View.VISIBLE);
+            pbCenter.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
         } else {
-            pb_center.setVisibility(View.GONE);
+            pbCenter.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * This Method unregister the RecyclerView OnScrollListener and SwipeRefreshLayout
+     * and NoClientIcon click event.
+     */
+    @Override
+    public void unregisterSwipeAndScrollListener() {
+        rvCenters.clearOnScrollListeners();
+        swipeRefreshLayout.setEnabled(false);
     }
 
     @Override
@@ -287,5 +315,77 @@ public class CenterListFragment extends MifosBaseFragment
     public void onDestroyView() {
         super.onDestroyView();
         mCenterListPresenter.detachView();
+    }
+
+    /**
+     * Toggle the selection state of an item.
+     * <p>
+     * If the item was the last one in the selection and is unselected, the selection is stopped.
+     * Note that the selection must already be started (actionMode must not be null).
+     *
+     * @param position Position of the item to toggle the selection state
+     */
+    private void toggleSelection(int position) {
+        centersListAdapter.toggleSelection(position);
+        int count = centersListAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+    /**
+     * This ActionModeCallBack Class handling the User Event after the Selection of Clients. Like
+     * Click of Menu Sync Button and finish the ActionMode
+     */
+    private class ActionModeCallback implements ActionMode.Callback {
+        @SuppressWarnings("unused")
+        private final String LOG_TAG = ActionModeCallback.class.getSimpleName();
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_sync, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_sync:
+
+                    selectedCenters.clear();
+                    for (Integer position : centersListAdapter.getSelectedItems()) {
+                        selectedCenters.add(centers.get(position));
+                    }
+
+                    SyncCentersDialogFragment syncCentersDialogFragment =
+                            SyncCentersDialogFragment.newInstance(selectedCenters);
+                    FragmentTransaction fragmentTransaction = getActivity()
+                            .getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC);
+                    syncCentersDialogFragment.setCancelable(false);
+                    syncCentersDialogFragment.show(fragmentTransaction,
+                            getResources().getString(R.string.sync_centers));
+                    mode.finish();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            centersListAdapter.clearSelection();
+            actionMode = null;
+        }
     }
 }
