@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -32,6 +34,7 @@ import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -66,6 +69,9 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     @BindView(R.id.ll_connectionSettings)
     LinearLayout ll_connectionSettings;
 
+    @BindView(R.id.bt_login)
+    AppCompatButton loginButton;
+
     @Inject
     LoginPresenter mLoginPresenter;
 
@@ -74,6 +80,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     private String password;
     private String domain;
     private boolean isValidUrl = false;
+
 
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
@@ -106,6 +113,26 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
         }
     };
+    private TextWatcher editTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            boolean isReady = et_username.getText().toString().length() >= 5
+                    && et_password.getText().toString().length() >= 6;
+            loginButton.setEnabled(isReady);
+
+
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +152,10 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         et_domain.addTextChangedListener(urlWatcher);
         et_port.addTextChangedListener(urlWatcher);
         urlWatcher.afterTextChanged(null);
+
+        loginButton.setEnabled(false);
+        et_password.addTextChangedListener(editTextWatcher);
+        et_username.addTextChangedListener(editTextWatcher);
     }
 
     public boolean validateUserInputs() {
@@ -149,12 +180,14 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         }
         return true;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_login, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
