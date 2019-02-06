@@ -41,6 +41,7 @@ import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -333,6 +334,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     public void showOffices(List<Office> offices) {
         clientOffices = offices;
         officeList.addAll(createNewClientPresenter.filterOffices(offices));
+        Collections.sort(officeList);
         officeAdapter.notifyDataSetChanged();
     }
 
