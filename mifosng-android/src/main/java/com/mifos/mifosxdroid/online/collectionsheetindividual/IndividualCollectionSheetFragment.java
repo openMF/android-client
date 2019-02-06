@@ -258,10 +258,9 @@ public class IndividualCollectionSheetFragment extends MifosBaseFragment impleme
     public void setOfficeSpinner(List<Office> offices) {
         officeList = offices;
         officeNameList.clear();
-        officeNameList.addAll(presenter.filterOffices(officeList));
         officeNameList.add(getString(R.string.spinner_office));
+        officeNameList.addAll(presenter.filterOffices(officeList));
         officeAdapter.notifyDataSetChanged();
-        spOffices.setSelection(officeList.size());
     }
 
     @Override
@@ -287,30 +286,29 @@ public class IndividualCollectionSheetFragment extends MifosBaseFragment impleme
         spStaff.setOnItemSelectedListener(this);
         staffList = staffs;
         staffNameList.clear();
-        staffNameList.addAll(presenter.filterStaff(staffList));
         staffNameList.add(getString(R.string.spinner_staff));
+        staffNameList.addAll(presenter.filterStaff(staffList));
         staffAdapter.notifyDataSetChanged();
-        spStaff.setSelection(staffList.size());
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         switch (adapterView.getId()) {
             case R.id.sp_office_list:
-                if (i == officeList.size()) {
+                if (i == officeNameList.size() || i == 0) {
                     Toaster.show(rootView, getStringMessage(R.string.error_select_office));
                 } else {
-                    Toaster.show(rootView, officeList.get(i).getName());
-                    officeId = officeList.get(i).getId();
+                    Toaster.show(rootView, officeNameList.get(i));
+                    officeId = officeList.get(i - 1).getId();
                     presenter.fetchStaff(officeId);
                 }
                 break;
 
             case R.id.sp_staff_list:
-                if (i == staffList.size()) {
+                if (i == staffNameList.size() || i == 0) {
                     Toaster.show(rootView, getStringMessage(R.string.error_select_staff));
                 } else {
-                    staffId = staffList.get(i).getId();
+                    staffId = staffList.get(i - 1).getId();
                 }
                 break;
         }
