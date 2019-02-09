@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online.grouploanaccount;
 
 import android.R.layout;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -531,9 +532,14 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity a;
+
+        if (context instanceof Activity){
+          a=(Activity) context;
     }
+  }
 
     @Override
     public void onDetach() {

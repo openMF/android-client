@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -52,6 +53,7 @@ public class PinpointClientActivity extends MifosBaseActivity implements PinPoin
 
     private static final int REQUEST_ADD_PLACE_PICKER = 1;
     private static final int REQUEST_UPDATE_PLACE_PICKER = 2;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST=1;
 
     @BindView(R.id.rv_pinpoint_location)
     RecyclerView rvPinPointLocation;
@@ -149,7 +151,8 @@ public class PinpointClientActivity extends MifosBaseActivity implements PinPoin
             Intent intent = intentBuilder.build(this);
             startActivityForResult(intent, requestCode);
         } catch (GooglePlayServicesRepairableException e) {
-            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0);
+            GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+            apiAvailability.getErrorDialog(this,e.getConnectionStatusCode(), PLAY_SERVICES_RESOLUTION_REQUEST).show();
         } catch (GooglePlayServicesNotAvailableException e) {
             Toast.makeText(this, getString(R.string.google_play_services_not_available),
                     Toast.LENGTH_LONG)
