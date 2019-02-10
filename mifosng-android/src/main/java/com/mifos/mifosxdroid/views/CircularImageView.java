@@ -23,7 +23,7 @@ import com.mifos.mifosxdroid.R;
 /**
  * @author fomenkoo
  */
-public class CircularImageView extends ImageView {
+public class CircularImageView extends android.support.v7.widget.AppCompatImageView {
     private int borderWidth;
     private int canvasSize;
     private Bitmap image;

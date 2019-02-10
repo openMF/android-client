@@ -15,7 +15,7 @@ import com.mifos.mifosxdroid.R;
 /**
  * @author fomenkoo
  */
-public class FontTextView extends TextView {
+public class FontTextView extends android.support.v7.widget.AppCompatTextView {
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
