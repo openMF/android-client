@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:spinnerMode="dropdown"
                 android:paddingTop="10dp"
-                android:backgroundTint="@color/gray_dark"/>
+                app:backgroundTint="@color/gray_dark"/>
         </LinearLayout>
             <LinearLayout
                 android:id="@+id/ll_address"

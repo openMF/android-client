@@ -5,322 +5,362 @@
     android:layout_height="match_parent"
     android:inAnimation="@android:anim/fade_in"
     android:outAnimation="@android:anim/fade_out"
-    android:padding="10dp">
+    android:padding="10dp"
+    >
 
-    <!-- Comment this out when editing the actual content -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+  <!-- Comment this out when editing the actual content -->
+  <ProgressBar
+      android:id="@+id/progress_bar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      />
 
-    <!-- Actual content -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+  <!-- Actual content -->
+  <ScrollView
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      >
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            style="@style/LinearLayout.Base">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/LinearLayout.Base"
+        >
 
-            <TextView style="@style/TextView.CreateClient" />
+      <TextView style="@style/TextView.CreateClient"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+      <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
-                <EditText
-                    android:id="@+id/et_client_first_name"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/first_name_mandatory"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:paddingBottom="16dp"
-                    android:maxLines="1"/>
+        <EditText
+            android:id="@+id/et_client_first_name"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/first_name_mandatory"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:paddingBottom="16dp"
+            android:maxLines="1"
+            />
 
-                <requestFocus />
-            </android.support.design.widget.TextInputLayout>
+        <requestFocus/>
+      </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+      <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
-                <EditText
-                    android:id="@+id/et_client_middle_name"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/mname"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:paddingBottom="16dp"
-                    android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/et_client_middle_name"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/mname"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:paddingBottom="16dp"
+            android:maxLines="1"
+            />
+      </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+      <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
-                <EditText
-                    android:id="@+id/et_client_last_name"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/last_name_mandatory"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:paddingBottom="16dp"
-                    android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/et_client_last_name"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/last_name_mandatory"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:paddingBottom="16dp"
+            android:maxLines="1"
+            />
+      </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+      <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
-                <EditText
-                    android:id="@+id/et_client_mobile_no"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/mobile_no"
-                    android:imeOptions="actionNext"
-                    android:inputType="phone"
-                    android:paddingBottom="16dp"
-                    android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/et_client_mobile_no"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/mobile_no"
+            android:imeOptions="actionNext"
+            android:inputType="phone"
+            android:paddingBottom="16dp"
+            android:maxLines="1"
+            />
+      </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+      <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
 
-                <EditText
-                    android:id="@+id/et_client_external_id"
-                    style="@style/EditText.BaseWidth"
-                    android:gravity="start"
-                    android:hint="@string/external_id"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:paddingBottom="16dp"
-                    android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
-        <LinearLayout
+        <EditText
+            android:id="@+id/et_client_external_id"
+            style="@style/EditText.BaseWidth"
+            android:gravity="start"
+            android:hint="@string/external_id"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:paddingBottom="16dp"
+            android:maxLines="1"
+            />
+      </android.support.design.widget.TextInputLayout>
+      <LinearLayout
+          android:layout_height="wrap_content"
+          android:layout_width="match_parent"
+          android:orientation="vertical"
+          >
+
+        <TextView
+            android:id="@+id/tv_client_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="@string/gender"
+            android:textSize="12sp"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            />
+
+        <android.support.v7.widget.AppCompatSpinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:id="@+id/sp_gender"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:orientation="vertical">
+            android:spinnerMode="dropdown"
+            android:paddingTop="10dp"
+            app:backgroundTint="@color/gray_dark"
+            />
 
-            <TextView
-                android:id="@+id/tv_client_gender"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:text="@string/gender"
-                android:textSize="12sp"
-                style="@style/Base.TextAppearance.AppCompat.Small"/>
+      </LinearLayout>
 
-            <android.support.v7.widget.AppCompatSpinner
-                style="@style/Widget.AppCompat.Spinner.Underlined"
-                android:id="@+id/sp_gender"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:spinnerMode="dropdown"
-                android:paddingTop="10dp"
-                android:backgroundTint="@color/gray_dark"/>
-
-        </LinearLayout>
+      <LinearLayout
+          android:layout_height="match_parent"
+          android:layout_width="match_parent"
+          android:orientation="vertical"
+          android:paddingTop="16dp"
+          >
 
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
+            android:orientation="horizontal"
+            >
 
-            <LinearLayout
+          <ImageView
+              android:baselineAlignBottom="true"
+              android:layout_gravity="center"
+              android:layout_height="30dp"
+              android:layout_marginTop="4dp"
+              android:layout_width="30dp"
+              app:srcCompat="@drawable/ic_event_black_24dp"
+              />
+
+          <LinearLayout
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              >
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Small"
                 android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:baselineAlignBottom="true"
-                    android:layout_gravity="center"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_width="30dp"
-                    app:srcCompat="@drawable/ic_event_black_24dp"/>
-
-                <LinearLayout
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/Base.TextAppearance.AppCompat.Small"
-                        android:layout_height="match_parent"
-                        android:layout_width="wrap_content"
-                        android:textSize="12sp"
-                        android:text="@string/dob"/>
-
-                    <TextView
-                        android:id="@+id/tv_dateofbirth"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-            <View
-                android:background="@color/gray_dark"
-                android:layout_height="0.2dp"
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"/>
-
-        </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/tv_client_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:text="@string/client_type"
-                    android:textSize="12sp"
-                    style="@style/Base.TextAppearance.AppCompat.Small"/>
-
-                <android.support.v7.widget.AppCompatSpinner
-                    style="@style/Widget.AppCompat.Spinner.Underlined"
-                    android:id="@+id/sp_client_type"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:spinnerMode="dropdown"
-                    android:paddingTop="10dp"
-                    android:backgroundTint="@color/gray_dark"/>
-            </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_client_classification"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/client_classification"
-                android:textSize="12sp"
-                style="@style/Base.TextAppearance.AppCompat.Small"/>
-
-            <android.support.v7.widget.AppCompatSpinner
-                style="@style/Widget.AppCompat.Spinner.Underlined"
-                android:id="@+id/sp_client_classification"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:spinnerMode="dropdown"
-                android:paddingTop="10dp"
-                android:backgroundTint="@color/gray_dark"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_office"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/office_name_mandatory"
-                android:textSize="12sp"
-                style="@style/Base.TextAppearance.AppCompat.Small"/>
-
-            <android.support.v7.widget.AppCompatSpinner
-                style="@style/Widget.AppCompat.Spinner.Underlined"
-                android:id="@+id/sp_offices"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:spinnerMode="dropdown"
-                android:paddingTop="10dp"
-                android:backgroundTint="@color/gray_dark"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_staff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/staff_names"
-                android:textSize="12sp"
-                style="@style/Base.TextAppearance.AppCompat.Small"/>
-            <android.support.v7.widget.AppCompatSpinner
-                style="@style/Widget.AppCompat.Spinner.Underlined"
-                android:id="@+id/sp_staff"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:spinnerMode="dropdown"
-                android:paddingTop="10dp"
-                android:backgroundTint="@color/gray_dark"/>
-        </LinearLayout>
-            <CheckBox
-                android:id="@+id/cb_client_active_status"
                 android:layout_width="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/dob"
+                />
+
+            <TextView
+                android:id="@+id/tv_dateofbirth"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:checked="false"
-                android:paddingTop="10dp"
-                android:text="@string/client_active" />
+                android:layout_width="wrap_content"
+                />
 
-            <LinearLayout
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:visibility="gone"
-                android:id="@+id/layout_submission">
-
-                <LinearLayout
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:baselineAlignBottom="true"
-                        android:layout_gravity="center"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="30dp"
-                        app:srcCompat="@drawable/ic_event_black_24dp"/>
-
-                    <LinearLayout
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_width="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/Base.TextAppearance.AppCompat.Small"
-                            android:layout_height="match_parent"
-                            android:layout_width="wrap_content"
-                            android:textSize="12sp"
-                            android:text="@string/loan_submission_date"/>
-
-                        <TextView
-                            android:id="@+id/tv_submission_date"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-                <View
-                    android:background="@color/gray_dark"
-                    android:layout_height="0.2dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="match_parent"/>
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_submit"
-                style="@style/Button.Base"
-                android:layout_marginTop="10dp"
-                android:text="@string/submit" />
+          </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+        <View
+            android:background="@color/gray_dark"
+            android:layout_height="0.2dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            />
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+        <TextView
+            android:id="@+id/tv_client_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="@string/client_type"
+            android:textSize="12sp"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            />
+
+        <android.support.v7.widget.AppCompatSpinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:id="@+id/sp_client_type"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:spinnerMode="dropdown"
+            android:paddingTop="10dp"
+            app:backgroundTint="@color/gray_dark"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+        <TextView
+            android:id="@+id/tv_client_classification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/client_classification"
+            android:textSize="12sp"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            />
+
+        <android.support.v7.widget.AppCompatSpinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:id="@+id/sp_client_classification"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:spinnerMode="dropdown"
+            android:paddingTop="10dp"
+            app:backgroundTint="@color/gray_dark"
+            />
+
+      </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+        <TextView
+            android:id="@+id/tv_office"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/office_name_mandatory"
+            android:textSize="12sp"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            />
+
+        <android.support.v7.widget.AppCompatSpinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:id="@+id/sp_offices"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:spinnerMode="dropdown"
+            android:paddingTop="10dp"
+            app:backgroundTint="@color/gray_dark"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+        <TextView
+            android:id="@+id/tv_staff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/staff_names"
+            android:textSize="12sp"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            />
+        <android.support.v7.widget.AppCompatSpinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:id="@+id/sp_staff"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:spinnerMode="dropdown"
+            android:paddingTop="10dp"
+            app:backgroundTint="@color/gray_dark"
+            />
+      </LinearLayout>
+      <CheckBox
+          android:id="@+id/cb_client_active_status"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:checked="false"
+          android:paddingTop="10dp"
+          android:text="@string/client_active"
+          />
+
+      <LinearLayout
+          android:layout_height="match_parent"
+          android:layout_width="match_parent"
+          android:orientation="vertical"
+          android:paddingTop="16dp"
+          android:visibility="gone"
+          android:id="@+id/layout_submission"
+          >
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            >
+
+          <ImageView
+              android:baselineAlignBottom="true"
+              android:layout_gravity="center"
+              android:layout_height="30dp"
+              android:layout_marginTop="4dp"
+              android:layout_width="30dp"
+              app:srcCompat="@drawable/ic_event_black_24dp"
+              />
+
+          <LinearLayout
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              >
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/loan_submission_date"
+                />
+
+            <TextView
+                android:id="@+id/tv_submission_date"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                />
+
+          </LinearLayout>
+
+        </LinearLayout>
+        <View
+            android:background="@color/gray_dark"
+            android:layout_height="0.2dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            />
+
+      </LinearLayout>
+
+      <Button
+          android:id="@+id/btn_submit"
+          style="@style/Button.Base"
+          android:layout_marginTop="10dp"
+          android:text="@string/submit"
+          />
+
+    </LinearLayout>
+  </ScrollView>
 </ViewFlipper>

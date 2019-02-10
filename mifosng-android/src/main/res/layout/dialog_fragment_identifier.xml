@@ -10,7 +10,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:inAnimation="@android:anim/fade_in"
-    android:outAnimation="@android:anim/fade_out">
+    android:outAnimation="@android:anim/fade_out"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <!-- Comment this out when editing the actual content -->
     <!--<ProgressBar-->
         <!--android:id="@+id/progress_bar"-->
@@ -61,7 +63,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
             android:paddingTop="10dp"
-            android:backgroundTint="@color/gray_dark"/>
+            app:backgroundTint="@color/gray_dark"/>
     </LinearLayout>
     <LinearLayout
         android:layout_height="wrap_content"
@@ -86,7 +88,7 @@
             android:layout_marginRight="24dp"
             android:spinnerMode="dropdown"
             android:paddingTop="10dp"
-            android:backgroundTint="@color/gray_dark"/>
+            app:backgroundTint="@color/gray_dark"/>
     </LinearLayout>
     <android.support.design.widget.TextInputLayout
         android:layout_height="match_parent"
@@ -123,7 +125,7 @@
         android:layout_width="match_parent"
         android:text="@string/create_identifier"
         android:textAllCaps="true"
-        android:backgroundTint="@color/primary" />
+        app:backgroundTint="@color/primary" />
 
 </LinearLayout>
 </ViewFlipper>
