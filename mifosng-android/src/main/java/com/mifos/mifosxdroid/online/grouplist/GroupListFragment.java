@@ -25,6 +25,7 @@ import com.mifos.objects.client.Client;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.utils.Constants;
+import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
 
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class GroupListFragment extends ProgressableFragment
 
     @BindView(R.id.lv_group_list)
     ListView lv_groupList;
+
+
 
     @BindView(R.id.ll_error)
     LinearLayout ll_error;
