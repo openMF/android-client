@@ -33,6 +33,7 @@ import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,9 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @BindView(R.id.progressbar_group)
     ProgressBar pb_groups;
+
+    @BindView(R.id.fastScroll)
+    RecyclerFastScroller mFastScroller;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -221,6 +225,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);
+        mFastScroller.attachRecyclerView(rv_groups);
         sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
     }
 

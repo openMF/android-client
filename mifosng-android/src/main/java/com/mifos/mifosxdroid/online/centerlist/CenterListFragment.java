@@ -38,6 +38,7 @@ import com.mifos.objects.group.Center;
 import com.mifos.objects.group.CenterWithAssociations;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,9 @@ public class CenterListFragment extends MifosBaseFragment
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.fastScroll)
+    RecyclerFastScroller mFastScroller;
 
     @BindView(R.id.progressbar_center)
     ProgressBar pbCenter;
@@ -166,6 +170,7 @@ public class CenterListFragment extends MifosBaseFragment
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);
+        mFastScroller.attachRecyclerView(rvCenters);
         sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
     }
 
