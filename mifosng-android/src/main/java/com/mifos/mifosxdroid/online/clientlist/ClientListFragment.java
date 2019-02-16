@@ -34,6 +34,7 @@ import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,9 @@ public class ClientListFragment extends MifosBaseFragment
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.fastScroll)
+    RecyclerFastScroller mFastScroller;
 
     @BindView(R.id.layout_error)
     View errorView;
@@ -229,6 +233,7 @@ public class ClientListFragment extends MifosBaseFragment
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);
+        mFastScroller.attachRecyclerView(rv_clients);
         sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
     }
 

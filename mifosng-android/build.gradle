@@ -157,6 +157,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
     implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
     implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+    implementation 'com.github.plusCubed:recycler-fast-scroll:0.3.2'
 
     //Dagger dependencies
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
