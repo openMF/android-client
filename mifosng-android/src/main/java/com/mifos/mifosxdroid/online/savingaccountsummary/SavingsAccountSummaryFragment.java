@@ -136,6 +136,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
             parentFragment = getArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT);
         }
+        inflateSavingsAccountSummary();
         setHasOptionsMenu(true);
     }
 
