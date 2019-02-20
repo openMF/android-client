@@ -199,9 +199,16 @@ public class SignatureFragment extends MifosBaseFragment implements
                 if (resultCode == Activity.RESULT_OK) {
                     Uri uri = data.getData();
 
-                    String filePath = FileUtils.getPathReal(getActivity(), uri);
+
+                    String filePath;
+                    filePath = FileUtils.getPathReal(getActivity(), uri);
                     if (filePath != null) {
                         signatureFile = new File(filePath);
+                    } else {
+                        filePath = FileUtils.getFileFromUri(getActivity(), uri);
+                        if (!filePath.equals("error")) {
+                            signatureFile = new File(filePath);
+                        }
                     }
 
                     if (signatureFile != null) {
