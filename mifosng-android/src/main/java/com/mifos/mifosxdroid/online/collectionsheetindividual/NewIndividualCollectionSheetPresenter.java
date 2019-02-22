@@ -3,15 +3,9 @@ package com.mifos.mifosxdroid.online.collectionsheetindividual;
 
 import com.mifos.api.DataManager;
 import com.mifos.api.datamanager.DataManagerCollectionSheet;
-import com.mifos.api.GenericResponse;
-import com.mifos.api.model.IndividualCollectionSheetPayload;
 import com.mifos.api.model.RequestCollectionSheetPayload;
 import com.mifos.mifosxdroid.base.BasePresenter;
-import com.mifos.objects.accounts.loan.PaymentTypeOptions;
-import com.mifos.objects.collectionsheet.ClientCollectionSheet;
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet;
-import com.mifos.objects.collectionsheet.LoanAndClientName;
-import com.mifos.objects.collectionsheet.LoanCollectionSheet;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.utils.MFErrorParser;
@@ -34,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Tarun on 05-07-2017.
  */
 
-public class IndividualCollectionSheetPresenter
+public class NewIndividualCollectionSheetPresenter
         extends BasePresenter<IndividualCollectionSheetMvpView> {
 
     private DataManager mDataManager;
@@ -42,8 +36,8 @@ public class IndividualCollectionSheetPresenter
     private CompositeSubscription mSubscription;
 
     @Inject
-    IndividualCollectionSheetPresenter(DataManager manager,
-                                       DataManagerCollectionSheet managerCollectionSheet) {
+    NewIndividualCollectionSheetPresenter(DataManager manager,
+                                          DataManagerCollectionSheet managerCollectionSheet) {
         mDataManager = manager;
         mDataManagerCollection = managerCollectionSheet;
         mSubscription = new CompositeSubscription();
@@ -62,43 +56,6 @@ public class IndividualCollectionSheetPresenter
         }
     }
 
-    void submitIndividualCollectionSheet(IndividualCollectionSheetPayload
-                                                 individualCollectionSheetPayload) {
-        checkViewAttached();
-        getMvpView().showProgressbar(true);
-        mSubscription.add(mDataManagerCollection
-                .saveIndividualCollectionSheet(individualCollectionSheetPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<GenericResponse>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().showProgressbar(false);
-                        try {
-                            if (e instanceof HttpException) {
-                                String errorMessage = ((HttpException) e).response().errorBody()
-                                        .string();
-                                getMvpView().showError(MFErrorParser.parseError(errorMessage)
-                                        .getErrors().get(0).getDefaultUserMessage());
-                            }
-                        } catch (Throwable throwable) {
-                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(GenericResponse genericResponse) {
-                        getMvpView().showProgressbar(false);
-                        getMvpView().showSuccess();
-                    }
-                }));
-    }
-
     void fetchIndividualCollectionSheet(RequestCollectionSheetPayload
                                                 requestCollectionSheetPayload) {
 
@@ -111,7 +68,7 @@ public class IndividualCollectionSheetPresenter
                 .subscribe(new Subscriber<IndividualCollectionSheet>() {
                     @Override
                     public void onCompleted() {
-
+                        getMvpView().showSuccess();
                     }
 
                     @Override
@@ -236,38 +193,6 @@ public class IndividualCollectionSheetPresenter
                     }
                 });
         return staffList;
-    }
-
-    List<String> filterPaymentTypeOptions(List<PaymentTypeOptions> paymentTypeOptionsList) {
-        final List<String> paymentList = new ArrayList<>();
-        Observable.from(paymentTypeOptionsList)
-                .subscribe(new Action1<PaymentTypeOptions>() {
-                    @Override
-                    public void call(PaymentTypeOptions paymentTypeOption) {
-                        paymentList.add(paymentTypeOption.getName());
-                    }
-                });
-        return paymentList;
-    }
-
-    List<LoanAndClientName> filterLoanAndClientNames(List<ClientCollectionSheet>
-                                                             clientCollectionSheets) {
-        final List<LoanAndClientName> loansAndClientNames = new ArrayList<>();
-        Observable.from(clientCollectionSheets)
-                .subscribe(new Action1<ClientCollectionSheet>() {
-                    @Override
-                    public void call(ClientCollectionSheet clientCollectionSheet) {
-                        if (clientCollectionSheet.getLoans() != null) {
-                            for (LoanCollectionSheet loanCollectionSheet :
-                                    clientCollectionSheet.getLoans()) {
-                                loansAndClientNames.add(new
-                                        LoanAndClientName(loanCollectionSheet,
-                                        clientCollectionSheet.getClientName()));
-                            }
-                        }
-                    }
-                });
-        return loansAndClientNames;
     }
 
 }
