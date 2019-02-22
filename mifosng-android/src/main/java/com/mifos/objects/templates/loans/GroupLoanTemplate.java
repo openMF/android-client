@@ -626,6 +626,15 @@ public class GroupLoanTemplate implements Parcelable {
         this.maximumGap = maximumGap;
     }
 
+    public int getFundNameFromId(int fundId) {
+        for (int i = 0; i < fundOptions.size(); i++) {
+            if (fundOptions.get(i).getId() == fundId) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -1,3 +1,7 @@
+Fixes #Issue_Number
+
+Please Add Screenshots If there are any UI changes.
+
 Please make sure these boxes are checked before submitting your pull request - thanks!
 
 - [ ] Apply the `MifosStyle.xml` style template to your code in Android Studio.

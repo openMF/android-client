@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -96,6 +98,9 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @BindView(R.id.sp_client_classification)
     Spinner spClientClassification;
+
+    @BindView(R.id.layout_submission)
+    LinearLayout layout_submission;
 
     @Inject
     CreateNewClientPresenter createNewClientPresenter;
@@ -155,7 +160,6 @@ public class CreateNewClientFragment extends ProgressableFragment
         showUserInterface();
 
         createNewClientPresenter.loadClientTemplate();
-        createNewClientPresenter.loadOffices();
 
         return rootView;
     }
@@ -281,6 +285,7 @@ public class CreateNewClientFragment extends ProgressableFragment
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                         .beginTransaction();
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
                 fragmentTransaction.replace(R.id.container, fragment).commit();
             } else {
@@ -292,7 +297,7 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @OnCheckedChanged(R.id.cb_client_active_status)
     public void onClickActiveCheckBox() {
-        tvSubmissionDate.setVisibility(cbClientActiveStatus.isChecked()
+        layout_submission.setVisibility(cbClientActiveStatus.isChecked()
                 ? View.VISIBLE : View.GONE);
     }
 
@@ -329,6 +334,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     public void showOffices(List<Office> offices) {
         clientOffices = offices;
         officeList.addAll(createNewClientPresenter.filterOffices(offices));
+        Collections.sort(officeList);
         officeAdapter.notifyDataSetChanged();
     }
 

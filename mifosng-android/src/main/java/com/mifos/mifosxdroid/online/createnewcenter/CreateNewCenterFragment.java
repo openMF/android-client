@@ -45,6 +45,7 @@ import com.mifos.utils.MifosResponseHandler;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,6 +78,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @BindView(R.id.ll_center)
     LinearLayout llCenter;
+
+    @BindView(R.id.layout_submission)
+    LinearLayout layout_submission;
 
     int officeId;
     Boolean result = true;
@@ -114,9 +118,9 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    tv_activationDate.setVisibility(View.VISIBLE);
+                    layout_submission.setVisibility(View.VISIBLE);
                 } else {
-                    tv_activationDate.setVisibility(View.GONE);
+                    layout_submission.setVisibility(View.GONE);
                 }
 
             }
@@ -222,6 +226,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             officeList.add(office.getName());
             officeNameIdHashMap.put(office.getName(), office.getId());
         }
+        Collections.sort(officeList);
         ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, officeList);
         officeAdapter.setDropDownViewResource(android.R.layout

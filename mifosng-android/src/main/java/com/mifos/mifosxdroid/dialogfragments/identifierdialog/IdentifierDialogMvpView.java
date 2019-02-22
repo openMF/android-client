@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.identifierdialog;
 
 import com.mifos.mifosxdroid.base.MvpView;
+import com.mifos.objects.noncore.IdentifierCreationResponse;
 import com.mifos.objects.noncore.IdentifierTemplate;
 
 /**
@@ -13,9 +14,9 @@ public interface IdentifierDialogMvpView extends MvpView {
 
     void showClientIdentifierTemplate(IdentifierTemplate identifierTemplate);
 
-    void showIdentifierCreatedSuccessfully();
+    void showIdentifierCreatedSuccessfully(IdentifierCreationResponse identifierCreationResponse);
 
-    void showMessage(String message);
+    void showErrorMessage(String message);
 
     void showError(int errorMessage);
 }

@@ -60,7 +60,12 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         if (holder instanceof ViewHolder) {
 
             Client client = getItem(position);
-            String clientName = client.getFirstname() + " " + client.getLastname();
+            String clientName;
+            if (client.getFullname() == null) {
+                clientName = client.getFirstname() + " " + client.getLastname();
+            } else {
+                clientName = client.getFullname();
+            }
             ((ViewHolder) holder).tv_clientName.setText(clientName);
             ((ViewHolder) holder).tv_clientAccountNumber.setText(client.getAccountNo());
 

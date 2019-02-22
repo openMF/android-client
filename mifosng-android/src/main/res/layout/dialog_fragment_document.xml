@@ -5,93 +5,122 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="24dp"
+    android:layout_centerHorizontal="true"
+    android:minWidth="300dp"
+    android:minHeight="300dp"
+    android:scrollbars="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TableLayout
-        android:layout_width="match_parent"
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:padding="8dp"
-        android:id="@+id/tableLayout">
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
         <TextView
+            style="@style/Base.TextAppearance.AppCompat.Large"
             android:id="@+id/tv_document_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/layout_padding_30dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingStart="24dp"
+            android:paddingTop="24dp"
             android:gravity="center"
-            android:padding="10dp"
             android:text="@string/upload_document"
-            />
+            android:textColor="@color/primary"
+            android:textStyle="bold"/>
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/tableRow1">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/name"
-                android:id="@+id/textView2" />
+        <android.support.design.widget.TextInputLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:hint="@string/name"
                 android:id="@+id/et_document_name"
-                android:maxLines="3"
-                android:scrollbars="vertical"/>
-        </TableRow>
+                android:inputType="text"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/tableRow2"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/description"
-                android:id="@+id/textView3" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_description"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="16dp">
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:hint="@string/description"
                 android:id="@+id/et_document_description"
-                android:maxLines="3"
+                android:inputType="textMultiLine"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:scrollHorizontally="false"
                 android:scrollbars="vertical"/>
-        </TableRow>
-
-    </TableLayout>
+        </android.support.design.widget.TextInputLayout>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/choose_file"
-        android:id="@+id/tv_choose_file"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/tableLayout"
-        android:layout_centerHorizontal="true" />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_selected_file"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:layout_weight=".7"
+                android:layout_width="match_parent"
+                android:paddingEnd="8dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="16dp">
+                <EditText
+                    android:hint="@string/selected_file"
+                    android:id="@+id/tv_choose_file"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:scrollHorizontally="false"
+                    android:enabled="false"
+                    android:scrollbars="vertical"/>
+            </android.support.design.widget.TextInputLayout>
 
-    <Button
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/upload"
-        android:id="@+id/bt_upload"
-        android:enabled="false"
-        android:layout_below="@+id/tv_choose_file"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp" />
+        android:layout_height="match_parent"
+        android:gravity="center">
 
+        <Button
+            android:drawableLeft="@drawable/ic_folder_black_24dp"
+            android:drawableStart="@drawable/ic_folder_black_24dp"
+            android:id="@+id/btn_browse_document"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            android:text="@string/browse"
+            android:backgroundTint="@color/primary"
+            android:textAllCaps="true" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/bt_upload"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="@string/upload"
+            android:layout_weight="0.5"
+            android:textAllCaps="true"
+            android:backgroundTint="@color/primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -3,14 +3,17 @@ package com.mifos.mifosxdroid.online.loancharge;
 import com.mifos.api.DataManager;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Charges;
+import com.mifos.utils.MFErrorParser;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -52,7 +55,17 @@ public class LoanChargePresenter extends BasePresenter<LoanChargeMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to load Charges");
+                        try {
+                            if (e instanceof HttpException) {
+                                String errorMessage = ((HttpException) e).response().errorBody()
+                                        .string();
+                                getMvpView().showFetchingError(MFErrorParser
+                                        .parseError(errorMessage)
+                                        .getErrors().get(0).getDefaultUserMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
+                        }
                     }
 
                     @Override

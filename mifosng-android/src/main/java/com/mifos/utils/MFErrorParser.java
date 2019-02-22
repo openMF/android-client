@@ -27,8 +27,10 @@ public class MFErrorParser {
         try {
             if (throwableError instanceof HttpException) {
                 errorMessage = ((HttpException) throwableError).response().errorBody().string();
-                errorMessage =  MFErrorParser.parseError(errorMessage).getErrors()
+                errorMessage = MFErrorParser.parseError(errorMessage).getErrors()
                         .get(0).getDefaultUserMessage();
+            } else {
+                errorMessage = throwableError.toString();
             }
         } catch (Throwable throwable) {
             RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);

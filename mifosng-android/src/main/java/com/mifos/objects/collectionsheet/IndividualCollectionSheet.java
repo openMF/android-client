@@ -3,6 +3,7 @@ package com.mifos.objects.collectionsheet;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mifos.objects.accounts.loan.PaymentTypeOptions;
 
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ public class IndividualCollectionSheet implements Parcelable {
 
     private int[] dueDate;
 
-    private ArrayList<ClientCollectionSheet> clients;
+    @SerializedName("clients")
+    private ArrayList<ClientCollectionSheet> clientCollectionSheetList;
 
     private ArrayList<PaymentTypeOptions> paymentTypeOptions;
 
@@ -28,11 +30,11 @@ public class IndividualCollectionSheet implements Parcelable {
     }
 
     public ArrayList<ClientCollectionSheet> getClients() {
-        return clients;
+        return clientCollectionSheetList;
     }
 
     public void setClients(ArrayList<ClientCollectionSheet> clients) {
-        this.clients = clients;
+        this.clientCollectionSheetList = clients;
     }
 
     public ArrayList<PaymentTypeOptions> getPaymentTypeOptions() {
@@ -52,7 +54,7 @@ public class IndividualCollectionSheet implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeIntArray(this.dueDate);
-        dest.writeList(this.clients);
+        dest.writeList(this.clientCollectionSheetList);
         dest.writeList(this.paymentTypeOptions);
     }
 
@@ -61,8 +63,8 @@ public class IndividualCollectionSheet implements Parcelable {
 
     protected IndividualCollectionSheet(Parcel in) {
         this.dueDate = in.createIntArray();
-        this.clients = new ArrayList<ClientCollectionSheet>();
-        in.readList(this.clients, ClientCollectionSheet.class.getClassLoader());
+        this.clientCollectionSheetList = new ArrayList<ClientCollectionSheet>();
+        in.readList(this.clientCollectionSheetList, ClientCollectionSheet.class.getClassLoader());
         this.paymentTypeOptions = new ArrayList<PaymentTypeOptions>();
         in.readList(this.paymentTypeOptions, PaymentTypeOptions.class.getClassLoader());
     }

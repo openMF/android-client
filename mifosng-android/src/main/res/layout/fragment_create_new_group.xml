@@ -1,9 +1,11 @@
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_flipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:inAnimation="@android:anim/fade_in"
-    android:outAnimation="@android:anim/fade_out">
+    android:outAnimation="@android:anim/fade_out"
+    android:padding="10dp">
 
     <!-- Comment this out when editing the actual content -->
     <ProgressBar
@@ -36,35 +38,81 @@
 
                 <requestFocus />
             </android.support.design.widget.TextInputLayout>
-
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_office"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:text="@string/office_name_mandatory"
-                android:textSize="16sp"
+                android:textSize="12sp"
+                style="@style/Base.TextAppearance.AppCompat.Small" />
 
-                />
-
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_group_offices"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
-                android:spinnerMode="dropdown" />
-
-            <TextView
-                android:id="@+id/tv_group_submission_date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingTop="16dp"
-                android:text="@string/center_submission_date"
-                android:textSize="16sp" />
+                android:spinnerMode="dropdown"
+                android:paddingTop="10dp"
+                android:backgroundTint="@color/gray_dark"/>
+        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_address"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="16dp">
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+                <LinearLayout
+                    android:id="@+id/ll_payment_cycle"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:baselineAlignBottom="true"
+                        android:layout_gravity="center"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_width="30dp"
+                        app:srcCompat="@drawable/ic_event_black_24dp"/>
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Base.TextAppearance.AppCompat.Small"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:textSize="12sp"
+                            android:text="@string/center_submission_date"/>
+
+                        <TextView
+                            android:id="@+id/tv_group_submission_date"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <View
+                    android:background="@color/gray_dark"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"/>
+
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base"
+                android:layout_marginTop="10dp">
 
                 <EditText
                     android:id="@+id/et_group_external_id"
@@ -73,41 +121,69 @@
                     android:hint="@string/external_id"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:paddingBottom="16dp"
+                    android:paddingTop="10dp"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/cb_group_active_status"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:checked="false"
                 android:paddingTop="10dp"
                 android:text="@string/center_active" />
 
-            <TextView
-                android:id="@+id/tv_group_activationDate"
+            <LinearLayout
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:paddingBottom="10dp"
-                android:text="@string/center_activation_date"
-                android:textSize="20sp"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
                 android:visibility="gone"
+                android:id="@+id/layout_submission">
 
-                />
+                <LinearLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:baselineAlignBottom="true"
+                        android:layout_gravity="center"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_width="30dp"
+                        app:srcCompat="@drawable/ic_event_black_24dp"/>
 
-            <TextView
-                android:id="@+id/tv_center_active_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:textSize="20sp"
-                android:visibility="gone"
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical">
 
-                />
+                        <TextView
+                            style="@style/Base.TextAppearance.AppCompat.Small"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:textSize="12sp"
+                            android:text="@string/center_activation_date"/>
+
+                        <TextView
+                            android:id="@+id/tv_group_activationDate"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <View
+                    android:background="@color/gray_dark"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_submit"

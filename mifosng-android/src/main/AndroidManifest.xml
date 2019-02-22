@@ -39,7 +39,8 @@
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -85,9 +86,19 @@
             android:label="@string/title_activity_generate_collection_sheet"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:parentActivityName=".online.DashboardActivity">
+            android:parentActivityName=".online.DashboardActivity"
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".online.DashboardActivity" />
+        </activity>
+
+        <activity android:name=".online.RunReportsActivity"
+            android:label="@string/run_report"
+            android:parentActivityName=".online.DashboardActivity">
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".online.DashboardActivity"/>
         </activity>
         <activity
             android:name=".ClientListActivity"

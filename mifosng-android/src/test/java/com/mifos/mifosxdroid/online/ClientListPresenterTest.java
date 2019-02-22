@@ -1,5 +1,9 @@
 package com.mifos.mifosxdroid.online;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.R;
@@ -18,10 +22,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import rx.Observable;
-
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Rajan Maurya on 15/06/16.
@@ -131,7 +131,7 @@ public class ClientListPresenterTest {
         mClientListPresenter.loadClients(false, offset);
 
         verify(mClientListMvpView).showProgressbar(true);
-        verify(mClientListMvpView).showEmptyClientList(R.string.empty_client_list);
+        verify(mClientListMvpView).showEmptyClientList(R.string.client);
         verify(mClientListMvpView).unregisterSwipeAndScrollListener();
         verify(mClientListMvpView, never()).showError();
         verify(mClientListMvpView).showProgressbar(false);

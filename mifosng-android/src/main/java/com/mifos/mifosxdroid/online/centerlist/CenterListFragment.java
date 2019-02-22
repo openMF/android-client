@@ -18,11 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
@@ -68,11 +66,8 @@ public class CenterListFragment extends MifosBaseFragment
     @BindView(R.id.progressbar_center)
     ProgressBar pbCenter;
 
-    @BindView(R.id.noCenterText)
-    TextView mNoCenterText;
-
-    @BindView(R.id.rl_error)
-    RelativeLayout rlError;
+    @BindView(R.id.layout_error)
+    View layoutError;
 
     @Inject
     CenterListPresenter mCenterListPresenter;
@@ -80,15 +75,13 @@ public class CenterListFragment extends MifosBaseFragment
     @Inject
     CentersListAdapter centersListAdapter;
 
-    @BindView(R.id.noCentersIcon)
-    ImageView mNoCenterIcon;
-
     private View rootView;
     private List<Center> centers;
     private List<Center> selectedCenters;
     private LinearLayoutManager layoutManager;
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
+    private SweetUIErrorHandler sweetUIErrorHandler;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -173,6 +166,7 @@ public class CenterListFragment extends MifosBaseFragment
         swipeRefreshLayout.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
     }
 
     @OnClick(R.id.fab_create_center)
@@ -194,10 +188,9 @@ public class CenterListFragment extends MifosBaseFragment
     /**
      * OnClick Error Image icon, reload the centers
      */
-    @OnClick(R.id.noCentersIcon)
+    @OnClick(R.id.btn_try_again)
     public void reloadOnError() {
-        rlError.setVisibility(View.GONE);
-        rvCenters.setVisibility(View.VISIBLE);
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(rvCenters, layoutError);
         mCenterListPresenter.loadCenters(false, 0);
         mCenterListPresenter.loadDatabaseCenters();
     }
@@ -232,9 +225,8 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showEmptyCenters(int message) {
-        rvCenters.setVisibility(View.GONE);
-        rlError.setVisibility(View.VISIBLE);
-        mNoCenterText.setText(getStringMessage(message));
+        sweetUIErrorHandler.showSweetEmptyUI(getString(R.string.center), getString(message),
+                R.drawable.ic_error_black_24dp, rvCenters, layoutError);
     }
 
     /**
@@ -255,7 +247,7 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showCentersGroupAndMeeting(final CenterWithAssociations centerWithAssociations,
-                                           final int id) {
+            final int id) {
         MFDatePicker mfDatePicker = new MFDatePicker();
         mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
             @Override
@@ -280,11 +272,9 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showFetchingError() {
-        rvCenters.setVisibility(View.GONE);
-        rlError.setVisibility(View.VISIBLE);
-        String errorMessage = getStringMessage(R.string.failed_to_fetch_centers)
-                + getStringMessage(R.string.new_line) + getStringMessage(R.string.click_to_refresh);
-        mNoCenterText.setText(errorMessage);
+        String errorMessage = getStringMessage(R.string.failed_to_fetch_centers);
+        sweetUIErrorHandler.showSweetErrorUI(errorMessage,
+                R.drawable.ic_error_black_24dp, rvCenters, layoutError);
     }
 
     /**
@@ -312,7 +302,6 @@ public class CenterListFragment extends MifosBaseFragment
     public void unregisterSwipeAndScrollListener() {
         rvCenters.clearOnScrollListeners();
         swipeRefreshLayout.setEnabled(false);
-        mNoCenterIcon.setEnabled(false);
     }
 
     @Override

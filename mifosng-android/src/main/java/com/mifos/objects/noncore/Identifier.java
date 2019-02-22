@@ -33,14 +33,6 @@ public class Identifier implements Parcelable {
     @SerializedName("status")
     String status;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -81,6 +73,13 @@ public class Identifier implements Parcelable {
         this.description = description;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @Override
     public int describeContents() {
@@ -100,6 +99,10 @@ public class Identifier implements Parcelable {
     public Identifier() {
     }
 
+    public Identifier(int id) {
+        this.id = id;
+    }
+
     protected Identifier(Parcel in) {
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.clientId = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -109,8 +112,7 @@ public class Identifier implements Parcelable {
         this.status = in.readString();
     }
 
-    public static final Parcelable.Creator<Identifier> CREATOR = new Parcelable
-            .Creator<Identifier>() {
+    public static final Creator<Identifier> CREATOR = new Creator<Identifier>() {
         @Override
         public Identifier createFromParcel(Parcel source) {
             return new Identifier(source);
