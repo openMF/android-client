@@ -141,6 +141,32 @@ public class Constants {
 
     public static final String INTIAL_LOGIN = "initial_login";
 
+    public static final String INDIVIDUAL_SHEET = "collection_sheet";
+
+    public static final String DISBURSEMENT_DATE = "disbursement_date";
+
+    public static final String TRANSACTION_DATE = "transaction_date";
+
+    public static final String ADAPTER_POSITION = "adapter_position";
+
+    public static final String PAYLOAD = "payload";
+
+    public static final String PAYMENT_LIST = "payment_list";
+
+    public static final String LOAN_AND_CLIENT = "loan_and_client_item";
+
+    public static final String PAYMENT_OPTIONS = "payment_options";
+
+    public static final String MEMBERS = "members";
+
+    public static final String NEW = "NEW";
+
+    public static final String SAVED = "SAVED";
+
+    public static final String FILLNOW = "FillNow";
+
+
+
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
     public static final int REQUEST_PERMISSION_SETTING = 254;
