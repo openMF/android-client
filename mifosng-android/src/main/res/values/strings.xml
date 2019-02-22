@@ -188,7 +188,7 @@
     <string name="dialog_logout">Are you sure you want to logout?</string>
     <string name="browse">Browse</string>
     <string name="selected_file">Selected File</string>
-    <string name="currency">Currency</string> 
+    <string name="currency">Currency</string>
     <!-- General Terms End Here -->
 
 
@@ -237,7 +237,6 @@
     <string name="collection_loan_product">Loan:%1$s</string>
     <string name="collection_saving_product">Saving:%1$s</string>
     <string name="collection_heading_charges">%1$s/Charges</string>
-
 
 
     <!-- RunReport relates Strings -->
@@ -764,6 +763,7 @@
     <string name="error_passcode">Passcode should be of 4 digit</string>
     <string name="title_activity_sync_client_payload" translatable="false">SyncClientPayloadActivity</string>
     <string name="client_search_hint"></string>
+    <string name="view_image">View photo</string>
 
 
 </resources>

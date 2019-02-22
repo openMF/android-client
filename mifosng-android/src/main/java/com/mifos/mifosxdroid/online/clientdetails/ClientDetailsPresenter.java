@@ -1,5 +1,7 @@
 package com.mifos.mifosxdroid.online.clientdetails;
 
+import android.content.Intent;
+
 import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.mifosxdroid.base.BasePresenter;
@@ -48,6 +50,9 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
         super.detachView();
         if (mSubscription != null) mSubscription.unsubscribe();
     }
+
+
+
 
     public void uploadImage(int id, File pngFile) {
         checkViewAttached();

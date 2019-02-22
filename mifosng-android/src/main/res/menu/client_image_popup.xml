@@ -12,4 +12,9 @@
     <item
         android:id="@+id/client_image_remove"
         android:title="@string/menu_remove_photo" />
+    <item
+        android:id="@+id/client_image_view"
+        android:title="@string/view_image"/>
+
+
 </menu>

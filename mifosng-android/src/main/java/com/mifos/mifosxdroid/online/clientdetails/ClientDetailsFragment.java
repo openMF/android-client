@@ -293,6 +293,25 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
+
+    public void ShowClientImage(Client client){
+
+        Intent intent= new Intent(getActivity(),image_view_activity.class);
+
+        if (client.isImagePresent()) {
+
+           //ImageLoaderUtils.loadImage(getContext(),clientId,iv_clientImage);
+
+            intent.putExtra("resId",client.getId());
+
+        } else {
+            intent.putExtra("resId",R.drawable.ic_launcher);
+
+        }
+
+        startActivity(intent);
+    }
+
     /**
      * A service to upload the image of the client.
      *
@@ -408,6 +427,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     }
 
+
+
     @Override
     public void showProgressbar(boolean show) {
         if (show) {
@@ -420,7 +441,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     }
 
     @Override
-    public void showClientInformation(Client client) {
+    public void showClientInformation(final Client client) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
             isClientActive = client.isActive();
@@ -478,6 +499,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                                     switch (menuItem.getItemId()) {
                                         case R.id.client_image_capture:
                                             captureClientImage();
+                                            break;
+                                        case R.id.client_image_view:
+                                            ShowClientImage( client);
                                             break;
                                         case R.id.client_image_remove:
                                             mClientDetailsPresenter.deleteClientImage(clientId);
