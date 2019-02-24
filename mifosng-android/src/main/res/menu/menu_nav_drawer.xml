@@ -80,5 +80,14 @@
             />
          
     </group>
+
+    <group android:checkableBehavior="none"
+        android:id="@+id/group4">
+         
+        <item
+            android:id="@+id/item_about_us"
+            android:title="@string/about_us"/>
+         
+    </group>
      
 </menu>
