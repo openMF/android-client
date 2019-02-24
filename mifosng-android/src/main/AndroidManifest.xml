@@ -150,6 +150,10 @@
             android:label="@string/pass_code"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".AboutUsActivity"
+            android:label="@string/about_us"
+            android:screenOrientation="portrait"/>
+
         <service android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false"/>
 

@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SettingsActivity;
+import com.mifos.mifosxdroid.AboutUsActivity;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
@@ -228,6 +229,10 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
             case R.id.runreport:
                 intent.setClass(this, RunReportsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.item_about_us:
+                intent.setClass(this, AboutUsActivity.class);
                 startActivity(intent);
                 break;
         }
