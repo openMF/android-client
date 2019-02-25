@@ -303,16 +303,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
 
         startActivity(intent);
-//        if (client.isImagePresent()) {
-//            loadClientProfileImage();
-//        } else {
-//            iv_clientImage.setImageDrawable(
-//                    ResourcesCompat.getDrawable(getResources(), R.drawable
-//                            .ic_launcher, null));
-//
-//            pb_imageProgressBar.setVisibility(GONE);
-//        }
-
     }
 
 
