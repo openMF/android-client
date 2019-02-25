@@ -611,5 +611,6 @@
     <string name="collectionsheet_submit_success">कलेक्शन शीट सफलतापूर्वक जमा कर दी गई</string>
     <string name="individual_collection_sheet">व्यक्तिगत कलेक्शन शीट</string>
     <string name="due_collection">कलेक्शन का देय</string>
+    <string name="menu_image_view">View Image</string>
 
 </resources>

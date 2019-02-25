@@ -555,6 +555,7 @@
     <string name="error_passcode">Code de passe</string>
     <string name="dialog_message_permission_never_ask_again_read">L\'application a besoin de la permission de lire le stockage externe, mais vous avez déjà coché le bouton Ne jamais demander à nouveau.</string>
     <string name="dialog_action_ok">D\'accord</string>
+    <string name="menu_image_view">View Image</string>
 
     <string-array name="office_ids">
         <item>siège social</item>

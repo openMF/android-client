@@ -293,6 +293,30 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
+    /* to Show Client Image on click. moving to next activity on click*/
+
+    public void showImageView(int clientId)
+    {
+        Intent intent = new Intent(getActivity(), ImageViewActivity.class);
+
+        intent.putExtra("resId",clientId);
+
+
+        startActivity(intent);
+//        if (client.isImagePresent()) {
+//            loadClientProfileImage();
+//        } else {
+//            iv_clientImage.setImageDrawable(
+//                    ResourcesCompat.getDrawable(getResources(), R.drawable
+//                            .ic_launcher, null));
+//
+//            pb_imageProgressBar.setVisibility(GONE);
+//        }
+
+    }
+
+
+
     /**
      * A service to upload the image of the client.
      *
@@ -482,6 +506,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                                         case R.id.client_image_remove:
                                             mClientDetailsPresenter.deleteClientImage(clientId);
                                             break;
+                                        case R.id.client_view_image:
+                                            showImageView(clientId);
                                         default:
                                             Log.e("ClientDetailsFragment", "Unrecognized " +
                                                     "client " +
