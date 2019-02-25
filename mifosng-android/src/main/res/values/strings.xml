@@ -33,6 +33,7 @@
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
+    <string name="date_colon">Date:</string>
     <string name="payment_type">Payment Type</string>
     <string name="mifos_instance_domain">Mifos Instance Domain</string>
     <string name="username">Username</string>
@@ -188,6 +189,16 @@
     <string name="dialog_logout">Are you sure you want to logout?</string>
     <string name="browse">Browse</string>
     <string name="selected_file">Selected File</string>
+
+     <string name="found_sheet">Found Collection Sheet</string>
+    <string name="save_sheet_text">You Can Save this Collection Sheet for Offline Use also.</string>
+    <string name="fill_now">Fill Now</string>
+    <string name="members">Members:</string>
+    <string name="no_saved_sheet">No Saved Collection sheet</string>
+    <string name="no_payment_added">No Payment Added</string>
+    <string name="add_payment_detail">Add Payment Detail</string>
+    <string name="generate_new">Generate New</string>
+
     <string name="currency">Currency</string>
     <!-- General Terms End Here -->
 
@@ -232,11 +243,15 @@
     <string name="bank_number">Bank Number</string>
     <string name="branch_name">Branch Name</string>
     <string name="meeting_calender">Meeting Calendar</string>
-    <string name="productive_collection_sheet">Productive CollectionSheet</string>
+    <string name="productive_collection_sheet">Productive Collection Sheet</string>
     <string name="attendance">Attendance</string>
     <string name="collection_loan_product">Loan:%1$s</string>
     <string name="collection_saving_product">Saving:%1$s</string>
     <string name="collection_heading_charges">%1$s/Charges</string>
+
+    <string name="generate">Generate</string>
+    <string name="fill_collection_sheet_message">Please fill in appropriate details to find the collection sheet to generate.</string>
+    <string name="clear">Clear</string>
 
 
     <!-- RunReport relates Strings -->
@@ -321,7 +336,8 @@
     <string name="payment_failed">Payment Failed</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="loan_submission_date">Submission Date</string>
-
+    <string name="total_charges">Total Charges:</string>
+    <string name="total_dues">Total Due:</string>
     <!-- Loan Related Terminologies End Here -->
 
 
@@ -621,7 +637,6 @@
     <string name="dialog_action_i_am_sure">I\'M Sure</string>
     <string name="dialog_action_re_try">Re-Try</string>
     <string name="dialog_action_app_settings">App Settings</string>
-
 
     <!--OnError Message-->
     <string name="failed_to_load_clientpayload">Failed to load ClientPayload</string>
