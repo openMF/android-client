@@ -287,6 +287,17 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         return super.onOptionsItemSelected(item);
     }
 
+    /* to Show Client Image on click. moving to next activity on click*/
+
+    public void showImageView(int clientId)
+    {
+        Intent intent = new Intent(getActivity(), ClientImageView.class);
+        intent.putExtra("resId",clientId);
+        startActivity(intent);
+    }
+
+
+
     public void captureClientImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(capturedClientImageFile));
@@ -479,6 +490,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                                         case R.id.client_image_capture:
                                             captureClientImage();
                                             break;
+                                        case R.id.client_image_show:
+                                            showImageView(clientId);
                                         case R.id.client_image_remove:
                                             mClientDetailsPresenter.deleteClientImage(clientId);
                                             break;
