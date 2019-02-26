@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.injection.component;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.collectionsheetdialog.CollectionSheetDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment;
@@ -33,6 +34,9 @@ import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment;
+import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment;
+import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment;
+import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
@@ -190,11 +194,19 @@ public interface ActivityComponent {
 
     void inject(IndividualCollectionSheetFragment individualCollectionSheetFragment);
 
+    void inject(NewIndividualCollectionSheetFragment individualCollectionSheetFragment);
+
+    void inject(IndividualCollectionSheetDetailsFragment individualCollectionSheetDetailsFragment);
+
     void inject(ReportCategoryFragment reportCategoryFragment);
 
     void inject(ReportDetailFragment reportDetailFragment);
 
     void inject(ReportFragment
                         clientReportFragment);
+
+    void inject(CollectionSheetDialogFragment collectionSheetDialogFragment);
+
+    void inject(PaymentDetailsFragment paymentDetailsFragment);
 
 }
