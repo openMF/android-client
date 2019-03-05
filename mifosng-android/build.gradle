@@ -11,7 +11,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.3.1'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
     }
@@ -109,6 +109,7 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/dbflow-kotlinextensions-compileReleaseKotlin.kotlin_module'
     }
     useLibrary 'org.apache.http.legacy'
 
@@ -142,8 +143,8 @@ dependencies {
     implementation fileTree(dir: 'src/main/libs', include: ['*.jar'])
 
     //DBFlow dependencies
+    annotationProcessor "com.github.Raizlabs.DBFlow.dbflow:dbflow-processor:3.1.1"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
 
     // App's Support dependencies, including test
