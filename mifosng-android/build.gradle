@@ -42,6 +42,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6
         versionName "1.0.1"
+        javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
         // A test runner provided by https://code.google.com/p/android-test-kit/
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -143,7 +144,7 @@ dependencies {
 
     //DBFlow dependencies
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.raizLabsDBFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
+    // implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
 
     // App's Support dependencies, including test

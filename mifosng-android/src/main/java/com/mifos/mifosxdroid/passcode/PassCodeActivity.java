@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.passcode;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
@@ -19,6 +20,7 @@ public class PassCodeActivity extends MifosPassCodeActivity {
 
     @Override
     public void startNextActivity() {
+        Toast.makeText(this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, DashboardActivity.class));
     }
 
