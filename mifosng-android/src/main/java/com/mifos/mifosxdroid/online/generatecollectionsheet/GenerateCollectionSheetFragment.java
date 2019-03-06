@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -65,7 +66,7 @@ import butterknife.ButterKnife;
 
 public class GenerateCollectionSheetFragment extends MifosBaseFragment
         implements GenerateCollectionSheetMvpView, Spinner.OnItemSelectedListener,
-        View.OnClickListener, MFDatePicker.OnDatePickListener {
+        View.OnClickListener, MFDatePicker.OnDatePickListener, AdapterView.OnItemClickListener {
 
     public static final String LIMIT = "limit";
     public static final String ORDER_BY = "orderBy";
@@ -81,7 +82,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     private final int TAG_TYPE_COLLECTION = 222;
 
     @BindView(R.id.sp_branch_offices)
-    Spinner spOffices;
+    AutoCompleteTextView spOffices;
 
     @BindView(R.id.sp_staff)
     Spinner spStaff;
@@ -210,8 +211,10 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (getActivity() == null) return;
         officeNameIdHashMap = presenter.createOfficeNameIdMap(offices, officeNames);
-        setSpinner(spOffices, officeNames);
-        spOffices.setOnItemSelectedListener(this);
+        setAutoCompleteTextView(spOffices, officeNames);
+        spOffices.setOnClickListener(this);
+        spOffices.setOnItemClickListener(this);
+        spOffices.setThreshold(0);
     }
 
     @Override
@@ -250,17 +253,6 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
                     inflateGroupSpinner(officeId, staffId);
                 } else {
                     Toaster.show(rootView, getString(R.string.error_select_staff));
-                }
-                break;
-
-            case R.id.sp_branch_offices:
-                officeId = officeNameIdHashMap.get(officeNames.get(i));
-                if (officeId != -1) {
-                    inflateStaffSpinner(officeId);
-                    inflateCenterSpinner(officeId, -1);
-                    inflateGroupSpinner(officeId, -1);
-                } else {
-                    Toaster.show(rootView, getString(R.string.error_select_office));
                 }
                 break;
 
@@ -304,6 +296,11 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
                         submitCollectionSheet();
                         break;
                 }
+                break;
+
+            case R.id.sp_branch_offices:
+                spOffices.requestFocus();
+                spOffices.showDropDown();
         }
     }
 
@@ -849,6 +846,13 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
         spGroups.setOnItemSelectedListener(this);
     }
 
+    private void setAutoCompleteTextView(AutoCompleteTextView textView, List<String> values) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.select_dialog_item, values);
+        adapter.notifyDataSetChanged();
+        textView.setAdapter(adapter);
+    }
+
     private void setSpinner(Spinner spinner, List<String> values) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, values);
@@ -875,5 +879,18 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     public void onDestroyView() {
         super.onDestroyView();
         presenter.detachView();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String selected = (String) parent.getItemAtPosition(position);
+        officeId = officeNameIdHashMap.get(selected);
+        if (officeId != -1) {
+            inflateStaffSpinner(officeId);
+            inflateCenterSpinner(officeId, -1);
+            inflateGroupSpinner(officeId, -1);
+        } else {
+            Toaster.show(rootView, getString(R.string.error_select_office));
+        }
     }
 }
