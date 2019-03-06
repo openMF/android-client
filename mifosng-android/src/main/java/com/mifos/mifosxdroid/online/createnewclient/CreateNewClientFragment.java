@@ -147,6 +147,7 @@ public class CreateNewClientFragment extends ProgressableFragment
         clientTypeList = new ArrayList<>();
         officeList = new ArrayList<>();
         staffList = new ArrayList<>();
+        clientStaff = new ArrayList<>();
     }
 
     @Override
