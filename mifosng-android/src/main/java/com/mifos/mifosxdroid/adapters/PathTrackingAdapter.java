@@ -152,7 +152,7 @@ public class PathTrackingAdapter extends RecyclerView.Adapter<PathTrackingAdapte
             MapsInitializer.initialize(context);
             map = googleMap;
             UserLatLng data = (UserLatLng) mvUserLocation.getTag();
-            if (data != null) {
+            if (data != null && userLatLngs.size() != 0) {
                 setMapLocation(map, data);
             }
         }
