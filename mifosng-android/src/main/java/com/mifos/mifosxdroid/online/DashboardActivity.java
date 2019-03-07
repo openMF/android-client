@@ -244,7 +244,7 @@ public class DashboardActivity extends MifosBaseActivity
      */
     public void setupUserStatusToggle() {
         userStatusToggle
-                = (SwitchCompat) mNavigationHeader.findViewById(R.id.user_status_toggle);
+                = mNavigationHeader.findViewById(R.id.user_status_toggle);
         if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
             userStatusToggle.setChecked(true);
         }
