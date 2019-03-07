@@ -215,6 +215,8 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @OnClick(R.id.bt_login)
     public void onLoginClick() {
+        //Hide the keyboard, when user clicks on login button
+        hideKeyboard(findViewById(R.id.bt_login));
         login();
     }
 
