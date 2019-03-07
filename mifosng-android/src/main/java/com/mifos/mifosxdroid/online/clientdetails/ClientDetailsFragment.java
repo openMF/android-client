@@ -498,6 +498,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                                             break;
                                         case R.id.client_view_image:
                                             showImageView(clientId);
+                                            break;
                                         default:
                                             Log.e("ClientDetailsFragment", "Unrecognized " +
                                                     "client " +
