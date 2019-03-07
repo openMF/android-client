@@ -774,6 +774,7 @@
     <string name="error_passcode">Passcode should be of 4 digit</string>
     <string name="title_activity_sync_client_payload" translatable="false">SyncClientPayloadActivity</string>
     <string name="client_search_hint"></string>
-
+    <string name="path_tracking_channel_name">Path Tracking channel</string>
+    <string name="path_tracking_channel_description">Path Tracker</string>
 
 </resources>

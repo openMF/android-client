@@ -5,6 +5,8 @@
 
 package com.mifos;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -15,10 +17,12 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.injection.component.ApplicationComponent;
 import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.mifos.mobile.passcode.utils.ForegroundChecker;
+import com.mifos.utils.Constants;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -67,6 +71,7 @@ public class App extends MultiDexApplication {
             StrictMode.setVmPolicy(policy);
         }
         ForegroundChecker.init(this);
+        createNotificationChannel(this);
     }
 
     public ApplicationComponent getComponent() {
@@ -83,4 +88,16 @@ public class App extends MultiDexApplication {
         mApplicationComponent = applicationComponent;
     }
 
+    public static void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = context.getString(R.string.path_tracking_channel_name);
+            String description = context.getString(R.string.path_tracking_channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel
+                    (Constants.PATH_TRACKER_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 }

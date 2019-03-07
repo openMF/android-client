@@ -16,6 +16,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -62,7 +63,7 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
     private LocationRequest locationRequest;
     private Location currentLocation;
 
-    private NotificationManager notificationManager;
+    private NotificationManagerCompat notificationManager;
     private NotificationCompat.Builder notification;
     private BroadcastReceiver notificationReceiver;
 
@@ -153,8 +154,9 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
     }
 
     public void startNotification() {
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notification = new NotificationCompat.Builder(this)
+        App.createNotificationChannel(this);
+        notificationManager = NotificationManagerCompat.from(this);
+        notification = new NotificationCompat.Builder(this, Constants.PATH_TRACKER_CHANNEL_ID)
                 .setContentTitle(getString(R.string.mifos_path_tracker))
                 .setAutoCancel(false)
                 .setOngoing(true)

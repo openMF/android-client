@@ -24,6 +24,10 @@ public class Constants {
 
     public static final String API_PATH = "/mifosng-provider/api/v1";
 
+    /**
+     * Path Tracker Notification Channel ID
+     */
+    public static final String PATH_TRACKER_CHANNEL_ID = "pathTrackerChannelID";
 
     /**
      * Entity Type, Like Clients, Groups, Staff, Loans, Savings and Client Identifiers
