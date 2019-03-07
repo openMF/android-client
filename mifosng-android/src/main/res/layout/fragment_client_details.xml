@@ -36,8 +36,9 @@
 
             <TableLayout
                 android:id="@+id/tbl_clientDetails"
-                style="@style/Table">
-
+                style="@style/Table"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
                 <TableRow
                     android:id="@+id/row_account"
                     style="@style/TableRow">
@@ -143,19 +144,25 @@
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
 
             <include
                 android:id="@+id/account_accordion_section_savings"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
 
             <include
                 android:id="@+id/account_accordion_section_recurring"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
 
         </LinearLayout>
     </ScrollView>
