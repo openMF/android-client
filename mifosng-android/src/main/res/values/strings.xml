@@ -198,6 +198,7 @@
     <string name="add_payment_detail">Add Payment Detail</string>
     <string name="generate_new">Generate New</string>
     <string name="currency">Currency</string>
+    <string name="Log_in_success">Logged in successfully</string>
     <!-- General Terms End Here -->
 
 
