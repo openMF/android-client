@@ -26,7 +26,7 @@ public class ProgressableDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewFlipper = (ViewFlipper) view.findViewById(R.id.view_flipper);
+        viewFlipper = view.findViewById(R.id.view_flipper);
 
         if (viewFlipper == null) {
             throw new NullPointerException("Are you sure your Fragment has a ViewFlipper with id " +
