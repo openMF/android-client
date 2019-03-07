@@ -64,6 +64,7 @@ public class DashboardActivity extends MifosBaseActivity
     private Menu menu;
     private boolean doubleBackToExitPressedOnce = false;
     private boolean itemClient = true, itemCenter = true, itemGroup = true;
+    private final int DELAY_FOR_SECOND_BACK_PRESS = 2000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -307,13 +308,14 @@ public class DashboardActivity extends MifosBaseActivity
                 return;
             }
             this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+            if (fragment instanceof CreateNewClientFragment
+                    || fragment instanceof CreateNewCenterFragment
+                    || fragment instanceof CreateNewGroupFragment) {
+                showToastOnBackPressed(R.string.back_to_dashboard);
+            } else {
+                showToastOnBackPressed(R.string.back_again);
+            }
         }
     }
 
@@ -373,6 +375,16 @@ public class DashboardActivity extends MifosBaseActivity
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    private void showToastOnBackPressed(int msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, DELAY_FOR_SECOND_BACK_PRESS);
     }
 }
 

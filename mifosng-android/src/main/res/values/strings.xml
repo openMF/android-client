@@ -186,6 +186,7 @@
     <string name="disburse_loan">Disburse Loan</string>
     <string name="logging_in">Logging In</string>
     <string name="back_again">Please press back again to exit</string>
+    <string name="back_to_dashboard">Press again to go to Dashboard</string>
     <string name="dialog_logout">Are you sure you want to logout?</string>
     <string name="browse">Browse</string>
     <string name="selected_file">Selected File</string>
