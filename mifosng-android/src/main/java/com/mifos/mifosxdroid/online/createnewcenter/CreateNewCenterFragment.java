@@ -119,6 +119,11 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     layout_submission.setVisibility(View.VISIBLE);
+
+                    activationdateString = tv_activationDate.getText().toString();
+                    activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                    (activationdateString).replace("-", " ");
+                    
                 } else {
                     layout_submission.setVisibility(View.GONE);
                 }
@@ -126,9 +131,6 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             }
         });
 
-        activationdateString = tv_activationDate.getText().toString();
-        activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                (activationdateString).replace("-", " ");
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
