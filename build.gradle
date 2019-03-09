@@ -25,5 +25,15 @@ ext {
     flipTableVersion = '1.0.1'
     butterKnifeVersion = '8.0.1'
     mifosPasscodeVersion = '0.3.0'
-
+    sweetErrorVersion = '1.0.0'
+    stethoVersion = '1.3.1'
+    rxAndroidVersion = '1.1.0'
+    rxJavaVersion = '1.1.4'
+    junitVersion = '4.12'
+    mockitoVersion = '1.10.19'
+    glideVersion = '3.7.0'
+    textDrawableVersion = '1.0.1'
+    iconifyVersion = '2.1.1'
+    crashlyticsVersion = '2.6.6@aar'
+    multidexVersion = '1.0.1'
 }
