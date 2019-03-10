@@ -6,6 +6,7 @@ import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.runreports.client.ClientReportTypeItem;
 import com.mifos.utils.MFErrorParser;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -72,6 +73,8 @@ public class ReportCategoryPresenter extends BasePresenter<ReportCategoryMvpView
                                 // Hence, show Developer message.
                                 getMvpView().showError(MFErrorParser.parseError(errorMessage)
                                         .getErrors().get(0).getDeveloperMessage());
+                            } else if (e instanceof UnknownHostException) {
+                                getMvpView().showError(MFErrorParser.errorMessage(e));
                             }
                         } catch (Throwable throwable) {
                             RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
