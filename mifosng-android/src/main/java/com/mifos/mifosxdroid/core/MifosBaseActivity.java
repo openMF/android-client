@@ -123,7 +123,7 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
     public void hideKeyboard(View view) {
         InputMethodManager inputManager = (InputMethodManager) this
                  .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager
                  .RESULT_UNCHANGED_SHOWN);
     }
 
