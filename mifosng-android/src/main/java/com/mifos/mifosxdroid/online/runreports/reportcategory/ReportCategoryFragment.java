@@ -59,6 +59,18 @@ public class ReportCategoryFragment extends MifosBaseFragment
         }
     };
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(this.broadCastNewMessage,
+                new IntentFilter(Constants.ACTION_REPORT));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(this.broadCastNewMessage);
+    }
 
     public ReportCategoryFragment() {
     }
@@ -74,8 +86,6 @@ public class ReportCategoryFragment extends MifosBaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        getActivity().registerReceiver(this.broadCastNewMessage,
-                new IntentFilter(Constants.ACTION_REPORT));
     }
 
     @Nullable
