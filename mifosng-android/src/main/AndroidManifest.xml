@@ -54,7 +54,6 @@
         <activity
             android:name=".online.DashboardActivity"
             android:label="@string/dashboard"
-            android:theme="@style/TraslucentActionBarTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.SurveyQuestionActivity"

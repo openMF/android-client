@@ -41,7 +41,7 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
@@ -123,7 +123,7 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
     public void hideKeyboard(View view) {
         InputMethodManager inputManager = (InputMethodManager) this
                  .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager
                  .RESULT_UNCHANGED_SHOWN);
     }
 
