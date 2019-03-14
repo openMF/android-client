@@ -23,7 +23,7 @@
         <TextView
             style="@style/Base.TextAppearance.AppCompat.Large"
             android:id="@+id/tv_document_action"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:paddingBottom="@dimen/layout_padding_30dp"
             android:paddingLeft="24dp"
@@ -36,7 +36,7 @@
             android:textStyle="bold"/>
 
         <android.support.design.widget.TextInputLayout
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
@@ -45,13 +45,13 @@
                 android:hint="@string/name"
                 android:id="@+id/et_document_name"
                 android:inputType="text"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_description"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
@@ -61,7 +61,7 @@
                 android:hint="@string/description"
                 android:id="@+id/et_document_description"
                 android:inputType="textMultiLine"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:scrollHorizontally="false"
                 android:scrollbars="vertical"/>
@@ -71,7 +71,7 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/til_selected_file"
                 android:gravity="center"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight=".7"
                 android:layout_width="match_parent"
                 android:paddingEnd="8dp"
@@ -83,7 +83,7 @@
                     android:id="@+id/tv_choose_file"
                     android:inputType="text"
                     android:lines="1"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:scrollHorizontally="false"
                     android:enabled="false"
