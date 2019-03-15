@@ -682,7 +682,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 getListView(context).setVisibility(GONE);
             }
 
-            private void configureSection(Activity context, final AccountAccordion accordion) {
+            private void configureSection(final Activity context, final AccountAccordion accordion) {
                 final ListView listView = getListView(context);
                 final TextView textView = getTextView(context);
                 final IconTextView iconView = getIconView(context);
@@ -694,6 +694,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                             accordion.setCurrentSection(null);
                         } else if (listView != null && listView.getCount() > 0) {
                             accordion.setCurrentSection(Section.this);
+                        } else if (listView.getCount() == 0){
+                            Toast.makeText(context, "No "+textView.getText().toString()+" found.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
