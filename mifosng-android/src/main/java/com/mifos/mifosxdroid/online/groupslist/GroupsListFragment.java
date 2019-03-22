@@ -4,7 +4,9 @@
  */
 package com.mifos.mifosxdroid.online.groupslist;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
@@ -319,7 +321,9 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @Override
     public boolean isInternetConnected() {
-        return Utils.isInternetAvailable(getContext());
+        ConnectivityManager cm =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
 
