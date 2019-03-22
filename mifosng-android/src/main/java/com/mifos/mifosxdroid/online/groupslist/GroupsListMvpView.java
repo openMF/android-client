@@ -23,4 +23,6 @@ public interface GroupsListMvpView extends MvpView {
     void showMessage(int message);
 
     void showFetchingError();
+
+    boolean isInternetConnected();
 }

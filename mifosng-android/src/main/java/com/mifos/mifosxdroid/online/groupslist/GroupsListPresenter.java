@@ -1,10 +1,13 @@
 package com.mifos.mifosxdroid.online.groupslist;
 
+import android.content.Context;
+
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Page;
 import com.mifos.objects.group.Group;
+import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,6 +139,11 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
                         getMvpView().showProgressbar(false);
                     }
                 }));
+         //Check internet connection
+        if (!getMvpView().isInternetConnected()) {
+            getMvpView().showProgressbar(false);
+            getMvpView().showFetchingError();
+        }
     }
 
     public void loadDatabaseGroups() {

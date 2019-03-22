@@ -33,6 +33,7 @@ import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -314,6 +315,11 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         String errorMessage = getStringMessage(R.string.failed_to_fetch_groups);
         sweetUIErrorHandler.showSweetErrorUI(errorMessage,
                 R.drawable.ic_error_black_24dp, rv_groups, errorView);
+    }
+
+    @Override
+    public boolean isInternetConnected() {
+        return Utils.isInternetAvailable(getContext());
     }
 
 

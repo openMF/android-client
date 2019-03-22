@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.ConnectivityManager;
 import android.support.v4.content.ContextCompat;
 
 import com.mifos.mifosxdroid.R;
@@ -12,6 +13,7 @@ import com.mifos.objects.accounts.loan.LoanAccount;
 import com.mifos.objects.accounts.savings.SavingsAccount;
 import com.mifos.objects.client.Client;
 
+import java.net.InetAddress;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -185,5 +187,11 @@ public class Utils {
         Drawable image = ContextCompat.getDrawable(context, R.drawable.circular_background);
         LayerDrawable ld = new LayerDrawable(new Drawable[]{image, color});
         return ld;
+    }
+
+    public static boolean isInternetAvailable(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }
