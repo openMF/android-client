@@ -45,8 +45,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:checked="false"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:text="@string/center_active"
+            android:gravity="left"
+            android:textSize="15dp"
             />
 
         <LinearLayout
