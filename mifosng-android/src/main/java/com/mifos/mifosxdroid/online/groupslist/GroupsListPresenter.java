@@ -49,7 +49,7 @@ public class GroupsListPresenter extends BasePresenter<GroupsListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        mSubscriptions.clear();
     }
 
     public void loadGroups(Boolean loadmore, int offset) {
