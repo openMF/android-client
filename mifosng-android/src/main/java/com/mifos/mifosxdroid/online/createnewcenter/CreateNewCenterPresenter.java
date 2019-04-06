@@ -39,7 +39,7 @@ public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpVi
     @Override
     public void detachView() {
         super.detachView();
-        subscriptions.unsubscribe();
+        subscriptions.clear();
     }
 
 
