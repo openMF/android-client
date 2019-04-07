@@ -137,7 +137,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Client not found.");
+                        getMvpView().showFetchingError("Failed to load Client");
                     }
 
                     @Override
