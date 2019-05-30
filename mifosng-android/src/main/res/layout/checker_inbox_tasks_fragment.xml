@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_refresh_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/ll_checker_inbox_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <RelativeLayout
+            android:id="@+id/rl_checker_inbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:minHeight="@dimen/dimension_72_dp"
+            android:paddingLeft="@dimen/layout_padding_24dp"
+            android:paddingRight="@dimen/layout_padding_24dp">
+
+            <ImageView
+                android:id="@+id/iv_checker_inbox_icon"
+                android:layout_width="@dimen/dimension_32_dp"
+                android:layout_height="@dimen/dimension_32_dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_mail_outline_24dp" />
+
+            <TextView
+                android:id="@+id/tv_checker_inbox"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/layout_padding_16dp"
+                android:layout_toRightOf="@+id/iv_checker_inbox_icon"
+                android:singleLine="true"
+                android:text="@string/checker_inbox"
+                android:textColor="#222222"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badge_checker_inbox"
+                style="@style/badge_style"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0" />
+        </RelativeLayout>
+
+        <View style="@style/divider_style" />
+
+        <RelativeLayout
+            android:id="@+id/rl_client_approval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:minHeight="@dimen/dimension_72_dp"
+            android:paddingLeft="@dimen/layout_padding_24dp"
+            android:paddingRight="@dimen/layout_padding_24dp">
+
+            <ImageView
+                android:id="@+id/iv_client_approval_icon"
+                android:layout_width="@dimen/dimension_32_dp"
+                android:layout_height="@dimen/dimension_32_dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_supervisor_account_24dp" />
+
+            <TextView
+                android:id="@+id/tv_client_approval"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/layout_padding_16dp"
+                android:layout_toRightOf="@+id/iv_client_approval_icon"
+                android:singleLine="true"
+                android:text="@string/client_approval"
+                android:textColor="#222222"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badge_client_approval"
+                style="@style/badge_style"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0" />
+        </RelativeLayout>
+
+        <View style="@style/divider_style" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:minHeight="@dimen/dimension_72_dp"
+            android:paddingLeft="@dimen/layout_padding_24dp"
+            android:paddingRight="@dimen/layout_padding_24dp">
+
+            <ImageView
+                android:id="@+id/iv_loan_approval_icon"
+                android:layout_width="@dimen/dimension_32_dp"
+                android:layout_height="@dimen/dimension_32_dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_assignment_turned_in_black_24dp" />
+
+            <TextView
+                android:id="@+id/tv_loan_approval"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/layout_padding_16dp"
+                android:layout_toRightOf="@+id/iv_loan_approval_icon"
+                android:singleLine="true"
+                android:text="@string/loan_approval"
+                android:textColor="#222222"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badge_loan_approval"
+                style="@style/badge_style"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0" />
+        </RelativeLayout>
+
+        <View style="@style/divider_style" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:minHeight="@dimen/dimension_72_dp"
+            android:paddingLeft="@dimen/layout_padding_24dp"
+            android:paddingRight="@dimen/layout_padding_24dp">
+
+            <ImageView
+                android:id="@+id/iv_loan_disbursal_icon"
+                android:layout_width="@dimen/dimension_32_dp"
+                android:layout_height="@dimen/dimension_32_dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_done_all_24dp" />
+
+            <TextView
+                android:id="@+id/tv_loan_disbursal"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/layout_padding_16dp"
+                android:layout_toRightOf="@+id/iv_loan_disbursal_icon"
+                android:singleLine="true"
+                android:text="@string/loan_disbursal"
+                android:textColor="#222222"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badge_loan_disbursal"
+                style="@style/badge_style"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0" />
+        </RelativeLayout>
+
+        <View style="@style/divider_style" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:minHeight="@dimen/dimension_72_dp"
+            android:paddingLeft="@dimen/layout_padding_24dp"
+            android:paddingRight="@dimen/layout_padding_24dp">
+
+            <ImageView
+                android:id="@+id/iv_reschedule_loan_icon"
+                android:layout_width="@dimen/dimension_32_dp"
+                android:layout_height="@dimen/dimension_32_dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_restore_24dp" />
+
+            <TextView
+                android:id="@+id/tv_reschedule_loan"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/layout_padding_16dp"
+                android:layout_toRightOf="@+id/iv_reschedule_loan_icon"
+                android:singleLine="true"
+                android:text="@string/reschedule_loan"
+                android:textColor="#222222"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badge_reschedule_loan"
+                style="@style/badge_style"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0" />
+        </RelativeLayout>
+
+        <View style="@style/divider_style" />
+
+    </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
