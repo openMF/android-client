@@ -2,11 +2,11 @@ package com.mifos.mifosxdroid.tests;
 
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.support.design.widget.NavigationView;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import com.google.android.material.navigation.NavigationView;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.test.ViewAsserts;
@@ -32,9 +32,9 @@ import com.mifos.mifosxdroid.online.search.SearchFragment;
 import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.PrefManager;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by Gabriel Esteban on 06/12/14.

@@ -2,8 +2,8 @@ package com.mifos.mifosxdroid.core;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,7 +13,7 @@ import android.widget.ViewFlipper;
 import com.mifos.mifosxdroid.R;
 
 /**
- * A {@link android.support.v4.app.DialogFragment} that provides progress viewing functionality
+ * A {@link DialogFragment} that provides progress viewing functionality
  * with a ViewFlipper.
  */
 public class ProgressableDialogFragment extends DialogFragment {
