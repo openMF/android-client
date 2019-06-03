@@ -105,8 +105,7 @@
 
                 <TableRow
                     android:id="@+id/row_group"
-                    style="@style/TableRow"
-                    android:visibility="gone">
+                    style="@style/TableRow">
 
                     <TextView
                         style="@style/TextView.Row"
