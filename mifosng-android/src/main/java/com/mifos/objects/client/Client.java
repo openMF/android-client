@@ -56,6 +56,8 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     List<Integer> dobDate = new ArrayList<Integer>();
 
+    String mobileNo;
+
     @Column
     String firstname;
 
@@ -108,6 +110,14 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     public void setGroupId(int groupId) {
         this.groupId = groupId;
+    }
+
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
     }
 
     public boolean isSync() {
