@@ -793,6 +793,7 @@
     <string name="office_head">office</string>
     <string name="status_head">status</string>
     <string name="client_search_hint"></string>
+
     <string name="create_client_loading_message">Creating new client</string>
     <string name="savings_account_loading_message">Activating savings account</string>
     <string name="signature_fragment_loading_message">Uploading image</string>
@@ -800,5 +801,10 @@
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
 
+    <string name="Image_Upload_Successful">Image Upload Successful</string>
+    <string name="Image_Upload_Failed">Image Upload Failed</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="take_a_photo">Take a Photo</string>
+    <string name="remove_existing_photo">Remove Existing Photo</string>
 
 </resources>
