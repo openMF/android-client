@@ -38,6 +38,7 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -132,6 +133,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     @Override       
     public void showPathTracking(List<UserLocation> userLocations) {
         this.userLocations = userLocations;
+        Collections.reverse(userLocations);
         pathTrackingAdapter.setPathTracker(userLocations);
     }
 
