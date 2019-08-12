@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
@@ -35,11 +34,8 @@ import com.mifos.utils.CheckSelfPermissionAndRequest;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FileUtils;
 import com.mifos.utils.SafeUIBlockingUtility;
-
 import java.io.File;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -275,11 +271,15 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
             case FILE_SELECT_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     // Get the Uri of the selected file
-                    uri = data.getData();
-
+                    Uri uri = data.getData();
                     filePath = FileUtils.getPathReal(getActivity(), uri);
                     if (filePath != null) {
                         fileChoosen = new File(filePath);
+                    } else {
+                        filePath = FileUtils.getFileFromUri(getActivity(), uri);
+                        if (!filePath.equals("error")) {
+                            fileChoosen = new File(filePath);
+                        }
                     }
 
                     if (fileChoosen != null) {
