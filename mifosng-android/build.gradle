@@ -144,7 +144,10 @@ dependencies {
 
     //DBFlow dependencies
     annotationProcessor "com.github.Raizlabs.DBFlow.dbflow:dbflow-processor:3.1.1"
-    implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
+    implementation "com.github.raizlabs.dbflow:dbflow:$rootProject.raizLabsDBFlow"
+
+    // enum constant Scope.LIBRARY_GROUP
+    implementation 'com.android.support:appcompat-v7:24.2.1'
 
     // App's Support dependencies, including test
     implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -216,6 +219,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'
+    implementation 'com.android.support:appcompat-v7:24.2.1'
 
 }
 /*
