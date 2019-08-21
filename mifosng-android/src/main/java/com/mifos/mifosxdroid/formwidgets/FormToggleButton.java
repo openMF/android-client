@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.formwidgets;
 
 import android.content.Context;
-import android.support.v7.widget.SwitchCompat;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.Gravity;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;

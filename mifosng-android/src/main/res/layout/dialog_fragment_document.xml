@@ -35,7 +35,7 @@
             android:textColor="@color/primary"
             android:textStyle="bold"/>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:paddingLeft="24dp"
@@ -47,9 +47,9 @@
                 android:inputType="text"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_description"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
@@ -65,10 +65,10 @@
                 android:layout_width="match_parent"
                 android:scrollHorizontally="false"
                 android:scrollbars="vertical"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_selected_file"
                 android:gravity="center"
                 android:layout_height="match_parent"
@@ -88,7 +88,7 @@
                     android:scrollHorizontally="false"
                     android:enabled="false"
                     android:scrollbars="vertical"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
 

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary">
-        <android.support.design.widget.BottomNavigationView
+        <com.google.android.material.bottomnavigation.BottomNavigationView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/navigation"
             android:layout_width="match_parent"

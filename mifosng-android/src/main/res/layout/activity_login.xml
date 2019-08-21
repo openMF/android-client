@@ -6,7 +6,7 @@
 
     <include layout="@layout/toolbar" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         style="@style/ScrollView.Login"
         android:layout_below="@+id/toolbar"
         android:padding="@dimen/layout_padding_30dp"
@@ -25,7 +25,7 @@
                 style="@style/TextView.Login"
                 android:text="@string/enter_credentials"/>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userWrapper"
                 style="@style/TextInput.Base">
 
@@ -34,10 +34,10 @@
                     style="@style/EditText.Username"
                     android:nextFocusDown="@+id/et_password" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordWrapper"
                 style="@style/TextInput.Base"
                 app:passwordToggleEnabled="true">
@@ -46,7 +46,7 @@
                     android:id="@+id/et_password"
                     style="@style/EditText.Password"
                     android:nextFocusDown="@+id/bt_login" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
 
@@ -59,7 +59,7 @@
 
                 <LinearLayout style="@style/LinearLayout.Width">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/urlWrapper"
                         style="@style/TextInput.Base.Weight"
                         android:layout_weight="3">
@@ -70,10 +70,10 @@
                             android:hint="Instance URL"
                             android:nextFocusDown="@+id/et_instancePort" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/portWrapper"
                         style="@style/TextInput.Base.Weight"
                         android:layout_weight="1">
@@ -86,7 +86,7 @@
                             android:maxLength="9"
                             android:nextFocusDown="@+id/et_tenantIdentifier" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
 
@@ -97,7 +97,7 @@
                     android:layout_marginTop="16dp" />
 
 
-                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+                <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
 
                     <EditText
@@ -106,15 +106,15 @@
                         android:hint="@string/tenant_identifier"
                         android:nextFocusDown="@+id/bt_login" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_login"
                 style="@style/Button.Login" />
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>

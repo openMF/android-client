@@ -5,7 +5,7 @@
 
 package com.mifos.mifosxdroid.core;
 
-import android.support.v7.widget.SwitchCompat;
+import androidx.appcompat.widget.SwitchCompat;
 
 /**
  * @author fomenkoo
