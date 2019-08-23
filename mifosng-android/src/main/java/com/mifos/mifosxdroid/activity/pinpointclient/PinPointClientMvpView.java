@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.activity.pinpointclient;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mifos.mifosxdroid.base.MvpView;
 import com.mifos.objects.client.ClientAddressResponse;

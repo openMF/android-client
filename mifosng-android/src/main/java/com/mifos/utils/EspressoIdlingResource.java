@@ -16,7 +16,7 @@
 
 package com.mifos.utils;
 
-import android.support.test.espresso.IdlingResource;
+import androidx.test.espresso.IdlingResource;
 
 /**
  * @author Rajan Maurya

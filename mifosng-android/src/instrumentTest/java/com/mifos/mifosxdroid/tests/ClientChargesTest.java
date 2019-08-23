@@ -6,8 +6,8 @@
 package com.mifos.mifosxdroid.tests;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v7.view.menu.ActionMenuItem;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.view.menu.ActionMenuItem;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.view.KeyEvent;
@@ -19,11 +19,11 @@ import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.utils.Constants;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.clearText;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by ahmed fathy on 10/4/16.
