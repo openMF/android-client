@@ -12,8 +12,8 @@ Some **features** that are available in the app are:
 - Search of Clients, Client Details Viewing
 - Savings Accounts and Loan Accounts Viewing
 - Savings Account Transactions (Withdrawal & Deposit)
-- Loan Accounts (Approval, Disbursal, Repayments etc.)
-- Identifiers and Documents (Creation, Upload, Download and View)
+- Loan Accounts (Approval, Disbursal, Repayments, etc.)
+- Identifiers and Documents (Creation, Upload, Download, and View)
 - Collection Sheet Access (Online), Datatables (View, Add/Remove Entries).
 
 # Wiki
