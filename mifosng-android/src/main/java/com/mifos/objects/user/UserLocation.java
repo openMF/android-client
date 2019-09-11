@@ -14,7 +14,7 @@ public class UserLocation implements Parcelable {
     @SerializedName("user_id")
     Integer userId;
 
-    @SerializedName("latlng")
+    @SerializedName("latlang")
     String latlng;
 
     @SerializedName("start_time")
