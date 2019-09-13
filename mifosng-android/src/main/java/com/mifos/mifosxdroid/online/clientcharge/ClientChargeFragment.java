@@ -219,7 +219,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
             //checking the response size if size is zero then show toast No More
             // Clients Available for fetch
-            if (chargesPage.getPageItems().size() == 0 &&
+            if (chargesPage.getPageItems() == null &&
                     (chargesPage.getTotalFilteredRecords() == chargesList.size()))
                 Toaster.show(rootView, getString(R.string.message_no_more_charge));
         }
