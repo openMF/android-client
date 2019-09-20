@@ -19,6 +19,11 @@
     <string name="staff_name">Staff Name</string>
     <string name="level_name">Level Name</string>
     <string name="offline">Offline Sync *</string>
+    <string name="about_us">About Us</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="license">License</string>
+    <string name="copyright_mifos" translatable="false">©2016-%1$s Mifos Initiative</string>
+    <string name="all_rights_reserved">All rights reserved.</string>
     <string name="search_hint">Name or Account Number or External Id</string>
     <string name="search_results">Search Results</string>
     <string name="client_search">Client Search</string>
@@ -30,6 +35,8 @@
     <string name="locale">Locale</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
     <string name="default_instance_url" translatable="false">demo.openmf.org</string>
+    <string name="url_privacy_policy" translatable="false">https://openmf.github.io/privacy_policy_mifos_mobile.html</string>
+    <string name="url_license" translatable="false">https://openmf.github.io/privacy_policy_mifos_mobile.html</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>

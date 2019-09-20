@@ -1,5 +1,8 @@
 package com.mifos.mifosxdroid.injection.component;
 
+import com.mifos.mifosxdroid.aboutus.AboutUsFragment;
+import com.mifos.mifosxdroid.license.LicenseFragment;
+import com.mifos.mifosxdroid.privacypolicy.PrivacyPolicyFragment;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
@@ -187,6 +190,12 @@ public interface ActivityComponent {
     void inject(DataTableFragment dataTableFragment);
 
     void inject(NoteFragment noteFragment);
+
+    void inject(AboutUsFragment aboutUsFragment);
+
+    void inject(PrivacyPolicyFragment privacyPolicyFragment);
+
+    void inject(LicenseFragment licenseFragment);
 
     void inject(SavingsAccountActivateFragment savingsAccountActivateFragment);
 
