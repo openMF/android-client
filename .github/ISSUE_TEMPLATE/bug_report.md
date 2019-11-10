@@ -1,3 +1,9 @@
+---
+name: Bug report
+about: Create a bug report to help us improve
+
+---
+
 **Summary:** 
 
 Summarize your issue in one sentence (what goes wrong, what did you expect to happen)
