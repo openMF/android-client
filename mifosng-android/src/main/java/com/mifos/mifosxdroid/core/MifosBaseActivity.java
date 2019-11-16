@@ -9,11 +9,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -122,9 +124,12 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
 
     public void hideKeyboard(View view) {
         InputMethodManager inputManager = (InputMethodManager) this
-                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager
-                 .RESULT_UNCHANGED_SHOWN);
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view1 = getCurrentFocus();
+        if (view1 != null) {
+            inputManager.hideSoftInputFromWindow(view1.getWindowToken(), InputMethodManager
+                    .RESULT_UNCHANGED_SHOWN);
+        }
     }
 
     @Override
