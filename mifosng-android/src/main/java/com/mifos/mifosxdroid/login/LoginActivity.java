@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -255,5 +256,10 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     protected void onDestroy() {
         super.onDestroy();
         mLoginPresenter.detachView();
+    }
+
+    @OnClick(R.id.screen)
+    public void keyboardhide(View view) {
+        hideKeyboard(findViewById(R.id.screen));
     }
 }
