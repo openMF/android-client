@@ -40,14 +40,13 @@
         <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
         </com.google.android.material.textfield.TextInputLayout>
         <CheckBox
-            android:id="@+id/cb_center_active_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:checked="false"
-            android:paddingTop="10dp"
             android:text="@string/center_active"
-            />
+            android:id="@+id/cb_center_active_status"
+            android:checked="false"
+            android:padding="2dp"
+            android:layout_marginTop="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
