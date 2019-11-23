@@ -18,7 +18,7 @@ import java.util.Set;
 public class MapDeserializer implements JsonDeserializer<Map<String, Object>> {
 
     @Override
-    @SuppressWarnings("unchecked")
+
     public Map<String, Object> deserialize(JsonElement json, Type typeOfT,
                                            JsonDeserializationContext context)
             throws JsonParseException {

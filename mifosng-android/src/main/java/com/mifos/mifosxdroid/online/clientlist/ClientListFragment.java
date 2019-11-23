@@ -374,7 +374,7 @@ public class ClientListFragment extends MifosBaseFragment
      * Click of Menu Sync Button and finish the ActionMode
      */
     private class ActionModeCallback implements ActionMode.Callback {
-        @SuppressWarnings("unused")
+
         private final String LOG_TAG = ActionModeCallback.class.getSimpleName();
 
         @Override

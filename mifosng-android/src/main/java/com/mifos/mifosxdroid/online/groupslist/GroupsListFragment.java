@@ -368,7 +368,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
      * Click of Menu Sync Button and finish the ActionMode
      */
     private class ActionModeCallback implements ActionMode.Callback {
-        @SuppressWarnings("unused")
+
         private final String LOG_TAG = ActionModeCallback.class.getSimpleName();
 
         @Override

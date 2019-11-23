@@ -284,7 +284,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         }
     }
 
-    @SuppressWarnings("deprecation")
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

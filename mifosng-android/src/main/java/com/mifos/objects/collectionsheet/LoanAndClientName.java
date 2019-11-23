@@ -51,7 +51,7 @@ public class LoanAndClientName implements Parcelable {
         dest.writeInt(id);
     }
 
-    @SuppressWarnings("unused")
+
     public static final Parcelable.Creator<LoanAndClientName> CREATOR = new
             Parcelable.Creator<LoanAndClientName>() {
         @Override
