@@ -53,7 +53,6 @@ public class SavingsAccountsListAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 

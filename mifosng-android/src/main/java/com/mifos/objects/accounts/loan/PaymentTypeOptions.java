@@ -47,7 +47,6 @@ public class PaymentTypeOptions implements Parcelable {
         dest.writeString(name);
     }
 
-    @SuppressWarnings("unused")
     public static final Parcelable.Creator<PaymentTypeOptions> CREATOR =
             new Parcelable.Creator<PaymentTypeOptions>() {
         @Override
