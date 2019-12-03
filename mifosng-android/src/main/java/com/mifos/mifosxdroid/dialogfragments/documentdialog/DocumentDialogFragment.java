@@ -65,7 +65,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     EditText etDocumentDescription;
 
     @BindView(R.id.tv_choose_file)
-    TextView tvChooseFile;
+    EditText tvChooseFile;
 
     @BindView(R.id.bt_upload)
     Button btUpload;
@@ -173,12 +173,17 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     getString(R.string.message_field_required));
 
         //Start Uploading Document
-        if (documentAction.equals(getResources().getString(R.string.update_document))) {
-            mDocumentDialogPresenter.updateDocument(entityType, entityId, document.getId(),
-                    documentName, documentDescription, fileChoosen);
-        } else if (documentAction.equals(getResources().getString(R.string.upload_document))) {
-            mDocumentDialogPresenter.createDocument(entityType, entityId,
-                    documentName, documentDescription, fileChoosen);
+        if (!(tvChooseFile.getText().length() == 0 ||
+                tvChooseFile.getText().toString().equals(""))) {
+            if (documentAction.equals(getResources().getString(R.string.update_document))) {
+                mDocumentDialogPresenter.updateDocument(entityType, entityId, document.getId(),
+                        documentName, documentDescription, fileChoosen);
+            } else if (documentAction.equals(getResources().getString(R.string.upload_document))) {
+                mDocumentDialogPresenter.createDocument(entityType, entityId,
+                        documentName, documentDescription, fileChoosen);
+            }
+        } else {
+            Toast.makeText(getContext(), "Add Document to upload!", Toast.LENGTH_SHORT).show();
         }
     }
 
