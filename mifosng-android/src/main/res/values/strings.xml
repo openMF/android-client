@@ -523,6 +523,7 @@
     <string name="tenant_identifier">Tenant Identifier</string>
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
+    <string name="menu_upload_photo">Upload new photo</string>
     <string name="menu_remove_photo">Remove photo</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
@@ -700,6 +701,7 @@
     <string name="failed_to_fetch_loan_transaction_template">Failed to fetch loan transaction
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
+    <string name="havent_picked_image">You haven\'t picked an image.</string>
 
 
     <string-array name="office_ids">

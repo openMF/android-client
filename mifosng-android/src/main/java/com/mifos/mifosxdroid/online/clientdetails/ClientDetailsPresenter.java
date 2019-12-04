@@ -73,7 +73,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showUploadImageFailed("Failed to update image");
+                        getMvpView().showUploadImageFailed("Unable to update image");
                     }
 
                     @Override
