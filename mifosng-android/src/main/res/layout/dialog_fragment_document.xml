@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -68,7 +68,7 @@
         </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_selected_file"
                 android:gravity="center"
                 android:layout_height="match_parent"
@@ -88,7 +88,7 @@
                     android:scrollHorizontally="false"
                     android:enabled="false"
                     android:scrollbars="vertical"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
 
