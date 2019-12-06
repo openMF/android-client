@@ -4,6 +4,7 @@ import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
+import com.mifos.utils.MFErrorParser;
 
 import java.io.File;
 
@@ -12,8 +13,10 @@ import javax.inject.Inject;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody.Part;
 import okhttp3.RequestBody;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -58,7 +61,19 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showError(R.string.failed_to_upload_document);
+                        String errorMessage;
+                        try {
+                            if (e instanceof HttpException) {
+                                errorMessage = ((HttpException) e).response().errorBody().string();
+                                getMvpView().showUploadError(MFErrorParser.parseError(errorMessage)
+                                        .getDeveloperMessage());
+                            } else {
+                                getMvpView().showError(R.string.failed_to_upload_document);
+                            }
+                        } catch (Throwable throwable) {
+                                RxJavaPlugins.getInstance().getErrorHandler()
+                                        .handleError(throwable);
+                        }
                     }
 
                     @Override
