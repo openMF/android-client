@@ -67,7 +67,7 @@
                         <EditText
                             android:id="@+id/et_instanceURL"
                             style="@style/EditText.Connection"
-                            android:hint="Instance URL"
+                            android:hint="@string/hint_instance_url"
                             android:nextFocusDown="@+id/et_instancePort" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -81,7 +81,7 @@
                         <EditText
                             android:id="@+id/et_instancePort"
                             style="@style/EditText.Connection"
-                            android:hint="Port"
+                            android:hint="@string/hint_port"
                             android:inputType="number"
                             android:maxLength="9"
                             android:nextFocusDown="@+id/et_tenantIdentifier" />
