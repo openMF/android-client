@@ -83,7 +83,7 @@
                 android:id="@+id/tv_submittedon_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Submission Date :"
+                android:hint="@string/submission_headline"
                 android:imeOptions="actionNext"
                 android:paddingBottom="16dp"
                 android:paddingTop="10dp"
