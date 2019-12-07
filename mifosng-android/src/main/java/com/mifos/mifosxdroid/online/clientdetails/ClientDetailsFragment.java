@@ -11,10 +11,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +29,11 @@ import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -83,7 +84,8 @@ import static android.view.View.VISIBLE;
 public class ClientDetailsFragment extends MifosBaseFragment implements ClientDetailsMvpView {
 
     // Intent response codes. Each response code must be a unique integer.
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    private static final int CAPTURE_IMAGE_REQUEST_CODE = 1;
+    private static final int GALLERY_REQUEST_CODE = 2;
 
     public static final int MENU_ITEM_DATA_TABLES = 1000;
     public static final int MENU_ITEM_PIN_POINT = 1001;
@@ -226,8 +228,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK)
+        if (requestCode == CAPTURE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             uploadImage(capturedClientImageFile);
+        } else if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            //Set an existing image as the client display image
+            Uri pickedImageUri = data.getData();
+            iv_clientImage.setImageURI(pickedImageUri);
+        }
+
     }
 
     @Override
@@ -296,7 +304,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public void captureClientImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(capturedClientImageFile));
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent, CAPTURE_IMAGE_REQUEST_CODE);
     }
 
     /**
@@ -306,6 +314,15 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
      */
     private void uploadImage(File pngFile) {
         mClientDetailsPresenter.uploadImage(clientId, pngFile);
+    }
+
+    //Create an intent to open the gallery app.
+    private void pickFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        String[] mimeTypes = {"image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
     @Override
@@ -488,6 +505,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                                     switch (menuItem.getItemId()) {
                                         case R.id.client_image_capture:
                                             captureClientImage();
+                                            break;
+                                        case R.id.client_image_upload:
+                                            pickFromGallery();
                                             break;
                                         case R.id.client_image_remove:
                                             mClientDetailsPresenter.deleteClientImage(clientId);

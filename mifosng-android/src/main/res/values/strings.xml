@@ -101,6 +101,23 @@
     <string name="collection_sheet">Collection Sheet</string>
     <string name="individual_collection_sheet">Individual Collection Sheet</string>
     <string name="title_activity_generate_collection_sheet" translatable="false">Generate Collection Sheet</string>
+    <string name="hint_instance_url">Instance URL</string>	
+    <string name="hint_port">Port</string>	
+    <string name="next">Next</string>	
+    <string name="en_code">en</string>	
+    <string name="purpose_msg">Purpose</string>	
+    <string name="submission_headline">Submission Date :</string>	
+    <string name="select_client">Select a Client from the list</string>	
+    <string name="thanks_on_survey">Thanks for taking Survey </string>	
+    <string name="select_one_survey">Please select one of the Survey</string>	
+    <string name="title_head">Title</string>	
+    <string name="def_amount_paid">460</string>	
+    <string name="def_amount_one">237</string>	
+    <string name="def_name">Raj Kumar Kaushikl</string>	
+    <string name="name_head">name</string>	
+    <string name="office_head">office</string>	
+    <string name="status_head">status</string>	
+    <string name="client_search_hint"></string>
     <string name="meeting_date">Meeting Date</string>
     <string name="center">Center</string>
     <string name="generate_collection_sheet">Generate Collection Sheet</string>
@@ -523,6 +540,7 @@
     <string name="tenant_identifier">Tenant Identifier</string>
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
+    <string name="menu_upload_photo">Upload a photo</string>
     <string name="menu_remove_photo">Remove photo</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
@@ -773,22 +791,6 @@
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
     <string name="title_activity_sync_client_payload" translatable="false">SyncClientPayloadActivity</string>
-    <string name="hint_instance_url">Instance URL</string>
-    <string name="hint_port">Port</string>
-    <string name="next">Next</string>
-    <string name="en_code">en</string>
-    <string name="purpose_msg">Purpose</string>
-    <string name="submission_headline">Submission Date :</string>
-    <string name="select_client">Select a Client from the list</string>
-    <string name="thanks_on_survey">Thanks for taking Survey </string>
-    <string name="select_one_survey">Please select one of the Survey</string>
-    <string name="title_head">Title</string>
-    <string name="def_amount_paid">460</string>
-    <string name="def_amount_one">237</string>
-    <string name="def_name">Raj Kumar Kaushikl</string>
-    <string name="name_head">name</string>
-    <string name="office_head">office</string>
-    <string name="status_head">status</string>
     <string name="client_search_hint"></string>
 
 
