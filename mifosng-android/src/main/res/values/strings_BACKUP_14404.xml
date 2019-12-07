@@ -541,9 +541,6 @@
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
 <<<<<<< HEAD
-    <string name="menu_upload_photo">Upload a photo</string>
-=======
-<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     <string name="menu_upload_photo">Upload existing photo</string>
@@ -551,7 +548,6 @@
 =======
     <string name="menu_upload_photo">Upload a photo</string>
 >>>>>>> 7c0bfe40... Added functionality to upload image
->>>>>>> 6e0a6349... Added upload image option
     <string name="menu_remove_photo">Remove photo</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
