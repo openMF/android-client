@@ -84,7 +84,7 @@ import static android.view.View.VISIBLE;
 public class ClientDetailsFragment extends MifosBaseFragment implements ClientDetailsMvpView {
 
     // Intent response codes. Each response code must be a unique integer.
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    private static final int CAPTURE_IMAGE_REQUEST_CODE = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
 
     public static final int MENU_ITEM_DATA_TABLES = 1000;
@@ -228,7 +228,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == CAPTURE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             uploadImage(capturedClientImageFile);
         } else if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             //Set an existing image as the client display image
@@ -304,7 +304,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public void captureClientImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(capturedClientImageFile));
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent, CAPTURE_IMAGE_REQUEST_CODE);
     }
 
     /**
@@ -325,7 +325,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
-        @Override
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mClientDetailsPresenter.detachView();
