@@ -112,20 +112,24 @@ public class PathTrackingAdapter extends RecyclerView.Adapter<PathTrackingAdapte
     }
 
     private void setMapLocation(GoogleMap map, UserLatLng location) {
-        // Add a marker for this item and set the camera
-        PolylineOptions polylineOptions = new PolylineOptions();
-        for (UserLatLng userLatLng : userLatLngs) {
-            polylineOptions.add(new LatLng(userLatLng.getLat(), userLatLng.getLng()));
+        try {
+            // Add a marker for this item and set the camera
+            PolylineOptions polylineOptions = new PolylineOptions();
+            for (UserLatLng userLatLng : userLatLngs) {
+                polylineOptions.add(new LatLng(userLatLng.getLat(), userLatLng.getLng()));
+            }
+            map.addPolyline(polylineOptions);
+            LatLng startLatLng = new LatLng(location.getLat(), location.getLng());
+            LatLng stopLatLng = new LatLng(userLatLngs.get(userLatLngs.size() - 1).getLat(),
+                    userLatLngs.get(userLatLngs.size() - 1).getLng());
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatLng, 13f));
+            map.addMarker(new MarkerOptions().position(startLatLng));
+            map.addMarker(new MarkerOptions().position(stopLatLng));
+            // Set the map type back to normal.
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            /* Prevents crashing */
         }
-        map.addPolyline(polylineOptions);
-        LatLng startLatLng = new LatLng(location.getLat(), location.getLng());
-        LatLng stopLatLng = new LatLng(userLatLngs.get(userLatLngs.size() - 1).getLat(),
-                userLatLngs.get(userLatLngs.size() - 1).getLng());
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatLng, 13f));
-        map.addMarker(new MarkerOptions().position(startLatLng));
-        map.addMarker(new MarkerOptions().position(stopLatLng));
-        // Set the map type back to normal.
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
