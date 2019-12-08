@@ -164,8 +164,14 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onNext(Client client) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientCreatedSuccessfully(
-                                R.string.client_created_successfully);
+                        if (client.getClientId() != null) {
+                            getMvpView().showClientCreatedSuccessfully(
+                                    R.string.client_created_successfully);
+                        } else {
+                            getMvpView().showWaitingForCheckerApproval(
+                                    R.string.waiting_for_checker_approval
+                            );
+                        }
                     }
                 }));
     }

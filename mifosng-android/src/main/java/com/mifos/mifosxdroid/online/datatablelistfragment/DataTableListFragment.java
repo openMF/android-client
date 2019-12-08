@@ -323,6 +323,12 @@ public class DataTableListFragment extends Fragment
     }
 
     @Override
+    public void showWaitingForCheckerApproval(int message) {
+        getActivity().getSupportFragmentManager().popBackStack();
+        Toaster.show(rootView, message, Toast.LENGTH_SHORT);
+    }
+
+    @Override
     public void showProgressbar(boolean b) {
         if (b) {
             safeUIBlockingUtility.safelyBlockUI();
