@@ -8,6 +8,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="login_margin_top">24dp</dimen>
+    <dimen name="view_image_margin_top">24dp</dimen>
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_horizontal_padding">8dp</dimen>
@@ -17,6 +18,7 @@
     <dimen name="item_offset">3dp</dimen>
     <dimen name="login_height">72dp</dimen>
     <dimen name="text_large">20sp</dimen>
+    <dimen name="text_larger">32sp</dimen>
     <dimen name="text_medium">16sp</dimen>
     <dimen name="layout_padding_30dp">30dp</dimen>
     <dimen name="datatable_name_heading">18sp</dimen>

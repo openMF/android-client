@@ -7,7 +7,9 @@ package com.mifos.mifosxdroid.online.clientdetails;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -37,6 +39,7 @@ import android.widget.Toast;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.ViewImageActivity;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter;
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
@@ -491,6 +494,17 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                                             break;
                                         case R.id.client_image_remove:
                                             mClientDetailsPresenter.deleteClientImage(clientId);
+                                            break;
+                                        case R.id.client_image_view:
+                                            Bitmap userImage = ((BitmapDrawable) iv_clientImage
+                                                    .getDrawable())
+                                                    .getBitmap();
+                                            String userName = tv_fullName.getText().toString();
+                                            Intent viewImage = new Intent(getActivity(),
+                                                    ViewImageActivity.class);
+                                            viewImage.putExtra("clientImage", userImage);
+                                            viewImage.putExtra("clientName", userName);
+                                            startActivity(viewImage);
                                             break;
                                         default:
                                             Log.e("ClientDetailsFragment", "Unrecognized " +
