@@ -101,7 +101,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         getDialog().setTitle(dataTable.getRegisteredTableName());
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableRowDialogFragment.this
-                .getActivity());
+                .getActivity(), getString(R.string.data_table_row_dialog_loading_message));
 
         createForm(dataTable);
         addSaveButton();

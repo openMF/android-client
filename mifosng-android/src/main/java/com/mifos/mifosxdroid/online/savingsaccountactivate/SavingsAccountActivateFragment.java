@@ -99,7 +99,8 @@ public class SavingsAccountActivateFragment extends MifosBaseFragment implements
 
         ButterKnife.bind(this, rootView);
         mSavingsAccountActivatePresenter.attachView(this);
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity(),
+                getString(R.string.savings_account_loading_message));
 
         showUserInterface();
 

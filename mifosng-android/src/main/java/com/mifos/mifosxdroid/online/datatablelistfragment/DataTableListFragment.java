@@ -130,7 +130,7 @@ public class DataTableListFragment extends Fragment
                 R.string.associated_datatables));
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableListFragment.this
-                .getActivity());
+                .getActivity(), getString(R.string.create_client_loading_message));
 
         for (DataTable datatable: dataTables) {
             createForm(datatable);
