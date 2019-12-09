@@ -426,7 +426,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     }
 
     @Override
-    public void showClientInformation(Client client) {
+    public void showClientInformation(final Client client) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
             isClientActive = client.isActive();
@@ -481,6 +481,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                     PopupMenu menu = new PopupMenu(getActivity(), view);
                     menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
                             .getMenu());
+                    if (!client.isImagePresent()) {
+                        menu.getMenu().findItem(R.id.client_image_remove).setVisible(false);
+                    }
                     menu.setOnMenuItemClickListener(
                             new PopupMenu.OnMenuItemClickListener() {
                                 @Override
