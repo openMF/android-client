@@ -336,32 +336,33 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
             this.savingsAccountWithAssociations = savingsAccountWithAssociations;
 
-            tv_clientName.setText(savingsAccountWithAssociations.getClientName());
-            tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
-            tv_savingsAccountNumber.setText(savingsAccountWithAssociations.getAccountNo());
+            tv_clientName.setText("$" + savingsAccountWithAssociations.getClientName());
+            tv_savingsProductName.setText("$" +
+                    savingsAccountWithAssociations.getSavingsProductName());
+            tv_savingsAccountNumber.setText("$" + savingsAccountWithAssociations.getAccountNo());
 
             if (savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null) {
-                tv_interestEarned.setText(String.valueOf(savingsAccountWithAssociations
-                        .getSummary().getTotalInterestEarned()));
+                tv_interestEarned.setText("$" + savingsAccountWithAssociations
+                        .getSummary().getTotalInterestEarned());
             } else {
-                tv_interestEarned.setText("0.0");
+                tv_interestEarned.setText("$0.0");
             }
 
-            tv_savingsAccountBalance.setText(String.valueOf(savingsAccountWithAssociations
-                    .getSummary().getAccountBalance()));
+            tv_savingsAccountBalance.setText("$" + savingsAccountWithAssociations
+                    .getSummary().getAccountBalance());
 
             if (savingsAccountWithAssociations.getSummary().getTotalDeposits() != null) {
-                tv_totalDeposits.setText(String.valueOf(savingsAccountWithAssociations
-                        .getSummary().getTotalDeposits()));
+                tv_totalDeposits.setText("$" + savingsAccountWithAssociations
+                        .getSummary().getTotalDeposits());
             } else {
-                tv_totalDeposits.setText("0.0");
+                tv_totalDeposits.setText("$0.0");
             }
 
             if (savingsAccountWithAssociations.getSummary().getTotalWithdrawals() != null) {
-                tv_totalWithdrawals.setText(String.valueOf(savingsAccountWithAssociations
-                        .getSummary().getTotalWithdrawals()));
+                tv_totalWithdrawals.setText("$" + savingsAccountWithAssociations
+                        .getSummary().getTotalWithdrawals());
             } else {
-                tv_totalWithdrawals.setText("0.0");
+                tv_totalWithdrawals.setText("$0.0");
             }
 
             savingsAccountTransactionsListAdapter = new

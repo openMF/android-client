@@ -279,8 +279,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     }
 
     public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {
-        tv_amount_disbursed.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalDisbursed()));
+        tv_amount_disbursed.setText("$" + loanWithAssociations.getSummary()
+                .getPrincipalDisbursed());
         try {
             tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations
                     .getTimeline().getActualDisbursementDate()));
@@ -288,39 +288,39 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             Toast.makeText(getActivity(), getResources().getString(R.string
                     .loan_rejected_message), Toast.LENGTH_SHORT).show();
         }
-        tv_in_arrears.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOverdue()));
-        tv_principal.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalDisbursed()));
-        tv_loan_principal_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalOutstanding()));
-        tv_loan_principal_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalPaid()));
+        tv_in_arrears.setText("$" + loanWithAssociations.getSummary().getTotalOverdue());
+        tv_principal.setText("$" + loanWithAssociations.getSummary()
+                .getPrincipalDisbursed());
+        tv_loan_principal_due.setText("$" + loanWithAssociations.getSummary()
+                .getPrincipalOutstanding());
+        tv_loan_principal_paid.setText("$" + loanWithAssociations.getSummary()
+                .getPrincipalPaid());
 
-        tv_interest.setText(String.valueOf(loanWithAssociations.getSummary().getInterestCharged()));
-        tv_loan_interest_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getInterestOutstanding()));
-        tv_loan_interest_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getInterestPaid()));
+        tv_interest.setText("$" + loanWithAssociations.getSummary().getInterestCharged());
+        tv_loan_interest_due.setText("$" + loanWithAssociations.getSummary()
+                .getInterestOutstanding());
+        tv_loan_interest_paid.setText("$" + loanWithAssociations.getSummary()
+                .getInterestPaid());
 
-        tv_fees.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesCharged()));
-        tv_loan_fees_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getFeeChargesOutstanding()));
-        tv_loan_fees_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getFeeChargesPaid()));
+        tv_fees.setText("$" + loanWithAssociations.getSummary().getFeeChargesCharged());
+        tv_loan_fees_due.setText("$" + loanWithAssociations.getSummary()
+                .getFeeChargesOutstanding());
+        tv_loan_fees_paid.setText("$" + loanWithAssociations.getSummary()
+                .getFeeChargesPaid());
 
-        tv_penalty.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPenaltyChargesCharged()));
-        tv_loan_penalty_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPenaltyChargesOutstanding()));
-        tv_loan_penalty_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPenaltyChargesPaid()));
+        tv_penalty.setText("$" + loanWithAssociations.getSummary()
+                .getPenaltyChargesCharged());
+        tv_loan_penalty_due.setText("$" + loanWithAssociations.getSummary()
+                .getPenaltyChargesOutstanding());
+        tv_loan_penalty_paid.setText("$" + loanWithAssociations.getSummary()
+                .getPenaltyChargesPaid());
 
-        tv_total.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getTotalExpectedRepayment()));
-        tv_total_due.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOutstanding
-                ()));
-        tv_total_paid.setText(String.valueOf(loanWithAssociations.getSummary().getTotalRepayment
-                ()));
+        tv_total.setText("$" + loanWithAssociations.getSummary()
+                .getTotalExpectedRepayment());
+        tv_total_due.setText("$" + loanWithAssociations.getSummary().getTotalOutstanding
+                ());
+        tv_total_paid.setText("$" + loanWithAssociations.getSummary().getTotalRepayment
+                ());
     }
 
     public void loadDocuments() {
