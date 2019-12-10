@@ -93,9 +93,9 @@
         <activity android:name=".online.RunReportsActivity"
             android:label="@string/run_report"
             android:parentActivityName=".online.DashboardActivity">
-                <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".online.DashboardActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".online.DashboardActivity"/>
         </activity>
         <activity
             android:name=".ClientListActivity"
@@ -153,6 +153,10 @@
         <service android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false"/>
 
+        <activity
+            android:name=".ViewImageActivity"
+            android:label="@string/view_photo"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

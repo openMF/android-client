@@ -524,6 +524,7 @@
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
     <string name="menu_remove_photo">Remove photo</string>
+    <string name="view_photo">View photo</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
     <string name="failed_to_capture_image">Failed to capture image</string>
@@ -790,6 +791,5 @@
     <string name="office_head">office</string>
     <string name="status_head">status</string>
     <string name="client_search_hint"></string>
-
 
 </resources>
