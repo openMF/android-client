@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.online.clientlist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.view.ActionMode;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.mifosxdroid.R;
@@ -43,6 +45,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 
 /**
@@ -77,6 +82,9 @@ public class ClientListFragment extends MifosBaseFragment
 
     @BindView(R.id.layout_error)
     View errorView;
+
+    @BindView(R.id.pb_client)
+    ProgressBar pb_client;
 
     @Inject
     ClientNameListAdapter mClientNameListAdapter;
@@ -333,10 +341,10 @@ public class ClientListFragment extends MifosBaseFragment
     public void showProgressbar(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
         if (show && mClientNameListAdapter.getItemCount() == 0) {
-            showMifosProgressBar();
+            pb_client.setVisibility(VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
         } else {
-            hideMifosProgressBar();
+            pb_client.setVisibility(GONE);
         }
     }
 

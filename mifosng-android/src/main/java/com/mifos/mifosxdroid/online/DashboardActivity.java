@@ -17,7 +17,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SwitchCompat;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -232,7 +231,7 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
         }
 
-        mDrawerLayout.closeDrawer(Gravity.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
     }
@@ -297,7 +296,7 @@ public class DashboardActivity extends MifosBaseActivity
     public void onBackPressed() {
         // check if the nav mDrawer is open
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(Gravity.START);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             if (doubleBackToExitPressedOnce) {
                 setMenuCreateClient(true);
