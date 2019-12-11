@@ -134,6 +134,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
             tvDocumentAction.setText(R.string.upload_document);
         }
 
+        btUpload.setEnabled(false);
         return rootView;
     }
 
@@ -315,6 +316,11 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @Override
     public void showError(int errorMessage) {
         Toast.makeText(getActivity(), getString(errorMessage), Toast.LENGTH_SHORT).show();
+        getDialog().dismiss();
+    }
+    @Override
+    public void showUploadError(String errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
         getDialog().dismiss();
     }
 

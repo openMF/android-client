@@ -35,6 +35,8 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -259,6 +261,12 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Override
     public void showGroups(List<Group> groups) {
         mGroupList = groups;
+        Collections.sort(mGroupList, new Comparator<Group>() {
+            @Override
+            public int compare(Group grp1, Group grp2) {
+                return grp1.getName().compareTo(grp2.getName());
+            }
+        });
         mGroupListAdapter.setGroups(groups);
     }
 
