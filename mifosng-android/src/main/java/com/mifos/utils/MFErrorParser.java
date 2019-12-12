@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.mifos.objects.mifoserror.MifosError;
 
 import retrofit2.adapter.rxjava.HttpException;
+import java.net.UnknownHostException;
 import rx.plugins.RxJavaPlugins;
 
 public class MFErrorParser {
@@ -29,6 +30,8 @@ public class MFErrorParser {
                 errorMessage = ((HttpException) throwableError).response().errorBody().string();
                 errorMessage = MFErrorParser.parseError(errorMessage).getErrors()
                         .get(0).getDefaultUserMessage();
+            } else if (throwableError instanceof UnknownHostException) {
+                errorMessage = "failed to fetch office"; // since no internet connection available
             } else {
                 errorMessage = throwableError.toString();
             }
