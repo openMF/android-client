@@ -43,6 +43,6 @@
         android:gravity="left"
         android:inputType="numberDecimal"
         android:paddingLeft="5dp"
-        android:text="460"
+        android:text="@string/def_amount_paid"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </RelativeLayout>

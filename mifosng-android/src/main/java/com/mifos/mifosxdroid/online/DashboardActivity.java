@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.online;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.VisibleForTesting;
 import com.google.android.material.navigation.NavigationView;
 import androidx.test.espresso.IdlingResource;
@@ -17,7 +18,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SwitchCompat;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +42,7 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -58,6 +59,7 @@ public class DashboardActivity extends MifosBaseActivity
 
     @BindView(R.id.drawer)
     DrawerLayout mDrawerLayout;
+
 
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
@@ -181,6 +183,7 @@ public class DashboardActivity extends MifosBaseActivity
         loadClientDetails();
     }
 
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -232,11 +235,33 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
         }
 
-        mDrawerLayout.closeDrawer(Gravity.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String currentFragment = getSupportFragmentManager().findFragmentById(R.id.container)
+                .getClass().getSimpleName();
+        switch (currentFragment) {
+            case "SearchFragment":
+                mNavigationView.setCheckedItem(R.id.item_dashboard);
+                break;
+            case "ClientListFragment":
+                mNavigationView.setCheckedItem(R.id.item_clients);
+                break;
+            case "GroupsListFragment":
+                mNavigationView.setCheckedItem(R.id.item_groups);
+                break;
+            case "CenterListFragment":
+                mNavigationView.setCheckedItem(R.id.item_centers);
+                break;
+            case "OfflineDashboardFragment":
+                mNavigationView.setCheckedItem(R.id.item_offline);
+        }
+    }
 
     /**
      * This SwitchCompat Toggle Handling the User Status.
@@ -297,7 +322,7 @@ public class DashboardActivity extends MifosBaseActivity
     public void onBackPressed() {
         // check if the nav mDrawer is open
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(Gravity.START);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             if (doubleBackToExitPressedOnce) {
                 setMenuCreateClient(true);

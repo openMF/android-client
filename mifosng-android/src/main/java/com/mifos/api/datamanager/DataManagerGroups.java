@@ -7,6 +7,7 @@ import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.group.AssociateClientsPayload;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.group.GroupWithAssociations;
@@ -243,5 +244,11 @@ public class DataManagerGroups {
     public Observable<GenericResponse> activateGroup(int groupId,
                                                       ActivatePayload activatePayload) {
         return mBaseApiManager.getGroupApi().activateGroup(groupId, activatePayload);
+    }
+
+    public Observable<GenericResponse> associateClients(int groupId,
+                                                        AssociateClientsPayload
+                                                                associateClientsPayload) {
+        return mBaseApiManager.getGroupApi().associateClients(groupId, associateClientsPayload);
     }
 }

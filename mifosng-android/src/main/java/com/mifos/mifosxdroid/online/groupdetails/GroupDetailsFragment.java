@@ -240,7 +240,7 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
     @Override
     public void showGroupClients(List<Client> clients) {
-        mListener.loadGroupClients(clients);
+        mListener.loadGroupClients(clients, groupId);
     }
 
     @Override
@@ -356,7 +356,7 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
         void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType);
 
-        void loadGroupClients(List<Client> clients);
+        void loadGroupClients(List<Client> clients, int groupId);
     }
 
 

@@ -164,6 +164,7 @@
     <string name="no_search_result_found">No results found for entered query</string>
     <string name="no_search_query_entered">No Search Query Entered!</string>
     <string name="client_created_successfully">Client Created Successfully</string>
+    <string name="waiting_for_checker_approval">Waiting for Checker\'s Approval</string>
     <string name="no_staff_associated_with_office">No Staff associated with this Office</string>
     <string name="adding_client_address">Adding Client Address</string>
     <string name="updating_client_address">Updating Client Address</string>
@@ -523,6 +524,7 @@
     <string name="tenant_identifier">Tenant Identifier</string>
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
+    <string name="menu_upload_photo">Upload new photo</string>
     <string name="menu_remove_photo">Remove photo</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
@@ -700,6 +702,7 @@
     <string name="failed_to_fetch_loan_transaction_template">Failed to fetch loan transaction
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
+    <string name="havent_picked_image">You haven\'t picked an image.</string>
 
 
     <string-array name="office_ids">
@@ -773,7 +776,29 @@
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
     <string name="title_activity_sync_client_payload" translatable="false">SyncClientPayloadActivity</string>
+    <string name="hint_instance_url">Instance URL</string>
+    <string name="hint_port">Port</string>
+    <string name="next">Next</string>
+    <string name="en_code">en</string>
+    <string name="purpose_msg">Purpose</string>
+    <string name="submission_headline">Submission Date :</string>
+    <string name="select_client">Select a Client from the list</string>
+    <string name="thanks_on_survey">Thanks for taking Survey </string>
+    <string name="select_one_survey">Please select one of the Survey</string>
+    <string name="title_head">Title</string>
+    <string name="def_amount_paid">460</string>
+    <string name="def_amount_one">237</string>
+    <string name="def_name">Raj Kumar Kaushikl</string>
+    <string name="name_head">name</string>
+    <string name="office_head">office</string>
+    <string name="status_head">status</string>
     <string name="client_search_hint"></string>
+    <string name="create_client_loading_message">Creating new client</string>
+    <string name="savings_account_loading_message">Activating savings account</string>
+    <string name="signature_fragment_loading_message">Uploading image</string>
+    <string name="document_dialog_fragment_loading_message">Uploading document</string>
+    <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
+    <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
 
 
 </resources>

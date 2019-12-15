@@ -1,12 +1,15 @@
 package com.mifos.mifosxdroid.online.createnewclient;
 
+import com.mifos.api.GenericResponse;
 import com.mifos.api.datamanager.DataManagerClient;
+import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.api.datamanager.DataManagerStaff;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientPayload;
+import com.mifos.objects.group.AssociateClientsPayload;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -36,14 +39,21 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
     private final DataManagerOffices mDataManagerOffices;
     private final DataManagerStaff mDataManagerStaff;
     private CompositeSubscription mSubscriptions;
+    private DataManagerGroups mDataManagerGroups;
+    private ArrayList<Integer> clientMembers = new ArrayList<>();
+    private AssociateClientsPayload associateClientsPayload;
+    private Client mClient;
+    private CreateNewClientFragment createNewClientFragment;
 
     @Inject
     public CreateNewClientPresenter(DataManagerClient dataManagerClient,
                                     DataManagerOffices dataManagerOffices,
-                                    DataManagerStaff dataManagerStaff) {
+                                    DataManagerStaff dataManagerStaff,
+                                    DataManagerGroups dataManagerGroups) {
         mDataManagerClient = dataManagerClient;
         mDataManagerOffices = dataManagerOffices;
         mDataManagerStaff = dataManagerStaff;
+        mDataManagerGroups = dataManagerGroups;
         mSubscriptions = new CompositeSubscription();
     }
 
@@ -134,7 +144,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                 }));
     }
 
-    public void createClient(ClientPayload clientPayload) {
+    public void createClient(ClientPayload clientPayload, final int groupId) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerClient.createClient(clientPayload)
@@ -164,12 +174,45 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onNext(Client client) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientCreatedSuccessfully(
-                                R.string.client_created_successfully);
+                        if (groupId != 0) {
+                            clientMembers.add(client.getClientId());
+                            getMvpView().associateClients(clientMembers);
+                        }
+                        if (client.getClientId() != null) {
+                            getMvpView().showClientCreatedSuccessfully(
+                                    R.string.client_created_successfully);
+                        } else {
+                            getMvpView().showWaitingForCheckerApproval(
+                                    R.string.waiting_for_checker_approval
+                            );
+                        }
                     }
                 }));
     }
 
+    public void associateClients(int groupId, AssociateClientsPayload associateClientsPayload) {
+        checkViewAttached();
+        getMvpView().showProgressbar(true);
+        mSubscriptions.add(mDataManagerGroups.associateClients(groupId, associateClientsPayload)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<GenericResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
+                    }
+
+                    @Override
+                    public void onNext(GenericResponse genericResponse) {
+                    }
+                })
+        );
+
+    }
 
     public List<String> filterOptions(List<Options> options) {
         final List<String> filterValues = new ArrayList<>();
@@ -205,5 +248,9 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     }
                 });
         return staffList;
+    }
+
+    public int getClientId() {
+        return mClient.getClientId();
     }
 }

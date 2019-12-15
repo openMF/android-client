@@ -32,6 +32,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.ClientPayload;
+import com.mifos.objects.group.AssociateClientsPayload;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
@@ -112,6 +113,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     private int staffId;
     private int genderId;
     private int clientClassificationId;
+    private int mGroupId;
     private Boolean result = true;
     private String submissionDateString;
     private String dateOfBirthString;
@@ -147,6 +149,10 @@ public class CreateNewClientFragment extends ProgressableFragment
         clientTypeList = new ArrayList<>();
         officeList = new ArrayList<>();
         staffList = new ArrayList<>();
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            mGroupId = getArguments().getInt("groupId");
+        }
     }
 
     @Override
@@ -288,9 +294,10 @@ public class CreateNewClientFragment extends ProgressableFragment
                 getActivity().getSupportFragmentManager().popBackStackImmediate();
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
                 fragmentTransaction.replace(R.id.container, fragment).commit();
+                createNewClientPresenter.createClient(clientPayload, mGroupId);
             } else {
                 clientPayload.setDatatables(null);
-                createNewClientPresenter.createClient(clientPayload);
+                createNewClientPresenter.createClient(clientPayload, mGroupId);
             }
         }
     }
@@ -299,6 +306,12 @@ public class CreateNewClientFragment extends ProgressableFragment
     public void onClickActiveCheckBox() {
         layout_submission.setVisibility(cbClientActiveStatus.isChecked()
                 ? View.VISIBLE : View.GONE);
+    }
+
+    public void associateClients(ArrayList<Integer> clientMembers) {
+        AssociateClientsPayload associateClientsPayload = new AssociateClientsPayload();
+        associateClientsPayload.setClientMembers(clientMembers);
+        createNewClientPresenter.associateClients(mGroupId, associateClientsPayload);
     }
 
     public void onDatePicked(String date) {
@@ -351,6 +364,12 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @Override
     public void showClientCreatedSuccessfully(int message) {
+        Toaster.show(rootView, message);
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void showWaitingForCheckerApproval(int message) {
         Toaster.show(rootView, message);
         getActivity().getSupportFragmentManager().popBackStack();
     }
