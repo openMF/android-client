@@ -149,7 +149,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     String disbursementDate;
 
     private boolean hasDataTables;
-    private DialogFragment mfDatePicker;
+    private DialogFragment submissionMfDatePicker;
+    private DialogFragment disbursemenMfDatePicker;
     private int productId;
     private int clientId;
     private int loanPurposeId;
@@ -440,7 +441,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     }
 
     public void inflateSubmissionDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        submissionMfDatePicker = MFDatePicker.newInsance(this);
 
         tvSubmittedOnDate.setText(MFDatePicker.getDatePickedAsString());
     }
@@ -448,12 +449,12 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @OnClick(R.id.tv_submittedon_date)
     public void setTvSubmittedOnDate() {
         isSubmissionDate = true;
-        mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+        submissionMfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
 
     public void inflateDisbursementDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        disbursemenMfDatePicker = MFDatePicker.newInstance(this, false);
 
         tvDisbursementOnDate.setText(MFDatePicker.getDatePickedAsString());
     }
@@ -461,7 +462,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @OnClick(R.id.tv_disbursementon_date)
     public void setTvDisbursementOnDate() {
         isDisbursebemntDate = true;
-        mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+        disbursemenMfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
                 .DFRAG_DATE_PICKER);
     }
 
