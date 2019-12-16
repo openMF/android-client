@@ -36,6 +36,16 @@ public class SafeUIBlockingUtility {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
 
+    public SafeUIBlockingUtility(Context context, String message) {
+        this.context = context;
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle(utilityTitle);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    }
+
     public static String getUtilityTitle() {
         return utilityTitle;
     }

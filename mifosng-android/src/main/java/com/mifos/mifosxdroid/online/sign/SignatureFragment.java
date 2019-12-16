@@ -65,7 +65,8 @@ public class SignatureFragment extends MifosBaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity(),
+                getString(R.string.signature_fragment_loading_message));
         if (getArguments() != null) {
             mClientId = getArguments().getInt(Constants.CLIENT_ID);
         }
