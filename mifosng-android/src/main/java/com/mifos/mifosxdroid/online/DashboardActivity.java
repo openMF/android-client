@@ -240,6 +240,28 @@ public class DashboardActivity extends MifosBaseActivity
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String currentFragment = getSupportFragmentManager().findFragmentById(R.id.container)
+                .getClass().getSimpleName();
+        switch (currentFragment) {
+            case "SearchFragment":
+                mNavigationView.setCheckedItem(R.id.item_dashboard);
+                break;
+            case "ClientListFragment":
+                mNavigationView.setCheckedItem(R.id.item_clients);
+                break;
+            case "GroupsListFragment":
+                mNavigationView.setCheckedItem(R.id.item_groups);
+                break;
+            case "CenterListFragment":
+                mNavigationView.setCheckedItem(R.id.item_centers);
+                break;
+            case "OfflineDashboardFragment":
+                mNavigationView.setCheckedItem(R.id.item_offline);
+        }
+    }
 
     /**
      * This SwitchCompat Toggle Handling the User Status.
