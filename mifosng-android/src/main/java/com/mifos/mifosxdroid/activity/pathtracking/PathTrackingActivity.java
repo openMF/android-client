@@ -7,11 +7,14 @@ package com.mifos.mifosxdroid.activity.pathtracking;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -224,10 +229,15 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_start_path_track:
-                if (checkPermissionAndRequest()) {
+                if (checkPermissionAndRequest() && isLocationEnabled()) {
                     startService(intentLocationService);
                     PrefManager.putBoolean(Constants.SERVICE_STATUS, true);
                     invalidateOptionsMenu();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            R.string.location_services_disabled,
+                            Toast.LENGTH_SHORT).show();
+                    enableLocation();
                 }
                 return true;
             case R.id.menu_stop_path_track:
@@ -238,6 +248,54 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean gpsEnabled = false;
+        boolean networkEnabled = false;
+        if (lm != null) {
+            try {
+                gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            } catch (NullPointerException e) {
+                Toast.makeText(getApplicationContext(),
+                        R.string.gps_network_not_enabled, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    R.string.location_services_unavailable, Toast.LENGTH_SHORT)
+                    .show();
+        }
+        return gpsEnabled && networkEnabled;
+    }
+
+    private void enableLocation() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this, R.style.MaterialAlertDialogStyle)
+                .setTitle(getResources().getString(R.string.gps_network_not_enabled))
+                .setMessage(getResources().getString(R.string.enable_location))
+                .setPositiveButton(getResources().getString(R.string.open_location_settings),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface,
+                                                int paramInt) {
+                                Intent myIntent = new Intent(
+                                        Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(myIntent);
+                            }
+                        })
+                .setNegativeButton(getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface,
+                                                int paramInt) {
+                                paramDialogInterface.dismiss();
+
+                            }
+                        })
+                .create();
+        alertDialog.show();
     }
 
     @Override

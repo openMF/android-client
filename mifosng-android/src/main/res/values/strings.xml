@@ -702,6 +702,11 @@
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
     <string name="havent_picked_image">You haven\'t picked an image.</string>
+    <string name="location_services_unavailable">Location services unavailable</string>
+    <string name="gps_network_not_enabled">GPS network is disabled</string>
+    <string name="enable_location">To continue, let your device turn on location</string>
+    <string name="open_location_settings">Open location settings</string>
+    <string name="location_services_disabled">Location services disabled</string>
 
 
     <string-array name="office_ids">
