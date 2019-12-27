@@ -356,6 +356,12 @@ public class CreateNewClientFragment extends ProgressableFragment
     }
 
     @Override
+    public void showWaitingForCheckerApproval(int message) {
+        Toaster.show(rootView, message);
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
     public void showMessage(int message) {
         Toaster.show(rootView, message);
     }

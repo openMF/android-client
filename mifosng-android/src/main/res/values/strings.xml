@@ -164,6 +164,7 @@
     <string name="no_search_result_found">No results found for entered query</string>
     <string name="no_search_query_entered">No Search Query Entered!</string>
     <string name="client_created_successfully">Client Created Successfully</string>
+    <string name="waiting_for_checker_approval">Waiting for Checker\'s Approval</string>
     <string name="no_staff_associated_with_office">No Staff associated with this Office</string>
     <string name="adding_client_address">Adding Client Address</string>
     <string name="updating_client_address">Updating Client Address</string>
