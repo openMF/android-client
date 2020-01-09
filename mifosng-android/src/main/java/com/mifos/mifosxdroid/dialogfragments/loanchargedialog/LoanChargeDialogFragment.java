@@ -280,6 +280,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     public void showChargeCreatedFailure(String errorMessage) {
         if (onChargeCreateListener != null) {
             onChargeCreateListener.onChargeCreatedFailure(errorMessage);
+            onDestroyView();
         } else {
             Toaster.show(rootView, errorMessage);
         }
