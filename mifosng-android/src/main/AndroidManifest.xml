@@ -50,10 +50,17 @@
             android:name=".online.DashboardActivity"
             android:label="@string/dashboard"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".online.SurveyQuestionActivity"
             android:label="Survey"
-            android:screenOrientation="portrait" />
+            android:parentActivityName="com.mifos.mifosxdroid.online.ClientActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mifos.mifosxdroid.online.ClientActivity"/>
+        </activity>
+
         <activity
             android:name=".online.GroupsActivity"
             android:configChanges="orientation|screenSize"

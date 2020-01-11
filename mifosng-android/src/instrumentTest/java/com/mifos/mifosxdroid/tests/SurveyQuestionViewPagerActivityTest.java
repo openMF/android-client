@@ -10,7 +10,6 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 
 import com.mifos.mifosxdroid.R;
-import com.mifos.mifosxdroid.online.SurveyQuestionActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

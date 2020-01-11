@@ -74,6 +74,8 @@ class SurveyQuestionActivity : MifosBaseActivity(), OnAnswerSelectedListener, Di
         mViewPager!!.adapter = mPagerAdapter
         mViewPager!!.addOnPageChangeListener(this)
         loadSurvey(survey)
+        val actionBar = supportActionBar
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
