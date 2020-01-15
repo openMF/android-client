@@ -48,6 +48,7 @@ public class SettingsFragment extends PreferenceFragment {
                         syncSurveysDialogFragment.setCancelable(false);
                         syncSurveysDialogFragment.show(fragmentTransaction,
                                 getResources().getString(R.string.sync_clients));
+                        return false;
                     }
                     return true;
                 }
