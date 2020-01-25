@@ -16,12 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +34,12 @@ import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -245,7 +245,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 // Get the Image from data
 
                 Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
                 // Get the cursor
                 Cursor cursor = getActivity().getApplicationContext().getContentResolver().query(
@@ -503,7 +503,13 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @Override
     public void showClientInformation(final Client client) {
         if (client != null) {
-            setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
+            String lastName = client.getLastname();
+            String name = client.getDisplayName();
+            if (lastName != null) {
+                setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
+            } else {
+                setToolbarTitle(getString(R.string.client) + " - " + name);
+            }
             isClientActive = client.isActive();
             getActivity().invalidateOptionsMenu();
             if (!client.isActive()) {
