@@ -7,8 +7,6 @@ package com.mifos.mifosxdroid.online.loanaccountsummary;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,13 +18,16 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
-import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment;
 import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment;
 import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.client.Charges;
@@ -35,7 +36,12 @@ import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Currency;
 import java.util.List;
+import java.util.Locale;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -154,6 +160,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     private boolean parentFragment = true;
     private OnFragmentInteractionListener mListener;
     private LoanWithAssociations clientLoanWithAssociations;
+    private static SortedMap<Currency, Locale> currencyLocaleMap;
+    private String currSymbol;
 
     public LoanAccountSummaryFragment() {
         // Required empty public constructor
@@ -169,6 +177,27 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         return fragment;
     }
 
+    static {
+        currencyLocaleMap = new TreeMap<Currency, Locale>(new Comparator<Currency>() {
+            public int compare(Currency c1, Currency c2) {
+                return c1.getCurrencyCode().compareTo(c2.getCurrencyCode());
+            }
+        });
+        for (Locale locale : Locale.getAvailableLocales()) {
+            try {
+                Currency currency = Currency.getInstance(locale);
+                currencyLocaleMap.put(currency, locale);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
+    public static String getCurrencySymbol(String currencyCode) {
+        Currency currency = Currency.getInstance(currencyCode);
+        return currency.getSymbol(currencyLocaleMap.get(currency));
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +207,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
         }
         //Necessary Call to add and update the Menu in a Fragment
         setHasOptionsMenu(true);
+        Locale current = getResources().getConfiguration().locale;
+        currSymbol = getCurrencySymbol(Currency.getInstance(current).getCurrencyCode());
     }
 
     @Override
@@ -279,8 +310,8 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     }
 
     public void inflateLoanSummary(LoanWithAssociations loanWithAssociations) {
-        tv_amount_disbursed.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalDisbursed()));
+        tv_amount_disbursed.setText(currSymbol + loanWithAssociations.getSummary()
+                .getPrincipalDisbursed());
         try {
             tv_disbursement_date.setText(DateHelper.getDateAsString(loanWithAssociations
                     .getTimeline().getActualDisbursementDate()));
@@ -288,39 +319,39 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
             Toast.makeText(getActivity(), getResources().getString(R.string
                     .loan_rejected_message), Toast.LENGTH_SHORT).show();
         }
-        tv_in_arrears.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOverdue()));
-        tv_principal.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalDisbursed()));
-        tv_loan_principal_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalOutstanding()));
-        tv_loan_principal_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPrincipalPaid()));
+        tv_in_arrears.setText(currSymbol + loanWithAssociations.getSummary().getTotalOverdue());
+        tv_principal.setText(currSymbol + loanWithAssociations.getSummary()
+                .getPrincipalDisbursed());
+        tv_loan_principal_due.setText(currSymbol + loanWithAssociations.getSummary()
+                .getPrincipalOutstanding());
+        tv_loan_principal_paid.setText(currSymbol + loanWithAssociations.getSummary()
+                .getPrincipalPaid());
 
-        tv_interest.setText(String.valueOf(loanWithAssociations.getSummary().getInterestCharged()));
-        tv_loan_interest_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getInterestOutstanding()));
-        tv_loan_interest_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getInterestPaid()));
+        tv_interest.setText(currSymbol + loanWithAssociations.getSummary().getInterestCharged());
+        tv_loan_interest_due.setText(currSymbol + loanWithAssociations.getSummary()
+                .getInterestOutstanding());
+        tv_loan_interest_paid.setText(currSymbol + loanWithAssociations.getSummary()
+                .getInterestPaid());
 
-        tv_fees.setText(String.valueOf(loanWithAssociations.getSummary().getFeeChargesCharged()));
-        tv_loan_fees_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getFeeChargesOutstanding()));
-        tv_loan_fees_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getFeeChargesPaid()));
+        tv_fees.setText(currSymbol + loanWithAssociations.getSummary().getFeeChargesCharged());
+        tv_loan_fees_due.setText(currSymbol + loanWithAssociations.getSummary()
+                .getFeeChargesOutstanding());
+        tv_loan_fees_paid.setText(currSymbol + loanWithAssociations.getSummary()
+                .getFeeChargesPaid());
 
-        tv_penalty.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPenaltyChargesCharged()));
-        tv_loan_penalty_due.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPenaltyChargesOutstanding()));
-        tv_loan_penalty_paid.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getPenaltyChargesPaid()));
+        tv_penalty.setText(currSymbol + loanWithAssociations.getSummary()
+                .getPenaltyChargesCharged());
+        tv_loan_penalty_due.setText(currSymbol + loanWithAssociations.getSummary()
+                .getPenaltyChargesOutstanding());
+        tv_loan_penalty_paid.setText(currSymbol + loanWithAssociations.getSummary()
+                .getPenaltyChargesPaid());
 
-        tv_total.setText(String.valueOf(loanWithAssociations.getSummary()
-                .getTotalExpectedRepayment()));
-        tv_total_due.setText(String.valueOf(loanWithAssociations.getSummary().getTotalOutstanding
-                ()));
-        tv_total_paid.setText(String.valueOf(loanWithAssociations.getSummary().getTotalRepayment
-                ()));
+        tv_total.setText(currSymbol + loanWithAssociations.getSummary()
+                .getTotalExpectedRepayment());
+        tv_total_due.setText(currSymbol + loanWithAssociations.getSummary().getTotalOutstanding
+                ());
+        tv_total_paid.setText(currSymbol + loanWithAssociations.getSummary().getTotalRepayment
+                ());
     }
 
     public void loadDocuments() {
