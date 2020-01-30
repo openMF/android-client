@@ -9,6 +9,7 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity;
  */
 
 public class SettingsActivity extends MifosBaseActivity {
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar_container);
