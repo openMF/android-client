@@ -293,6 +293,7 @@ public class CreateNewClientFragment extends ProgressableFragment
                 createNewClientPresenter.createClient(clientPayload);
             }
         }
+        hideKeyboard(rootView);
     }
 
     @OnCheckedChanged(R.id.cb_client_active_status)
