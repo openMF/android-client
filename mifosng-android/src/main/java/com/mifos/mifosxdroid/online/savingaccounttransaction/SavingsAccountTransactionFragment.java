@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -199,6 +201,13 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
 
     @OnClick(R.id.bt_reviewTransaction)
     public void onReviewTransactionButtonClicked() {
+        InputMethodManager key = (InputMethodManager) getActivity()
+                .getSystemService(INPUT_METHOD_SERVICE);
+        if (key.isAcceptingText()) { // verify if the soft keyboard is open
+            key.hideSoftInputFromWindow(getActivity()
+                    .getCurrentFocus()
+                    .getWindowToken(), 0);
+        }
         // Notify user if Amount field is blank and Review
         // Transaction button is pressed.
         if (et_transactionAmount.getEditableText().toString().isEmpty()) {
