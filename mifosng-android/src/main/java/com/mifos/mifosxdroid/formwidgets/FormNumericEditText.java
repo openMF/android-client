@@ -28,7 +28,7 @@ public class FormNumericEditText extends FormWidget {
 
         input = new EditText(context);
         input.setInputType(InputType.TYPE_CLASS_PHONE);
-        input.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        input.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         input.setLayoutParams(FormWidget.defaultLayoutParams);
 
         layout.addView(label);
