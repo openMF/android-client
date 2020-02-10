@@ -268,13 +268,13 @@
     <string name="overdue_x_number">Overdue X Number</string>
     <string name="overdue_y_number">Overdue Y Number</string>
     <string-array name="array_runreport">
+        <item>All</item>
         <item>Client</item>
         <item>Loan</item>
         <item>Savings</item>
         <item>Fund</item>
         <item>Accounting</item>
-        <item>XBRL</item>
-        <item>ALL</item>
+
     </string-array>
 
     <!-- Loan Related Terminologies Begin Here -->

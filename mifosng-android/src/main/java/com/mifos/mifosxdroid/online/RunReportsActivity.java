@@ -18,6 +18,7 @@ import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFrag
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
 import com.mifos.utils.Constants;
 
+
 /**
  * Created by Tarun on 02-08-17.
  */
@@ -54,32 +55,37 @@ public class RunReportsActivity extends MifosBaseActivity
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         switch (i) {
-            case 0: //Clients
+            case 0:
+                intent.putExtra(Constants.REPORT_CATEGORY, Constants.All);
+                sendBroadcast(intent);
+                break;
+
+            case 1: //Clients
                 intent.putExtra(Constants.REPORT_CATEGORY, Constants.CLIENT);
                 sendBroadcast(intent);
                 break;
 
-            case 1:
+            case 2:
                 intent.putExtra(Constants.REPORT_CATEGORY, Constants.LOAN);
                 sendBroadcast(intent);
                 break;
 
-            case 2:
+            case 3:
                 intent.putExtra(Constants.REPORT_CATEGORY, Constants.SAVINGS);
                 sendBroadcast(intent);
                 break;
 
-            case 3:
+            case 4:
                 intent.putExtra(Constants.REPORT_CATEGORY, Constants.FUND);
                 sendBroadcast(intent);
                 break;
 
-            case 4:
+            case 5:
                 intent.putExtra(Constants.REPORT_CATEGORY, Constants.ACCOUNTING);
                 sendBroadcast(intent);
                 break;
 
-            case 5:
+            case 6:
                 break;
         }
     }
@@ -108,30 +114,36 @@ public class RunReportsActivity extends MifosBaseActivity
                                                 AdapterView<?> adapterView,
                                                 View view, int i, long l) {
                                             switch (i) {
-                                                case 0: //Clients
+                                                case 0:
+                                                    intent.putExtra(Constants
+                                                            .REPORT_CATEGORY, Constants.All);
+                                                    sendBroadcast(intent);
+                                                    break;
+
+                                                case 1: //Clients
                                                     sendBroadcastFromReportDetailsFragment(
                                                             fragmentManager, Constants.CLIENT);
                                                     break;
-                                                case 1: //Loan
+                                                case 2: //Loan
                                                     sendBroadcastFromReportDetailsFragment(
                                                             fragmentManager, Constants.LOAN);
                                                     break;
-                                                case 2:
+                                                case 3:
                                                     sendBroadcastFromReportDetailsFragment(
                                                             fragmentManager, Constants.SAVINGS);
                                                     break;
 
-                                                case 3:
+                                                case 4:
                                                     sendBroadcastFromReportDetailsFragment(
                                                             fragmentManager, Constants.FUND);
                                                     break;
 
-                                                case 4:
+                                                case 5:
                                                     sendBroadcastFromReportDetailsFragment(
                                                             fragmentManager, Constants.ACCOUNTING);
                                                     break;
 
-                                                case 5:
+                                                case 6:
                                                     break;
                                             }
                                         }
@@ -150,32 +162,37 @@ public class RunReportsActivity extends MifosBaseActivity
                                                 AdapterView<?> adapterView,
                                                 View view, int i, long l) {
                                             switch (i) {
-                                                case 0: //Clients
+                                                case 0:
+                                                    intent.putExtra(Constants
+                                                            .REPORT_CATEGORY, Constants.All);
+                                                    sendBroadcast(intent);
+                                                    break;
+                                                case 1: //Clients
                                                     sendBroadcastFromReportFragment(
                                                             fragmentManager, Constants.CLIENT);
                                                     break;
 
-                                                case 1: //Loan
+                                                case 2: //Loan
                                                     sendBroadcastFromReportFragment(
                                                             fragmentManager, Constants.LOAN);
                                                     break;
 
-                                                case 2:
+                                                case 3:
                                                     sendBroadcastFromReportFragment(
                                                             fragmentManager, Constants.SAVINGS);
                                                     break;
 
-                                                case 3:
+                                                case 4:
                                                     sendBroadcastFromReportFragment(
                                                             fragmentManager, Constants.FUND);
                                                     break;
 
-                                                case 4:
+                                                case 5:
                                                     sendBroadcastFromReportFragment(
                                                             fragmentManager, Constants.ACCOUNTING);
                                                     break;
 
-                                                case 5:
+                                                case 6:
                                                     break;
                                             }
                                         }
