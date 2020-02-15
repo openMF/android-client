@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.mifosxdroid.HelpActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SettingsActivity;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
@@ -231,6 +232,10 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
             case R.id.runreport:
                 intent.setClass(this, RunReportsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.item_help:
+                intent.setClass(this, HelpActivity.class);
                 startActivity(intent);
                 break;
         }

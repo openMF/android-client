@@ -20,4 +20,12 @@
     <dimen name="text_medium">16sp</dimen>
     <dimen name="layout_padding_30dp">30dp</dimen>
     <dimen name="datatable_name_heading">18sp</dimen>
+    <dimen name="margin_4dp">4dp</dimen>
+    <dimen name="about_card_elevation">5dp</dimen>
+    <dimen name="about_separator_height">0.5dp</dimen>
+    <dimen name="about_group_text_padding">16dp</dimen>
+    <dimen name="about_group_item_text_size">18sp</dimen>
+    <dimen name="about_icon_size">34dp</dimen>
+    <dimen name="license_icon_size">28dp</dimen>
+    <dimen name="about_icon_padding">8dp</dimen>
 </resources>

@@ -798,6 +798,13 @@
     <string name="document_dialog_fragment_loading_message">Uploading document</string>
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+    <string name="help">Help</string>
+    <string name="call_now">Call now</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="faq">FAQ</string>
+    <string name="about_terms">Terms and Privacy Policy</string>
+    <string name="issue">Report an Issue</string>
+    <string name="donate">Donate</string>
 
 
 </resources>
