@@ -233,6 +233,13 @@ public class DashboardActivity extends MifosBaseActivity
                 intent.setClass(this, RunReportsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.item_share:
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, getString(R.string.playstore_link,
+                        getString(R.string.share_message), getApplication().getPackageName()));
+                startActivity(Intent.createChooser(i, getString(R.string.choose_appplication)));
+                break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);

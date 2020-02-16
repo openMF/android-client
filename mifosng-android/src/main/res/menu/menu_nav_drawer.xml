@@ -67,6 +67,13 @@
             android:title="@string/settings"
             />
 
+        <item
+            android:id="@+id/item_share"
+            android:checked="false"
+            android:icon="@drawable/ic_share_black_24dp"
+            android:title="@string/share"
+            />
+
     </group>
        
     <group android:checkableBehavior="single"

@@ -798,6 +798,12 @@
     <string name="document_dialog_fragment_loading_message">Uploading document</string>
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+    <string name="share">Share</string>
+    <string name="share_message">Download Android Client app here:
+        https://play.google.com/store/apps/details?id=
+    </string>
+    <string name="playstore_link">%1$s%2$s</string>
+    <string name="choose_appplication">Choose application</string>
 
 
 </resources>
