@@ -333,7 +333,6 @@
     <string name="payment_failed">Payment Failed</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="loan_submission_date">Submission Date</string>
-    <string name="total_charges">Total Charges:</string>
     <string name="total_dues">Total Due:</string>
     <!-- Loan Related Terminologies End Here -->
 
@@ -799,6 +798,24 @@
     <string name="document_dialog_fragment_loading_message">Uploading document</string>
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+    <string name="due">due</string>
+    <string name="total_charges">Total Charges:</string>
+    <string name="charge">charge</string>
+    <string name="santa_maria_group_1">Santa Maria Group 1</string>
+    <string name="m_mary">M, Mary</string>
+    <string name="number_one">1</string>
+    <string name="_12_02_2014">12-02-2014</string>
+    <string name="_200005">200005</string>
+    <string name="fa_android">{fa-android}</string>
+    <string name="may_24_2014">May 24,2014</string>
+    <string name="_2500_inr">2500 INR</string>
+    <string name="_09214">09214</string>
+    <string name="survey_name">survey_name</string>
+    <string name="pyload_name">Pyload Name</string>
+    <string name="error_message_two">Error Message</string>
+    <string name="md_add_circle_outline">{md-add-circle-outline}</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
 
 
 </resources>
