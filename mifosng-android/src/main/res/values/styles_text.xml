@@ -34,7 +34,7 @@
     </style>
 
     <style name="TextView.Row.Value" parent="TextView.Row">
-        <item name="android:gravity">right</item>
+        <item name="android:gravity">left</item>
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
