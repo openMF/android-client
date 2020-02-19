@@ -39,7 +39,7 @@
                     android:padding="4dp"
                     android:text="@string/savings_account_id"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_savings_account_id"
@@ -49,8 +49,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/savings_account_id"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -67,7 +66,7 @@
                     android:padding="4dp"
                     android:text="@string/payment_type"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_payment_type"
@@ -77,8 +76,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/payment_type"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -95,7 +93,7 @@
                     android:padding="4dp"
                     android:text="@string/transaction_type"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_transaction_type"
@@ -105,8 +103,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/transaction_type"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -123,7 +120,7 @@
                     android:padding="4dp"
                     android:text="@string/transaction_amount"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_transaction_amount"
@@ -133,8 +130,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/transaction_amount"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -151,7 +147,7 @@
                     android:padding="4dp"
                     android:text="@string/transaction_date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_transaction_date"
@@ -161,8 +157,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/transaction_date"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 

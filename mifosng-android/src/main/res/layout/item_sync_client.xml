@@ -39,7 +39,7 @@
                     android:padding="4dp"
                     android:text="@string/name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_first_name"
@@ -49,8 +49,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/name"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -67,7 +66,7 @@
                     android:padding="4dp"
                     android:text="@string/middle_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_middle_name"
@@ -77,8 +76,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/middle_name"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -95,7 +93,7 @@
                     android:padding="4dp"
                     android:text="@string/last_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_last_name"
@@ -105,8 +103,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/last_name"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -123,7 +120,7 @@
                     android:padding="4dp"
                     android:text="@string/mobile_no"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_mobile_no"
@@ -133,8 +130,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/mobile_no"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -151,7 +147,7 @@
                     android:padding="4dp"
                     android:text="@string/external_id"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_externalId"
@@ -161,8 +157,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/external_id"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -179,7 +174,7 @@
                     android:padding="4dp"
                     android:text="@string/gender"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_gender"
@@ -189,8 +184,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/gender"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -207,7 +201,7 @@
                     android:padding="4dp"
                     android:text="@string/dob"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_dob"
@@ -217,8 +211,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/dob"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -235,7 +228,7 @@
                     android:padding="4dp"
                     android:text="@string/office_id"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_office_id"
@@ -245,8 +238,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/office_id"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -263,7 +255,7 @@
                     android:padding="4dp"
                     android:text="@string/activation_date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_activation_date"
@@ -273,8 +265,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/activation_date"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
@@ -291,7 +282,7 @@
                     android:padding="4dp"
                     android:text="@string/active"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/secondary_text" />
 
                 <TextView
                     android:id="@+id/tv_db_active_status"
@@ -301,8 +292,7 @@
                     android:gravity="left"
                     android:padding="4dp"
                     android:text="@string/active"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
 
