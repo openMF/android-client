@@ -249,9 +249,11 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
 
     @Override
     public void showEmptyCharges() {
-        ll_error.setVisibility(View.VISIBLE);
-        mNoChargesText.setText(getResources().getString(R.string.message_no_charges_available));
-        mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+        if (mChargesNameListAdapter == null || mChargesNameListAdapter.getItemCount() == 0) {
+            ll_error.setVisibility(View.VISIBLE);
+            mNoChargesText.setText(getResources().getString(R.string.message_no_charges_available));
+            mNoChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+        }
     }
 
     @Override
