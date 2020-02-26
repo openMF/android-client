@@ -14,7 +14,11 @@ public interface SearchMvpView extends MvpView {
 
     void showSearchedResources(List<SearchedEntity> searchedEntities);
 
+    void showInstantSearchedResources(List<SearchedEntity> searchedEntities);
+
     void showNoResultFound();
 
     void showMessage(int message);
+
+    void showInstantSearchProgressBar(boolean b);
 }
