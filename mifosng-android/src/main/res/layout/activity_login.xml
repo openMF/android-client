@@ -12,7 +12,6 @@
         android:padding="@dimen/layout_padding_30dp"
 
         >
-
         <LinearLayout style="@style/LinearLayout.Base"
             >
 
@@ -20,33 +19,62 @@
 
                 android:layout_width="200dp"
                 android:layout_height="100dp"
+                android:layout_gravity="center"
                 android:src="@drawable/mifos_logo"/>
             <TextView
                 style="@style/TextView.Login"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="@string/enter_credentials"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/userWrapper"
-                style="@style/TextInput.Base">
-
-                <EditText
-                    android:id="@+id/et_username"
-                    style="@style/EditText.Username"
-                    android:nextFocusDown="@+id/et_password" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordWrapper"
-                style="@style/TextInput.Base"
-                app:passwordToggleEnabled="true">
+            <androidx.cardview.widget.CardView
+              style="@style/CardView.LoginUsername">
 
-                <EditText
-                    android:id="@+id/et_password"
-                    style="@style/EditText.Password"
-                    android:nextFocusDown="@+id/bt_login" />
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    app:hintEnabled="false"
+                    android:id="@+id/userWrapper"
+                    style="@style/TextInput.Base"
+                    app:passwordToggleEnabled="true">
+
+
+                    <EditText
+                        android:id="@+id/et_username"
+                        style="@style/EditText.Username"
+                        android:nextFocusDown="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:inputType="text"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@color/cardview_login_hints" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                style="@style/CardView.LoginPassword">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordWrapper"
+                    style="@style/TextInput.Base"
+                    app:hintEnabled="false"
+                    app:passwordToggleEnabled="true">
+
+                    <EditText
+                        android:id="@+id/et_password"
+                        style="@style/EditText.Password"
+                        android:nextFocusDown="@+id/bt_login"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@color/cardview_login_hints"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.cardview.widget.CardView>
 
 
 
@@ -110,9 +138,21 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+
+
+            <Button
                 android:id="@+id/bt_login"
-                style="@style/Button.Login" />
+                style="@style/Button.Login"
+                android:layout_height="38.06dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/login_btn_rounded_bg"
+                android:paddingTop="8.7dp"
+                android:paddingBottom="8.71dp"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF" />
+
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
