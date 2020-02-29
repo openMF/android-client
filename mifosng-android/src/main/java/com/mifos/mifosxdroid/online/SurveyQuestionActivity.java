@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
@@ -113,9 +114,14 @@ public class SurveyQuestionActivity extends MifosBaseActivity implements
 
     @OnClick(R.id.btnNext)
     void onClickButtonNext() {
-        updateAnswerList();
-        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
-        setSubtitleToolbar();
+        if (mScorecardValue != null) {
+            updateAnswerList();
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+            setSubtitleToolbar();
+        } else {
+            Toast.makeText(this, getString(R.string.error_select_option),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -185,7 +191,7 @@ public class SurveyQuestionActivity extends MifosBaseActivity implements
             mToolbar.setSubtitle(getResources().getString(R.string.submit_survey));
         }
     }
-
+    
     @Override
     public void disableSwipe() {
         mViewPager.beginFakeDrag();
@@ -196,7 +202,6 @@ public class SurveyQuestionActivity extends MifosBaseActivity implements
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable(Constants.ANSWERS, mMapScores);
-
     }
 
     @SuppressWarnings(value = "unchecked")
