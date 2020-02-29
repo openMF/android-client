@@ -7,20 +7,24 @@ package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SurveyPagerAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.SurveyQuestionFragment.OnAnswerSelectedListener;
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment;
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment.DisableSwipe;
@@ -113,9 +117,14 @@ public class SurveyQuestionActivity extends MifosBaseActivity implements
 
     @OnClick(R.id.btnNext)
     void onClickButtonNext() {
-        updateAnswerList();
-        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
-        setSubtitleToolbar();
+        if (mScorecardValue != null) {
+            updateAnswerList();
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+            setSubtitleToolbar();
+        } else {
+            Toast.makeText(this, getString(R.string.error_select_answer_survey),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -185,6 +194,7 @@ public class SurveyQuestionActivity extends MifosBaseActivity implements
             mToolbar.setSubtitle(getResources().getString(R.string.submit_survey));
         }
     }
+
 
     @Override
     public void disableSwipe() {

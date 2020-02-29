@@ -549,6 +549,7 @@
     <string name="error_select_loan">Select Loans Product</string>
     <string name="error_select_officer">Select Officer</string>
     <string name="error_select_client">Select Client</string>
+    <string name="error_select_answer_survey">Select the option</string>
 
     <!--Offline sync Terms-->
     <string name="offline_mode">Offline Mode</string>
