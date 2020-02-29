@@ -174,7 +174,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
     @Override
     public void showToastMessage(String message) {
-        Toaster.show(findViewById(android.R.id.content), message, Toaster.INDEFINITE);
+        Toaster.show(findViewById(android.R.id.content), message, Toaster.LONG);
     }
 
     @Override
