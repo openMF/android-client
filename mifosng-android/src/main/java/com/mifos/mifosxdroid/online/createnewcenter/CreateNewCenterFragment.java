@@ -35,6 +35,7 @@ import com.mifos.exceptions.ShortOfLengthException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.organisation.Office;
 import com.mifos.objects.response.SaveResponse;
@@ -265,7 +266,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @Override
     public void showFetchingError(int errorMessage) {
-        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+        Toaster.show(rootView, errorMessage);
     }
 
     @Override

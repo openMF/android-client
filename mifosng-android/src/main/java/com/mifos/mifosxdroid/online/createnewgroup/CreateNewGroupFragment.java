@@ -303,6 +303,11 @@ public class CreateNewGroupFragment extends ProgressableFragment
     }
 
     @Override
+    public void showFetchingError(int errorMessage) {
+        Toaster.show(rootView, errorMessage);
+    }
+
+    @Override
     public void showFetchingError(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }

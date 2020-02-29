@@ -682,7 +682,7 @@
     <string name="failed_to_fetch_identifier">Failed to fetch identifiers</string>
     <string name="failed_to_delete_identifier">Failed to delete Identifier</string>
     <string name="failed_to_fetch_resources_of_query">Failed to fetch resources</string>
-    <string name="failed_to_fetch_client_template">Failed to fetch clientTemplate</string>
+    <string name="failed_to_fetch_client_template">Failed to fetch client template</string>
     <string name="failed_to_fetch_offices">Failed to fetch Offices</string>
     <string name="failed_to_fetch_staffs">Failed to fetch Staffs</string>
     <string name="failed_to_fetch_pinpoint_location">Failed to pinpoint locations</string>
@@ -799,6 +799,7 @@
     <string name="document_dialog_fragment_loading_message">Uploading document</string>
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+    <string name="failed_to_fetch_office_list">Failed to fetch office list</string>
 
 
 </resources>
