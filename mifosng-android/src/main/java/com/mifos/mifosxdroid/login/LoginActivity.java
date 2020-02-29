@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
@@ -15,6 +16,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -255,5 +258,16 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     protected void onDestroy() {
         super.onDestroy();
         mLoginPresenter.detachView();
+    }
+
+    public void hideKeyboard(View view) {
+        try {
+            InputMethodManager imm = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (Exception ignored) {
+            Toast.makeText(this, ignored.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
