@@ -11,7 +11,7 @@ import com.mifos.mobile.passcode.MifosPassCodeActivity;
 import com.mifos.mobile.passcode.utils.EncryptionUtil;
 
 public class PassCodeActivity extends MifosPassCodeActivity {
-
+    public static String action;
     @Override
     public int getLogo() {
         return R.drawable.mifos_logo;
@@ -19,7 +19,10 @@ public class PassCodeActivity extends MifosPassCodeActivity {
 
     @Override
     public void startNextActivity() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        Intent intent=new Intent(this, DashboardActivity.class);
+        if(action!=null)
+            intent.setAction(action);
+        startActivity(intent);
     }
 
     @Override

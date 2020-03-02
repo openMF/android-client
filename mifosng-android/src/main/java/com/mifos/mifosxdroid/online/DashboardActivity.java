@@ -6,6 +6,9 @@
 package com.mifos.mifosxdroid.online;
 
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -18,6 +21,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SwitchCompat;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +32,7 @@ import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SettingsActivity;
+import com.mifos.mifosxdroid.SplashScreenActivity;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
@@ -42,6 +48,9 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,9 +82,10 @@ public class DashboardActivity extends MifosBaseActivity
         setContentView(R.layout.activity_dashboard);
 
         ButterKnife.bind(this);
-
+        initialiseShortcuts();
         replaceFragment(new SearchFragment(), false, R.id.container);
-
+        if(getIntent().getAction()!=null)
+            listenForActions(getIntent().getAction());
         // setup navigation drawer and Navigation Toggle click and Offline Mode SwitchButton
         setupNavigationBar();
 
@@ -122,6 +132,66 @@ public class DashboardActivity extends MifosBaseActivity
 
     }
 
+    private void listenForActions(String actions) {
+
+        if (actions.trim().equals(getString(R.string.clients))) {
+            replaceFragment(ClientListFragment.newInstance(), false, R.id.container);
+        } else if (actions.trim().equals(getString(R.string.groups))) {
+            replaceFragment(GroupsListFragment.newInstance(), false, R.id.container);
+        } else if (actions.trim().equals(getString(R.string.centers))) {
+            replaceFragment(CenterListFragment.newInstance(), false, R.id.container);
+        } else if (actions.trim().equals(getString(R.string.settings))) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
+
+    }
+
+    private void initialiseShortcuts() {
+        ShortcutManager shortcutManager;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+            shortcutManager = getSystemService(ShortcutManager.class);
+            Intent intent = new Intent(this, SplashScreenActivity.class);
+            List<ShortcutInfo> shortcutList = new ArrayList<>();
+            shortcutList.add(
+                    new ShortcutInfo.Builder(this, getString(R.string.clients))
+                            .setShortLabel(getString(R.string.clients))
+                            .setLongLabel(getString(R.string.clients))
+                            .setIcon(Icon.createWithResource(this, R.drawable.ic_person_black_24dp))
+                            .setIntent(intent.setAction(
+                                    getString(R.string.clients)))
+                            .build()
+            );
+            shortcutList.add(
+                    new ShortcutInfo.Builder(this, getString(R.string.groups))
+                            .setShortLabel(
+                                    getString(R.string.groups))
+                            .setLongLabel(getString(R.string.groups))
+                            .setIcon(Icon.createWithResource(this,
+                                    R.drawable.ic_group_black_24dp))
+                            .setIntent(intent.setAction(
+                                    getString(R.string.groups)))
+                            .build()
+            );
+            shortcutList.add(
+                    new ShortcutInfo.Builder(this, getString(R.string.centers))
+                            .setShortLabel(getString(R.string.centers))
+                            .setLongLabel(getString(R.string.centers))
+                            .setIcon(Icon.createWithResource(this, R.drawable.ic_centers_24dp))
+                            .setIntent(intent.setAction(getString(R.string.centers)))
+                            .build()
+            );
+            shortcutList.add(
+                    new ShortcutInfo.Builder(this, getString(R.string.settings))
+                            .setShortLabel(getString(R.string.settings))
+                            .setLongLabel(getString(R.string.settings))
+                            .setIcon(Icon.createWithResource(this,
+                                    R.drawable.ic_settings))
+                            .setIntent(intent.setAction(getString(R.string.settings)))
+                            .build()
+            );
+            shortcutManager.setDynamicShortcuts(shortcutList);
+        }
+    }
     private void setMenuCreateGroup(boolean isEnabled) {
         if (menu != null) {
             //position of mItem_create_new_group is 2

@@ -33,6 +33,8 @@ public class SplashScreenActivity extends MifosBaseActivity {
             Intent intent = new Intent(SplashScreenActivity.this,
                     PassCodeActivity.class);
             intent.putExtra(PassCodeConstants.PASSCODE_INITIAL_LOGIN, true);
+            intent.setAction(getIntent().getAction());
+            PassCodeActivity.action=getIntent().getAction();
             startActivity(intent);
         }
         finish();
