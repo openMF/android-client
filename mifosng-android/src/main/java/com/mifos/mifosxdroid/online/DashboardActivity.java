@@ -37,6 +37,7 @@ import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.mifosxdroid.online.search.SearchFragment;
+import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
@@ -360,7 +361,19 @@ public class DashboardActivity extends MifosBaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        final Intent intent = new Intent();
         switch (item.getItemId()) {
+            case R.id.menu_lock:
+                intent.setClass(this, PassCodeActivity.class);
+                startActivity(intent);
+                if (PrefManager.getPassCodeStatus()) {
+                    startActivity(new Intent(this, DashboardActivity.class));
+                } else {
+                    intent.setClass(this, PassCodeActivity.class);
+                    intent.putExtra(Constants.INTIAL_LOGIN, true);
+                    startActivity(intent);
+                }
+                break;
             case R.id.mItem_create_new_client:
                 setActionBarTitle(R.string.create_client);
                 openCreateClient();
