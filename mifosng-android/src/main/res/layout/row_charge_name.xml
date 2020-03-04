@@ -29,15 +29,13 @@
                 android:layout_weight="1"
                 android:id="@+id/textView2"
                 android:layout_height="wrap_content"
-                android:text="@string/charge_id"
-                />
+                android:text="@string/charge_id" />
 
             <TextView
                 android:id="@+id/tv_charger_id"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                 />
+                android:layout_height="wrap_content" />
         </TableRow>
 
         <TableRow
@@ -57,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
         </TableRow>
 
         <TableRow

@@ -5,8 +5,7 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<LinearLayout
-    android:layout_height="wrap_content"
+<LinearLayout android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="24dp"
@@ -33,7 +32,7 @@
             android:gravity="center"
             android:text="@string/upload_document"
             android:textColor="@color/primary"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_height="match_parent"
@@ -47,7 +46,7 @@
                 android:id="@+id/et_document_name"
                 android:inputType="text"
                 android:layout_height="match_parent"
-                android:layout_width="match_parent"/>
+                android:layout_width="match_parent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,32 +65,32 @@
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:scrollHorizontally="false"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_selected_file"
-                android:gravity="center"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_selected_file"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_weight=".7"
+            android:layout_width="match_parent"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="16dp">
+
+            <EditText
+                android:hint="@string/selected_file"
+                android:id="@+id/tv_choose_file"
+                android:inputType="text"
+                android:lines="1"
                 android:layout_height="match_parent"
-                android:layout_weight=".7"
                 android:layout_width="match_parent"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:paddingTop="16dp">
+                android:scrollHorizontally="false"
+                android:enabled="false"
+                android:scrollbars="vertical" />
 
-                <EditText
-                    android:hint="@string/selected_file"
-                    android:id="@+id/tv_choose_file"
-                    android:inputType="text"
-                    android:lines="1"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:scrollHorizontally="false"
-                    android:enabled="false"
-                    android:scrollbars="vertical"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
@@ -113,7 +112,7 @@
             android:layout_weight="0.5"
             android:text="@string/browse"
             android:backgroundTint="@color/primary"
-            android:textAllCaps="true"/>
+            android:textAllCaps="true" />
 
         <Button
             android:drawableLeft="@drawable/ic_cloud_upload_black_24dp"
@@ -126,7 +125,7 @@
             android:layout_weight="0.5"
             android:textAllCaps="true"
             android:backgroundTint="@color/primary"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 

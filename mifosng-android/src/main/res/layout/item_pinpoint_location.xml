@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:id="@+id/card_view"
+<androidx.cardview.widget.CardView android:id="@+id/card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -14,8 +13,7 @@
     app:contentPadding="0dp"
     xmlns:map="http://schemas.android.com/tools">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ll_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +24,7 @@
             map:liteMode="true"
             map:mapType="none"
             android:layout_width="match_parent"
-            android:layout_height="150dp"/>
+            android:layout_height="150dp" />
 
 
         <TextView
@@ -39,7 +37,7 @@
             android:textAlignment="inherit"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:typeface="sans"/>
+            android:typeface="sans" />
 
     </LinearLayout>
 

@@ -4,8 +4,7 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
@@ -23,7 +22,7 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:scrollbars="vertical"
-            android:fadeScrollbars="false"/>
+            android:fadeScrollbars="false" />
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -32,7 +31,7 @@
         android:id="@+id/pb_client"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_create_client"
@@ -40,11 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"/>
+        android:src="@drawable/ic_add_white_24dp" />
 
     <include
         layout="@layout/layout_sweet_exception_handler"
         android:visibility="gone"
-        android:id="@+id/layout_error"/>
+        android:id="@+id/layout_error" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

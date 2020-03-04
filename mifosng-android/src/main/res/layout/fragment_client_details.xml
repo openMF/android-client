@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginStart="@dimen/default_padding"
@@ -20,18 +19,18 @@
                     <com.mifos.mifosxdroid.views.CircularImageView
                         android:id="@+id/iv_clientImage"
                         style="@style/ClientImage"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center" />
 
                     <ProgressBar
                         android:id="@+id/pb_imageProgressBar"
                         style="@style/ProgressBar.Base"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center" />
 
                 </FrameLayout>
 
                 <TextView
                     android:id="@+id/tv_fullName"
-                    style="@style/TextView.Client"/>
+                    style="@style/TextView.Client" />
 
             </LinearLayout>
 
@@ -46,11 +45,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/account_number"/>
+                        android:text="@string/account_number" />
 
                     <TextView
                         android:id="@+id/tv_accountNumber"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value" />
                 </TableRow>
 
                 <TableRow
@@ -59,11 +58,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/external_id"/>
+                        android:text="@string/external_id" />
 
                     <TextView
                         android:id="@+id/tv_externalId"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value" />
                 </TableRow>
 
                 <TableRow
@@ -72,11 +71,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/activation_date"/>
+                        android:text="@string/activation_date" />
 
                     <TextView
                         android:id="@+id/tv_activationDate"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value" />
                 </TableRow>
 
                 <TableRow
@@ -85,11 +84,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/office"/>
+                        android:text="@string/office" />
 
                     <TextView
                         android:id="@+id/tv_office"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value" />
                 </TableRow>
 
                 <TableRow
@@ -98,11 +97,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/mobile_no"/>
+                        android:text="@string/mobile_no" />
 
                     <TextView
                         android:id="@+id/tv_mobile_no"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value" />
                 </TableRow>
 
                 <TableRow
@@ -112,11 +111,11 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/group"/>
+                        android:text="@string/group" />
 
                     <TextView
                         android:id="@+id/tv_group"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value" />
                 </TableRow>
 
                 <TableRow
@@ -126,13 +125,13 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/staff"/>
+                        android:text="@string/staff" />
 
                     <TextView
                         android:id="@+id/tv_loanOfficer"
                         style="@style/TextView.Row"
                         android:gravity="right"
-                        android:text=""/>
+                        android:text="" />
                 </TableRow>
 
                 <TableRow
@@ -142,13 +141,13 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/loan_cycle"/>
+                        android:text="@string/loan_cycle" />
 
                     <TextView
                         android:id="@+id/tv_loanCycle"
                         style="@style/TextView.Row"
                         android:gravity="right"
-                        android:text=""/>
+                        android:text="" />
                 </TableRow>
 
             </TableLayout>
@@ -158,19 +157,19 @@
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
 
             <include
                 android:id="@+id/account_accordion_section_savings"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <include
                 android:id="@+id/account_accordion_section_recurring"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>
@@ -183,12 +182,12 @@
         android:visibility="gone"
         android:orientation="horizontal">
 
-       <Button
-           android:id="@+id/btn_activate_client"
-           android:layout_width="match_parent"
-           android:layout_height="50dp"
-           android:text="@string/activate_client"
-           android:background="@color/accent" />
+        <Button
+            android:id="@+id/btn_activate_client"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/activate_client"
+            android:background="@color/accent" />
     </LinearLayout>
 
 </RelativeLayout>

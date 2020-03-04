@@ -5,7 +5,8 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/card_blueborder"
     android:padding="8dp">
 

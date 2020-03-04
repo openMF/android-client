@@ -13,17 +13,17 @@
 
         >
 
-        <LinearLayout style="@style/LinearLayout.Base"
-            >
+        <LinearLayout style="@style/LinearLayout.Base">
 
             <ImageView
 
                 android:layout_width="200dp"
                 android:layout_height="100dp"
-                android:src="@drawable/mifos_logo"/>
+                android:src="@drawable/mifos_logo" />
+
             <TextView
                 style="@style/TextView.Login"
-                android:text="@string/enter_credentials"/>
+                android:text="@string/enter_credentials" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userWrapper"
@@ -47,7 +47,6 @@
                     style="@style/EditText.Password"
                     android:nextFocusDown="@+id/bt_login" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
 
             <LinearLayout
