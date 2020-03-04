@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.StrictMode;
+
 import androidx.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;

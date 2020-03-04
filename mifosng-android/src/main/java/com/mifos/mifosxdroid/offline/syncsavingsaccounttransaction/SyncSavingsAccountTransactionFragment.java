@@ -2,9 +2,11 @@ package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;

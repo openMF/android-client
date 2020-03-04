@@ -7,9 +7,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +45,7 @@ import butterknife.ButterKnife;
 
 public class SignatureFragment extends MifosBaseFragment implements
         SignatureMvpView, BottomNavigationView.OnNavigationItemSelectedListener,
-        SignatureView.OnSignatureSaveListener  {
+        SignatureView.OnSignatureSaveListener {
 
     public static final String LOG_TAG = SignatureFragment.class.getSimpleName();
     private static final int FILE_SELECT_CODE = 0;

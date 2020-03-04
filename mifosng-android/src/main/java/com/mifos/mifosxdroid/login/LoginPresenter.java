@@ -59,7 +59,7 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
                         try {
                             if (e instanceof HttpException) {
                                 errorMessage = ((HttpException) e).response().errorBody().string();
-                                getMvpView().onLoginError( MFErrorParser.parseError(errorMessage)
+                                getMvpView().onLoginError(MFErrorParser.parseError(errorMessage)
                                         .getDeveloperMessage());
                             }
                         } catch (Throwable throwable) {

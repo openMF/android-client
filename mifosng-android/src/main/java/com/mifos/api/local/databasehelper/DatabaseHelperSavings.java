@@ -197,7 +197,6 @@ public class DatabaseHelperSavings {
      * @param savingsAccountId                 SavingAccount Id
      * @param savingsAccountType               SavingAccountType
      * @param transactionType                  Transaction Type
-     *
      * @return SavingsAccountTransactionResponse
      */
     public Observable<SavingsAccountTransactionResponse> saveSavingsAccountTransaction(
@@ -271,7 +270,7 @@ public class DatabaseHelperSavings {
      * List<SavingsAccountTransactionRequest> to DataManagerSavings and DataManagerSaving sync the
      * List<SavingsAccountTransactionRequest> to the SyncSavingsAccountTransaction.
      *
-     * @param  savingsAccountId SavingsAccount Id
+     * @param savingsAccountId SavingsAccount Id
      * @return List<SavingsAccountTransactionRequest>
      */
     public Observable<List<SavingsAccountTransactionRequest>> deleteAndUpdateTransaction(

@@ -103,7 +103,6 @@ public class GroupTimeline implements Parcelable {
     }
 
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -139,14 +138,14 @@ public class GroupTimeline implements Parcelable {
 
     public static final Parcelable.Creator<GroupTimeline> CREATOR =
             new Parcelable.Creator<GroupTimeline>() {
-        @Override
-        public GroupTimeline createFromParcel(Parcel source) {
-            return new GroupTimeline(source);
-        }
+                @Override
+                public GroupTimeline createFromParcel(Parcel source) {
+                    return new GroupTimeline(source);
+                }
 
-        @Override
-        public GroupTimeline[] newArray(int size) {
-            return new GroupTimeline[size];
-        }
-    };
+                @Override
+                public GroupTimeline[] newArray(int size) {
+                    return new GroupTimeline[size];
+                }
+            };
 }

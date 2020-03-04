@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.mifos.mifosxdroid.R;

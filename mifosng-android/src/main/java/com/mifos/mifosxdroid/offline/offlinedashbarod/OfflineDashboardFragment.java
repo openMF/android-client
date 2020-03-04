@@ -2,10 +2,12 @@ package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,21 +48,21 @@ import butterknife.ButterKnife;
  * This Fragment is the Dashboard of the Offline sync of Clients, Groups, LoanRepayment etc.
  * In which presenter request the DataManager to get the offline created clients or groups or
  * LoanRepayment from DatabaseHelper and get the List of Groups, clients and LoanRepayment etc.
- *
+ * <p>
  * if DataManager Response List is not equal to zero then add the Card Name and List Count in
  * OfflineDashboardAdapter.showCard(String cardName, String cardCount) and add the Class in
  * List<Class> mPayloadClasses, which will open onclick the card.
- *
+ * <p>
  * mPayloadIndex, this is the counter value of the number of request we are making to the
  * DataManager to load the Clients, Groups, LoanRepayment etc list from DatabaseHelper
- *
+ * <p>
  * SYNC_CARD_UI_NAMES is array of the card UI names, which contains the all possible name of cards.
  * due to this array we have maintain the single method in
  * OfflineDashboardAdapter.showCard(String cardName, String cardCount) and update the list.
- *
+ * <p>
  * if DatabaseHelper returns the List size zero for all Clients, Groups, LoanRepayment etc
  * then showNoPayloadToShow() and Nothing to Sync.
- *
+ * <p>
  * Created by Rajan Maurya on 20/07/16.
  */
 public class OfflineDashboardFragment extends MifosBaseFragment implements
@@ -304,7 +306,8 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
 
     /**
      * This is the Generic Type method for starting the activity.
-     * @param t Activity Class that is user wants to start
+     *
+     * @param t   Activity Class that is user wants to start
      * @param <T>
      */
     public <T> void startPayloadActivity(Class<T> t) {

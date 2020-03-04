@@ -217,14 +217,14 @@ public class LoanRepaymentRequest extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<LoanRepaymentRequest> CREATOR =
             new Parcelable.Creator<LoanRepaymentRequest>() {
-        @Override
-        public LoanRepaymentRequest createFromParcel(Parcel source) {
-            return new LoanRepaymentRequest(source);
-        }
+                @Override
+                public LoanRepaymentRequest createFromParcel(Parcel source) {
+                    return new LoanRepaymentRequest(source);
+                }
 
-        @Override
-        public LoanRepaymentRequest[] newArray(int size) {
-            return new LoanRepaymentRequest[size];
-        }
-    };
+                @Override
+                public LoanRepaymentRequest[] newArray(int size) {
+                    return new LoanRepaymentRequest[size];
+                }
+            };
 }

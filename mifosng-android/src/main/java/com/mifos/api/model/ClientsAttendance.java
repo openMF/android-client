@@ -62,14 +62,14 @@ public class ClientsAttendance implements Parcelable {
 
     public static final Parcelable.Creator<ClientsAttendance> CREATOR = new
             Parcelable.Creator<ClientsAttendance>() {
-        @Override
-        public ClientsAttendance createFromParcel(Parcel source) {
-            return new ClientsAttendance(source);
-        }
+                @Override
+                public ClientsAttendance createFromParcel(Parcel source) {
+                    return new ClientsAttendance(source);
+                }
 
-        @Override
-        public ClientsAttendance[] newArray(int size) {
-            return new ClientsAttendance[size];
-        }
-    };
+                @Override
+                public ClientsAttendance[] newArray(int size) {
+                    return new ClientsAttendance[size];
+                }
+            };
 }

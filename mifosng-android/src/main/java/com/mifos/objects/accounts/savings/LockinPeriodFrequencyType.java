@@ -73,14 +73,14 @@ public class LockinPeriodFrequencyType implements Parcelable {
 
     public static final Parcelable.Creator<LockinPeriodFrequencyType> CREATOR =
             new Parcelable.Creator<LockinPeriodFrequencyType>() {
-        @Override
-        public LockinPeriodFrequencyType createFromParcel(Parcel source) {
-            return new LockinPeriodFrequencyType(source);
-        }
+                @Override
+                public LockinPeriodFrequencyType createFromParcel(Parcel source) {
+                    return new LockinPeriodFrequencyType(source);
+                }
 
-        @Override
-        public LockinPeriodFrequencyType[] newArray(int size) {
-            return new LockinPeriodFrequencyType[size];
-        }
-    };
+                @Override
+                public LockinPeriodFrequencyType[] newArray(int size) {
+                    return new LockinPeriodFrequencyType[size];
+                }
+            };
 }

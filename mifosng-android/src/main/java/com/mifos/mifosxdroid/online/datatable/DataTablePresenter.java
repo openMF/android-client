@@ -42,7 +42,7 @@ public class DataTablePresenter extends BasePresenter<DataTableMvpView> {
 
     /**
      * This method load the DataTable.
-     *
+     * <p>
      * Table name can be
      * "m_client"
      * "m_group"
@@ -51,7 +51,7 @@ public class DataTablePresenter extends BasePresenter<DataTableMvpView> {
      * "m_saving_account"
      * "m_product_loan"
      * "m_savings_product
-     *
+     * <p>
      * Response: List<DataTable></DataTable>
      */
     public void loadDataTable(String tableName) {

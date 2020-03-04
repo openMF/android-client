@@ -53,14 +53,14 @@ public class FullParameterListResponse implements Parcelable {
 
     public static final Parcelable.Creator<FullParameterListResponse> CREATOR = new
             Parcelable.Creator<FullParameterListResponse>() {
-        @Override
-        public FullParameterListResponse createFromParcel(Parcel source) {
-            return new FullParameterListResponse(source);
-        }
+                @Override
+                public FullParameterListResponse createFromParcel(Parcel source) {
+                    return new FullParameterListResponse(source);
+                }
 
-        @Override
-        public FullParameterListResponse[] newArray(int size) {
-            return new FullParameterListResponse[size];
-        }
-    };
+                @Override
+                public FullParameterListResponse[] newArray(int size) {
+                    return new FullParameterListResponse[size];
+                }
+            };
 }

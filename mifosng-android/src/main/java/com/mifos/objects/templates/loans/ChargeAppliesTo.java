@@ -76,14 +76,14 @@ public class ChargeAppliesTo implements Parcelable {
 
     public static final Parcelable.Creator<ChargeAppliesTo> CREATOR =
             new Parcelable.Creator<ChargeAppliesTo>() {
-        @Override
-        public ChargeAppliesTo createFromParcel(Parcel source) {
-            return new ChargeAppliesTo(source);
-        }
+                @Override
+                public ChargeAppliesTo createFromParcel(Parcel source) {
+                    return new ChargeAppliesTo(source);
+                }
 
-        @Override
-        public ChargeAppliesTo[] newArray(int size) {
-            return new ChargeAppliesTo[size];
-        }
-    };
+                @Override
+                public ChargeAppliesTo[] newArray(int size) {
+                    return new ChargeAppliesTo[size];
+                }
+            };
 }

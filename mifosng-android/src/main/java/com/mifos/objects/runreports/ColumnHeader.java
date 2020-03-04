@@ -102,14 +102,14 @@ public class ColumnHeader implements Parcelable {
 
     public static final Parcelable.Creator<ColumnHeader> CREATOR = new
             Parcelable.Creator<ColumnHeader>() {
-        @Override
-        public ColumnHeader createFromParcel(Parcel source) {
-            return new ColumnHeader(source);
-        }
+                @Override
+                public ColumnHeader createFromParcel(Parcel source) {
+                    return new ColumnHeader(source);
+                }
 
-        @Override
-        public ColumnHeader[] newArray(int size) {
-            return new ColumnHeader[size];
-        }
-    };
+                @Override
+                public ColumnHeader[] newArray(int size) {
+                    return new ColumnHeader[size];
+                }
+            };
 }

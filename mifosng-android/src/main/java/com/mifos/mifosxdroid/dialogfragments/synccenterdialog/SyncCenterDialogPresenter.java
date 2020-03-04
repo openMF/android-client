@@ -70,7 +70,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
 
     @Inject
     public SyncCenterDialogPresenter(DataManagerCenter dataManagerCenter,
-                                    DataManagerLoan dataManagerLoan,
+                                     DataManagerLoan dataManagerLoan,
                                      DataManagerSavings dataManagerSavings,
                                      DataManagerGroups dataManagerGroups,
                                      DataManagerClient dataManagerClient) {
@@ -860,7 +860,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
      * @param savingsAccountId   SavingsAccount Id
      */
     private void syncGroupSavingsAccountAndTemplate(String savingsAccountType,
-                                                     int savingsAccountId) {
+                                                    int savingsAccountId) {
         checkViewAttached();
         mSubscriptions.add(getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
                 .subscribe(new Subscriber<SavingsAccountAndTransactionTemplate>() {

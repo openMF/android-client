@@ -61,6 +61,6 @@ public interface GroupService {
      */
     @POST(APIEndPoint.GROUPS + "/{groupId}?command=activate")
     Observable<GenericResponse> activateGroup(@Path("groupId") int groupId,
-                                               @Body ActivatePayload activatePayload);
+                                              @Body ActivatePayload activatePayload);
 
 }

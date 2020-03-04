@@ -7,7 +7,9 @@ package com.mifos.mifosxdroid.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.core.content.ContextCompat;
+
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -32,6 +35,7 @@ import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -149,12 +153,14 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         }
         return true;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_login, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection

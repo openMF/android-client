@@ -58,14 +58,14 @@ public class GroupAndGroupAccounts implements Parcelable {
 
     public static final Parcelable.Creator<GroupAndGroupAccounts> CREATOR =
             new Parcelable.Creator<GroupAndGroupAccounts>() {
-        @Override
-        public GroupAndGroupAccounts createFromParcel(Parcel source) {
-            return new GroupAndGroupAccounts(source);
-        }
+                @Override
+                public GroupAndGroupAccounts createFromParcel(Parcel source) {
+                    return new GroupAndGroupAccounts(source);
+                }
 
-        @Override
-        public GroupAndGroupAccounts[] newArray(int size) {
-            return new GroupAndGroupAccounts[size];
-        }
-    };
+                @Override
+                public GroupAndGroupAccounts[] newArray(int size) {
+                    return new GroupAndGroupAccounts[size];
+                }
+            };
 }

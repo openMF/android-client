@@ -7,8 +7,10 @@ package com.mifos.mifosxdroid.dialogfragments.loanchargedialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -261,7 +263,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
     @Override
     public void showLoanChargesCreatedSuccessfully(ChargeCreationResponse chargeCreationResponse) {
-        if (onChargeCreateListener != null ) {
+        if (onChargeCreateListener != null) {
             createdCharge.setClientId(chargeCreationResponse.getClientId());
             createdCharge.setId(chargeCreationResponse.getResourceId());
             onChargeCreateListener.onChargeCreatedSuccess(createdCharge);

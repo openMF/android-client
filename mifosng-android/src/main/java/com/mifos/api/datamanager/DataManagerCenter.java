@@ -47,7 +47,7 @@ public class DataManagerCenter {
      * <p/>
      * If the offset is zero and UserStatus is 1 then fetch all Center list from Database and show
      * on the view.
-     *
+     * <p>
      * else if offset is not zero and UserStatus is 1 then return default empty response to
      * presenter
      *
@@ -134,6 +134,7 @@ public class DataManagerCenter {
 
     /**
      * This Method Fetch the Groups that are attached to the Centers.
+     *
      * @param centerId Center Id
      * @return CenterWithAssociations
      */

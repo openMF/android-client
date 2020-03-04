@@ -75,14 +75,14 @@ public class CollectionSheetRequestPayload implements Parcelable {
 
     public static final Parcelable.Creator<CollectionSheetRequestPayload> CREATOR = new
             Parcelable.Creator<CollectionSheetRequestPayload>() {
-        @Override
-        public CollectionSheetRequestPayload createFromParcel(Parcel source) {
-            return new CollectionSheetRequestPayload(source);
-        }
+                @Override
+                public CollectionSheetRequestPayload createFromParcel(Parcel source) {
+                    return new CollectionSheetRequestPayload(source);
+                }
 
-        @Override
-        public CollectionSheetRequestPayload[] newArray(int size) {
-            return new CollectionSheetRequestPayload[size];
-        }
-    };
+                @Override
+                public CollectionSheetRequestPayload[] newArray(int size) {
+                    return new CollectionSheetRequestPayload[size];
+                }
+            };
 }

@@ -6,7 +6,9 @@
 package com.mifos.mifosxdroid.online.loanaccountapproval;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,7 +170,6 @@ public class LoanAccountApproval extends MifosBaseFragment
         et_approved_amount.setText(String.valueOf(loanWithAssociations.getApprovedPrincipal()));
         et_transaction_amount.setText(String.valueOf(loanWithAssociations.getApprovedPrincipal()));
     }
-
 
 
     @Override

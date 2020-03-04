@@ -286,14 +286,14 @@ public class RepaymentSchedule implements Parcelable {
 
     public static final Parcelable.Creator<RepaymentSchedule> CREATOR =
             new Parcelable.Creator<RepaymentSchedule>() {
-        @Override
-        public RepaymentSchedule createFromParcel(Parcel source) {
-            return new RepaymentSchedule(source);
-        }
+                @Override
+                public RepaymentSchedule createFromParcel(Parcel source) {
+                    return new RepaymentSchedule(source);
+                }
 
-        @Override
-        public RepaymentSchedule[] newArray(int size) {
-            return new RepaymentSchedule[size];
-        }
-    };
+                @Override
+                public RepaymentSchedule[] newArray(int size) {
+                    return new RepaymentSchedule[size];
+                }
+            };
 }

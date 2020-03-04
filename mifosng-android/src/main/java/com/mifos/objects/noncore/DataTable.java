@@ -91,14 +91,14 @@ public class DataTable extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<DataTable> CREATOR =
             new Parcelable.Creator<DataTable>() {
-        @Override
-        public DataTable createFromParcel(Parcel source) {
-            return new DataTable(source);
-        }
+                @Override
+                public DataTable createFromParcel(Parcel source) {
+                    return new DataTable(source);
+                }
 
-        @Override
-        public DataTable[] newArray(int size) {
-            return new DataTable[size];
-        }
-    };
+                @Override
+                public DataTable[] newArray(int size) {
+                    return new DataTable[size];
+                }
+            };
 }

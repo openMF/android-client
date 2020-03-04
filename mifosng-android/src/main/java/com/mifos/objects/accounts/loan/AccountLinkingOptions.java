@@ -133,12 +133,12 @@ public class AccountLinkingOptions implements Parcelable {
     public static final Parcelable.Creator<AccountLinkingOptions>
             CREATOR = new Parcelable.Creator<AccountLinkingOptions>() {
                 @Override
-            public AccountLinkingOptions createFromParcel(Parcel source) {
+        public AccountLinkingOptions createFromParcel(Parcel source) {
                     return new AccountLinkingOptions(source);
                 }
 
                 @Override
-            public AccountLinkingOptions[] newArray(int size) {
+        public AccountLinkingOptions[] newArray(int size) {
                     return new AccountLinkingOptions[size];
                 }
             };

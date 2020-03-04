@@ -211,14 +211,14 @@ public class MeetingFallCalendar implements Parcelable {
 
     public static final Parcelable.Creator<MeetingFallCalendar> CREATOR = new
             Parcelable.Creator<MeetingFallCalendar>() {
-        @Override
-        public MeetingFallCalendar createFromParcel(Parcel source) {
-            return new MeetingFallCalendar(source);
-        }
+                @Override
+                public MeetingFallCalendar createFromParcel(Parcel source) {
+                    return new MeetingFallCalendar(source);
+                }
 
-        @Override
-        public MeetingFallCalendar[] newArray(int size) {
-            return new MeetingFallCalendar[size];
-        }
-    };
+                @Override
+                public MeetingFallCalendar[] newArray(int size) {
+                    return new MeetingFallCalendar[size];
+                }
+            };
 }

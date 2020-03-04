@@ -138,7 +138,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     }
 
     public List<String> filterAmortizations(final List<AmortizationTypeOptions>
-                                                               amortizationTypeOptions) {
+                                                    amortizationTypeOptions) {
         final ArrayList<String> amortizationNameList = new ArrayList<>();
         Observable.from(amortizationTypeOptions)
                 .subscribe(new Action1<AmortizationTypeOptions>() {
@@ -151,9 +151,9 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     }
 
     public List<String> filterInterestCalculationPeriods(final
-                                                                    List
-                                                                    <InterestCalculationPeriodType>
-                                                               interestCalculationPeriodType) {
+                                                         List
+                                                                 <InterestCalculationPeriodType>
+                                                                 interestCalculationPeriodType) {
         final ArrayList<String> interestCalculationPeriodNameList = new ArrayList<>();
         Observable.from(interestCalculationPeriodType)
                 .subscribe(new Action1<InterestCalculationPeriodType>() {
@@ -167,8 +167,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     }
 
     public List<String> filterTransactionProcessingStrategies(final
-             List<TransactionProcessingStrategyOptions>
-              transactionProcessingStrategyOptions) {
+            List<TransactionProcessingStrategyOptions> transactionProcessingStrategyOptions) {
         final ArrayList<String> transactionProcessingStrategyNameList = new ArrayList<>();
         Observable.from(transactionProcessingStrategyOptions)
                 .subscribe(new Action1<TransactionProcessingStrategyOptions>() {
@@ -196,7 +195,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     }
 
     public List<String> filterTermFrequencyTypes(final List<TermFrequencyTypeOptions>
-                                                                    termFrequencyTypeOptions) {
+                                                         termFrequencyTypeOptions) {
         final ArrayList<String> termFrequencyNameList = new ArrayList<>();
         Observable.from(termFrequencyTypeOptions)
                 .subscribe(new Action1<TermFrequencyTypeOptions>() {
@@ -209,7 +208,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     }
 
     public List<String> filterLoanPurposeTypes(final List<LoanPurposeOptions>
-                                                                  loanPurposeOptions) {
+                                                       loanPurposeOptions) {
         final ArrayList<String> loanPurposeNameList = new ArrayList<>();
         Observable.from(loanPurposeOptions)
                 .subscribe(new Action1<LoanPurposeOptions>() {
@@ -222,7 +221,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     }
 
     public List<String> filterInterestTypeOptions(final List<InterestTypeOptions>
-                                                                      interestTypeOptions) {
+                                                          interestTypeOptions) {
         final ArrayList<String> interestTypeNameList = new ArrayList<>();
         Observable.from(interestTypeOptions)
                 .subscribe(new Action1<InterestTypeOptions>() {
@@ -235,7 +234,7 @@ public class GroupLoanAccountPresenter extends BasePresenter<GroupLoanAccountMvp
     }
 
     public List<String> filterLoanOfficers(final List<LoanOfficerOptions>
-                                                              loanOfficerOptions) {
+                                                   loanOfficerOptions) {
         final ArrayList<String> loanOfficerNameList = new ArrayList<>();
         Observable.from(loanOfficerOptions)
                 .subscribe(new Action1<LoanOfficerOptions>() {

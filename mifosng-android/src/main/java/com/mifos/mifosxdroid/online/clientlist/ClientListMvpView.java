@@ -12,7 +12,7 @@ public interface ClientListMvpView extends MvpView {
 
     void showUserInterface();
 
-    void showClientList(List<Client>  clients);
+    void showClientList(List<Client> clients);
 
     void showLoadMoreClients(List<Client> clients);
 

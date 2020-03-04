@@ -10,7 +10,8 @@ import javax.inject.Inject;
 
 public class ReportPresenter extends BasePresenter<ReportMvpView> {
     @Inject
-    public ReportPresenter() {}
+    public ReportPresenter() {
+    }
 
     @Override
     public void attachView(ReportMvpView mvpView) {

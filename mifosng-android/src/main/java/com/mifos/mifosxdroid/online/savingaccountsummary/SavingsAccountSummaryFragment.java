@@ -7,7 +7,9 @@ package com.mifos.mifosxdroid.online.savingaccountsummary;
 
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentTransaction;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -390,7 +392,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
                     //Display them as a Formatted string in a toast message
                     Toast.makeText(getActivity(), String.format(getResources()
-                            .getString(R.string.savings_transaction_detail), transactionId,
+                                    .getString(R.string.savings_transaction_detail), transactionId,
                             runningBalance), Toast.LENGTH_LONG).show();
                 }
             });

@@ -2,9 +2,11 @@ package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -178,7 +180,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     @Override
     public void showSyncResponse() {
         mSyncPayloadsPresenter.deleteAndUpdateClientPayload(clientPayloads
-                .get(mClientSyncIndex).getId(),
+                        .get(mClientSyncIndex).getId(),
                 clientPayloads.get(mClientSyncIndex).getClientCreationTime());
     }
 
@@ -319,7 +321,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
             } else {
                 Log.d(LOG_TAG,
                         getActivity().getResources().getString(R.string.error_fix_before_sync) +
-                        clientPayloads.get(i).getErrorMessage());
+                                clientPayloads.get(i).getErrorMessage());
             }
         }
     }

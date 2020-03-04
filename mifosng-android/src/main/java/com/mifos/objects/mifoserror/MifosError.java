@@ -88,14 +88,14 @@ public class MifosError implements Parcelable {
 
     public static final Parcelable.Creator<MifosError> CREATOR =
             new Parcelable.Creator<MifosError>() {
-        @Override
-        public MifosError createFromParcel(Parcel source) {
-            return new MifosError(source);
-        }
+                @Override
+                public MifosError createFromParcel(Parcel source) {
+                    return new MifosError(source);
+                }
 
-        @Override
-        public MifosError[] newArray(int size) {
-            return new MifosError[size];
-        }
-    };
+                @Override
+                public MifosError[] newArray(int size) {
+                    return new MifosError[size];
+                }
+            };
 }

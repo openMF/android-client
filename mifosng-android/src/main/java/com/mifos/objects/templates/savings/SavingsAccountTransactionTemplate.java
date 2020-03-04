@@ -125,14 +125,14 @@ public class SavingsAccountTransactionTemplate extends MifosBaseModel implements
 
     public static final Parcelable.Creator<SavingsAccountTransactionTemplate> CREATOR =
             new Parcelable.Creator<SavingsAccountTransactionTemplate>() {
-        @Override
-        public SavingsAccountTransactionTemplate createFromParcel(Parcel source) {
-            return new SavingsAccountTransactionTemplate(source);
-        }
+                @Override
+                public SavingsAccountTransactionTemplate createFromParcel(Parcel source) {
+                    return new SavingsAccountTransactionTemplate(source);
+                }
 
-        @Override
-        public SavingsAccountTransactionTemplate[] newArray(int size) {
-            return new SavingsAccountTransactionTemplate[size];
-        }
-    };
+                @Override
+                public SavingsAccountTransactionTemplate[] newArray(int size) {
+                    return new SavingsAccountTransactionTemplate[size];
+                }
+            };
 }

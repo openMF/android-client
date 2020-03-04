@@ -4,7 +4,6 @@ import com.mifos.objects.accounts.loan.LoanWithAssociations;
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate;
 
 /**
- *
  * Created by Rajan Maurya on 08/08/16.
  */
 public class LoanAndLoanRepayment {

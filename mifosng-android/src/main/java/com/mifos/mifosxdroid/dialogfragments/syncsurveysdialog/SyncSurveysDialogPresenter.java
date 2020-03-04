@@ -55,8 +55,6 @@ public class SyncSurveysDialogPresenter extends BasePresenter<SyncSurveysDialogM
 
     /**
      * This Method Start Syncing Surveys. Start Syncing the Survey Accounts.
-     *
-     *
      */
     private void startSyncingSurveys() {
         checkNetworkConnectionAndSyncSurvey();

@@ -71,7 +71,9 @@ public class DatabaseHelperClient {
     public DatabaseHelperClient() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(new TypeToken<HashMap<String, Object>>() {
-                }.getType(), new MapDeserializer());
+
+        }
+                .getType(), new MapDeserializer());
         gson = gsonBuilder.create();
         type = new TypeToken<HashMap<String, Object>>() {
         }.getType();

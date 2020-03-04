@@ -8,9 +8,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.widget.Toast;
 
 import com.mifos.mifosxdroid.R;
@@ -96,7 +98,7 @@ public class CheckSelfPermissionAndRequest {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ActivityCompat.requestPermissions(activity, new
-                                            String[]{permission},
+                                                    String[]{permission},
                                             permissionRequestCode);
                                 }
                             })

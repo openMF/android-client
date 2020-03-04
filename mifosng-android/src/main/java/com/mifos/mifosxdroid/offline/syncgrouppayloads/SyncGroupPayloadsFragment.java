@@ -2,9 +2,11 @@ package com.mifos.mifosxdroid.offline.syncgrouppayloads;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -106,7 +108,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
          * Loading All Client Payloads from Database
          */
         swipeRefreshLayout.setColorSchemeColors(getActivity()
-                        .getResources().getIntArray(R.array.swipeRefreshColors));
+                .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -285,7 +287,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
             } else {
                 Log.d(LOG_TAG,
                         getActivity().getResources().getString(R.string.error_fix_before_sync) +
-                        groupPayloads.get(i).getErrorMessage());
+                                groupPayloads.get(i).getErrorMessage());
             }
         }
     }

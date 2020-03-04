@@ -149,14 +149,14 @@ public class AllowAttributeOverrides implements Parcelable {
 
     public static final Parcelable.Creator<AllowAttributeOverrides> CREATOR =
             new Parcelable.Creator<AllowAttributeOverrides>() {
-        @Override
-        public AllowAttributeOverrides createFromParcel(Parcel source) {
-            return new AllowAttributeOverrides(source);
-        }
+                @Override
+                public AllowAttributeOverrides createFromParcel(Parcel source) {
+                    return new AllowAttributeOverrides(source);
+                }
 
-        @Override
-        public AllowAttributeOverrides[] newArray(int size) {
-            return new AllowAttributeOverrides[size];
-        }
-    };
+                @Override
+                public AllowAttributeOverrides[] newArray(int size) {
+                    return new AllowAttributeOverrides[size];
+                }
+            };
 }

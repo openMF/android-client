@@ -185,14 +185,14 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
 
     public static final Parcelable.Creator<LoanRepaymentTemplate> CREATOR =
             new Parcelable.Creator<LoanRepaymentTemplate>() {
-        @Override
-        public LoanRepaymentTemplate createFromParcel(Parcel source) {
-            return new LoanRepaymentTemplate(source);
-        }
+                @Override
+                public LoanRepaymentTemplate createFromParcel(Parcel source) {
+                    return new LoanRepaymentTemplate(source);
+                }
 
-        @Override
-        public LoanRepaymentTemplate[] newArray(int size) {
-            return new LoanRepaymentTemplate[size];
-        }
-    };
+                @Override
+                public LoanRepaymentTemplate[] newArray(int size) {
+                    return new LoanRepaymentTemplate[size];
+                }
+            };
 }

@@ -21,9 +21,10 @@ public interface RunReportsService {
 
     /**
      * Endpoint to fetch Categories of the reports
-     * @param category Client/Savings etc.
+     *
+     * @param category         Client/Savings etc.
      * @param genericResultSet genericResultSet - true/false
-     * @param parameterType parameterType - true/false
+     * @param parameterType    parameterType - true/false
      * @return List of ClientReportTypeItem
      */
     @GET(APIEndPoint.RUNREPORTS + "/reportCategoryList")
@@ -35,7 +36,8 @@ public interface RunReportsService {
 
     /**
      * Endpoint to fetch FullParameter list after fetching the categories.
-     * @param reportName Report's Name for whom the list has to be retrieved
+     *
+     * @param reportName    Report's Name for whom the list has to be retrieved
      * @param parameterType parameterType - true/false
      * @return FullParameterListResponse
      */
@@ -48,6 +50,7 @@ public interface RunReportsService {
 
     /**
      * Endpoint to fetch the details for a particular parameter.
+     *
      * @param parameterName Parameter Name
      * @param parameterType parameterType - true/false
      * @return
@@ -72,10 +75,12 @@ public interface RunReportsService {
             @Query("R_currencyId") String currency,
             @Query("parameterType") boolean parameterType
     );
+
     /**
      * Endpoint to retrieve final Report based on the parameters.
+     *
      * @param reportName Report's Name
-     * @param options Map of the queries with their corresponding value.
+     * @param options    Map of the queries with their corresponding value.
      * @return
      */
 
@@ -83,7 +88,7 @@ public interface RunReportsService {
     Observable<FullParameterListResponse> getRunReportWithQuery(
             @Path("path") String reportName,
             @QueryMap Map<String, String> options
-            );
+    );
 
     @GET(APIEndPoint.RUNREPORTS + "/GroupSummaryCounts")
     Observable<List<CenterInfo>> getCenterSummaryInfo(

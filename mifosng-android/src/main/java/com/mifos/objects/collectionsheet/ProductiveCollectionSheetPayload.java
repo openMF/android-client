@@ -93,14 +93,14 @@ public class ProductiveCollectionSheetPayload implements Parcelable {
 
     public static final Parcelable.Creator<ProductiveCollectionSheetPayload> CREATOR = new
             Parcelable.Creator<ProductiveCollectionSheetPayload>() {
-        @Override
-        public ProductiveCollectionSheetPayload createFromParcel(Parcel source) {
-            return new ProductiveCollectionSheetPayload(source);
-        }
+                @Override
+                public ProductiveCollectionSheetPayload createFromParcel(Parcel source) {
+                    return new ProductiveCollectionSheetPayload(source);
+                }
 
-        @Override
-        public ProductiveCollectionSheetPayload[] newArray(int size) {
-            return new ProductiveCollectionSheetPayload[size];
-        }
-    };
+                @Override
+                public ProductiveCollectionSheetPayload[] newArray(int size) {
+                    return new ProductiveCollectionSheetPayload[size];
+                }
+            };
 }

@@ -6,7 +6,9 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;

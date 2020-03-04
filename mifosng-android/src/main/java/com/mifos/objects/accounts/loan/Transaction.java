@@ -198,14 +198,14 @@ public class Transaction implements Parcelable {
 
     public static final Parcelable.Creator<Transaction> CREATOR =
             new Parcelable.Creator<Transaction>() {
-        @Override
-        public Transaction createFromParcel(Parcel source) {
-            return new Transaction(source);
-        }
+                @Override
+                public Transaction createFromParcel(Parcel source) {
+                    return new Transaction(source);
+                }
 
-        @Override
-        public Transaction[] newArray(int size) {
-            return new Transaction[size];
-        }
-    };
+                @Override
+                public Transaction[] newArray(int size) {
+                    return new Transaction[size];
+                }
+            };
 }

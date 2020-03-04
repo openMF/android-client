@@ -22,7 +22,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
  */
 @Table(database = MifosDatabase.class, name = "ClientTemplateOptions")
 @ModelContainer
-public class Options  extends MifosBaseModel implements Parcelable {
+public class Options extends MifosBaseModel implements Parcelable {
 
     @Column
     String optionType;

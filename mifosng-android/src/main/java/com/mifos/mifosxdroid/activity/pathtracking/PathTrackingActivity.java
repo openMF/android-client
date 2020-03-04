@@ -15,11 +15,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -129,7 +131,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
     }
 
-    @Override       
+    @Override
     public void showPathTracking(List<UserLocation> userLocations) {
         this.userLocations = userLocations;
         pathTrackingAdapter.setPathTracker(userLocations);
@@ -207,7 +209,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
                 } else {
                     // permission denied
                     Toast.makeText(getApplicationContext(), getResources()
-                                    .getString(R.string.permission_denied_to_access_fine_location) ,
+                                    .getString(R.string.permission_denied_to_access_fine_location),
                             Toast.LENGTH_SHORT).show();
                 }
             }

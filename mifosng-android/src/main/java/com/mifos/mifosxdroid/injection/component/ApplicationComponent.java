@@ -53,36 +53,62 @@ public interface ApplicationComponent {
     Context context();
 
     Application application();
+
     DataManager dataManager();
 
     DataManagerClient dataManagerClient();
+
     DataManagerGroups dataManagerGroups();
+
     DataManagerCenter dataManagerCenters();
+
     DataManagerDataTable dataManagerDataTable();
+
     DataManagerCharge dataManagerCharge();
+
     DataManagerOffices dataManagerOffices();
+
     DataManagerStaff dataManagerStaff();
+
     DataManagerLoan dataManagerLoan();
+
     DataManagerSavings dataManagerSavings();
+
     DataManagerSurveys dataManagerSurveys();
+
     DataManagerDocument dataManagerDocument();
+
     DataManagerSearch dataManagerSearch();
+
     DataManagerRunReport dataManagerRunReport();
+
     DataManagerAuth dataManagerAuth();
+
     DataManagerNote dataManagerNote();
+
     DataManagerCollectionSheet dataManagerCollectionSheet();
 
 
     DatabaseHelperClient databaseHelperClient();
+
     DatabaseHelperCenter databaseHelperCenter();
+
     DatabaseHelperGroups databaseHelperGroup();
+
     DatabaseHelperDataTable databaseHelperDataTable();
+
     DatabaseHelperCharge databaseHelperCharge();
+
     DatabaseHelperOffices databaseHelperOffices();
+
     DatabaseHelperStaff databaseHelperStaff();
+
     DatabaseHelperLoan databaseHelperLoan();
+
     DatabaseHelperSavings databaseHelperSavings();
+
     DatabaseHelperSurveys databaseHelperSurveys();
+
     DatabaseHelperNote databaseHelperNote();
 
 }

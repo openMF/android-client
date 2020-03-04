@@ -68,5 +68,4 @@ public class SavingsAccountSummaryPresenter extends BasePresenter<SavingsAccount
     }
 
 
-
 }

@@ -163,14 +163,14 @@ public class QuestionDatas extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<QuestionDatas> CREATOR =
             new Parcelable.Creator<QuestionDatas>() {
-        @Override
-        public QuestionDatas createFromParcel(Parcel source) {
-            return new QuestionDatas(source);
-        }
+                @Override
+                public QuestionDatas createFromParcel(Parcel source) {
+                    return new QuestionDatas(source);
+                }
 
-        @Override
-        public QuestionDatas[] newArray(int size) {
-            return new QuestionDatas[size];
-        }
-    };
+                @Override
+                public QuestionDatas[] newArray(int size) {
+                    return new QuestionDatas[size];
+                }
+            };
 }

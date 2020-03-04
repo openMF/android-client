@@ -27,7 +27,7 @@ import rx.schedulers.Schedulers;
  */
 public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> {
 
-    private final DataManagerDataTable  mDataManagerDataTable;
+    private final DataManagerDataTable mDataManagerDataTable;
     private final DataManagerClient mDataManagerClient;
     private Subscription mSubscription;
 

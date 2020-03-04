@@ -197,14 +197,14 @@ public class ProductOptions implements Parcelable {
 
     public static final Parcelable.Creator<ProductOptions> CREATOR =
             new Parcelable.Creator<ProductOptions>() {
-        @Override
-        public ProductOptions createFromParcel(Parcel source) {
-            return new ProductOptions(source);
-        }
+                @Override
+                public ProductOptions createFromParcel(Parcel source) {
+                    return new ProductOptions(source);
+                }
 
-        @Override
-        public ProductOptions[] newArray(int size) {
-            return new ProductOptions[size];
-        }
-    };
+                @Override
+                public ProductOptions[] newArray(int size) {
+                    return new ProductOptions[size];
+                }
+            };
 }

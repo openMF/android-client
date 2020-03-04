@@ -19,7 +19,7 @@ import rx.Observable;
 /**
  * This DataManager is for Managing Survey API, In which Request is going to Server
  * and In Response, We are getting Survey API Observable Response using Retrofit 2 .
- *
+ * <p>
  * Created by Rajan Maurya on 22/08/16.
  */
 @Singleton
@@ -41,7 +41,7 @@ public class DataManagerSurveys {
      * https://demo.openmf.org/fineract-provider/api/v1/surveys and fetch the list of surveys and
      * returns the Observable<List<Survey>> to the Presenter.
      *
-     * @return Observable<List<Survey>>
+     * @return Observable<List < Survey>>
      */
     public Observable<List<Survey>> getAllSurvey() {
         switch (PrefManager.getUserStatus()) {
@@ -69,6 +69,7 @@ public class DataManagerSurveys {
      * This method call the DatabaseHelperSurveys Helper and
      * mDatabaseHelperSurveys.getQuestionDatas() read the all QuestionDatas
      * from the Database QuestionDatas table and returns the List<QuestionDatas>.
+     *
      * @return List<QuestionDatas>
      */
     public Observable<List<QuestionDatas>> getDatabaseQuestionDatas(int surveyId) {
@@ -79,6 +80,7 @@ public class DataManagerSurveys {
      * This method call the DatabaseHelperSurveys Helper and
      * mDatabaseHelperSurveys.getResponseDatas() read the all ResponseDatas
      * from the Database ResponseDatas table and returns the List<ResponseDatas>.
+     *
      * @return List<ResponseDatas>
      */
     public Observable<List<ResponseDatas>> getDatabaseResponseDatas(int questionId) {
@@ -89,7 +91,8 @@ public class DataManagerSurveys {
     /**
      * This Method sending the request to the REST API :
      * https://demo.openmf.org/fineract-provider/api/v1/surveys/{surveyId}/scorecards
-     * @param surveyId Survey Id
+     *
+     * @param surveyId         Survey Id
      * @param scorecardPayload Scorecard Payload
      * @return Scorecard
      */

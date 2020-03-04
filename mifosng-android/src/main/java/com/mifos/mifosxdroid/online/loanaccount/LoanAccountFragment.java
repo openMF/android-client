@@ -7,8 +7,10 @@ package com.mifos.mifosxdroid.online.loanaccount;
 
 import android.R.layout;
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -181,7 +183,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     List<String> mListLoanPurposeOptions = new ArrayList<>();
     List<String> mListAccountLinkingOptions = new ArrayList<>();
     List<String> mListAmortizationTypeOptions = new ArrayList<>();
-    List<String> mListInterestCalculationPeriodTypeOptions  = new ArrayList<>();
+    List<String> mListInterestCalculationPeriodTypeOptions = new ArrayList<>();
     List<String> mListTransactionProcessingStrategyOptions = new ArrayList<>();
     List<String> mListTermFrequencyTypeOptions = new ArrayList<>();
     List<String> mListLoanTermFrequencyTypeOptions = new ArrayList<>();
@@ -539,7 +541,7 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
         mListTermFrequencyTypeOptions.clear();
         for (com.mifos.objects.templates.loans.TermFrequencyTypeOptions termFrequencyTypeOptions :
-                 mLoanTemplate.getTermFrequencyTypeOptions()) {
+                mLoanTemplate.getTermFrequencyTypeOptions()) {
             mListTermFrequencyTypeOptions.add(termFrequencyTypeOptions.getValue());
         }
         mTermFrequencyTypeOptionsAdapter.notifyDataSetChanged();
@@ -610,32 +612,32 @@ public class LoanAccountFragment extends ProgressableDialogFragment
 
         switch (parent.getId()) {
 
-            case R.id.sp_lproduct :
+            case R.id.sp_lproduct:
                 productId = mLoanProducts.get(position).getId();
                 inflateLoanPurposeSpinner();
                 break;
 
-            case R.id.sp_loan_purpose :
+            case R.id.sp_loan_purpose:
                 loanPurposeId = mLoanTemplate.getLoanPurposeOptions().get(position).getId();
                 break;
 
-            case R.id.sp_amortization :
+            case R.id.sp_amortization:
                 amortizationTypeId = mLoanTemplate.getAmortizationTypeOptions()
                         .get(position).getId();
                 break;
 
-            case R.id.sp_interestcalculationperiod :
+            case R.id.sp_interestcalculationperiod:
                 interestCalculationPeriodTypeId = mLoanTemplate
                         .getInterestCalculationPeriodTypeOptions().get(position).getId();
                 break;
 
-            case R.id.sp_repaymentstrategy :
+            case R.id.sp_repaymentstrategy:
                 transactionProcessingStrategyId = mLoanTemplate
                         .getTransactionProcessingStrategyOptions().get(position).getId();
                 break;
 
             //LoanTermFrequencyType must be same as the RepaidFrequencyType
-            case R.id.sp_payment_periods :
+            case R.id.sp_payment_periods:
                 loanTermFrequency = mLoanTemplate.getTermFrequencyTypeOptions().get(position)
                         .getId();
                 spLoanTermFrequencyType.setSelection(loanTermFrequency);
@@ -683,15 +685,15 @@ public class LoanAccountFragment extends ProgressableDialogFragment
                 }
                 break;
 
-            case R.id.sp_fund :
+            case R.id.sp_fund:
                 fundId = mLoanTemplate.getFundOptions().get(position).getId();
                 break;
 
-            case R.id.sp_loan_officer :
+            case R.id.sp_loan_officer:
                 loanOfficerId = mLoanTemplate.getLoanOfficerOptions().get(position).getId();
                 break;
 
-            case R.id.sp_interest_type :
+            case R.id.sp_interest_type:
                 interestTypeId = mLoanTemplate.getInterestTypeOptions().get(position).getId();
                 break;
 

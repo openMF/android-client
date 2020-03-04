@@ -8,7 +8,9 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.graphics.Color;
+
 import androidx.cardview.widget.CardView;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -80,10 +82,10 @@ public class DataTableUIBuilder {
 
             final JsonElement jsonElement = jsonElementIterator.next();
             /*
-            * Each Entry in a Data Table is Displayed in the
-            * form of a table where each row contains one Key-Value Pair
-            * i.e a Column Name - Column Value from the DataTable
-            */
+             * Each Entry in a Data Table is Displayed in the
+             * form of a table where each row contains one Key-Value Pair
+             * i.e a Column Name - Column Value from the DataTable
+             */
             int rowIndex = 0;
             while (rowIndex < dataTable.getColumnHeaderData().size()) {
                 TableRow tableRow = new TableRow(context);

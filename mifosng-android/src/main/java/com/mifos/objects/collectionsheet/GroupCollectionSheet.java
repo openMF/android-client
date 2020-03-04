@@ -114,14 +114,14 @@ public class GroupCollectionSheet implements Parcelable {
 
     public static final Creator<GroupCollectionSheet> CREATOR = new
             Creator<GroupCollectionSheet>() {
-        @Override
-        public GroupCollectionSheet createFromParcel(Parcel source) {
-            return new GroupCollectionSheet(source);
-        }
+                @Override
+                public GroupCollectionSheet createFromParcel(Parcel source) {
+                    return new GroupCollectionSheet(source);
+                }
 
-        @Override
-        public GroupCollectionSheet[] newArray(int size) {
-            return new GroupCollectionSheet[size];
-        }
-    };
+                @Override
+                public GroupCollectionSheet[] newArray(int size) {
+                    return new GroupCollectionSheet[size];
+                }
+            };
 }

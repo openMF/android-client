@@ -76,14 +76,14 @@ public class RecalculationRestFrequencyType implements Parcelable {
 
     public static final Parcelable.Creator<RecalculationRestFrequencyType> CREATOR =
             new Parcelable.Creator<RecalculationRestFrequencyType>() {
-        @Override
-        public RecalculationRestFrequencyType createFromParcel(Parcel source) {
-            return new RecalculationRestFrequencyType(source);
-        }
+                @Override
+                public RecalculationRestFrequencyType createFromParcel(Parcel source) {
+                    return new RecalculationRestFrequencyType(source);
+                }
 
-        @Override
-        public RecalculationRestFrequencyType[] newArray(int size) {
-            return new RecalculationRestFrequencyType[size];
-        }
-    };
+                @Override
+                public RecalculationRestFrequencyType[] newArray(int size) {
+                    return new RecalculationRestFrequencyType[size];
+                }
+            };
 }

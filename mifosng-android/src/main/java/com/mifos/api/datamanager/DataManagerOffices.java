@@ -18,7 +18,7 @@ import rx.functions.Func1;
  * This DataManager is for Managing Offices API, In which Request is going to Server
  * and In Response, We are getting Offices API Observable Response using Retrofit2.
  * DataManagerOffices saving response in Database and response to Presenter as accordingly.
- *
+ * <p>
  * Created by Rajan Maurya on 7/7/16.
  */
 @Singleton

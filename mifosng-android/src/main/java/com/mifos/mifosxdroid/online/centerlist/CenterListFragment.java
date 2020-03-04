@@ -7,12 +7,14 @@ package com.mifos.mifosxdroid.online.centerlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -247,7 +249,7 @@ public class CenterListFragment extends MifosBaseFragment
      */
     @Override
     public void showCentersGroupAndMeeting(final CenterWithAssociations centerWithAssociations,
-            final int id) {
+                                           final int id) {
         MFDatePicker mfDatePicker = new MFDatePicker();
         mfDatePicker.setOnDatePickListener(new MFDatePicker.OnDatePickListener() {
             @Override

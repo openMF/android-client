@@ -11,7 +11,6 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 /**
- *
  * Created by Rajan Maurya on 17/08/16.
  */
 @Table(database = MifosDatabase.class)
@@ -95,14 +94,14 @@ public class SavingsTransactionDate extends MifosBaseModel implements Parcelable
 
     public static final Parcelable.Creator<SavingsTransactionDate> CREATOR =
             new Parcelable.Creator<SavingsTransactionDate>() {
-        @Override
-        public SavingsTransactionDate createFromParcel(Parcel source) {
-            return new SavingsTransactionDate(source);
-        }
+                @Override
+                public SavingsTransactionDate createFromParcel(Parcel source) {
+                    return new SavingsTransactionDate(source);
+                }
 
-        @Override
-        public SavingsTransactionDate[] newArray(int size) {
-            return new SavingsTransactionDate[size];
-        }
-    };
+                @Override
+                public SavingsTransactionDate[] newArray(int size) {
+                    return new SavingsTransactionDate[size];
+                }
+            };
 }

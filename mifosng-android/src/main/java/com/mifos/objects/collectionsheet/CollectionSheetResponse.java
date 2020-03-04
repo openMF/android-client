@@ -105,14 +105,14 @@ public class CollectionSheetResponse implements Parcelable {
 
     public static final Creator<CollectionSheetResponse> CREATOR = new
             Creator<CollectionSheetResponse>() {
-        @Override
-        public CollectionSheetResponse createFromParcel(Parcel source) {
-            return new CollectionSheetResponse(source);
-        }
+                @Override
+                public CollectionSheetResponse createFromParcel(Parcel source) {
+                    return new CollectionSheetResponse(source);
+                }
 
-        @Override
-        public CollectionSheetResponse[] newArray(int size) {
-            return new CollectionSheetResponse[size];
-        }
-    };
+                @Override
+                public CollectionSheetResponse[] newArray(int size) {
+                    return new CollectionSheetResponse[size];
+                }
+            };
 }

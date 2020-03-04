@@ -10,11 +10,13 @@ package com.mifos.mifosxdroid.online.clientcharge;
 
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;

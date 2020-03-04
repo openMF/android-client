@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.core;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.SparseBooleanArray;
 
 import java.util.ArrayList;

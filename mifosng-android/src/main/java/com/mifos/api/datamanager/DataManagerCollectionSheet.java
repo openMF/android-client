@@ -49,7 +49,7 @@ public class DataManagerCollectionSheet {
     }
 
     /**
-     *  Productive CollectionSheet API
+     * Productive CollectionSheet API
      */
 
     public Observable<List<CenterDetail>> fetchCenterDetails(

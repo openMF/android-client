@@ -5,7 +5,7 @@
 
 package com.mifos.objects.db;
 
-public class Account  {
+public class Account {
     private String accountId;
     private int accountStatusId;
     private int loanId;

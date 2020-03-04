@@ -81,14 +81,14 @@ public class IdentifierPayload implements Parcelable {
 
     public static final Parcelable.Creator<IdentifierPayload> CREATOR =
             new Parcelable.Creator<IdentifierPayload>() {
-        @Override
-        public IdentifierPayload createFromParcel(Parcel source) {
-            return new IdentifierPayload(source);
-        }
+                @Override
+                public IdentifierPayload createFromParcel(Parcel source) {
+                    return new IdentifierPayload(source);
+                }
 
-        @Override
-        public IdentifierPayload[] newArray(int size) {
-            return new IdentifierPayload[size];
-        }
-    };
+                @Override
+                public IdentifierPayload[] newArray(int size) {
+                    return new IdentifierPayload[size];
+                }
+            };
 }

@@ -15,7 +15,7 @@ public class SavingsProduct implements Parcelable {
 
     private boolean enforceMinRequiredBalance;
 
-    private  int id;
+    private int id;
 
     private String name;
 
@@ -111,14 +111,14 @@ public class SavingsProduct implements Parcelable {
 
     public static final Parcelable.Creator<SavingsProduct> CREATOR = new
             Parcelable.Creator<SavingsProduct>() {
-        @Override
-        public SavingsProduct createFromParcel(Parcel source) {
-            return new SavingsProduct(source);
-        }
+                @Override
+                public SavingsProduct createFromParcel(Parcel source) {
+                    return new SavingsProduct(source);
+                }
 
-        @Override
-        public SavingsProduct[] newArray(int size) {
-            return new SavingsProduct[size];
-        }
-    };
+                @Override
+                public SavingsProduct[] newArray(int size) {
+                    return new SavingsProduct[size];
+                }
+            };
 }

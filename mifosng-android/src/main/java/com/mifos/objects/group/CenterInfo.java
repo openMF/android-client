@@ -159,14 +159,14 @@ public class CenterInfo implements Parcelable {
 
     public static final Parcelable.Creator<CenterInfo> CREATOR =
             new Parcelable.Creator<CenterInfo>() {
-        @Override
-        public CenterInfo createFromParcel(Parcel source) {
-            return new CenterInfo(source);
-        }
+                @Override
+                public CenterInfo createFromParcel(Parcel source) {
+                    return new CenterInfo(source);
+                }
 
-        @Override
-        public CenterInfo[] newArray(int size) {
-            return new CenterInfo[size];
-        }
-    };
+                @Override
+                public CenterInfo[] newArray(int size) {
+                    return new CenterInfo[size];
+                }
+            };
 }

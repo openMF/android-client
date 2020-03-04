@@ -48,6 +48,6 @@ public interface ChargeService {
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
     Observable<ChargeCreationResponse> createLoanCharges(@Path("loanId") int loanId,
-                                          @Body ChargesPayload chargesPayload);
+                                                         @Body ChargesPayload chargesPayload);
 
 }

@@ -76,14 +76,14 @@ public class AmortizationTypeOptions implements Parcelable {
 
     public static final Parcelable.Creator<AmortizationTypeOptions> CREATOR =
             new Parcelable.Creator<AmortizationTypeOptions>() {
-        @Override
-        public AmortizationTypeOptions createFromParcel(Parcel source) {
-            return new AmortizationTypeOptions(source);
-        }
+                @Override
+                public AmortizationTypeOptions createFromParcel(Parcel source) {
+                    return new AmortizationTypeOptions(source);
+                }
 
-        @Override
-        public AmortizationTypeOptions[] newArray(int size) {
-            return new AmortizationTypeOptions[size];
-        }
-    };
+                @Override
+                public AmortizationTypeOptions[] newArray(int size) {
+                    return new AmortizationTypeOptions[size];
+                }
+            };
 }

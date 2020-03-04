@@ -231,14 +231,14 @@ public class SavingsAccount extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<SavingsAccount> CREATOR =
             new Parcelable.Creator<SavingsAccount>() {
-        @Override
-        public SavingsAccount createFromParcel(Parcel source) {
-            return new SavingsAccount(source);
-        }
+                @Override
+                public SavingsAccount createFromParcel(Parcel source) {
+                    return new SavingsAccount(source);
+                }
 
-        @Override
-        public SavingsAccount[] newArray(int size) {
-            return new SavingsAccount[size];
-        }
-    };
+                @Override
+                public SavingsAccount[] newArray(int size) {
+                    return new SavingsAccount[size];
+                }
+            };
 }

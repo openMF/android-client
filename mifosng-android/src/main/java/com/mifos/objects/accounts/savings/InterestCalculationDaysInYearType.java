@@ -71,14 +71,14 @@ public class InterestCalculationDaysInYearType implements Parcelable {
 
     public static final Parcelable.Creator<InterestCalculationDaysInYearType> CREATOR =
             new Parcelable.Creator<InterestCalculationDaysInYearType>() {
-        @Override
-        public InterestCalculationDaysInYearType createFromParcel(Parcel source) {
-            return new InterestCalculationDaysInYearType(source);
-        }
+                @Override
+                public InterestCalculationDaysInYearType createFromParcel(Parcel source) {
+                    return new InterestCalculationDaysInYearType(source);
+                }
 
-        @Override
-        public InterestCalculationDaysInYearType[] newArray(int size) {
-            return new InterestCalculationDaysInYearType[size];
-        }
-    };
+                @Override
+                public InterestCalculationDaysInYearType[] newArray(int size) {
+                    return new InterestCalculationDaysInYearType[size];
+                }
+            };
 }

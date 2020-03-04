@@ -1,7 +1,9 @@
 package com.mifos.mifosxdroid.dialogfragments.identifierdialog;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -52,14 +52,14 @@ public class BulkSavingsDueTransaction implements Parcelable {
 
     public static final Creator<BulkSavingsDueTransaction> CREATOR = new
             Creator<BulkSavingsDueTransaction>() {
-        @Override
-        public BulkSavingsDueTransaction createFromParcel(Parcel source) {
-            return new BulkSavingsDueTransaction(source);
-        }
+                @Override
+                public BulkSavingsDueTransaction createFromParcel(Parcel source) {
+                    return new BulkSavingsDueTransaction(source);
+                }
 
-        @Override
-        public BulkSavingsDueTransaction[] newArray(int size) {
-            return new BulkSavingsDueTransaction[size];
-        }
-    };
+                @Override
+                public BulkSavingsDueTransaction[] newArray(int size) {
+                    return new BulkSavingsDueTransaction[size];
+                }
+            };
 }

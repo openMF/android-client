@@ -114,7 +114,7 @@ public class DatabaseHelperGroups {
      * @return GroupAccounts
      */
     public Observable<GroupAccounts> saveGroupAccounts(final GroupAccounts groupAccounts,
-                                                        final int groupId) {
+                                                       final int groupId) {
 
         return Observable.defer(new Func0<Observable<GroupAccounts>>() {
             @Override
@@ -198,6 +198,7 @@ public class DatabaseHelperGroups {
     /**
      * This Method for deleting the group payload from the Database according to Id and
      * again fetch the group List from the Database GroupPayload_Table
+     *
      * @param id is Id of the Client Payload in which reference client was saved into Database
      * @return List<ClientPayload></>
      */

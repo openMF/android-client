@@ -349,15 +349,15 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<ClientPayload> CREATOR =
             new Parcelable.Creator<ClientPayload>() {
-        @Override
-        public ClientPayload createFromParcel(Parcel source) {
-            return new ClientPayload(source);
-        }
+                @Override
+                public ClientPayload createFromParcel(Parcel source) {
+                    return new ClientPayload(source);
+                }
 
-        @Override
-        public ClientPayload[] newArray(int size) {
-            return new ClientPayload[size];
-        }
-    };
+                @Override
+                public ClientPayload[] newArray(int size) {
+                    return new ClientPayload[size];
+                }
+            };
 }
 

@@ -76,14 +76,14 @@ public class AccountingRule implements Parcelable {
 
     public static final Parcelable.Creator<AccountingRule> CREATOR =
             new Parcelable.Creator<AccountingRule>() {
-        @Override
-        public AccountingRule createFromParcel(Parcel source) {
-            return new AccountingRule(source);
-        }
+                @Override
+                public AccountingRule createFromParcel(Parcel source) {
+                    return new AccountingRule(source);
+                }
 
-        @Override
-        public AccountingRule[] newArray(int size) {
-            return new AccountingRule[size];
-        }
-    };
+                @Override
+                public AccountingRule[] newArray(int size) {
+                    return new AccountingRule[size];
+                }
+            };
 }

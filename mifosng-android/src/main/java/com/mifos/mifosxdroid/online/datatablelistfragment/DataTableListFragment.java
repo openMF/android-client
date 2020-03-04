@@ -9,7 +9,9 @@ package com.mifos.mifosxdroid.online.datatablelistfragment;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -56,14 +58,14 @@ import butterknife.ButterKnife;
 
 /**
  * A generic fragment to show the DataTables at the runtime.
- *
+ * <p>
  * It receives the list of DataTables, the corresponding LoanPayload (client/center/group)
  * and an identifier int that states the type of entity generating the request for datatables.
- *
+ * <p>
  * It differs from the other DatatableDialogFragments in the sense that -
  * 1. it does NOT query for the datatables i.e. it does not fetch the datatable from the endpoint.
  * 2. it shows all the datatables (from datatable array) unlike in the other fragments which show
- *  a single datatable.
+ * a single datatable.
  */
 public class DataTableListFragment extends Fragment
         implements DataTableListMvpView {
@@ -132,7 +134,7 @@ public class DataTableListFragment extends Fragment
         safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableListFragment.this
                 .getActivity(), getString(R.string.create_client_loading_message));
 
-        for (DataTable datatable: dataTables) {
+        for (DataTable datatable : dataTables) {
             createForm(datatable);
         }
         addSaveButton();

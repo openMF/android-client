@@ -6,7 +6,9 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by ishankhanna on 03/07/14.
  */
-public class ChargeNameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class ChargeNameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
     LayoutInflater layoutInflater;

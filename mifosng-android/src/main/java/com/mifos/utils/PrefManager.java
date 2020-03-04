@@ -100,6 +100,7 @@ public class PrefManager {
         return gson.fromJson(getString(USER_DETAILS, "null"),
                 User.class);
     }
+
     public static void saveToken(String token) {
         putString(TOKEN, token);
     }

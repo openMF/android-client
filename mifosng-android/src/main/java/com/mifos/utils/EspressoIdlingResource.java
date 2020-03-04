@@ -20,7 +20,7 @@ import androidx.test.espresso.IdlingResource;
 
 /**
  * @author Rajan Maurya
- *         Contains a static reference to {@link IdlingResource}.
+ * Contains a static reference to {@link IdlingResource}.
  */
 public class EspressoIdlingResource {
 

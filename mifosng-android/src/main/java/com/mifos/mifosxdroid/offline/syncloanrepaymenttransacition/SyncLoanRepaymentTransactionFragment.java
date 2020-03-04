@@ -2,9 +2,11 @@ package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -290,7 +292,7 @@ public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment impl
             } else {
                 Log.d(LOG_TAG,
                         getActivity().getResources().getString(R.string.error_fix_before_sync) +
-                        mLoanRepaymentRequests.get(i).getErrorMessage());
+                                mLoanRepaymentRequests.get(i).getErrorMessage());
             }
         }
     }

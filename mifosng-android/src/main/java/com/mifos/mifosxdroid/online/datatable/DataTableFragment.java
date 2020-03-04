@@ -1,11 +1,13 @@
 package com.mifos.mifosxdroid.online.datatable;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +165,7 @@ public class DataTableFragment extends MifosBaseFragment implements DataTableMvp
         Toaster.show(rootView, message);
         ll_error.setVisibility(View.VISIBLE);
         rvDataTable.setVisibility(View.GONE);
-        tvError.setText( getString(R.string.failed_to_fetch_datatable));
+        tvError.setText(getString(R.string.failed_to_fetch_datatable));
     }
 
     @Override

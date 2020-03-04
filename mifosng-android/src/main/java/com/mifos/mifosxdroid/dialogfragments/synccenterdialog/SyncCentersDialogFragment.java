@@ -2,8 +2,10 @@ package com.mifos.mifosxdroid.dialogfragments.synccenterdialog;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,7 +207,6 @@ public class SyncCentersDialogFragment extends DialogFragment implements SyncCen
     public void updateClientSyncProgressBar(int i) {
         pbSyncingClient.setProgress(i);
     }
-
 
 
     @Override

@@ -14,8 +14,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -319,6 +321,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         Toast.makeText(getActivity(), getString(errorMessage), Toast.LENGTH_SHORT).show();
         getDialog().dismiss();
     }
+
     @Override
     public void showUploadError(String errorMessage) {
         Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();

@@ -76,14 +76,14 @@ public class RescheduleStrategyType implements Parcelable {
 
     public static final Parcelable.Creator<RescheduleStrategyType> CREATOR =
             new Parcelable.Creator<RescheduleStrategyType>() {
-        @Override
-        public RescheduleStrategyType createFromParcel(Parcel source) {
-            return new RescheduleStrategyType(source);
-        }
+                @Override
+                public RescheduleStrategyType createFromParcel(Parcel source) {
+                    return new RescheduleStrategyType(source);
+                }
 
-        @Override
-        public RescheduleStrategyType[] newArray(int size) {
-            return new RescheduleStrategyType[size];
-        }
-    };
+                @Override
+                public RescheduleStrategyType[] newArray(int size) {
+                    return new RescheduleStrategyType[size];
+                }
+            };
 }

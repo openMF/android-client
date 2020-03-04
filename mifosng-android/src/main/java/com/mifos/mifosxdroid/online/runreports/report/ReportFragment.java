@@ -2,7 +2,9 @@ package com.mifos.mifosxdroid.online.runreports.report;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;

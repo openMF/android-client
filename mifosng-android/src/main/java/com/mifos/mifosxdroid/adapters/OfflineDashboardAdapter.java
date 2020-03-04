@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Rajan Maurya on 20/07/16.
  */
-public class OfflineDashboardAdapter  extends
+public class OfflineDashboardAdapter extends
         RecyclerView.Adapter<OfflineDashboardAdapter.ViewHolder> {
 
     private List<Integer> payloadNames;

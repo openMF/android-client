@@ -76,14 +76,14 @@ public class PreClosureInterestCalculationStrategy implements Parcelable {
 
     public static final Parcelable.Creator<PreClosureInterestCalculationStrategy> CREATOR =
             new Parcelable.Creator<PreClosureInterestCalculationStrategy>() {
-        @Override
-        public PreClosureInterestCalculationStrategy createFromParcel(Parcel source) {
-            return new PreClosureInterestCalculationStrategy(source);
-        }
+                @Override
+                public PreClosureInterestCalculationStrategy createFromParcel(Parcel source) {
+                    return new PreClosureInterestCalculationStrategy(source);
+                }
 
-        @Override
-        public PreClosureInterestCalculationStrategy[] newArray(int size) {
-            return new PreClosureInterestCalculationStrategy[size];
-        }
-    };
+                @Override
+                public PreClosureInterestCalculationStrategy[] newArray(int size) {
+                    return new PreClosureInterestCalculationStrategy[size];
+                }
+            };
 }
