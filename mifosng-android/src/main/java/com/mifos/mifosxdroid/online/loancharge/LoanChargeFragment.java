@@ -230,7 +230,6 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
         mLoanChargePresenter.detachView();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();

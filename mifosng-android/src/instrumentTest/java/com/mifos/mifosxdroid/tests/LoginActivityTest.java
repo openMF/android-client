@@ -71,7 +71,6 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         assertEquals(View.VISIBLE, et_mifos_domain.getVisibility());
     }
 
-    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance1() {
         //Test if TextView has been instantiated
@@ -84,7 +83,6 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
                 tv_constructed_instance_url.getCurrentTextColor());
     }
 
-    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance2() {
         //Test if TextView has been instantiated
@@ -95,7 +93,6 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     }
 
 
-    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance3() {
         //Test if TextView has been instantiated
@@ -106,7 +103,6 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
                 tv_constructed_instance_url.getCurrentTextColor());
     }
 
-    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance4() {
         //Test if TextView has been instantiated
@@ -116,7 +112,6 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
                 tv_constructed_instance_url.getCurrentTextColor());
     }
 
-    @SuppressWarnings("deprecation")
     @SmallTest
     public void testURLInstance5() {
         //Test if TextView has been instantiated
