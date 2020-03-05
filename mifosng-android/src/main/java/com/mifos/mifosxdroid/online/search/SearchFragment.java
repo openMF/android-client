@@ -100,12 +100,6 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         sp_search.setAdapter(searchOptionsAdapter);
         sp_search.setOnItemSelectedListener(this);
         et_search.requestFocus();
-        layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_search.setLayoutManager(layoutManager);
-        rv_search.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
-        rv_search.setHasFixedSize(true);
-        rv_search.setAdapter(searchAdapter);
     }
 
 
@@ -124,6 +118,12 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
 
     @Override
     public void showSearchedResources(List<SearchedEntity> searchedEntities) {
+        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_search.setLayoutManager(layoutManager);
+        rv_search.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
+        rv_search.setHasFixedSize(true);
+        rv_search.setAdapter(searchAdapter);
         searchAdapter.setSearchResults(searchedEntities);
         this.searchedEntities = searchedEntities;
         EspressoIdlingResource.decrement(); // App is idle.
@@ -133,6 +133,7 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     public void showNoResultFound() {
         showAlertDialog(getString(R.string.dialog_message),
                 getString(R.string.no_search_result_found));
+        rv_search.setAdapter(null);
     }
 
     @Override
