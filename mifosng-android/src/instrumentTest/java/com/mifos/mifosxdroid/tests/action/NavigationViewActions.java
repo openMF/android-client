@@ -17,13 +17,16 @@
 package com.mifos.mifosxdroid.tests.action;
 
 import android.content.res.Resources.NotFoundException;
+
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;

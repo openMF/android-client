@@ -62,7 +62,6 @@ public class ClientListPresenterTest {
     }
 
 
-
     @Test
     public void testLoadClients() {
 

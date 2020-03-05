@@ -2,11 +2,14 @@ package com.mifos.mifosxdroid.tests;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.test.ViewAsserts;

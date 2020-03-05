@@ -32,7 +32,7 @@ public class SyncClientPayloadsPresenterTest {
     @Rule
     public final RxSchedulersOverrideRule mOverrideSchedulersRule = new RxSchedulersOverrideRule();
 
-    SyncClientPayloadsPresenter  syncClientPayloadsPresenter;
+    SyncClientPayloadsPresenter syncClientPayloadsPresenter;
 
     @Mock
     DataManagerClient mDataManagerClient;

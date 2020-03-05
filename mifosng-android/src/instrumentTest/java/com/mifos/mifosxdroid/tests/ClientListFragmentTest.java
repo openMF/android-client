@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.test.suitebuilder.annotation.LargeTest;
 import android.text.TextUtils;
 import android.util.Log;
