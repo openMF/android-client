@@ -21,8 +21,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SwitchCompat;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,10 +46,8 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -84,7 +80,7 @@ public class DashboardActivity extends MifosBaseActivity
         ButterKnife.bind(this);
         initialiseShortcuts();
         replaceFragment(new SearchFragment(), false, R.id.container);
-        if(getIntent().getAction()!=null)
+        if (getIntent().getAction() != null)
             listenForActions(getIntent().getAction());
         // setup navigation drawer and Navigation Toggle click and Offline Mode SwitchButton
         setupNavigationBar();
@@ -151,44 +147,22 @@ public class DashboardActivity extends MifosBaseActivity
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
             shortcutManager = getSystemService(ShortcutManager.class);
             Intent intent = new Intent(this, SplashScreenActivity.class);
+            String[] shortcutLabelArray = {getString(R.string.clients), getString(R.string.groups),
+                getString(R.string.centers), getString(R.string.settings)};
+            int[] drawableArray = {R.drawable.ic_person_black_24dp, R.drawable.ic_group_black_24dp,
+                    R.drawable.ic_centers_24dp, R.drawable.ic_settings};
             List<ShortcutInfo> shortcutList = new ArrayList<>();
-            shortcutList.add(
-                    new ShortcutInfo.Builder(this, getString(R.string.clients))
-                            .setShortLabel(getString(R.string.clients))
-                            .setLongLabel(getString(R.string.clients))
-                            .setIcon(Icon.createWithResource(this, R.drawable.ic_person_black_24dp))
-                            .setIntent(intent.setAction(
-                                    getString(R.string.clients)))
-                            .build()
-            );
-            shortcutList.add(
-                    new ShortcutInfo.Builder(this, getString(R.string.groups))
-                            .setShortLabel(
-                                    getString(R.string.groups))
-                            .setLongLabel(getString(R.string.groups))
-                            .setIcon(Icon.createWithResource(this,
-                                    R.drawable.ic_group_black_24dp))
-                            .setIntent(intent.setAction(
-                                    getString(R.string.groups)))
-                            .build()
-            );
-            shortcutList.add(
-                    new ShortcutInfo.Builder(this, getString(R.string.centers))
-                            .setShortLabel(getString(R.string.centers))
-                            .setLongLabel(getString(R.string.centers))
-                            .setIcon(Icon.createWithResource(this, R.drawable.ic_centers_24dp))
-                            .setIntent(intent.setAction(getString(R.string.centers)))
-                            .build()
-            );
-            shortcutList.add(
-                    new ShortcutInfo.Builder(this, getString(R.string.settings))
-                            .setShortLabel(getString(R.string.settings))
-                            .setLongLabel(getString(R.string.settings))
-                            .setIcon(Icon.createWithResource(this,
-                                    R.drawable.ic_settings))
-                            .setIntent(intent.setAction(getString(R.string.settings)))
-                            .build()
-            );
+            for (int i = 0; i < 4; ++i) {
+                shortcutList.add(
+                        new ShortcutInfo.Builder(this, shortcutLabelArray[i])
+                                .setShortLabel(shortcutLabelArray[i])
+                                .setLongLabel(shortcutLabelArray[i])
+                                .setIcon(Icon.createWithResource(this, drawableArray[i]))
+                                .setIntent(intent.setAction(
+                                        shortcutLabelArray[i]))
+                                .build()
+                );
+            }
             shortcutManager.setDynamicShortcuts(shortcutList);
         }
     }

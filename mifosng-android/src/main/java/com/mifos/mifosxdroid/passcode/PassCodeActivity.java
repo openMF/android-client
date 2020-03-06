@@ -19,8 +19,8 @@ public class PassCodeActivity extends MifosPassCodeActivity {
 
     @Override
     public void startNextActivity() {
-        Intent intent=new Intent(this, DashboardActivity.class);
-        if(action!=null)
+        Intent intent = new Intent(this, DashboardActivity.class);
+        if (action != null)
             intent.setAction(action);
         startActivity(intent);
     }

@@ -24,7 +24,6 @@ public class SplashScreenActivity extends MifosBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
         if (!PrefManager.isAuthenticated()) {
             PrefManager.setInstanceUrl(BaseUrl.PROTOCOL_HTTPS
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);
@@ -34,7 +33,7 @@ public class SplashScreenActivity extends MifosBaseActivity {
                     PassCodeActivity.class);
             intent.putExtra(PassCodeConstants.PASSCODE_INITIAL_LOGIN, true);
             intent.setAction(getIntent().getAction());
-            PassCodeActivity.action=getIntent().getAction();
+            PassCodeActivity.action = getIntent().getAction();
             startActivity(intent);
         }
         finish();
