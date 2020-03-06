@@ -29,6 +29,7 @@ public class FormSpinner extends FormWidget {
 
         label = new TextView(context);
         label.setText(getDisplayText());
+        label.setPadding(0, 16, 16, 0);
 
         spinner = new Spinner(context);
         spinner.setAdapter(new ArrayAdapter<String>(context, android.R.layout
