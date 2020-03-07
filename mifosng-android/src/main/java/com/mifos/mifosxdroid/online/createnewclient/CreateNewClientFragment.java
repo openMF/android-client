@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
@@ -102,6 +103,9 @@ public class CreateNewClientFragment extends ProgressableFragment
     @BindView(R.id.layout_submission)
     LinearLayout layout_submission;
 
+    @BindArray(R.array.search_options_values)
+    String[] searchOptionsValues;
+
     @Inject
     CreateNewClientPresenter createNewClientPresenter;
 
@@ -126,7 +130,7 @@ public class CreateNewClientFragment extends ProgressableFragment
     private List<String> officeList;
     private List<String> staffList;
 
-    private ArrayAdapter<String> genderOptionsAdapter;
+    private ArrayAdapter<CharSequence> genderOptionsAdapter;
     private ArrayAdapter<String> clientClassificationAdapter;
     private ArrayAdapter<String> clientTypeAdapter;
     private ArrayAdapter<String> officeAdapter;
@@ -166,9 +170,8 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @Override
     public void showUserInterface() {
-
-        genderOptionsAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item, genderOptionsList);
+        genderOptionsAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.gender_options_values, android.R.layout.simple_spinner_item);
         genderOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spGender.setAdapter(genderOptionsAdapter);
         spGender.setOnItemSelectedListener(this);
@@ -316,10 +319,6 @@ public class CreateNewClientFragment extends ProgressableFragment
         if (!clientsTemplate.getDataTables().isEmpty()) {
             hasDataTables = true;
         }
-
-        genderOptionsList.addAll(
-                createNewClientPresenter.filterOptions(clientsTemplate.getGenderOptions()));
-        genderOptionsAdapter.notifyDataSetChanged();
 
         clientTypeList.addAll(
                 createNewClientPresenter.filterOptions(clientsTemplate.getClientTypeOptions()));

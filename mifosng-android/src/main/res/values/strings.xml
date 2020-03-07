@@ -751,6 +751,12 @@
         <item>savingsaccounts</item>
     </string-array>
 
+    <string-array name="gender_options_values">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="centerList_account_prefix">Account No: %1$s</string>
     <string name="no_staff">no staff</string>
