@@ -799,6 +799,7 @@
     <string name="document_dialog_fragment_loading_message">Uploading document</string>
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+    <string name="product_short_name">Product Short Name</string>
 
 
 </resources>

@@ -86,7 +86,6 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:src="@drawable/baseline_keyboard_arrow_right_black_36"
-               android:layout_alignParentRight="true"
                android:layout_gravity="center_vertical"
                android:id="@+id/btn_additional_details"
                />

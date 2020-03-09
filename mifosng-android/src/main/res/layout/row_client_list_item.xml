@@ -28,8 +28,7 @@
             android:id="@+id/tv_product_short_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_clientName"
-            android:text=""
+            android:text="@string/product_short_name"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
