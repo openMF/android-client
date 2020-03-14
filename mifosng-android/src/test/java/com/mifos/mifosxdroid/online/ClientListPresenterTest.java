@@ -77,10 +77,8 @@ public class ClientListPresenterTest {
 
         mClientListPresenter.loadClients(false, offset);
 
-        verify(mClientListMvpView).showProgressbar(true);
         verify(mClientListMvpView).showClientList(clientPage.getPageItems());
         verify(mClientListMvpView, never()).showError();
-        verify(mClientListMvpView).showProgressbar(false);
     }
 
     @Test
@@ -106,11 +104,9 @@ public class ClientListPresenterTest {
         stubDataManagerGetClients(Observable.just(clientPage));
 
         mClientListPresenter.loadClients(true, offset);
-
-        verify(mClientListMvpView).showProgressbar(true);
+        
         verify(mClientListMvpView).showLoadMoreClients(clientPage.getPageItems());
         verify(mClientListMvpView, never()).showError();
-        verify(mClientListMvpView).showProgressbar(false);
     }
 
     @Test
