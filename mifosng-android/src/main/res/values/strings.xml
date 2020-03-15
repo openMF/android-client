@@ -29,6 +29,7 @@
     <string name="due_date">Due Date</string>
     <string name="locale">Locale</string>
     <string name="confirm_delete_client_image">Are you sure you want to delete this client\'s image?</string>
+    <string name="confirm_delete_identifiers">do you really want to delete?</string>
     <string name="default_instance_url" translatable="false">demo.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
@@ -635,6 +636,7 @@
     <string name="dialog_action_i_am_sure">I\'M Sure</string>
     <string name="dialog_action_re_try">Re-Try</string>
     <string name="dialog_action_app_settings">App Settings</string>
+    <string name="dialog_action_delete">Delete</string>
 
     <!--OnError Message-->
     <string name="failed_to_load_clientpayload">Failed to load ClientPayload</string>

@@ -55,7 +55,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class CreateNewCenterFragment extends MifosBaseFragment
+public class
+        CreateNewCenterFragment extends MifosBaseFragment
         implements MFDatePicker.OnDatePickListener, CreateNewCenterMvpView {
 
 
