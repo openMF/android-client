@@ -1,29 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/RelativeLayout.Base"
-
-    >
+    style="@style/RelativeLayout.Base">
 
     <include layout="@layout/toolbar" />
 
     <androidx.core.widget.NestedScrollView
         style="@style/ScrollView.Login"
         android:layout_below="@+id/toolbar"
-        android:padding="@dimen/layout_padding_30dp"
+        android:padding="@dimen/layout_padding_30dp">
 
-        >
-
-        <LinearLayout style="@style/LinearLayout.Base"
-            >
+        <LinearLayout style="@style/LinearLayout.Base">
 
             <ImageView
-
                 android:layout_width="200dp"
                 android:layout_height="100dp"
-                android:src="@drawable/mifos_logo"/>
+                android:src="@drawable/mifos_logo" />
+
             <TextView
                 style="@style/TextView.Login"
-                android:text="@string/enter_credentials"/>
+                android:text="@string/enter_credentials" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userWrapper"
@@ -36,7 +31,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordWrapper"
                 style="@style/TextInput.Base"
@@ -46,9 +40,8 @@
                     android:id="@+id/et_password"
                     style="@style/EditText.Password"
                     android:nextFocusDown="@+id/bt_login" />
+
             </com.google.android.material.textfield.TextInputLayout>
-
-
 
             <LinearLayout
                 android:id="@+id/ll_connectionSettings"
@@ -68,10 +61,10 @@
                             android:id="@+id/et_instanceURL"
                             style="@style/EditText.Connection"
                             android:hint="@string/hint_instance_url"
+                            android:inputType="textUri"
                             android:nextFocusDown="@+id/et_instancePort" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/portWrapper"
@@ -87,8 +80,8 @@
                             android:nextFocusDown="@+id/et_tenantIdentifier" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
 
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_constructed_instance_url"
@@ -96,9 +89,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="16dp" />
 
-
                 <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
-
 
                     <EditText
                         android:id="@+id/et_tenantIdentifier"
@@ -115,6 +106,7 @@
                 style="@style/Button.Login" />
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
