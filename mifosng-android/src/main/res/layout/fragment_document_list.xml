@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/name"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -44,13 +42,13 @@
                 android:layout_marginRight="24dp"
                 android:layout_weight="1"
                 android:text="@string/description"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </TableRow>
 
     </TableLayout>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_container"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_below="@id/tbl_header"
@@ -61,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -78,13 +76,13 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_error_black_24dp"/>
+            android:src="@drawable/ic_error_black_24dp" />
 
         <TextView
             android:id="@+id/noDocumentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
     </LinearLayout>
 

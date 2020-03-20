@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <androidx.cardview.widget.CardView android:id="@+id/card_view"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -39,7 +37,7 @@
                     android:padding="4dp"
                     android:text="@string/name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_first_name"
@@ -50,7 +48,7 @@
                     android:padding="4dp"
                     android:text="@string/name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -67,7 +65,7 @@
                     android:padding="4dp"
                     android:text="@string/middle_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_middle_name"
@@ -78,7 +76,7 @@
                     android:padding="4dp"
                     android:text="@string/middle_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -95,7 +93,7 @@
                     android:padding="4dp"
                     android:text="@string/last_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_last_name"
@@ -106,7 +104,7 @@
                     android:padding="4dp"
                     android:text="@string/last_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -123,7 +121,7 @@
                     android:padding="4dp"
                     android:text="@string/mobile_no"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_mobile_no"
@@ -134,7 +132,7 @@
                     android:padding="4dp"
                     android:text="@string/mobile_no"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -151,7 +149,7 @@
                     android:padding="4dp"
                     android:text="@string/external_id"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_externalId"
@@ -162,7 +160,7 @@
                     android:padding="4dp"
                     android:text="@string/external_id"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -179,7 +177,7 @@
                     android:padding="4dp"
                     android:text="@string/gender"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_gender"
@@ -190,7 +188,7 @@
                     android:padding="4dp"
                     android:text="@string/gender"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -207,7 +205,7 @@
                     android:padding="4dp"
                     android:text="@string/dob"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_dob"
@@ -218,7 +216,7 @@
                     android:padding="4dp"
                     android:text="@string/dob"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -235,7 +233,7 @@
                     android:padding="4dp"
                     android:text="@string/office_id"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_office_id"
@@ -246,7 +244,7 @@
                     android:padding="4dp"
                     android:text="@string/office_id"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -263,7 +261,7 @@
                     android:padding="4dp"
                     android:text="@string/activation_date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_activation_date"
@@ -274,7 +272,7 @@
                     android:padding="4dp"
                     android:text="@string/activation_date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -291,7 +289,7 @@
                     android:padding="4dp"
                     android:text="@string/active"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_db_active_status"
@@ -302,7 +300,7 @@
                     android:padding="4dp"
                     android:text="@string/active"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
@@ -314,10 +312,9 @@
                 android:text="@string/error_message"
                 android:visibility="gone"
                 android:textColor="@color/light_yellow"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableLayout>
-
 
 
     </androidx.cardview.widget.CardView>

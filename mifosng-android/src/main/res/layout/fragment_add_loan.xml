@@ -302,7 +302,7 @@
                     android:paddingTop="10dp"
                     android:spinnerMode="dropdown"
                     android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical" />
             </LinearLayout>
 
             <TextView

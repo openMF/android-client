@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/item_client_runreport"/>
+        <include layout="@layout/item_client_runreport" />
 
         <TableLayout
             android:layout_width="match_parent"

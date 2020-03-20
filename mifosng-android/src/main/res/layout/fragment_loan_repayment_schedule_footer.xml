@@ -22,7 +22,7 @@
         android:layout_weight="1"
         android:text="@string/medium_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="left"/>
+        android:gravity="left" />
 
     <TextView
         android:id="@+id/tv_total_upcoming"
@@ -31,7 +31,7 @@
         android:layout_weight="1"
         android:text="@string/medium_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="center"/>
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/tv_total_overdue"
@@ -40,6 +40,6 @@
         android:layout_weight="1"
         android:text="@string/medium_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="right"/>
+        android:gravity="right" />
 
 </LinearLayout>

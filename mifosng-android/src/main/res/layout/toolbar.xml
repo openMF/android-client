@@ -8,10 +8,10 @@
 
     <!--<RelativeLayout style="@style/RelativeLayout.Base">-->
 
-        <!--<com.mifos.mifosxdroid.views.FontTextView-->
-            <!--android:id="@+id/title"-->
-            <!--style="@style/TextView.Toolbar"-->
-            <!--app:typeface="roboto_medium" />-->
+    <!--<com.mifos.mifosxdroid.views.FontTextView-->
+    <!--android:id="@+id/title"-->
+    <!--style="@style/TextView.Toolbar"-->
+    <!--app:typeface="roboto_medium" />-->
 
     <!--</RelativeLayout>-->
 </androidx.appcompat.widget.Toolbar>

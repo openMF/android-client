@@ -22,8 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".6"
             android:text="@string/group_name"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/tv_group_name"

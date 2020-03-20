@@ -186,7 +186,7 @@
                     android:inputType="number"
                     android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
@@ -209,7 +209,7 @@
                     android:inputType="number"
                     android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -223,7 +223,7 @@
                     android:inputType="number"
                     android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -237,7 +237,7 @@
                     android:inputType="number"
                     android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
