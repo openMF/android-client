@@ -51,7 +51,6 @@
     </TableLayout>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_below="@id/tbl_header"
         android:layout_height="match_parent">

@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/ll_center"
+    <LinearLayout
+        android:id="@+id/ll_center"
                   style="@style/LinearLayout.Base">
         <TextView style="@style/TextView.CreateCenter" />
         <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">

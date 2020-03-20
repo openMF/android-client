@@ -19,8 +19,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            style="@style/LinearLayout.Base">
+        <LinearLayout style="@style/LinearLayout.Base">
 
             <TextView style="@style/TextView.CreateClient" />
 
