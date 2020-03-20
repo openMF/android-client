@@ -224,7 +224,6 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
                 }
 
             }
-            String stringResult = sb.toString();
         } catch (Exception e) {
             Log.e(LOG_TAG, "", e);
         }
