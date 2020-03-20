@@ -47,32 +47,46 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tv_center_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
+                    android:layout_alignParentStart="true"
                     android:lines="1"
                     android:text="@string/medium_text"
                     android:textColor="@color/black"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:layout_alignParentLeft="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:layout_toStartOf="@+id/tv_center_id"
+                    android:text="@string/center_id"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_toLeftOf="@+id/tv_center_id"
+                    android:layout_marginRight="@dimen/default_margin" />
 
                 <TextView
                     android:id="@+id/tv_center_id"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="end"
+                    android:layout_alignParentEnd="true"
                     android:text="@string/small_text"
                     android:textColor="@color/black"
-                    android:textSize="14sp"/>
-            </LinearLayout>
+                    android:textSize="14sp"
+                    android:layout_alignParentRight="true" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_account_number"
