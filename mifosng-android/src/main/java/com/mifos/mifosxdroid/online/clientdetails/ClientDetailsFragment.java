@@ -506,7 +506,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @Override
     public void showClientInformation(final Client client) {
         if (client != null) {
-            setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
+            setToolbarTitle(getString(R.string.client) + " - " + client.getDisplayName());
             isClientActive = client.isActive();
             getActivity().invalidateOptionsMenu();
             if (!client.isActive()) {
