@@ -178,7 +178,7 @@ android {
 
 
         //Square dependencies
-        implementation('com.squareup.retrofit2:retrofit:$rootProject.retrofitVersionLatest') {
+        implementation("com.squareup.retrofit2:retrofit:$rootProject.retrofitVersionLatest") {
             // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
             exclude module: 'okhttp'
         }
