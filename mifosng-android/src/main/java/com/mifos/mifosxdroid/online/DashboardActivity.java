@@ -279,9 +279,11 @@ public class DashboardActivity extends MifosBaseActivity
             public void onClick(View v) {
                 if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
                     PrefManager.setUserStatus(Constants.USER_ONLINE);
+                    userStatusToggle.setText(R.string.online_mode);
                     userStatusToggle.setChecked(false);
                 } else {
                     PrefManager.setUserStatus(Constants.USER_OFFLINE);
+                    userStatusToggle.setText(R.string.offline_mode);
                     userStatusToggle.setChecked(true);
                 }
             }

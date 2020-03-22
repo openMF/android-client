@@ -634,6 +634,7 @@
     <string name="dialog_action_i_am_sure">I\'M Sure</string>
     <string name="dialog_action_re_try">Re-Try</string>
     <string name="dialog_action_app_settings">App Settings</string>
+    <string name="online_mode">Online Mode</string>
 
     <!--OnError Message-->
     <string name="failed_to_load_clientpayload">Failed to load ClientPayload</string>
