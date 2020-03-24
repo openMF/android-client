@@ -4,4 +4,4 @@
     android:layout_height="wrap_content"
     android:textColor="@color/white"
     android:textStyle="bold"
-    android:textSize="25sp"/>
+    android:textSize="@dimen/text_spinner_item"/>
