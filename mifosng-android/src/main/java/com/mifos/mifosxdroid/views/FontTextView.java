@@ -8,14 +8,14 @@ package com.mifos.mifosxdroid.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.widget.TextView;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.mifos.mifosxdroid.R;
 
 /**
  * @author fomenkoo
  */
-public class FontTextView extends TextView {
+public class FontTextView extends AppCompatTextView {
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
