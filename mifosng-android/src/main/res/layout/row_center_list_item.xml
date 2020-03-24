@@ -17,7 +17,8 @@
     android:layout_marginBottom="5dp"
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    android:focusable="true">
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

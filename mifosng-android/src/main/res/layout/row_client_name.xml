@@ -13,7 +13,8 @@
     android:background="@color/white"
     android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
-    app:cardUseCompatPadding="true" >
+    app:cardUseCompatPadding="true"
+    android:focusable="true">
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
