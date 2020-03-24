@@ -14,7 +14,6 @@
         >
 
         <LinearLayout style="@style/LinearLayout.Base"
-            android:animateLayoutChanges="true"
             >
 
             <ImageView

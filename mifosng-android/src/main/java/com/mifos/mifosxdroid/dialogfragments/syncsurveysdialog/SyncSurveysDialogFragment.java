@@ -1,8 +1,16 @@
 package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog;
 
 import android.app.DialogFragment;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,11 +98,71 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
         return syncSurveysDialogFragment;
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.Channel_Name);
+            String description = getString(R.string.Channel_Description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new
+                    NotificationChannel(getString(R.string.Channel_ID), name, importance);
+            channel.setDescription(description);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    void showProgressInNotification() {
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.
+                from(getActivity());
+        final NotificationCompat.Builder builder = new NotificationCompat.
+                Builder(getActivity(), getString(R.string.Channel_ID));
+        builder.setContentTitle("Survey Sync Progress")
+                .setContentText("Syncing...")
+                .setSmallIcon(R.drawable.mifos_logo)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true);
+
+        new Thread(new Runnable() {
+            public void run() {
+                int PROGRESS_MAX = mSurveyList.size();
+                int CURRENT_PROGRESS = pbTotalSyncSurvey.getProgress();
+
+                while (CURRENT_PROGRESS <= PROGRESS_MAX) {
+                    builder.setProgress(PROGRESS_MAX, CURRENT_PROGRESS, false);
+                    notificationManager.notify(0, builder.build());
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        Log.e("Error", e.toString());
+                    }
+                    CURRENT_PROGRESS = pbTotalSyncSurvey.getProgress();
+                    if (CURRENT_PROGRESS == PROGRESS_MAX) {
+                        CURRENT_PROGRESS += 1;
+                    }
+
+                }
+
+                builder.setContentText("Sync Completed").setProgress(0, 0, false);
+                notificationManager.notify(0, builder.build());
+
+            }
+        }).start();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         mSurveyList = new ArrayList<Survey>();
         super.onCreate(savedInstanceState);
+        createNotificationChannel();
     }
 
     @Override
@@ -125,6 +193,7 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
             dismissDialog();
         } else {
             hideDialog();
+            showProgressInNotification();
         }
     }
 
