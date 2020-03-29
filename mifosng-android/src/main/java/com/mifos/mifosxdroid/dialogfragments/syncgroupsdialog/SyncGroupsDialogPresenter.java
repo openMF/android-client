@@ -56,7 +56,8 @@ public class SyncGroupsDialogPresenter extends BasePresenter<SyncGroupsDialogMvp
 
     private Boolean mLoanAccountSyncStatus = false;
 
-    private int mGroupSyncIndex = 0, mClientSyncIndex = 0, mLoanAndRepaymentSyncIndex = 0,
+    public int mGroupSyncIndex = 0;
+    private int mClientSyncIndex = 0, mLoanAndRepaymentSyncIndex = 0,
             mSavingsAndTransactionSyncIndex = 0;
 
     @Inject

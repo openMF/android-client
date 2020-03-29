@@ -1,9 +1,17 @@
 package com.mifos.mifosxdroid.dialogfragments.synccenterdialog;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.DialogFragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +95,66 @@ public class SyncCentersDialogFragment extends DialogFragment implements SyncCen
         return syncCentersDialogFragment;
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.Channel_Name);
+            String description = getString(R.string.Channel_Description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new
+                    NotificationChannel(getString(R.string.Channel_ID), name, importance);
+            channel.setDescription(description);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    void showProgressInNotification() {
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.
+                from(getActivity());
+
+        final NotificationCompat.Builder builder = new NotificationCompat.
+                Builder(getActivity(), getString(R.string.Channel_ID));
+        builder.setSmallIcon(R.drawable.mifos_logo)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true);
+        new Thread(new Runnable() {
+            public void run() {
+                int MAX_PROGRESS = Integer.parseInt(getString(R.string.max_progress));
+                int CURRENT_PROGRESS = Integer.parseInt(getString(R.string.current_progress));
+                while (syncCentersDialogPresenter.mCenterSyncIndex < mCenterList.size()) {
+                    builder.setContentTitle("Syncing Centers " +
+                            (syncCentersDialogPresenter.mCenterSyncIndex ) +
+                            "/" + mCenterList.size());
+                    builder.setContentText(CURRENT_PROGRESS + "%");
+                    builder.setProgress(MAX_PROGRESS, CURRENT_PROGRESS, false);
+                    notificationManager.notify(0, builder.build());
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Log.e("Error: ", e.toString());
+                    }
+                    float individualCenterProgress = pbTotalSyncCenter.getProgress();
+                    float individualCenterMax = pbTotalSyncCenter.getMax();
+                    float individualCenterPercent =
+                            (individualCenterProgress / individualCenterMax) * 100;
+                    CURRENT_PROGRESS = (int) individualCenterPercent;
+                }
+
+                builder.setContentTitle(mCenterList.size() + " Centers Synced ");
+                builder.setContentText("Sync Completed").setProgress(0, 0, false);
+                notificationManager.notify(0, builder.build());
+            }
+        }).start();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
@@ -94,6 +162,7 @@ public class SyncCentersDialogFragment extends DialogFragment implements SyncCen
             mCenterList = getArguments().getParcelableArrayList(Constants.CENTER);
         }
         super.onCreate(savedInstanceState);
+        createNotificationChannel();
     }
 
     @Override
@@ -127,6 +196,7 @@ public class SyncCentersDialogFragment extends DialogFragment implements SyncCen
             dismissDialog();
         } else {
             hideDialog();
+            showProgressInNotification();
         }
     }
 
@@ -205,7 +275,6 @@ public class SyncCentersDialogFragment extends DialogFragment implements SyncCen
     public void updateClientSyncProgressBar(int i) {
         pbSyncingClient.setProgress(i);
     }
-
 
 
     @Override

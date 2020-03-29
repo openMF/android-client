@@ -1,9 +1,19 @@
 package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.DialogFragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mifos.mifosxdroid.ClientListActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
@@ -74,13 +85,74 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     private List<Client> mClientList;
 
-
     public static SyncClientsDialogFragment newInstance(List<Client> client) {
         SyncClientsDialogFragment syncClientsDialogFragment = new SyncClientsDialogFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(Constants.CLIENT, (ArrayList<? extends Parcelable>) client);
         syncClientsDialogFragment.setArguments(args);
         return syncClientsDialogFragment;
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.Channel_Name);
+            String description = getString(R.string.Channel_Description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new
+                    NotificationChannel(getString(R.string.Channel_ID), name, importance);
+            channel.setDescription(description);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    void showProgressInNotification() {
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat
+                .from(getActivity());
+        Intent intent = new Intent(getActivity(), ClientListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
+        final NotificationCompat.Builder builder = new NotificationCompat.
+                Builder(getActivity(), getString(R.string.Channel_ID));
+        builder.setSmallIcon(R.drawable.mifos_logo)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true);
+        new Thread(new Runnable() {
+            public void run() {
+                int MAX_PROGRESS = Integer.parseInt(getString(R.string.max_progress));
+                int CURRENT_PROGRESS = Integer.parseInt(getString(R.string.current_progress));
+                while (mSyncClientsDialogPresenter.mClientSyncIndex < mClientList.size()) {
+                    builder.setContentTitle("Syncing Clients " +
+                            (mSyncClientsDialogPresenter.mClientSyncIndex) +
+                            "/" + mClientList.size());
+                    builder.setContentText(CURRENT_PROGRESS + "%");
+                    builder.setProgress(MAX_PROGRESS, CURRENT_PROGRESS, false);
+                    notificationManager.notify(0, builder.build());
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Log.e("Error: ", e.toString());
+                    }
+                    float individualClientProgress = pb_syncing_client.getProgress();
+                    float individualClientMax = getMaxSingleSyncClientProgressBar();
+                    float individualClientPercent =
+                            (individualClientProgress / individualClientMax) * 100;
+                    CURRENT_PROGRESS = (int) individualClientPercent;
+                }
+
+                builder.setContentTitle(mClientList.size() + " Clients Synced ");
+                builder.setContentText("Sync Completed").setProgress(0, 0, false);
+                notificationManager.notify(0, builder.build());
+            }
+        }).start();
     }
 
     @Override
@@ -90,6 +162,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
             mClientList = getArguments().getParcelableArrayList(Constants.CLIENT);
         }
         super.onCreate(savedInstanceState);
+        createNotificationChannel();
     }
 
     @Override
@@ -123,6 +196,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
             dismissDialog();
         } else {
             hideDialog();
+            showProgressInNotification();
         }
     }
 
