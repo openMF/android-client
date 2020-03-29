@@ -48,8 +48,8 @@ public class SyncClientsDialogPresenter extends BasePresenter<SyncClientsDialogM
     private List<SavingsAccount> mSavingsAccountList;
 
     private Boolean mLoanAccountSyncStatus = false;
-
-    private int mClientSyncIndex, mLoanAndRepaymentSyncIndex = 0,
+    public int mClientSyncIndex = 0;
+    private int mLoanAndRepaymentSyncIndex = 0,
             mSavingsAndTransactionSyncIndex = 0;
 
     @Inject

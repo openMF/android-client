@@ -199,6 +199,11 @@
     <string name="add_payment_detail">Add Payment Detail</string>
     <string name="generate_new">Generate New</string>
     <string name="currency">Currency</string>
+    <string name="Channel_Name">Channel_Name</string>
+    <string name="Channel_Description">Channel_Description</string>
+    <string name="Channel_ID">10001</string>
+    <string name="max_progress">100</string>
+    <string name="current_progress">0</string>
     <!-- General Terms End Here -->
 
 
