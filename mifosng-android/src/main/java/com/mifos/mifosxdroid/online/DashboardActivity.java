@@ -174,6 +174,9 @@ public class DashboardActivity extends MifosBaseActivity
                 if (slideOffset != 0)
                     hideKeyboard(mDrawerLayout);
                 super.onDrawerSlide(drawerView, slideOffset);
+				InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(
+                        getCurrentFocus().getWindowToken(),0);
             }
         };
         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
