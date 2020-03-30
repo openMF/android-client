@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -174,7 +176,7 @@ public class DashboardActivity extends MifosBaseActivity
                 if (slideOffset != 0)
                     hideKeyboard(mDrawerLayout);
                 super.onDrawerSlide(drawerView, slideOffset);
-				InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(
                         getCurrentFocus().getWindowToken(),0);
             }
