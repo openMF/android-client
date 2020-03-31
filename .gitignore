@@ -1,0 +1,13 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+.DS_Store
+.idea/
+build/
+mifosng-android/src/main/res/values/com_crashlytics_export_strings.xml
+mifosng-android/mifosng-android.apk
+mifosng-android/src/main/assets/crashlytics-build.properties
+android-client.iml
+mifosng-android/mifosng-android.iml
+*.hprof
+android-client.iml

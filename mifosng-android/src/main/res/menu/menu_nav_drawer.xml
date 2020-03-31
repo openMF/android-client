@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+     
+    <!-- dummy ids are given to ech group to make dividers between each group -->
+    <group android:checkableBehavior="single"
+        android:id="@+id/group1" >
+
+        <item
+            android:id="@+id/item_dashboard"
+            android:checked="true"
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="@string/dashboard"
+            />
+
+        <item
+            android:id="@+id/item_clients"
+            android:checked="false"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/clients"
+            />
+
+        <item
+            android:id="@+id/item_groups"
+            android:checked="false"
+            android:icon="@drawable/ic_group_black_24dp"
+            android:title="@string/groups"
+            />
+
+        <item
+            android:id="@+id/item_centers"
+            android:checked="false"
+            android:icon="@drawable/ic_centers_24dp"
+            android:title="@string/centers"
+            />
+
+        <item
+            android:id="@+id/individual_collection_sheet"
+            android:checked="false"
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="@string/individual_collection_sheet"
+            />
+
+        <item
+            android:id ="@+id/collection_sheet"
+            android:checked="false"
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="@string/collection_sheet"/>
+
+        <item
+            android:id="@+id/runreport"
+            android:checked="false"
+            android:icon="@drawable/ic_report_item"
+            android:title="@string/run_report"
+            />
+                
+        <item
+            android:id="@+id/item_path_tracker"
+            android:checked="false"
+            android:icon="@drawable/ic_path_tracker"
+            android:title="@string/path_tracker"
+            />
+
+        <item
+            android:id="@+id/item_settings"
+            android:checked="false"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/settings"
+            />
+
+    </group>
+       
+    <group android:checkableBehavior="single"
+        android:id="@+id/group3">
+         
+        <item
+            android:id="@+id/item_offline"
+            android:checked="false"
+            android:icon="@drawable/ic_offline"
+            android:title="@string/offline"
+            />
+         
+    </group>
+     
+</menu>

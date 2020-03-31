@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<resources>
+    <attr name="typeface" format="enum">
+        <enum name="roboto_light" value="0" />
+        <enum name="roboto_medium" value="1" />
+        <enum name="roboto_bold" value="2" />
+    </attr>
+    <declare-styleable name="CustomFont">
+        <attr name="typeface" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularImageView">
+        <attr name="border" format="boolean"></attr>
+        <attr name="border_width" format="dimension"></attr>
+        <attr name="border_color" format="color"></attr>
+        <attr name="shadow" format="boolean"></attr>
+    </declare-styleable>
+</resources>

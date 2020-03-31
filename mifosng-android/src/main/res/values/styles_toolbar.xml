@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<resources>
+
+    <style name="Toolbar" parent="Theme.AppCompat.Light" />
+
+    <style name="Toolbar.Common">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@color/primary</item>
+        <item name="actionModeBackground">@color/primary</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/AppToolbarPopup</item>
+    </style>
+
+    <style name="AppToolbarPopup" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+</resources>

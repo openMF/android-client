@@ -1,0 +1,138 @@
+[
+    {
+        "entityId": 621,
+        "entityAccountNo": "000000621",
+        "entityName": "Ram Singh",
+        "entityType": "CLIENT",
+        "parentId": 93,
+        "parentName": "Group G2",
+        "entityStatus": {
+            "id": 300,
+            "code": "clientStatusType.active",
+            "value": "Active"
+        }
+    },
+    {
+        "entityId": 645,
+        "entityAccountNo": "000000645",
+        "entityName": "Madenge Pimbi",
+        "entityType": "CLIENT",
+        "parentId": 96,
+        "parentName": "Arusha",
+        "entityMobileNo": "0762213979",
+        "entityStatus": {
+            "id": 300,
+            "code": "clientStatusType.active",
+            "value": "Active"
+        }
+    },
+    {
+        "entityId": 261,
+        "entityAccountNo": "000000261",
+        "entityName": "For Prepay - Calculate till preclosure date",
+        "entityType": "LOAN",
+        "parentId": 30,
+        "parentName": "Joseph Sese Seko Mobutu",
+        "entityStatus": {
+            "id": 200,
+            "code": "loanStatusType.approved",
+            "value": "Approved"
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 281,
+        "entityAccountNo": "000000281",
+        "entityName": "LP",
+        "entityType": "LOAN",
+        "parentId": 547,
+        "parentName": "Fishermen Welfare Federation",
+        "entityStatus": {
+            "id": 300,
+            "code": "loanStatusType.active",
+            "value": "Active"
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 316,
+        "entityAccountNo": "GPSP000000316",
+        "entityName": "Group P Saving Product",
+        "entityType": "SAVING",
+        "parentId": 626,
+        "parentName": "James Austin",
+        "entityStatus": {
+            "id": 0,
+            "code": "",
+            "value": ""
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 317,
+        "entityAccountNo": "GPSP000000317",
+        "entityName": "Group P Saving Product",
+        "entityType": "SAVING",
+        "parentId": 629,
+        "parentName": "Asha Gupta",
+        "entityStatus": {
+            "id": 0,
+            "code": "",
+            "value": ""
+        },
+        "parentType": "client"
+    },
+    {
+        "entityId": 58,
+        "entityAccountNo": "000000058",
+        "entityExternalId": "001",
+        "entityName": "Farmers",
+        "entityType": "GROUP",
+        "parentId": 25,
+        "parentName": "EDI",
+        "entityStatus": {
+            "id": 300,
+            "code": "groupingStatusType.active",
+            "value": "Active"
+        }
+    },
+    {
+        "entityId": 71,
+        "entityAccountNo": "000000071",
+        "entityName": "SHGGB001",
+        "entityType": "GROUP",
+        "parentId": 30,
+        "parentName": "Group B",
+        "entityStatus": {
+            "id": 300,
+            "code": "groupingStatusType.active",
+            "value": "Active"
+        }
+    },
+    {
+        "entityId": 184,
+        "entityAccountNo": "000000184",
+        "entityName": "JRR",
+        "entityType": "CENTER",
+        "parentId": 92,
+        "parentName": "Group G1",
+        "entityStatus": {
+            "id": 300,
+            "code": "groupingStatusType.active",
+            "value": "Active"
+        }
+    },
+    {
+        "entityId": 192,
+        "entityAccountNo": "000000192",
+        "entityName": "Center Rumpin",
+        "entityType": "CENTER",
+        "parentId": 101,
+        "parentName": "Sub Area",
+        "entityStatus": {
+            "id": 300,
+            "code": "groupingStatusType.active",
+            "value": "Active"
+        }
+    }
+]

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="8dp">
+
+    <View
+        android:id="@+id/view_status_indicator"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/light_red" />
+
+    <TextView
+        android:id="@+id/tv_accountNumber"
+        style="@style/TextView.Base.Weight"
+        android:layout_weight="1"
+        android:padding="@dimen/text_padding_normal"
+        android:text="@string/medium_text" />
+
+    <TextView
+        android:id="@+id/tv_amount"
+        style="@style/TextView.Base.Weight"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:padding="@dimen/text_padding_normal"
+        android:text="@string/medium_text" />
+</LinearLayout>

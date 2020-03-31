@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/tv_sync_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:text="@string/sync_clients_full_information"
+        />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/client_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/name"
+                />
+
+            <TextView
+                android:id="@+id/tv_client_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/name"
+                />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/total_clients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total"
+                />
+
+            <TextView
+                android:id="@+id/tv_total_clients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total"
+                />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/syncing_client"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/syncing_client"
+                />
+
+            <TextView
+                android:id="@+id/tv_syncing_client"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/syncing_client"
+                />
+
+        </TableRow>
+
+        <ProgressBar
+            android:id="@+id/pb_sync_client"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"/>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/total_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total_sync_progress"
+                />
+
+            <TextView
+                android:id="@+id/tv_total_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/total_sync_progress"
+                />
+
+        </TableRow>
+
+        <ProgressBar
+            android:id="@+id/pb_total_sync_client"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:indeterminate="false"/>
+
+        <TableRow
+            android:id="@+id/tableRow5"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/sync_failed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/failed_sync"
+                />
+
+            <TextView
+                android:id="@+id/tv_sync_failed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/failed_sync"
+                />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            />
+
+        <Button
+            android:id="@+id/btn_hide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:text="@string/hide"
+            />
+    </LinearLayout>
+
+</LinearLayout>

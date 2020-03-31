@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mifos.mifosxdroid">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <application
+        android:name="com.mifos.App"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/MaterialAppTheme"
+        android:supportsRtl="true">
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="facae47316396ae7954149cc408e25b7a37ab7ea" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".SplashScreenActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login.LoginActivity"
+            android:label="@string/mifos_account"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".online.DashboardActivity"
+            android:label="@string/dashboard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".online.SurveyQuestionActivity"
+            android:label="Survey"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".online.GroupsActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".online.ClientActivity"
+            android:label="@string/title_activity_client"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".online.CentersActivity"
+            android:label="@string/title_activity_centers"
+            android:parentActivityName=".online.DashboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".online.DashboardActivity" />
+        </activity>
+
+
+        <activity
+            android:name=".online.GenerateCollectionSheetActivity"
+            android:label="@string/title_activity_generate_collection_sheet"
+            android:parentActivityName=".online.DashboardActivity"
+            android:configChanges="orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".online.DashboardActivity" />
+        </activity>
+
+        <activity android:name=".online.RunReportsActivity"
+            android:label="@string/run_report"
+            android:parentActivityName=".online.DashboardActivity">
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".online.DashboardActivity"/>
+        </activity>
+        <activity
+            android:name=".ClientListActivity"
+            android:label="@string/clients"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GroupListActivity"
+            android:label="@string/groups"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.pinpointclient.PinpointClientActivity"
+            android:label="@string/pinpoint"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.pathtracking.PathTrackingActivity"
+            android:label="@string/track_path"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".offline.syncclientpayloads.SyncClientPayloadActivity"
+            android:label="@string/sync_clients"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".offline.syncgrouppayloads.SyncGroupPayloadsActivity"
+            android:label="@string/sync_groups"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".offline.synccenterpayloads.SyncCenterPayloadActivity"
+            android:label="@string/sync_centers"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity"
+            android:label="@string/sync_loanrepayments"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".SettingsActivity"
+            android:label="@string/settings"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity"
+            android:label="@string/sync_savingsaccounttransactions"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".passcode.PassCodeActivity"
+            android:label="@string/pass_code"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".activity.pathtracking.PathTrackingService"
+            android:exported="false"/>
+
+    </application>
+
+</manifest>

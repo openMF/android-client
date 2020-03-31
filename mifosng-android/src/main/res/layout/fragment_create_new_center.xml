@@ -1,0 +1,100 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/ll_center"
+                  style="@style/LinearLayout.Base">
+        <TextView style="@style/TextView.CreateCenter" />
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+            <EditText
+                android:id="@+id/et_center_name"
+                style="@style/EditText.BaseWidth"
+                android:gravity="start"
+                android:hint="@string/centername"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingBottom="16dp"
+                android:singleLine="true"/>
+            <requestFocus />
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/tv_office"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/office_name_mandatory"
+            android:textSize="16sp"
+
+            />
+
+        <Spinner
+            android:id="@+id/sp_center_offices"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:spinnerMode="dropdown"
+            android:background="@color/light_grey"/>
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+        </com.google.android.material.textfield.TextInputLayout>
+        <CheckBox
+            android:id="@+id/cb_center_active_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:paddingTop="10dp"
+            android:text="@string/center_active"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/layout_submission"
+            android:visibility="gone">
+
+
+            <ImageView
+                android:baselineAlignBottom="true"
+                android:layout_gravity="center"
+                android:layout_height="30dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="30dp"
+                app:srcCompat="@drawable/ic_event_black_24dp"/>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_width="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Small"
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/center_activation_date"/>
+
+                <TextView
+                    android:id="@+id/tv_center_activationDate"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_submit"
+            style="@style/Button.Base"
+            android:layout_marginTop="10dp"
+            android:text="@string/submit"
+            />
+
+
+    </LinearLayout>
+</ScrollView>

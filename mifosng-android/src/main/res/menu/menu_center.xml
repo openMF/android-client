@@ -1,0 +1,18 @@
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add_savings_account"
+        android:title="@string/create_savings_account"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/view_group_list"
+        android:title="@string/group_list"/>
+
+</menu>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="0.4"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/medium_text"
+        android:id="@+id/tv_doc_name" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="0.4"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/medium_text"
+        android:id="@+id/tv_doc_descrption" />
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/tv_doc_location_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:shadowColor="#22000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+
+</LinearLayout>

@@ -1,0 +1,251 @@
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
+
+    <!-- Comment this out when editing the actual content -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <!-- Actual content -->
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/LinearLayout.Base">
+
+            <TextView
+                style="@style/TextView.CreateSavingsAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/product"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_product"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/tv_field_officer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/field_officer"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_field_officer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_client_external_id"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/external_id"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_submittedon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="16dp"
+                android:text="@string/submittedon"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_submittedon_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/submission_headline"
+                android:imeOptions="actionNext"
+                android:paddingBottom="16dp"
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_nominal_annual"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/nominal"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_interest_calc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/interest_calc"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sp_interest_calc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_interest_comp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/interest_comp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sp_interest_comp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_interest_p_period"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/interest_p_period"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sp_interest_p_period"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_days_in_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/days_in_year"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sp_days_in_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="10dp"
+                android:textSize="20sp" />
+
+            <CheckBox
+                android:id="@+id/cb_enforce_required_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:paddingTop="10dp"
+                android:text="@string/saving_min_required_balance" />
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_min_required_balance"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/minbalance"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/cb_overdraft_allowed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:paddingTop="10dp"
+                android:text="@string/saving_overdraft_allowed" />
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_max_overdraft_amount"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/maxoverdraft"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_nominal_annual_overdraft"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/nominal_overdraft"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                <EditText
+                    android:id="@+id/et_min_overdraft_required"
+                    style="@style/EditText.BaseWidth"
+                    android:gravity="start"
+                    android:hint="@string/min_overdraft"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
+                    android:maxLines="1"
+                    android:visibility="gone"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_submit"
+                style="@style/Button.Base"
+                android:layout_marginTop="10dp"
+                android:text="@string/submit" />
+        </LinearLayout>
+    </ScrollView>
+</ViewFlipper>

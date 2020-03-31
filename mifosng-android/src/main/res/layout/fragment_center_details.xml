@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+~ This project is licensed under the open source MPL V2.
+~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rl_center">
+
+    <ScrollView style="@style/ScrollView.Base"
+                android:id="@+id/container">
+
+        <TableLayout
+            android:id="@+id/tbl_centerDetails"
+            style="@style/Table">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_horizontal"
+                style="@style/TextView.Client"
+                android:textColor="@color/black"
+                android:text="@string/center_details"/>
+
+            <TableRow
+                android:id="@+id/row_activation_date"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/activation_date" />
+
+                <TextView
+                    android:id="@+id/tv_center_activation_date"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_meeting_date"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/next_meeting_on" />
+
+                <TextView
+                    android:id="@+id/tv_meeting_date"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_meeting_frequency"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/meeting_frequency" />
+
+                <TextView
+                    style="@style/TextView.Row.Value"
+                    android:id="@+id/tv_meeting_frequency" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_staff_name"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/staff_name" />
+
+                <TextView
+                    android:id="@+id/tv_staff_name"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TextView
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"
+                android:background="@color/black"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="16dp"
+                style="@style/TextView.Client"
+                android:textColor="@color/black"
+                android:text="@string/summary_info"/>
+
+            <TableRow
+                android:id="@+id/row_active_clients"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/active_clients" />
+
+                <TextView
+                    android:id="@+id/tv_active_clients"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_active_group_loans"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/active_group_loans" />
+
+                <TextView
+                    android:id="@+id/tv_active_group_loans"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_active_client_loans"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/active_client_loans" />
+
+                <TextView
+                    style="@style/TextView.Row.Value"
+                    android:id="@+id/tv_active_client_loans" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_active_group_borrowers"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/active_group_borrowers" />
+
+                <TextView
+                    android:id="@+id/tv_active_group_borrowers"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_active_client_borrowers"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/active_client_borrowers" />
+
+                <TextView
+                    android:id="@+id/tv_active_client_borrowers"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_active_overdue_group_loans"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/active_overdue_group_loans" />
+
+                <TextView
+                    android:id="@+id/tv_active_overdue_group_loans"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_active_overdue_client_loans"
+                style="@style/TableRow">
+
+                <TextView
+                    style="@style/TextView.Row"
+                    android:text="@string/active_overdue_client_loans" />
+
+                <TextView
+                    android:id="@+id/tv_active_overdue_client_loans"
+                    style="@style/TextView.Row.Value" />
+            </TableRow>
+
+        </TableLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_activate_center"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/activate_center"
+            android:background="@color/primary_dark" />
+    </LinearLayout>
+
+</RelativeLayout>

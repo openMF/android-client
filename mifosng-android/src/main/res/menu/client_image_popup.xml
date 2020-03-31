@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This project is licensed under the open source MPL V2.
+  ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/client_image_capture"
+        android:title="@string/menu_take_photo" />
+    <item
+        android:id="@+id/client_image_upload"
+        android:title="@string/menu_upload_photo" />
+    <item
+        android:id="@+id/client_image_remove"
+        android:title="@string/menu_remove_photo" />
+</menu>
