@@ -220,7 +220,7 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @OnClick(R.id.btn_submit)
     public void onClickSubmitButton() {
-
+        hideKeyboard(rootView);
         submissionDateString = tvSubmissionDate.getText().toString();
         submissionDateString = DateHelper
                 .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)

@@ -134,6 +134,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideKeyboard(view);
 
                 CenterPayload centerPayload = new CenterPayload();
 
