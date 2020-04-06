@@ -149,7 +149,8 @@
             android:name=".passcode.PassCodeActivity"
             android:label="@string/pass_code"
             android:screenOrientation="portrait" />
-
+        <activity android:name=".appintro.AppIntroUser"
+            android:label="@string/app_name"/>
         <service android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false"/>
 

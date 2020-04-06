@@ -28,6 +28,7 @@
     <!-- Color resources for Savings Account Statuses -->
     <color name="savings_account_status_active">#008000</color>
 
+
     <!-- A light Holo shade of blue -->
     <color name="blue_light">#ff33b5e5</color>
     <!-- A light Holo shade of gray -->
