@@ -18,6 +18,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SwitchCompat;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,7 +72,6 @@ public class DashboardActivity extends MifosBaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
         ButterKnife.bind(this);
 
         replaceFragment(new SearchFragment(), false, R.id.container);
@@ -399,6 +399,8 @@ public class DashboardActivity extends MifosBaseActivity
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
     }
+
+
 }
 
 

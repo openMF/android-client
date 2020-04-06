@@ -236,7 +236,7 @@ public class DataTableListFragment extends Fragment
         bt_processForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideKeyboard(v);
+                hideKeyboard(getContext(), v);
                 try {
                     onSaveActionRequested();
                 } catch (RequiredFieldException e) {
@@ -245,9 +245,9 @@ public class DataTableListFragment extends Fragment
             }
         });
     }
-    public void hideKeyboard(View view) {
+    public void hideKeyboard(Context context, View view) {
         InputMethodManager inputManager = (InputMethodManager) getActivity()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                .getSystemService(context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager
                 .RESULT_UNCHANGED_SHOWN);
     }
