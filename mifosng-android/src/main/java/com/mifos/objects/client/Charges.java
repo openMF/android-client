@@ -56,7 +56,7 @@ public class Charges extends MifosBaseModel implements Parcelable {
     @SerializedName("chargeDueDate")
     ClientDate chargeDueDate;
 
-    List<Integer> dueDate = new ArrayList<Integer>();
+    List<Integer> dueDate = new ArrayList<>();
 
     public Boolean getActive() {
         return isActive;

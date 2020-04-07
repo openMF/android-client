@@ -23,7 +23,7 @@ public class CollectionMeetingCalendar {
     private boolean repeating;
     private String recurrence;
 
-    private List<Integer> startDate = new ArrayList<Integer>();
+    private List<Integer> startDate = new ArrayList<>();
 
 
     public long getCalendarId() {

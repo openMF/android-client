@@ -20,8 +20,8 @@ public class User {
     private boolean authenticated;
     private int officeId;
     private String officeName;
-    private List<Role> roles = new ArrayList<Role>();
-    private List<String> permissions = new ArrayList<String>();
+    private List<Role> roles = new ArrayList<>();
+    private List<String> permissions = new ArrayList<>();
 
     //{"username":"User1","userId":1,"base64EncodedAuthenticationKey":"VXNlcjE6dGVjaDRtZg\u003d
     // \u003d",

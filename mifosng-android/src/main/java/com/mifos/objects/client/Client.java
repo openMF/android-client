@@ -53,10 +53,10 @@ public class Client extends MifosBaseModel implements Parcelable {
     @ForeignKey(saveForeignKeyModel = true)
     ClientDate clientDate;
 
-    List<Integer> activationDate = new ArrayList<Integer>();
+    List<Integer> activationDate = new ArrayList<>();
 
-    List<Integer> dobDate = new ArrayList<Integer>();
-    List<Group> groups = new ArrayList<Group>();
+    List<Integer> dobDate = new ArrayList<>();
+    List<Group> groups = new ArrayList<>();
 
     String mobileNo;
 
@@ -160,9 +160,9 @@ public class Client extends MifosBaseModel implements Parcelable {
         this.accountNo = in.readString();
         this.status = in.readParcelable(Status.class.getClassLoader());
         this.active = in.readByte() != 0;
-        this.activationDate = new ArrayList<Integer>();
+        this.activationDate = new ArrayList<>();
         in.readList(this.activationDate, Integer.class.getClassLoader());
-        this.dobDate = new ArrayList<Integer>();
+        this.dobDate = new ArrayList<>();
         in.readList(this.dobDate, Integer.class.getClassLoader());
         this.groups = new ArrayList<>();
         in.readList(this.groups, Group.class.getClassLoader());

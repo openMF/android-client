@@ -444,14 +444,14 @@ public class SavingsAccountWithAssociations extends MifosBaseModel implements Pa
         this.allowOverdraft = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.enforceMinRequiredBalance = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.withHoldTax = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.lastActiveTransactionDate = new ArrayList<Integer>();
+        this.lastActiveTransactionDate = new ArrayList<>();
         in.readList(this.lastActiveTransactionDate, Integer.class.getClassLoader());
         this.isDormancyTrackingActive = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.overdraftLimit = (Integer) in.readValue(Integer.class.getClassLoader());
         this.summary = in.readParcelable(Summary.class.getClassLoader());
-        this.transactions = new ArrayList<Transaction>();
+        this.transactions = new ArrayList<>();
         in.readList(this.transactions, Transaction.class.getClassLoader());
-        this.charges = new ArrayList<Charge>();
+        this.charges = new ArrayList<>();
         in.readList(this.charges, Charge.class.getClassLoader());
     }
 

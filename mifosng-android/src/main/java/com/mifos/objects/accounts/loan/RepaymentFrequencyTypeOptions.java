@@ -10,7 +10,7 @@ public class RepaymentFrequencyTypeOptions {
     private Integer id;
     private String code;
     private String value;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public Integer getId() {
         return id;

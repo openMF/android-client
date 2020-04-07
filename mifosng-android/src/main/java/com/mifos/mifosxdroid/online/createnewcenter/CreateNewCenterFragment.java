@@ -89,7 +89,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     private View rootView;
     private String activationdateString;
     private DialogFragment newDatePicker;
-    private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> officeNameIdHashMap = new HashMap<>();
 
     public static CreateNewCenterFragment newInstance() {
         CreateNewCenterFragment createNewCenterFragment = new CreateNewCenterFragment();
@@ -222,14 +222,14 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @Override
     public void showOffices(List<Office> offices) {
-        final List<String> officeList = new ArrayList<String>();
+        final List<String> officeList = new ArrayList<>();
 
         for (Office office : offices) {
             officeList.add(office.getName());
             officeNameIdHashMap.put(office.getName(), office.getId());
         }
         Collections.sort(officeList);
-        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> officeAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, officeList);
         officeAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);

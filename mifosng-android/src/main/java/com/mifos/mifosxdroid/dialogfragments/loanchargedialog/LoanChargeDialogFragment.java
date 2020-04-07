@@ -84,7 +84,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     private DialogFragment mfDatePicker;
     private int chargeId;
     private int loanAccountNumber;
-    private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> chargeNameIdHashMap = new HashMap<>();
     private String chargeName;
     private Charges createdCharge;
     private List<Integer> dueDateAsIntegerList;
@@ -200,7 +200,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
         final List<Charges> charges = new ArrayList<>();
         // you can use this array to populate your spinner
-        final ArrayList<String> chargesNames = new ArrayList<String>();
+        final ArrayList<String> chargesNames = new ArrayList<>();
         //Try to get response body
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
@@ -228,7 +228,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
         } catch (Exception e) {
             Log.e(LOG_TAG, "", e);
         }
-        final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<String>(getActivity(),
+        final ArrayAdapter<String> chargesAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, chargesNames);
         chargesAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);

@@ -55,8 +55,8 @@ public class Loan {
     private Boolean canDisburse;
     private Boolean inArrears;
     private Boolean isNPA;
-    private List<Object> overdueCharges = new ArrayList<Object>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private List<Object> overdueCharges = new ArrayList<>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public Integer getId() {
         return id;

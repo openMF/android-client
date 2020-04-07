@@ -317,7 +317,7 @@ public class CalendarOptions implements Parcelable {
         this.entityId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.entityType = in.readParcelable(EntityType.class.getClassLoader());
         this.title = in.readString();
-        this.startDate = new ArrayList<Integer>();
+        this.startDate = new ArrayList<>();
         in.readList(this.startDate, Integer.class.getClassLoader());
         this.duration = (Integer) in.readValue(Integer.class.getClassLoader());
         this.type = in.readParcelable(CalendarOptionsType.class.getClassLoader());
@@ -334,9 +334,9 @@ public class CalendarOptions implements Parcelable {
         this.nextTenRecurringDates = (List) new ArrayList<ArrayList<Integer>>();
         in.readList(this.nextTenRecurringDates, Integer.class.getClassLoader());
         this.humanReadable = in.readString();
-        this.createdDate = new ArrayList<Integer>();
+        this.createdDate = new ArrayList<>();
         in.readList(this.startDate, Integer.class.getClassLoader());
-        this.lastUpdatedDate = new ArrayList<Integer>();
+        this.lastUpdatedDate = new ArrayList<>();
         in.readList(this.startDate, Integer.class.getClassLoader());
         this.createdByUserId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.createdByUsername = in.readString();

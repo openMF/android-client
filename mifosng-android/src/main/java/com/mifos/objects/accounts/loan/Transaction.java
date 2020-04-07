@@ -20,7 +20,7 @@ public class Transaction implements Parcelable {
     private Integer officeId;
     private String officeName;
     private Type type;
-    private List<Integer> date = new ArrayList<Integer>();
+    private List<Integer> date = new ArrayList<>();
     private Currency currency;
     private PaymentDetailData paymentDetailData;
     private Double amount;
@@ -184,7 +184,7 @@ public class Transaction implements Parcelable {
         this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.officeName = in.readString();
         this.type = in.readParcelable(Type.class.getClassLoader());
-        this.date = new ArrayList<Integer>();
+        this.date = new ArrayList<>();
         in.readList(this.date, Integer.class.getClassLoader());
         this.currency = in.readParcelable(Currency.class.getClassLoader());
         this.paymentDetailData = in.readParcelable(PaymentDetailData.class.getClassLoader());

@@ -108,7 +108,7 @@ public class LoanWithAssociations extends MifosBaseModel implements Parcelable {
 
     RepaymentSchedule repaymentSchedule;
 
-    List<Transaction> transactions = new ArrayList<Transaction>();
+    List<Transaction> transactions = new ArrayList<>();
 
     List<Object> disbursementDetails;
 
@@ -620,9 +620,9 @@ public class LoanWithAssociations extends MifosBaseModel implements Parcelable {
         this.timeline = in.readParcelable(Timeline.class.getClassLoader());
         this.summary = in.readParcelable(Summary.class.getClassLoader());
         this.repaymentSchedule = in.readParcelable(RepaymentSchedule.class.getClassLoader());
-        this.transactions = new ArrayList<Transaction>();
+        this.transactions = new ArrayList<>();
         in.readList(this.transactions, Transaction.class.getClassLoader());
-        this.disbursementDetails = new ArrayList<Object>();
+        this.disbursementDetails = new ArrayList<>();
         in.readList(this.disbursementDetails, Object.class.getClassLoader());
         this.feeChargesAtDisbursementCharged = (Double) in.readValue(Double.class.getClassLoader());
         this.totalOverpaid = (Double) in.readValue(Double.class.getClassLoader());
@@ -630,11 +630,11 @@ public class LoanWithAssociations extends MifosBaseModel implements Parcelable {
         this.loanProductCounter = (Integer) in.readValue(Integer.class.getClassLoader());
         this.multiDisburseLoan = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.canDisburse = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.emiAmountVariations = new ArrayList<Object>();
+        this.emiAmountVariations = new ArrayList<>();
         in.readList(this.emiAmountVariations, Object.class.getClassLoader());
         this.inArrears = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.isNPA = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.overdueCharges = new ArrayList<Object>();
+        this.overdueCharges = new ArrayList<>();
         in.readList(this.overdueCharges, Object.class.getClassLoader());
     }
 

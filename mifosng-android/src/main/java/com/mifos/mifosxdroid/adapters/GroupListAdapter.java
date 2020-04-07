@@ -30,7 +30,7 @@ public class GroupListAdapter extends BaseAdapter {
 
     LayoutInflater layoutInflater;
     Context context;
-    List<Group> groups = new ArrayList<Group>();
+    List<Group> groups = new ArrayList<>();
 
     public GroupListAdapter(Context context, List<Group> groups) {
         this.layoutInflater = LayoutInflater.from(context);

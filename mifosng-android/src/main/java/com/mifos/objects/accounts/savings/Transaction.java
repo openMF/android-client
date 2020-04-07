@@ -197,7 +197,7 @@ public class Transaction extends MifosBaseModel implements Parcelable {
         this.transactionType = in.readParcelable(TransactionType.class.getClassLoader());
         this.accountId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.accountNo = in.readString();
-        this.date = new ArrayList<Integer>();
+        this.date = new ArrayList<>();
         in.readList(this.date, Integer.class.getClassLoader());
         this.currency = in.readParcelable(Currency.class.getClassLoader());
         this.amount = (Double) in.readValue(Double.class.getClassLoader());

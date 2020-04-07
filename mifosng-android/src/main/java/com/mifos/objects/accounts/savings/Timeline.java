@@ -14,14 +14,14 @@ import java.util.List;
 
 public class Timeline implements Parcelable {
 
-    List<Integer> submittedOnDate = new ArrayList<Integer>();
+    List<Integer> submittedOnDate = new ArrayList<>();
 
     String submittedByUsername;
 
     String submittedByFirstname;
 
     String submittedByLastname;
-    List<Integer> approvedOnDate = new ArrayList<Integer>();
+    List<Integer> approvedOnDate = new ArrayList<>();
 
     String approvedByUsername;
 
@@ -29,7 +29,7 @@ public class Timeline implements Parcelable {
 
     String approvedByLastname;
 
-    List<Integer> activatedOnDate = new ArrayList<Integer>();
+    List<Integer> activatedOnDate = new ArrayList<>();
 
     public List<Integer> getSubmittedOnDate() {
         return submittedOnDate;
@@ -141,17 +141,17 @@ public class Timeline implements Parcelable {
     }
 
     protected Timeline(Parcel in) {
-        this.submittedOnDate = new ArrayList<Integer>();
+        this.submittedOnDate = new ArrayList<>();
         in.readList(this.submittedOnDate, Integer.class.getClassLoader());
         this.submittedByUsername = in.readString();
         this.submittedByFirstname = in.readString();
         this.submittedByLastname = in.readString();
-        this.approvedOnDate = new ArrayList<Integer>();
+        this.approvedOnDate = new ArrayList<>();
         in.readList(this.approvedOnDate, Integer.class.getClassLoader());
         this.approvedByUsername = in.readString();
         this.approvedByFirstname = in.readString();
         this.approvedByLastname = in.readString();
-        this.activatedOnDate = new ArrayList<Integer>();
+        this.activatedOnDate = new ArrayList<>();
         in.readList(this.activatedOnDate, Integer.class.getClassLoader());
     }
 

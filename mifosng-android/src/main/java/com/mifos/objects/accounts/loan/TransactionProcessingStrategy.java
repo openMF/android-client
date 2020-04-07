@@ -13,7 +13,7 @@ public class TransactionProcessingStrategy {
     private Integer id;
     private String code;
     private String name;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public Integer getId() {
         return id;

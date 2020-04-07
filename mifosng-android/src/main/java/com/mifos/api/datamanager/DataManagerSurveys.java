@@ -50,7 +50,7 @@ public class DataManagerSurveys {
             case 1:
                 return mDatabaseHelperSurveys.readAllSurveys();
             default:
-                List<Survey> defaultSurveyList = new ArrayList<Survey>();
+                List<Survey> defaultSurveyList = new ArrayList<>();
                 return Observable.just(defaultSurveyList);
         }
     }

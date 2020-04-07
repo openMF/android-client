@@ -125,12 +125,12 @@ public class GroupTimeline implements Parcelable {
     }
 
     protected GroupTimeline(Parcel in) {
-        this.submittedOnDate = new ArrayList<Integer>();
+        this.submittedOnDate = new ArrayList<>();
         in.readList(this.submittedOnDate, Integer.class.getClassLoader());
         this.submittedByUsername = in.readString();
         this.submittedByFirstname = in.readString();
         this.submittedByLastname = in.readString();
-        this.activatedOnDate = new ArrayList<Integer>();
+        this.activatedOnDate = new ArrayList<>();
         in.readList(this.activatedOnDate, Integer.class.getClassLoader());
         this.activatedByUsername = in.readString();
         this.activatedByFirstname = in.readString();

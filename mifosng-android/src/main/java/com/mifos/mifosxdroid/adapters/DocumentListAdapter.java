@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
  */
 public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<Document> documents = new ArrayList<Document>();
+    List<Document> documents = new ArrayList<>();
 
     @Inject
     public DocumentListAdapter() {

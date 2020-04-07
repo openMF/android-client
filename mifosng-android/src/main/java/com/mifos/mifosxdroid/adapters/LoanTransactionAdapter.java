@@ -43,8 +43,8 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         this.transactionList = transactionList;
         this.context = context;
 
-        parents = new ArrayList<Parent>();
-        children = new ArrayList<Child>();
+        parents = new ArrayList<>();
+        children = new ArrayList<>();
         for (Transaction transaction : transactionList) {
 
             Parent parent = new Parent(transaction.getDate(), transaction.getType(), transaction

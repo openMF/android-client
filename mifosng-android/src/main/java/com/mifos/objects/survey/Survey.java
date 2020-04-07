@@ -44,9 +44,9 @@ public class Survey extends MifosBaseModel implements Parcelable {
     @Column
     String countryCode;
 
-    List<QuestionDatas> questionDatas = new ArrayList<QuestionDatas>();
+    List<QuestionDatas> questionDatas = new ArrayList<>();
 
-    List<ComponentDatas> componentDatas  = new ArrayList<ComponentDatas>();
+    List<ComponentDatas> componentDatas  = new ArrayList<>();
 
     public List<ComponentDatas> getComponentDatas() {
         return componentDatas;

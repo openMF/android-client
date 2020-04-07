@@ -510,7 +510,7 @@ public class Summary extends MifosBaseModel implements Parcelable {
         this.totalWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
         this.totalOutstanding = (Double) in.readValue(Double.class.getClassLoader());
         this.totalOverdue = (Double) in.readValue(Double.class.getClassLoader());
-        this.overdueSinceDate = new ArrayList<Integer>();
+        this.overdueSinceDate = new ArrayList<>();
         in.readList(this.overdueSinceDate, Integer.class.getClassLoader());
     }
 

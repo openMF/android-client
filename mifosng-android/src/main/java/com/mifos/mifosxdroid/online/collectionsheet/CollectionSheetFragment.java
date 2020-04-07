@@ -194,7 +194,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         CollectionSheetPayload collectionSheetPayload = new CollectionSheetPayload();
 
         List<BulkRepaymentTransactions> bulkRepaymentTransactions = new
-                ArrayList<BulkRepaymentTransactions>();
+                ArrayList<>();
 
         Iterator iterator = CollectionListAdapter.sRepaymentTransactions.entrySet().iterator();
 

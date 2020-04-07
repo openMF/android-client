@@ -51,7 +51,7 @@ public class ClientListPresenterTest {
         mClientListPresenter.attachView(mClientListMvpView);
 
 
-        clientPage = new Page<Client>();
+        clientPage = new Page<>();
         clientPage = FakeRemoteDataSource.getClientList();
 
     }

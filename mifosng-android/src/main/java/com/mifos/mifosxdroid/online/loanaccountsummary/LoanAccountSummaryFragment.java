@@ -147,7 +147,7 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     @Inject
     LoanAccountSummaryPresenter mLoanAccountSummaryPresenter;
 
-    List<Charges> chargesList = new ArrayList<Charges>();
+    List<Charges> chargesList = new ArrayList<>();
     private View rootView;
     // Action Identifier in the onProcessTransactionClicked Method
     private int processLoanTransactionAction = -1;
