@@ -150,8 +150,6 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
     @Override
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
-            case DialogInterface.BUTTON_NEGATIVE:
-                break;
             case DialogInterface.BUTTON_POSITIVE:
                 PrefManager.setUserStatus(Constants.USER_ONLINE);
                 if (centerPayloads.size() != 0) {
