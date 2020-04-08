@@ -28,6 +28,7 @@ import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientActivity;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.utils.Constants;
@@ -69,6 +70,7 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     @Inject
     SearchPresenter searchPresenter;
 
+    DashboardActivity dashboardActivity;
     private List<SearchedEntity> searchedEntities;
     private ArrayAdapter<CharSequence> searchOptionsAdapter;
     private String resources;
@@ -113,11 +115,15 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     public void onClickSearch() {
         hideKeyboard(et_search);
         String query = et_search.getEditableText().toString().trim();
-        if (!query.isEmpty()) {
-            EspressoIdlingResource.increment(); // App is busy until further notice.
-            searchPresenter.searchResources(query, resources, cb_exactMatch.isChecked());
+        if (dashboardActivity.getToggleStatus()) {
+            Toaster.show(getView(), getString(R.string.failed_to_fetch));
         } else {
-            Toaster.show(et_search, getString(R.string.no_search_query_entered));
+            if (!query.isEmpty()) {
+                EspressoIdlingResource.increment(); // App is busy until further notice.
+                searchPresenter.searchResources(query, resources, cb_exactMatch.isChecked());
+            } else {
+                Toaster.show(et_search, getString(R.string.no_search_query_entered));
+            }
         }
 
     }
