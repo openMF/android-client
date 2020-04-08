@@ -125,6 +125,7 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
                 Toaster.show(et_search, getString(R.string.no_search_query_entered));
             }
         }
+            
     }
 
     @Override
