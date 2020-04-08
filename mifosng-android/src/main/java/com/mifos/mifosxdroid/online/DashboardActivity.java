@@ -288,6 +288,14 @@ public class DashboardActivity extends MifosBaseActivity
         });
     }
 
+    public boolean getToggleStatus() {
+        if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void startNavigationClickActivity(final Intent intent) {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
