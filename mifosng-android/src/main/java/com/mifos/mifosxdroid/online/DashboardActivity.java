@@ -45,6 +45,7 @@ import com.mifos.utils.PrefManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.http.HEAD;
 
 /**
  * Created by ishankhanna on 09/02/14.
