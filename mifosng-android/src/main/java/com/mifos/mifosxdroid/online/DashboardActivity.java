@@ -288,7 +288,7 @@ public class DashboardActivity extends MifosBaseActivity
         });
     }
 
-    public boolean getToggleStatus() {
+    public boolean toggleStatus() {
         return PrefManager.getUserStatus() == Constants.USER_OFFLINE;
     }
 

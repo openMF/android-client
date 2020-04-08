@@ -115,7 +115,7 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     public void onClickSearch() {
         hideKeyboard(et_search);
         String query = et_search.getEditableText().toString().trim();
-        if (dashboardActivity.getToggleStatus()) {
+        if (dashboardActivity.toggleStatus()) {
             Toaster.show(getView(), getString(R.string.failed_to_fetch));
         } else {
             if (!query.isEmpty()) {
