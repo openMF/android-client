@@ -7,11 +7,16 @@
 package com.mifos.mifosxdroid.online.createnewclient;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +43,8 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
 import com.mifos.utils.FragmentConstants;
+import com.mifos.utils.Network;
+import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
@@ -147,6 +154,7 @@ public class CreateNewClientFragment extends ProgressableFragment
         clientTypeList = new ArrayList<>();
         officeList = new ArrayList<>();
         staffList = new ArrayList<>();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -162,6 +170,23 @@ public class CreateNewClientFragment extends ProgressableFragment
         createNewClientPresenter.loadClientTemplate();
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_refresh, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                showUserInterface();
+                createNewClientPresenter.loadClientTemplate();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -220,78 +245,83 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @OnClick(R.id.btn_submit)
     public void onClickSubmitButton() {
+        if (Network.isOnline(getContext()) || isOfflineModeOn()) {
 
-        submissionDateString = tvSubmissionDate.getText().toString();
-        submissionDateString = DateHelper
-                .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
-                .replace("-", " ");
-        dateOfBirthString = tvDateOfBirth.getText().toString();
-        dateOfBirthString = DateHelper.getDateAsStringUsedForDateofBirth(dateOfBirthString)
-                .replace("-", " ");
+            submissionDateString = tvSubmissionDate.getText().toString();
+            submissionDateString = DateHelper
+                    .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
+                    .replace("-", " ");
+            dateOfBirthString = tvDateOfBirth.getText().toString();
+            dateOfBirthString = DateHelper.getDateAsStringUsedForDateofBirth(dateOfBirthString)
+                    .replace("-", " ");
 
-        ClientPayload clientPayload = new ClientPayload();
+            ClientPayload clientPayload = new ClientPayload();
 
-        //Mandatory Fields
-        clientPayload.setFirstname(etClientFirstName.getEditableText().toString());
-        clientPayload.setLastname(etClientLastName.getEditableText().toString());
-        clientPayload.setOfficeId(officeId);
+            //Mandatory Fields
+            clientPayload.setFirstname(etClientFirstName.getEditableText().toString());
+            clientPayload.setLastname(etClientLastName.getEditableText().toString());
+            clientPayload.setOfficeId(officeId);
 
-        //Optional Fields, we do not need to add any check because these fields carry some
-        // default values
-        clientPayload.setActive(cbClientActiveStatus.isChecked());
-        clientPayload.setActivationDate(submissionDateString);
-        clientPayload.setDateOfBirth(dateOfBirthString);
+            //Optional Fields, we do not need to add any check because these fields carry some
+            // default values
+            clientPayload.setActive(cbClientActiveStatus.isChecked());
+            clientPayload.setActivationDate(submissionDateString);
+            clientPayload.setDateOfBirth(dateOfBirthString);
 
-        //Optional Fields
-        if (!TextUtils.isEmpty(etClientMiddleName.getEditableText().toString())) {
-            clientPayload.setMiddlename(etClientMiddleName.getEditableText().toString());
-        }
-
-        if (PhoneNumberUtils.isGlobalPhoneNumber(etClientMobileNo.getEditableText().toString())) {
-            clientPayload.setMobileNo(etClientMobileNo.getEditableText().toString());
-        }
-
-        if (!TextUtils.isEmpty(etClientExternalId.getEditableText().toString())) {
-            clientPayload.setExternalId(etClientExternalId.getEditableText().toString());
-        }
-
-        if (!clientStaff.isEmpty()) {
-            clientPayload.setStaffId(staffId);
-        }
-
-        if (!genderOptionsList.isEmpty()) {
-            clientPayload.setGenderId(genderId);
-        }
-
-        if (!clientTypeList.isEmpty()) {
-            clientPayload.setClientTypeId(clientTypeId);
-        }
-
-        if (!clientClassificationList.isEmpty()) {
-            clientPayload.setClientClassificationId(clientClassificationId);
-        }
-
-        if (!isFirstNameValid()) {
-            return;
-        }
-        if (!isMiddleNameValid()) {
-            return;
-        }
-        if (isLastNameValid()) {
-            if (hasDataTables) {
-                DataTableListFragment fragment = DataTableListFragment.newInstance(
-                        clientsTemplate.getDataTables(),
-                        clientPayload, Constants.CREATE_CLIENT);
-
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
-                fragmentTransaction.replace(R.id.container, fragment).commit();
-            } else {
-                clientPayload.setDatatables(null);
-                createNewClientPresenter.createClient(clientPayload);
+            //Optional Fields
+            if (!TextUtils.isEmpty(etClientMiddleName.getEditableText().toString())) {
+                clientPayload.setMiddlename(etClientMiddleName.getEditableText().toString());
             }
+
+            if (PhoneNumberUtils.isGlobalPhoneNumber(
+                    etClientMobileNo.getEditableText().toString())) {
+                clientPayload.setMobileNo(etClientMobileNo.getEditableText().toString());
+            }
+
+            if (!TextUtils.isEmpty(etClientExternalId.getEditableText().toString())) {
+                clientPayload.setExternalId(etClientExternalId.getEditableText().toString());
+            }
+
+            if (clientStaff != null && !clientStaff.isEmpty()) {
+                clientPayload.setStaffId(staffId);
+            }
+
+            if (!genderOptionsList.isEmpty()) {
+                clientPayload.setGenderId(genderId);
+            }
+
+            if (!clientTypeList.isEmpty()) {
+                clientPayload.setClientTypeId(clientTypeId);
+            }
+
+            if (!clientClassificationList.isEmpty()) {
+                clientPayload.setClientClassificationId(clientClassificationId);
+            }
+
+            if (!isFirstNameValid()) {
+                return;
+            }
+            if (!isMiddleNameValid()) {
+                return;
+            }
+            if (isLastNameValid()) {
+                if (hasDataTables) {
+                    DataTableListFragment fragment = DataTableListFragment.newInstance(
+                            clientsTemplate.getDataTables(),
+                            clientPayload, Constants.CREATE_CLIENT);
+
+                    FragmentTransaction fragmentTransaction = getActivity().
+                            getSupportFragmentManager().beginTransaction();
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
+                    fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST);
+                    fragmentTransaction.replace(R.id.container, fragment).commit();
+                } else {
+                    clientPayload.setDatatables(null);
+                    createNewClientPresenter.createClient(clientPayload);
+                }
+            }
+        } else {
+            Toaster.show(rootView, R.string.error_network_not_available, Toaster.LONG);
         }
     }
 
@@ -307,6 +337,10 @@ public class CreateNewClientFragment extends ProgressableFragment
         } else if (mCurrentDateView != null && mCurrentDateView == tvDateOfBirth) {
             tvDateOfBirth.setText(date);
         }
+    }
+
+    public boolean isOfflineModeOn() {
+        return PrefManager.getUserStatus() == Constants.USER_OFFLINE;
     }
 
     @Override
