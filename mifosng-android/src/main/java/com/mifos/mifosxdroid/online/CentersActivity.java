@@ -44,7 +44,7 @@ public class CentersActivity extends MifosBaseActivity implements
 
     @Override
     public void loadClientsOfGroup(List<Client> clientList) {
-        replaceFragment(ClientListFragment.newInstance(clientList, true), true, R.id.container);
+        replaceFragment(ClientListFragment.newInstance(clientList, 0, true), true, R.id.container);
     }
 
     @Override

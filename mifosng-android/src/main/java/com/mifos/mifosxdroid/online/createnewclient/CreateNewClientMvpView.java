@@ -5,6 +5,7 @@ import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,4 +28,6 @@ public interface CreateNewClientMvpView extends MvpView {
     void showMessage(int message);
 
     void showMessage(String message);
+
+    void associateClients(ArrayList<Integer> clientMembers);
 }

@@ -64,8 +64,9 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
     }
 
     @Override
-    public void loadGroupClients(List<Client> clients) {
-        replaceFragment(ClientListFragment.newInstance(clients, true), true, R.id.container);
+    public void loadGroupClients(List<Client> clients, int groupId) {
+        replaceFragment(ClientListFragment.newInstance(clients, groupId, true), true,
+                R.id.container);
     }
 
     /**

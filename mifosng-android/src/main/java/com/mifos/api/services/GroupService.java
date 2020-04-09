@@ -9,6 +9,7 @@ import com.mifos.api.model.APIEndPoint;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
+import com.mifos.objects.group.AssociateClientsPayload;
 import com.mifos.objects.group.Group;
 import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.group.GroupPayload;
@@ -62,5 +63,10 @@ public interface GroupService {
     @POST(APIEndPoint.GROUPS + "/{groupId}?command=activate")
     Observable<GenericResponse> activateGroup(@Path("groupId") int groupId,
                                                @Body ActivatePayload activatePayload);
+
+    @POST(APIEndPoint.GROUPS + "/{groupId}?command=associateClients")
+    Observable<GenericResponse> associateClients(@Path("groupId") int groupId,
+                                                 @Body AssociateClientsPayload
+                                                         associateClientsPayload);
 
 }

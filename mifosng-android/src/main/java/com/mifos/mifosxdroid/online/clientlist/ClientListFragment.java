@@ -101,6 +101,7 @@ public class ClientListFragment extends MifosBaseFragment
     private LinearLayoutManager mLayoutManager;
     private Integer clickedPosition = -1;
     private SweetUIErrorHandler sweetUIErrorHandler;
+    public static int mGroupId = 0;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -147,11 +148,12 @@ public class ClientListFragment extends MifosBaseFragment
      * @param isParentFragment true
      * @return ClientListFragment
      */
-    public static ClientListFragment newInstance(List<Client> clientList,
+    public static ClientListFragment newInstance(List<Client> clientList, int groupId,
                                                  boolean isParentFragment) {
         ClientListFragment clientListFragment = new ClientListFragment();
         Bundle args = new Bundle();
         if (isParentFragment && clientList != null) {
+            mGroupId = groupId;
             args.putParcelableArrayList(Constants.CLIENTS,
                     (ArrayList<? extends Parcelable>) clientList);
             args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true);
@@ -244,6 +246,14 @@ public class ClientListFragment extends MifosBaseFragment
     void onClickCreateNewClient() {
         ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewClientFragment.newInstance(),
                 true, R.id.container);
+        Bundle bundle = new Bundle();
+        bundle.putInt("groupId", mGroupId); // Put anything what you want
+        CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
+        createNewClientFragment.setArguments(bundle);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, createNewClientFragment)
+                .commit();
     }
 
     /**
