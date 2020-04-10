@@ -1,18 +1,14 @@
 package com.mifos.mifosxdroid;
 
 import android.app.FragmentTransaction;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;;
+import android.preference.SwitchPreference;
 
-import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment;
-import com.mifos.objects.survey.Survey;
 import com.mifos.utils.FragmentConstants;
 
-import java.util.List;
 
 /**
  * Created by mayankjindal on 22/07/17.
