@@ -5,7 +5,6 @@
 
 package com.mifos.mifosxdroid.online;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,7 +65,6 @@ public class DashboardActivity extends MifosBaseActivity
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
     private Menu menu;
-    Context context;
     private boolean doubleBackToExitPressedOnce = false;
     private boolean itemClient = true, itemCenter = true, itemGroup = true;
 
@@ -74,7 +72,6 @@ public class DashboardActivity extends MifosBaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        context = getBaseContext();
         ButterKnife.bind(this);
 
         replaceFragment(new SearchFragment(), false, R.id.container);

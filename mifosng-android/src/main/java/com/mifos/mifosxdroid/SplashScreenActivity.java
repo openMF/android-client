@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+
 
 import com.mifos.api.BaseUrl;
 import com.mifos.mifosxdroid.appintro.AppIntroUser;
@@ -26,6 +26,7 @@ import com.mifos.utils.PrefManager;
 public class SplashScreenActivity extends MifosBaseActivity {
     private  Thread mthread;
     private boolean misFirstStart;
+    private SharedPreferences mprefManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +51,10 @@ public class SplashScreenActivity extends MifosBaseActivity {
                 @Override
             public void run() {
                 //  Initialize SharedPreferences
-                SharedPreferences PREF = PreferenceManager
-                        .getDefaultSharedPreferences(context);
+                mprefManager = PrefManager.getPreferences();
 
                 //  Create a new boolean and preference and set it to true
-                misFirstStart = PREF.getBoolean("firstStart", true);
+                misFirstStart = mprefManager.getBoolean("firstStart", true);
 
                 //  If the activity has never started before...
                 if (misFirstStart) {
@@ -70,13 +70,14 @@ public class SplashScreenActivity extends MifosBaseActivity {
                     });
 
                     //  Make a new preferences editor
-                    SharedPreferences.Editor E = PREF.edit();
+                    SharedPreferences.Editor Editor = mprefManager.edit();
 
                     //  Edit preference to make it false because we don't want this to run again
-                    E.putBoolean("firstStart", false);
+                    Editor.putBoolean(getResources().
+                            getString(R.string.firststart_splash_screen), false);
 
                     //  Apply changes
-                    E.apply();
+                    Editor.apply();
                 }
             }
         });
