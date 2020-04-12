@@ -54,10 +54,8 @@ public class SplashScreenActivity extends MifosBaseActivity {
                 mprefManager = PrefManager.getPreferences();
 
                 //  Create a new boolean and preference and set it to true
-
                 misFirstStart = PrefManager.getBoolean(getResources().
                         getString(R.string.firststart_splash_screen), true);
-
 
                 //  If the activity has never started before...
                 if (misFirstStart) {
