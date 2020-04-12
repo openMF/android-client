@@ -200,7 +200,7 @@
     <string name="add_payment_detail">Add Payment Detail</string>
     <string name="generate_new">Generate New</string>
     <string name="currency">Currency</string>
-    <string name="firststart_splash_screen">firststart</string>
+    <string name="firststart_splash_screen" translatable="false">firststart</string>
     <!-- General Terms End Here -->
 
 
