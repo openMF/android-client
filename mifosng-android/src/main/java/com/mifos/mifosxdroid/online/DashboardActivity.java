@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.VisibleForTesting;
+
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.test.espresso.IdlingResource;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,6 +20,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SwitchCompat;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -144,6 +147,9 @@ public class DashboardActivity extends MifosBaseActivity
         }
     }
 
+    public boolean toggleStatus() {
+        return PrefManager.getUserStatus() == Constants.USER_OFFLINE;
+    }
 
     /**
      * sets up the navigation mDrawer in the activity

@@ -7,8 +7,10 @@ package com.mifos.mifosxdroid.online.search;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientActivity;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.mifosxdroid.online.GroupsActivity;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.utils.Constants;
@@ -73,6 +76,7 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     private ArrayAdapter<CharSequence> searchOptionsAdapter;
     private String resources;
     private LinearLayoutManager layoutManager;
+    DashboardActivity dashboardActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,12 +117,22 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     public void onClickSearch() {
         hideKeyboard(et_search);
         String query = et_search.getEditableText().toString().trim();
-        if (!query.isEmpty()) {
-            EspressoIdlingResource.increment(); // App is busy until further notice.
-            searchPresenter.searchResources(query, resources, cb_exactMatch.isChecked());
+//        if (!query.isEmpty()) {
+//            EspressoIdlingResource.increment(); // App is busy until further notice.
+//            searchPresenter.searchResources(query, resources, cb_exactMatch.isChecked());
+//        }
+        if (dashboardActivity.toggleStatus()) {
+            Toaster.show(getView(), getString(R.string.eight));
         } else {
-            Toaster.show(et_search, getString(R.string.no_search_query_entered));
+//            Toaster.show(et_search, getString(R.string.no_search_query_entered));
+            if (!query.isEmpty()) {
+                EspressoIdlingResource.increment(); // App is busy until further notice.
+                searchPresenter.searchResources(query, resources, cb_exactMatch.isChecked());
+            } else {
+                Toaster.show(et_search, getString(R.string.no_search_query_entered));
+            }
         }
+
 
     }
 

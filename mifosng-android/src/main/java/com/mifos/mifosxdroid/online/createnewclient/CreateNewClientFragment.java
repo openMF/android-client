@@ -34,6 +34,7 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.ClientPayload;
@@ -138,12 +139,14 @@ public class CreateNewClientFragment extends ProgressableFragment
     private ArrayAdapter<String> clientTypeAdapter;
     private ArrayAdapter<String> officeAdapter;
     private ArrayAdapter<String> staffAdapter;
+    DashboardActivity d;
 
     public static CreateNewClientFragment newInstance() {
         CreateNewClientFragment createNewClientFragment = new CreateNewClientFragment();
         Bundle args = new Bundle();
         createNewClientFragment.setArguments(args);
         return createNewClientFragment;
+
     }
 
     @Override
@@ -168,6 +171,8 @@ public class CreateNewClientFragment extends ProgressableFragment
         showUserInterface();
 
         createNewClientPresenter.loadClientTemplate();
+        if (d.toggleStatus())
+            Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
 
         return rootView;
     }
