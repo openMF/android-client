@@ -223,6 +223,15 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
     public void showDocumentList(final List<Document> documents) {
         mDocumentList = documents;
         mDocumentListAdapter.setDocuments(mDocumentList);
+        mDocumentListAdapter.notifyDataSetChanged();
+
+        if (documents.isEmpty()) {
+            showEmptyDocuments();
+        } else {
+            if (ll_error.getVisibility() == View.VISIBLE) {
+                ll_error.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override

@@ -77,8 +77,7 @@ public class DocumentListPresenterTest {
         stubDataManagerGetDocuments(Observable.just(emptyDocuments));
 
         mDocumentListPresenter.loadDocumentList(entityType, entityId);
-
-        verify(mDocumentListMvpView).showEmptyDocuments();
+        
         verify(mDocumentListMvpView, never()).showDocumentList(documentList);
         verify(mDocumentListMvpView, never()).showFetchingError(R.string.failed_to_fetch_documents);
     }

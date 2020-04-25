@@ -62,12 +62,7 @@ public class DocumentListPresenter extends BasePresenter<DocumentListMvpView> {
                     @Override
                     public void onNext(List<Document> documents) {
                         getMvpView().showProgressbar(false);
-                        if (!documents.isEmpty()) {
-                            getMvpView().showDocumentList(documents);
-                        } else {
-                            getMvpView().showEmptyDocuments();
-                        }
-
+                        getMvpView().showDocumentList(documents);
                     }
                 }));
     }
