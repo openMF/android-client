@@ -140,6 +140,10 @@
             android:label="@string/settings"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".HelpActivity"
+            android:label="@string/help"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity"
             android:label="@string/sync_savingsaccounttransactions"

@@ -67,6 +67,11 @@
             android:title="@string/settings"
             />
 
+        <item
+            android:id="@+id/item_help"
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="@string/help"/>
+
     </group>
        
     <group android:checkableBehavior="single"
