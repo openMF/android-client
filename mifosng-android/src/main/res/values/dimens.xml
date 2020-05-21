@@ -20,4 +20,5 @@
     <dimen name="text_medium">16sp</dimen>
     <dimen name="layout_padding_30dp">30dp</dimen>
     <dimen name="datatable_name_heading">18sp</dimen>
+    <dimen name="date_size">14sp</dimen>
 </resources>

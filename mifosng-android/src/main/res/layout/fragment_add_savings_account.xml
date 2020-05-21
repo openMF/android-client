@@ -33,12 +33,12 @@
                 android:text="@string/product"
                 android:textSize="16sp" />
 
-            <Spinner
+            <androidx.appcompat.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_product"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/light_grey"
                 android:paddingTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />
 
             <TextView
@@ -49,11 +49,11 @@
                 android:text="@string/field_officer"
                 android:textSize="16sp" />
 
-            <Spinner
+            <androidx.appcompat.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_field_officer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
@@ -74,7 +74,7 @@
                 android:id="@+id/tv_submittedon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
+                android:paddingBottom="8dp"
                 android:paddingTop="16dp"
                 android:text="@string/submittedon"
                 android:textSize="16sp" />
@@ -87,7 +87,9 @@
                 android:imeOptions="actionNext"
                 android:paddingBottom="16dp"
                 android:paddingTop="10dp"
-                android:textSize="20sp" />
+                android:textSize="@dimen/date_size"
+                android:background="@color/gray_bright"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
@@ -172,7 +174,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:checked="false"
-                android:paddingTop="10dp"
                 android:text="@string/saving_min_required_balance" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -195,7 +196,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:checked="false"
-                android:paddingTop="10dp"
                 android:text="@string/saving_overdraft_allowed" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
