@@ -211,6 +211,7 @@ android {
 
         // Android Testing Support Library's runner and rules
         androidTestImplementation 'androidx.test:runner:1.1.0'
+        androidTestImplementation 'androidx.test:core:1.1.0'
         androidTestImplementation 'androidx.test:rules:1.1.0'
 
         // Espresso UI Testing dependencies.
