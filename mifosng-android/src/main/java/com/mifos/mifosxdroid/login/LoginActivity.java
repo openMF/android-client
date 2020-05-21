@@ -138,14 +138,19 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             return false;
         }
         username = et_username.getEditableText().toString();
-        if (username.length() < 5) {
-            showToastMessage(getString(R.string.error_username_length));
-            return false;
-        }
         password = et_password.getEditableText().toString();
-        if (password.length() < 6) {
-            showToastMessage(getString(R.string.error_password_length));
+        if (username.isEmpty() || password.isEmpty()) {
+            showToastMessage(getString(R.string.error_enter_credentials));
             return false;
+        } else {
+            if (username.length() < 5) {
+                showToastMessage(getString(R.string.error_username_length));
+                return false;
+            }
+            if (password.length() < 6) {
+                showToastMessage(getString(R.string.error_password_length));
+                return false;
+            }
         }
         return true;
     }
