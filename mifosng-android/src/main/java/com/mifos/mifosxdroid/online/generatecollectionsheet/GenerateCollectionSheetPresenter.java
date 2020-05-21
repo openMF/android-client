@@ -196,7 +196,7 @@ public class GenerateCollectionSheetPresenter
                 }));
     }
 
-      /**
+    /**
      * Method to hit the endpoint so as to fetch Center Details which are required to retrieve
      * Productive CollectionSheet for that center for some meeting date.
      */
@@ -259,7 +259,7 @@ public class GenerateCollectionSheetPresenter
     }
 
     public void loadCollectionSheet(int groupId,
-                                              CollectionSheetRequestPayload payload) {
+                                    CollectionSheetRequestPayload payload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         mSubscription.add(collectionDataManager.fetchCollectionSheet(groupId, payload)
@@ -349,7 +349,8 @@ public class GenerateCollectionSheetPresenter
      * This method takes extracts the values of the office names and the corresponding ID
      * and returns a HashMap of the same.
      * It also fills the array officeNames with the names of the offices.
-     * @param offices List of offices from which the values have to be extracted
+     *
+     * @param offices     List of offices from which the values have to be extracted
      * @param officeNames List of Offices' names
      * @return HashMap of Office name string with the corresponding Id.
      */
@@ -374,7 +375,8 @@ public class GenerateCollectionSheetPresenter
      * This method takes a list of Staff and extracts Staff Name and Staff ID pair
      * in a HashMap.
      * It also fills the staffName array with the staff names
-     * @param staffs List of Staff
+     *
+     * @param staffs     List of Staff
      * @param staffNames List which is filled with the names of the staff
      * @return HashMap of Staff name string and the corresponding Id.
      */
@@ -398,7 +400,8 @@ public class GenerateCollectionSheetPresenter
      * This method takes list of centers and extracts te Center Name and Center Id pair
      * in a HashMap.
      * It also fills the centerNames array wit the names of the center.
-     * @param centers List of centers
+     *
+     * @param centers     List of centers
      * @param centerNames List which is filled with the names of the centers.
      * @return HashMap of Center name string and the corresponding Id.
      */
@@ -423,7 +426,8 @@ public class GenerateCollectionSheetPresenter
      * This method takes list of centers and extracts te Center Name and Center Id pair
      * in a HashMap.
      * It also fills the centerNames array wit the names of the center.
-     * @param groups List of groups.
+     *
+     * @param groups     List of groups.
      * @param groupNames List which is filled with the names of the groups.
      * @return HashMap of Group name string and the corresponding Id.
      */
@@ -442,8 +446,8 @@ public class GenerateCollectionSheetPresenter
                 });
         return groupMap;
     }
-    
-    HashMap<String, Integer> filterAttendanceTypes (final List<AttendanceTypeOption> attendance,
+
+    HashMap<String, Integer> filterAttendanceTypes(final List<AttendanceTypeOption> attendance,
                                                    final List<String> attendanceTypeNames) {
         final HashMap<String, Integer> options = new HashMap<>();
         Observable.from(attendance)
@@ -457,8 +461,8 @@ public class GenerateCollectionSheetPresenter
         return options;
     }
 
-    HashMap<String, Integer> filterPaymentTypes (List<PaymentTypeOption> paymentTypeOptions,
-                                                 final List<String> paymentTypeNames) {
+    HashMap<String, Integer> filterPaymentTypes(List<PaymentTypeOption> paymentTypeOptions,
+                                                final List<String> paymentTypeNames) {
         final HashMap<String, Integer> paymentMap = new HashMap<>();
         paymentMap.put(c.getResources().getString(R.string.payment_type), -1);
         paymentTypeNames.clear();

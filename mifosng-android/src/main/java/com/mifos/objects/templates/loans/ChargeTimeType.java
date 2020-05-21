@@ -76,14 +76,14 @@ public class ChargeTimeType implements Parcelable {
 
     public static final Parcelable.Creator<ChargeTimeType> CREATOR =
             new Parcelable.Creator<ChargeTimeType>() {
-        @Override
-        public ChargeTimeType createFromParcel(Parcel source) {
-            return new ChargeTimeType(source);
-        }
+                @Override
+                public ChargeTimeType createFromParcel(Parcel source) {
+                    return new ChargeTimeType(source);
+                }
 
-        @Override
-        public ChargeTimeType[] newArray(int size) {
-            return new ChargeTimeType[size];
-        }
-    };
+                @Override
+                public ChargeTimeType[] newArray(int size) {
+                    return new ChargeTimeType[size];
+                }
+            };
 }

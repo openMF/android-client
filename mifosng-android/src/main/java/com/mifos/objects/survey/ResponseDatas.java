@@ -111,15 +111,15 @@ public class ResponseDatas extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<ResponseDatas> CREATOR =
             new Parcelable.Creator<ResponseDatas>() {
-        @Override
-        public ResponseDatas createFromParcel(Parcel source) {
-            return new ResponseDatas(source);
-        }
+                @Override
+                public ResponseDatas createFromParcel(Parcel source) {
+                    return new ResponseDatas(source);
+                }
 
-        @Override
-        public ResponseDatas[] newArray(int size) {
-            return new ResponseDatas[size];
-        }
-    };
+                @Override
+                public ResponseDatas[] newArray(int size) {
+                    return new ResponseDatas[size];
+                }
+            };
 }
 

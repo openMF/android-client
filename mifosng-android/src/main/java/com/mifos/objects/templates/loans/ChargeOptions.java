@@ -172,14 +172,14 @@ public class ChargeOptions implements Parcelable {
 
     public static final Parcelable.Creator<ChargeOptions> CREATOR =
             new Parcelable.Creator<ChargeOptions>() {
-        @Override
-        public ChargeOptions createFromParcel(Parcel source) {
-            return new ChargeOptions(source);
-        }
+                @Override
+                public ChargeOptions createFromParcel(Parcel source) {
+                    return new ChargeOptions(source);
+                }
 
-        @Override
-        public ChargeOptions[] newArray(int size) {
-            return new ChargeOptions[size];
-        }
-    };
+                @Override
+                public ChargeOptions[] newArray(int size) {
+                    return new ChargeOptions[size];
+                }
+            };
 }

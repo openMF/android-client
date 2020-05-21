@@ -15,7 +15,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
  * This Model is only for Database use.
  * Created by Rajan Maurya on 26/07/16.
  */
-@Table(database = MifosDatabase.class )
+@Table(database = MifosDatabase.class)
 @ModelContainer
 public class ActualDisbursementDate extends MifosBaseModel implements Parcelable {
 
@@ -96,14 +96,14 @@ public class ActualDisbursementDate extends MifosBaseModel implements Parcelable
 
     public static final Creator<ActualDisbursementDate> CREATOR = new
             Creator<ActualDisbursementDate>() {
-        @Override
-        public ActualDisbursementDate createFromParcel(Parcel source) {
-            return new ActualDisbursementDate(source);
-        }
+                @Override
+                public ActualDisbursementDate createFromParcel(Parcel source) {
+                    return new ActualDisbursementDate(source);
+                }
 
-        @Override
-        public ActualDisbursementDate[] newArray(int size) {
-            return new ActualDisbursementDate[size];
-        }
-    };
+                @Override
+                public ActualDisbursementDate[] newArray(int size) {
+                    return new ActualDisbursementDate[size];
+                }
+            };
 }

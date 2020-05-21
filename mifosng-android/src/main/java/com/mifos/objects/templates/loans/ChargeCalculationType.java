@@ -76,14 +76,14 @@ public class ChargeCalculationType implements Parcelable {
 
     public static final Parcelable.Creator<ChargeCalculationType> CREATOR =
             new Parcelable.Creator<ChargeCalculationType>() {
-        @Override
-        public ChargeCalculationType createFromParcel(Parcel source) {
-            return new ChargeCalculationType(source);
-        }
+                @Override
+                public ChargeCalculationType createFromParcel(Parcel source) {
+                    return new ChargeCalculationType(source);
+                }
 
-        @Override
-        public ChargeCalculationType[] newArray(int size) {
-            return new ChargeCalculationType[size];
-        }
-    };
+                @Override
+                public ChargeCalculationType[] newArray(int size) {
+                    return new ChargeCalculationType[size];
+                }
+            };
 }

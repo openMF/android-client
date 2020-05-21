@@ -1,7 +1,9 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,13 +61,13 @@ public class SyncPayloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).tv_activation_date.setText(clientPayload.getActivationDate());
 
             switch (clientPayload.getGenderId()) {
-                case 22 :
+                case 22:
                     ((ViewHolder) holder).tv_gender.setText("Male");
                     break;
-                case 24 :
+                case 24:
                     ((ViewHolder) holder).tv_gender.setText("Female");
                     break;
-                case 91 :
+                case 91:
                     ((ViewHolder) holder).tv_gender.setText("homosexual");
                     break;
                 default:

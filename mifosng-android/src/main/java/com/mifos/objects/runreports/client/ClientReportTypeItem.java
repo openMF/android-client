@@ -13,7 +13,7 @@ public class ClientReportTypeItem implements Parcelable {
 
     private String parameter_name;
 
-    private  String report_category;
+    private String report_category;
 
     private int report_id;
 
@@ -123,16 +123,16 @@ public class ClientReportTypeItem implements Parcelable {
 
     public static final Parcelable.Creator<ClientReportTypeItem> CREATOR = new
             Parcelable.Creator<ClientReportTypeItem>() {
-        @Override
-        public ClientReportTypeItem createFromParcel(Parcel source) {
-            return new ClientReportTypeItem(source);
-        }
+                @Override
+                public ClientReportTypeItem createFromParcel(Parcel source) {
+                    return new ClientReportTypeItem(source);
+                }
 
-        @Override
-        public ClientReportTypeItem[] newArray(int size) {
-            return new ClientReportTypeItem[size];
-        }
-    };
+                @Override
+                public ClientReportTypeItem[] newArray(int size) {
+                    return new ClientReportTypeItem[size];
+                }
+            };
 
     @Override
     public String toString() {

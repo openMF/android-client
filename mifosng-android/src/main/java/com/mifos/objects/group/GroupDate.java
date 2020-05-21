@@ -107,14 +107,14 @@ public class GroupDate extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<GroupDate> CREATOR =
             new Parcelable.Creator<GroupDate>() {
-        @Override
-        public GroupDate createFromParcel(Parcel source) {
-            return new GroupDate(source);
-        }
+                @Override
+                public GroupDate createFromParcel(Parcel source) {
+                    return new GroupDate(source);
+                }
 
-        @Override
-        public GroupDate[] newArray(int size) {
-            return new GroupDate[size];
-        }
-    };
+                @Override
+                public GroupDate[] newArray(int size) {
+                    return new GroupDate[size];
+                }
+            };
 }

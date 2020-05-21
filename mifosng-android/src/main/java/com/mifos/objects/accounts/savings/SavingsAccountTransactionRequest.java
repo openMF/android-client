@@ -243,14 +243,14 @@ public class SavingsAccountTransactionRequest extends MifosBaseModel implements 
 
     public static final Parcelable.Creator<SavingsAccountTransactionRequest> CREATOR =
             new Parcelable.Creator<SavingsAccountTransactionRequest>() {
-        @Override
-        public SavingsAccountTransactionRequest createFromParcel(Parcel source) {
-            return new SavingsAccountTransactionRequest(source);
-        }
+                @Override
+                public SavingsAccountTransactionRequest createFromParcel(Parcel source) {
+                    return new SavingsAccountTransactionRequest(source);
+                }
 
-        @Override
-        public SavingsAccountTransactionRequest[] newArray(int size) {
-            return new SavingsAccountTransactionRequest[size];
-        }
-    };
+                @Override
+                public SavingsAccountTransactionRequest[] newArray(int size) {
+                    return new SavingsAccountTransactionRequest[size];
+                }
+            };
 }

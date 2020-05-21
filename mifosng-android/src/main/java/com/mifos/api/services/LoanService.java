@@ -88,7 +88,7 @@ public interface LoanService {
      * 4. refundbycash
      * 5. foreclosure
      *
-     * @param loanId Loan Id
+     * @param loanId  Loan Id
      * @param command Template Type
      * @return
      */

@@ -1,9 +1,11 @@
 package com.mifos.mifosxdroid.online.collectionsheetindividualdetails;
 
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;

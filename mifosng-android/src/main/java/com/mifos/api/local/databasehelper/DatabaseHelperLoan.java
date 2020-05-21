@@ -161,7 +161,7 @@ public class DatabaseHelperLoan {
     /**
      * This Method send a query to Sqlite Database and get the LoanRepaymentRequest Where
      * Loan Id is Loan Id,
-     *
+     * <p>
      * This method used to check that LoanRepayment in offline mode,
      * Is already done with this loanId or not, If Yes then new Transaction can be made if
      * old one will be sync to server.

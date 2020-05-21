@@ -104,14 +104,14 @@ public class LoanCollateralOptions implements Parcelable {
 
     public static final Parcelable.Creator<LoanCollateralOptions> CREATOR =
             new Parcelable.Creator<LoanCollateralOptions>() {
-        @Override
-        public LoanCollateralOptions createFromParcel(Parcel source) {
-            return new LoanCollateralOptions(source);
-        }
+                @Override
+                public LoanCollateralOptions createFromParcel(Parcel source) {
+                    return new LoanCollateralOptions(source);
+                }
 
-        @Override
-        public LoanCollateralOptions[] newArray(int size) {
-            return new LoanCollateralOptions[size];
-        }
-    };
+                @Override
+                public LoanCollateralOptions[] newArray(int size) {
+                    return new LoanCollateralOptions[size];
+                }
+            };
 }

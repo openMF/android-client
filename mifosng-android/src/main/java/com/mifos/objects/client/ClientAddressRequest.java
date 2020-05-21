@@ -125,14 +125,14 @@ public class ClientAddressRequest implements Parcelable {
 
     public static final Parcelable.Creator<ClientAddressRequest> CREATOR =
             new Parcelable.Creator<ClientAddressRequest>() {
-        @Override
-        public ClientAddressRequest createFromParcel(Parcel source) {
-            return new ClientAddressRequest(source);
-        }
+                @Override
+                public ClientAddressRequest createFromParcel(Parcel source) {
+                    return new ClientAddressRequest(source);
+                }
 
-        @Override
-        public ClientAddressRequest[] newArray(int size) {
-            return new ClientAddressRequest[size];
-        }
-    };
+                @Override
+                public ClientAddressRequest[] newArray(int size) {
+                    return new ClientAddressRequest[size];
+                }
+            };
 }

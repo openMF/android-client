@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Created by Rajan Maurya on 12/15/2015.
  */
 public class LoanProducts implements Parcelable {
@@ -767,15 +766,15 @@ public class LoanProducts implements Parcelable {
 
     public static final Parcelable.Creator<LoanProducts> CREATOR =
             new Parcelable.Creator<LoanProducts>() {
-        @Override
-        public LoanProducts createFromParcel(Parcel source) {
-            return new LoanProducts(source);
-        }
+                @Override
+                public LoanProducts createFromParcel(Parcel source) {
+                    return new LoanProducts(source);
+                }
 
-        @Override
-        public LoanProducts[] newArray(int size) {
-            return new LoanProducts[size];
-        }
-    };
+                @Override
+                public LoanProducts[] newArray(int size) {
+                    return new LoanProducts[size];
+                }
+            };
 }
 

@@ -113,14 +113,14 @@ public class ComponentDatas extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<ComponentDatas> CREATOR =
             new Parcelable.Creator<ComponentDatas>() {
-        @Override
-        public ComponentDatas createFromParcel(Parcel source) {
-            return new ComponentDatas(source);
-        }
+                @Override
+                public ComponentDatas createFromParcel(Parcel source) {
+                    return new ComponentDatas(source);
+                }
 
-        @Override
-        public ComponentDatas[] newArray(int size) {
-            return new ComponentDatas[size];
-        }
-    };
+                @Override
+                public ComponentDatas[] newArray(int size) {
+                    return new ComponentDatas[size];
+                }
+            };
 }

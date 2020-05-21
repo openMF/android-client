@@ -71,14 +71,14 @@ public class IndividualCollectionSheet implements Parcelable {
 
     public static final Parcelable.Creator<IndividualCollectionSheet> CREATOR = new
             Parcelable.Creator<IndividualCollectionSheet>() {
-        @Override
-        public IndividualCollectionSheet createFromParcel(Parcel source) {
-            return new IndividualCollectionSheet(source);
-        }
+                @Override
+                public IndividualCollectionSheet createFromParcel(Parcel source) {
+                    return new IndividualCollectionSheet(source);
+                }
 
-        @Override
-        public IndividualCollectionSheet[] newArray(int size) {
-            return new IndividualCollectionSheet[size];
-        }
-    };
+                @Override
+                public IndividualCollectionSheet[] newArray(int size) {
+                    return new IndividualCollectionSheet[size];
+                }
+            };
 }

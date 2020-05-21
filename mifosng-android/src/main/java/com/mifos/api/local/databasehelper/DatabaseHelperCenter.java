@@ -1,6 +1,7 @@
 package com.mifos.api.local.databasehelper;
 
 import android.os.AsyncTask;
+
 import androidx.annotation.Nullable;
 
 import com.mifos.objects.accounts.CenterAccounts;
@@ -107,6 +108,7 @@ public class DatabaseHelperCenter {
 
     /**
      * This Method Fetch the Groups that are attached to the Center.
+     *
      * @param centerId Center Id
      * @return CenterWithAssociations
      */
@@ -155,6 +157,7 @@ public class DatabaseHelperCenter {
     /**
      * This Method for deleting the center payload from the Database according to Id and
      * again fetch the center List from the Database CenterPayload_Table
+     *
      * @param id is Id of the Center Payload in which reference center was saved into Database
      * @return List<CenterPayload></>
      */

@@ -67,14 +67,14 @@ public class UserLatLng implements Parcelable {
 
     public static final Parcelable.Creator<UserLatLng> CREATOR =
             new Parcelable.Creator<UserLatLng>() {
-        @Override
-        public UserLatLng createFromParcel(Parcel source) {
-            return new UserLatLng(source);
-        }
+                @Override
+                public UserLatLng createFromParcel(Parcel source) {
+                    return new UserLatLng(source);
+                }
 
-        @Override
-        public UserLatLng[] newArray(int size) {
-            return new UserLatLng[size];
-        }
-    };
+                @Override
+                public UserLatLng[] newArray(int size) {
+                    return new UserLatLng[size];
+                }
+            };
 }

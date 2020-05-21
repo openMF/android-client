@@ -640,14 +640,14 @@ public class LoanWithAssociations extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<LoanWithAssociations> CREATOR =
             new Parcelable.Creator<LoanWithAssociations>() {
-        @Override
-        public LoanWithAssociations createFromParcel(Parcel source) {
-            return new LoanWithAssociations(source);
-        }
+                @Override
+                public LoanWithAssociations createFromParcel(Parcel source) {
+                    return new LoanWithAssociations(source);
+                }
 
-        @Override
-        public LoanWithAssociations[] newArray(int size) {
-            return new LoanWithAssociations[size];
-        }
-    };
+                @Override
+                public LoanWithAssociations[] newArray(int size) {
+                    return new LoanWithAssociations[size];
+                }
+            };
 }

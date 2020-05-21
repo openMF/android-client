@@ -122,6 +122,7 @@ public class DataManagerGroups {
 
     /**
      * This Method Fetch the Clients that are attached to the Group.
+     *
      * @param groupId Group Id
      * @return GroupWithAssociations
      */
@@ -241,7 +242,7 @@ public class DataManagerGroups {
      * @return GenericResponse
      */
     public Observable<GenericResponse> activateGroup(int groupId,
-                                                      ActivatePayload activatePayload) {
+                                                     ActivatePayload activatePayload) {
         return mBaseApiManager.getGroupApi().activateGroup(groupId, activatePayload);
     }
 }

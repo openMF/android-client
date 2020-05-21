@@ -12,7 +12,7 @@ public class LoanAndClientName implements Parcelable {
     private LoanCollectionSheet loan;
 
     private String clientName;
-    private  int id;
+    private int id;
 
     public LoanAndClientName(LoanCollectionSheet loan, String clientName, int id) {
         this.loan = loan;
@@ -54,14 +54,14 @@ public class LoanAndClientName implements Parcelable {
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<LoanAndClientName> CREATOR = new
             Parcelable.Creator<LoanAndClientName>() {
-        @Override
-        public LoanAndClientName createFromParcel(Parcel in) {
-            return new LoanAndClientName(in);
-        }
+                @Override
+                public LoanAndClientName createFromParcel(Parcel in) {
+                    return new LoanAndClientName(in);
+                }
 
-        @Override
-        public LoanAndClientName[] newArray(int size) {
-            return new LoanAndClientName[size];
-        }
-    };
+                @Override
+                public LoanAndClientName[] newArray(int size) {
+                    return new LoanAndClientName[size];
+                }
+            };
 }

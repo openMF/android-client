@@ -76,14 +76,14 @@ public class InterestRecalculationCompoundingType implements Parcelable {
 
     public static final Parcelable.Creator<InterestRecalculationCompoundingType> CREATOR =
             new Parcelable.Creator<InterestRecalculationCompoundingType>() {
-        @Override
-        public InterestRecalculationCompoundingType createFromParcel(Parcel source) {
-            return new InterestRecalculationCompoundingType(source);
-        }
+                @Override
+                public InterestRecalculationCompoundingType createFromParcel(Parcel source) {
+                    return new InterestRecalculationCompoundingType(source);
+                }
 
-        @Override
-        public InterestRecalculationCompoundingType[] newArray(int size) {
-            return new InterestRecalculationCompoundingType[size];
-        }
-    };
+                @Override
+                public InterestRecalculationCompoundingType[] newArray(int size) {
+                    return new InterestRecalculationCompoundingType[size];
+                }
+            };
 }

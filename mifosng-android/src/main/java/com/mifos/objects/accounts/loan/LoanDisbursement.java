@@ -104,14 +104,14 @@ public class LoanDisbursement implements Parcelable {
 
     public static final Parcelable.Creator<LoanDisbursement> CREATOR =
             new Parcelable.Creator<LoanDisbursement>() {
-        @Override
-        public LoanDisbursement createFromParcel(Parcel source) {
-            return new LoanDisbursement(source);
-        }
+                @Override
+                public LoanDisbursement createFromParcel(Parcel source) {
+                    return new LoanDisbursement(source);
+                }
 
-        @Override
-        public LoanDisbursement[] newArray(int size) {
-            return new LoanDisbursement[size];
-        }
-    };
+                @Override
+                public LoanDisbursement[] newArray(int size) {
+                    return new LoanDisbursement[size];
+                }
+            };
 }

@@ -126,7 +126,7 @@ public class Group implements Parcelable {
         return hierarchy;
     }
 
-    public void setHierarchy(String  hierarchy) {
+    public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
     }
 

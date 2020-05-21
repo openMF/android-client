@@ -38,13 +38,15 @@ public interface CollectionSheetService {
 
 
     //Productive CollectionSheet Endpoints
+
     /**
      * Endpoint to fetch Productive CollectionSheet
-     * @param format "dd MMMM yyyy"
-     * @param locale "en"
+     *
+     * @param format      "dd MMMM yyyy"
+     * @param locale      "en"
      * @param meetingDate Meeting Date for the center
-     * @param officeId Office Id
-     * @param staffId Staff Id
+     * @param officeId    Office Id
+     * @param staffId     Staff Id
      * @return List of CenterDetail
      */
     @GET(APIEndPoint.CENTERS)
@@ -58,8 +60,9 @@ public interface CollectionSheetService {
 
     /**
      * Request Endpoint to fetch Productive CollectionSheet
+     *
      * @param centerId Center Id
-     * @param payload CollectionSheetRequestPayload
+     * @param payload  CollectionSheetRequestPayload
      * @return CollectionSheetResponse
      */
     @POST(APIEndPoint.CENTERS + "/{centerId}" + "?command=generateCollectionSheet")

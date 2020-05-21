@@ -8,7 +8,9 @@ package com.mifos.mifosxdroid.online.grouploanaccount;
 import android.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -195,7 +197,6 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
             mRepaymentFrequencyNthDayTypeOptions = new ArrayList<>();
     List<RepaymentFrequencyDaysOfWeekTypeOptions>
             mRepaymentFrequencyDaysOfWeekTypeOptions = new ArrayList<>();
-
 
 
     public static GroupLoanAccountFragment newInstance(int groupId) {
@@ -403,7 +404,6 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
 
-
     private void initiateLoanCreation(GroupLoanPayload loansPayload) {
         mGroupLoanAccountPresenter.createGroupLoanAccount(loansPayload);
     }
@@ -456,13 +456,13 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         interestCalculationPeriodType.clear();
         interestCalculationPeriodType.addAll(mGroupLoanAccountPresenter.
                 filterInterestCalculationPeriods(
-                groupLoanTemplate.getInterestCalculationPeriodTypeOptions()));
+                        groupLoanTemplate.getInterestCalculationPeriodTypeOptions()));
         interestCalculationPeriodTypeAdapter.notifyDataSetChanged();
 
         transactionProcessingStrategy.clear();
         transactionProcessingStrategy.addAll(mGroupLoanAccountPresenter.
                 filterTransactionProcessingStrategies
-                (groupLoanTemplate.getTransactionProcessingStrategyOptions()));
+                        (groupLoanTemplate.getTransactionProcessingStrategyOptions()));
         transactionProcessingStrategyAdapter.notifyDataSetChanged();
 
         termFrequencyType.clear();

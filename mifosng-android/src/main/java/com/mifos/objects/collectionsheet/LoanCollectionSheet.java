@@ -161,14 +161,14 @@ public class LoanCollectionSheet implements Parcelable {
 
     public static final Parcelable.Creator<LoanCollectionSheet> CREATOR = new
             Parcelable.Creator<LoanCollectionSheet>() {
-        @Override
-        public LoanCollectionSheet createFromParcel(Parcel source) {
-            return new LoanCollectionSheet(source);
-        }
+                @Override
+                public LoanCollectionSheet createFromParcel(Parcel source) {
+                    return new LoanCollectionSheet(source);
+                }
 
-        @Override
-        public LoanCollectionSheet[] newArray(int size) {
-            return new LoanCollectionSheet[size];
-        }
-    };
+                @Override
+                public LoanCollectionSheet[] newArray(int size) {
+                    return new LoanCollectionSheet[size];
+                }
+            };
 }

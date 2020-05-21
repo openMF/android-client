@@ -103,6 +103,7 @@ public class DatabaseHelperSurveys {
     /**
      * Reading All QuestionDatas from Database table of QuestionDatas
      * and return the QuestionDatasList
+     *
      * @return List Of QuestionDatas
      */
     public Observable<List<QuestionDatas>> getQuestionDatas(final int surveyId) {
@@ -123,6 +124,7 @@ public class DatabaseHelperSurveys {
     /**
      * Reading All ResponseDatas from Database table of ResponseDatas
      * and return the ResponseDatasList
+     *
      * @return List Of ResponseDatas
      */
     public Observable<List<ResponseDatas>> getResponseDatas(final int questionId) {

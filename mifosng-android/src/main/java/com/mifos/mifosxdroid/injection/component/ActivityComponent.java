@@ -72,7 +72,7 @@ import dagger.Component;
 
 /**
  * @author Rajan Maurya
- *         This component inject dependencies to all Activities across the application
+ * This component inject dependencies to all Activities across the application
  */
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)

@@ -175,14 +175,14 @@ public class GroupPayload extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<GroupPayload> CREATOR =
             new Parcelable.Creator<GroupPayload>() {
-        @Override
-        public GroupPayload createFromParcel(Parcel source) {
-            return new GroupPayload(source);
-        }
+                @Override
+                public GroupPayload createFromParcel(Parcel source) {
+                    return new GroupPayload(source);
+                }
 
-        @Override
-        public GroupPayload[] newArray(int size) {
-            return new GroupPayload[size];
-        }
-    };
+                @Override
+                public GroupPayload[] newArray(int size) {
+                    return new GroupPayload[size];
+                }
+            };
 }

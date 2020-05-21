@@ -70,7 +70,8 @@ public class SyncCenterPayloadsPresenter extends BasePresenter<SyncCenterPayload
 
     public void syncCenterPayload(CenterPayload centerPayload) {
         checkViewAttached();
-        getMvpView().showProgressbar(true);;
+        getMvpView().showProgressbar(true);
+        ;
         mSubscriptions.add(mDataManagerCenter.createCenter(centerPayload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

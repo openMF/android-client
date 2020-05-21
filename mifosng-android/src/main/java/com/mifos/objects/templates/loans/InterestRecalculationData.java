@@ -186,14 +186,14 @@ public class InterestRecalculationData implements Parcelable {
 
     public static final Parcelable.Creator<InterestRecalculationData> CREATOR =
             new Parcelable.Creator<InterestRecalculationData>() {
-        @Override
-        public InterestRecalculationData createFromParcel(Parcel source) {
-            return new InterestRecalculationData(source);
-        }
+                @Override
+                public InterestRecalculationData createFromParcel(Parcel source) {
+                    return new InterestRecalculationData(source);
+                }
 
-        @Override
-        public InterestRecalculationData[] newArray(int size) {
-            return new InterestRecalculationData[size];
-        }
-    };
+                @Override
+                public InterestRecalculationData[] newArray(int size) {
+                    return new InterestRecalculationData[size];
+                }
+            };
 }

@@ -66,14 +66,14 @@ public class CenterDetail implements Parcelable {
 
     public static final Parcelable.Creator<CenterDetail> CREATOR = new
             Parcelable.Creator<CenterDetail>() {
-        @Override
-        public CenterDetail createFromParcel(Parcel source) {
-            return new CenterDetail(source);
-        }
+                @Override
+                public CenterDetail createFromParcel(Parcel source) {
+                    return new CenterDetail(source);
+                }
 
-        @Override
-        public CenterDetail[] newArray(int size) {
-            return new CenterDetail[size];
-        }
-    };
+                @Override
+                public CenterDetail[] newArray(int size) {
+                    return new CenterDetail[size];
+                }
+            };
 }

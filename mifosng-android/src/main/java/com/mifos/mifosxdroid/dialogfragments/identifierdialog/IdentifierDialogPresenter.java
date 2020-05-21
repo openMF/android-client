@@ -126,6 +126,7 @@ public class IdentifierDialogPresenter extends BasePresenter<IdentifierDialogMvp
 
     /**
      * Method to map Document Type with the corresponding name.
+     *
      * @param documentTypeList List of DocumentType
      * @return HashMap of <Name,DocumentType>
      */

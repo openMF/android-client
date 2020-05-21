@@ -113,14 +113,14 @@ public class LoanTransactionTemplate implements Parcelable {
 
     public static final Creator<LoanTransactionTemplate> CREATOR = new
             Creator<LoanTransactionTemplate>() {
-        @Override
-        public LoanTransactionTemplate createFromParcel(Parcel source) {
-            return new LoanTransactionTemplate(source);
-        }
+                @Override
+                public LoanTransactionTemplate createFromParcel(Parcel source) {
+                    return new LoanTransactionTemplate(source);
+                }
 
-        @Override
-        public LoanTransactionTemplate[] newArray(int size) {
-            return new LoanTransactionTemplate[size];
-        }
-    };
+                @Override
+                public LoanTransactionTemplate[] newArray(int size) {
+                    return new LoanTransactionTemplate[size];
+                }
+            };
 }

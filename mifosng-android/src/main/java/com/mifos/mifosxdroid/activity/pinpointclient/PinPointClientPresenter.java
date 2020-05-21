@@ -77,36 +77,6 @@ public class PinPointClientPresenter extends BasePresenter<PinPointClientMvpView
         checkViewAttached();
         getMvpView().showProgressDialog(true, R.string.adding_client_address);
         subscriptions.add(dataManagerClient.addClientPinpointLocation(clientId, addressRequest)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new Subscriber<GenericResponse>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                getMvpView().showProgressDialog(false, null);
-                                getMvpView().showMessage(R.string.failed_to_add_pinpoint_location);
-                            }
-
-                            @Override
-                            public void onNext(GenericResponse genericResponse) {
-                                getMvpView().showProgressDialog(false, null);
-                                getMvpView().updateClientAddress(
-                                        R.string.address_added_successfully);
-                            }
-                        })
-
-        );
-    }
-
-    public void deleteClientPinpointLocation(int apptableId, int datatableId) {
-        checkViewAttached();
-        getMvpView().showProgressDialog(true, R.string.deleting_client_address);
-        subscriptions
-                .add(dataManagerClient.deleteClientAddressPinpointLocation(apptableId, datatableId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<GenericResponse>() {
@@ -118,15 +88,47 @@ public class PinPointClientPresenter extends BasePresenter<PinPointClientMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressDialog(false, null);
-                        getMvpView().showMessage(R.string.failed_to_delete_pinpoint_location);
+                        getMvpView().showMessage(R.string.failed_to_add_pinpoint_location);
                     }
 
                     @Override
                     public void onNext(GenericResponse genericResponse) {
                         getMvpView().showProgressDialog(false, null);
-                        getMvpView().updateClientAddress(R.string.address_deleted_successfully);
+                        getMvpView().updateClientAddress(
+                                R.string.address_added_successfully);
                     }
                 })
+
+        );
+    }
+
+    public void deleteClientPinpointLocation(int apptableId, int datatableId) {
+        checkViewAttached();
+        getMvpView().showProgressDialog(true, R.string.deleting_client_address);
+        subscriptions
+                .add(dataManagerClient.deleteClientAddressPinpointLocation(apptableId, datatableId)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new Subscriber<GenericResponse>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                getMvpView().showProgressDialog(false, null);
+                                getMvpView()
+                                        .showMessage(R.string.failed_to_delete_pinpoint_location);
+                            }
+
+                            @Override
+                            public void onNext(GenericResponse genericResponse) {
+                                getMvpView().showProgressDialog(false, null);
+                                getMvpView()
+                                        .updateClientAddress(R.string.address_deleted_successfully);
+                            }
+                        })
         );
     }
 

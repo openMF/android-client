@@ -76,14 +76,14 @@ public class RepaymentFrequencyTypeOptions implements Parcelable {
 
     public static final Parcelable.Creator<RepaymentFrequencyTypeOptions> CREATOR =
             new Parcelable.Creator<RepaymentFrequencyTypeOptions>() {
-        @Override
-        public RepaymentFrequencyTypeOptions createFromParcel(Parcel source) {
-            return new RepaymentFrequencyTypeOptions(source);
-        }
+                @Override
+                public RepaymentFrequencyTypeOptions createFromParcel(Parcel source) {
+                    return new RepaymentFrequencyTypeOptions(source);
+                }
 
-        @Override
-        public RepaymentFrequencyTypeOptions[] newArray(int size) {
-            return new RepaymentFrequencyTypeOptions[size];
-        }
-    };
+                @Override
+                public RepaymentFrequencyTypeOptions[] newArray(int size) {
+                    return new RepaymentFrequencyTypeOptions[size];
+                }
+            };
 }

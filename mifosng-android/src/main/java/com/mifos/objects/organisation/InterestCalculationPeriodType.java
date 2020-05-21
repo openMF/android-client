@@ -76,14 +76,14 @@ public class InterestCalculationPeriodType implements Parcelable {
 
     public static final Parcelable.Creator<InterestCalculationPeriodType> CREATOR =
             new Parcelable.Creator<InterestCalculationPeriodType>() {
-        @Override
-        public InterestCalculationPeriodType createFromParcel(Parcel source) {
-            return new InterestCalculationPeriodType(source);
-        }
+                @Override
+                public InterestCalculationPeriodType createFromParcel(Parcel source) {
+                    return new InterestCalculationPeriodType(source);
+                }
 
-        @Override
-        public InterestCalculationPeriodType[] newArray(int size) {
-            return new InterestCalculationPeriodType[size];
-        }
-    };
+                @Override
+                public InterestCalculationPeriodType[] newArray(int size) {
+                    return new InterestCalculationPeriodType[size];
+                }
+            };
 }

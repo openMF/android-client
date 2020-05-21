@@ -126,14 +126,14 @@ public class SavingsCollectionSheet implements Parcelable {
 
     public static final Parcelable.Creator<SavingsCollectionSheet> CREATOR = new
             Parcelable.Creator<SavingsCollectionSheet>() {
-        @Override
-        public SavingsCollectionSheet createFromParcel(Parcel source) {
-            return new SavingsCollectionSheet(source);
-        }
+                @Override
+                public SavingsCollectionSheet createFromParcel(Parcel source) {
+                    return new SavingsCollectionSheet(source);
+                }
 
-        @Override
-        public SavingsCollectionSheet[] newArray(int size) {
-            return new SavingsCollectionSheet[size];
-        }
-    };
+                @Override
+                public SavingsCollectionSheet[] newArray(int size) {
+                    return new SavingsCollectionSheet[size];
+                }
+            };
 }

@@ -105,16 +105,16 @@ public class IndividualCollectionSheetPayload implements Parcelable {
 
     public static final Parcelable.Creator<IndividualCollectionSheetPayload> CREATOR = new
             Parcelable.Creator<IndividualCollectionSheetPayload>() {
-        @Override
-        public IndividualCollectionSheetPayload createFromParcel(Parcel source) {
-            return new IndividualCollectionSheetPayload(source);
-        }
+                @Override
+                public IndividualCollectionSheetPayload createFromParcel(Parcel source) {
+                    return new IndividualCollectionSheetPayload(source);
+                }
 
-        @Override
-        public IndividualCollectionSheetPayload[] newArray(int size) {
-            return new IndividualCollectionSheetPayload[size];
-        }
-    };
+                @Override
+                public IndividualCollectionSheetPayload[] newArray(int size) {
+                    return new IndividualCollectionSheetPayload[size];
+                }
+            };
 
     @Override
     public String toString() {

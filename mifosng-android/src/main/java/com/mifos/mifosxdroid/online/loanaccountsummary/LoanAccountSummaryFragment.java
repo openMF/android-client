@@ -7,8 +7,10 @@ package com.mifos.mifosxdroid.online.loanaccountsummary;
 
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;

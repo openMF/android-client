@@ -457,14 +457,14 @@ public class SavingsAccountWithAssociations extends MifosBaseModel implements Pa
 
     public static final Parcelable.Creator<SavingsAccountWithAssociations> CREATOR =
             new Parcelable.Creator<SavingsAccountWithAssociations>() {
-        @Override
-        public SavingsAccountWithAssociations createFromParcel(Parcel source) {
-            return new SavingsAccountWithAssociations(source);
-        }
+                @Override
+                public SavingsAccountWithAssociations createFromParcel(Parcel source) {
+                    return new SavingsAccountWithAssociations(source);
+                }
 
-        @Override
-        public SavingsAccountWithAssociations[] newArray(int size) {
-            return new SavingsAccountWithAssociations[size];
-        }
-    };
+                @Override
+                public SavingsAccountWithAssociations[] newArray(int size) {
+                    return new SavingsAccountWithAssociations[size];
+                }
+            };
 }

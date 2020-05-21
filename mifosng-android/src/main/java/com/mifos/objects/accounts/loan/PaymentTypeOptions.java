@@ -50,14 +50,14 @@ public class PaymentTypeOptions implements Parcelable {
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<PaymentTypeOptions> CREATOR =
             new Parcelable.Creator<PaymentTypeOptions>() {
-        @Override
-        public PaymentTypeOptions createFromParcel(Parcel in) {
-            return new PaymentTypeOptions(in);
-        }
+                @Override
+                public PaymentTypeOptions createFromParcel(Parcel in) {
+                    return new PaymentTypeOptions(in);
+                }
 
-        @Override
-        public PaymentTypeOptions[] newArray(int size) {
-            return new PaymentTypeOptions[size];
-        }
-    };
+                @Override
+                public PaymentTypeOptions[] newArray(int size) {
+                    return new PaymentTypeOptions[size];
+                }
+            };
 }

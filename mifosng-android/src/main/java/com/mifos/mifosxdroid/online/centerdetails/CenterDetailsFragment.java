@@ -2,8 +2,10 @@ package com.mifos.mifosxdroid.online.centerdetails;
 
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -163,7 +165,7 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
             }
         } else {
             tvMeetingDate.setText(Utils.getStringOfDate(centerWithAssociations
-                            .getCollectionMeetingCalendar().getNextTenRecurringDates().get(0)));
+                    .getCollectionMeetingCalendar().getNextTenRecurringDates().get(0)));
             if (getView() != null) {
                 getView().findViewById(R.id.row_meeting_frequency).setVisibility(View.VISIBLE);
                 tvMeetingFrequency.setText(centerWithAssociations.getCollectionMeetingCalendar()
@@ -221,6 +223,7 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
 
     public interface OnFragmentInteractionListener {
         void addCenterSavingAccount(int centerId);
+
         void loadGroupsOfCenter(int centerId);
     }
 

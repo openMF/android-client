@@ -37,20 +37,20 @@ public class SettingsFragment extends PreferenceFragment {
                 findPreference(getResources().getString(R.string.sync_survey));
         mEnableSyncSurvey.setOnPreferenceChangeListener(
                 new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if (((Boolean) newValue)) {
-                        SyncSurveysDialogFragment syncSurveysDialogFragment =
-                                SyncSurveysDialogFragment.newInstance();
-                        FragmentTransaction fragmentTransaction =
-                                getFragmentManager().beginTransaction();
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (((Boolean) newValue)) {
+                            SyncSurveysDialogFragment syncSurveysDialogFragment =
+                                    SyncSurveysDialogFragment.newInstance();
+                            FragmentTransaction fragmentTransaction =
+                                    getFragmentManager().beginTransaction();
                             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SURVEYS_SYNC);
-                        syncSurveysDialogFragment.setCancelable(false);
-                        syncSurveysDialogFragment.show(fragmentTransaction,
-                                getResources().getString(R.string.sync_clients));
+                            syncSurveysDialogFragment.setCancelable(false);
+                            syncSurveysDialogFragment.show(fragmentTransaction,
+                                    getResources().getString(R.string.sync_clients));
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            });
+                });
     }
 }

@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,8 @@ public class ClientReportAdapter extends
     private List<ClientReportTypeItem> items;
 
     @Inject
-    public ClientReportAdapter() {}
+    public ClientReportAdapter() {
+    }
 
     public void setReportItems(List<ClientReportTypeItem> items) {
         this.items = items;

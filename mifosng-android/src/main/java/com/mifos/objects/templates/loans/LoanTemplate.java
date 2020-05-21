@@ -802,14 +802,14 @@ public class LoanTemplate implements Parcelable {
 
     public static final Parcelable.Creator<LoanTemplate> CREATOR =
             new Parcelable.Creator<LoanTemplate>() {
-        @Override
-        public LoanTemplate createFromParcel(Parcel source) {
-            return new LoanTemplate(source);
-        }
+                @Override
+                public LoanTemplate createFromParcel(Parcel source) {
+                    return new LoanTemplate(source);
+                }
 
-        @Override
-        public LoanTemplate[] newArray(int size) {
-            return new LoanTemplate[size];
-        }
-    };
+                @Override
+                public LoanTemplate[] newArray(int size) {
+                    return new LoanTemplate[size];
+                }
+            };
 }

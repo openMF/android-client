@@ -76,14 +76,14 @@ public class ChargePaymentMode implements Parcelable {
 
     public static final Parcelable.Creator<ChargePaymentMode> CREATOR =
             new Parcelable.Creator<ChargePaymentMode>() {
-        @Override
-        public ChargePaymentMode createFromParcel(Parcel source) {
-            return new ChargePaymentMode(source);
-        }
+                @Override
+                public ChargePaymentMode createFromParcel(Parcel source) {
+                    return new ChargePaymentMode(source);
+                }
 
-        @Override
-        public ChargePaymentMode[] newArray(int size) {
-            return new ChargePaymentMode[size];
-        }
-    };
+                @Override
+                public ChargePaymentMode[] newArray(int size) {
+                    return new ChargePaymentMode[size];
+                }
+            };
 }

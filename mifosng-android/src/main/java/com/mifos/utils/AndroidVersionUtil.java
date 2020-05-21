@@ -1,7 +1,6 @@
 package com.mifos.utils;
 
 /**
- *
  * Created by Rajan Maurya on 04/09/16.
  */
 public class AndroidVersionUtil {

@@ -1,9 +1,11 @@
 package com.mifos.mifosxdroid.online.runreports.reportdetail;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;

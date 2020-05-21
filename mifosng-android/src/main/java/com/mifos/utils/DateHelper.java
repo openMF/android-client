@@ -185,7 +185,7 @@ public class DateHelper {
          *  index 2 = Day
          *
          *  Format is YYYY - MM - DD
-        */
+         */
 
         //comparing years
         if (date1.get(0).equals(date2.get(0))) {

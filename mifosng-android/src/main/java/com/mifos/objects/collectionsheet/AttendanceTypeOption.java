@@ -63,14 +63,14 @@ public class AttendanceTypeOption implements Parcelable {
 
     public static final Parcelable.Creator<AttendanceTypeOption> CREATOR =
             new Parcelable.Creator<AttendanceTypeOption>() {
-        @Override
-        public AttendanceTypeOption createFromParcel(Parcel source) {
-            return new AttendanceTypeOption(source);
-        }
+                @Override
+                public AttendanceTypeOption createFromParcel(Parcel source) {
+                    return new AttendanceTypeOption(source);
+                }
 
-        @Override
-        public AttendanceTypeOption[] newArray(int size) {
-            return new AttendanceTypeOption[size];
-        }
-    };
+                @Override
+                public AttendanceTypeOption[] newArray(int size) {
+                    return new AttendanceTypeOption[size];
+                }
+            };
 }

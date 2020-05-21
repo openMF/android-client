@@ -204,14 +204,14 @@ public class CollectionSheetPayload implements Parcelable {
 
     public static final Creator<CollectionSheetPayload> CREATOR = new
             Creator<CollectionSheetPayload>() {
-        @Override
-        public CollectionSheetPayload createFromParcel(Parcel source) {
-            return new CollectionSheetPayload(source);
-        }
+                @Override
+                public CollectionSheetPayload createFromParcel(Parcel source) {
+                    return new CollectionSheetPayload(source);
+                }
 
-        @Override
-        public CollectionSheetPayload[] newArray(int size) {
-            return new CollectionSheetPayload[size];
-        }
-    };
+                @Override
+                public CollectionSheetPayload[] newArray(int size) {
+                    return new CollectionSheetPayload[size];
+                }
+            };
 }

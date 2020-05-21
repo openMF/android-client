@@ -242,14 +242,14 @@ public class GroupWithAssociations implements Parcelable {
 
     public static final Parcelable.Creator<GroupWithAssociations> CREATOR =
             new Parcelable.Creator<GroupWithAssociations>() {
-        @Override
-        public GroupWithAssociations createFromParcel(Parcel source) {
-            return new GroupWithAssociations(source);
-        }
+                @Override
+                public GroupWithAssociations createFromParcel(Parcel source) {
+                    return new GroupWithAssociations(source);
+                }
 
-        @Override
-        public GroupWithAssociations[] newArray(int size) {
-            return new GroupWithAssociations[size];
-        }
-    };
+                @Override
+                public GroupWithAssociations[] newArray(int size) {
+                    return new GroupWithAssociations[size];
+                }
+            };
 }

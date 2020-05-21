@@ -76,14 +76,14 @@ public class InterestRateFrequencyType implements Parcelable {
 
     public static final Parcelable.Creator<InterestRateFrequencyType> CREATOR =
             new Parcelable.Creator<InterestRateFrequencyType>() {
-        @Override
-        public InterestRateFrequencyType createFromParcel(Parcel source) {
-            return new InterestRateFrequencyType(source);
-        }
+                @Override
+                public InterestRateFrequencyType createFromParcel(Parcel source) {
+                    return new InterestRateFrequencyType(source);
+                }
 
-        @Override
-        public InterestRateFrequencyType[] newArray(int size) {
-            return new InterestRateFrequencyType[size];
-        }
-    };
+                @Override
+                public InterestRateFrequencyType[] newArray(int size) {
+                    return new InterestRateFrequencyType[size];
+                }
+            };
 }

@@ -68,10 +68,11 @@ public class ClientIdentifiersPresenter extends BasePresenter<ClientIdentifiersM
 
     /**
      * Method to call Identifier Delete endpoint to remove an identifier.
-     * @param clientId ClientID whose identifier has to be removed
+     *
+     * @param clientId     ClientID whose identifier has to be removed
      * @param identifierId Id of the identifier to be removed
-     * @param position Position of the identifier to be removed. This will be sent on successful
-     *                 request to notify that identifier at this position has been removed.
+     * @param position     Position of the identifier to be removed. This will be sent on successful
+     *                     request to notify that identifier at this position has been removed.
      */
     public void deleteIdentifier(final int clientId, int identifierId, final int position) {
         checkViewAttached();

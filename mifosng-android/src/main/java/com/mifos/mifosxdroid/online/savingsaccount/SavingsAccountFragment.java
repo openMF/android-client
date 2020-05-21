@@ -7,7 +7,9 @@ package com.mifos.mifosxdroid.online.savingsaccount;
 
 import android.R.layout;
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -233,7 +235,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @Override
     public void onDatePicked(String date) {
         tvSubmissionDate.setText(date);
-        submission_date  = date;
+        submission_date = date;
         setSubmissionDate();
     }
 

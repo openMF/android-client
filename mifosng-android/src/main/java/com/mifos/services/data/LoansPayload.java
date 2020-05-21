@@ -332,14 +332,14 @@ public class LoansPayload implements Parcelable {
 
     public static final Parcelable.Creator<LoansPayload> CREATOR =
             new Parcelable.Creator<LoansPayload>() {
-        @Override
-        public LoansPayload createFromParcel(Parcel source) {
-            return new LoansPayload(source);
-        }
+                @Override
+                public LoansPayload createFromParcel(Parcel source) {
+                    return new LoansPayload(source);
+                }
 
-        @Override
-        public LoansPayload[] newArray(int size) {
-            return new LoansPayload[size];
-        }
-    };
+                @Override
+                public LoansPayload[] newArray(int size) {
+                    return new LoansPayload[size];
+                }
+            };
 }

@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * This Model is saving the Summary of the Loans according to their Id's
- *
  */
 @Table(database = MifosDatabase.class, name = "LoansAccountSummary")
 @ModelContainer

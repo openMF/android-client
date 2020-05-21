@@ -108,14 +108,14 @@ public class ClientAddressResponse implements Parcelable {
 
     public static final Parcelable.Creator<ClientAddressResponse> CREATOR =
             new Parcelable.Creator<ClientAddressResponse>() {
-        @Override
-        public ClientAddressResponse createFromParcel(Parcel source) {
-            return new ClientAddressResponse(source);
-        }
+                @Override
+                public ClientAddressResponse createFromParcel(Parcel source) {
+                    return new ClientAddressResponse(source);
+                }
 
-        @Override
-        public ClientAddressResponse[] newArray(int size) {
-            return new ClientAddressResponse[size];
-        }
-    };
+                @Override
+                public ClientAddressResponse[] newArray(int size) {
+                    return new ClientAddressResponse[size];
+                }
+            };
 }

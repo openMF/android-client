@@ -39,7 +39,7 @@ public class IndividualCollectionSheetDetailsPresenter
 
     @Inject
     IndividualCollectionSheetDetailsPresenter(DataManager manager,
-                                          DataManagerCollectionSheet managerCollectionSheet) {
+                                              DataManagerCollectionSheet managerCollectionSheet) {
         mDataManager = manager;
         mDataManagerCollection = managerCollectionSheet;
         mSubscription = new CompositeSubscription();

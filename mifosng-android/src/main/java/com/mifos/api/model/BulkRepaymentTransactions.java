@@ -131,14 +131,14 @@ public class BulkRepaymentTransactions implements Parcelable {
 
     public static final Parcelable.Creator<BulkRepaymentTransactions> CREATOR =
             new Parcelable.Creator<BulkRepaymentTransactions>() {
-        @Override
-        public BulkRepaymentTransactions createFromParcel(Parcel source) {
-            return new BulkRepaymentTransactions(source);
-        }
+                @Override
+                public BulkRepaymentTransactions createFromParcel(Parcel source) {
+                    return new BulkRepaymentTransactions(source);
+                }
 
-        @Override
-        public BulkRepaymentTransactions[] newArray(int size) {
-            return new BulkRepaymentTransactions[size];
-        }
-    };
+                @Override
+                public BulkRepaymentTransactions[] newArray(int size) {
+                    return new BulkRepaymentTransactions[size];
+                }
+            };
 }

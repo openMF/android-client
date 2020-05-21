@@ -244,14 +244,14 @@ public class TransactionType extends MifosBaseModel implements Parcelable {
 
     public static final Parcelable.Creator<TransactionType> CREATOR =
             new Parcelable.Creator<TransactionType>() {
-        @Override
-        public TransactionType createFromParcel(Parcel source) {
-            return new TransactionType(source);
-        }
+                @Override
+                public TransactionType createFromParcel(Parcel source) {
+                    return new TransactionType(source);
+                }
 
-        @Override
-        public TransactionType[] newArray(int size) {
-            return new TransactionType[size];
-        }
-    };
+                @Override
+                public TransactionType[] newArray(int size) {
+                    return new TransactionType[size];
+                }
+            };
 }

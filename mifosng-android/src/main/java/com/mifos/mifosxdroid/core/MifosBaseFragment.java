@@ -9,8 +9,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -55,10 +57,10 @@ public class MifosBaseFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton(getStringMessage(R.string.dialog_action_ok), new
                         DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                })
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        })
                 .createMaterialDialog()
                 .show();
     }

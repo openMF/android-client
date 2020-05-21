@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+
 import androidx.core.content.ContextCompat;
 
 import com.mifos.mifosxdroid.R;
@@ -59,12 +60,12 @@ public class Utils {
      * This Method filtering the List<PaymentTypeOption> and if any PaymentTypeOption id is equal to
      * the paymentId. and return the match PaymentType Name.
      *
-     * @param paymentId Payment Type Id
+     * @param paymentId          Payment Type Id
      * @param paymentTypeOptions PaymentTypeOptions
      * @return PaymentType Name
      */
     public static String getPaymentTypeName(final int paymentId,
-                                     List<PaymentTypeOption> paymentTypeOptions) {
+                                            List<PaymentTypeOption> paymentTypeOptions) {
         final String[] paymentTypeName = new String[1];
         Observable.from(paymentTypeOptions)
                 .filter(new Func1<PaymentTypeOption, Boolean>() {
@@ -141,7 +142,7 @@ public class Utils {
     }
 
     public static List<SavingsAccount> getSyncableSavingsAccounts(List<SavingsAccount>
-                                                                        savingsAccounts) {
+                                                                          savingsAccounts) {
         final List<SavingsAccount> accounts = new ArrayList<>();
         Observable.from(savingsAccounts)
                 .filter(new Func1<SavingsAccount, Boolean>() {

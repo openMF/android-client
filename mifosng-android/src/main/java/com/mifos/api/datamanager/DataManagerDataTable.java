@@ -18,7 +18,7 @@ import rx.Observable;
 /**
  * This DataManager is for Managing DataTable API, In which Request is going to Server
  * and In Response, We are getting DataTable API Observable Response using Retrofit2
- *
+ * <p>
  * Created by Rajan Maurya on 3/7/16.
  */
 @Singleton
@@ -41,6 +41,7 @@ public class DataManagerDataTable {
      * 1. m_client
      * 2. m_savings_account
      * 3. m_loan
+     *
      * @param tableName DataTable Name
      * @return List<DataTable>
      */
@@ -66,8 +67,8 @@ public class DataManagerDataTable {
     /**
      * This Method is adding the User Tracking Data in the data Table "user_tracking"
      *
-     * @param userId UserId Id
-     * @param userLocation  UserLocation
+     * @param userId       UserId Id
+     * @param userLocation UserLocation
      * @return GenericResponse
      */
     public Observable<GenericResponse> addUserPathTracking(int userId,

@@ -71,8 +71,8 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                                 getMvpView().showError(R.string.failed_to_upload_document);
                             }
                         } catch (Throwable throwable) {
-                                RxJavaPlugins.getInstance().getErrorHandler()
-                                        .handleError(throwable);
+                            RxJavaPlugins.getInstance().getErrorHandler()
+                                    .handleError(throwable);
                         }
                     }
 

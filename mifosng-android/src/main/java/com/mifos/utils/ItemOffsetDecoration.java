@@ -2,9 +2,11 @@ package com.mifos.utils;
 
 import android.content.Context;
 import android.graphics.Rect;
+
 import androidx.annotation.DimenRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 
 /**

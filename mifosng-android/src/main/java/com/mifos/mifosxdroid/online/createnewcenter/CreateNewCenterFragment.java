@@ -11,8 +11,10 @@ package com.mifos.mifosxdroid.online.createnewcenter;
 
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -122,8 +124,8 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
                     activationdateString = tv_activationDate.getText().toString();
                     activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                    (activationdateString).replace("-", " ");
-                    
+                            (activationdateString).replace("-", " ");
+
                 } else {
                     layout_submission.setVisibility(View.GONE);
                 }

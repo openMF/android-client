@@ -1,9 +1,11 @@
 package com.mifos.mifosxdroid.online.collectionsheetindividual;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -213,7 +215,7 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
     public void popupDialog() {
         CollectionSheetDialogFragment collectionSheetDialogFragment =
                 CollectionSheetDialogFragment.newInstance(tvRepaymentDate.getText().toString(),
-                sheet.getClients().size());
+                        sheet.getClients().size());
         collectionSheetDialogFragment.setTargetFragment(this, requestCode);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();

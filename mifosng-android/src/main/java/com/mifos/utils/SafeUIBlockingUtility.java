@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 /**
  * @author ishankhanna
- *         Class To Block User Interface Safely for Asynchronous Network Calls
- *         and/or Heavy Operations
+ * Class To Block User Interface Safely for Asynchronous Network Calls
+ * and/or Heavy Operations
  */
 public class SafeUIBlockingUtility {
 

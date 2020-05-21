@@ -46,7 +46,7 @@ public class Survey extends MifosBaseModel implements Parcelable {
 
     List<QuestionDatas> questionDatas = new ArrayList<QuestionDatas>();
 
-    List<ComponentDatas> componentDatas  = new ArrayList<ComponentDatas>();
+    List<ComponentDatas> componentDatas = new ArrayList<ComponentDatas>();
 
     public List<ComponentDatas> getComponentDatas() {
         return componentDatas;

@@ -13,7 +13,7 @@ import dagger.Provides;
 
 /**
  * @author Rajan Maurya
- *         Provide application-level dependencies.
+ * Provide application-level dependencies.
  */
 @Module
 public class ApplicationModule {

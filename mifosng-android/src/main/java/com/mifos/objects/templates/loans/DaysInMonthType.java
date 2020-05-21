@@ -76,14 +76,14 @@ public class DaysInMonthType implements Parcelable {
 
     public static final Parcelable.Creator<DaysInMonthType> CREATOR =
             new Parcelable.Creator<DaysInMonthType>() {
-        @Override
-        public DaysInMonthType createFromParcel(Parcel source) {
-            return new DaysInMonthType(source);
-        }
+                @Override
+                public DaysInMonthType createFromParcel(Parcel source) {
+                    return new DaysInMonthType(source);
+                }
 
-        @Override
-        public DaysInMonthType[] newArray(int size) {
-            return new DaysInMonthType[size];
-        }
-    };
+                @Override
+                public DaysInMonthType[] newArray(int size) {
+                    return new DaysInMonthType[size];
+                }
+            };
 }

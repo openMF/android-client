@@ -76,14 +76,14 @@ public class InterestType implements Parcelable {
 
     public static final Parcelable.Creator<InterestType> CREATOR =
             new Parcelable.Creator<InterestType>() {
-        @Override
-        public InterestType createFromParcel(Parcel source) {
-            return new InterestType(source);
-        }
+                @Override
+                public InterestType createFromParcel(Parcel source) {
+                    return new InterestType(source);
+                }
 
-        @Override
-        public InterestType[] newArray(int size) {
-            return new InterestType[size];
-        }
-    };
+                @Override
+                public InterestType[] newArray(int size) {
+                    return new InterestType[size];
+                }
+            };
 }

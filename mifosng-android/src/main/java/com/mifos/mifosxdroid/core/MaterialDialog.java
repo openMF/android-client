@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.core;
 
 import android.content.Context;
 import android.content.DialogInterface;
+
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
@@ -11,7 +12,7 @@ import com.mifos.mifosxdroid.R;
  * This Class is the Material Dialog Builder Class
  * Created by Rajan Maurya on 03/08/16.
  */
-public final class MaterialDialog  {
+public final class MaterialDialog {
 
     public static class Builder {
 
@@ -61,7 +62,7 @@ public final class MaterialDialog  {
         }
 
         //This Method Set the String Resources Text To Positive Button
-        public Builder setPositiveButton(@StringRes int  positiveText) {
+        public Builder setPositiveButton(@StringRes int positiveText) {
             mMaterialDialogBuilder.setPositiveButton(positiveText, null);
             return this;
         }
