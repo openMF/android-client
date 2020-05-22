@@ -22,7 +22,15 @@ public interface CreateNewClientMvpView extends MvpView {
 
     void showClientCreatedSuccessfully(int s);
 
+    void showWaitingForCheckerApproval(int s);
+
     void showMessage(int message);
 
     void showMessage(String message);
+
+    void setClientId(Integer id);
+
+    void showProgress(String message);
+
+    void hideProgress();
 }

@@ -10,4 +10,6 @@ public interface DataTableListMvpView extends MvpView {
     void showMessage(String message);
 
     void showClientCreatedSuccessfully(Client client);
+
+    void showWaitingForCheckerApproval(int message);
 }

@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/tv_title"
             style="@style/TextView.Search.Results"
-            android:text="Select a Client from the list"
+            android:text="@string/select_client"
             android:textSize="20sp" />
 
         <ListView

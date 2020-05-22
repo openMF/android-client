@@ -7,7 +7,7 @@ package com.mifos.mifosxdroid.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -138,14 +138,19 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             return false;
         }
         username = et_username.getEditableText().toString();
-        if (username.length() < 5) {
-            showToastMessage(getString(R.string.error_username_length));
-            return false;
-        }
         password = et_password.getEditableText().toString();
-        if (password.length() < 6) {
-            showToastMessage(getString(R.string.error_password_length));
+        if (username.isEmpty() || password.isEmpty()) {
+            showToastMessage(getString(R.string.error_enter_credentials));
             return false;
+        } else {
+            if (username.length() < 5) {
+                showToastMessage(getString(R.string.error_username_length));
+                return false;
+            }
+            if (password.length() < 6) {
+                showToastMessage(getString(R.string.error_password_length));
+                return false;
+            }
         }
         return true;
     }

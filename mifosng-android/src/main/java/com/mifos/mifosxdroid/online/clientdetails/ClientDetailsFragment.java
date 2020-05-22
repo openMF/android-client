@@ -5,16 +5,23 @@
 
 package com.mifos.mifosxdroid.online.clientdetails;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.widget.PopupMenu;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,6 +71,7 @@ import com.mifos.utils.ImageLoaderUtils;
 import com.mifos.utils.Utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +82,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
+import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
 import static android.view.View.OnTouchListener;
@@ -83,8 +92,9 @@ import static android.view.View.VISIBLE;
 public class ClientDetailsFragment extends MifosBaseFragment implements ClientDetailsMvpView {
 
     // Intent response codes. Each response code must be a unique integer.
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
-
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2;
+    private static final int UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    private static final int CHECK_PERMISSIONS = 1010;
     public static final int MENU_ITEM_DATA_TABLES = 1000;
     public static final int MENU_ITEM_PIN_POINT = 1001;
     public static final int MENU_ITEM_CLIENT_CHARGES = 1003;
@@ -96,7 +106,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public static final int MENU_ITEM_SURVEYS = 1008;
     public static final int MENU_ITEM_NOTE = 1009;
 
-
+    String imgDecodableString;
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
     public int clientId;
@@ -116,6 +126,12 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     @BindView(R.id.tv_office)
     TextView tv_office;
+
+    @BindView(R.id.tv_mobile_no)
+    TextView tvMobileNo;
+
+    @BindView(R.id.tv_group)
+    TextView tvGroup;
 
     @BindView(R.id.iv_clientImage)
     CircularImageView iv_clientImage;
@@ -144,6 +160,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @BindView(R.id.row_loan)
     TableRow rowLoan;
 
+    @BindView(R.id.tableRow_mobile_no)
+    TableRow rowMobileNo;
+
     @BindView(R.id.ll_bottom_panel)
     LinearLayout llBottomPanel;
 
@@ -155,7 +174,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     private View rootView;
     private OnFragmentInteractionListener mListener;
-    private File capturedClientImageFile;
+    private File clientImageFile = new File(Environment.getExternalStorageDirectory().toString() +
+            "/client_image.png");
     private AccountAccordion accountAccordion;
     private boolean isClientActive = false;
 
@@ -182,7 +202,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             clientId = getArguments().getInt(Constants.CLIENT_ID);
         }
         setHasOptionsMenu(true);
-        capturedClientImageFile = new File(getActivity().getExternalCacheDir(), "client_image.png");
+        checkPermissions();
     }
 
     @Override
@@ -220,8 +240,52 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK)
-            uploadImage(capturedClientImageFile);
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            // When an Image is picked
+            if (requestCode == UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK
+                    && null != data) {
+                // Get the Image from data
+
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                // Get the cursor
+                Cursor cursor = getActivity().getApplicationContext().getContentResolver().query(
+                        selectedImage,
+                        filePathColumn, null, null, null);
+                // Move to first row
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imgDecodableString = cursor.getString(columnIndex);
+                cursor.close();
+                Bitmap pickedImage = BitmapFactory.decodeFile(imgDecodableString);
+                saveBitmap(clientImageFile, pickedImage);
+                uploadImage(clientImageFile);
+            } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
+                    && resultCode == RESULT_OK) {
+                uploadImage(clientImageFile);
+            } else {
+                Toaster.show(rootView, R.string.havent_picked_image,
+                        Toast.LENGTH_LONG);
+            }
+        } catch (Exception e) {
+            Toaster.show(rootView, e.toString(), Toast.LENGTH_LONG);
+        }
+    }
+
+    public void saveBitmap(File file, Bitmap mBitmap) {
+        try {
+            file.createNewFile();
+            FileOutputStream fOut = null;
+            fOut = new FileOutputStream(file);
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception exception) {
+            //Empty catch block to prevent crashing
+        }
     }
 
     @Override
@@ -289,9 +353,29 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     public void captureClientImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(capturedClientImageFile));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(clientImageFile));
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    CHECK_PERMISSIONS);
+        }
+    }
+
+    public void uploadClientImage() {
+        // Create intent to Open Image applications like Gallery, Google Photos
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        // Start the Intent
+        galleryIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(clientImageFile));
+        startActivityForResult(galleryIntent, UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
 
     /**
      * A service to upload the image of the client.
@@ -420,7 +504,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     }
 
     @Override
-    public void showClientInformation(Client client) {
+    public void showClientInformation(final Client client) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.getLastname());
             isClientActive = client.isActive();
@@ -430,12 +514,20 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             }
             tv_fullName.setText(client.getDisplayName());
             tv_accountNumber.setText(client.getAccountNo());
+            tvGroup.setText(client.getGroupNames());
             tv_externalId.setText(client.getExternalId());
+            tvMobileNo.setText(client.getMobileNo());
             if (TextUtils.isEmpty(client.getAccountNo()))
                 rowAccount.setVisibility(GONE);
 
             if (TextUtils.isEmpty(client.getExternalId()))
                 rowExternal.setVisibility(GONE);
+
+            if (TextUtils.isEmpty(client.getMobileNo()))
+                rowMobileNo.setVisibility(GONE);
+
+            if (TextUtils.isEmpty(client.getGroupNames()))
+                rowGroup.setVisibility(GONE);
 
             try {
                 String dateString = Utils.getStringOfDate(
@@ -471,11 +563,17 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                     PopupMenu menu = new PopupMenu(getActivity(), view);
                     menu.getMenuInflater().inflate(R.menu.client_image_popup, menu
                             .getMenu());
+                    if (!client.isImagePresent()) {
+                        menu.getMenu().findItem(R.id.client_image_remove).setVisible(false);
+                    }
                     menu.setOnMenuItemClickListener(
                             new PopupMenu.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     switch (menuItem.getItemId()) {
+                                        case R.id.client_image_upload:
+                                            uploadClientImage();
+                                            break;
                                         case R.id.client_image_capture:
                                             captureClientImage();
                                             break;
@@ -517,6 +615,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             pb_imageProgressBar.setVisibility(GONE);
         }
     }
+
 
     public void loadClientProfileImage() {
         pb_imageProgressBar.setVisibility(VISIBLE);

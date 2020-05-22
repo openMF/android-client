@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import com.mifos.api.local.MifosBaseModel;
 import com.mifos.api.local.MifosDatabase;
 import com.mifos.objects.Timeline;
+import com.mifos.objects.group.Group;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ModelContainer;
@@ -55,6 +56,9 @@ public class Client extends MifosBaseModel implements Parcelable {
     List<Integer> activationDate = new ArrayList<Integer>();
 
     List<Integer> dobDate = new ArrayList<Integer>();
+    List<Group> groups = new ArrayList<Group>();
+
+    String mobileNo;
 
     @Column
     String firstname;
@@ -98,6 +102,20 @@ public class Client extends MifosBaseModel implements Parcelable {
         return clientId;
     }
 
+    /**
+     * This method is returning the comma separated names of all the client's group
+     * in the form of a string.
+     */
+    public String getGroupNames() {
+        String groupNames = "";
+        if (groups.isEmpty())
+            return "";
+        for (Group group: groups) {
+            groupNames += group.getName() + ", ";
+        }
+        return groupNames.substring(0, groupNames.length() - 2);
+    }
+
     public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
@@ -108,6 +126,14 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     public void setGroupId(int groupId) {
         this.groupId = groupId;
+    }
+
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
     }
 
     public boolean isSync() {
@@ -138,6 +164,8 @@ public class Client extends MifosBaseModel implements Parcelable {
         in.readList(this.activationDate, Integer.class.getClassLoader());
         this.dobDate = new ArrayList<Integer>();
         in.readList(this.dobDate, Integer.class.getClassLoader());
+        this.groups = new ArrayList<>();
+        in.readList(this.groups, Group.class.getClassLoader());
         this.firstname = in.readString();
         this.middlename = in.readString();
         this.lastname = in.readString();
@@ -159,6 +187,14 @@ public class Client extends MifosBaseModel implements Parcelable {
 
     public void setDobDate(List<Integer> dobDate) {
         this.dobDate = dobDate;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     public int getId() {
@@ -342,6 +378,7 @@ public class Client extends MifosBaseModel implements Parcelable {
         dest.writeByte(this.active ? (byte) 1 : (byte) 0);
         dest.writeList(this.activationDate);
         dest.writeList(this.dobDate);
+        dest.writeList(this.groups);
         dest.writeString(this.firstname);
         dest.writeString(this.middlename);
         dest.writeString(this.lastname);

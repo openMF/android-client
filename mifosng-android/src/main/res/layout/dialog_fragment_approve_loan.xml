@@ -47,7 +47,7 @@
             android:paddingTop="10dp"
             android:textSize="20sp" />
 
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
             <EditText
                 android:id="@+id/et_approved_amount"
@@ -58,9 +58,9 @@
                 android:inputType="number"
                 android:maxLines="1"
                 android:paddingBottom="16dp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
             <EditText
                 android:id="@+id/et_transaction_amount"
@@ -71,9 +71,9 @@
                 android:inputType="number"
                 android:maxLines="1"
                 android:paddingBottom="16dp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
             <EditText
                 android:id="@+id/et_approval_note"
@@ -83,7 +83,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:paddingBottom="16dp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/bt_approve_loan"

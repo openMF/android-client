@@ -8,7 +8,7 @@
                   android:id="@+id/ll_center"
                   style="@style/LinearLayout.Base">
         <TextView style="@style/TextView.CreateCenter" />
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
             <EditText
                 android:id="@+id/et_center_name"
                 style="@style/EditText.BaseWidth"
@@ -19,7 +19,7 @@
                 android:paddingBottom="16dp"
                 android:singleLine="true"/>
             <requestFocus />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:id="@+id/tv_office"
             android:layout_width="match_parent"
@@ -30,15 +30,16 @@
 
             />
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/sp_center_offices"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-        </android.support.design.widget.TextInputLayout>
+            android:backgroundTint="@color/gray_dark"/>
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+        </com.google.android.material.textfield.TextInputLayout>
         <CheckBox
             android:id="@+id/cb_center_active_status"
             android:layout_width="match_parent"

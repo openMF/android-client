@@ -19,14 +19,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/default_vertical_padding">
 
         <LinearLayout
             android:id="@+id/linear_layout_1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
             android:paddingBottom="8dp">
@@ -60,9 +61,9 @@
             android:id="@+id/linear_layout_2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/linear_layout_1"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -98,10 +99,10 @@
             android:id="@+id/savings_account_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/tv_savings_account_balance"
             android:layout_below="@+id/divider_2"
+            android:layout_alignTop="@+id/tv_savings_account_balance"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:text="@string/savings_account_balance"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -109,9 +110,9 @@
             android:id="@+id/tv_savings_account_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/divider_2"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/divider_2"
             android:layout_marginTop="8dp"
             android:gravity="right"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -120,9 +121,9 @@
             android:id="@+id/total_deposits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/tv_savings_account_balance"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="8dp"
             android:text="@string/savings_total_deposits"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -131,9 +132,9 @@
             android:id="@+id/tv_total_deposits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_savings_account_balance"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/tv_savings_account_balance"
             android:layout_marginTop="8dp"
             android:gravity="right"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -142,9 +143,9 @@
             android:id="@+id/total_withdrawals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/tv_total_deposits"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="8dp"
             android:text="@string/savings_total_withdrawals"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -153,9 +154,9 @@
             android:id="@+id/tv_total_withdrawals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_total_deposits"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/tv_total_deposits"
             android:layout_marginTop="8dp"
             android:gravity="right"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -164,9 +165,9 @@
             android:id="@+id/interest_earned"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/tv_total_withdrawals"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="8dp"
             android:text="@string/savings_interest_earned"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -175,9 +176,9 @@
             android:id="@+id/tv_interest_earned"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_total_withdrawals"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/tv_total_withdrawals"
             android:layout_marginTop="8dp"
             android:gravity="right"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -210,8 +211,8 @@
             android:id="@+id/buttons"
             style="@style/LinearLayout.Width"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
 
             <Button
                 android:id="@+id/bt_withdrawal"

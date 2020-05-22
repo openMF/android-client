@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.injection.component;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
+import com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog.CheckerTaskFilterDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.collectionsheetdialog.CollectionSheetDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment;
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment;
@@ -15,6 +16,9 @@ import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialog
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxFragment;
+import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity;
+import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment;
 import com.mifos.mifosxdroid.online.runreports.report.ReportFragment;
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment;
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
@@ -209,4 +213,11 @@ public interface ActivityComponent {
 
     void inject(PaymentDetailsFragment paymentDetailsFragment);
 
+    void inject(CheckerInboxPendingTasksActivity checkerInboxActivity);
+
+    void inject(CheckerInboxTasksFragment checkerInboxTasksFragment);
+
+    void inject(CheckerInboxFragment checkerInboxFragment);
+
+    void inject(CheckerTaskFilterDialogFragment checkerTaskFilterDialogFragment);
 }

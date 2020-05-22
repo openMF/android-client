@@ -34,13 +34,15 @@
             android:gravity="end" />
     </LinearLayout>
 
-    <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInput.Base">
 
         <EditText
             android:id="@+id/et_search"
             style="@style/EditText.BaseWidth"
-            android:hint="@string/search_hint" />
-    </android.support.design.widget.TextInputLayout>
+            android:hint="@string/search_hint"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
         android:id="@+id/btn_search"
@@ -59,7 +61,7 @@
         android:layout_height="wrap_content"
         android:text="@string/exact_match" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -7,7 +7,7 @@ package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,7 +101,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         getDialog().setTitle(dataTable.getRegisteredTableName());
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableRowDialogFragment.this
-                .getActivity());
+                .getActivity(), getString(R.string.data_table_row_dialog_loading_message));
 
         createForm(dataTable);
         addSaveButton();

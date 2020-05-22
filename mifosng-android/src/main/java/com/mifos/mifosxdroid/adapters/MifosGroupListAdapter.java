@@ -56,9 +56,9 @@ public class MifosGroupListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.tv_group_name = (TextView) view.findViewById(R.id.tv_group_name);
-        viewHolder.tv_staff_name = (TextView) view.findViewById(R.id.tv_staff_name);
-        viewHolder.tv_level_name = (TextView) view.findViewById(R.id.tv_level_name);
+        viewHolder.tv_group_name = view.findViewById(R.id.tv_group_name);
+        viewHolder.tv_staff_name = view.findViewById(R.id.tv_staff_name);
+        viewHolder.tv_level_name = view.findViewById(R.id.tv_level_name);
 
 
         MifosGroup mifosGroup = groups.get(i);

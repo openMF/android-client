@@ -34,6 +34,13 @@
             />
 
         <item
+            android:id="@+id/item_checker_inbox"
+            android:checked="false"
+            android:icon="@drawable/ic_check_box_black_24dp"
+            android:title="@string/checker_inbox"
+            />
+
+        <item
             android:id="@+id/individual_collection_sheet"
             android:checked="false"
             android:icon="@drawable/ic_assignment_black_24dp"

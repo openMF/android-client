@@ -121,7 +121,13 @@ public class DataTableListPresenter extends BasePresenter<DataTableListMvpView> 
                     @Override
                     public void onNext(Client client) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientCreatedSuccessfully(client);
+                        if (client.getClientId() != null) {
+                            getMvpView().showClientCreatedSuccessfully(
+                                    client);
+                        } else {
+                            getMvpView().showWaitingForCheckerApproval(
+                                    R.string.waiting_for_checker_approval);
+                        }
                     }
                 }));
     }
