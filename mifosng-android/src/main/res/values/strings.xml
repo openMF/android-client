@@ -800,6 +800,13 @@
     <string name="document_dialog_fragment_loading_message">Uploading document</string>
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+
+    <string name="Image_Upload_Successful">Image Upload Successful</string>
+    <string name="Image_Upload_Failed">Image Upload Failed</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="take_a_photo">Take a Photo</string>
+    <string name="remove_existing_photo">Remove Existing Photo</string>
+
     <string name="error_enter_credentials">Please Enter the Credentials</string>
 
     <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>

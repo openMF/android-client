@@ -27,4 +27,10 @@ public interface CreateNewClientMvpView extends MvpView {
     void showMessage(int message);
 
     void showMessage(String message);
+
+    void setClientId(Integer id);
+
+    void showProgress(String message);
+
+    void hideProgress();
 }
