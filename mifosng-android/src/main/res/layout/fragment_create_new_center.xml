@@ -30,13 +30,13 @@
 
             />
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
             android:id="@+id/sp_center_offices"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
+            android:spinnerMode="dropdown" />
         <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
         </com.google.android.material.textfield.TextInputLayout>
         <CheckBox
