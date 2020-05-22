@@ -807,4 +807,28 @@
     <string name="take_a_photo">Take a Photo</string>
     <string name="remove_existing_photo">Remove Existing Photo</string>
 
+    <string name="error_enter_credentials">Please Enter the Credentials</string>
+
+    <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
+    <string name="client_approval">Client Approval</string>
+    <string name="loan_approval">Loan Approval</string>
+    <string name="loan_disbursal">Loan Disbursal</string>
+    <string name="reschedule_loan">Reschedule Loan</string>
+    <string name="checker_inbox">Checker Inbox</string>
+    <string name="select_from_date">Select From Date</string>
+    <string name="select_to_date">Select To Date</string>
+    <string name="approve">APPROVE</string>
+    <string name="approve_confirmation">Do you want to approve this entry?</string>
+    <string name="yes">Yes</string>
+    <string name="reject">REJECT</string>
+    <string name="reject_confirmation">Do you want to reject this entry?</string>
+    <string name="delete">DELETE</string>
+    <string name="delete_confirmation">Do you want to delete this entry?</string>
+    <string name="approve_selected_entries">Approve selected entries?</string>
+    <string name="reject_selected_entries">Reject selected entries?</string>
+    <string name="no_task_selected">No task selected</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="entry">ENTRY</string>
+    <string name="network_issue">Network Issue</string>
+
 </resources>
