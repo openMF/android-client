@@ -144,7 +144,11 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
     public void showCenterDetails(CenterWithAssociations centerWithAssociations) {
         setToolbarTitle(centerWithAssociations.getName());
         if (!centerWithAssociations.getActivationDate().isEmpty()) {
-            tvStaffName.setText(centerWithAssociations.getStaffName());
+            if (centerWithAssociations.getStaffName() != null) {
+                tvStaffName.setText(centerWithAssociations.getStaffName());
+            } else {
+                tvStaffName.setText(R.string.no_staff);
+            }
             tvActivationDate.setText(Utils.getStringOfDate
                     (centerWithAssociations.getActivationDate()));
         }

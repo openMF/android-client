@@ -217,7 +217,11 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
             }
             setToolbarTitle(getString(R.string.group) + " - " + group.getName());
             tv_fullName.setText(group.getName());
-            tv_externalId.setText(group.getExternalId());
+            if (group.getExternalId() != null) {
+                tv_externalId.setText(group.getExternalId());
+            } else {
+                tv_externalId.setText(R.string.not_available);
+            }
 
             try {
                 String dateString = Utils.getStringOfDate(group.getActivationDate());
