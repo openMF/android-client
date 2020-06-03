@@ -11,8 +11,8 @@ package com.mifos.mifosxdroid.online.createnewcenter;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +45,7 @@ import com.mifos.utils.MifosResponseHandler;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -120,6 +121,11 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     layout_submission.setVisibility(View.VISIBLE);
+
+                    activationdateString = tv_activationDate.getText().toString();
+                    activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
+                    (activationdateString).replace("-", " ");
+                    
                 } else {
                     layout_submission.setVisibility(View.GONE);
                 }
@@ -127,9 +133,6 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             }
         });
 
-        activationdateString = tv_activationDate.getText().toString();
-        activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
-                (activationdateString).replace("-", " ");
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,6 +230,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             officeList.add(office.getName());
             officeNameIdHashMap.put(office.getName(), office.getId());
         }
+        Collections.sort(officeList);
         ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, officeList);
         officeAdapter.setDropDownViewResource(android.R.layout

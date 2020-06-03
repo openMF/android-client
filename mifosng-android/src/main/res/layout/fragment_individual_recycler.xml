@@ -1,79 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <TableLayout
-            android:id="@+id/mandatory_views"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TableRow>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/office"
-                            android:layout_weight="0.5"/>
-                        <Spinner
-                            android:id="@+id/sp_office_list"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"/>
-                    </TableRow>
-
-                    <TableRow>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/repayment_date"
-                            android:layout_weight="0.5"/>
-                        <TextView
-                            android:id="@+id/tv_repayment_date"
-                            tools:text="05 July 2017"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:background="@color/gray_light"
-                            android:gravity="center"/>
-                    </TableRow>
-
-                    <TableRow>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/staff"
-                            android:layout_weight="0.5"/>
-                        <Spinner
-                            android:id="@+id/sp_staff_list"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"/>
-                    </TableRow>
-                </TableLayout>
-
-    <Button
-        android:layout_below="@+id/mandatory_views"
-        android:id="@+id/btn_fetch_collection_sheet"
-        style="@style/Button.Base"
-        android:layout_gravity="center"
-        android:text="@string/generate_collection_sheet"/>
-
-    <android.support.v7.widget.RecyclerView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recycler_collections"
-        android:layout_gravity="center"
-        android:layout_below="@+id/btn_fetch_collection_sheet"/>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <TextView
-        android:id="@+id/tv_no_sheet_found"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/white"
+            app:tabMode="fixed"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/no_collectionsheet_found"
-        android:layout_below="@+id/btn_fetch_collection_sheet"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"/>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

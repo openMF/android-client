@@ -14,8 +14,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,19 +56,19 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     private final String LOG_TAG = getClass().getSimpleName();
 
     @BindView(R.id.tv_document_action)
-    TextView tv_document_action;
+    TextView tvDocumentAction;
 
     @BindView(R.id.et_document_name)
-    EditText et_document_name;
+    EditText etDocumentName;
 
     @BindView(R.id.et_document_description)
-    EditText et_document_description;
+    EditText etDocumentDescription;
 
     @BindView(R.id.tv_choose_file)
-    TextView tv_choose_file;
+    TextView tvChooseFile;
 
     @BindView(R.id.bt_upload)
-    Button bt_upload;
+    Button btUpload;
 
     @Inject
     DocumentDialogPresenter mDocumentDialogPresenter;
@@ -106,7 +106,8 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity(),
+                getString(R.string.document_dialog_fragment_loading_message));
         if (getArguments() != null) {
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -124,18 +125,17 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
-
         ButterKnife.bind(this, rootView);
         mDocumentDialogPresenter.attachView(this);
-
         if (getResources().getString(R.string.update_document).equals(documentAction)) {
-            tv_document_action.setText(R.string.update_document);
-            et_document_name.setText(document.getName());
-            et_document_description.setText(document.getDescription());
+            tvDocumentAction.setText(R.string.update_document);
+            etDocumentName.setText(document.getName());
+            etDocumentDescription.setText(document.getDescription());
         } else if (getResources().getString(R.string.upload_document).equals(documentAction)) {
-            tv_document_action.setText(R.string.upload_document);
+            tvDocumentAction.setText(R.string.upload_document);
         }
 
+        btUpload.setEnabled(false);
         return rootView;
     }
 
@@ -149,7 +149,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         }
     }
 
-    @OnClick(R.id.tv_choose_file)
+    @OnClick(R.id.btn_browse_document)
     public void openFilePicker() {
         checkPermissionAndRequest();
     }
@@ -162,13 +162,13 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
      */
     public void validateInput() throws RequiredFieldException {
 
-        documentName = et_document_name.getEditableText().toString();
+        documentName = etDocumentName.getEditableText().toString();
 
         if (documentName.length() == 0 || documentName.equals(""))
             throw new RequiredFieldException(getResources().getString(R.string.name),
                     getString(R.string.message_field_required));
 
-        documentDescription = et_document_description.getEditableText().toString();
+        documentDescription = etDocumentDescription.getEditableText().toString();
 
         if (documentDescription.length() == 0 || documentDescription.equals(""))
             throw new RequiredFieldException(getResources().getString(R.string.description),
@@ -285,11 +285,11 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     }
 
                     if (fileChoosen != null) {
-                        tv_choose_file.setText(fileChoosen.getName());
+                        tvChooseFile.setText(fileChoosen.getName());
                     } else {
                         break;
                     }
-                    bt_upload.setEnabled(true);
+                    btUpload.setEnabled(true);
 
                 }
                 break;
@@ -319,6 +319,11 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         Toast.makeText(getActivity(), getString(errorMessage), Toast.LENGTH_SHORT).show();
         getDialog().dismiss();
     }
+    @Override
+    public void showUploadError(String errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+        getDialog().dismiss();
+    }
 
     @Override
     public void showProgressbar(boolean b) {
@@ -338,4 +343,5 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public interface OnDialogFragmentInteractionListener {
         void initiateFileUpload(String name, String description);
     }
+
 }

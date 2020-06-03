@@ -19,4 +19,6 @@ public interface DocumentDialogMvpView extends MvpView {
     void showDocumentUpdatedSuccessfully();
 
     void showError(int errorMessage);
+
+    void showUploadError(String errorMessage);
 }

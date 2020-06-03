@@ -7,11 +7,11 @@ package com.mifos.mifosxdroid.online.groupslist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.view.ActionMode;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +35,8 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -259,6 +261,12 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
     @Override
     public void showGroups(List<Group> groups) {
         mGroupList = groups;
+        Collections.sort(mGroupList, new Comparator<Group>() {
+            @Override
+            public int compare(Group grp1, Group grp2) {
+                return grp1.getName().compareTo(grp2.getName());
+            }
+        });
         mGroupListAdapter.setGroups(groups);
     }
 

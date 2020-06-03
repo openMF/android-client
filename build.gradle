@@ -7,9 +7,9 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 15
-    targetSdkVersion = 27
-    compileSdkVersion = 27
-    buildToolsVersion = '27.0.3'
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.3'
 
     // App dependencies
     supportLibraryVersion = '27.1.1'
@@ -21,7 +21,7 @@ ext {
     runnerVersion = '0.4.1'
     rulesVersion = '0.4.1'
     retrofitVersionLatest = '2.1.0'
-    okHttp3Version = '3.3.1'
+    okHttp3Version = '3.5.0'
     flipTableVersion = '1.0.1'
     butterKnifeVersion = '8.0.1'
     mifosPasscodeVersion = '0.3.0'

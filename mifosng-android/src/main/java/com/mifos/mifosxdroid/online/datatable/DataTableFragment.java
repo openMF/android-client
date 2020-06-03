@@ -1,11 +1,11 @@
 package com.mifos.mifosxdroid.online.datatable;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +99,6 @@ public class DataTableFragment extends MifosBaseFragment implements DataTableMvp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             tableName = getArguments().getString(Constants.DATA_TABLE_NAME);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -110,6 +109,7 @@ public class DataTableFragment extends MifosBaseFragment implements DataTableMvp
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
             Bundle savedInstanceState) {
+        ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         rootView = inflater.inflate(R.layout.fragment_datatables, container, false);
         ButterKnife.bind(this, rootView);
         dataTablePresenter.attachView(this);

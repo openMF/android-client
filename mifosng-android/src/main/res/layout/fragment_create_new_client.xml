@@ -24,7 +24,13 @@
 
             <TextView style="@style/TextView.CreateClient" />
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.mifos.mifosxdroid.views.CircularImageView
+                android:id="@+id/iv_clientImage"
+                style="@style/ClientImage"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_dp_placeholder"/>
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_client_first_name"
@@ -37,10 +43,10 @@
                     android:maxLines="1"/>
 
                 <requestFocus />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_client_middle_name"
@@ -51,9 +57,9 @@
                     android:inputType="text"
                     android:paddingBottom="16dp"
                     android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_client_last_name"
@@ -64,9 +70,9 @@
                     android:inputType="text"
                     android:paddingBottom="16dp"
                     android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_client_mobile_no"
@@ -77,9 +83,9 @@
                     android:inputType="phone"
                     android:paddingBottom="16dp"
                     android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_client_external_id"
@@ -90,7 +96,7 @@
                     android:inputType="text"
                     android:paddingBottom="16dp"
                     android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -105,7 +111,7 @@
                 android:textSize="12sp"
                 style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_gender"
                 android:layout_height="wrap_content"
@@ -178,7 +184,7 @@
                     android:textSize="12sp"
                     style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:id="@+id/sp_client_type"
                     android:layout_height="wrap_content"
@@ -201,7 +207,7 @@
                 android:textSize="12sp"
                 style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_client_classification"
                 android:layout_height="wrap_content"
@@ -224,7 +230,7 @@
                 android:textSize="12sp"
                 style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_offices"
                 android:layout_height="wrap_content"
@@ -246,7 +252,7 @@
                 android:text="@string/staff_names"
                 android:textSize="12sp"
                 style="@style/Base.TextAppearance.AppCompat.Small"/>
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/sp_staff"
                 android:layout_height="wrap_content"

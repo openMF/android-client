@@ -33,7 +33,7 @@
             android:paddingLeft="20dip"
             android:paddingRight="10dip"
             android:paddingTop="20dip"
-            android:text="Please select one of the Survey"
+            android:text="@string/select_one_survey"
             android:textSize="18sp" />
 
         <ListView

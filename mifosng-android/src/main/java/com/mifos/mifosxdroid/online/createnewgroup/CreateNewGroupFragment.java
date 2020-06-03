@@ -12,7 +12,7 @@ package com.mifos.mifosxdroid.online.createnewgroup;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +49,7 @@ import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -285,6 +286,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
         for (Office office : offices) {
             mListOffices.add(office.getName());
         }
+        Collections.sort(mListOffices);
         mOfficesAdapter.notifyDataSetChanged();
     }
 

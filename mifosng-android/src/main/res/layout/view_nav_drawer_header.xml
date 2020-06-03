@@ -36,7 +36,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"/>
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/user_status_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

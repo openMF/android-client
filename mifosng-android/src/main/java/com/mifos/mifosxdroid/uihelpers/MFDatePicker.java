@@ -8,8 +8,8 @@ package com.mifos.mifosxdroid.uihelpers;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import android.text.format.DateFormat;
 import android.widget.DatePicker;
 
@@ -28,19 +28,8 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     static Calendar calendar;
 
     static {
-
         calendar = Calendar.getInstance();
-        dateSet = new StringBuilder()
-                .append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ?
-                        ("0" + calendar.get(Calendar.DAY_OF_MONTH))
-                        : calendar.get(Calendar.DAY_OF_MONTH))
-                .append("-")
-                .append(calendar.get(Calendar.MONTH) + 1 < 10 ?
-                        ("0" + (calendar.get(Calendar.MONTH) + 1))
-                        : calendar.get(Calendar.MONTH) + 1)
-                .append("-")
-                .append(calendar.get(Calendar.YEAR))
-                .toString();
+        dateSet = DateFormat.format("dd-MM-yyyy", calendar.getTime()).toString();
     }
 
     OnDatePickListener onDatePickListener;
@@ -74,12 +63,10 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        //TODO Fix Single digit problem that fails with the locale
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         Date date = calendar.getTime();
         onDatePickListener.onDatePicked(DateFormat.format("dd-MM-yyyy", date).toString());
-
     }
 
     public void setOnDatePickListener(OnDatePickListener onDatePickListener) {
@@ -89,6 +76,4 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     public interface OnDatePickListener {
         public void onDatePicked(String date);
     }
-
-
 }

@@ -8,7 +8,7 @@
                   android:id="@+id/ll_center"
                   style="@style/LinearLayout.Base">
         <TextView style="@style/TextView.CreateCenter" />
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
             <EditText
                 android:id="@+id/et_center_name"
                 style="@style/EditText.BaseWidth"
@@ -19,7 +19,9 @@
                 android:paddingBottom="16dp"
                 android:singleLine="true"/>
             <requestFocus />
-        </android.support.design.widget.TextInputLayout>
+
+        </com.google.android.material.textfield.TextInputLayout>
+      
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,13 +35,13 @@
                 android:textSize="12sp"
                 style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-            <android.support.v7.widget.AppCompatSpinner
-                style="@style/Widget.AppCompat.Spinner.Underlined"
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/sp_center_offices"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:spinnerMode="dropdown"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_height="wrap_content"
                 android:paddingTop="10dp"
+                android:spinnerMode="dropdown"
                 android:backgroundTint="@color/gray_dark"/>
         </LinearLayout>
 
@@ -85,7 +87,7 @@
                     android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:textSize="12sp"
-                    android:text="@string/loan_submission_date"/>
+                    android:text="@string/center_activation_date"/>
 
                 <TextView
                     android:id="@+id/tv_center_activationDate"
@@ -95,6 +97,7 @@
             </LinearLayout>
 
         </LinearLayout>
+      
         <View
             android:background="@color/gray_dark"
             android:layout_height="0.2dp"
@@ -102,14 +105,11 @@
             android:layout_width="match_parent"/>
     </LinearLayout>
 
-
-        <Button
-            android:id="@+id/btn_submit"
-            style="@style/Button.Base"
-            android:layout_marginTop="10dp"
-            android:text="@string/submit"
-            />
-
+    <Button
+        android:id="@+id/btn_submit"
+        style="@style/Button.Base"
+        android:layout_marginTop="10dp"
+        android:text="@string/submit" />
 
     </LinearLayout>
 </ScrollView>

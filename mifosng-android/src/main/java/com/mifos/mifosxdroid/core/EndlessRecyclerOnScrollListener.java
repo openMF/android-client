@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.core;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by rajanmaurya on 16/4/2016.

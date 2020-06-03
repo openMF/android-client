@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;

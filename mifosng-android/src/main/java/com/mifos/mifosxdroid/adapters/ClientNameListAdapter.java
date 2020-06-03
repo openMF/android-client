@@ -7,8 +7,8 @@ package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +60,12 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
         if (holder instanceof ViewHolder) {
 
             Client client = getItem(position);
-            String clientName = client.getFirstname() + " " + client.getLastname();
+            String clientName;
+            if (client.getFullname() == null) {
+                clientName = client.getFirstname() + " " + client.getLastname();
+            } else {
+                clientName = client.getFullname();
+            }
             ((ViewHolder) holder).tv_clientName.setText(clientName);
             ((ViewHolder) holder).tv_clientAccountNumber.setText(client.getAccountNo());
 

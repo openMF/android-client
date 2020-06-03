@@ -66,6 +66,7 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
+    <color name="summer_sky">#29B6F6</color>
 
     <!--Swipe Refresh Colors-->
     <array name="swipeRefreshColors">

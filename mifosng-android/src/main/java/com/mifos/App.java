@@ -9,7 +9,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.StrictMode;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;

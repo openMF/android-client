@@ -13,7 +13,7 @@
     <string name="associated_datatables">Associated Datatables</string>
     <string name="login">Login</string>
     <string name="login_successfully">Login Successfully</string>
-    <string name="test_ip">10.0.2.2</string>
+    <string name="test_ip" translatable="false">10.0.2.2</string>
     <string name="search">Search</string>
     <string name="group_name">Group Name</string>
     <string name="staff_name">Staff Name</string>
@@ -33,6 +33,7 @@
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
+    <string name="date_colon">Date:</string>
     <string name="payment_type">Payment Type</string>
     <string name="mifos_instance_domain">Mifos Instance Domain</string>
     <string name="username">Username</string>
@@ -99,7 +100,7 @@
     <string name="savings_account_id">Savings Account Id</string>
     <string name="collection_sheet">Collection Sheet</string>
     <string name="individual_collection_sheet">Individual Collection Sheet</string>
-    <string name="title_activity_generate_collection_sheet" translatable="false">GenerateCollectionSheet</string>
+    <string name="title_activity_generate_collection_sheet" translatable="false">Generate Collection Sheet</string>
     <string name="meeting_date">Meeting Date</string>
     <string name="center">Center</string>
     <string name="generate_collection_sheet">Generate Collection Sheet</string>
@@ -114,14 +115,14 @@
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
     <string name="hide">Hide</string>
-    <string name="colon">" : "</string>
-    <string name="backspace_slash">\</string>
-    <string name="slash">/</string>
-    <string name="space">" "</string>
-    <string name="new_line">\n</string>
+    <string name="colon" translatable="false">" : "</string>
+    <string name="backspace_slash" translatable="false">\</string>
+    <string name="slash" translatable="false">/</string>
+    <string name="space" translatable="false">" "</string>
+    <string name="new_line" translatable="false">\n</string>
     <string name="field">Field</string>
     <string name="value">Value</string>
-    <string name="survey_subtitle">0/0</string>
+    <string name="survey_subtitle" translatable="false">0/0</string>
     <string name="submit_survey">Submit Survey</string>
     <string name="question">Question</string>
     <string name="submitting_surveys">Submitting Survey</string>
@@ -140,19 +141,19 @@
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
-    <string name="document_directory">/mifos/documents/</string>
+    <string name="document_directory" translatable="false">/mifos/documents/</string>
     <string name="open_document">Open Document</string>
     <string name="document_remove_successfully">Document Removed Successfully</string>
     <string name="document_fetch_successfully">Document Fetch Successfully</string>
     <string name="update_document">Update Document</string>
     <string name="document_updated_successfully">%1$s Document Updated Successfully</string>
-    <string name="document_dialog">"Document Dialog</string>
+    <string name="document_dialog" translatable="false">"Document Dialog</string>
     <string name="document_type">Document Type</string>
     <string name="status">Status</string>
     <string name="unique_id">Unique Id</string>
     <string name="identifier_created_successfully">Identifier Created Successfully</string>
-    <string name="empty_identifier_document_type">Identifier Document Type id is Empty \n
-        May be, Identifier Template is failed to fetch. Please Check your Internet
+    <string name="empty_identifier_document_type">Identifier Document Type ID is Empty \n
+        or May be, Identifier Template couldn\'t to be fetched. Please Check your Internet
     Connection</string>
     <string name="data_table_entry_added">DataTable entry added successfully</string>
     <string name="unique_id_required">Unique Id is required!</string>
@@ -163,6 +164,7 @@
     <string name="no_search_result_found">No results found for entered query</string>
     <string name="no_search_query_entered">No Search Query Entered!</string>
     <string name="client_created_successfully">Client Created Successfully</string>
+    <string name="waiting_for_checker_approval">Waiting for Checker\'s Approval</string>
     <string name="no_staff_associated_with_office">No Staff associated with this Office</string>
     <string name="adding_client_address">Adding Client Address</string>
     <string name="updating_client_address">Updating Client Address</string>
@@ -170,8 +172,7 @@
     <string name="address_added_successfully">Address Added Successfully</string>
     <string name="address_deleted_successfully">Address Deleted Successfully</string>
     <string name="address_updated_successfully">Address Updated Successfully</string>
-    <string name="google_play_services_not_available">Google Play Services is not available
-        .</string>
+    <string name="google_play_services_not_available">Google Play Services is not available.</string>
     <string name="empty_client_address">Empty Address List</string>
     <string name="mifos_path_tracker">Mifos Path Tracker</string>
     <string name="description_location_tracking">Location tracking starts now</string>
@@ -187,6 +188,17 @@
     <string name="logging_in">Logging In</string>
     <string name="back_again">Please press back again to exit</string>
     <string name="dialog_logout">Are you sure you want to logout?</string>
+    <string name="browse">Browse</string>
+    <string name="selected_file">Selected File</string>
+    <string name="found_sheet">Found Collection Sheet</string>
+    <string name="save_sheet_text">You Can Save this Collection Sheet for Offline Use also.</string>
+    <string name="fill_now">Fill Now</string>
+    <string name="members">Members:</string>
+    <string name="no_saved_sheet">No Saved Collection sheet</string>
+    <string name="no_payment_added">No Payment Added</string>
+    <string name="add_payment_detail">Add Payment Detail</string>
+    <string name="generate_new">Generate New</string>
+    <string name="currency">Currency</string>
     <!-- General Terms End Here -->
 
 
@@ -199,7 +211,7 @@
     <string name="reset">Reset</string>
     <string name="from_gallery">From Gallery</string>
     <string name="sign_uploaded_success_msg">Signature uploaded successfully!</string>
-    <string name="signature_image_directory">/mifos/documents/sign/</string>
+    <string name="signature_image_directory" translatable="false">/mifos/documents/sign/</string>
     <string name="sign_dir_not_created_msg">Something went wrong. Couldn\'t create directory.</string>
     <string name="sign_saved_success_msg">File saved successfully in </string>
     <string name="uploading_sign_msg">Uploading signature %#8230</string>
@@ -229,20 +241,33 @@
     <string name="receipt_number">Receipt Number</string>
     <string name="bank_number">Bank Number</string>
     <string name="branch_name">Branch Name</string>
-    <string name="meeting_calender">Meeting Calender</string>
-    <string name="productive_collection_sheet">Productive CollectionSheet</string>
+    <string name="meeting_calender">Meeting Calendar</string>
+    <string name="productive_collection_sheet">Productive Collection Sheet</string>
     <string name="attendance">Attendance</string>
     <string name="collection_loan_product">Loan:%1$s</string>
     <string name="collection_saving_product">Saving:%1$s</string>
     <string name="collection_heading_charges">%1$s/Charges</string>
-
-
+    <string name="generate">Generate</string>
+    <string name="fill_collection_sheet_message">Please fill in appropriate details to find the collection sheet to generate.</string>
+    <string name="clear">Clear</string>
 
     <!-- RunReport relates Strings -->
     <string name="run_report">RunReports</string>
     <string name="menu_run_report">Run Report</string>
     <string name="menu_export_csv">Export CSV</string>
     <string name="msg_report_empty">No data retrieved for the chosen report!</string>
+    <string name="report_loan_purpose">"Loan Purpose"</string>
+    <string name="par_calculation">PAR Calculation</string>
+    <string name="savings_acc_deposit">SavingsAccDeposit</string>
+    <string name="glaccount">GLAccountNO</string>
+    <string name="obligation_date_type">Obligation date type</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="enter_account_no">Enter Account No.</string>
+    <string name="from_x_number">From X Number</string>
+    <string name="to_y_number">To Y Number</string>
+    <string name="overdue_x_number">Overdue X Number</string>
+    <string name="overdue_y_number">Overdue Y Number</string>
     <string-array name="array_runreport">
         <item>Client</item>
         <item>Loan</item>
@@ -308,7 +333,8 @@
     <string name="payment_failed">Payment Failed</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="loan_submission_date">Submission Date</string>
-
+    <string name="total_charges">Total Charges:</string>
+    <string name="total_dues">Total Due:</string>
     <!-- Loan Related Terminologies End Here -->
 
 
@@ -457,6 +483,7 @@
     <string name="group_list">Group List</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
+    <string name="error_select_group">Please Select a Group</string>
     <string name="error_select_payment">Please Select Payment Type</string>
     <string name="error_select_fund">Please Select Fund</string>
     <string name="error_select_interestCalculationPeriod">Please Select Interest Calculation Period</string>
@@ -497,6 +524,7 @@
     <string name="tenant_identifier">Tenant Identifier</string>
     <string name="dashboard">Dashboard</string>
     <string name="menu_take_photo">Take new photo</string>
+    <string name="menu_upload_photo">Upload new photo</string>
     <string name="menu_remove_photo">Remove photo</string>
     <string name="toast_welcome">Welcome</string>
     <string name="client_image_updated">Client image updated</string>
@@ -538,7 +566,7 @@
     <string name="no_group_payload_to_sync">There is No Group Payload to Sync</string>
     <string name="no_client_payload_to_sync">There is No Client Payload to Sync</string>
     <string name="no_center_payload_to_sync">There is No Center Payload to Sync</string>
-    <string name="no_transaction_to_sync">here is No Transaction to Sync</string>
+    <string name="no_transaction_to_sync">There is No Transaction to Sync</string>
     <string name="no_more_clients_to_sync">No More Clients To Sync</string>
     <string name="all_repayment_synced">All LoanRepayment have been Synced</string>
     <string name="all_groups_synced">All Groups have been Synced</string>
@@ -574,13 +602,13 @@
         with This Savings Account Id First. \n\nGo to Navigation Menu \'Offline Sync *\' and Sync
         transaction First.
         \n\nBefore making new SavingAccount Transaction with this SavingAccount</string>
-    <string name="dialog_message_read_external_storage_permission_denied">With out this
-        permission the app is unable to upload document when uploading document, app need to
-        access photos media and files on your device. Are you sure you want to deny this
+    <string name="dialog_message_read_external_storage_permission_denied">Without this
+        permission the app would be unable to upload any document. When uploading a document, the app
+        requires access to photos, media and files on your device. Are you sure you want to deny this
         permission?</string>
-    <string name="dialog_message_write_external_storage_permission_denied">With out this
-        permission the app is unable to save document when downloading document, app need to
-        access external write storage permission. Are you sure you want to deny this
+    <string name="dialog_message_write_external_storage_permission_denied">Without this
+        permission the app would be unable to save the document. When downloading a document, the app
+        requires access to external storage with write permission. Are you sure you want to deny this
         permission?</string>
     <string name="dialog_message_permission_never_ask_again_read">App Needs the Permission to
         Read the External Storage but you had previously checked the Button Never Ask Again.
@@ -588,16 +616,14 @@
     <string name="dialog_message_permission_never_ask_again_write">App Needs the Permission to
         Write the External Storage but you had previously checked the Button Never Ask Again.
     </string>
-    <string name="dialog_message_access_fine_location_permission_denied">With out this
-        permission the app is unable to get fine location, app need to
-        access you correct location. Are you sure you want to deny this permission?</string>
-    <string name="dialog_message_permission_never_ask_again_fine_location">App Needs the
-        Permission to access fine location but you had previously checked the Button Never
+    <string name="dialog_message_access_fine_location_permission_denied">Without this
+        permission the app would be unable to get fine location, the app requires
+        access your correct location. Are you sure you want to deny this permission?</string>
+    <string name="dialog_message_permission_never_ask_again_fine_location">App needs the
+        permission to access fine location, but you had previously checked the Button Never
         Ask Again.
     </string>
-    <string name="msg_setting_activity_not_found">Something went wrong finding Settings activity.
-        \nGo to \'Settings\' and grant permission manually.
-    </string>
+    <string name="msg_setting_activity_not_found">Something went wrong while finding Settings activity.\n        \nGo to \'Settings\' and grant permission manually.</string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
@@ -610,13 +636,12 @@
     <string name="dialog_action_re_try">Re-Try</string>
     <string name="dialog_action_app_settings">App Settings</string>
 
-
     <!--OnError Message-->
     <string name="failed_to_load_clientpayload">Failed to load ClientPayload</string>
     <string name="failed_to_load_grouppayload">Failed to load GroupPayload</string>
     <string name="failed_to_load_centerpayload">Failed to load CenterPayload</string>
     <string name="failed_to_load_loanrepayment">Failed to load LoanRepayment</string>
-    <string name="failed_to_update_list">Failed Update List</string>
+    <string name="failed_to_update_list">Failed to Update List</string>
     <string name="failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
     <string name="failed_to_update_loanrepayment">Failed to Update LoanRepayment</string>
     <string name="failed_sync">Sync Failed</string>
@@ -677,6 +702,7 @@
     <string name="failed_to_fetch_loan_transaction_template">Failed to fetch loan transaction
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
+    <string name="havent_picked_image">You haven\'t picked an image.</string>
 
 
     <string-array name="office_ids">
@@ -729,10 +755,10 @@
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="centerList_account_prefix">Account No: %1$s</string>
     <string name="no_staff">no staff</string>
+    <string name="not_available">N.A</string>
     <string name="note">Notes</string>
     <string name="empty_notes">Empty Notes</string>
     <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
-    <string name="title_activity_sync_client_payload">SyncClientPayloadActivity</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>
@@ -750,6 +776,60 @@
     <string name="incorrect_passcode">Incorrect Passcode</string>
     <string name="incorrect_passcode_more_than_three">You have entered incorrect Passcode more than 3 times. Please login again.</string>
     <string name="error_passcode">Passcode should be of 4 digit</string>
+    <string name="title_activity_sync_client_payload" translatable="false">SyncClientPayloadActivity</string>
+    <string name="hint_instance_url">Instance URL</string>
+    <string name="hint_port">Port</string>
+    <string name="next">Next</string>
+    <string name="en_code">en</string>
+    <string name="purpose_msg">Purpose</string>
+    <string name="submission_headline">Submission Date :</string>
+    <string name="select_client">Select a Client from the list</string>
+    <string name="thanks_on_survey">Thanks for taking Survey </string>
+    <string name="select_one_survey">Please select one of the Survey</string>
+    <string name="title_head">Title</string>
+    <string name="def_amount_paid">460</string>
+    <string name="def_amount_one">237</string>
+    <string name="def_name">Raj Kumar Kaushikl</string>
+    <string name="name_head">name</string>
+    <string name="office_head">office</string>
+    <string name="status_head">status</string>
+    <string name="client_search_hint"></string>
 
+    <string name="create_client_loading_message">Creating new client</string>
+    <string name="savings_account_loading_message">Activating savings account</string>
+    <string name="signature_fragment_loading_message">Uploading image</string>
+    <string name="document_dialog_fragment_loading_message">Uploading document</string>
+    <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
+    <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+
+    <string name="Image_Upload_Successful">Image Upload Successful</string>
+    <string name="Image_Upload_Failed">Image Upload Failed</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="take_a_photo">Take a Photo</string>
+    <string name="remove_existing_photo">Remove Existing Photo</string>
+
+    <string name="error_enter_credentials">Please Enter the Credentials</string>
+
+    <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
+    <string name="client_approval">Client Approval</string>
+    <string name="loan_approval">Loan Approval</string>
+    <string name="loan_disbursal">Loan Disbursal</string>
+    <string name="reschedule_loan">Reschedule Loan</string>
+    <string name="checker_inbox">Checker Inbox</string>
+    <string name="select_from_date">Select From Date</string>
+    <string name="select_to_date">Select To Date</string>
+    <string name="approve">APPROVE</string>
+    <string name="approve_confirmation">Do you want to approve this entry?</string>
+    <string name="yes">Yes</string>
+    <string name="reject">REJECT</string>
+    <string name="reject_confirmation">Do you want to reject this entry?</string>
+    <string name="delete">DELETE</string>
+    <string name="delete_confirmation">Do you want to delete this entry?</string>
+    <string name="approve_selected_entries">Approve selected entries?</string>
+    <string name="reject_selected_entries">Reject selected entries?</string>
+    <string name="no_task_selected">No task selected</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="entry">ENTRY</string>
+    <string name="network_issue">Network Issue</string>
 
 </resources>

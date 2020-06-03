@@ -6,7 +6,7 @@
 package com.mifos.mifosxdroid.online.savingsaccountapproval;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +94,8 @@ public class SavingsAccountApprovalFragment extends MifosBaseFragment implements
 
         ButterKnife.bind(this, rootView);
         mSavingsAccountApprovalPresenter.attachView(this);
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity(),
+                getString(R.string.savings_account_approval_fragment_loading_message));
 
         showUserInterface();
 

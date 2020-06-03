@@ -8,16 +8,16 @@ package com.mifos.mifosxdroid.online;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.NavigationView;
-import android.support.test.espresso.IdlingResource;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.SwitchCompat;
-import android.view.Gravity;
+
+import androidx.annotation.VisibleForTesting;
+import com.google.android.material.navigation.NavigationView;
+import androidx.test.espresso.IdlingResource;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +36,7 @@ import com.mifos.mifosxdroid.offlinejobs.OfflineSyncGroup;
 import com.mifos.mifosxdroid.offlinejobs.OfflineSyncLoanRepayment;
 import com.mifos.mifosxdroid.offlinejobs.OfflineSyncSavingsAccount;
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
+import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
@@ -46,6 +47,7 @@ import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,10 +66,12 @@ public class DashboardActivity extends MifosBaseActivity
     @BindView(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
+
     View mNavigationHeader;
     SwitchCompat userStatusToggle;
     private Menu menu;
     private boolean doubleBackToExitPressedOnce = false;
+    private boolean itemClient = true, itemCenter = true, itemGroup = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,19 +110,26 @@ public class DashboardActivity extends MifosBaseActivity
                         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
                         if (fragment instanceof CreateNewClientFragment) {
                             setActionBarTitle(R.string.create_client);
-                            setMenuCreateClient(false);
-                            setMenuCreateCentre(true);
-                            setMenuCreateGroup(true);
+                            itemClient = false;
+                            itemGroup = true;
+                            itemCenter = true;
+                            invalidateOptionsMenu();
                         } else if (fragment instanceof CreateNewGroupFragment) {
                             setActionBarTitle(R.string.create_group);
-                            setMenuCreateClient(true);
-                            setMenuCreateCentre(true);
-                            setMenuCreateGroup(false);
+                            itemClient = true;
+                            itemGroup = false;
+                            itemCenter = true;
+                            invalidateOptionsMenu();
                         } else if (fragment instanceof CreateNewCenterFragment) {
                             setActionBarTitle(R.string.create_center);
-                            setMenuCreateClient(true);
-                            setMenuCreateCentre(false);
-                            setMenuCreateGroup(true);
+                            itemClient = true;
+                            itemGroup = true;
+                            itemCenter = false;
+                            invalidateOptionsMenu();
+                        } else {
+                            itemClient = true;
+                            itemGroup = true;
+                            itemCenter = true;
                         }
                     }
                 });
@@ -186,6 +197,7 @@ public class DashboardActivity extends MifosBaseActivity
         loadClientDetails();
     }
 
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -210,6 +222,10 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
             case R.id.item_centers:
                 replaceFragment(CenterListFragment.newInstance(), false, R.id.container);
+                break;
+            case R.id.item_checker_inbox:
+                intent.setClass(this, CheckerInboxPendingTasksActivity.class);
+                startActivity(intent);
                 break;
             case R.id.item_path_tracker:
                 intent.setClass(getApplicationContext(), PathTrackingActivity.class);
@@ -237,11 +253,33 @@ public class DashboardActivity extends MifosBaseActivity
                 break;
         }
 
-        mDrawerLayout.closeDrawer(Gravity.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String currentFragment = getSupportFragmentManager().findFragmentById(R.id.container)
+                .getClass().getSimpleName();
+        switch (currentFragment) {
+            case "SearchFragment":
+                mNavigationView.setCheckedItem(R.id.item_dashboard);
+                break;
+            case "ClientListFragment":
+                mNavigationView.setCheckedItem(R.id.item_clients);
+                break;
+            case "GroupsListFragment":
+                mNavigationView.setCheckedItem(R.id.item_groups);
+                break;
+            case "CenterListFragment":
+                mNavigationView.setCheckedItem(R.id.item_centers);
+                break;
+            case "OfflineDashboardFragment":
+                mNavigationView.setCheckedItem(R.id.item_offline);
+        }
+    }
 
     /**
      * This SwitchCompat Toggle Handling the User Status.
@@ -249,7 +287,7 @@ public class DashboardActivity extends MifosBaseActivity
      */
     public void setupUserStatusToggle() {
         userStatusToggle
-                = (SwitchCompat) mNavigationHeader.findViewById(R.id.user_status_toggle);
+                = mNavigationHeader.findViewById(R.id.user_status_toggle);
         if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
             userStatusToggle.setChecked(true);
         }
@@ -302,7 +340,7 @@ public class DashboardActivity extends MifosBaseActivity
     public void onBackPressed() {
         // check if the nav mDrawer is open
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(Gravity.START);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             if (doubleBackToExitPressedOnce) {
                 setMenuCreateClient(true);
@@ -332,6 +370,9 @@ public class DashboardActivity extends MifosBaseActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         hideKeyboard(mDrawerLayout);
+        menu.getItem(0).setEnabled(itemClient);
+        menu.getItem(1).setEnabled(itemCenter);
+        menu.getItem(2).setEnabled(itemGroup);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -377,5 +418,3 @@ public class DashboardActivity extends MifosBaseActivity
         return EspressoIdlingResource.getIdlingResource();
     }
 }
-
-

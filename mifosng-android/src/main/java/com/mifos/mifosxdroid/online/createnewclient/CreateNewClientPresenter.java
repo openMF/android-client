@@ -13,11 +13,16 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.objects.templates.clients.Options;
 import com.mifos.utils.MFErrorParser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
@@ -68,6 +73,7 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
+                        loadOffices();
                     }
 
                     @Override
@@ -119,7 +125,6 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                 .subscribe(new Subscriber<List<Staff>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
@@ -164,8 +169,16 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     @Override
                     public void onNext(Client client) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showClientCreatedSuccessfully(
-                                R.string.client_created_successfully);
+
+                        if (client.getClientId() != null) {
+                            getMvpView().showClientCreatedSuccessfully(
+                                    R.string.client_created_successfully);
+                            getMvpView().setClientId(client.getClientId());
+                        } else {
+                            getMvpView().showWaitingForCheckerApproval(
+                                    R.string.waiting_for_checker_approval
+                            );
+                        }
                     }
                 }));
     }
@@ -205,5 +218,41 @@ public class CreateNewClientPresenter extends BasePresenter<CreateNewClientMvpVi
                     }
                 });
         return staffList;
+    }
+
+    public void uploadImage(int id, File pngFile) {
+        checkViewAttached();
+        getMvpView().showProgress("Uploading Client's Picture...");
+        final String imagePath = pngFile.getAbsolutePath();
+
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/png"), pngFile);
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("file", pngFile.getName(), requestFile);
+
+        mSubscriptions.add(mDataManagerClient.uploadClientImage(id, body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+                        getMvpView().hideProgress();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().hideProgress();
+                        getMvpView().showMessage(R.string.Image_Upload_Failed);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody response) {
+                        getMvpView().hideProgress();
+                        getMvpView().showMessage(R.string.Image_Upload_Successful);
+                    }
+                }));
     }
 }
