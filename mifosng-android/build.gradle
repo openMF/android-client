@@ -246,13 +246,9 @@ dependencies {
 
     //Android-Jobs
     implementation 'com.evernote:android-job:1.2.6'
-}
-/*
-Resolves dependency versions across test and production APKs, specifically, transitive
-dependencies. This is required since Espresso internally has a dependency on support-annotations.
-*/
-configurations.all {
-    resolutionStrategy.force "com.android.support:support-annotations:23.1.1"
+
+    // androidx annotations
+    implementation 'androidx.annotation:annotation:1.1.0'
 }
 
 /*
