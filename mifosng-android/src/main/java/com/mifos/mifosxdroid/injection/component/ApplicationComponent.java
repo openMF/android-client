@@ -34,6 +34,11 @@ import com.mifos.api.local.databasehelper.DatabaseHelperSurveys;
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingService;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncCenter;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncClient;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncGroup;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncLoanRepayment;
+import com.mifos.mifosxdroid.offlinejobs.OfflineSyncSavingsAccount;
 
 import javax.inject.Singleton;
 
@@ -85,4 +90,13 @@ public interface ApplicationComponent {
     DatabaseHelperSurveys databaseHelperSurveys();
     DatabaseHelperNote databaseHelperNote();
 
+    void inject(OfflineSyncCenter offlineSyncCenter);
+
+    void inject(OfflineSyncClient offlineSyncClient);
+
+    void inject(OfflineSyncGroup offlineSyncGroup);
+
+    void inject(OfflineSyncLoanRepayment offlineSyncLoanRepayment);
+
+    void inject(OfflineSyncSavingsAccount offlineSyncSavingsAccount);
 }

@@ -84,8 +84,10 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     int officeId;
     Boolean result = true;
+
     @Inject
     CreateNewCenterPresenter mCreateNewCenterPresenter;
+
     private View rootView;
     private String activationdateString;
     private DialogFragment newDatePicker;
