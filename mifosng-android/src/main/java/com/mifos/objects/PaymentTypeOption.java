@@ -93,13 +93,7 @@ public class PaymentTypeOption extends MifosBaseModel implements Comparable<Paym
     @Override
     public int compareTo(PaymentTypeOption another) {
 
-        if (this.position < another.position) {
-            return -1;
-        } else if (this.position > another.position) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return this.position.compareTo(another.position);
     }
 
     @Override
