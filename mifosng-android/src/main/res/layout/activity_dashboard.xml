@@ -10,7 +10,7 @@
 
     <LinearLayout
         style="@style/LinearLayout.Base"
-        android:fitsSystemWindows="true">
+        >
 
         <include layout="@layout/toolbar"/>
 
