@@ -199,6 +199,8 @@
     <string name="add_payment_detail">Add Payment Detail</string>
     <string name="generate_new">Generate New</string>
     <string name="currency">Currency</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="dismiss">Dismiss</string>
     <!-- General Terms End Here -->
 
 
@@ -703,6 +705,7 @@
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>
     <string name="havent_picked_image">You haven\'t picked an image.</string>
+    <string name="kindly_connect_to_a_network">kindly connect to a network.</string>
 
 
     <string-array name="office_ids">
