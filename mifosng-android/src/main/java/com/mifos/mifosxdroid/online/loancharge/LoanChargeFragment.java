@@ -9,7 +9,6 @@ package com.mifos.mifosxdroid.online.loancharge;
  */
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -239,8 +238,7 @@ public class LoanChargeFragment extends MifosBaseFragment implements LoanChargeM
         menuItemAddNewLoanCharge.setIcon(getResources().getDrawable(R.drawable
                 .ic_add_white_24dp));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            menuItemAddNewLoanCharge.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menuItemAddNewLoanCharge.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onPrepareOptionsMenu(menu);
     }
 

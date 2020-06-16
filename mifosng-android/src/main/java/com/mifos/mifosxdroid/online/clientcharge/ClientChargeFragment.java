@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.online.clientcharge;
  * Created by nellyk on 1/22/2016.
  */
 
-import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.res.ResourcesCompat;
@@ -298,8 +297,7 @@ public class ClientChargeFragment extends MifosBaseFragment implements ClientCha
                 ResourcesCompat.getDrawable(getResources(),
                         R.drawable.ic_add_white_24dp, null));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onPrepareOptionsMenu(menu);
     }
 
