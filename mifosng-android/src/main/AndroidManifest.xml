@@ -65,6 +65,7 @@
         <activity
             android:name=".online.CentersActivity"
             android:label="@string/title_activity_centers"
+            android:screenOrientation="portrait"
             android:parentActivityName=".online.DashboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
