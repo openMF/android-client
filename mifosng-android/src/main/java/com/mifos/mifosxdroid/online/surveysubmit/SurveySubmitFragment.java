@@ -93,6 +93,7 @@ public class SurveySubmitFragment extends MifosBaseFragment implements
             mDetachFragment.disableSwipe();
             btn_submit.setText(getResources().getString(R.string.submitting_surveys));
             btn_submit.setEnabled(false);
+            btn_submit.setVisibility(View.GONE);
             mSurveySubmitPresenter.submitSurvey(mSurveyId, mScorecard);
         } else {
             Toast.makeText(context, getResources()
