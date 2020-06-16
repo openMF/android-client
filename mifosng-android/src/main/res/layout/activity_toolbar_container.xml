@@ -10,8 +10,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  style="@style/LinearLayout.Base">
+    <LinearLayout style="@style/LinearLayout.Base">
 
         <include layout="@layout/toolbar"/>
 
