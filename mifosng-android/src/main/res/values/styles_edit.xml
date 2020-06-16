@@ -28,6 +28,8 @@
         <item name="android:hint">@string/username</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:singleLine">true</item>
+        <item name="android:padding">18dp</item>
+        <item name="android:textSize">14dp</item>
     </style>
 
     <style name="EditText.Password" parent="EditText.BaseWidth">
@@ -36,6 +38,8 @@
         <item name="android:imeActionLabel">@string/login</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:inputType">textPassword</item>
+        <item name="android:padding">18dp</item>
+        <item name="android:textSize">14dp</item>
     </style>
 
     <style name="EditText.Base.Weight" parent="EditText.Base">

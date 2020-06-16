@@ -17,6 +17,10 @@
     <color name="blue">#ff003fff</color>
     <color name="red">#FF0000</color>
 
+
+
+    <color name="cardview_login_hints">#BCBCBC</color>
+
     <!-- Color resources common to Accounts -->
     <color name="status_submitted_and_pending_approval">#FFA500</color>
     <color name="status_approved">#0536E4</color>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CardView" parent="Base.CardView" />
+
+
+    <style name="CardView.LoginUsername">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">31dp</item>
+        <item name="android:layout_marginRight">31dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+
+        <item name="cardBackgroundColor">@android:color/white</item>
+        <item name="cardCornerRadius">15dp</item>
+        <item name="cardElevation">5dp</item>
+
+    </style>
+
+    <style name="CardView.LoginPassword">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">31dp</item>
+        <item name="android:layout_marginRight">31dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="cardBackgroundColor">@android:color/white</item>
+        <item name="cardCornerRadius">15dp</item>
+        <item name="cardElevation">5dp</item>
+
+    </style>
+
+
+</resources>
