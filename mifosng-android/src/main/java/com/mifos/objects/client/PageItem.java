@@ -195,7 +195,7 @@ public class PageItem {
         calendar.set(activationDate.get(0), activationDate.get(1) - 1, activationDate.get(2));
 
         DateFormat dateFormat = DateFormat.getDateInstance();
-        return dateFormat.format(calendar.getTime()).toString();
+        return dateFormat.format(calendar.getTime());
 
     }
 
