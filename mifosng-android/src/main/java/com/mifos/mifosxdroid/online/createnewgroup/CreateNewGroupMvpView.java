@@ -16,4 +16,6 @@ public interface CreateNewGroupMvpView extends MvpView {
     void showGroupCreatedSuccessfully(SaveResponse group);
 
     void showFetchingError(String s);
+
+    void showFetchingError(int errorMessage);
 }

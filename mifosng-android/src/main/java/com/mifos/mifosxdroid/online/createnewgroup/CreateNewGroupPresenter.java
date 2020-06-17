@@ -2,6 +2,7 @@ package com.mifos.mifosxdroid.online.createnewgroup;
 
 import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.api.datamanager.DataManagerOffices;
+import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.group.GroupPayload;
 import com.mifos.objects.organisation.Office;
@@ -60,7 +61,7 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
                     @Override
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
-                        getMvpView().showFetchingError("Failed to fetch office list");
+                        getMvpView().showFetchingError(R.string.failed_to_fetch_office_list);
                     }
 
                     @Override
