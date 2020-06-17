@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:gravity="right"
-                android:text="09214"
+                android:text="@string/_09214"
                 android:textColor="@color/black" />
 
         </TableRow>

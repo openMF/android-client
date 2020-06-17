@@ -11,7 +11,7 @@
         android:layout_alignBaseline="@+id/tv_toggle_accounts"
         android:layout_alignParentLeft="true"
         android:layout_margin="4dp"
-        android:text="{md-add-circle-outline}"
+        android:text="@string/md_add_circle_outline"
         android:textColor="@color/secondary_text"
         android:textSize="20sp" />
 
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/tv_toggle_accounts"
         android:layout_alignParentRight="true"
-        android:text="0"
+        android:text="@string/zero"
         android:textStyle="bold" />
 
     <View

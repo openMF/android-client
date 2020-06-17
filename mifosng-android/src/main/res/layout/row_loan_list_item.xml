@@ -27,7 +27,7 @@
                 android:layout_weight=".4"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="1"
+                android:text="@string/number_one"
                 android:id="@+id/tv_loan_id"
                 />
     </LinearLayout>

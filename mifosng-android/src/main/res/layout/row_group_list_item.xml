@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".4"
-            android:text="Santa Maria Group 1"
+            android:text="@string/santa_maria_group_1"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
@@ -51,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".4"
-            android:text="M, Mary"
+            android:text="@string/m_mary"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 

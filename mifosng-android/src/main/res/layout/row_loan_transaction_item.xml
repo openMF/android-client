@@ -23,7 +23,7 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="1"
-        android:text="{fa-android}"
+        android:text="@string/fa_android"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:gravity="left"
-        android:text="May 24,2014"
+        android:text="@string/may_24_2014"
         android:textColor="@color/black" />
 
     <TextView
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:gravity="right"
-        android:text="2500 INR"
+        android:text="@string/_2500_inr"
         android:textColor="@color/black" />
 
 
