@@ -20,10 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mifos.api.BaseApiManager;
+import com.mifos.mifosxdroid.HomeActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
-import com.mifos.mifosxdroid.online.DashboardActivity;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
@@ -195,7 +195,7 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
                 Toast.LENGTH_SHORT).show();
 
         if (PrefManager.getPassCodeStatus()) {
-            startActivity(new Intent(this, DashboardActivity.class));
+            startActivity(new Intent(this, HomeActivity.class));
         } else {
             Intent intent = new Intent(this, PassCodeActivity.class);
             intent.putExtra(Constants.INTIAL_LOGIN, true);

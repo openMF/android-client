@@ -116,7 +116,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
         selectedGroups = ArrayList()
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
-            mGroupList = arguments!!.getParcelableArrayList(Constants.GROUPS)
+            mGroupList = requireArguments().getParcelableArrayList(Constants.GROUPS)
             isParentFragment = arguments!!
                     .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
@@ -176,7 +176,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
     @OnClick(R.id.fab_create_group)
     fun onClickCreateNewGroup() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewGroupFragment.newInstance(),
-                true, R.id.container)
+                true, R.id.container_a)
     }
 
     /**
