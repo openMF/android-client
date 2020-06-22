@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.online.runreports.report;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +13,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -90,20 +91,25 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
         TableRow.LayoutParams headingRowParams = new TableRow.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         headingRowParams.gravity = Gravity.CENTER;
-        headingRowParams.setMargins(0, 0, 0, 10);
+        headingRowParams.setMargins(5, 5, 0, 10);
         row.setLayoutParams(headingRowParams);
+        row.setBackgroundColor(getResources().getColor(R.color.gray_bright));
 
         for (ColumnHeader column : report.getColumnHeaders()) {
             switch (column.getColumnDisplayType()) {
                 case "STRING":
-                    TextView tv = new TextView(getContext());
-                    tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
-                    tv.setGravity(Gravity.CENTER);
-                    tv.setText(column.getColumnName());
-                    row.addView(tv);
+                    TextView textView = new TextView(this.getContext());
+                    Typeface typeface = textView.getTypeface();
+                    textView.setTypeface(typeface, Typeface.BOLD);
+                    textView.setGravity(Gravity.START);
+                    textView.setPadding(10, 5, 5, 5);
+                    textView.setText(this.formatString(column.getColumnName().trim()));
+                    row.addView(textView);
                     break;
             }
+
         }
+
         tableReport.addView(row);
     }
 
@@ -126,18 +132,41 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
                 switch (report.getColumnHeaders().get(i).getColumnDisplayType()) {
                     case "STRING":
                         TextView tv = new TextView(getContext());
-                        tv.setGravity(Gravity.CENTER);
+                        tv.setGravity(Gravity.START);
                         if (dataRow.getRow().get(i) != null) {
-                            tv.setText(dataRow.getRow().get(i));
+                            tv.setText(formatString(dataRow.getRow().get(i)));
+                            tv.setPadding(5, 0, 2, 0);
+
+
                         } else {
                             tv.setText("-");
                         }
+                        if (0 != (i % 2)) {
+                            tv.setBackgroundColor(getResources().getColor(R.color.gray_bright));
+                        }
+
                         row.addView(tv);
                         break;
                 }
+
             }
+
             tableReport.addView(row);
         }
+    }
+    private String formatString(String word) {
+        String[] words = word.replace(".", "").split(" ");
+        StringBuilder sb = new StringBuilder();
+        if (words[0].length() > 0) {
+            sb.append(Character.toUpperCase(words[0].charAt(0)) + words[0]
+                    .subSequence(1, words[0].length()).toString().toLowerCase());
+            for (int i = 1; i < words.length; i++) {
+
+                sb.append(" " + Character.toUpperCase(words[i].charAt(0)) + words[i]
+                        .subSequence(1, words[i].length()).toString().toLowerCase());
+            }
+        }
+        return  sb.toString();
     }
 
     @Override
@@ -164,4 +193,5 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
             hideMifosProgressDialog();
         }
     }
+
 }
