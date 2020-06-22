@@ -712,5 +712,11 @@
     <string name="incorrect_passcode_more_than_three">您已经输错三次密码了，请再次尝试</string>
     <string name="error_passcode">密码应该是4位数</string>
 
+    <!-- Language -->
+    <string name="language">语</string>
+    <string name="language_type" translatable="false">language_type</string>
+    <string name="lang_changed">语言已更改</string>
+    <string name="lang_change_description">选择您要查看应用程序的语言</string>
+
 
 </resources>

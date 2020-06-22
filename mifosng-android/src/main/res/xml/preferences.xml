@@ -3,4 +3,13 @@
     <SwitchPreference
         android:key="@string/sync_survey"
         android:title="@string/sync_survey"/>
+
+    <ListPreference
+        android:title="@string/language"
+        android:summary="@string/lang_change_description"
+        android:key="@string/language_type"
+        android:defaultValue="en"
+        android:entries="@array/language_option"
+        android:entryValues="@array/languages_value" />
+
 </PreferenceScreen>

@@ -21,6 +21,7 @@ import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.mifos.mifosxdroid.offlinejobs.OfflineJobCreator;
 import com.mifos.mobile.passcode.utils.ForegroundChecker;
+import com.mifos.utils.LanguageHelper;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -84,6 +85,11 @@ public class App extends MultiDexApplication {
     // Needed to replace the component with a test specific one
     public void setComponent(ApplicationComponent applicationComponent) {
         mApplicationComponent = applicationComponent;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LanguageHelper.onAttach(base, "en"));
     }
 
 }

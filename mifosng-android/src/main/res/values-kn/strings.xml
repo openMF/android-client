@@ -586,4 +586,10 @@
     <string name="overdue_x_number">ಮಿತಿಮೀರಿದ ಎಕ್ಸ್ ಸಂಖ್ಯೆ</string>
     <string name="overdue_y_number">ಮಿತಿಮೀರಿದ ವೈ ಸಂಖ್ಯೆ</string>
     <string name="error_select_group">ದಯವಿಟ್ಟು ಒಂದು ಗುಂಪನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+
+    <!-- Language -->
+    <string name="language">ಭಾಷೆ</string>
+    <string name="language_type" translatable="false">language_type</string>
+    <string name="lang_changed">ಭಾಷೆ ಬದಲಾಗಿದೆ</string>
+    <string name="lang_change_description">ನೀವು ಅಪ್ಲಿಕೇಶನ್ ವೀಕ್ಷಿಸಲು ಬಯಸುವ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
 </resources>
