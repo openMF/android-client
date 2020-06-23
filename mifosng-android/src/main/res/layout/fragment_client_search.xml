@@ -5,6 +5,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout.Base"
     android:orientation="vertical"
     android:padding="10dp">
@@ -13,15 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingRight="4dp"
-            app:srcCompat="@drawable/ic_search_black_24dp" />
-
         <TextView
             android:id="@+id/tv_search"
+            android:paddingRight="4dp"
             style="@style/TextView.Search" />
 
         <Spinner
@@ -33,21 +28,56 @@
             android:layout_marginBottom="10dp"
             android:gravity="end" />
     </LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/TextInput.Base">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ImageView
+                android:id="@+id/iv_search_icon"
+                android:layout_width="@dimen/dimension_32_dp"
+                android:layout_height="@dimen/dimension_32_dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_search_black_24dp" />
 
-        <EditText
-            android:id="@+id/et_search"
-            style="@style/EditText.BaseWidth"
-            android:hint="@string/search_hint"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_toLeftOf="@id/iv_filter_search_icon"
+                android:layout_toRightOf="@id/iv_search_icon"
+                android:background="@android:color/transparent"
+                android:hint="@string/search_hint"
+                android:singleLine="true"
+                android:textSize="15sp"
+                tools:ignore="NotSibling"
+                android:layout_marginEnd="4dp"
+                android:layout_toEndOf="@id/iv_search_icon"
+                android:layout_toStartOf="@id/iv_filter_search_icon"
+                android:layout_marginStart="8dp" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
 
     <Button
         android:id="@+id/btn_search"
         style="@style/Button.Base"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="@dimen/marginItemsInSectionSmall"
+        android:background="@drawable/login_button_rounded"
         android:text="@string/search" />
 
     <TextView
