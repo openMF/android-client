@@ -41,6 +41,7 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
     public void searchResources(String query, String resources, Boolean exactMatch) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
+        getMvpView().showInstantSearchedProgressBar(false);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = dataManagerSearch.searchResources(query, resources, exactMatch)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,6 +65,33 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
                         } else {
                             getMvpView().showSearchedResources(searchedEntities);
                         }
+                    }
+                });
+    }
+
+    public void searchInstantResources(String query, String resources, Boolean exactMatch) {
+        checkViewAttached();
+        if (mSubscription != null) mSubscription.unsubscribe();
+        mSubscription = dataManagerSearch.searchResources(query, resources, exactMatch)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<List<SearchedEntity>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(List<SearchedEntity> searchedEntities) {
+                        if (searchedEntities.size() == 0) {
+                            getMvpView().showNoResultFound();
+                        } else {
+                            getMvpView().showInstantSearchedResult(searchedEntities);
+                        }
+
                     }
                 });
     }

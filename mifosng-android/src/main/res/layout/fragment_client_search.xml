@@ -61,10 +61,23 @@
         android:layout_height="wrap_content"
         android:text="@string/exact_match" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <ProgressBar
+            android:id="@+id/progress_bar_search"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
 
 </LinearLayout>
