@@ -6,9 +6,12 @@
 package com.mifos;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
+
 import androidx.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
@@ -21,6 +24,7 @@ import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent;
 import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.mifos.mifosxdroid.offlinejobs.OfflineJobCreator;
 import com.mifos.mobile.passcode.utils.ForegroundChecker;
+import com.mifos.utils.ThemeHelper;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -55,6 +59,10 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String themePref = sharedPreferences.getString("dark_mode", ThemeHelper.DEFAULT_MODE);
+        ThemeHelper.applyTheme(themePref);
         instance = this;
         Fabric.with(this, new Crashlytics());
 
