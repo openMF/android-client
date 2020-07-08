@@ -7,6 +7,8 @@ package com.mifos.mifosxdroid.activity.pathtracking;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,8 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -106,6 +110,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
 
         showUserInterface();
         pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
+        createNotificationChannel();
     }
 
     @Override
@@ -231,6 +236,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
                     startService(intentLocationService);
                     PrefManager.putBoolean(Constants.SERVICE_STATUS, true);
                     invalidateOptionsMenu();
+                    showProgressInNotification();
                 }
                 return true;
             case R.id.menu_stop_path_track:
@@ -285,4 +291,42 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
             progressBar.setVisibility(View.GONE);
         }
     }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.Channel_Path);
+            String description = getString(R.string
+                    .Channel_Path_Description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new
+                    NotificationChannel(getString(R.string
+                    .Channel_ID), name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = this.
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    void showProgressInNotification() {
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.
+                from(this);
+
+        final NotificationCompat.Builder builder = new NotificationCompat.
+                Builder(this, getString(R.string.Channel_ID));
+        builder.setSmallIcon(R.drawable.mifos_logo)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true);
+        new Thread(new Runnable() {
+            public void run() {
+                builder.setSmallIcon(R.drawable.background);
+                builder.setContentTitle(getString(R.string
+                        .notification_path_tracking));
+                notificationManager.notify(0, builder.build());
+            }
+        }).start();
+    }
+
 }

@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.activity.pathtracking;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,10 +13,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
+
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -124,6 +129,14 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
     @Override
     public void onConnected(Bundle bundle) {
         if (currentLocation == null) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
+                    .PERMISSION_GRANTED && ActivityCompat
+                    .checkSelfPermission(this, Manifest
+                            .permission.ACCESS_COARSE_LOCATION) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return;
+            }
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             latLngs.add(new UserLatLng(currentLocation.getLatitude(),
                     currentLocation.getLongitude()));

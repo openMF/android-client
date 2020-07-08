@@ -832,4 +832,11 @@
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
 
+    <string name="Channel_Path">Path Tracking</string>
+    <string name="Channel_Path_Description">Path Tracking Description</string>
+    <string name="Channel_ID">10001</string>
+    <string name="max_progress">100</string>
+    <string name="current_progress">0</string>
+    <string name="notification_path_tracking">Path tracking is turned on</string>
+
 </resources>
