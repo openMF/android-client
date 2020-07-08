@@ -832,4 +832,11 @@
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
 
+    <string name="Channel_Offline">Offline Mode</string>
+    <string name="Channel_Offline_Description">Offline Mode Description</string>
+    <string name="Channel_ID">10001</string>
+    <string name="max_progress">100</string>
+    <string name="current_progress">0</string>
+    <string name="notification_offline_mode">Offline Mode is turned on</string>
+
 </resources>

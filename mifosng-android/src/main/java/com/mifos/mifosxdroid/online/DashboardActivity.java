@@ -5,12 +5,19 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.VisibleForTesting;
 import com.google.android.material.navigation.NavigationView;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.test.espresso.IdlingResource;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -88,6 +95,7 @@ public class DashboardActivity extends MifosBaseActivity
         //addOnBackStackChangedListener
         //to change title after Back Stack Changed
         addOnBackStackChangedListener();
+        createNotificationChannel();
     }
 
     private void runJobs() {
@@ -298,9 +306,12 @@ public class DashboardActivity extends MifosBaseActivity
                 if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
                     PrefManager.setUserStatus(Constants.USER_ONLINE);
                     userStatusToggle.setChecked(false);
+                    deleteProgressInNotifications();
+                    createNotificationChannel();
                 } else {
                     PrefManager.setUserStatus(Constants.USER_OFFLINE);
                     userStatusToggle.setChecked(true);
+                    showProgressInNotification();
                 }
             }
         });
@@ -417,4 +428,51 @@ public class DashboardActivity extends MifosBaseActivity
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
     }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.Channel_Offline);
+            String description = getString(R.string
+                    .Channel_Offline_Description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new
+                    NotificationChannel(getString(R.string
+                    .Channel_ID), name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = this.
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    void showProgressInNotification() {
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.
+                from(this);
+
+        final NotificationCompat.Builder builder = new NotificationCompat.
+                Builder(this, getString(R.string.Channel_ID));
+        builder.setSmallIcon(R.drawable.mifos_logo)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true);
+        new Thread(new Runnable() {
+            public void run() {
+                builder.setSmallIcon(R.drawable.background);
+                builder.setContentTitle(getString(R.string
+                        .notification_offline_mode));
+                notificationManager.notify(0, builder.build());
+            }
+        }).start();
+    }
+
+    void deleteProgressInNotifications() {
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.deleteNotificationChannel(getString(R.string
+                    .Channel_ID));
+        }
+    }
+
 }
