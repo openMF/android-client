@@ -487,7 +487,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
                 && resultCode == Activity.RESULT_OK) {
             createClientWithImage = true
@@ -495,7 +495,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         } else if (requestCode == PICK_IMAGE_ACTIVITY_REQUEST_CODE
                 && resultCode == Activity.RESULT_OK) {
             createClientWithImage = true
-            pickedImageUri = data.data
+            pickedImageUri = data?.data
             val filePath = arrayOf(MediaStore.Images.Media.DATA)
             val c = activity!!.contentResolver.query(pickedImageUri, filePath,
                     null, null, null)

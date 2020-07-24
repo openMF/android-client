@@ -278,4 +278,6 @@ public class Constants {
     public static final String R_OVERDUE_X = "R_overdueX";
     public static final String R_OVERDUE_Y = "R_overdueY";
     public static final String ACTION_REPORT = "report";
+    public static final String CURR_PASSWORD = "currentPassword";
+    public static final String IS_TO_UPDATE_PASS_CODE = "updatePassCode";
 }

@@ -50,7 +50,7 @@ class IndividualCollectionSheetFragment : MifosBaseFragment() {
         viewPager!!.adapter = adapter
     }
 
-    internal inner class ViewPagerAdapter(manager: FragmentManager?) : FragmentPagerAdapter(manager) {
+    internal inner class ViewPagerAdapter(manager: FragmentManager?) : FragmentPagerAdapter(manager!!) {
         private val mFragmentList: MutableList<Fragment> = ArrayList()
         private val mFragmentTitleList: MutableList<String> = ArrayList()
         override fun getItem(position: Int): Fragment {

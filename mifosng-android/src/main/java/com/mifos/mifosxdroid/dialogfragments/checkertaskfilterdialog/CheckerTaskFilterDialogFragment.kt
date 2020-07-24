@@ -81,14 +81,18 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
 
     private fun setOnClickListeners() {
         tv_from_date.setOnClickListener {
-            datePickerFromDate.show(activity?.supportFragmentManager,
-                    FragmentConstants.DFRAG_DATE_PICKER)
+            activity?.supportFragmentManager?.let { it1 ->
+                datePickerFromDate.show(it1,
+                        FragmentConstants.DFRAG_DATE_PICKER)
+            }
             mCurrentDateView = tv_from_date
         }
 
         tv_to_date.setOnClickListener {
-            datePickerToDate.show(activity?.supportFragmentManager,
-                    FragmentConstants.DFRAG_DATE_PICKER)
+            activity?.supportFragmentManager?.let { it1 ->
+                datePickerToDate.show(it1,
+                        FragmentConstants.DFRAG_DATE_PICKER)
+            }
             mCurrentDateView = tv_to_date
         }
 
@@ -105,7 +109,7 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
             )
             mOnInputSelected.sendInput(fromDateTimeStamp, toDateTimeStamp,
                     selectedAction, selectedEntity, resourceId)
-            dialog.dismiss()
+            dialog?.dismiss()
         }
     }
 
@@ -139,7 +143,7 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
         })
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
             mOnInputSelected = targetFragment as OnInputSelected

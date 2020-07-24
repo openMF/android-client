@@ -80,6 +80,7 @@ public class DashboardActivity extends MifosBaseActivity
         setContentView(R.layout.activity_dashboard);
 
         ButterKnife.bind(this);
+        //runJobs();
         replaceFragment(new SearchFragment(), false, R.id.container);
 
         // setup navigation drawer and Navigation Toggle click and Offline Mode SwitchButton

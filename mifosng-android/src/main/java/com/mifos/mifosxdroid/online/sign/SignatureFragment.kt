@@ -153,10 +153,10 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
             startActivityForResult(intentDocument, FILE_SELECT_CODE)
         }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             FILE_SELECT_CODE -> if (resultCode == Activity.RESULT_OK) {
-                val uri = data.data
+                val uri = data?.data
                 val filePath = FileUtils.getPathReal(activity, uri)
                 if (filePath != null) {
                     signatureFile = File(filePath)

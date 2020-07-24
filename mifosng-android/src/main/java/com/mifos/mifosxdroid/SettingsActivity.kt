@@ -9,9 +9,10 @@ import com.mifos.mifosxdroid.online.DashboardActivity
  * Created by mayankjindal on 22/07/17.
  */
 class SettingsActivity : MifosBaseActivity() {
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
+        setToolbarTitle(getString(R.string.settings))
         showBackButton()
         fragmentManager.beginTransaction()
                 .replace(R.id.container, SettingsFragment())

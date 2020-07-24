@@ -12,6 +12,12 @@ import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialog
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.LanguageHelper
 import com.mifos.utils.ThemeHelper
+import android.preference.Preference
+import android.preference.PreferenceScreen
+
+import com.mifos.mifosxdroid.passcode.PassCodeActivity
+import com.mifos.mobile.passcode.utils.PasscodePreferencesHelper
+import com.mifos.utils.Constants
 
 /**
  * Created by mayankjindal on 22/07/17.
@@ -20,6 +26,16 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
     var mEnableSyncSurvey: SwitchPreference? = null
     private lateinit var languages: Array<String>
     private var languageCallback: LanguageCallback? = null
+    var preference: Preference? = null
+
+    companion object {
+        fun newInstance(): SettingsFragment {
+            val fragment = SettingsFragment()
+            val args = Bundle()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +72,25 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
             Toast.makeText(activity, "Switched to ${themeOption.toString()} Mode", Toast.LENGTH_SHORT).show()
             true
         }
+
+        when (preference?.key) {
+            getString(R.string.password) -> {
+                //    TODO("create changePasswordActivity and implement the logic for password change")
+            }
+            getString(R.string.passcode) -> {
+                activity?.let {
+                    val passCodePreferencesHelper = PasscodePreferencesHelper(activity)
+                    val currPassCode = passCodePreferencesHelper.passCode
+                    passCodePreferencesHelper.savePassCode("")
+                    val intent = Intent(it, PassCodeActivity::class.java).apply {
+                        putExtra(Constants.CURR_PASSWORD, currPassCode)
+                        putExtra(Constants.IS_TO_UPDATE_PASS_CODE, true)
+                    }
+                    preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     override fun onPause() {
@@ -76,12 +111,25 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         fun updateNavDrawer()
     }
 
-    companion object {
-        fun newInstance(): SettingsFragment {
-            val fragment = SettingsFragment()
-            val args = Bundle()
-            fragment.arguments = args
-            return fragment
+    override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen?, preference: Preference?): Boolean {
+        when (preference?.key) {
+            getString(R.string.password) -> {
+                //    TODO("create changePasswordActivity and implement the logic for password change")
+            }
+
+            getString(R.string.passcode) -> {
+                activity?.let {
+                    val passCodePreferencesHelper = PasscodePreferencesHelper(activity)
+                    val currPassCode = passCodePreferencesHelper.passCode
+                    passCodePreferencesHelper.savePassCode("")
+                    val intent = Intent(it, PassCodeActivity::class.java).apply {
+                        putExtra(Constants.CURR_PASSWORD, currPassCode)
+                        putExtra(Constants.IS_TO_UPDATE_PASS_CODE, true)
+                    }
+                    startActivity(intent)
+                }
+            }
         }
+        return super.onPreferenceTreeClick(preferenceScreen, preference)
     }
 }
