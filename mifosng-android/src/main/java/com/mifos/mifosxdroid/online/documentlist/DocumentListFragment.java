@@ -128,6 +128,7 @@ public class DocumentListFragment extends MifosBaseFragment implements DocumentL
         ButterKnife.bind(this, rootView);
         mDocumentListPresenter.attachView(this);
 
+        setToolbarTitle(getString(R.string.documents));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_documents.setLayoutManager(layoutManager);
