@@ -39,5 +39,4 @@
     <dimen name="marginItemsInSectionSmall">16dp</dimen>
     <dimen name="marginItemsInSectionMedium">20dp</dimen>
     <dimen name="marginItemsInSectionLarge">24dp</dimen>
-  
 </resources>
