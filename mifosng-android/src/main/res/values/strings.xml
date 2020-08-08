@@ -833,4 +833,21 @@
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
 
+    <!-- About App -->
+    <string name="about_app">Field Officer Application is an application
+        developed for the Bank staff field officer to keep track of Clients,
+        Centers, Groups, Loan Account, Savings Account, etc.</string>
+    <string name="about_mifos">Developed by <a href="https://mifos.org/">Mifos</a>
+        <a href="https://github.com/openMF/android-client/graphs/contributors">contributors</a>.
+    </string>
+    <string name="about_us_connect">Connect With Us</string>
+    <string name="link">Visit Us</string>
+    <string name="about_support_github_sub">Fork the repo and push changes or submit new issues.</string>
+    <string name="about_support_github">GitHub</string>
+    <string name="about">About</string>
+    <string name="about_support_twitter_sub">Twitter page for the application.</string>
+    <string name="about_support_twitter">Twitter</string>
+    <string name="about_license">License</string>
+    <string name="about_license_sub">Check Mozilla Public License 2.0</string>
+
 </resources>

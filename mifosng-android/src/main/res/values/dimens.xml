@@ -22,4 +22,17 @@
     <dimen name="datatable_name_heading">18sp</dimen>
     <dimen name="dimension_72_dp">72dp</dimen>
     <dimen name="dimension_32_dp">32dp</dimen>
+
+    <!-- About App -->
+    <dimen name="card_spacing">10dp</dimen>
+    <dimen name="card_corner_radius">1dp</dimen>
+    <dimen name="about_card_elevation">5dp</dimen>
+    <dimen name="about_separator_height">0.5dp</dimen>
+    <dimen name="about_group_text_padding">16dp</dimen>
+    <dimen name="about_group_item_text_size">18sp</dimen>
+    <dimen name="about_icon_size">34dp</dimen>
+    <dimen name="license_icon_size">28dp</dimen>
+    <dimen name="about_icon_padding">8dp</dimen>
+    <dimen name="card_radius">8dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
 </resources>
