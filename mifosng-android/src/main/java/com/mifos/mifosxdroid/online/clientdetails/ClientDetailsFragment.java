@@ -50,11 +50,10 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.online.kycdetails.ClientKycFragment;
 import com.mifos.mifosxdroid.online.activate.ActivateFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
-import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
-import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
 import com.mifos.mifosxdroid.online.note.NoteFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
@@ -100,11 +99,10 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public static final int MENU_ITEM_CLIENT_CHARGES = 1003;
     public static final int MENU_ITEM_ADD_SAVINGS_ACCOUNT = 1004;
     public static final int MENU_ITEM_ADD_LOAN_ACCOUNT = 1005;
-    public static final int MENU_ITEM_DOCUMENTS = 1006;
     public static final int MENU_ITEM_UPLOAD_SIGN = 1010;
-    public static final int MENU_ITEM_IDENTIFIERS = 1007;
     public static final int MENU_ITEM_SURVEYS = 1008;
     public static final int MENU_ITEM_NOTE = 1009;
+    public static final int MENU_ITEM_KYC = 1011;
 
     String imgDecodableString;
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
@@ -304,11 +302,10 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                     .savings_account));
             menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
                     getString(R.string.add_loan));
-            menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents));
             menu.add(Menu.NONE, MENU_ITEM_UPLOAD_SIGN, Menu.NONE, R.string.upload_sign);
-            menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers));
             menu.add(Menu.NONE, MENU_ITEM_SURVEYS, Menu.NONE, getString(R.string.survey));
             menu.add(Menu.NONE, MENU_ITEM_NOTE, Menu.NONE, getString(R.string.note));
+            menu.add(Menu.NONE, MENU_ITEM_KYC, Menu.NONE, getString(R.string.kyc_details));
         }
         super.onPrepareOptionsMenu(menu);
     }
@@ -318,9 +315,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         switch (item.getItemId()) {
             case MENU_ITEM_DATA_TABLES:
                 loadClientDataTables();
-                break;
-            case MENU_ITEM_DOCUMENTS:
-                loadDocuments();
                 break;
             case MENU_ITEM_UPLOAD_SIGN:
                 loadSignUpload();
@@ -334,9 +328,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             case MENU_ITEM_ADD_LOAN_ACCOUNT:
                 addloanaccount();
                 break;
-            case MENU_ITEM_IDENTIFIERS:
-                loadIdentifiers();
-                break;
             case MENU_ITEM_PIN_POINT:
                 Intent i = new Intent(getActivity(), PinpointClientActivity.class);
                 i.putExtra(Constants.CLIENT_ID, clientId);
@@ -347,6 +338,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 break;
             case MENU_ITEM_NOTE:
                 loadNotes();
+            case MENU_ITEM_KYC:
+                loadKyc();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -392,16 +385,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         mClientDetailsPresenter.detachView();
     }
 
-    public void loadDocuments() {
-        DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
-                .ENTITY_TYPE_CLIENTS, clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                .beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.container, documentListFragment);
-        fragmentTransaction.commit();
-    }
-
     public void loadNotes() {
         NoteFragment noteFragment = NoteFragment.newInstance(Constants
                 .ENTITY_TYPE_CLIENTS, clientId);
@@ -422,15 +405,6 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         fragmentTransaction.commit();
     }
 
-    public void loadIdentifiers() {
-        ClientIdentifiersFragment clientIdentifiersFragment = ClientIdentifiersFragment
-                .newInstance(clientId);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                .beginTransaction();
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
-        fragmentTransaction.replace(R.id.container, clientIdentifiersFragment);
-        fragmentTransaction.commit();
-    }
 
     public void loadSurveys() {
         SurveyListFragment surveyListFragment = SurveyListFragment.newInstance(clientId);
@@ -438,6 +412,15 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 .beginTransaction();
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
         fragmentTransaction.replace(R.id.container, surveyListFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void loadKyc() {
+        ClientKycFragment clientKycFragment = ClientKycFragment.newInstance(clientId);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS);
+        fragmentTransaction.replace(R.id.container, clientKycFragment);
         fragmentTransaction.commit();
     }
 

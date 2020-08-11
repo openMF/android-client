@@ -16,6 +16,7 @@ import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialog
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.online.kycdetails.ClientKycFragment;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxFragment;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment;
@@ -220,4 +221,6 @@ public interface ActivityComponent {
     void inject(CheckerInboxFragment checkerInboxFragment);
 
     void inject(CheckerTaskFilterDialogFragment checkerTaskFilterDialogFragment);
+
+    void inject(ClientKycFragment clientKycFragment);
 }

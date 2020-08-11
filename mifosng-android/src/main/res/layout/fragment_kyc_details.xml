@@ -1,0 +1,169 @@
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out"
+    android:padding="10dp">
+
+    <!-- Actual content -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout style="@style/LinearLayout.Base">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+            <TextView style="@style/TextView.kycLevel" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:id="@+id/sp_kyc_level"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:spinnerMode="dropdown"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:entries="@array/kyc_level_values"/>
+            </LinearLayout>
+
+            <com.mifos.mifosxdroid.views.CircularImageView
+                android:id="@+id/iv_clientImage"
+                style="@style/ClientImage"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_dp_placeholder"/>
+
+            <LinearLayout
+                android:id="@+id/kyc_level_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+
+                <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_client_mobile_no"
+                        style="@style/EditText.BaseWidth"
+                        android:gravity="start"
+                        android:hint="@string/mobile_no"
+                        android:imeOptions="actionNext"
+                        android:inputType="phone"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_client_address"
+                        style="@style/EditText.BaseWidth"
+                        android:gravity="start"
+                        android:hint="@string/address"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPostalAddress"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.2dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/gray_dark" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/kyc_level_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView style="@style/TextView.documents" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingLeft="24dp"
+                        android:paddingTop="16dp"
+                        android:paddingRight="24dp">
+
+                        <Button
+                            android:id="@+id/btn_upload_document"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:backgroundTint="@color/primary"
+                            android:drawableStart="@drawable/ic_folder_black_24dp"
+                            android:drawableLeft="@drawable/ic_folder_black_24dp"
+                            android:gravity="center"
+                            android:text="@string/upload_document"
+                            android:textAllCaps="true" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/kyc_level_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView style="@style/TextView.identifiers" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingLeft="24dp"
+                        android:paddingTop="16dp"
+                        android:paddingRight="24dp">
+
+                        <Button
+                            android:id="@+id/btn_upload_identifier"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:backgroundTint="@color/primary"
+                            android:drawableStart="@drawable/ic_folder_black_24dp"
+                            android:drawableLeft="@drawable/ic_folder_black_24dp"
+                            android:gravity="center"
+                            android:text="@string/upload_identifiers"
+                            android:textAllCaps="true" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <Button
+                android:id="@+id/btn_submit"
+                style="@style/Button.Base"
+                android:layout_marginTop="10dp"
+                android:text="@string/submit" />
+
+        </LinearLayout>
+    </ScrollView>
+</ViewFlipper>

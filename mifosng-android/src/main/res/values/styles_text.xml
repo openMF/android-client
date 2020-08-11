@@ -119,4 +119,30 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="TextView.kycLevel" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">KYC Level</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="TextView.kyc" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">KYC Details</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextView.identifiers" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">Identifiers</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextView.documents" parent="TextView.Base">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">Documents</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

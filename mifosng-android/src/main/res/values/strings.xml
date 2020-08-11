@@ -752,6 +752,12 @@
         <item>savingsaccounts</item>
     </string-array>
 
+    <string-array name="kyc_level_values">
+        <item>Level 1</item>
+        <item>Level 2</item>
+        <item>Level 3</item>
+    </string-array>
+
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="centerList_account_prefix">Account No: %1$s</string>
     <string name="no_staff">no staff</string>
@@ -832,5 +838,9 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+    <string name="kyc_description">Document description</string>
+    <string name="kyc_details">KYC Details</string>
+    <string name="address">Address</string>
+    <string name="upload_identifiers">Upload Identifiers</string>
 
 </resources>
