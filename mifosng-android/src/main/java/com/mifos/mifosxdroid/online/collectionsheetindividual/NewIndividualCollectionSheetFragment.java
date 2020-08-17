@@ -4,6 +4,8 @@ import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +78,7 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
 
     private String actualDisbursementDate;
     private String transactionDate;
+    private long lastclicktime = 0;
 
 
     public NewIndividualCollectionSheetFragment() {
@@ -280,9 +283,16 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
 
     @Override
     public void onClick(View view) {
+        //avoid frequent clicks by user
+        if  (SystemClock.elapsedRealtime()
+                - lastclicktime < 2000)
+            return;
+        lastclicktime = SystemClock.elapsedRealtime();
         switch (view.getId()) {
             case R.id.tv_repayment_date:
+
                 setTvRepaymentDate();
+
                 break;
 
             case R.id.btn_fetch_collection_sheet:
@@ -291,4 +301,5 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
         }
 
     }
+
 }

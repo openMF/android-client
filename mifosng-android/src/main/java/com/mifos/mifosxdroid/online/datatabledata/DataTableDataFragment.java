@@ -40,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DataTableDataFragment extends MifosBaseFragment
+public class  DataTableDataFragment extends MifosBaseFragment
         implements DataTableUIBuilder.DataTableActionListener, DataTableDataMvpView,
         SwipeRefreshLayout.OnRefreshListener {
 
