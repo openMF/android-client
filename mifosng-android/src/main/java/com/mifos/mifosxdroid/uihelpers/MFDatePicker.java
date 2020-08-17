@@ -33,6 +33,7 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     }
 
     OnDatePickListener onDatePickListener;
+    Boolean isSubmissionDate = true;
 
     public MFDatePicker() {
 
@@ -41,6 +42,13 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     public static MFDatePicker newInsance(Fragment fragment) {
         MFDatePicker mfDatePicker = new MFDatePicker();
         mfDatePicker.onDatePickListener = (OnDatePickListener) fragment;
+        return mfDatePicker;
+    }
+
+    public static MFDatePicker newInstance(Fragment fragment, boolean isSubmissionDate) {
+        MFDatePicker mfDatePicker = new MFDatePicker();
+        mfDatePicker.onDatePickListener = (OnDatePickListener) fragment;
+        mfDatePicker.isSubmissionDate = isSubmissionDate;
         return mfDatePicker;
     }
 
@@ -56,8 +64,11 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
                 this, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
-
-        dialog.getDatePicker().setMaxDate(new Date().getTime());
+        if (isSubmissionDate) {
+            dialog.getDatePicker().setMaxDate(new Date().getTime());
+        } else {
+            dialog.getDatePicker().setMinDate(new Date().getTime());
+        }
         return dialog;
     }
 
