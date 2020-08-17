@@ -41,7 +41,7 @@ public class SavingsAccountActivatePresenter extends BasePresenter<SavingsAccoun
 
     public void activateSavings(int savingsAccountId, HashMap<String, Object> request) {
         checkViewAttached();
-        getMvpView().showProgressbar(false);
+        getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerSavings.activateSavings(savingsAccountId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
