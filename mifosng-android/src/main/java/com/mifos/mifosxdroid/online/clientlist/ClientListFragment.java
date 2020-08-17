@@ -38,6 +38,8 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -295,6 +297,13 @@ public class ClientListFragment extends MifosBaseFragment
     @Override
     public void showClientList(List<Client> clients) {
         clientList = clients;
+        Collections.sort(clientList, new Comparator<Client>() {
+            @Override
+            public int compare(Client client1, Client client2) {
+                return client1.getDisplayName().toLowerCase().
+                        compareTo(client2.getDisplayName().toLowerCase());
+            }
+        });
         mClientNameListAdapter.setClients(clients);
         mClientNameListAdapter.notifyDataSetChanged();
     }

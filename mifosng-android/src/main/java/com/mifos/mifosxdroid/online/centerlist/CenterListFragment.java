@@ -40,6 +40,8 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -203,6 +205,13 @@ public class CenterListFragment extends MifosBaseFragment
     @Override
     public void showCenters(List<Center> centers) {
         this.centers = centers;
+        Collections.sort(centers, new Comparator<Center>() {
+            @Override
+            public int compare(Center center1, Center center2) {
+                return center1.getName().toLowerCase().
+                        compareTo(center2.getName().toLowerCase());
+            }
+        });
         centersListAdapter.setCenters(centers);
         centersListAdapter.notifyDataSetChanged();
     }
