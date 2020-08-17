@@ -57,7 +57,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param object The object to add at the end of the array.
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public void add(T object) {
         synchronized (mLock) {
             list.add(object);
@@ -70,7 +70,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param collection The Collection to add at the end of the array.
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public void addAll(Collection<? extends T> collection) {
         synchronized (mLock) {
             list.addAll(collection);
@@ -109,7 +109,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      *
      * @param object The object to remove.
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public void remove(T object) {
         synchronized (mLock) {
             list.remove(object);
@@ -133,7 +133,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      * @param comparator The comparator used to sort the objects contained
      *                   in this adapter.
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public void sort(Comparator<? super T> comparator) {
         synchronized (mLock) {
             Collections.sort(list, comparator);
@@ -151,7 +151,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public T getItem(int position) {
         return (list != null && position >= 0 && position < getCount()) ? list.get(position) : null;
     }
@@ -162,7 +162,7 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
      * @param item The item to retrieve the position of.
      * @return The position of the specified item.
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public int getPosition(T item) {
         return list != null ? list.indexOf(item) : -1;
     }
@@ -188,12 +188,12 @@ public abstract class MifosBaseListAdapter<T> extends BaseAdapter {
         return getContext().getResources();
     }
 
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public List<T> getList() {
         return list;
     }
 
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({"varargs"})
     public void setList(List<T> list) {
         synchronized (mLock) {
             this.list = list;
