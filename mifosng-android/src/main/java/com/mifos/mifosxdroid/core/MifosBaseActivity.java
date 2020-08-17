@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
@@ -138,6 +139,9 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
                                 PrefManager.clearPrefs();
                                 startActivity(new Intent(MifosBaseActivity.this,
                                         SplashScreenActivity.class));
+                                Toast.makeText(MifosBaseActivity
+                                        .this, R.string.logout_successfully, Toast
+                                        .LENGTH_SHORT).show();
                                 finish();
                             }
                         })
