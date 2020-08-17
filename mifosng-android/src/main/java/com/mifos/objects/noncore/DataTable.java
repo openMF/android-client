@@ -84,7 +84,7 @@ public class DataTable extends MifosBaseModel implements Parcelable {
 
     protected DataTable(Parcel in) {
         this.applicationTableName = in.readString();
-        this.columnHeaderData = new ArrayList<ColumnHeader>();
+        this.columnHeaderData = new ArrayList<>();
         in.readList(this.columnHeaderData, ColumnHeader.class.getClassLoader());
         this.registeredTableName = in.readString();
     }

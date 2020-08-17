@@ -31,13 +31,13 @@ public class FormSpinner extends FormWidget {
         label.setText(getDisplayText());
 
         spinner = new Spinner(context);
-        spinner.setAdapter(new ArrayAdapter<String>(context, android.R.layout
+        spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout
                 .simple_spinner_item, columnValues));
 
         layout.addView(label);
         layout.addView(spinner);
 
-        spinnerValueIdMap = new HashMap<String, Integer>();
+        spinnerValueIdMap = new HashMap<>();
         for (int i = 0; i < columnValues.size(); i++) {
             spinnerValueIdMap.put(columnValues.get(i), columnValueIds.get(i));
         }

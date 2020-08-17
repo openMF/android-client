@@ -31,9 +31,9 @@ public class CenterWithAssociations implements Parcelable {
     private String hierarchy;
     private Status status;
     private Boolean active;
-    private List<Integer> activationDate = new ArrayList<Integer>();
+    private List<Integer> activationDate = new ArrayList<>();
     private Timeline timeline;
-    private List<Group> groupMembers = new ArrayList<Group>();
+    private List<Group> groupMembers = new ArrayList<>();
     private CollectionMeetingCalendar collectionMeetingCalendar = new CollectionMeetingCalendar();
 
 
@@ -184,7 +184,7 @@ public class CenterWithAssociations implements Parcelable {
         this.hierarchy = in.readString();
         this.status = in.readParcelable(Status.class.getClassLoader());
         this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.activationDate = new ArrayList<Integer>();
+        this.activationDate = new ArrayList<>();
         in.readList(this.activationDate, Integer.class.getClassLoader());
         this.timeline = in.readParcelable(Timeline.class.getClassLoader());
         this.groupMembers = in.createTypedArrayList(Group.CREATOR);

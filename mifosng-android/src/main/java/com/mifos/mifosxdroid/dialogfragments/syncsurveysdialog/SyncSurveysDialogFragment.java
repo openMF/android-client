@@ -93,7 +93,7 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        mSurveyList = new ArrayList<Survey>();
+        mSurveyList = new ArrayList<>();
         super.onCreate(savedInstanceState);
     }
 

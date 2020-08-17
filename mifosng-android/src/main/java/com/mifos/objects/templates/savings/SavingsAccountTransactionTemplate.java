@@ -117,7 +117,7 @@ public class SavingsAccountTransactionTemplate extends MifosBaseModel implements
     protected SavingsAccountTransactionTemplate(Parcel in) {
         this.accountId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.accountNo = in.readString();
-        this.date = new ArrayList<Integer>();
+        this.date = new ArrayList<>();
         in.readList(this.date, Integer.class.getClassLoader());
         this.reversed = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.paymentTypeOptions = in.createTypedArrayList(PaymentTypeOption.CREATOR);

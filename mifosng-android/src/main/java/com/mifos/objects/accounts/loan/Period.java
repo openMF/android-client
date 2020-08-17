@@ -462,14 +462,14 @@ public class Period implements Parcelable {
     protected Period(Parcel in) {
         this.complete = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.daysInPeriod = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.dueDate = new ArrayList<Integer>();
+        this.dueDate = new ArrayList<>();
         in.readList(this.dueDate, Integer.class.getClassLoader());
         this.feeChargesDue = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesOutstanding = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesPaid = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesWaived = (Double) in.readValue(Double.class.getClassLoader());
         this.feeChargesWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
-        this.fromDate = new ArrayList<Integer>();
+        this.fromDate = new ArrayList<>();
         in.readList(this.fromDate, Integer.class.getClassLoader());
         this.interestDue = (Double) in.readValue(Double.class.getClassLoader());
         this.interestOriginalDue = (Double) in.readValue(Double.class.getClassLoader());
@@ -477,7 +477,7 @@ public class Period implements Parcelable {
         this.interestPaid = (Double) in.readValue(Double.class.getClassLoader());
         this.interestWaived = (Double) in.readValue(Double.class.getClassLoader());
         this.interestWrittenOff = (Double) in.readValue(Double.class.getClassLoader());
-        this.obligationsMetOnDate = new ArrayList<Integer>();
+        this.obligationsMetOnDate = new ArrayList<>();
         in.readList(this.obligationsMetOnDate, Integer.class.getClassLoader());
         this.penaltyChargesDue = (Double) in.readValue(Double.class.getClassLoader());
         this.penaltyChargesOutstanding = (Double) in.readValue(Double.class.getClassLoader());

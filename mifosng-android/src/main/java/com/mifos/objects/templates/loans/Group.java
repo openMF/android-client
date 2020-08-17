@@ -177,7 +177,7 @@ public class Group implements Parcelable {
         this.externalId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.status = in.readParcelable(Status.class.getClassLoader());
         this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.activationDate = new ArrayList<Integer>();
+        this.activationDate = new ArrayList<>();
         in.readList(this.activationDate, Integer.class.getClassLoader());
         this.officeId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.officeName = in.readString();

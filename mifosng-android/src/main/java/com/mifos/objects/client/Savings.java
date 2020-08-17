@@ -18,7 +18,7 @@ public class Savings {
     private Status status;
     private Currency currency;
     private Double accountBalance;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
     private DepositType depositType;
 
     public Integer getId() {

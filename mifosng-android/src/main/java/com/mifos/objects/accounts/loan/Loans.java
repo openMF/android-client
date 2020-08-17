@@ -137,7 +137,7 @@ public class Loans implements Parcelable {
     @SerializedName("isNPA")
     Boolean isNPA;
 
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public Integer getId() {
         return id;

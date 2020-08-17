@@ -47,7 +47,7 @@ public class DateHelper {
      */
     public static List<Integer> getCurrentDateAsListOfIntegers() {
 
-        List<Integer> date = new ArrayList<Integer>();
+        List<Integer> date = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         date.add(calendar.get(Calendar.YEAR));
         date.add(calendar.get(Calendar.MONTH) + 1);

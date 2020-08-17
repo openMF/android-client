@@ -63,9 +63,9 @@ public class IndividualCollectionSheet implements Parcelable {
 
     protected IndividualCollectionSheet(Parcel in) {
         this.dueDate = in.createIntArray();
-        this.clientCollectionSheetList = new ArrayList<ClientCollectionSheet>();
+        this.clientCollectionSheetList = new ArrayList<>();
         in.readList(this.clientCollectionSheetList, ClientCollectionSheet.class.getClassLoader());
-        this.paymentTypeOptions = new ArrayList<PaymentTypeOptions>();
+        this.paymentTypeOptions = new ArrayList<>();
         in.readList(this.paymentTypeOptions, PaymentTypeOptions.class.getClassLoader());
     }
 

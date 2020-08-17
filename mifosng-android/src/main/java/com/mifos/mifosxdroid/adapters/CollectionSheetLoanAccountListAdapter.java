@@ -31,7 +31,7 @@ public class CollectionSheetLoanAccountListAdapter extends BaseAdapter {
 
     private static final String TAG = "LoanAccountListAdapter";
     LayoutInflater layoutInflater;
-    List<Loan> loans = new ArrayList<Loan>();
+    List<Loan> loans = new ArrayList<>();
     int groupPosition;
     int childPosition;
 

@@ -88,7 +88,7 @@ public class ClientCollectionSheet implements Parcelable {
         this.clientName = in.readString();
         this.attendanceType = in.readParcelable(AttendanceTypeOption.class.getClassLoader());
         this.savings = in.createTypedArrayList(SavingsCollectionSheet.CREATOR);
-        this.loanCollectionSheetList = new ArrayList<LoanCollectionSheet>();
+        this.loanCollectionSheetList = new ArrayList<>();
         in.readList(this.loanCollectionSheetList, LoanCollectionSheet.class.getClassLoader());
     }
 

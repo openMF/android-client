@@ -102,11 +102,11 @@ public class LoanTransactionTemplate implements Parcelable {
 
     protected LoanTransactionTemplate(Parcel in) {
         this.type = in.readParcelable(Type.class.getClassLoader());
-        this.date = new ArrayList<Integer>();
+        this.date = new ArrayList<>();
         in.readList(this.date, Integer.class.getClassLoader());
         this.amount = (Double) in.readValue(Double.class.getClassLoader());
         this.manuallyReversed = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.possibleNextRepaymentDate = new ArrayList<Integer>();
+        this.possibleNextRepaymentDate = new ArrayList<>();
         in.readList(this.possibleNextRepaymentDate, Integer.class.getClassLoader());
         this.paymentTypeOptions = in.createTypedArrayList(PaymentTypeOption.CREATOR);
     }

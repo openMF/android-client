@@ -84,7 +84,7 @@ public class DataTableListFragment extends Fragment
     private int requestType;
     private View rootView;
     private SafeUIBlockingUtility safeUIBlockingUtility;
-    private List<List<FormWidget>> listFormWidgets = new ArrayList<List<FormWidget>>();
+    private List<List<FormWidget>> listFormWidgets = new ArrayList<>();
 
     public static DataTableListFragment newInstance(List<DataTable> dataTables,
                                                     Object payload, int type) {
@@ -151,7 +151,7 @@ public class DataTableListFragment extends Fragment
                 getActivity().getResources().getDimension(R.dimen.datatable_name_heading));
         linearLayout.addView(tableName);
 
-        List<FormWidget> formWidgets = new ArrayList<FormWidget>();
+        List<FormWidget> formWidgets = new ArrayList<>();
 
         for (ColumnHeader columnHeader : table.getColumnHeaderData()) {
 
@@ -189,8 +189,8 @@ public class DataTableListFragment extends Fragment
                         (FormWidget.SCHEMA_KEY_CODEVALUE)) {
 
                     if (columnHeader.getColumnValues().size() > 0) {
-                        List<String> columnValueStrings = new ArrayList<String>();
-                        List<Integer> columnValueIds = new ArrayList<Integer>();
+                        List<String> columnValueStrings = new ArrayList<>();
+                        List<Integer> columnValueIds = new ArrayList<>();
 
                         for (ColumnValue columnValue : columnHeader.getColumnValues()) {
                             columnValueStrings.add(columnValue.getValue());
@@ -274,7 +274,7 @@ public class DataTableListFragment extends Fragment
     HashMap<String, Object> addDataTableInput(int index) {
 
         List<FormWidget> formWidgets = listFormWidgets.get(index);
-        HashMap<String, Object> payload = new HashMap<String, Object>();
+        HashMap<String, Object> payload = new HashMap<>();
         payload.put(Constants.DATE_FORMAT, "dd-mm-YYYY");
         payload.put(Constants.LOCALE, "en");
         for (FormWidget formWidget : formWidgets) {

@@ -267,7 +267,7 @@ public class RepaymentSchedule implements Parcelable {
     protected RepaymentSchedule(Parcel in) {
         this.currency = in.readParcelable(Currency.class.getClassLoader());
         this.loanTermInDays = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.periods = new ArrayList<Period>();
+        this.periods = new ArrayList<>();
         in.readList(this.periods, Period.class.getClassLoader());
         this.totalFeeChargesCharged = (Double) in.readValue(Double.class.getClassLoader());
         this.totalInterestCharged = (Double) in.readValue(Double.class.getClassLoader());

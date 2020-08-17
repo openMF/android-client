@@ -22,7 +22,7 @@ public class PageItem {
     private String accountNo;
     private Status status;
     private boolean active;
-    private List<Integer> activationDate = new ArrayList<Integer>();
+    private List<Integer> activationDate = new ArrayList<>();
     private String firstname;
     private String middlename;
     private String lastname;

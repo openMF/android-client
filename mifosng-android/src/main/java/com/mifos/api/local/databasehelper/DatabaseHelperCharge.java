@@ -85,7 +85,7 @@ public class DatabaseHelperCharge {
                             chargesList.get(i).getChargeDueDate().getDay()));
                 }
 
-                Page<Charges> chargePage = new Page<Charges>();
+                Page<Charges> chargePage = new Page<>();
                 chargePage.setPageItems(chargesList);
                 subscriber.onNext(chargePage);
 

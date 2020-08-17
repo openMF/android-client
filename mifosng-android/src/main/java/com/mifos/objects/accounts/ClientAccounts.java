@@ -16,15 +16,15 @@ import java.util.List;
 
 public class ClientAccounts implements Parcelable {
 
-    private List<LoanAccount> loanAccounts = new ArrayList<LoanAccount>();
-    private List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
+    private List<LoanAccount> loanAccounts = new ArrayList<>();
+    private List<SavingsAccount> savingsAccounts = new ArrayList<>();
 
     public ClientAccounts() {
     }
 
     protected ClientAccounts(Parcel in) {
         this.loanAccounts = in.createTypedArrayList(LoanAccount.CREATOR);
-        this.savingsAccounts = new ArrayList<SavingsAccount>();
+        this.savingsAccounts = new ArrayList<>();
         in.readList(this.savingsAccounts, SavingsAccount.class.getClassLoader());
     }
 
@@ -63,7 +63,7 @@ public class ClientAccounts implements Parcelable {
     }
 
     private List<SavingsAccount> getSavingsAccounts(boolean wantRecurring) {
-        List<SavingsAccount> result = new ArrayList<SavingsAccount>();
+        List<SavingsAccount> result = new ArrayList<>();
         if (this.savingsAccounts != null) {
             for (SavingsAccount account : savingsAccounts) {
                 if (account.isRecurring() == wantRecurring) {

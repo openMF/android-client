@@ -42,7 +42,7 @@ public class Office extends MifosBaseModel implements Parcelable {
     @ForeignKey(saveForeignKeyModel = true)
     OfficeOpeningDate officeOpeningDate;
 
-    List<Integer> openingDate = new ArrayList<Integer>();
+    List<Integer> openingDate = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -128,7 +128,7 @@ public class Office extends MifosBaseModel implements Parcelable {
         this.name = in.readString();
         this.nameDecorated = in.readString();
         this.officeOpeningDate = in.readParcelable(OfficeOpeningDate.class.getClassLoader());
-        this.openingDate = new ArrayList<Integer>();
+        this.openingDate = new ArrayList<>();
         in.readList(this.openingDate, Integer.class.getClassLoader());
     }
 

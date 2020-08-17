@@ -15,9 +15,9 @@ import java.util.List;
 
 public class CenterAccounts implements Parcelable {
 
-    private List<LoanAccount> loanAccounts = new ArrayList<LoanAccount>();
-    private List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
-    private List<LoanAccount> memberLoanAccounts = new ArrayList<LoanAccount>();
+    private List<LoanAccount> loanAccounts = new ArrayList<>();
+    private List<SavingsAccount> savingsAccounts = new ArrayList<>();
+    private List<LoanAccount> memberLoanAccounts = new ArrayList<>();
 
     public List<LoanAccount> getLoanAccounts() {
         return loanAccounts;
@@ -62,7 +62,7 @@ public class CenterAccounts implements Parcelable {
     }
 
     private List<SavingsAccount> getSavingsAccounts(boolean wantRecurring) {
-        List<SavingsAccount> result = new ArrayList<SavingsAccount>();
+        List<SavingsAccount> result = new ArrayList<>();
         if (this.savingsAccounts != null) {
             for (SavingsAccount account : savingsAccounts) {
                 if (account.isRecurring() == wantRecurring) {

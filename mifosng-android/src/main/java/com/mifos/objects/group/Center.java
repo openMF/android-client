@@ -65,7 +65,7 @@ public class Center extends MifosBaseModel implements Parcelable {
     @ForeignKey(saveForeignKeyModel = true)
     transient CenterDate centerDate;
 
-    List<Integer> activationDate = new ArrayList<Integer>();
+    List<Integer> activationDate = new ArrayList<>();
 
     Timeline timeline;
 
@@ -251,7 +251,7 @@ public class Center extends MifosBaseModel implements Parcelable {
         this.hierarchy = in.readString();
         this.status = in.readParcelable(Status.class.getClassLoader());
         this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.activationDate = new ArrayList<Integer>();
+        this.activationDate = new ArrayList<>();
         in.readList(this.activationDate, Integer.class.getClassLoader());
         this.timeline = in.readParcelable(Timeline.class.getClassLoader());
     }

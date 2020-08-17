@@ -31,7 +31,7 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
 
     Type type;
 
-    List<Integer> date = new ArrayList<Integer>();
+    List<Integer> date = new ArrayList<>();
 
     Currency currency;
 
@@ -50,7 +50,7 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
     @Column
     Double penaltyChargesPortion;
 
-    List<PaymentTypeOption> paymentTypeOptions = new ArrayList<PaymentTypeOption>();
+    List<PaymentTypeOption> paymentTypeOptions = new ArrayList<>();
 
     public Integer getLoanId() {
         return loanId;
@@ -172,7 +172,7 @@ public class LoanRepaymentTemplate extends MifosBaseModel implements Parcelable 
 
     protected LoanRepaymentTemplate(Parcel in) {
         this.loanId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.date = new ArrayList<Integer>();
+        this.date = new ArrayList<>();
         in.readList(this.date, Integer.class.getClassLoader());
         this.currency = in.readParcelable(Currency.class.getClassLoader());
         this.amount = (Double) in.readValue(Double.class.getClassLoader());

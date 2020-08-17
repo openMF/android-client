@@ -116,17 +116,17 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     private View rootView;
     private DialogFragment datePicker;
 
-    private HashMap<String, Integer> officeNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> staffNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> centerNameIdHashMap = new HashMap<String, Integer>();
-    private HashMap<String, Integer> groupNameIdHashMap = new HashMap<String, Integer>();
+    private HashMap<String, Integer> officeNameIdHashMap = new HashMap<>();
+    private HashMap<String, Integer> staffNameIdHashMap = new HashMap<>();
+    private HashMap<String, Integer> centerNameIdHashMap = new HashMap<>();
+    private HashMap<String, Integer> groupNameIdHashMap = new HashMap<>();
     private HashMap<String, Integer> additionalPaymentTypeMap = new HashMap<>();
 
     private HashMap<String, Integer> attendanceTypeOptions = new HashMap<>();
 
-    private List<String> centerNames = new ArrayList<String>();
-    private List<String> staffNames = new ArrayList<String>();
-    private List<String> officeNames = new ArrayList<String>();
+    private List<String> centerNames = new ArrayList<>();
+    private List<String> staffNames = new ArrayList<>();
+    private List<String> officeNames = new ArrayList<>();
     private List<String> groupNames = new ArrayList<>();
     private List<String> paymentTypes = new ArrayList<>();
     private int officeId = -1;
@@ -179,7 +179,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     }
 
     public void inflateCenterSpinner(final int officeId, int staffId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         params.put(LIMIT, -1);
         params.put(ORDER_BY, ORDER_BY_FIELD_NAME);
@@ -191,7 +191,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     }
 
     public void inflateGroupSpinner(final int officeId, int staffId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put(LIMIT, -1);
         params.put(ORDER_BY, ORDER_BY_FIELD_NAME);
         params.put(SORT_ORDER, ASCENDING);
@@ -850,7 +850,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     }
 
     private void setSpinner(Spinner spinner, List<String> values) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, values);
         adapter.notifyDataSetChanged();
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

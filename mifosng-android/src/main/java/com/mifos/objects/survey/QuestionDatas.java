@@ -45,7 +45,7 @@ public class QuestionDatas extends MifosBaseModel implements Parcelable {
     @Column
     int sequenceNo;
 
-    List<ResponseDatas> responseDatas = new ArrayList<ResponseDatas>();
+    List<ResponseDatas> responseDatas = new ArrayList<>();
 
     public Integer getId() {
         return id;
