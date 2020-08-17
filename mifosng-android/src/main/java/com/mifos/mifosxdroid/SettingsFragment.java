@@ -9,7 +9,6 @@ import android.preference.SwitchPreference;
 import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment;
 import com.mifos.utils.FragmentConstants;
 
-
 /**
  * Created by mayankjindal on 22/07/17.
  */

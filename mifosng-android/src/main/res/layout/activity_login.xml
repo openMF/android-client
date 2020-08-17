@@ -46,7 +46,7 @@
                 <EditText
                     android:id="@+id/et_password"
                     style="@style/EditText.Password"
-                    android:nextFocusDown="@+id/bt_login" />
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -68,6 +68,7 @@
                         <EditText
                             android:id="@+id/et_instanceURL"
                             style="@style/EditText.Connection"
+                            android:inputType="textUri"
                             android:hint="@string/hint_instance_url"
                             android:nextFocusDown="@+id/et_instancePort" />
 

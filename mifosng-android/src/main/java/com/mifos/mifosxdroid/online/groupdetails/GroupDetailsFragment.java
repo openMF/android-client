@@ -217,7 +217,11 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
             }
             setToolbarTitle(getString(R.string.group) + " - " + group.getName());
             tv_fullName.setText(group.getName());
-            tv_externalId.setText(group.getExternalId());
+            if (group.getExternalId() != null) {
+                tv_externalId.setText(group.getExternalId());
+            } else {
+                tv_externalId.setText(R.string.not_available);
+            }
 
             try {
                 String dateString = Utils.getStringOfDate(group.getActivationDate());
@@ -394,6 +398,7 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
             private final int sectionId;
             private final int textViewStringId;
+            private double mListViewCount;
 
             Section(int sectionId, int textViewStringId) {
                 this.sectionId = sectionId;
@@ -438,7 +443,12 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
             public void open(Activity context) {
                 IconTextView iconView = getIconView(context);
                 iconView.setText("{" + LIST_CLOSED_ICON.key() + "}");
-                getListView(context).setVisibility(VISIBLE);
+                mListViewCount = Double.valueOf(getCountView(context)
+                        .getText()
+                        .toString());
+                ListView listView = getListView(context);
+                resizeListView(context, listView);
+                listView.setVisibility(VISIBLE);
             }
 
             public void close(Activity context) {
@@ -485,6 +495,22 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                 }
                 // initialize section in closed state
                 close(context);
+            }
+
+            private void resizeListView(Activity context, ListView listView) {
+                if (mListViewCount < 4) {
+                    //default listview height is 200dp,which displays 4 listview items.
+                    // This calculates the required listview height
+                    // if listview items are less than 4
+                    double heightInDp = (mListViewCount / 4) * 200;
+                    double heightInPx = heightInDp * context.getResources()
+                            .getDisplayMetrics()
+                            .density;
+                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+                    params.height = (int) heightInPx;
+                    listView.setLayoutParams(params);
+                    listView.requestLayout();
+                }
             }
         }
     }

@@ -9,8 +9,7 @@
     tools:context=".online.DashboardActivity">
 
     <LinearLayout
-        style="@style/LinearLayout.Base"
-        android:fitsSystemWindows="true">
+        style="@style/LinearLayout.Base">
 
         <include layout="@layout/toolbar"/>
 

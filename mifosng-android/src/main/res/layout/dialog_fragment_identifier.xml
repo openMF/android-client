@@ -24,8 +24,7 @@
     android:layout_centerHorizontal="true"
     android:minWidth="300dp"
     android:minHeight="300dp"
-    android:scrollbars="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:scrollbars="vertical">
     <TextView
         style="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_height="match_parent"

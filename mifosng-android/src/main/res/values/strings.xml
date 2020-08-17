@@ -755,6 +755,7 @@
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="centerList_account_prefix">Account No: %1$s</string>
     <string name="no_staff">no staff</string>
+    <string name="not_available">N.A</string>
     <string name="note">Notes</string>
     <string name="empty_notes">Empty Notes</string>
     <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
@@ -793,12 +794,43 @@
     <string name="office_head">office</string>
     <string name="status_head">status</string>
     <string name="client_search_hint"></string>
+
     <string name="create_client_loading_message">Creating new client</string>
     <string name="savings_account_loading_message">Activating savings account</string>
     <string name="signature_fragment_loading_message">Uploading image</string>
     <string name="document_dialog_fragment_loading_message">Uploading document</string>
     <string name="data_table_row_dialog_loading_message">Adding entry to database</string>
     <string name="savings_account_approval_fragment_loading_message">Approving savings account</string>
+    <string name="sync_success">Successfully Synced</string>
 
+    <string name="Image_Upload_Successful">Image Upload Successful</string>
+    <string name="Image_Upload_Failed">Image Upload Failed</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="take_a_photo">Take a Photo</string>
+    <string name="remove_existing_photo">Remove Existing Photo</string>
+
+    <string name="error_enter_credentials">Please Enter the Credentials</string>
+
+    <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
+    <string name="client_approval">Client Approval</string>
+    <string name="loan_approval">Loan Approval</string>
+    <string name="loan_disbursal">Loan Disbursal</string>
+    <string name="reschedule_loan">Reschedule Loan</string>
+    <string name="checker_inbox">Checker Inbox</string>
+    <string name="select_from_date">Select From Date</string>
+    <string name="select_to_date">Select To Date</string>
+    <string name="approve">APPROVE</string>
+    <string name="approve_confirmation">Do you want to approve this entry?</string>
+    <string name="yes">Yes</string>
+    <string name="reject">REJECT</string>
+    <string name="reject_confirmation">Do you want to reject this entry?</string>
+    <string name="delete">DELETE</string>
+    <string name="delete_confirmation">Do you want to delete this entry?</string>
+    <string name="approve_selected_entries">Approve selected entries?</string>
+    <string name="reject_selected_entries">Reject selected entries?</string>
+    <string name="no_task_selected">No task selected</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="entry">ENTRY</string>
+    <string name="network_issue">Network Issue</string>
 
 </resources>

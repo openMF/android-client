@@ -2,7 +2,7 @@
 <ScrollView android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         style="@style/LinearLayout.Base"
         android:padding="10dp">
        <TextView

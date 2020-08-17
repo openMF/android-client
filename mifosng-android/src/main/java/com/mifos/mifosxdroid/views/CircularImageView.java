@@ -16,14 +16,14 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.mifos.mifosxdroid.R;
 
 /**
  * @author fomenkoo
  */
-public class CircularImageView extends ImageView {
+public class CircularImageView extends AppCompatImageView {
     private int borderWidth;
     private int canvasSize;
     private Bitmap image;

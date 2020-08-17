@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.mifos.api.services.AuthService;
 import com.mifos.api.services.CenterService;
 import com.mifos.api.services.ChargeService;
+import com.mifos.api.services.CheckerInboxService;
 import com.mifos.api.services.ClientAccountsService;
 import com.mifos.api.services.ClientService;
 import com.mifos.api.services.CollectionSheetService;
@@ -58,6 +59,7 @@ public class BaseApiManager {
     private static RunReportsService runreportsService;
     private static NoteService noteService;
     private static CollectionSheetService collectionSheetService;
+    private static CheckerInboxService checkerInboxService;
 
     public BaseApiManager() {
         createService();
@@ -81,6 +83,7 @@ public class BaseApiManager {
         runreportsService = createApi(RunReportsService.class);
         noteService = createApi(NoteService.class);
         collectionSheetService = createApi(CollectionSheetService.class);
+        checkerInboxService = createApi(CheckerInboxService.class);
     }
 
     private static <T> T createApi(Class<T> clazz) {
@@ -168,5 +171,9 @@ public class BaseApiManager {
 
     public CollectionSheetService getCollectionSheetApi() {
         return collectionSheetService;
+    }
+
+    public CheckerInboxService getCheckerInboxApi() {
+        return checkerInboxService;
     }
 }

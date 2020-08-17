@@ -15,7 +15,6 @@
     xmlns:map="http://schemas.android.com/tools">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ll_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

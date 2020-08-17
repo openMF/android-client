@@ -80,7 +80,8 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
         if (report.getData().size() > 0) {
             setUpValues();
         } else {
-            Toast.makeText(getActivity(), getString(R.string.msg_report_empty), Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), getString(R.string.msg_report_empty), Toast.LENGTH_SHORT)
+                    .show();
         }
         showProgressbar(false);
     }

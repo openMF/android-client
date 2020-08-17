@@ -74,6 +74,6 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     }
 
     public interface OnDatePickListener {
-        public void onDatePicked(String date);
+        void onDatePicked(String date);
     }
 }
