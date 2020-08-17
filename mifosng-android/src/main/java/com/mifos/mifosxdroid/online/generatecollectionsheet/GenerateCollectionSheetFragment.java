@@ -257,7 +257,6 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
                 officeId = officeNameIdHashMap.get(officeNames.get(i));
                 if (officeId != -1) {
                     inflateStaffSpinner(officeId);
-                    inflateCenterSpinner(officeId, -1);
                     inflateGroupSpinner(officeId, -1);
                 } else {
                     Toaster.show(rootView, getString(R.string.error_select_office));
