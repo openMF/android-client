@@ -170,6 +170,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideKeyboard(view);
                 if (Network.isOnline(getContext())) {
                     GroupPayload groupPayload = new GroupPayload();
 
