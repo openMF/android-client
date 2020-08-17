@@ -33,7 +33,7 @@
                     android:text="@string/office"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                <Spinner
+                <AutoCompleteTextView
                     android:id="@+id/sp_branch_offices"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
