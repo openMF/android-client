@@ -64,7 +64,8 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
     private Boolean mLoanAccountSyncStatus = false;
     private Boolean mSavingAccountSyncStatus = false;
 
-    private int mCenterSyncIndex = 0, mLoanAndRepaymentSyncIndex = 0,
+    public int mCenterSyncIndex = 0;
+    private int mLoanAndRepaymentSyncIndex = 0,
             mSavingsAndTransactionSyncIndex = 0, mMemberLoanSyncIndex = 0,
             mClientSyncIndex = 0, mGroupSyncIndex;
 
