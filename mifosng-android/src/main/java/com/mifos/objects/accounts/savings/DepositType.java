@@ -106,7 +106,7 @@ public class DepositType extends MifosBaseModel implements Parcelable {
         dest.writeString(this.value);
     }
 
-    public static enum ServerTypes {
+    public enum ServerTypes {
         // TODO: Are these all the types?
         SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGSACCOUNTS),
         FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGSACCOUNTS),
