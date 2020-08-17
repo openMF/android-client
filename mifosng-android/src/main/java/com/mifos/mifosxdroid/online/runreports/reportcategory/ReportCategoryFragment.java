@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +59,18 @@ public class ReportCategoryFragment extends MifosBaseFragment
         }
     };
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(this.broadCastNewMessage,
+                new IntentFilter(Constants.ACTION_REPORT));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(this.broadCastNewMessage);
+    }
 
     public ReportCategoryFragment() {
     }
@@ -74,8 +86,6 @@ public class ReportCategoryFragment extends MifosBaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        getActivity().registerReceiver(this.broadCastNewMessage,
-                new IntentFilter(Constants.ACTION_REPORT));
     }
 
     @Nullable

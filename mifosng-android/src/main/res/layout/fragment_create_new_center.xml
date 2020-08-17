@@ -1,14 +1,14 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/ll_center"
+    <LinearLayout
+        android:id="@+id/ll_center"
                   style="@style/LinearLayout.Base">
         <TextView style="@style/TextView.CreateCenter" />
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+        <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
             <EditText
                 android:id="@+id/et_center_name"
                 style="@style/EditText.BaseWidth"
@@ -19,56 +19,97 @@
                 android:paddingBottom="16dp"
                 android:singleLine="true"/>
             <requestFocus />
-        </android.support.design.widget.TextInputLayout>
-        <TextView
-            android:id="@+id/tv_office"
+
+        </com.google.android.material.textfield.TextInputLayout>
+      
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/office_name_mandatory"
-            android:textSize="16sp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_office"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/office_name_mandatory"
+                android:textSize="12sp"
+                style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-            />
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/sp_center_offices"
+                android:layout_width="match_parent"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown"
+                android:backgroundTint="@color/gray_dark"/>
+        </LinearLayout>
 
-        <Spinner
-            android:id="@+id/sp_center_offices"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown"
-            android:background="@color/light_grey"/>
-        <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
-        </android.support.design.widget.TextInputLayout>
-        <CheckBox
-            android:id="@+id/cb_center_active_status"
+    <CheckBox
+        android:id="@+id/cb_center_active_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:checked="false"
+        android:paddingTop="10dp"
+        android:text="@string/center_active" />
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:visibility="gone"
+        android:id="@+id/layout_submission">
+
+        <LinearLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:checked="false"
-            android:paddingTop="10dp"
-            android:text="@string/center_active"
-            />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_center_activationDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="date"
-            android:paddingBottom="10dp"
-            android:textSize="20sp"
-            android:text="@string/center_activation_date"
-            android:visibility="gone"
+            <ImageView
+                android:baselineAlignBottom="true"
+                android:layout_gravity="center"
+                android:layout_height="30dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="30dp"
+                app:srcCompat="@drawable/ic_event_black_24dp"/>
 
-            />
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_width="match_parent"
+                android:orientation="vertical">
 
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Small"
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/center_activation_date"/>
 
-        <Button
-            android:id="@+id/btn_submit"
-            style="@style/Button.Base"
-            android:layout_marginTop="10dp"
-            android:text="@string/submit"
-            />
+                <TextView
+                    android:id="@+id/tv_center_activationDate"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
 
+            </LinearLayout>
+
+        </LinearLayout>
+      
+        <View
+            android:background="@color/gray_dark"
+            android:layout_height="0.2dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_submit"
+        style="@style/Button.Base"
+        android:layout_marginTop="10dp"
+        android:text="@string/submit" />
 
     </LinearLayout>
 </ScrollView>

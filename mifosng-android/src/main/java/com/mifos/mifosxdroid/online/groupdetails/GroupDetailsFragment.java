@@ -2,7 +2,7 @@ package com.mifos.mifosxdroid.online.groupdetails;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +32,7 @@ import com.mifos.mifosxdroid.online.datatable.DataTableFragment;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
 import com.mifos.mifosxdroid.online.note.NoteFragment;
+import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.accounts.savings.DepositType;
 import com.mifos.objects.client.Client;
@@ -167,6 +168,16 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
         fragmentTransaction.commit();
     }
 
+    public void addGroupSavingsAccount() {
+        SavingsAccountFragment savingsAccountFragment =
+                SavingsAccountFragment.newInstance(groupId, true);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS);
+        fragmentTransaction.replace(R.id.container, savingsAccountFragment);
+        fragmentTransaction.commit();
+    }
+
     public void addGroupLoanAccount() {
         GroupLoanAccountFragment grouploanAccountFragment = GroupLoanAccountFragment.newInstance
                 (groupId);
@@ -206,7 +217,11 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
             }
             setToolbarTitle(getString(R.string.group) + " - " + group.getName());
             tv_fullName.setText(group.getName());
-            tv_externalId.setText(group.getExternalId());
+            if (group.getExternalId() != null) {
+                tv_externalId.setText(group.getExternalId());
+            } else {
+                tv_externalId.setText(R.string.not_available);
+            }
 
             try {
                 String dateString = Utils.getStringOfDate(group.getActivationDate());
@@ -316,6 +331,9 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
             case R.id.documents:
                 loadDocuments();
                 break;
+            case R.id.add_group_savings_account:
+                addGroupSavingsAccount();
+                break;
             case R.id.add_group_loan:
                 addGroupLoanAccount();
                 break;
@@ -380,6 +398,7 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
             private final int sectionId;
             private final int textViewStringId;
+            private double mListViewCount;
 
             Section(int sectionId, int textViewStringId) {
                 this.sectionId = sectionId;
@@ -424,7 +443,12 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
             public void open(Activity context) {
                 IconTextView iconView = getIconView(context);
                 iconView.setText("{" + LIST_CLOSED_ICON.key() + "}");
-                getListView(context).setVisibility(VISIBLE);
+                mListViewCount = Double.valueOf(getCountView(context)
+                        .getText()
+                        .toString());
+                ListView listView = getListView(context);
+                resizeListView(context, listView);
+                listView.setVisibility(VISIBLE);
             }
 
             public void close(Activity context) {
@@ -471,6 +495,22 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                 }
                 // initialize section in closed state
                 close(context);
+            }
+
+            private void resizeListView(Activity context, ListView listView) {
+                if (mListViewCount < 4) {
+                    //default listview height is 200dp,which displays 4 listview items.
+                    // This calculates the required listview height
+                    // if listview items are less than 4
+                    double heightInDp = (mListViewCount / 4) * 200;
+                    double heightInPx = heightInDp * context.getResources()
+                            .getDisplayMetrics()
+                            .density;
+                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+                    params.height = (int) heightInPx;
+                    listView.setLayoutParams(params);
+                    listView.requestLayout();
+                }
             }
         }
     }

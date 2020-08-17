@@ -4,22 +4,20 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  style="@style/LinearLayout.Base">
+    <LinearLayout style="@style/LinearLayout.Base">
 
         <include layout="@layout/toolbar"/>
 
         <FrameLayout
-            style="@style/FrameLayout.Container"
-            android:padding="10dp"/>
+            style="@style/FrameLayout.Container" />
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

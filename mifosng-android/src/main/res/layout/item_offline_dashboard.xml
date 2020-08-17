@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/iv_payload_image"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
@@ -36,4 +35,4 @@
         android:textColor="@color/white"
         android:layout_marginTop="28dp"/>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

@@ -3,9 +3,9 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/LinearLayout.Base"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -13,50 +13,58 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingRight="4dp"
+            app:srcCompat="@drawable/ic_search_black_24dp" />
+
         <TextView
             android:id="@+id/tv_search"
-            style="@style/TextView.Search"/>
+            style="@style/TextView.Search" />
 
         <Spinner
             android:id="@+id/sp_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="50dp"
-            android:gravity="end"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="end" />
     </LinearLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         style="@style/TextInput.Base">
 
         <EditText
             android:id="@+id/et_search"
             style="@style/EditText.BaseWidth"
             android:hint="@string/search_hint"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
         android:id="@+id/btn_search"
         style="@style/Button.Base"
         android:layout_marginTop="10dp"
-        android:text="@string/search"/>
+        android:text="@string/search" />
 
     <TextView
         android:id="@+id/tv_title_search_results"
         style="@style/TextView.Search.Results"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <CheckBox
         android:id="@+id/cb_exact_match"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/exact_match"/>
+        android:text="@string/exact_match" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
 </LinearLayout>

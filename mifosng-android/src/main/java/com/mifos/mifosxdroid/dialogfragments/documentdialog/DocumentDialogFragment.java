@@ -14,8 +14,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +106,8 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity(),
+                getString(R.string.document_dialog_fragment_loading_message));
         if (getArguments() != null) {
             entityType = getArguments().getString(Constants.ENTITY_TYPE);
             entityId = getArguments().getInt(Constants.ENTITY_ID);
@@ -134,6 +135,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
             tvDocumentAction.setText(R.string.upload_document);
         }
 
+        btUpload.setEnabled(false);
         return rootView;
     }
 
@@ -315,6 +317,11 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @Override
     public void showError(int errorMessage) {
         Toast.makeText(getActivity(), getString(errorMessage), Toast.LENGTH_SHORT).show();
+        getDialog().dismiss();
+    }
+    @Override
+    public void showUploadError(String errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
         getDialog().dismiss();
     }
 

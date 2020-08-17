@@ -13,12 +13,11 @@
         android:layout_gravity="center" />
 
     <!-- Actual content -->
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            style="@style/LinearLayout.Base">
+        <LinearLayout style="@style/LinearLayout.Base">
 
             <TextView
                 style="@style/TextView.CreateSavingsAccount"
@@ -57,7 +56,7 @@
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_client_external_id"
@@ -68,7 +67,7 @@
                     android:inputType="text"
                     android:paddingBottom="16dp"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_submittedon"
@@ -83,13 +82,13 @@
                 android:id="@+id/tv_submittedon_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Submission Date :"
+                android:hint="@string/submission_headline"
                 android:imeOptions="actionNext"
                 android:paddingBottom="16dp"
                 android:paddingTop="10dp"
                 android:textSize="20sp" />
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_nominal_annual"
@@ -100,7 +99,7 @@
                     android:inputType="number"
                     android:paddingBottom="16dp"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_interest_calc"
@@ -175,7 +174,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/saving_min_required_balance" />
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_min_required_balance"
@@ -187,7 +186,7 @@
                     android:paddingBottom="16dp"
                     android:maxLines="1"
                     android:visibility="gone"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/cb_overdraft_allowed"
@@ -198,7 +197,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/saving_overdraft_allowed" />
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_max_overdraft_amount"
@@ -210,9 +209,9 @@
                     android:paddingBottom="16dp"
                     android:maxLines="1"
                     android:visibility="gone"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_nominal_annual_overdraft"
@@ -224,9 +223,9 @@
                     android:paddingBottom="16dp"
                     android:maxLines="1"
                     android:visibility="gone"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+            <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
                 <EditText
                     android:id="@+id/et_min_overdraft_required"
@@ -239,7 +238,7 @@
                     android:maxLines="1"
                     android:visibility="gone"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_submit"

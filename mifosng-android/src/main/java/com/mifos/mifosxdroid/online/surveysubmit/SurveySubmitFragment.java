@@ -9,7 +9,7 @@ package com.mifos.mifosxdroid.online.surveysubmit;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +93,7 @@ public class SurveySubmitFragment extends MifosBaseFragment implements
             mDetachFragment.disableSwipe();
             btn_submit.setText(getResources().getString(R.string.submitting_surveys));
             btn_submit.setEnabled(false);
+            btn_submit.setVisibility(View.GONE);
             mSurveySubmitPresenter.submitSurvey(mSurveyId, mScorecard);
         } else {
             Toast.makeText(context, getResources()

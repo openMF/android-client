@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         tools:context=".online.clientidentifiers.ClientIdentifiersFragment">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -35,6 +35,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </RelativeLayout>
 </ViewFlipper>

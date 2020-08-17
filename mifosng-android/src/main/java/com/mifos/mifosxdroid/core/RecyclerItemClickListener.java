@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.core;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,7 +55,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
          * @param childView View of the item that was clicked.
          * @param position  Position of the item that was clicked.
          */
-        public void onItemClick(View childView, int position);
+        void onItemClick(View childView, int position);
 
         /**
          * Called when an item is long pressed.
@@ -63,7 +63,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
          * @param childView View of the item that was long pressed.
          * @param position  Position of the item that was long pressed.
          */
-        public void onItemLongPress(View childView, int position);
+        void onItemLongPress(View childView, int position);
 
     }
 

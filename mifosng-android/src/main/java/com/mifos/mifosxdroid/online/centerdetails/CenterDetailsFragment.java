@@ -2,8 +2,8 @@ package com.mifos.mifosxdroid.online.centerdetails;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -144,7 +144,11 @@ public class CenterDetailsFragment extends MifosBaseFragment implements CenterDe
     public void showCenterDetails(CenterWithAssociations centerWithAssociations) {
         setToolbarTitle(centerWithAssociations.getName());
         if (!centerWithAssociations.getActivationDate().isEmpty()) {
-            tvStaffName.setText(centerWithAssociations.getStaffName());
+            if (centerWithAssociations.getStaffName() != null) {
+                tvStaffName.setText(centerWithAssociations.getStaffName());
+            } else {
+                tvStaffName.setText(R.string.no_staff);
+            }
             tvActivationDate.setText(Utils.getStringOfDate
                     (centerWithAssociations.getActivationDate()));
         }

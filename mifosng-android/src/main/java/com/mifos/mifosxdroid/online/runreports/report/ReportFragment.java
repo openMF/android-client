@@ -2,7 +2,7 @@ package com.mifos.mifosxdroid.online.runreports.report;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -80,7 +80,8 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
         if (report.getData().size() > 0) {
             setUpValues();
         } else {
-            Toast.makeText(getActivity(), getString(R.string.msg_report_empty), Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), getString(R.string.msg_report_empty), Toast.LENGTH_SHORT)
+                    .show();
         }
         showProgressbar(false);
     }

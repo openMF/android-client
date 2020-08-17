@@ -6,7 +6,7 @@
 package com.mifos.mifosxdroid.online.savingsaccountactivate;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +99,8 @@ public class SavingsAccountActivateFragment extends MifosBaseFragment implements
 
         ButterKnife.bind(this, rootView);
         mSavingsAccountActivatePresenter.attachView(this);
-        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity());
+        safeUIBlockingUtility = new SafeUIBlockingUtility(getActivity(),
+                getString(R.string.savings_account_loading_message));
 
         showUserInterface();
 

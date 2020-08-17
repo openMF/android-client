@@ -9,7 +9,7 @@ package com.mifos.mifosxdroid.online.datatablelistfragment;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -130,7 +130,7 @@ public class DataTableListFragment extends Fragment
                 R.string.associated_datatables));
 
         safeUIBlockingUtility = new SafeUIBlockingUtility(DataTableListFragment.this
-                .getActivity());
+                .getActivity(), getString(R.string.create_client_loading_message));
 
         for (DataTable datatable: dataTables) {
             createForm(datatable);
@@ -320,6 +320,12 @@ public class DataTableListFragment extends Fragment
             clientActivityIntent.putExtra(Constants.CLIENT_ID, client.getClientId());
             startActivity(clientActivityIntent);
         }
+    }
+
+    @Override
+    public void showWaitingForCheckerApproval(int message) {
+        getActivity().getSupportFragmentManager().popBackStack();
+        Toaster.show(rootView, message, Toast.LENGTH_SHORT);
     }
 
     @Override

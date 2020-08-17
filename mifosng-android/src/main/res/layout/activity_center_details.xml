@@ -10,11 +10,11 @@
 
     <include layout="@layout/toolbar" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         style="@style/LinearLayout.Base"
         android:padding="10dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/staffWrapper"
             style="@style/TextInput.Offline">
 
@@ -24,9 +24,9 @@
                 android:hint="@string/staff_id"
                 android:nextFocusDown="@+id/et_password" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/branchWrapper"
             style="@style/TextInput.Offline">
 
@@ -36,7 +36,7 @@
                 android:hint="@string/branch_id"
                 android:nextFocusDown="@+id/et_password" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <TextView

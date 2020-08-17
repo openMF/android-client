@@ -7,7 +7,7 @@ package com.mifos.mifosxdroid.online.savingaccountsummary;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -136,6 +136,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             savingsAccountType = getArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE);
             parentFragment = getArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT);
         }
+        inflateSavingsAccountSummary();
         setHasOptionsMenu(true);
     }
 

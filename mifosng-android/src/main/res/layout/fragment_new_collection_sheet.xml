@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        style="@style/LinearLayout.Base"
+        android:padding="10dp">
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="10dp"
+           android:layout_marginBottom="10dp"
+           android:textSize="24sp"
+           android:text="@string/generate_new"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fill_collection_sheet_message"
+            android:textSize="12sp"
+            android:textColor="@color/gray_dark"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            style="@style/spinner_style"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:spinnerMode="dropdown"
+            android:paddingTop="10dp"
+            android:id="@+id/sp_office_list"
+            android:entries="@array/search_options"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/repayment_date"
+            android:id="@+id/tv_repayment_date"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:text="@string/repayment_date"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            style="@style/spinner_style"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/sp_staff_list"
+            android:spinnerMode="dropdown"
+            android:paddingTop="10dp"
+            android:entries="@array/search_options"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"/>
+
+
+            <LinearLayout
+                style="@style/LinearLayout.Width"
+                android:padding="10dp">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/generate"
+                    android:id="@+id/btn_fetch_collection_sheet"
+                    android:background="@color/primary"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="20dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clear"
+                    android:id="@+id/btn_clear"
+                    android:background="@color/light_grey"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -7,8 +7,8 @@ package com.mifos.mifosxdroid.online.loanaccount;
 
 import android.R.layout;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -720,17 +720,15 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         interestRatePerPeriod = mLoanTemplate.getInterestRatePerPeriod();
         loanTermFrequency = mLoanTemplate.getTermPeriodFrequencyType().getId();
         termFrequency = mLoanTemplate.getTermFrequency();
-        etPrincipal.setText(String.valueOf(mLoanTemplate.getPrincipal().toString()));
-        etNumberOfRepayments.setText(String.valueOf(
-                mLoanTemplate.getNumberOfRepayments().toString()));
+        etPrincipal.setText(mLoanTemplate.getPrincipal().toString());
+        etNumberOfRepayments.setText(mLoanTemplate.getNumberOfRepayments().toString());
         tvNominalRatePerYearMonth
                 .setText(mLoanTemplate.getInterestRateFrequencyType().getValue());
-        etNominalInterestRate.setText(String.valueOf(
-                mLoanTemplate.getInterestRatePerPeriod().toString()));
-        etLoanTerm.setText(String.valueOf(termFrequency.toString()));
+        etNominalInterestRate.setText(mLoanTemplate.getInterestRatePerPeriod().toString());
+        etLoanTerm.setText(termFrequency.toString());
         if (mLoanTemplate.getRepaymentEvery() != null) {
             repaymentEvery = mLoanTemplate.getRepaymentEvery();
-            etRepaidEvery.setText(String.valueOf(repaymentEvery.toString()));
+            etRepaidEvery.setText(repaymentEvery.toString());
         }
         if (mLoanTemplate.getFundId() != null) {
             fundId = mLoanTemplate.getFundId();

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_client"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    app:cardUseCompatPadding="true" >
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="8dp">
+
+    <com.mifos.mifosxdroid.views.CircularImageView
+        android:id="@+id/iv_user_picture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:elevation="2dp"
+        android:src="@drawable/ic_dp_placeholder"
+        app:border="false"
+        />
+
+       <LinearLayout
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:gravity="center_vertical"
+           android:orientation="vertical"
+           android:paddingLeft="16dp">
+
+           <TextView
+               android:id="@+id/tv_client_name"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textSize="24sp"
+               tools:text="Joseph Mobuto"/>
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               tools:text="MDL (#Account No)"
+               android:textColor="@color/gray_dark"
+               android:id="@+id/tv_product_code"/>
+
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+               <TextView
+                   android:layout_width="120dp"
+                   android:layout_height="wrap_content"
+                   android:text="Total Due:"/>
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:text="due"
+                   android:id="@+id/tv_total_due"/>
+           </LinearLayout>
+
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:layout_marginBottom="20dp">
+               <TextView
+                   android:layout_width="120dp"
+                   android:layout_height="wrap_content"
+                   android:text="Total Charges:"/>
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:text="charge"
+                   android:id="@+id/et_charges"/>
+           </LinearLayout>
+       </LinearLayout>
+
+           <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:src="@drawable/baseline_keyboard_arrow_right_black_36"
+               android:layout_alignParentRight="true"
+               android:layout_gravity="center_vertical"
+               android:id="@+id/btn_additional_details"
+               />
+
+</LinearLayout>
+</androidx.cardview.widget.CardView>

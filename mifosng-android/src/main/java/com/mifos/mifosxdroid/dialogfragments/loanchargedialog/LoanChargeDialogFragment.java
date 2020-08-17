@@ -7,8 +7,8 @@ package com.mifos.mifosxdroid.dialogfragments.loanchargedialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -224,7 +224,6 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
                 }
 
             }
-            String stringResult = sb.toString();
         } catch (Exception e) {
             Log.e(LOG_TAG, "", e);
         }
@@ -240,16 +239,10 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
                 chargeId = chargeNameIdHashMap.get(chargesNames.get(i));
                 chargeName = chargesNames.get(i);
                 Log.d("chargesoptionss" + chargesNames.get(i), String.valueOf(chargeId));
-                if (chargeId != -1) {
-
-
-                } else {
-
+                if (chargeId == -1) {
                     Toast.makeText(getActivity(), getString(R.string.error_select_charge)
                             , Toast.LENGTH_SHORT).show();
-
                 }
-
             }
 
             @Override

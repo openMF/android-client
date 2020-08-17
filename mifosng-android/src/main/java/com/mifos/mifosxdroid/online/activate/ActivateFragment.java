@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.activate;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,7 +122,7 @@ public class ActivateFragment extends MifosBaseFragment implements ActivateMvpVi
     @Override
     public void showActivatedSuccessfully(int message) {
         Toast.makeText(getActivity(),
-                R.string.client_activated_successfully, Toast.LENGTH_SHORT).show();
+                getString(message), Toast.LENGTH_SHORT).show();
         getActivity().getSupportFragmentManager().popBackStack();
     }
 

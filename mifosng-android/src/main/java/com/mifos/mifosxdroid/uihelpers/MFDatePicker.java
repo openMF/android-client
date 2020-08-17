@@ -8,8 +8,8 @@ package com.mifos.mifosxdroid.uihelpers;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import android.text.format.DateFormat;
 import android.widget.DatePicker;
 
@@ -74,6 +74,6 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
     }
 
     public interface OnDatePickListener {
-        public void onDatePicked(String date);
+        void onDatePicked(String date);
     }
 }

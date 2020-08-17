@@ -6,9 +6,8 @@
 package com.mifos.mifosxdroid.online.collectionsheet;
 
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -125,9 +124,7 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
 //        mItemSearch.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
 //                .colorRes(Color.WHITE)
 //                .actionBarSize());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        }
+        mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
 
         MenuItem mItemRefresh = menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R
@@ -135,18 +132,14 @@ public class CollectionSheetFragment extends MifosBaseFragment implements Collec
         mItemRefresh.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_refresh)
                 .colorRes(R.color.white)
                 .actionBarSize());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mItemRefresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
+        mItemRefresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         MenuItem mItemSave = menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string
                 .save));
         mItemSave.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_save)
                 .colorRes(R.color.white)
                 .actionBarSize());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mItemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
+        mItemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 
         super.onPrepareOptionsMenu(menu);
