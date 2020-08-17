@@ -138,6 +138,10 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     public void onError(Throwable e) {
                         getMvpView().showProgressbar(false);
                         getMvpView().showFetchingError("Client not found.");
+
+                        //IN CASE THERE IS AN ERROR OR NO INTERNET CONNECTION
+                        //show the default client accounts info
+                        getMvpView().showClientAccount(new ClientAccounts());
                     }
 
                     @Override
