@@ -171,6 +171,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
      */
     public void loadDatabaseClients() {
         checkViewAttached();
+        getMvpView().showProgressbar(true);
         mSubscriptions.add(mDataManagerClient.getAllDatabaseClients()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -182,6 +183,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
+                        getMvpView().showProgressbar(false);
                         getMvpView().showMessage(R.string.failed_to_load_db_clients);
                     }
 
@@ -190,6 +192,7 @@ public class ClientListPresenter extends BasePresenter<ClientListMvpView> {
                         mDatabaseClientSyncStatus = true;
                         mDbClientList = clientPage.getPageItems();
                         setAlreadyClientSyncStatus();
+                        getMvpView().showProgressbar(false);
                     }
                 })
         );
