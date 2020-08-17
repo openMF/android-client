@@ -203,6 +203,7 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
                 if (i == staffList.size() || i == 0) {
                     Toaster.show(rootView, getStringMessage(R.string.error_select_staff));
                 } else {
+                    Toaster.show(rootView, staffNameList.get(i));
                     staffId = staffList.get(i - 1).getId();
                 }
                 break;
