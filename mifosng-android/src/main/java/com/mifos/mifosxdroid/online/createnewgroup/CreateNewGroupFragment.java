@@ -10,6 +10,7 @@ package com.mifos.mifosxdroid.online.createnewgroup;
  */
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
@@ -56,6 +57,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 //TODO Show Image and Text after successful or Failed during creation of Group and
 //TODO A button to Continue or Finish the GroupCreation.
@@ -218,11 +220,19 @@ public class CreateNewGroupFragment extends ProgressableFragment
         tv_submissionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
+                Dialog dialogFrg = mfDatePicker.getDialog();
+                if(dialogFrg!=null && dialogFrg.isShowing()) {
+                    //no need to call the inputDateSub() function
+                } else {
+                    inputDateSub();
+                }
             }
-        });
 
+            });
+    }
+    public void inputDateSub(){
+        mfDatePicker.show(getActivity().getSupportFragmentManager(),
+                FragmentConstants.DFRAG_DATE_PICKER);
     }
 
     public void inflateActivationDate() {
@@ -233,13 +243,21 @@ public class CreateNewGroupFragment extends ProgressableFragment
         tv_activationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
+                Dialog dialogFrg = newDatePicker.getDialog();
+                if(dialogFrg!=null && dialogFrg.isShowing()) {
+                    //no need to call the inputDateAct() function
+                } else {
+                    inputDateAct();
+                }
             }
 
         });
 
 
+    }
+    public void inputDateAct(){
+        newDatePicker.show(getActivity().getSupportFragmentManager(),
+                FragmentConstants.DFRAG_DATE_PICKER);
     }
 
     public void onDatePicked(String date) {

@@ -2,6 +2,7 @@ package com.mifos.objects.client;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 import com.mifos.api.local.MifosBaseModel;
@@ -95,7 +96,7 @@ public class ClientDate extends MifosBaseModel implements Parcelable {
     public ClientDate() {
     }
 
-    protected ClientDate(Parcel in) {
+    public ClientDate(Parcel in) {
         this.clientId = in.readLong();
         this.day = in.readInt();
         this.month = in.readInt();

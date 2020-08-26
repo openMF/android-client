@@ -8,6 +8,7 @@ package com.mifos.mifosxdroid.online.createnewclient;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -289,17 +290,35 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @OnClick(R.id.tv_submission_date)
     public void onClickTextViewSubmissionDate() {
+        Dialog dialogFrg = datePickerSubmissionDate.getDialog();
+        if(dialogFrg!=null && dialogFrg.isShowing()) {
+            //no need to call inputDateSub() function;
+        } else {
+            inputDateSub();
+        }
+    }
+    public void inputDateSub(){
         datePickerSubmissionDate.show(getActivity().getSupportFragmentManager(),
                 FragmentConstants.DFRAG_DATE_PICKER);
         mCurrentDateView = tvSubmissionDate;
     }
 
+
     @OnClick(R.id.tv_dateofbirth)
-    public void onClickTextViewDateOfBirth() {
-        datePickerDateOfBirth.show(getActivity().getSupportFragmentManager(),
-                FragmentConstants.DFRAG_DATE_PICKER);
-        mCurrentDateView = tvDateOfBirth;
+    public void onClickTextViewDateOfBirth(){
+        Dialog dialogFrg = datePickerDateOfBirth.getDialog();
+        if(dialogFrg!=null && dialogFrg.isShowing()) {
+             //no need to call inputDateDOB() function;
+        } else {
+            inputDateDOB();
+        }
     }
+     public void inputDateDOB(){
+         datePickerDateOfBirth.show(getActivity().getSupportFragmentManager(),
+                 FragmentConstants.DFRAG_DATE_PICKER);
+         mCurrentDateView = tvDateOfBirth;
+    }
+
 
     @OnClick(R.id.btn_submit)
     public void onClickSubmitButton() {
