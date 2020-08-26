@@ -10,6 +10,7 @@ package com.mifos.mifosxdroid.online.createnewcenter;
  */
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -176,14 +177,23 @@ public class CreateNewCenterFragment extends MifosBaseFragment
         tv_activationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
+                Dialog dialogFrg = newDatePicker.getDialog();
+                if (dialogFrg != null && dialogFrg.isShowing()) {
+                    // no need to call inputActivationDate()
+                } else {
+                    inputActivationDate();
+                }
             }
 
         });
 
 
     }
+    public void inputActivationDate() {
+        newDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
+                .DFRAG_DATE_PICKER);
+    }
+
 
     public void onDatePicked(String date) {
         tv_activationDate.setText(date);
