@@ -180,6 +180,7 @@ public class DashboardActivity extends MifosBaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                hideKeyboard(mDrawerLayout);
                 setUserStatus(userStatusToggle);
             }
 
