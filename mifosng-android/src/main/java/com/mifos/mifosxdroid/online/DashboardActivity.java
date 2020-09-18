@@ -5,6 +5,8 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -170,7 +173,7 @@ public class DashboardActivity extends MifosBaseActivity
 
         // setup drawer layout and sync to toolbar
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
-                mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
+                mDrawerLayout, toolbar, R.string.open_drawer,R.string.close_drawer) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -180,6 +183,9 @@ public class DashboardActivity extends MifosBaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                Context context = getApplicationContext();
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(drawerView.getWindowToken(), 0);
                 setUserStatus(userStatusToggle);
             }
 
