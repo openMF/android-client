@@ -173,7 +173,7 @@ public class DashboardActivity extends MifosBaseActivity
 
         // setup drawer layout and sync to toolbar
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
-                mDrawerLayout, toolbar, R.string.open_drawer,R.string.close_drawer) {
+                mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
