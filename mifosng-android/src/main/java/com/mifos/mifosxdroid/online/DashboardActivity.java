@@ -184,7 +184,8 @@ public class DashboardActivity extends MifosBaseActivity
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 Context context = getApplicationContext();
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        context.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(drawerView.getWindowToken() , 0);
                 setUserStatus(userStatusToggle);
             }
