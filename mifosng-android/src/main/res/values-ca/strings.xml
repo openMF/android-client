@@ -166,4 +166,7 @@
 
     <string name="accounts">Comptes</string>
 
+    <string name="client_not_found">No s\'ha trobat el client.</string>
+    <string name="device_not_connected_to_internet">Dispositiu no connectat a Internet</string>
+
 </resources>

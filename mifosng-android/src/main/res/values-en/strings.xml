@@ -189,5 +189,8 @@
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="accounts">Accounts</string>
 
+    <string name="client_not_found">Client not found.</string>
+    <string name="device_not_connected_to_internet">Device not connected to internet</string>
+
 
 </resources>

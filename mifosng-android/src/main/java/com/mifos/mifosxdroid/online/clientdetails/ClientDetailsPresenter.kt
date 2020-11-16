@@ -1,7 +1,9 @@
 package com.mifos.mifosxdroid.online.clientdetails
 
+import com.mifos.App
 import com.mifos.api.datamanager.DataManagerClient
 import com.mifos.api.datamanager.DataManagerDataTable
+import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.zipmodels.ClientAndClientAccounts
 import okhttp3.MediaType
@@ -98,7 +100,8 @@ class ClientDetailsPresenter @Inject constructor(private val mDataManagerDataTab
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showProgressbar(false)
-                        mvpView!!.showFetchingError("Client not found.")
+                        val msg = App.getContext().getString(R.string.client_not_found)
+                        mvpView!!.showFetchingError(msg)
                     }
 
                     override fun onNext(clientAndClientAccounts: ClientAndClientAccounts?) {

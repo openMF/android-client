@@ -6,10 +6,12 @@ package com.mifos.mifosxdroid.online.clientdetails
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -174,7 +176,15 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     }
 
     fun inflateClientInformation() {
-        mClientDetailsPresenter!!.loadClientDetailsAndClientAccounts(clientId)
+        val context = context
+        val systemService = context!!.getSystemService(Context.CONNECTIVITY_SERVICE)
+        val connectivityManager = systemService as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        if (networkInfo != null && networkInfo.isConnected) {
+            mClientDetailsPresenter!!.loadClientDetailsAndClientAccounts(clientId)
+            return
+        }
+        showFetchingError(getString(R.string.device_not_connected_to_internet))
     }
 
     override fun onAttach(activity: Activity) {

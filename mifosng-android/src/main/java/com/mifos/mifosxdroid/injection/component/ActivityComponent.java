@@ -23,6 +23,7 @@ import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment;
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment;
 import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment;
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment;
+import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.runreports.report.ReportFragment;
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment;
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
@@ -37,7 +38,6 @@ import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAc
 import com.mifos.mifosxdroid.online.activate.ActivateFragment;
 import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
-import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;

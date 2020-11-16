@@ -166,4 +166,7 @@
 
     <string name="accounts">cuenta</string>
 
+    <string name="client_not_found">Cliente no encontrado.</string>
+    <string name="device_not_connected_to_internet">Dispositivo no conectado a internet</string>
+
 </resources>

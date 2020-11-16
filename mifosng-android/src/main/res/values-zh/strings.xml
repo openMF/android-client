@@ -713,6 +713,9 @@
     <string name="error_passcode">密码应该是4位数</string>
     <string name="accounts">帳戶</string>
 
+    <string name="client_not_found">找不到客户端。</string>
+    <string name="device_not_connected_to_internet">设备未连接到互联网</string>
+
     <!-- Language -->
     <string name="language">语</string>
     <string name="language_type" translatable="false">language_type</string>

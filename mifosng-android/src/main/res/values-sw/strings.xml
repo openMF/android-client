@@ -724,6 +724,9 @@
     <string name="browse">Vinjari</string>
     <string name="accounts">akaunti</string>
 
+    <string name="client_not_found">Mteja hajapatikana.</string>
+    <string name="device_not_connected_to_internet">Kifaa hakijaunganishwa kwenye mtandao</string>
+
     <!-- Language -->
     <string name="language">Lugha</string>
     <string name="language_type" translatable="false">language_type</string>
