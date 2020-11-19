@@ -711,6 +711,7 @@
     <string name="incorrect_passcode">密码错误</string>
     <string name="incorrect_passcode_more_than_three">您已经输错三次密码了，请再次尝试</string>
     <string name="error_passcode">密码应该是4位数</string>
+    <string name="accounts">帳戶</string>
 
     <!-- Language -->
     <string name="language">语</string>
