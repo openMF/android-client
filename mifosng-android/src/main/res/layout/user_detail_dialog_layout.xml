@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:layout_marginTop="@dimen/layout_padding_24dp"
+    android:layout_marginLeft="18dp"
+    android:layout_marginRight="18dp"
+    android:layout_marginStart="18dp"
+    android:layout_marginEnd="18dp">
+
+    <com.mifos.mifosxdroid.views.CircularImageView
+        android:id="@+id/iv_user_picture"
+        android:layout_width="78dp"
+        android:layout_height="78dp"
+        android:elevation="2dp"
+        android:src="@drawable/ic_account_circle_black_24dp"
+        android:layout_centerHorizontal="true"
+        app:border="false"/>
+
+    <LinearLayout
+        android:id="@+id/ll_userNameContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_user_picture"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/dimension_32_dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp">
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/login"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large" />
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/primary"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"/>
+
+        <com.mifos.mifosxdroid.views.CircularImageView
+            android:id="@+id/iv_auth_indicator"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center_vertical"
+            android:src="@color/red_light"
+            app:border_width="0dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
+
+        <TextView
+            android:id="@+id/tv_authText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="Authenticated"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large" />
+
+    </LinearLayout>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        android:elevation="2dp"
+        android:layout_below="@id/ll_userNameContainer">
+
+        <LinearLayout
+            style="@style/LinearLayout.Width">
+
+            <TableLayout
+                android:id="@+id/tbl_clientDetails"
+                style="@style/Table">
+
+                <TableRow
+                    android:id="@+id/row_userId"
+                    style="@style/user_info_TableRow">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="User ID"/>
+
+                    <TextView
+                        android:id="@+id/tv_userId"
+                        style="@style/TextView.Row.Value"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/row_officeId"
+                    style="@style/user_info_TableRow">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="Office Id"/>
+
+                    <TextView
+                        android:id="@+id/tv_officeId"
+                        style="@style/TextView.Row.Value"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/row_officeName"
+                    style="@style/user_info_TableRow">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="Office Name"/>
+
+                    <TextView
+                        android:id="@+id/tv_officeName"
+                        style="@style/TextView.Row.Value"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow_tenant"
+                    style="@style/user_info_TableRow">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="Tenant"/>
+
+                    <TextView
+                        android:id="@+id/tv_tenant"
+                        style="@style/TextView.Row.Value"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/row_instanceURL"
+                    style="@style/user_info_TableRow">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="Instance Url"/>
+
+                    <TextView
+                        android:id="@+id/tv_instanceURL"
+                        style="@style/TextView.Row.Value"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/row_staff"
+                    style="@style/user_info_TableRow"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="@string/staff"/>
+
+                    <TextView
+                        android:id="@+id/tv_loanOfficer"
+                        style="@style/TextView.Row"
+                        android:gravity="right"
+                        android:text=""/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/row_loan"
+                    style="@style/user_info_TableRow"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="@string/loan_cycle"/>
+
+                    <TextView
+                        android:id="@+id/tv_loanCycle"
+                        style="@style/TextView.Row"
+                        android:gravity="right"
+                        android:text=""/>
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

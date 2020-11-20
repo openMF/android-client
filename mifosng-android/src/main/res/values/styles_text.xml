@@ -30,7 +30,7 @@
     <style name="TextView.Row" parent="TextView.Base">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">0.5</item>
-        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textColor">@color/primary_text</item>
     </style>
 
     <style name="TextView.Row.Value" parent="TextView.Row">

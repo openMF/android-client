@@ -834,6 +834,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+
     <string name="dark_mode">Dark Mode</string>
     <string name="ui">UI</string>
     <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
@@ -901,5 +902,8 @@
     <string name="passcode">Passcode</string>
     <string name="change_passcode">Change Passcode</string>
     <string name="change_app_passcode">Change App Passcode</string>
+
+    <string name="authenticated">Authenticated</string>
+    <string name="unauthenticated">Unauthenticated</string>
 
 </resources>
