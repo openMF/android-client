@@ -16,6 +16,7 @@ import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialog
 import com.mifos.mifosxdroid.injection.PerActivity;
 import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.login.LoginActivity;
+import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxFragment;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment;
@@ -31,7 +32,6 @@ import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepay
 import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionFragment;
 import com.mifos.mifosxdroid.online.activate.ActivateFragment;
 import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment;
-import com.mifos.mifosxdroid.online.centerlist.CenterListFragment;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
