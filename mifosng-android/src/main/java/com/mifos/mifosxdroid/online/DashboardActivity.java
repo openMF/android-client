@@ -264,19 +264,19 @@ public class DashboardActivity extends MifosBaseActivity
         String currentFragment = getSupportFragmentManager().findFragmentById(R.id.container)
                 .getClass().getSimpleName();
         switch (currentFragment) {
-            case "SearchFragment":
+            case Constants.SEARCH_FRAGMENT:
                 mNavigationView.setCheckedItem(R.id.item_dashboard);
                 break;
-            case "ClientListFragment":
+            case Constants.CLIENT_LIST_FRAGMENT:
                 mNavigationView.setCheckedItem(R.id.item_clients);
                 break;
-            case "GroupsListFragment":
+            case Constants.GROUP_LIST_FRAGMENT:
                 mNavigationView.setCheckedItem(R.id.item_groups);
                 break;
-            case "CenterListFragment":
+            case Constants.CENTER_LIST_FRAGMENT:
                 mNavigationView.setCheckedItem(R.id.item_centers);
                 break;
-            case "OfflineDashboardFragment":
+            case Constants.OFFLINE_DASHBOARD_FRAGMENT:
                 mNavigationView.setCheckedItem(R.id.item_offline);
         }
     }
@@ -342,6 +342,13 @@ public class DashboardActivity extends MifosBaseActivity
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
+            String currentFragment = getSupportFragmentManager()
+                    .findFragmentById(R.id.container)
+                    .getClass().getSimpleName();
+            if (!currentFragment.equalsIgnoreCase(Constants.SEARCH_FRAGMENT)) {
+                replaceFragment(new SearchFragment(), false, R.id.container);
+                return;
+            }
             if (doubleBackToExitPressedOnce) {
                 setMenuCreateClient(true);
                 setMenuCreateCentre(true);
