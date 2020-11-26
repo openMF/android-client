@@ -615,6 +615,7 @@
     <string name="individual_collection_sheet">व्यक्तिगत कलेक्शन शीट</string>
     <string name="due_collection">कलेक्शन का देय</string>
     <string name="accounts">खाता</string>
+    <string name="no_internet_available">कोई इंटरनेट कनेक्शन नहीं</string>
 
     !-- About App -->
     <string name="about_app">फील्ड ऑफिसर एप्लीकेशन एक एप्लीकेशन है बैंक स्टाफ फील्ड ऑफिसर के लिए विकसित किया गया

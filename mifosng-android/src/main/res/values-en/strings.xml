@@ -188,6 +188,6 @@
     <string name="valid">Valid</string>
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="accounts">Accounts</string>
-
+    <string name="no_internet_available">No internet connection</string>
 
 </resources>

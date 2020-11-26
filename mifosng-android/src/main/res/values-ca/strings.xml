@@ -163,7 +163,7 @@
     <string name="lang_changed">S\'ha canviat l\'idioma</string>
     <string name="lang_change_description">Seleccioneu l\'idioma en què voleu veure l\'aplicació</string>
     <string name="dark_mode">mode fosc</string>
-
     <string name="accounts">Comptes</string>
+    <string name="no_internet_available">No hi ha connexió a Internet</string>
 
 </resources>
