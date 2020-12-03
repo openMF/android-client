@@ -816,7 +816,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     }
 
     private void inflateMeetingDate() {
-        datePicker = MFDatePicker.newInsance(this);
+        datePicker = MFDatePicker.newInstance(this);
         String date = DateHelper.
                 getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.getDatePickedAsString());
         tvMeetingDate.setText(date.replace('-', ' '));

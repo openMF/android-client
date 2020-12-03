@@ -409,7 +409,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
     public void inflateSubmissionDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
 
         tvSubmittedOnDate.setText(MFDatePicker.getDatePickedAsString());
     }
@@ -422,7 +422,7 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     }
 
     public void inflateDisbursementDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
 
         tvDisbursementonDate.setText(MFDatePicker.getDatePickedAsString());
     }

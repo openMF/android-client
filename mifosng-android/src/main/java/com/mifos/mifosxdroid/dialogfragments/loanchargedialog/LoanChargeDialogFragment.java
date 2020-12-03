@@ -176,7 +176,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
     }
 
     private void inflateDueDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         String receivedDate = MFDatePicker.getDatePickedAsString();
         dueDateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(receivedDate)
                 .replace("-", " ");

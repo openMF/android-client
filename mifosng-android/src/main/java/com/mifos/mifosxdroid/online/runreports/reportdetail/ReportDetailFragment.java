@@ -125,7 +125,7 @@ public class ReportDetailFragment extends MifosBaseFragment
 
         String reportName = "'" + reportItem.getReportName() + "'";
         presenter.fetchFullParameterList(reportName, true);
-        datePicker = MFDatePicker.newInsance(this);
+        datePicker = MFDatePicker.newInstance(this);
     }
 
     private void addTableRow(FullParameterListResponse data, String identifier) {

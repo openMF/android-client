@@ -134,7 +134,7 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
     }
 
     void setRepaymentDate() {
-        datePicker = MFDatePicker.newInsance(this);
+        datePicker = MFDatePicker.newInstance(this);
         String date = DateHelper.
                 getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.getDatePickedAsString());
         tvRepaymentDate.setText(date.replace('-', ' '));

@@ -238,7 +238,7 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     }
 
     public void inflateSubmissionDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tvSubmissionDate.setText(MFDatePicker.getDatePickedAsString());
         setSubmissionDate();
     }

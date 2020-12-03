@@ -77,7 +77,7 @@ public class ActivateFragment extends MifosBaseFragment implements ActivateMvpVi
     @Override
     public void showUserInterface() {
         setToolbarTitle(getString(R.string.activate));
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tvActivationDate.setText(MFDatePicker.getDatePickedAsString());
         activationDate = tvActivationDate.getText().toString();
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDate)

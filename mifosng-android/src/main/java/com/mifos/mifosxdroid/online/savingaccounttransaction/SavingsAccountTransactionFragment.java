@@ -288,7 +288,7 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
     public void inflateRepaymentDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tv_transactionDate.setText(MFDatePicker.getDatePickedAsString());
         // TODO Add Validation to make sure :
         // 1. Date Is in Correct Format

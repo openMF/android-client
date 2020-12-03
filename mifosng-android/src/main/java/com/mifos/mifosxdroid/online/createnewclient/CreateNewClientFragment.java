@@ -227,8 +227,8 @@ public class CreateNewClientFragment extends ProgressableFragment
         spStaff.setAdapter(staffAdapter);
         spStaff.setOnItemSelectedListener(this);
 
-        datePickerSubmissionDate = MFDatePicker.newInsance(this);
-        datePickerDateOfBirth = MFDatePicker.newInsance(this);
+        datePickerSubmissionDate = MFDatePicker.newInstance(this);
+        datePickerDateOfBirth = MFDatePicker.newInstance(this);
         tvSubmissionDate.setText(MFDatePicker.getDatePickedAsString());
         tvDateOfBirth.setText(MFDatePicker.getDatePickedAsString());
 

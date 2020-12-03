@@ -211,7 +211,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
     }
 
     public void inflateSubmissionDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
 
         tv_submissionDate.setText(MFDatePicker.getDatePickedAsString());
 
@@ -226,7 +226,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
     }
 
     public void inflateActivationDate() {
-        newDatePicker = MFDatePicker.newInsance(this);
+        newDatePicker = MFDatePicker.newInstance(this);
 
         tv_activationDate.setText(MFDatePicker.getDatePickedAsString());
 

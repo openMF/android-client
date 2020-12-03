@@ -38,7 +38,8 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
 
     }
 
-    public static MFDatePicker newInsance(Fragment fragment) {
+    public static MFDatePicker newInstance(Fragment fragment) {
+        calendar = Calendar.getInstance();
         MFDatePicker mfDatePicker = new MFDatePicker();
         mfDatePicker.onDatePickListener = (OnDatePickListener) fragment;
         return mfDatePicker;
@@ -63,7 +64,6 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         Date date = calendar.getTime();
         onDatePickListener.onDatePicked(DateFormat.format("dd-MM-yyyy", date).toString());
