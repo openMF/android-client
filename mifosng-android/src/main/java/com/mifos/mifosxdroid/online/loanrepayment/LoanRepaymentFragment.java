@@ -294,7 +294,7 @@ public class LoanRepaymentFragment extends MifosBaseFragment
      * Setting the Repayment Date
      */
     public void inflateRepaymentDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tv_repaymentDate.setText(MFDatePicker.getDatePickedAsString());
         /*
             TODO Add Validation to make sure :

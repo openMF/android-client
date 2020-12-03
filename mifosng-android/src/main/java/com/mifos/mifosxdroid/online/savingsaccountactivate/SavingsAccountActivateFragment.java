@@ -111,7 +111,7 @@ public class SavingsAccountActivateFragment extends MifosBaseFragment implements
     public void showUserInterface() {
         etSavingsActivateReason.setVisibility(View.GONE);
         tvActivateDateHeading.setText(getResources().getString(R.string.activated_on));
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tvActivationDate.setText(MFDatePicker.getDatePickedAsString());
         activationDate = tvActivationDate.getText().toString();
         showActivationDate();

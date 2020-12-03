@@ -142,7 +142,7 @@ public class LoanAccountDisbursementFragment extends MifosBaseFragment implement
     @Override
     public void showUserInterface() {
         setToolbarTitle(getString(R.string.disburse_loan));
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tvLoanDisbursementDates.setText(MFDatePicker.getDatePickedAsString());
         showDisbursementDate(tvLoanDisbursementDates.getText().toString());
 

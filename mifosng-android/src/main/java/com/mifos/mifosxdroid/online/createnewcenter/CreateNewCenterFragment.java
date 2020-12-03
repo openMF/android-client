@@ -169,7 +169,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
 
     public void inflateActivationDate() {
-        newDatePicker = MFDatePicker.newInsance(this);
+        newDatePicker = MFDatePicker.newInstance(this);
 
         tv_activationDate.setText(MFDatePicker.getDatePickedAsString());
 

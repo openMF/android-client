@@ -104,7 +104,7 @@ public class SavingsAccountApprovalFragment extends MifosBaseFragment implements
 
     @Override
     public void showUserInterface() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tvApprovalDate.setText(MFDatePicker.getDatePickedAsString());
         approvaldate = tvApprovalDate.getText().toString();
         showApprovalDate();

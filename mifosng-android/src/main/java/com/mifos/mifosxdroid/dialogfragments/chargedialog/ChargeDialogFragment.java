@@ -169,7 +169,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
     }
 
     public void inflatedueDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         String receivedDate = MFDatePicker.getDatePickedAsString();
         dueDateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(receivedDate)
                 .replace("-", " ");

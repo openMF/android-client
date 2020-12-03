@@ -57,8 +57,8 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
         fromDate = ""
         selectedAction = ALL
         selectedEntity = ALL
-        datePickerFromDate = MFDatePicker.newInsance(this)
-        datePickerToDate = MFDatePicker.newInsance(this)
+        datePickerFromDate = MFDatePicker.newInstance(this)
+        datePickerToDate = MFDatePicker.newInstance(this)
 
         (activity as MifosBaseActivity).activityComponent.inject(this)
     }

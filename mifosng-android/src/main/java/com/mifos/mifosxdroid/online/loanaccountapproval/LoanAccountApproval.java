@@ -155,7 +155,7 @@ public class LoanAccountApproval extends MifosBaseFragment
 
     @Override
     public void showUserInterface() {
-        mfDatePicker = MFDatePicker.newInsance(this);
+        mfDatePicker = MFDatePicker.newInstance(this);
         tv_loan_approval_dates.setText(MFDatePicker.getDatePickedAsString());
         approvalDate = tv_loan_approval_dates.getText().toString();
 
