@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avatarfirst.avatargenlib.AvatarConstants;
+import com.avatarfirst.avatargenlib.AvatarGenerator;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.SelectableAdapter;
 import com.mifos.objects.client.Client;
@@ -75,7 +77,9 @@ public class ClientNameListAdapter extends SelectableAdapter<RecyclerView.ViewHo
                 ImageLoaderUtils.loadImage(mContext, client.getId(),
                         ((ViewHolder) holder).iv_userPicture);
             } else {
-                ((ViewHolder) holder).iv_userPicture.setImageResource(R.drawable.ic_dp_placeholder);
+                ((ViewHolder) holder).iv_userPicture.setImageBitmap(
+                        AvatarGenerator.Companion.avatarImage(mContext, 40,
+                                AvatarConstants.Companion.getCIRCLE(), clientName).getBitmap());
             }
 
             //Changing the Color of Selected Clients

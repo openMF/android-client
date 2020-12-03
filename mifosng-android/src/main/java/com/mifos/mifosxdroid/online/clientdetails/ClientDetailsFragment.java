@@ -41,6 +41,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avatarfirst.avatargenlib.AvatarConstants;
+import com.avatarfirst.avatargenlib.AvatarGenerator;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.mifosxdroid.R;
@@ -550,9 +552,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             if (client.isImagePresent()) {
                 loadClientProfileImage();
             } else {
-                iv_clientImage.setImageDrawable(
-                        ResourcesCompat.getDrawable(getResources(), R.drawable
-                                .ic_launcher, null));
+                iv_clientImage.setImageBitmap(AvatarGenerator.Companion.avatarImage(getActivity().
+                        getBaseContext(), 75, AvatarConstants.Companion.getCIRCLE(),
+                        client.getDisplayName()).getBitmap());
 
                 pb_imageProgressBar.setVisibility(GONE);
             }
