@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.VisibleForTesting;
+import com.avatarfirst.avatargenlib.AvatarConstants;
+import com.avatarfirst.avatargenlib.AvatarGenerator;
 import com.google.android.material.navigation.NavigationView;
 import androidx.test.espresso.IdlingResource;
 import androidx.fragment.app.Fragment;
@@ -333,7 +335,9 @@ public class DashboardActivity extends MifosBaseActivity
         // no profile picture credential, using dummy profile picture
         ImageView imageViewUserPicture = ButterKnife
                 .findById(mNavigationHeader, R.id.iv_user_picture);
-        imageViewUserPicture.setImageResource(R.drawable.ic_dp_placeholder);
+        imageViewUserPicture.setImageBitmap(AvatarGenerator.Companion.avatarImage(
+                DashboardActivity.this, 72, AvatarConstants.Companion.getCIRCLE(),
+                loggedInUser.getUsername()).getBitmap());
     }
 
     @Override
