@@ -1,7 +1,5 @@
 package com.mifos.mifosxdroid.online.checkerinbox
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
@@ -9,7 +7,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CheckerTaskListAdapter
@@ -241,7 +242,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Single Entry Rejected (without batch processing)
                     hideMifosProgressBar()
                     updateRecyclerViewAfterOperation(adapterPosition,
-                            "REJECTED")
+                            getString(R.string.rejected))
                 }
             }
             Status.DELETE_SUCCESS -> {
@@ -267,7 +268,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Single Entry Deleted (without batch processing)
                     hideMifosProgressBar()
                     updateRecyclerViewAfterOperation(adapterPosition,
-                            "DELETED")
+                            getString(R.string.deleted))
                 }
             }
             Status.APPROVE_ERROR -> {
@@ -398,7 +399,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         val task = checkerTaskList.removeAt(position)
         fetchedCheckerTaskList.remove(task)
         checkerTaskListAdapter.submitList(checkerTaskList)
-        Toast.makeText(activity, getString(R.string.entry) + action, Toast.LENGTH_SHORT).show()
+        val message = String.format("%s %s", getString(R.string.entry), action)
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun showNetworkError() {

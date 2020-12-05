@@ -722,6 +722,7 @@
     <string name="failed_to_load_db_clients">Upakio wa wateja wa hifadhidata umefeli</string>
     <string name="failed_to_load_db_groups">Upakio wa makundi ya hifadhidata umefeli</string>
     <string name="browse">Vinjari</string>
-
-
+    <string name="deleted">Imefutwa</string>
+    <string name="rejected">Imekataliwa</string>
+    <string name="entry">Kuingia</string>
 </resources>

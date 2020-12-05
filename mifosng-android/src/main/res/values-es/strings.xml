@@ -155,4 +155,7 @@
     <string name="valid">Válido</string>
     <string name="surveyEmpty">Esta encuesta está vacía</string>
     <string name="back_again">Vuelva a pulsar para salir</string>
+    <string name="deleted">Eliminada</string>
+    <string name="rejected">Rechazada</string>
+    <string name="entry">Entrada</string>
 </resources>
