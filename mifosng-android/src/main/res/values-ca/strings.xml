@@ -155,4 +155,7 @@
     <string name="valid">Vàlid</string>
     <string name="surveyEmpty"> Aquesta enquesta està buida</string>
     <string name="back_again">Appuyez de nouveau sur la touche pour quitter</string>
+    <string name="deleted">Suprimit</string>
+    <string name="rejected">Rebutjat</string>
+    <string name="entry">Entrada</string>
 </resources>

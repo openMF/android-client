@@ -832,7 +832,8 @@
     <string name="reject_selected_entries">Reject selected entries?</string>
     <string name="no_task_selected">No task selected</string>
     <string name="something_went_wrong">Something went wrong</string>
-    <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
-
+    <string name="entry">Entry</string>
+    <string name="deleted">Deleted</string>
+    <string name="rejected">Rejected</string>
 </resources>

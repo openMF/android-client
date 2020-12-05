@@ -711,6 +711,7 @@
     <string name="incorrect_passcode">密码错误</string>
     <string name="incorrect_passcode_more_than_three">您已经输错三次密码了，请再次尝试</string>
     <string name="error_passcode">密码应该是4位数</string>
-
-
+    <string name="deleted">已删除</string>
+    <string name="rejected">拒绝</string>
+    <string name="entry">条目</string>
 </resources>

@@ -586,4 +586,7 @@
     <string name="overdue_x_number">ಮಿತಿಮೀರಿದ ಎಕ್ಸ್ ಸಂಖ್ಯೆ</string>
     <string name="overdue_y_number">ಮಿತಿಮೀರಿದ ವೈ ಸಂಖ್ಯೆ</string>
     <string name="error_select_group">ದಯವಿಟ್ಟು ಒಂದು ಗುಂಪನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="deleted">ಅಳಿಸಲಾಗಿದೆ</string>
+    <string name="rejected">ತಿರಸ್ಕರಿಸಿದ</string>
+    <string name="entry">ಪ್ರವೇಶ</string>
 </resources>
