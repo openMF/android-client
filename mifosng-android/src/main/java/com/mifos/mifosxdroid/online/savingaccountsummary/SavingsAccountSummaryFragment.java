@@ -5,9 +5,15 @@
 
 package com.mifos.mifosxdroid.online.savingaccountsummary;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.pdf.PdfDocument;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentTransaction;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,8 +25,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
@@ -38,6 +50,10 @@ import com.mifos.objects.accounts.savings.Transaction;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,11 +67,14 @@ import butterknife.OnClick;
 public class SavingsAccountSummaryFragment extends ProgressableFragment
         implements SavingsAccountSummaryMvpView {
 
+    private static final int SAVE_AS_PDF = 1005;
     public static final int MENU_ITEM_DATA_TABLES = 1001;
     public static final int MENU_ITEM_DOCUMENTS = 1004;
     private static final int ACTION_APPROVE_SAVINGS = 4;
     private static final int ACTION_ACTIVATE_SAVINGS = 5;
 
+    private String directory = Environment.getExternalStorageDirectory().getPath() +
+            File.separator + "Mifos Docs";
     public int savingsAccountNumber;
     public DepositType savingsAccountType;
 
@@ -196,9 +215,11 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                 .DATA_TABLE_SAVINGS_ACCOUNTS_NAME);
         menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE,
                 getResources().getString(R.string.documents));
+        menu.add(Menu.NONE, SAVE_AS_PDF, Menu.NONE, Constants.SAVE_AS_PDF);
         super.onPrepareOptionsMenu(menu);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -206,6 +227,13 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             loadDocuments();
         } else if (id == MENU_ITEM_DATA_TABLES) {
             loadSavingsDataTables();
+        } else if (id == SAVE_AS_PDF) {
+            if (checkPermission()) {
+                createPDF();
+            } else {
+                Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                requestPermission();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -246,8 +274,9 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                     visibleItemCount, int totalItemCount) {
                 final int lastItem = firstVisibleItem + visibleItemCount;
 
-                if (firstVisibleItem == 0)
+                if (firstVisibleItem == 0) {
                     return;
+                }
 
                 if (lastItem == totalItemCount && loadmore) {
                     loadmore = false;
@@ -455,5 +484,79 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     public interface OnFragmentInteractionListener {
         void doTransaction(SavingsAccountWithAssociations savingsAccountWithAssociations, String
                 transactionType, DepositType accountType);
+    }
+
+    // Takes ScreenShot of Relative layout
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void layoutToImage() {
+        File dir = new File(Environment.getExternalStorageDirectory().getPath(), "Mifos Docs");
+        if (!dir.isDirectory()) {
+            dir.mkdirs();
+        }
+        RelativeLayout relativeLayout = (RelativeLayout) rootView.findViewById(
+                R.id.savings_account_summary_pdf_rl);
+        relativeLayout.setDrawingCacheEnabled(true);
+        relativeLayout.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
+        relativeLayout.buildDrawingCache();
+        Bitmap bm = relativeLayout.getDrawingCache();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        bm.recycle();
+        File f = new File(directory + File.separator + "mifos_img.jpg");
+        try {
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+        } catch (IOException ignored) {
+        }
+        relativeLayout.setDrawingCacheEnabled(false);
+    }
+
+    //Converts image to pdf and deletes image
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void createPDF() {
+        layoutToImage();
+        String imagePath = directory + File.separator + "mifos_img.jpg";
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+        PdfDocument pdfDocument = new PdfDocument();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
+                bitmap.getWidth() + 20, bitmap.getHeight() + 20,
+                1).create();
+        PdfDocument.Page page = pdfDocument.startPage(pageInfo);
+        page.getCanvas().drawBitmap(bitmap, 0, 0, null);
+        bitmap.recycle();
+        pdfDocument.finishPage(page);
+        String filePath = directory + File.separator + tv_clientName.getText() + ".pdf";
+        File myFile = new File(filePath);
+        try {
+            pdfDocument.writeTo(new FileOutputStream(myFile));
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error in saving PDF", Toast.LENGTH_SHORT).show();
+        }
+        pdfDocument.close();
+        Toast.makeText(getContext(), "Pdf saved to " + filePath, Toast.LENGTH_SHORT).show();
+        File imageFile = new File(imagePath);
+        imageFile.delete();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PackageManager.PERMISSION_GRANTED);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public Boolean checkPermission() {
+        int perm1 = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        int perm2 = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (perm1 == PackageManager.PERMISSION_GRANTED
+                && perm2 == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
     }
 }
