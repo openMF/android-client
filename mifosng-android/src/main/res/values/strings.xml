@@ -834,5 +834,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+    <string name="voice_search">VOICE SEARCH</string>
+    <string name="nothing_recognised">Nothing recognised</string>
 
 </resources>

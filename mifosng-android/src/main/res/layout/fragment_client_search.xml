@@ -43,12 +43,25 @@
             android:hint="@string/search_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <Button
-        android:id="@+id/btn_search"
-        style="@style/Button.Base"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/search" />
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_voice_search"
+            style="@style/Button.Base"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/voice_search" />
+        <Button
+            android:id="@+id/btn_search"
+            style="@style/Button.Base"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/search" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_title_search_results"
