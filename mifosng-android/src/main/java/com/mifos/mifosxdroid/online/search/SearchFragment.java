@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ import com.mifos.utils.EspressoIdlingResource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -43,10 +46,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
+
 public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         RecyclerItemClickListener.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
+    private static final int SPEECH_RECOGNISE_CODE = 1001;
 
     @BindView(R.id.et_search)
     EditText et_search;
@@ -120,6 +126,84 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
             Toaster.show(et_search, getString(R.string.no_search_query_entered));
         }
 
+    }
+
+    @OnClick(R.id.btn_voice_search)
+    void speak() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "SEARCH");
+        try {
+            startActivityForResult(intent, SPEECH_RECOGNISE_CODE);
+        } catch (Exception e) {
+            String errorMsg = "Try enabling speech to text in input from setting";
+            Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SPEECH_RECOGNISE_CODE:
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> result = data.getStringArrayListExtra(
+                            RecognizerIntent.EXTRA_RESULTS);
+                    textProcessing(result.get(0));
+                }
+        }
+    }
+
+    /**
+     * this method is used for voice text manipulation and then set it to @et_search
+     * @param text
+     */
+    void textProcessing(String text) {
+        text = text.toLowerCase();
+        String[] segment = text.split("using");
+        for (int i = 0; i < segment.length; i++) {
+            segment[i] = segment[i].trim();
+        }
+        if (text == null || text.equals("") || segment.length == 0) {
+            Toast.makeText(getContext(),
+                    getString(R.string.nothing_recognised),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (segment.length == 1) {
+            et_search.setText(text);
+            et_search.setSelection(text.length());
+            onClickSearch();
+            return;
+        }
+        switch (segment[1]) {
+            case "clients":
+            case "client":
+                sp_search.setSelection(1);
+                break;
+            case "groups":
+            case "group":
+                sp_search.setSelection(2);
+                break;
+            case "loan accounts":
+            case "loan account":
+                sp_search.setSelection(3);
+                break;
+            case "savings account":
+            case "saving accounts":
+            case "saving account":
+                sp_search.setSelection(4);
+                break;
+            default:
+                sp_search.setSelection(0);
+                break;
+        }
+        et_search.setText(segment[0]);
+        et_search.setSelection(segment[0].length());
+        onClickSearch();
     }
 
     @Override
