@@ -346,17 +346,22 @@ public class DashboardActivity extends MifosBaseActivity
                 setMenuCreateClient(true);
                 setMenuCreateCentre(true);
                 setMenuCreateGroup(true);
-                super.onBackPressed();
+                finish();
                 return;
             }
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
+            if (itemClient && itemGroup && itemCenter) {
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT)
+                        .show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
