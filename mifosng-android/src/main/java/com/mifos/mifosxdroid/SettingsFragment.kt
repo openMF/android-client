@@ -2,28 +2,23 @@ package com.mifos.mifosxdroid
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
-import android.preference.ListPreference
+import android.preference.*
 import android.preference.Preference.OnPreferenceChangeListener
-import android.preference.PreferenceFragment
-import android.preference.SwitchPreference
 import android.widget.Toast
 import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment
-import com.mifos.utils.FragmentConstants
-import com.mifos.utils.LanguageHelper
-import com.mifos.utils.ThemeHelper
-import android.preference.Preference
-import android.preference.PreferenceScreen
-
+import com.mifos.mifosxdroid.online.DashboardActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.mobile.passcode.utils.PasscodePreferencesHelper
-import com.mifos.utils.Constants
+import com.mifos.utils.*
 
 /**
  * Created by mayankjindal on 22/07/17.
  */
 class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
     var mEnableSyncSurvey: SwitchPreference? = null
+    var mInstanceUrlPref: EditTextPreference? = null
     private lateinit var languages: Array<String>
     private var languageCallback: LanguageCallback? = null
     var preference: Preference? = null
@@ -50,6 +45,28 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                 syncSurveysDialogFragment.isCancelable = false
                 syncSurveysDialogFragment.show(fragmentTransaction,
                         resources.getString(R.string.sync_clients))
+            }
+            true
+        }
+
+        mInstanceUrlPref = findPreference(
+                getString(R.string.hint_instance_url)) as EditTextPreference
+        val instanceUrl = PrefManager.getInstanceUrl()
+        mInstanceUrlPref!!.text = instanceUrl
+        mInstanceUrlPref!!.isSelectable = true
+        mInstanceUrlPref!!.dialogTitle = "Edit Instance Url"
+        mInstanceUrlPref!!.setDialogIcon(R.drawable.ic_baseline_edit_24)
+        mInstanceUrlPref!!.onPreferenceChangeListener = OnPreferenceChangeListener { preference, o ->
+            val newUrl = o.toString()
+            if (newUrl != instanceUrl) {
+                PrefManager.setInstanceUrl(newUrl)
+                Toast.makeText(activity, newUrl, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(activity, DashboardActivity::class.java))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    activity.finishAffinity()
+                } else {
+                    activity.finish()
+                }
             }
             true
         }
