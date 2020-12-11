@@ -31,6 +31,11 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         view_flipper.showNext()
         if (inBadgeProcessingMode) {
             tv_no_of_selected_tasks.text = "0"
+            for (task in selectedCheckerTaskList){
+                if (checkerTaskList.contains(task)){
+                    checkerTaskList[checkerTaskList.indexOf(task)].selectedFlag = false
+                }
+            }
             selectedCheckerTaskList.clear()
             inBadgeProcessingMode = false
             checkerTaskListAdapter.notifyDataSetChanged()
@@ -382,6 +387,11 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         iv_deselect_all.setOnClickListener {
             view_flipper.showNext()
             tv_no_of_selected_tasks.text = "0"
+            for (task in selectedCheckerTaskList){
+                if (checkerTaskList.contains(task)){
+                    checkerTaskList[checkerTaskList.indexOf(task)].selectedFlag = false
+                }
+            }
             selectedCheckerTaskList.clear()
             inBadgeProcessingMode = false
             checkerTaskListAdapter.notifyDataSetChanged()
