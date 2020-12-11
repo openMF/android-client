@@ -15,9 +15,10 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
-import androidx.core.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,8 +53,6 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
 
     private final String TAG = PathTrackingService.class.getSimpleName();
 
-    private final int NOTIFICATION = 0;
-
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
@@ -63,8 +62,7 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
     private Location currentLocation;
 
     private NotificationManager notificationManager;
-    private NotificationCompat.Builder notification;
-    private BroadcastReceiver notificationReceiver;
+    private BroadcastReceiver receiver;
 
     private List<UserLatLng> latLngs;
     private String startTime, stopTime, date;
@@ -117,7 +115,6 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
         date = DateHelper.getCurrentDateTime(DateHelper.DATE_FORMAT_VALUE);
         googleApiClient.connect();
         startNotification();
-        createNotificationReceiver();
         return START_STICKY;
     }
 
@@ -154,7 +151,7 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
 
     public void startNotification() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notification = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this)
                 .setContentTitle(getString(R.string.mifos_path_tracker))
                 .setAutoCancel(false)
                 .setOngoing(true)
@@ -167,13 +164,13 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
                 PendingIntent.FLAG_UPDATE_CURRENT);
         notification.addAction(R.drawable.ic_assignment_turned_in_black_24dp,
                 getString(R.string.stop_tracking), intentBroadCast);
-
         notification.setContentIntent(intentBroadCast);
-        notificationManager.notify(NOTIFICATION, notification.build());
+        notificationManager.notify(Constants.PATH_TRACKER_NOTIFICATION_ID, notification.build());
+        startNotificationReceiver();
     }
 
     public void stopNotification() {
-        notificationManager.cancel(NOTIFICATION);
+        notificationManager.cancel(Constants.PATH_TRACKER_NOTIFICATION_ID);
     }
 
     @Override
@@ -182,24 +179,25 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
         stopLocationUpdates();
         googleApiClient.disconnect();
         stopNotification();
-        unregisterReceiver(notificationReceiver);
+        unregisterReceiver(receiver);
         PrefManager.putBoolean(Constants.SERVICE_STATUS, false);
         stopTime = DateHelper.getCurrentDateTime(DateHelper.TIME_FORMAT_VALUE);
         addPathTracking(PrefManager.getUserId(), buildUserLocation());
         super.onDestroy();
     }
 
-    public void createNotificationReceiver() {
-        notificationReceiver = new BroadcastReceiver() {
+    public void startNotificationReceiver() {
+        receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (Constants.STOP_TRACKING.equals(action)) {
-                    onDestroy();
+                if (intent.getAction().equals(Constants.STOP_TRACKING)) {
+                    notificationManager.cancel(Constants.PATH_TRACKER_NOTIFICATION_ID);
+                    context.stopService(new Intent(context, PathTrackingService.class));
+                    PrefManager.putBoolean(Constants.SERVICE_STATUS, false);
                 }
             }
         };
-        registerReceiver(notificationReceiver, new IntentFilter(Constants.STOP_TRACKING));
+        registerReceiver(receiver, new IntentFilter(Constants.STOP_TRACKING));
     }
 
     public UserLocation buildUserLocation() {

@@ -215,6 +215,11 @@ public class Constants {
     public static final int USER_OFFLINE = 1;
 
     /**
+     * Constant used for PathTracking Notification ID*/
+    public static final int PATH_TRACKER_NOTIFICATION_ID = 101;
+
+
+    /**
      * Constants to determine in the generic DataTableListFragment, the type of query that
      * has to be forwarded after showing the datatables and adding the values
      * to the corresponding payload.
