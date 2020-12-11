@@ -187,7 +187,8 @@
     <string name="product_name">Product Name</string>
     <string name="valid">Valid</string>
     <string name="surveyEmpty">This Survey is Empty</string>
-    <string name="accounts">Accounts</string>
 
+    <string name="accounts">Accounts</string>
+    <string name="run_report">Run Reports</string>
 
 </resources>

@@ -165,5 +165,6 @@
     <string name="dark_mode">mode fosc</string>
 
     <string name="accounts">Comptes</string>
+    <string name="run_report">Executa informes</string>
 
 </resources>

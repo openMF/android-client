@@ -43,7 +43,7 @@
         <item
             android:id="@+id/individual_collection_sheet"
             android:checked="false"
-            android:icon="@drawable/ic_assignment_black_24dp"
+            android:icon="@drawable/baseline_description_24"
             android:title="@string/individual_collection_sheet"
             />
 
