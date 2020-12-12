@@ -167,6 +167,7 @@ public class DashboardActivity extends MifosBaseActivity
         mNavigationHeader = mNavigationView.getHeaderView(0);
         setupUserStatusToggle();
         mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.getChildAt(0).setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         // setup drawer layout and sync to toolbar
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
