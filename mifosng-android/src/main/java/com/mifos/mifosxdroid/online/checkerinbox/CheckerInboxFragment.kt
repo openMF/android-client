@@ -606,4 +606,14 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         checkerTaskList.addAll(updatedList)
         checkerTaskListAdapter.submitList(checkerTaskList)
     }
+
+    override fun onPause() {
+        super.onPause()
+        hideMifosProgressBar()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        hideMifosProgressBar()
+    }
 }
