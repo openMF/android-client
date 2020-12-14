@@ -109,6 +109,8 @@ public class ClientListFragment extends MifosBaseFragment
         } else {
             Intent clientActivityIntent = new Intent(getActivity(), ClientActivity.class);
             clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList.get(position).getId());
+            clientActivityIntent.putExtra(Constants.CLIENT_NAME, clientList.get(position).
+                    getDisplayName());
             startActivity(clientActivityIntent);
             clickedPosition = position;
         }

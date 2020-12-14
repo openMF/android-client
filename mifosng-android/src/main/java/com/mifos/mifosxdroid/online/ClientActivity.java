@@ -34,6 +34,7 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
         SurveyListFragment.OnFragmentInteractionListener {
 
     private int clientId = 0, loanAccountNumber = 0, savingsAccountNumber = 0;
+    private String clientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +43,16 @@ public class ClientActivity extends MifosBaseActivity implements ClientDetailsFr
         ButterKnife.bind(this);
         showBackButton();
         clientId = getIntent().getExtras().getInt(Constants.CLIENT_ID);
+        clientName = getIntent().getExtras().getString(Constants.CLIENT_NAME);
         loanAccountNumber = getIntent().getExtras().getInt(Constants.LOAN_ACCOUNT_NUMBER);
         savingsAccountNumber = getIntent().getExtras().getInt(Constants.SAVINGS_ACCOUNT_NUMBER);
         DepositType depositType = new DepositType();
         depositType.setId(100);
         depositType.setValue(Constants.ENTITY_TYPE_SAVINGS);
         if (clientId != 0) {
+            if (clientName != null) {
+                setToolbarTitle(getString(R.string.client) + " - " + clientName);
+            }
             replaceFragment(ClientDetailsFragment.newInstance(clientId), false, R.id.container);
         } else if (loanAccountNumber != 0) {
             replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber, false), true,
