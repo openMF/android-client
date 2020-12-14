@@ -20,6 +20,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/default_vertical_padding">
+
+    <RelativeLayout
+        android:id="@+id/savings_account_summary_pdf_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:padding="@dimen/default_vertical_padding">
 
         <LinearLayout
@@ -200,12 +207,14 @@
             android:text="@string/transactions"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    </RelativeLayout>
+
         <ListView
             android:id="@+id/lv_savings_transactions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/buttons"
-            android:layout_below="@id/savings_transactions" />
+            android:layout_below="@id/savings_account_summary_pdf_rl" />
 
         <LinearLayout
             android:id="@+id/buttons"
