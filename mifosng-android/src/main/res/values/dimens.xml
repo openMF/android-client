@@ -22,4 +22,6 @@
     <dimen name="datatable_name_heading">18sp</dimen>
     <dimen name="dimension_72_dp">72dp</dimen>
     <dimen name="dimension_32_dp">32dp</dimen>
+    <dimen name="margin_16dp">16dp</dimen>
+    <dimen name="margin_10dp">10dp</dimen>
 </resources>
