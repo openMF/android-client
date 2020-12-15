@@ -296,7 +296,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        if (isClientActive) {
+        if (isClientActive && pb_imageProgressBar.getVisibility() != VISIBLE) {
             menu.add(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, getString(R.string.more_info));
             menu.add(Menu.NONE, MENU_ITEM_PIN_POINT, Menu.NONE, getString(R.string.pinpoint));
             menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges));
@@ -843,5 +843,17 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 }
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        showProgressbar(false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        showProgressbar(false);
     }
 }
