@@ -17,7 +17,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <LinearLayout style="@style/LinearLayout.Base">
+        <LinearLayout style="@style/LinearLayout.Base"
+            android:padding="@dimen/default_padding">
 
             <TextView
                 style="@style/TextView.CreateSavingsAccount"
@@ -28,7 +29,7 @@
                 android:id="@+id/tv_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/product"
                 android:textSize="16sp" />
 
@@ -36,15 +37,15 @@
                 android:id="@+id/sp_product"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:background="@android:color/transparent"
                 android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/tv_field_officer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/field_officer"
                 android:textSize="16sp" />
 
@@ -52,8 +53,8 @@
                 android:id="@+id/sp_field_officer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -65,7 +66,7 @@
                     android:hint="@string/external_id"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -73,8 +74,7 @@
                 android:id="@+id/tv_submittedon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/submittedon"
                 android:textSize="16sp" />
 
@@ -84,8 +84,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/submission_headline"
                 android:imeOptions="actionNext"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:textSize="20sp" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -97,7 +96,7 @@
                     android:hint="@string/nominal"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,7 +104,7 @@
                 android:id="@+id/tv_interest_calc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/interest_calc"
                 android:textSize="16sp" />
 
@@ -113,15 +112,14 @@
                 android:id="@+id/sp_interest_calc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_interest_comp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/interest_comp"
                 android:textSize="16sp" />
 
@@ -129,15 +127,14 @@
                 android:id="@+id/sp_interest_comp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_interest_p_period"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/interest_p_period"
                 android:textSize="16sp" />
 
@@ -145,15 +142,14 @@
                 android:id="@+id/sp_interest_p_period"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_days_in_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/days_in_year"
                 android:textSize="16sp" />
 
@@ -161,17 +157,15 @@
                 android:id="@+id/sp_days_in_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:textSize="20sp" />
 
             <CheckBox
                 android:id="@+id/cb_enforce_required_balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:checked="false"
-                android:paddingTop="10dp"
                 android:text="@string/saving_min_required_balance" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -183,7 +177,7 @@
                     android:hint="@string/minbalance"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:maxLines="1"
                     android:visibility="gone"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -192,9 +186,8 @@
                 android:id="@+id/cb_overdraft_allowed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:checked="false"
-                android:paddingTop="10dp"
                 android:text="@string/saving_overdraft_allowed" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -206,7 +199,7 @@
                     android:hint="@string/maxoverdraft"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:maxLines="1"
                     android:visibility="gone"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -220,7 +213,7 @@
                     android:hint="@string/nominal_overdraft"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:maxLines="1"
                     android:visibility="gone"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -234,7 +227,7 @@
                     android:hint="@string/min_overdraft"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:maxLines="1"
                     android:visibility="gone"/>
 
@@ -243,7 +236,7 @@
             <Button
                 android:id="@+id/btn_submit"
                 style="@style/Button.Base"
-                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
                 android:text="@string/submit" />
         </LinearLayout>
     </ScrollView>
