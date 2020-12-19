@@ -251,6 +251,9 @@ public class DashboardActivity extends MifosBaseActivity
                 intent.setClass(this, RunReportsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.logout:
+                logout();
+                break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -390,9 +393,6 @@ public class DashboardActivity extends MifosBaseActivity
             case R.id.mItem_create_new_group:
                 openCreateGroup();
                 setActionBarTitle(R.string.create_group);
-                break;
-            case R.id.logout:
-                logout();
                 break;
             default: //DO NOTHING
                 break;

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-     
     <!-- dummy ids are given to ech group to make dividers between each group -->
     <group android:checkableBehavior="single"
         android:id="@+id/group1" >
@@ -73,6 +72,12 @@
             android:icon="@drawable/ic_settings"
             android:title="@string/settings"
             />
+
+        <item
+            android:id="@+id/logout"
+            android:checked="false"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout"/>
 
     </group>
        
