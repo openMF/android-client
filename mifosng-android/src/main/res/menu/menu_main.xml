@@ -22,9 +22,4 @@
         android:enabled="true"
         android:title="@string/create_group"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/logout"
-        android:enabled="true"
-        android:title="@string/logout"
-        app:showAsAction="never" />
 </menu>
