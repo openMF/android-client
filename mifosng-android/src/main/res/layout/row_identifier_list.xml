@@ -7,106 +7,129 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/item_offset">
+    android:paddingLeft="@dimen/default_vertical_padding"
+    android:paddingRight="@dimen/default_vertical_padding"
+    android:paddingTop="@dimen/default_vertical_padding">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="2dp"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="2dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
         app:cardPreventCornerOverlap="false"
-        app:contentPadding="0dp">
+        app:contentPadding="0dp"
+        app:cardBackgroundColor="@color/gray_light">
 
-        <TableLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:padding="4dp"
-            android:id="@+id/tableLayout">
+            android:layout_height="104dp">
 
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/id" />
+            <ImageView
+                android:id="@+id/iv_identifier_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_more_vert_black_24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:padding="8dp"/>
 
-                <TextView
-                    android:id="@+id/tv_identifier_id"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.86"
-                    android:gravity="left"
-                    android:text="" />
+            <View
+                android:id="@+id/v_status"
+                android:layout_width="@dimen/layout_padding_16dp"
+                android:layout_height="match_parent"
+                android:background="@color/green_light"/>
 
-                <ImageView
-                    android:id="@+id/iv_identifier_options"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/ic_more_vert_black_24dp"/>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/id"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:layout_toEndOf="@id/v_status"
+                android:layout_toRightOf="@id/v_status"
+                tools:ignore="RtlSymmetry"
+                android:maxLines="1"/>
 
-            </TableRow>
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/type"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:layout_toEndOf="@id/v_status"
+                android:layout_toRightOf="@id/v_status"
+                android:layout_below="@id/textView2"
+                tools:ignore="RtlSymmetry"
+                android:maxLines="1"/>
 
-            <TableRow
-                android:id="@+id/tableRow"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:layout_toEndOf="@id/v_status"
+                android:layout_toRightOf="@id/v_status"
+                android:layout_below="@id/textView6"
+                tools:ignore="RtlSymmetry"
+                android:maxLines="1"/>
 
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/type" />
+            <TextView
+                android:id="@+id/tv_identifier_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/id"
+                android:paddingStart="@dimen/dimension_32_dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:layout_toEndOf="@id/textView4"
+                android:layout_toRightOf="@id/textView4"
+                android:layout_toLeftOf="@id/iv_identifier_options"
+                android:layout_toStartOf="@id/iv_identifier_options"
+                tools:ignore="RtlSymmetry"
+                android:maxLines="1"/>
 
-                <TextView
-                    android:id="@+id/tv_identifier_type"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="" />
+            <TextView
+                android:id="@+id/tv_identifier_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/type"
+                android:paddingStart="@dimen/dimension_32_dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:layout_toEndOf="@id/textView4"
+                android:layout_toRightOf="@id/textView4"
+                android:layout_below="@id/textView2"
+                tools:ignore="RtlSymmetry"
+                android:maxLines="1"/>
 
-            </TableRow>
+            <TextView
+                android:id="@+id/tv_identifier_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/description"
+                android:paddingStart="@dimen/dimension_32_dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:layout_toEndOf="@id/textView4"
+                android:layout_toRightOf="@id/textView4"
+                android:layout_below="@id/textView6"
+                tools:ignore="RtlSymmetry"
+                android:maxLines="1"/>
 
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/description" />
-
-                <TextView
-                    android:id="@+id/tv_identifier_description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="" />
-
-            </TableRow>
-
-        </TableLayout>
-
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
 </FrameLayout>
