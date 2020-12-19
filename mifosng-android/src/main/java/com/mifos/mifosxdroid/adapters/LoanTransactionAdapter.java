@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialIcons;
+import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.accounts.loan.Transaction;
 import com.mifos.objects.accounts.loan.Type;
@@ -109,11 +110,9 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
         MaterialIcons contractedIconValue = MaterialIcons.md_add_circle_outline;
         MaterialIcons expandedIconValue = MaterialIcons.md_remove_circle_outline;
         if (!isExpanded) {
-            reusableParentViewHolder.tv_arrow.setText(String.valueOf(contractedIconValue
-                    .character()));
+            reusableParentViewHolder.tv_arrow.setText("{" + contractedIconValue.key() + "}");
         } else {
-            reusableParentViewHolder.tv_arrow.setText(String.valueOf(expandedIconValue.character
-                    ()));
+            reusableParentViewHolder.tv_arrow.setText("{" + expandedIconValue.key() + "}");
         }
 
         Iconify.addIcons(reusableParentViewHolder.tv_arrow);
@@ -165,7 +164,7 @@ public class LoanTransactionAdapter extends BaseExpandableListAdapter {
     public static class ReusableParentViewHolder {
 
         @BindView(R.id.tv_arrow)
-        TextView tv_arrow;
+        IconTextView tv_arrow;
         @BindView(R.id.tv_transaction_date)
         TextView tv_transactionDate;
         @BindView(R.id.tv_transaction_type)
