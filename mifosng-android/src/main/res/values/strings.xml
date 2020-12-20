@@ -360,6 +360,7 @@
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <string name="saving_min_required_balance">Enforce Minimum Required Balance</string>
     <string name="saving_overdraft_allowed">Overdraft Allowed</string>
+    <string name="recurring_account_product_name">Recurring Account</string>
     <!-- Savings Account Related Terminologies End Here -->
 
 
