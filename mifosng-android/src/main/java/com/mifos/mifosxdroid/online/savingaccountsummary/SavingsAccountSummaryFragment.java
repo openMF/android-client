@@ -338,9 +338,13 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             this.savingsAccountWithAssociations = savingsAccountWithAssociations;
 
             tv_clientName.setText(savingsAccountWithAssociations.getClientName());
-            tv_savingsProductName.setText(savingsAccountWithAssociations.getSavingsProductName());
             tv_savingsAccountNumber.setText(savingsAccountWithAssociations.getAccountNo());
-
+            if (savingsAccountWithAssociations.getSavingsProductName() != null) {
+                tv_savingsProductName.setText(
+                        savingsAccountWithAssociations.getSavingsProductName());
+            } else {
+                tv_savingsProductName.setText(getString(R.string.recurring_account_product_name));
+            }
             if (savingsAccountWithAssociations.getSummary().getTotalInterestEarned() != null) {
                 tv_interestEarned.setText(String.valueOf(savingsAccountWithAssociations
                         .getSummary().getTotalInterestEarned()));
