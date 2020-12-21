@@ -110,6 +110,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     private final String TAG = ClientDetailsFragment.class.getSimpleName();
 
     public int clientId;
+    public String clientName;
     List<Charges> chargesList = new ArrayList<>();
 
     @BindView(R.id.tv_fullName)
@@ -507,6 +508,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public void showClientInformation(final Client client) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.getDisplayName());
+            clientName = client.getDisplayName();
             isClientActive = client.isActive();
             getActivity().invalidateOptionsMenu();
             if (!client.isActive()) {
@@ -593,6 +595,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             });
             //inflateClientsAccounts();
         }
+    }
+
+    @Override
+    public void onResume() {
+        if (clientName != null) {
+            setToolbarTitle(getString(R.string.client) + " - " + clientName);
+        }
+        super.onResume();
     }
 
     @Override
