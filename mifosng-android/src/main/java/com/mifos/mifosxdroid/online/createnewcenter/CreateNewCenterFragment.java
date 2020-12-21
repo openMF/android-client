@@ -302,4 +302,16 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     public void onDetach() {
         super.onDetach();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        showProgressbar(false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        showProgressbar(false);
+    }
 }
