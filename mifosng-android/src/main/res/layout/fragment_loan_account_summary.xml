@@ -23,6 +23,7 @@
         android:padding="@dimen/default_vertical_padding">
 
         <RelativeLayout
+            android:id="@+id/loan_account_summary_rl"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -497,4 +498,11 @@
 
         </RelativeLayout>
     </ScrollView>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/layout_sweet_exception_handler"
+        android:visibility="gone"
+        android:id="@+id/loan_account_summary_layout_error"/>
 </ViewFlipper>

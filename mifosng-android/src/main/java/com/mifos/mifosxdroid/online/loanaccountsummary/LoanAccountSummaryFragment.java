@@ -17,9 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.QuickContactBadge;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableFragment;
@@ -147,8 +149,10 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
     @Inject
     LoanAccountSummaryPresenter mLoanAccountSummaryPresenter;
 
+    private RelativeLayout mainLayout;
+    private SweetUIErrorHandler sweetUIErrorHandler;
     List<Charges> chargesList = new ArrayList<Charges>();
-    private View rootView;
+    private View rootView, layoutError;
     // Action Identifier in the onProcessTransactionClicked Method
     private int processLoanTransactionAction = -1;
     private boolean parentFragment = true;
@@ -190,7 +194,9 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
 
         ButterKnife.bind(this, rootView);
         mLoanAccountSummaryPresenter.attachView(this);
-
+        mainLayout = rootView.findViewById(R.id.loan_account_summary_rl);
+        layoutError = rootView.findViewById(R.id.loan_account_summary_layout_error);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
         inflateLoanAccountSummary();
 
         return rootView;
@@ -437,7 +443,15 @@ public class LoanAccountSummaryFragment extends ProgressableFragment
 
     @Override
     public void showFetchingError(String s) {
+        sweetUIErrorHandler.showSweetErrorUI(s, R.drawable.ic_error_black_24dp,
+                mainLayout, layoutError);
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.btn_try_again)
+    public void reloadOnError() {
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(mainLayout, layoutError);
+        mLoanAccountSummaryPresenter.loadLoanById(loanAccountNumber);
     }
 
     @Override
