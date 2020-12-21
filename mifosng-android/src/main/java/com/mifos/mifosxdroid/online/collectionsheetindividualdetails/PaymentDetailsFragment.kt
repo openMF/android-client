@@ -183,7 +183,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     }
 
     private fun saveAdditional() {
-        tvNoPayment!!.visibility = View.GONE
+        var isAnyDetailNull = false
         bulkRepaymentTransaction!!.setLoanId(loanAndClientNameItem
                 ?.getLoan()!!.loanId)
         val charge1: Double =   if (!tvCharges?.getText().toString().isEmpty())
@@ -197,18 +197,32 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
 
         if (!etAccountNumber!!.text.toString().isEmpty()) {
             bulkRepaymentTransaction!!.accountNumber = etAccountNumber!!.text.toString()
+        } else {
+            isAnyDetailNull = true;
         }
         if (!etChequeNumber!!.text.toString().isEmpty()) {
             bulkRepaymentTransaction!!.checkNumber = etChequeNumber!!.text.toString()
+        } else {
+            isAnyDetailNull = true;
         }
         if (!etRoutingCode!!.text.toString().isEmpty()) {
             bulkRepaymentTransaction!!.routingCode = etRoutingCode!!.text.toString()
+        } else {
+            isAnyDetailNull = true;
         }
         if (!etReceiptNumber!!.text.toString().isEmpty()) {
             bulkRepaymentTransaction!!.receiptNumber = etReceiptNumber!!.text.toString()
+        } else {
+            isAnyDetailNull = true;
         }
         if (!etBankNumber!!.text.toString().isEmpty()) {
             bulkRepaymentTransaction!!.bankNumber = etBankNumber!!.text.toString()
+        } else {
+            isAnyDetailNull = true;
+        }
+
+        if(!isAnyDetailNull) {
+            tvNoPayment!!.visibility = View.GONE
         }
         onSaveAdditionalItem(bulkRepaymentTransaction, position)
         tableAdditional!!.visibility = View.GONE

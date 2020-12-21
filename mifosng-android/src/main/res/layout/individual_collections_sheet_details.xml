@@ -8,5 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recycler_collections"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        tools:listitem="@layout/item_individual_collection_sheet"/>
 </RelativeLayout>
