@@ -125,7 +125,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
                     activationdateString = tv_activationDate.getText().toString();
                     activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload
                     (activationdateString).replace("-", " ");
-                    
+
                 } else {
                     layout_submission.setVisibility(View.GONE);
                 }
@@ -267,6 +267,7 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
     @Override
     public void showFetchingError(int errorMessage) {
+        noOfficeGenerator();
         Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
@@ -301,5 +302,19 @@ public class CreateNewCenterFragment extends MifosBaseFragment
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private void noOfficeGenerator() {
+        Office noOffice = new Office();
+        noOffice.setId(0);
+        noOffice.setName("No Office Available");
+        final List<String> officeList = new ArrayList<String>();
+        officeList.add(noOffice.getName());
+        officeNameIdHashMap.put(noOffice.getName(), noOffice.getId());
+        ArrayAdapter<String> officeAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, officeList);
+        officeAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
+        sp_offices.setAdapter(officeAdapter);
     }
 }
