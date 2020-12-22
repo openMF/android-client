@@ -17,7 +17,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <LinearLayout style="@style/LinearLayout.Base">
+        <LinearLayout style="@style/LinearLayout.Base"
+            android:padding="@dimen/default_padding">
 
             <TextView
                 style="@style/TextView.CreateLoanAccount"
@@ -28,7 +29,7 @@
                 android:id="@+id/tv_lproduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/loanproduct"
                 android:textSize="16sp" />
 
@@ -36,15 +37,15 @@
                 android:id="@+id/sp_lproduct"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/tv_loan_purpose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/purpose_msg"
                 android:textSize="16sp" />
 
@@ -52,15 +53,15 @@
                 android:id="@+id/sp_loan_purpose"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/tv_loan_officer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/loan_officer"
                 android:textSize="16sp" />
 
@@ -68,15 +69,15 @@
                 android:id="@+id/sp_loan_officer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/tv_fund"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/loan_fund"
                 android:textSize="16sp" />
 
@@ -84,8 +85,8 @@
                 android:id="@+id/sp_fund"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <LinearLayout style="@style/LinearLayout.Width">
@@ -93,8 +94,7 @@
                 <TextView
                     style="@style/TextView.Base.Weight"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:layout_weight="0.5"
                     android:text="@string/loan_submission_date" />
 
@@ -102,10 +102,9 @@
                     android:id="@+id/tv_submittedon_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:layout_weight="0.5"
-                    android:background="@color/gray_light"
+                    android:background="@android:color/transparent"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -114,7 +113,7 @@
                 <TextView
                     style="@style/TextView.Base.Weight"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:layout_weight="0.5"
                     android:text="@string/loan_disbursement_date" />
 
@@ -122,9 +121,9 @@
                     android:id="@+id/tv_disbursementon_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:layout_weight="0.5"
-                    android:background="@color/gray_light"
+                    android:background="@android:color/transparent"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -137,7 +136,7 @@
                     android:hint="@string/external_id"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,7 +144,7 @@
                 android:id="@+id/tv_linking_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/loan_account_linking_option_label"
                 android:textSize="16sp" />
 
@@ -153,8 +152,8 @@
                 android:id="@+id/sp_linking_options"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -166,7 +165,7 @@
                     android:hint="@string/principal"
                     android:imeOptions="actionNext"
                     android:inputType="numberDecimal"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -179,7 +178,7 @@
                     android:hint="@string/numberofrepayments"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -197,7 +196,7 @@
                         android:hint="@string/nominal_interest_rate"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
-                        android:paddingBottom="16dp" />
+                        android:layout_marginTop="@dimen/margin_10dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -218,8 +217,8 @@
                     android:hint="@string/repaidevery"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:layout_marginTop="@dimen/margin_10dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout style="@style/LinearLayout.Width">
@@ -231,9 +230,10 @@
                     android:layout_marginEnd="3dp"
                     android:layout_marginRight="3dp"
                     android:layout_weight="0.3"
-                    android:background="@color/light_grey"
+                    android:background="@android:color/transparent"
                     android:paddingTop="10dp"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dropdown"
+                    android:layout_marginTop="@dimen/margin_10dp"/>
 
                 <TextView
                     android:id="@+id/tv_repaid_nthfreq_label_on"
@@ -271,7 +271,8 @@
                 style="@style/TextView.CreateLoanTerms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/margin_10dp"/>
 
             <LinearLayout style="@style/LinearLayout.Width">
 
@@ -297,7 +298,7 @@
                     android:layout_marginEnd="3dp"
                     android:layout_marginRight="3dp"
                     android:layout_weight="0.5"
-                    android:background="@color/light_grey"
+                    android:background="@android:color/transparent"
                     android:paddingTop="10dp"
                     android:spinnerMode="dropdown"
                     android:gravity="center_vertical"
@@ -308,7 +309,7 @@
                 android:id="@+id/tv_amortization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:paddingTop="@dimen/margin_16dp"
                 android:text="@string/amortization"
                 android:textSize="16sp" />
 
@@ -316,31 +317,31 @@
                 android:id="@+id/sp_amortization"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:paddingTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/tv_interestcalculationperiod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/interestcalculationperiod"
-                android:textSize="16sp" />
+                android:textSize="@dimen/margin_16dp" />
 
             <Spinner
                 android:id="@+id/sp_interestcalculationperiod"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/tv_repaymentstrategy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/repaymentstrategy"
                 android:textSize="16sp" />
 
@@ -348,15 +349,15 @@
                 android:id="@+id/sp_repaymentstrategy"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/cb_calculateinterest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/calculateinterest"
                 android:textSize="16sp" />
 
@@ -364,7 +365,7 @@
                 android:id="@+id/tv_interest_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:text="@string/loan_interest_type"
                 android:textSize="16sp" />
 
@@ -372,14 +373,14 @@
                 android:id="@+id/sp_interest_type"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
-                android:paddingTop="10dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:spinnerMode="dropdown" />
 
             <Button
                 android:id="@+id/btn_loan_submit"
                 style="@style/Button.Base"
-                android:layout_marginTop="10dp"
+                android:layout_margin="@dimen/margin_10dp"
                 android:text="@string/submit" />
 
         </LinearLayout>
