@@ -16,6 +16,7 @@
 
     <!-- Actual content -->
     <ScrollView
+        android:id="@+id/create_new_client_sl"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
@@ -328,4 +329,11 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/layout_sweet_exception_handler"
+        android:visibility="gone"
+        android:id="@+id/create_new_client_layout_error"/>
 </ViewFlipper>
