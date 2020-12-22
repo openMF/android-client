@@ -19,9 +19,11 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.api.GenericResponse;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter;
@@ -98,12 +100,14 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
     @Inject
     SavingsAccountSummaryPresenter mSavingAccountSummaryPresenter;
 
+    private RelativeLayout mainLayout;
+    private SweetUIErrorHandler sweetUIErrorHandler;
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
     // Infinite Scroll View
     List<Transaction> listOfAllTransactions = new ArrayList<Transaction>();
     SavingsAccountTransactionsListAdapter savingsAccountTransactionsListAdapter;
-    private View rootView;
+    private View rootView, layoutError;
     private int processSavingTransactionAction = -1;
     private SavingsAccountWithAssociations savingsAccountWithAssociations;
     private boolean parentFragment = true;
@@ -148,7 +152,9 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         ButterKnife.bind(this, rootView);
         mSavingAccountSummaryPresenter.attachView(this);
-
+        mainLayout = rootView.findViewById(R.id.saving_account_summary_rl);
+        layoutError = rootView.findViewById(R.id.saving_account_summary_layout_error);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
         mSavingAccountSummaryPresenter
                 .loadSavingAccount(savingsAccountType.getEndpoint(), savingsAccountNumber);
         return rootView;
@@ -432,8 +438,17 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
     @Override
     public void showFetchingError(int s) {
+        sweetUIErrorHandler.showSweetErrorUI(String.valueOf(s), R.drawable.ic_error_black_24dp,
+                mainLayout, layoutError);
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
 
+    }
+
+    @OnClick(R.id.btn_try_again)
+    public void reloadOnError() {
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(mainLayout, layoutError);
+        mSavingAccountSummaryPresenter
+                .loadSavingAccount(savingsAccountType.getEndpoint(), savingsAccountNumber);
     }
 
     @Override
