@@ -32,10 +32,12 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.exceptions.InvalidTextInputException;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
@@ -127,8 +129,10 @@ public class CreateNewClientFragment extends ProgressableFragment
     @Inject
     CreateNewClientPresenter createNewClientPresenter;
 
-    View rootView;
+    View rootView, layoutError;
     // It checks whether the user wants to create the new client with or without picture
+    private ScrollView mainLayout;
+    private SweetUIErrorHandler sweetUIErrorHandler;
     private boolean createClientWithImage = false;
     private boolean hasDataTables;
     private Integer returnedClientId;
@@ -185,6 +189,9 @@ public class CreateNewClientFragment extends ProgressableFragment
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         ButterKnife.bind(this, rootView);
         createNewClientPresenter.attachView(this);
+        mainLayout = rootView.findViewById(R.id.create_new_client_sl);
+        layoutError = rootView.findViewById(R.id.create_new_client_layout_error);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
 
         showUserInterface();
 
@@ -432,6 +439,12 @@ public class CreateNewClientFragment extends ProgressableFragment
         staffAdapter.notifyDataSetChanged();
     }
 
+    @OnClick(R.id.btn_try_again)
+    public void reloadOnError() {
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(mainLayout, layoutError);
+        createNewClientPresenter.loadClientTemplate();
+    }
+
     @Override
     public void showClientCreatedSuccessfully(int message) {
         Toaster.show(rootView, message);
@@ -445,6 +458,8 @@ public class CreateNewClientFragment extends ProgressableFragment
 
     @Override
     public void showMessage(int message) {
+        sweetUIErrorHandler.showSweetErrorUI(getStringMessage(message), R.drawable.ic_error_black_24dp,
+                mainLayout, layoutError);
         Toaster.show(rootView, message);
     }
 
