@@ -315,7 +315,6 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_group, menu);
@@ -324,28 +323,41 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.more_group_info:
-                loadGroupDataTables();
-                break;
-            case R.id.documents:
-                loadDocuments();
-                break;
-            case R.id.add_group_savings_account:
-                addGroupSavingsAccount();
-                break;
-            case R.id.add_group_loan:
-                addGroupLoanAccount();
-                break;
-            case R.id.group_clients:
-                mGroupDetailsPresenter.loadGroupAssociateClients(groupId);
-                break;
-            case R.id.group_notes:
-                loadNotes();
-                break;
-
+        if (rlGroup.getVisibility() == VISIBLE) {
+            switch (item.getItemId()) {
+                case R.id.more_group_info:
+                    loadGroupDataTables();
+                    break;
+                case R.id.documents:
+                    loadDocuments();
+                    break;
+                case R.id.add_group_savings_account:
+                    addGroupSavingsAccount();
+                    break;
+                case R.id.add_group_loan:
+                    addGroupLoanAccount();
+                    break;
+                case R.id.group_clients:
+                    mGroupDetailsPresenter.loadGroupAssociateClients(groupId);
+                    break;
+                case R.id.group_notes:
+                    loadNotes();
+                    break;
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        showProgressbar(false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        showProgressbar(false);
     }
 
     @Override
