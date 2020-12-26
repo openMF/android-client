@@ -342,21 +342,26 @@ public class DashboardActivity extends MifosBaseActivity
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (doubleBackToExitPressedOnce) {
-                setMenuCreateClient(true);
-                setMenuCreateCentre(true);
-                setMenuCreateGroup(true);
-                super.onBackPressed();
-                return;
-            }
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+            if (fragment instanceof SearchFragment) {
+                if (doubleBackToExitPressedOnce) {
+                    setMenuCreateClient(true);
+                    setMenuCreateCentre(true);
+                    setMenuCreateGroup(true);
+                    finish();
+                    return;
                 }
-            }, 2000);
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
+            } else {
+                replaceFragment(new SearchFragment(), false, R.id.container);
+            }
         }
     }
 
@@ -401,16 +406,16 @@ public class DashboardActivity extends MifosBaseActivity
     }
 
     public void openCreateClient() {
-        replaceFragment(CreateNewClientFragment.newInstance(), true, R.id.container);
+        replaceFragment(CreateNewClientFragment.newInstance(), false, R.id.container);
     }
 
     public void openCreateCenter() {
-        replaceFragment(CreateNewCenterFragment.newInstance(), true, R.id.container);
+        replaceFragment(CreateNewCenterFragment.newInstance(), false, R.id.container);
 
     }
 
     public void openCreateGroup() {
-        replaceFragment(CreateNewGroupFragment.newInstance(), true, R.id.container);
+        replaceFragment(CreateNewGroupFragment.newInstance(), false, R.id.container);
     }
 
     @VisibleForTesting
