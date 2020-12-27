@@ -14,17 +14,17 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.views.scrollview.CustomScrollView;
+import com.mifos.mifosxdroid.views.scrollview.ScrollChangeListener;
 import com.mifos.objects.runreports.ColumnHeader;
 import com.mifos.objects.runreports.DataRow;
 import com.mifos.objects.runreports.FullParameterListResponse;
 import com.mifos.utils.Constants;
-
+import java.util.Date;
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,16 +32,23 @@ import butterknife.ButterKnife;
  * Created by Tarun on 05-08-17.
  */
 
-public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
+public class ReportFragment extends MifosBaseFragment implements ReportMvpView,
+        ScrollChangeListener {
 
     @BindView(R.id.table_report)
     TableLayout tableReport;
+
+    @BindView(R.id.sv_horizontal)
+    CustomScrollView scrollView;
 
     @Inject
     ReportPresenter presenter;
 
     private View rootView;
     private FullParameterListResponse report;
+
+    private int page = 0;
+    private int bottom = 0;
 
     public ReportFragment() {
     }
@@ -67,7 +74,7 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
         ButterKnife.bind(this, rootView);
         presenter.attachView(this);
 
-        setHasOptionsMenu(true);
+        long time = new Date().getTime();
         report = getArguments().getParcelable(Constants.REPORT_NAME);
         setUpUi();
 
@@ -77,8 +84,13 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
     private void setUpUi() {
         showProgressbar(true);
         setUpHeading();
+
+        scrollView.setScrollChangeListener(this);
+
+
         if (report.getData().size() > 0) {
             setUpValues();
+
         } else {
             Toast.makeText(getActivity(), getString(R.string.msg_report_empty), Toast.LENGTH_SHORT)
                     .show();
@@ -112,8 +124,10 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
 
         // For each dataRow, the item in the index i refers to the column
         // i of the columnHeader list.
+        int ll = page * 100;
+        int ul = Math.min(ll + 100, report.getData().size());
 
-        for (DataRow dataRow : report.getData()) {
+        for (DataRow dataRow : report.getData().subList(ll, ul)) {
             TableRow row = new TableRow(getContext());
             TableRow.LayoutParams rowParams = new TableRow.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -163,6 +177,22 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView {
             showMifosProgressDialog();
         } else {
             hideMifosProgressDialog();
+        }
+    }
+
+    @Override
+    public void onScrollChanged(int x, int y, int oldx, int oldy) {
+        View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+        if (diff == 0) {
+            if (bottom >= 2) {
+                bottom = 0;
+                page++;
+                Toast.makeText(getContext(), "Loading more", Toast.LENGTH_SHORT).show();
+                setUpValues();
+            } else {
+                bottom++;
+            }
         }
     }
 }

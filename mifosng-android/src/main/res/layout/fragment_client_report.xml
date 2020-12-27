@@ -2,19 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TableLayout
+    <com.mifos.mifosxdroid.views.scrollview.CustomScrollView
+        android:id="@+id/sv_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <HorizontalScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/table_report"/>
-    </HorizontalScrollView>
+            android:layout_height="wrap_content">
 
-</ScrollView>
+            <TableLayout
+                android:id="@+id/table_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </HorizontalScrollView>
+
+    </com.mifos.mifosxdroid.views.scrollview.CustomScrollView>
 </LinearLayout>
