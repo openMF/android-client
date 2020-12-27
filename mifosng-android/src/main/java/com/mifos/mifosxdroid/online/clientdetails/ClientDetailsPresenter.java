@@ -49,7 +49,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
-    public void uploadImage(int id, File pngFile) {
+    public void uploadImage(final int id, File pngFile) {
         checkViewAttached();
         final String imagePath = pngFile.getAbsolutePath();
 
@@ -80,11 +80,12 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     public void onNext(ResponseBody response) {
                         getMvpView().showUploadImageProgressbar(false);
                         getMvpView().showUploadImageSuccessfully(response, imagePath);
+                        loadClientDetailsAndClientAccounts(id);
                     }
                 });
     }
 
-    public void deleteClientImage(int clientId) {
+    public void deleteClientImage(final int clientId) {
         checkViewAttached();
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = mDataManagerClient.deleteClientImage(clientId)
@@ -104,6 +105,7 @@ public class ClientDetailsPresenter extends BasePresenter<ClientDetailsMvpView> 
                     @Override
                     public void onNext(ResponseBody response) {
                         getMvpView().showClientImageDeletedSuccessfully();
+                        loadClientDetailsAndClientAccounts(clientId);
                     }
                 });
     }
