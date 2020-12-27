@@ -21,12 +21,13 @@
 
         <LinearLayout style="@style/LinearLayout.Base">
 
-            <TextView style="@style/TextView.CreateClient" />
+<!--            <TextView style="@style/TextView.CreateClient" />-->
 
             <com.mifos.mifosxdroid.views.CircularImageView
                 android:id="@+id/iv_clientImage"
                 style="@style/ClientImage"
                 android:layout_gravity="center"
+
                 android:src="@drawable/ic_dp_placeholder"/>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">

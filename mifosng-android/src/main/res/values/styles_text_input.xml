@@ -8,7 +8,7 @@
 
     <style name="TextInput" />
 
-    <style name="TextInput.Base">
+    <style name="TextInput.Base" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
