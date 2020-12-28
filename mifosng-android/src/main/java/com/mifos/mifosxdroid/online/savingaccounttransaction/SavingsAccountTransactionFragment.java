@@ -8,7 +8,6 @@ package com.mifos.mifosxdroid.online.savingaccounttransaction;
 import android.R.layout;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,6 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations;
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate;
 import com.mifos.utils.Constants;
-import com.mifos.utils.FragmentConstants;
 import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.Utils;
@@ -52,7 +50,7 @@ import butterknife.OnClick;
 
 
 public class SavingsAccountTransactionFragment extends ProgressableFragment implements
-        MFDatePicker.OnDatePickListener, SavingsAccountTransactionMvpView {
+        SavingsAccountTransactionMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
@@ -86,7 +84,6 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     private String clientName;
     // Values to be fetched from Savings Account Template
     private int paymentTypeOptionId;
-    private DialogFragment mfDatePicker;
 
     /**
      * Use this factory method to create a new instance of
@@ -288,25 +285,8 @@ public class SavingsAccountTransactionFragment extends ProgressableFragment impl
     }
 
     public void inflateRepaymentDate() {
-        mfDatePicker = MFDatePicker.newInsance(this);
         tv_transactionDate.setText(MFDatePicker.getDatePickedAsString());
-        // TODO Add Validation to make sure :
-        // 1. Date Is in Correct Format
-        // 2. Date Entered is not greater than Date Today i.e Date is not in future
-        tv_transactionDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mfDatePicker.show(getActivity().getSupportFragmentManager(), FragmentConstants
-                        .DFRAG_DATE_PICKER);
-            }
-        });
     }
-
-    @Override
-    public void onDatePicked(String date) {
-        tv_transactionDate.setText(date);
-    }
-
 
     @Override
     public void showSavingAccountTemplate(final SavingsAccountTransactionTemplate
