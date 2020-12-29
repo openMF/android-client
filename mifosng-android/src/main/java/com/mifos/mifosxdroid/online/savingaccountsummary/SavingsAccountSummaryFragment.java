@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -234,53 +233,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
         }
     }
 
-    public void enableInfiniteScrollOfTransactions() {
-        lv_Transactions.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                loadmore = !(scrollState == SCROLL_STATE_IDLE);
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int
-                    visibleItemCount, int totalItemCount) {
-                final int lastItem = firstVisibleItem + visibleItemCount;
-
-                if (firstVisibleItem == 0)
-                    return;
-
-                if (lastItem == totalItemCount && loadmore) {
-                    loadmore = false;
-                    loadNextFiveTransactions();
-                }
-            }
-        });
-    }
-
-    public void loadNextFiveTransactions() {
-        index = lv_Transactions.getFirstVisiblePosition();
-        View v = lv_Transactions.getChildAt(0);
-        top = (v == null) ? 0 : v.getTop();
-        last += 5;
-        if (last > listOfAllTransactions.size()) {
-            last = listOfAllTransactions.size();
-            savingsAccountTransactionsListAdapter =
-                    new SavingsAccountTransactionsListAdapter(getActivity(),
-                            listOfAllTransactions.subList(initial, last));
-            savingsAccountTransactionsListAdapter.notifyDataSetChanged();
-            lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
-            lv_Transactions.setSelectionFromTop(index, top);
-            return;
-        }
-
-        savingsAccountTransactionsListAdapter =
-                new SavingsAccountTransactionsListAdapter(getActivity(),
-                        listOfAllTransactions.subList(initial, last));
-        savingsAccountTransactionsListAdapter.notifyDataSetChanged();
-        lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
-        lv_Transactions.setSelectionFromTop(index, top);
-    }
-
     public void loadDocuments() {
         DocumentListFragment documentListFragment = DocumentListFragment.newInstance(Constants
                 .ENTITY_TYPE_SAVINGS, savingsAccountNumber);
@@ -367,9 +319,7 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
 
             savingsAccountTransactionsListAdapter = new
                     SavingsAccountTransactionsListAdapter(getActivity(),
-                    savingsAccountWithAssociations.getTransactions().size() < last ?
-                            savingsAccountWithAssociations.getTransactions() :
-                            savingsAccountWithAssociations.getTransactions().subList(initial, last)
+                   savingsAccountWithAssociations.getTransactions()
             );
             lv_Transactions.setAdapter(savingsAccountTransactionsListAdapter);
 
@@ -419,7 +369,6 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
                 bt_approve_saving.setVisibility(View.GONE);
 
             }
-            enableInfiniteScrollOfTransactions();
         }
     }
 
