@@ -172,6 +172,12 @@ public class Charges extends MifosBaseModel implements Parcelable {
         return dueDate;
     }
 
+    public String getFormattedDueDate() {
+        String pattern = "%s-%s-%s";
+        return String.format(pattern,
+                dueDate.get(0), dueDate.get(1), dueDate.get(2));
+    }
+
     public void setDueDate(List<Integer> dueDate) {
         this.dueDate = dueDate;
     }
