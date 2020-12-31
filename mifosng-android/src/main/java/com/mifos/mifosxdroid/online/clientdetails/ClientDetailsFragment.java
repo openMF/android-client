@@ -174,10 +174,14 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
     private View rootView;
     private OnFragmentInteractionListener mListener;
-    private File clientImageFile = new File(Environment.getExternalStorageDirectory().toString() +
+    private final File clientImageFile = new File(
+            Environment.getExternalStorageDirectory().toString() +
             "/client_image.png");
     private AccountAccordion accountAccordion;
     private boolean isClientActive = false;
+    private LinearLayout llLegendLoans;
+    private LinearLayout llLegendSavings;
+    private LinearLayout llLegendRecurring;
 
 
     /**
@@ -209,6 +213,10 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false);
+
+        llLegendLoans = rootView.findViewById(R.id.account_accordion_section_loans_legend);
+        llLegendSavings = rootView.findViewById(R.id.account_accordion_section_savings_legend);
+        llLegendRecurring = rootView.findViewById(R.id.account_accordion_section_recurring_legend);
 
         ButterKnife.bind(this, rootView);
         mClientDetailsPresenter.attachView(this);
@@ -636,7 +644,8 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         if (!isAdded()) {
             return;
         }
-        accountAccordion = new AccountAccordion(getActivity());
+        accountAccordion = new AccountAccordion(getActivity(), llLegendLoans, llLegendSavings,
+                llLegendRecurring);
         if (clientAccounts.getLoanAccounts().size() > 0) {
             AccountAccordion.Section section = AccountAccordion.Section.LOANS;
             final LoanAccountsListAdapter adapter =
@@ -682,6 +691,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         }
     }
 
+
     @Override
     public void showFetchingError(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
@@ -693,13 +703,20 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         void loadSavingsAccountSummary(int savingsAccountNumber, DepositType accountType);
     }
 
-
     private static class AccountAccordion {
         private final Activity context;
         private Section currentSection;
+        private final LinearLayout llLegendLoans;
+        private final LinearLayout llLegendSavings;
+        private final LinearLayout llLegendRecurring;
 
-        private AccountAccordion(Activity context) {
+        private AccountAccordion(Activity context, LinearLayout llLegendLoans,
+                LinearLayout llLegendSavings, LinearLayout llLegendRecurring) {
             this.context = context;
+            this.llLegendLoans = llLegendLoans;
+            this.llLegendSavings = llLegendSavings;
+            this.llLegendRecurring = llLegendRecurring;
+
             Section.configure(context, this);
         }
 
@@ -707,6 +724,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             // close previous section
             if (this.currentSection != null) {
                 this.currentSection.close(context);
+                legendCloser(this.currentSection.sectionId);
             }
 
             this.currentSection = currentSection;
@@ -714,7 +732,24 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
             // open new section
             if (this.currentSection != null) {
                 this.currentSection.open(context);
+                legendOpener(this.currentSection.sectionId);
             }
+        }
+
+        private void legendOpener(int id) {
+            llLegendLoans.setVisibility(id ==
+                    R.id.account_accordion_section_loans ? VISIBLE : GONE);
+            llLegendSavings.setVisibility(id ==
+                    R.id.account_accordion_section_savings ? VISIBLE : GONE);
+            llLegendRecurring.setVisibility(id ==
+                    R.id.account_accordion_section_recurring ? VISIBLE : GONE);
+        }
+
+        private void legendCloser(int id) {
+            if (id == R.id.account_accordion_section_loans)llLegendLoans.setVisibility(GONE);
+            if (id == R.id.account_accordion_section_savings)llLegendSavings.setVisibility(GONE);
+            if (id == R.id.account_accordion_section_recurring)llLegendRecurring
+                    .setVisibility(GONE);
         }
 
         private enum Section {
