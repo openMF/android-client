@@ -834,5 +834,6 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+    <string name="dialog_charge_heading">Create Charge</string>
 
 </resources>
