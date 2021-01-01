@@ -23,14 +23,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/charge_dialog_head_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="@string/dialog_charge_heading"
+            android:textColor="@color/primary"
+            android:layout_margin="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            style="@style/DialogFragmentChargeEditText"/>
 
         <TableLayout
             android:id="@+id/tableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/charge_dialog_head_tv"
             android:layout_centerHorizontal="true"
-            android:padding="8dp">
+            android:padding="16dp">
 
             <TableRow
                 android:id="@+id/tableRow1"
@@ -43,14 +54,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/name"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingStart="20dp"
+                    android:paddingLeft="20dp" />
 
                 <Spinner
                     android:id="@+id/sp_charge_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/light_grey" />
+                    android:background="@android:color/transparent" />
             </TableRow>
 
             <TableRow
@@ -66,11 +79,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/amount"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingStart="20dp"
+                    android:paddingLeft="20dp"/>
 
                 <EditText
                     android:id="@+id/amount_due_charge"
                     android:inputType="numberDecimal"
+                    android:background="@android:color/transparent"
                     style="@style/DialogFragmentChargeEditText"/>
 
 </TableRow>
@@ -87,11 +103,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/due_date"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingStart="20dp"
+                    android:paddingLeft="20dp" />
 
                 <EditText
                     android:id="@+id/et_date"
                     android:focusable="false"
+                    android:background="@android:color/transparent"
                     style="@style/DialogFragmentChargeEditText"/>
 
             </TableRow>
@@ -108,14 +127,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/locale"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingStart="20dp"
+                    android:paddingLeft="20dp"/>
 
                 <EditText
                     android:id="@+id/et_charge_locale"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/light_grey"
+                    android:background="@android:color/transparent"
                     android:focusable="false"
                     android:text="@string/en_code" />
 
@@ -126,8 +147,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="26dp"
-                android:background="@color/blue"
-                android:text="@string/save" />
+                android:background="@color/primary"
+                android:text="@string/save"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"/>
         </TableLayout>
     </RelativeLayout>
 </ViewFlipper>
