@@ -266,6 +266,8 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                     mListener.loadLoanAccountSummary(adapter.getItem(i).getId());
                 }
             });
+        } else {
+            getActivity().findViewById(R.id.account_accordion_section_loans).setVisibility(GONE);
         }
 
         if (groupAccounts.getNonRecurringSavingsAccounts().size() > 0) {
@@ -281,6 +283,8 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                             adapter.getItem(i).getDepositType());
                 }
             });
+        } else {
+            getActivity().findViewById(R.id.account_accordion_section_savings).setVisibility(GONE);
         }
 
         if (groupAccounts.getRecurringSavingsAccounts().size() > 0) {
@@ -296,6 +300,9 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
                             adapter.getItem(i).getDepositType());
                 }
             });
+        } else {
+            getActivity().findViewById(R.id.account_accordion_section_recurring)
+                    .setVisibility(GONE);
         }
     }
 
