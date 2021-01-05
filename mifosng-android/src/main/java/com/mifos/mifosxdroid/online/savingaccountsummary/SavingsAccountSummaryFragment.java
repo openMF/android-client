@@ -417,7 +417,12 @@ public class SavingsAccountSummaryFragment extends ProgressableFragment
             } else {
                 inflateSavingsAccountSummary();
                 bt_approve_saving.setVisibility(View.GONE);
+            }
 
+            if (listOfAllTransactions.isEmpty()) {
+                getActivity().findViewById(R.id.savings_transactions).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.no_saving_transactions_view)
+                        .setVisibility(View.VISIBLE);
             }
             enableInfiniteScrollOfTransactions();
         }
