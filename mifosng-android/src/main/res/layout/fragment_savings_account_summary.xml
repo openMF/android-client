@@ -200,6 +200,19 @@
             android:text="@string/transactions"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
+        <TextView
+            android:id="@+id/no_saving_transactions_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_transactions"
+            android:textSize="22sp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:layout_above="@+id/buttons"
+            android:layout_below="@id/divider_3"
+            android:visibility="gone"
+            />
+
         <ListView
             android:id="@+id/lv_savings_transactions"
             android:layout_width="wrap_content"
