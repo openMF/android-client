@@ -81,6 +81,8 @@ public class Constants {
 
     public static final String GROUP_ID = "groupId";
 
+    public static final String GROUP_NAME = "groupName";
+
     public static final String GROUPS = "groups";
 
     public static final String GROUP_ACCOUNT = "isGroupAccount";
