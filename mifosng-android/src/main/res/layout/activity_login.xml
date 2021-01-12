@@ -33,7 +33,10 @@
                 <EditText
                     android:id="@+id/et_username"
                     style="@style/EditText.Username"
-                    android:nextFocusDown="@+id/et_password" />
+                    android:nextFocusDown="@+id/et_password"
+                    android:drawableLeft="@drawable/ic_wrapped_person_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_wrapped_person_black_24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,7 +49,10 @@
                 <EditText
                     android:id="@+id/et_password"
                     style="@style/EditText.Password"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:drawableLeft="@drawable/ic_wrapped_lock_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_wrapped_lock_black_24dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
