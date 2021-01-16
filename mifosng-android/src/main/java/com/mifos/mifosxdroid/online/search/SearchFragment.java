@@ -10,9 +10,11 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -42,6 +44,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 
 public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         RecyclerItemClickListener.OnItemClickListener, AdapterView.OnItemSelectedListener {
@@ -108,6 +111,14 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         rv_search.setAdapter(searchAdapter);
     }
 
+    @OnEditorAction(R.id.et_search)
+    boolean onEditorAction(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            onClickSearch();
+            return true;
+        }
+        return false;
+    }
 
     @OnClick(R.id.btn_search)
     public void onClickSearch() {
