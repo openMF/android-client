@@ -20,12 +20,15 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:gravity="center_horizontal"
+                android:padding="@dimen/layout_padding_16dp"
                 style="@style/TextView.Client"
                 android:textColor="@color/black"
                 android:text="@string/center_details"/>
 
             <TableRow
                 android:id="@+id/row_activation_date"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -39,6 +42,8 @@
 
             <TableRow
                 android:id="@+id/row_meeting_date"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -52,6 +57,8 @@
 
             <TableRow
                 android:id="@+id/row_meeting_frequency"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -66,6 +73,9 @@
 
             <TableRow
                 android:id="@+id/row_staff_name"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
+                android:paddingBottom="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -88,13 +98,15 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:gravity="center_horizontal"
-                android:paddingTop="16dp"
+                android:padding="16dp"
                 style="@style/TextView.Client"
                 android:textColor="@color/black"
                 android:text="@string/summary_info"/>
 
             <TableRow
                 android:id="@+id/row_active_clients"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -108,6 +120,8 @@
 
             <TableRow
                 android:id="@+id/row_active_group_loans"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -121,6 +135,8 @@
 
             <TableRow
                 android:id="@+id/row_active_client_loans"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -135,6 +151,8 @@
 
             <TableRow
                 android:id="@+id/row_active_group_borrowers"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -148,6 +166,8 @@
 
             <TableRow
                 android:id="@+id/row_active_client_borrowers"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -161,6 +181,8 @@
 
             <TableRow
                 android:id="@+id/row_active_overdue_group_loans"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
@@ -174,6 +196,8 @@
 
             <TableRow
                 android:id="@+id/row_active_overdue_client_loans"
+                android:paddingStart="@dimen/layout_padding_16dp"
+                android:paddingEnd="@dimen/layout_padding_16dp"
                 style="@style/TableRow">
 
                 <TextView
