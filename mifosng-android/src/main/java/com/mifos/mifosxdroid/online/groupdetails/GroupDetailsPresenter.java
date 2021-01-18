@@ -86,7 +86,7 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
                 .subscribe(new Subscriber<GroupWithAssociations>() {
                     @Override
                     public void onCompleted() {
-
+                        getMvpView().showProgressbar(false);
                     }
 
                     @Override
@@ -97,7 +97,6 @@ public class GroupDetailsPresenter extends BasePresenter<GroupDetailsMvpView> {
 
                     @Override
                     public void onNext(GroupWithAssociations groupWithAssociations) {
-                        getMvpView().showProgressbar(false);
                         getMvpView().showGroupClients(groupWithAssociations.getClientMembers());
                     }
                 })
