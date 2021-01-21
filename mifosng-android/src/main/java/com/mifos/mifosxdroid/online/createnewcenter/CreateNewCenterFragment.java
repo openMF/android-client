@@ -15,9 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -130,6 +132,17 @@ public class CreateNewCenterFragment extends MifosBaseFragment
                     layout_submission.setVisibility(View.GONE);
                 }
 
+            }
+        });
+
+        et_centerName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i == EditorInfo.IME_ACTION_GO){
+                    et_centerName.clearFocus();
+                    hideKeyboard(et_centerName);
+                }
+                return false;
             }
         });
 

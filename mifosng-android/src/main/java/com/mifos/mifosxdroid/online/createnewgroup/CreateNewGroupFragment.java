@@ -14,9 +14,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -166,6 +168,18 @@ public class CreateNewGroupFragment extends ProgressableFragment
         dateofsubmissionstring = tv_submissionDate.getText().toString();
         dateofsubmissionstring = DateHelper.getDateAsStringUsedForDateofBirth
                 (dateofsubmissionstring).replace("-", " ");
+
+        et_groupexternalId.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i == EditorInfo.IME_ACTION_GO){
+                    et_groupexternalId.clearFocus();
+                    hideKeyboard(et_groupexternalId);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override

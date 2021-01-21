@@ -23,10 +23,12 @@ import androidx.appcompat.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -231,6 +233,17 @@ public class CreateNewClientFragment extends ProgressableFragment
         datePickerDateOfBirth = MFDatePicker.newInsance(this);
         tvSubmissionDate.setText(MFDatePicker.getDatePickedAsString());
         tvDateOfBirth.setText(MFDatePicker.getDatePickedAsString());
+
+        etClientExternalId.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i == EditorInfo.IME_ACTION_GO){
+                    etClientExternalId.clearFocus();
+                    hideKeyboard(etClientExternalId);
+                }
+                return false;
+            }
+        });
 
         ivClientImage.setOnClickListener(new View.OnClickListener() {
             @Override

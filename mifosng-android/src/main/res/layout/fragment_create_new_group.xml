@@ -118,7 +118,7 @@
                     style="@style/EditText.BaseWidth"
                     android:gravity="start"
                     android:hint="@string/external_id"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="actionGo"
                     android:inputType="text"
                     android:paddingTop="10dp"
                     android:singleLine="true" />
