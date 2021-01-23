@@ -51,7 +51,7 @@ public class CenterListPresenter extends BasePresenter<CenterListMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        mSubscriptions.clear();
     }
 
 
