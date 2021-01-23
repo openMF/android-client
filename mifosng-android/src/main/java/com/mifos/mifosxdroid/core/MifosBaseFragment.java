@@ -27,7 +27,7 @@ public class MifosBaseFragment extends Fragment {
     private InputMethodManager inputManager;
     private MifosProgressBarHandler mMifosProgressBarHandler;
 
-    @SuppressWarnings("deprecation")
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

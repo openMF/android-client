@@ -199,7 +199,7 @@ public class SurveyQuestionActivity extends MifosBaseActivity implements
 
     }
 
-    @SuppressWarnings(value = "unchecked")
+
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
