@@ -42,7 +42,7 @@ public class CreateNewGroupPresenter extends BasePresenter<CreateNewGroupMvpView
     @Override
     public void detachView() {
         super.detachView();
-        mSubscriptions.unsubscribe();
+        mSubscriptions.clear();
     }
 
     public void loadOffices() {
