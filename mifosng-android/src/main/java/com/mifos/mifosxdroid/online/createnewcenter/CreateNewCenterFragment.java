@@ -114,6 +114,8 @@ public class CreateNewCenterFragment extends MifosBaseFragment
 
         inflateOfficeSpinner();
         inflateActivationDate();
+        mCreateNewCenterPresenter.loadOffices();
+
         //client active checkbox onCheckedListener
         cb_centerActiveStatus.setOnCheckedChangeListener(new CompoundButton
                 .OnCheckedChangeListener() {

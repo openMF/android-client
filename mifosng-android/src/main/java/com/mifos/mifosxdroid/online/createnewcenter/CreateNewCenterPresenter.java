@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online.createnewcenter;
 
 import com.mifos.api.datamanager.DataManagerCenter;
+import com.mifos.api.datamanager.DataManagerOffices;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.organisation.Office;
@@ -23,11 +24,14 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpView> {
 
     private final DataManagerCenter dataManagerCenter;
+    private final DataManagerOffices mDataManagerOffices;
     private CompositeSubscription subscriptions;
 
     @Inject
-    public CreateNewCenterPresenter(DataManagerCenter dataManager) {
+    public CreateNewCenterPresenter(DataManagerCenter dataManager,
+                                    DataManagerOffices dataManagerOffices) {
         dataManagerCenter = dataManager;
+        mDataManagerOffices = dataManagerOffices;
         subscriptions = new CompositeSubscription();
     }
 
@@ -46,7 +50,7 @@ public class CreateNewCenterPresenter extends BasePresenter<CreateNewCenterMvpVi
     public void loadOffices() {
         checkViewAttached();
         getMvpView().showProgressbar(true);
-        subscriptions.add(dataManagerCenter.getOffices()
+        subscriptions.add(mDataManagerOffices.getOffices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Office>>() {
