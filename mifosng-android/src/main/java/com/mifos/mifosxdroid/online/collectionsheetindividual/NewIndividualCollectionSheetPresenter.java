@@ -10,6 +10,7 @@ import com.mifos.objects.organisation.Office;
 import com.mifos.objects.organisation.Staff;
 import com.mifos.utils.MFErrorParser;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +123,8 @@ public class NewIndividualCollectionSheetPresenter
                                         .string();
                                 getMvpView().showError(MFErrorParser.parseError(errorMessage)
                                         .getErrors().get(0).getDefaultUserMessage());
+                            } else if (e instanceof UnknownHostException) {
+                                getMvpView().showError(MFErrorParser.errorMessage(e));
                             }
                         } catch (Throwable throwable) {
                             RxJavaPlugins.getInstance().getErrorHandler().handleError(e);
