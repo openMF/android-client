@@ -131,6 +131,8 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
 
     @Override
     public void showNoResultFound() {
+        searchedEntities.clear();
+        searchAdapter.notifyDataSetChanged();
         showAlertDialog(getString(R.string.dialog_message),
                 getString(R.string.no_search_result_found));
     }
