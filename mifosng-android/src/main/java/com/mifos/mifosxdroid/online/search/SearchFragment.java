@@ -210,6 +210,11 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
             } else {
                 resources = searchOptionsValues[position - 1];
             }
+
+            String query = et_search.getEditableText().toString().trim();
+            if (!query.isEmpty()) {
+                onClickSearch();
+            }
         }
     }
 
