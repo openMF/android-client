@@ -212,6 +212,7 @@ public class PaymentDetailsFragment extends MifosBaseFragment
                 + (!etDue.getText().toString().isEmpty() ?
                 Double.parseDouble(etDue.getText().toString()) : 0));
 
+        btnAddPayment.setText(getString(R.string.add_payment_detail));
         tableAdditional.setVisibility(View.GONE);
         bulkRepaymentTransaction.setPaymentTypeId(null);
         bulkRepaymentTransaction.setAccountNumber(null);
@@ -253,6 +254,7 @@ public class PaymentDetailsFragment extends MifosBaseFragment
         }
 
         onSaveAdditionalItem(bulkRepaymentTransaction, position);
+        btnAddPayment.setText(getString(R.string.add_payment_detail));
         tableAdditional.setVisibility(View.GONE);
     }
 
@@ -276,8 +278,10 @@ public class PaymentDetailsFragment extends MifosBaseFragment
         switch (view.getId()) {
             case R.id.btn_add_payment:
                 if (tableAdditional.getVisibility() == View.VISIBLE) {
+                    btnAddPayment.setText(getString(R.string.add_payment_detail));
                     tableAdditional.setVisibility(View.GONE);
                 } else if (tableAdditional.getVisibility() == View.GONE) {
+                    btnAddPayment.setText(getString(R.string.hide_payment_detail));
                     showAdditional();
                 }
                 break;

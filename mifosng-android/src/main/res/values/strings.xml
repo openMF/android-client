@@ -197,6 +197,7 @@
     <string name="members">Members:</string>
     <string name="no_saved_sheet">No Saved Collection sheet</string>
     <string name="no_payment_added">No Payment Added</string>
+    <string name="hide_payment_detail">Hide Payment Detail</string>
     <string name="add_payment_detail">Add Payment Detail</string>
     <string name="generate_new">Generate New</string>
     <string name="currency">Currency</string>
