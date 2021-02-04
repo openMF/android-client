@@ -219,6 +219,11 @@ public class PaymentDetailsFragment extends MifosBaseFragment
         bulkRepaymentTransaction.setRoutingCode(null);
         bulkRepaymentTransaction.setReceiptNumber(null);
         bulkRepaymentTransaction.setBankNumber(null);
+        etAccountNumber.setText("");
+        etBankNumber.setText("");
+        etChequeNumber.setText("");
+        etReceiptNumber.setText("");
+        etRoutingCode.setText("");
         onSaveAdditionalItem(bulkRepaymentTransaction, position);
     }
 
