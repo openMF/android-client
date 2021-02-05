@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +103,9 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
     @BindView(R.id.btn_submit)
     Button btnSubmit;
 
+    @BindView(R.id.ll_add_savings_account)
+    LinearLayout llAddSavingsAccount;
+
     @Inject
     SavingsAccountPresenter mSavingsAccountPresenter;
 
@@ -154,6 +158,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
 
         ButterKnife.bind(this, rootView);
         mSavingsAccountPresenter.attachView(this);
+
+        llAddSavingsAccount.setVisibility(View.INVISIBLE);
 
         inflateSubmissionDate();
         inflateSavingsSpinners();
@@ -279,6 +285,8 @@ public class SavingsAccountFragment extends ProgressableDialogFragment implement
         tvInterestPeriod.setText(savingProductsTemplate.getInterestPostingPeriodType().getValue());
         tvDaysInYear.setText(savingProductsTemplate.
                 getInterestCalculationDaysInYearType().getValue());
+
+        llAddSavingsAccount.setVisibility(View.VISIBLE);
     }
 
     @Override

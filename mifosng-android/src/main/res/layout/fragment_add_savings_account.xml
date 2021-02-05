@@ -17,7 +17,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <LinearLayout style="@style/LinearLayout.Base">
+        <LinearLayout
+            android:id="@+id/ll_add_savings_account"
+            style="@style/LinearLayout.Base">
 
             <TextView
                 style="@style/TextView.CreateSavingsAccount"
