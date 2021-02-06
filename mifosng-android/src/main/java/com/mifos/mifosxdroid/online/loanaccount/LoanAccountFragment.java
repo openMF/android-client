@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -142,6 +143,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment
     @BindView(R.id.btn_loan_submit)
     Button btnLoanSubmit;
 
+    @BindView(R.id.ll_add_loan)
+    LinearLayout llAddLoan;
+
     @Inject
     LoanAccountPresenter mLoanAccountPresenter;
 
@@ -231,6 +235,8 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         ButterKnife.bind(this, rootView);
         mLoanAccountPresenter.attachView(this);
 
+        // Hiding it now so it will be visible once everything is loaded for users
+        llAddLoan.setVisibility(View.INVISIBLE);
 
         inflateSubmissionDate();
         inflateDisbursementDate();
@@ -570,6 +576,9 @@ public class LoanAccountFragment extends ProgressableDialogFragment
         mInterestTypeOptionsAdapter.notifyDataSetChanged();
 
         showDefaultValues();
+
+        // Making it visible since everything is ready now
+        llAddLoan.setVisibility(View.VISIBLE);
 
     }
 

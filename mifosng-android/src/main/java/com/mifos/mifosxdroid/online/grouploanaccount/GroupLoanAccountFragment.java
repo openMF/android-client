@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -131,6 +132,9 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
     @BindView(R.id.sp_linking_options)
     Spinner spLinkingOptions;
 
+    @BindView(R.id.ll_add_loan)
+    LinearLayout llAddLoan;
+
     @Inject
     GroupLoanAccountPresenter mGroupLoanAccountPresenter;
 
@@ -226,6 +230,9 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
 
         ButterKnife.bind(this, rootView);
         mGroupLoanAccountPresenter.attachView(this);
+
+        // Hiding it now so it will be visible once everything is loaded for users
+        llAddLoan.setVisibility(View.INVISIBLE);
 
         //Linking Options not yet implemented for Groups but the layout file is shared.
         //So, hiding the widgets
@@ -506,6 +513,9 @@ public class GroupLoanAccountFragment extends ProgressableDialogFragment
         }
 
         showDefaultValues();
+
+        // Making it visible since everything is ready now
+        llAddLoan.setVisibility(View.VISIBLE);
     }
 
     @Override
