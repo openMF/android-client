@@ -133,6 +133,7 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
     private int centerId = -1;
     private int groupId = -1;
     private int staffId = -1;
+    private boolean isFirstTime = true;
 
     //id of the center whose Productive CollectionSheet has to be retrieved.
     private int productiveCenterId = -1;
@@ -233,45 +234,48 @@ public class GenerateCollectionSheetFragment extends MifosBaseFragment
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        switch (adapterView.getId()) {
-            case R.id.sp_centers:
-                centerId = centerNameIdHashMap.get(centerNames.get(i));
-                if (centerId != -1) {
-                    inflateGroupSpinner(centerId);
-                } else {
-                    Toaster.show(rootView, getString(R.string.error_select_center));
-                }
-                break;
+        if (!isFirstTime) {
+            switch (adapterView.getId()) {
+                case R.id.sp_centers:
+                    centerId = centerNameIdHashMap.get(centerNames.get(i));
+                    if (centerId != -1) {
+                        inflateGroupSpinner(centerId);
+                    } else {
+                        Toaster.show(rootView, getString(R.string.error_select_center));
+                    }
+                    break;
 
-            case R.id.sp_staff:
-                staffId = staffNameIdHashMap.get(staffNames.get(i));
-                if (staffId != -1) {
-                    inflateCenterSpinner(officeId, staffId);
-                    inflateGroupSpinner(officeId, staffId);
-                } else {
-                    Toaster.show(rootView, getString(R.string.error_select_staff));
-                }
-                break;
+                case R.id.sp_staff:
+                    staffId = staffNameIdHashMap.get(staffNames.get(i));
+                    if (staffId != -1) {
+                        inflateCenterSpinner(officeId, staffId);
+                        inflateGroupSpinner(officeId, staffId);
+                    } else {
+                        Toaster.show(rootView, getString(R.string.error_select_staff));
+                    }
+                    break;
 
-            case R.id.sp_branch_offices:
-                officeId = officeNameIdHashMap.get(officeNames.get(i));
-                if (officeId != -1) {
-                    inflateStaffSpinner(officeId);
-                    inflateCenterSpinner(officeId, -1);
-                    inflateGroupSpinner(officeId, -1);
-                } else {
-                    Toaster.show(rootView, getString(R.string.error_select_office));
-                }
-                break;
+                case R.id.sp_branch_offices:
+                    officeId = officeNameIdHashMap.get(officeNames.get(i));
+                    if (officeId != -1) {
+                        inflateStaffSpinner(officeId);
+                        inflateCenterSpinner(officeId, -1);
+                        inflateGroupSpinner(officeId, -1);
+                    } else {
+                        Toaster.show(rootView, getString(R.string.error_select_office));
+                    }
+                    break;
 
-            case R.id.sp_groups:
-                groupId = groupNameIdHashMap.get(groupNames.get(i));
-                if (groupId == -1) {
-                    Toaster.show(rootView, getString(R.string.error_select_group));
-                }
-                break;
+                case R.id.sp_groups:
+                    groupId = groupNameIdHashMap.get(groupNames.get(i));
+                    if (groupId == -1) {
+                        Toaster.show(rootView, getString(R.string.error_select_group));
+                    }
+                    break;
 
+            }
         }
+        isFirstTime = false;
     }
 
     @Override

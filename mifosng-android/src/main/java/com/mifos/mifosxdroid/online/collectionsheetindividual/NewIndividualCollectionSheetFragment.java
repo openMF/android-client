@@ -73,6 +73,7 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
     private int staffId;
     private int requestCode = 1;
     private boolean success = true;
+    private boolean isFirstTime = true;
 
     private String actualDisbursementDate;
     private String transactionDate;
@@ -188,25 +189,28 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        switch (adapterView.getId()) {
-            case R.id.sp_office_list:
-                if (i == officeList.size() || i == 0) {
-                    Toaster.show(rootView, getStringMessage(R.string.error_select_office));
-                } else {
-                    Toaster.show(rootView, officeNameList.get(i));
-                    officeId = officeList.get(i - 1).getId();
-                    presenter.fetchStaff(officeId);
-                }
-                break;
+        if (!isFirstTime) {
+            switch (adapterView.getId()) {
+                case R.id.sp_office_list:
+                    if (i == officeList.size() || i == 0) {
+                        Toaster.show(rootView, getStringMessage(R.string.error_select_office));
+                    } else {
+                        Toaster.show(rootView, officeNameList.get(i));
+                        officeId = officeList.get(i - 1).getId();
+                        presenter.fetchStaff(officeId);
+                    }
+                    break;
 
-            case R.id.sp_staff_list:
-                if (i == staffList.size() || i == 0) {
-                    Toaster.show(rootView, getStringMessage(R.string.error_select_staff));
-                } else {
-                    staffId = staffList.get(i - 1).getId();
-                }
-                break;
+                case R.id.sp_staff_list:
+                    if (i == staffList.size() || i == 0) {
+                        Toaster.show(rootView, getStringMessage(R.string.error_select_staff));
+                    } else {
+                        staffId = staffList.get(i - 1).getId();
+                    }
+                    break;
+            }
         }
+        isFirstTime = false;
 
     }
 
