@@ -190,7 +190,7 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         switch (adapterView.getId()) {
             case R.id.sp_office_list:
-                if (i == officeList.size() || i == 0) {
+                if (i == officeNameList.size() || i == 0) {
                     Toaster.show(rootView, getStringMessage(R.string.error_select_office));
                 } else {
                     Toaster.show(rootView, officeNameList.get(i));
@@ -200,7 +200,7 @@ public class NewIndividualCollectionSheetFragment extends MifosBaseFragment impl
                 break;
 
             case R.id.sp_staff_list:
-                if (i == staffList.size() || i == 0) {
+                if (i == staffNameList.size() || i == 0) {
                     Toaster.show(rootView, getStringMessage(R.string.error_select_staff));
                 } else {
                     staffId = staffList.get(i - 1).getId();
