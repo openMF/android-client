@@ -1,7 +1,5 @@
 package com.mifos.mifosxdroid.online.checkerinbox
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CheckerTaskListAdapter
@@ -593,6 +593,13 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     override fun sendInput(fromDate: Timestamp?, toDate: Timestamp,
                            action: String, entity: String, resourceId: String) {
         val filteredList = getFilteredList(fromDate, toDate, action, entity, resourceId)
+        ll_error.visibility = View.INVISIBLE
+        rv_checker_inbox.visibility = View.VISIBLE
+        if (filteredList.size == 0) {
+            ll_error.visibility = View.VISIBLE
+            rv_checker_inbox.visibility = View.INVISIBLE
+            noGroupsText.text = getStringMessage(R.string.empty_checker_inbox)
+        }
         updateRecyclerViewWithNewList(filteredList)
     }
 

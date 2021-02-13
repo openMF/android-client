@@ -139,6 +139,7 @@
     <string name="empty_center_list">Empty CenterList</string>
     <string name="empty_path_tracking">Empty Path Tracking</string>
     <string name="empty_data_table">Empty DataTable</string>
+    <string name="empty_checker_inbox">No Task found according to filters</string>
     <string name="savings_account_submitted_for_approval">The Savings Account has been submitted for
         Approval</string>
     <string name="package_name">Package Name</string>
