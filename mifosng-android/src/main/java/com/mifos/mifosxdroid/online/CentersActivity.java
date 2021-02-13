@@ -16,6 +16,8 @@ import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class CentersActivity extends MifosBaseActivity implements
@@ -43,12 +45,13 @@ public class CentersActivity extends MifosBaseActivity implements
     }
 
     @Override
-    public void loadClientsOfGroup(List<Client> clientList) {
-        replaceFragment(ClientListFragment.newInstance(clientList, true), true, R.id.container);
+    public void addCenterSavingAccount(int centerId) {
+        replaceFragment(SavingsAccountFragment.newInstance(centerId, true), true, R.id.container);
     }
 
     @Override
-    public void addCenterSavingAccount(int centerId) {
-        replaceFragment(SavingsAccountFragment.newInstance(centerId, true), true, R.id.container);
+    public void loadClientsOfGroup(@Nullable List<? extends Client> clientList) {
+        replaceFragment(ClientListFragment.newInstance((List<Client>) clientList
+                , true), true, R.id.container);
     }
 }
