@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="@dimen/default_padding"
-    android:layout_marginEnd="@dimen/default_padding"
     android:id="@+id/rl_client">
 
-    <ScrollView style="@style/ScrollView.Base">
+    <ScrollView style="@style/ScrollView.Base"
+        android:layout_marginStart="@dimen/default_padding"
+        android:layout_marginEnd="@dimen/default_padding">
 
-        <LinearLayout style="@style/LinearLayout.Base">
+        <LinearLayout style="@style/LinearLayout.Base"
+            android:id="@+id/ll_clientDetails">
 
             <LinearLayout style="@style/LinearLayout.Width">
 
@@ -189,5 +190,12 @@
            android:text="@string/activate_client"
            android:background="@color/accent" />
     </LinearLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/layout_sweet_exception_handler"
+        android:visibility="gone"
+        android:id="@+id/layout_error"/>
 
 </RelativeLayout>
