@@ -32,7 +32,7 @@ class CentersActivity : MifosBaseActivity(), GroupListFragment.OnFragmentInterac
         replaceFragment(GroupListFragment.newInstance(centerId), true, R.id.container)
     }
 
-    override fun loadClientsOfGroup(clientList: List<Client>) {
+    override fun loadClientsOfGroup(clientList: List<Client?>?) {
         replaceFragment(ClientListFragment.newInstance(clientList, true), true, R.id.container)
     }
 

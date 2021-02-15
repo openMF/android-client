@@ -62,7 +62,7 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      * It will display the Loan Repayment Fragment where
      * the Information of the repayment has to be filled in.
      */
-    override fun makeRepayment(loan: LoanWithAssociations) {
+    override fun makeRepayment(loan: LoanWithAssociations?) {
         replaceFragment(LoanRepaymentFragment.newInstance(loan), true, R.id.container)
     }
 
@@ -99,9 +99,8 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      *
      * The transactionType defines if the transaction is a Deposit or a Withdrawal
      */
-    override fun doTransaction(savingsAccountWithAssociations: SavingsAccountWithAssociations,
-                               transactionType: String, accountType: DepositType) {
-        replaceFragment(SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType, accountType), true, R.id.container)
+    override fun doTransaction(savingsAccountWithAssociations: SavingsAccountWithAssociations?, transactionType: String?, accountType: DepositType?) {
+        replaceFragment(SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations!!, transactionType, accountType), true, R.id.container)
     }
 
     override fun loadGroupClients(clients: List<Client>?) {

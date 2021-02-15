@@ -79,7 +79,7 @@ class ClientActivity : MifosBaseActivity(), ClientDetailsFragment.OnFragmentInte
      * It will display the Loan Repayment Fragment where
      * the Information of the repayment has to be filled in.
      */
-    override fun makeRepayment(loan: LoanWithAssociations) {
+    override fun makeRepayment(loan: LoanWithAssociations?) {
         replaceFragment(LoanRepaymentFragment.newInstance(loan), true, R.id.container)
     }
 
@@ -116,9 +116,8 @@ class ClientActivity : MifosBaseActivity(), ClientDetailsFragment.OnFragmentInte
      *
      * The transactionType defines if the transaction is a Deposit or a Withdrawal
      */
-    override fun doTransaction(savingsAccountWithAssociations: SavingsAccountWithAssociations,
-                               transactionType: String, accountType: DepositType) {
-        replaceFragment(SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations, transactionType, accountType), true, R.id.container)
+    override fun doTransaction(savingsAccountWithAssociations: SavingsAccountWithAssociations?, transactionType: String?, accountType: DepositType?) {
+        replaceFragment(SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations!!, transactionType, accountType), true, R.id.container)
     }
 
     /**
@@ -127,7 +126,7 @@ class ClientActivity : MifosBaseActivity(), ClientDetailsFragment.OnFragmentInte
      * @param survey   Survey
      * @param clientId Client Id
      */
-    override fun loadSurveyQuestion(survey: Survey, clientId: Int) {
+    override fun loadSurveyQuestion(survey: Survey?, clientId: Int) {
         val myIntent = Intent(this, SurveyQuestionActivity::class.java)
         myIntent.putExtra(Constants.SURVEYS, Gson().toJson(survey))
         myIntent.putExtra(Constants.CLIENT_ID, clientId)
