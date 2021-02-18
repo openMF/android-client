@@ -268,7 +268,7 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
                 uploadImage(clientImageFile);
             } else {
                 Toaster.show(rootView, R.string.havent_picked_image,
-                        Toast.LENGTH_LONG);
+                        Toast.LENGTH_SHORT);
             }
         } catch (Exception e) {
             Toaster.show(rootView, e.toString(), Toast.LENGTH_LONG);
