@@ -14,7 +14,7 @@
                 style="@style/EditText.BaseWidth"
                 android:gravity="start"
                 android:hint="@string/centername"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionGo"
                 android:inputType="text"
                 android:paddingBottom="16dp"
                 android:singleLine="true"/>
