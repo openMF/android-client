@@ -37,6 +37,10 @@ public class GroupsActivity extends MifosBaseActivity implements GroupDetailsFra
         ButterKnife.bind(this);
         showBackButton();
         int groupId = getIntent().getExtras().getInt(Constants.GROUP_ID);
+        String groupName = getIntent().getExtras().getString(Constants.GROUP_NAME);
+        if (groupName != null) {
+            setToolbarTitle(getString(R.string.group) + " - " + groupName);
+        }
         replaceFragment(GroupDetailsFragment.newInstance(groupId), false, R.id.container);
     }
 

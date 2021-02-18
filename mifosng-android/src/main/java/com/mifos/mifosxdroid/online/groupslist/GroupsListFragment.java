@@ -140,6 +140,7 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
         } else {
             Intent groupActivityIntent = new Intent(getActivity(), GroupsActivity.class);
             groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList.get(position).getId());
+            groupActivityIntent.putExtra(Constants.GROUP_NAME, mGroupList.get(position).getName());
             startActivity(groupActivityIntent);
         }
     }
