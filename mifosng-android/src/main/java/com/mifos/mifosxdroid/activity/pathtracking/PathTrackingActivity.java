@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.activity.pathtracking;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -71,9 +72,9 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     PathTrackingAdapter pathTrackingAdapter;
 
     private Intent intentLocationService;
-    private BroadcastReceiver notificationReceiver;
     private List<UserLocation> userLocations;
     private SweetUIErrorHandler sweetUIErrorHandler;
+    private BroadcastReceiver receiver;
 
     @Override
     public void onItemClick(View childView, int position) {
@@ -102,8 +103,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         ButterKnife.bind(this);
         showBackButton();
         intentLocationService = new Intent(this, PathTrackingService.class);
-        createNotificationReceiver();
-
+        startNotificationReceiver();
         showUserInterface();
         pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
     }
@@ -253,25 +253,29 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         return true;
     }
 
-    public void createNotificationReceiver() {
-        notificationReceiver = new BroadcastReceiver() {
+    public void startNotificationReceiver() {
+        receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (Constants.STOP_TRACKING.equals(action)) {
-                    invalidateOptionsMenu();
-                    pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
+                if (intent.getAction().equals(Constants.STOP_TRACKING)) {
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    notificationManager.cancel(Constants.PATH_TRACKER_NOTIFICATION_ID);
+                    context.stopService(new Intent(context, PathTrackingService.class));
+                    PrefManager.putBoolean(Constants.SERVICE_STATUS, false);
                 }
             }
         };
-        registerReceiver(notificationReceiver, new IntentFilter(Constants.STOP_TRACKING));
+        registerReceiver(receiver, new IntentFilter(Constants.STOP_TRACKING));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         pathTrackingPresenter.detachView();
-        unregisterReceiver(notificationReceiver);
+        stopService(new Intent(this, PathTrackingService.class));
+        unregisterReceiver(receiver);
+        PrefManager.putBoolean(Constants.SERVICE_STATUS, false);
     }
 
 
