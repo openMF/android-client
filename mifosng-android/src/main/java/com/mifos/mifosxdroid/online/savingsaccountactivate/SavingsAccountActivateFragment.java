@@ -148,7 +148,6 @@ public class SavingsAccountActivateFragment extends MifosBaseFragment implements
     public void showSavingAccountActivatedSuccessfully(GenericResponse genericResponse) {
         Toaster.show(tvActivateDateHeading,
                 getResources().getString(R.string.savings_account_activated));
-        Toast.makeText(getActivity(), "Savings Activated", Toast.LENGTH_LONG).show();
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
