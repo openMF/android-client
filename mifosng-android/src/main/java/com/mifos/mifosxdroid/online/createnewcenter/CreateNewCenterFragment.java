@@ -10,7 +10,10 @@ package com.mifos.mifosxdroid.online.createnewcenter;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import android.text.TextUtils;
@@ -18,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -284,6 +288,19 @@ public class CreateNewCenterFragment extends MifosBaseFragment
             llCenter.setVisibility(View.VISIBLE);
             hideMifosProgressBar();
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        et_centerName.post(new Runnable() {
+            @Override
+            public void run() {
+                et_centerName.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(et_centerName, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
     }
 
     @SuppressWarnings("deprecation")
