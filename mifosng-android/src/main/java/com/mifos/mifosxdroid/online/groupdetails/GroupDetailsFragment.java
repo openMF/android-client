@@ -20,6 +20,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.mifosxdroid.R;
@@ -100,8 +101,9 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
     @Inject
     GroupDetailsPresenter mGroupDetailsPresenter;
-
-    private View rootView;
+    private LinearLayout mainLayout;
+    private SweetUIErrorHandler sweetUIErrorHandler;
+    private View rootView, layoutError;
     private int groupId;
     private AccountAccordion accountAccordion;
     private OnFragmentInteractionListener mListener;
@@ -131,7 +133,9 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
 
         ButterKnife.bind(this, rootView);
         mGroupDetailsPresenter.attachView(this);
-
+        mainLayout = rootView.findViewById(R.id.ll_groupDetails);
+        layoutError = rootView.findViewById(R.id.layout_error);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
         mGroupDetailsPresenter.loadGroupDetailsAndAccounts(groupId);
 
         return rootView;
@@ -299,9 +303,16 @@ public class GroupDetailsFragment extends MifosBaseFragment implements GroupDeta
         }
     }
 
+    @OnClick(R.id.btn_try_again)
+    public void reloadOnError() {
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(mainLayout, layoutError);
+        mGroupDetailsPresenter.loadGroupDetailsAndAccounts(groupId);
+    }
+
     @Override
     public void showFetchingError(int errorMessage) {
-        Toast.makeText(getActivity(), getStringMessage(errorMessage), Toast.LENGTH_SHORT).show();
+        sweetUIErrorHandler.showSweetErrorUI(getStringMessage(errorMessage),
+                R.drawable.ic_error_black_24dp, mainLayout, layoutError);
     }
 
     @Override

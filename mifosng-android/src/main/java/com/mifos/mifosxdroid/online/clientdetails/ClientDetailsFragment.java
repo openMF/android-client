@@ -41,6 +41,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.mifos.mifosxdroid.R;
@@ -172,7 +173,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
     @Inject
     ClientDetailsPresenter mClientDetailsPresenter;
 
-    private View rootView;
+    private LinearLayout mainLayout;
+    private SweetUIErrorHandler sweetUIErrorHandler;
+    private View rootView, layoutError;
     private OnFragmentInteractionListener mListener;
     private File clientImageFile = new File(Environment.getExternalStorageDirectory().toString() +
             "/client_image.png");
@@ -212,7 +215,9 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
 
         ButterKnife.bind(this, rootView);
         mClientDetailsPresenter.attachView(this);
-
+        mainLayout = rootView.findViewById(R.id.ll_clientDetails);
+        layoutError = rootView.findViewById(R.id.layout_error);
+        sweetUIErrorHandler = new SweetUIErrorHandler(getActivity(), rootView);
         inflateClientInformation();
 
         return rootView;
@@ -682,9 +687,16 @@ public class ClientDetailsFragment extends MifosBaseFragment implements ClientDe
         }
     }
 
+    @OnClick(R.id.btn_try_again)
+    public void reloadOnError() {
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(mainLayout, layoutError);
+        mClientDetailsPresenter.loadClientDetailsAndClientAccounts(clientId);
+    }
+
     @Override
     public void showFetchingError(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        sweetUIErrorHandler.showSweetErrorUI(String.valueOf(s), R.drawable.ic_error_black_24dp,
+                mainLayout, layoutError);
     }
 
     public interface OnFragmentInteractionListener {
