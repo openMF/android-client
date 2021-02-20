@@ -179,7 +179,8 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tbl_transaction_details"
             android:layout_marginTop="8dp"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:layout_alignParentLeft="true" />
 
         <Button
             android:id="@+id/bt_reviewTransaction"
@@ -188,7 +189,8 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/tbl_transaction_details"
             android:layout_marginTop="8dp"
-            android:text="@string/review_transaction" />
+            android:text="@string/review_transaction"
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 </ViewFlipper>

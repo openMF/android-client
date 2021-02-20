@@ -12,6 +12,7 @@
         android:id="@+id/save_pin"
         android:enabled="true"
         android:icon="@drawable/ic_path_tracker_white"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title="TODO" />
 
 </menu>
