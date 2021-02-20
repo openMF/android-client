@@ -31,7 +31,6 @@
         android:layout_height="wrap_content"
         android:text="@string/submit_survey"
         android:gravity="center"
-        android:onClick="submitScore"
         android:layout_marginTop="81dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
