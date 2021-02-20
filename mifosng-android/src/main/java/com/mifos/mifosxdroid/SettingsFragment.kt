@@ -13,6 +13,7 @@ import com.mifos.utils.FragmentConstants
 class SettingsFragment : PreferenceFragment() {
     var mEnableSyncSurvey: SwitchPreference? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
         mEnableSyncSurvey = findPreference(resources.getString(R.string.sync_survey)) as SwitchPreference
