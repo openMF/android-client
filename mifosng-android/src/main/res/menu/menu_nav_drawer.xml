@@ -82,7 +82,7 @@
         <item
             android:id="@+id/item_offline"
             android:checked="false"
-            android:icon="@drawable/ic_offline"
+            android:icon="@drawable/ic_offline_sync"
             android:title="@string/offline"
             />
          
