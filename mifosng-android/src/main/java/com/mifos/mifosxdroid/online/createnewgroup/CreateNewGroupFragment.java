@@ -102,7 +102,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
     private DialogFragment newDatePicker;
 
     private List<String> mListOffices = new ArrayList<>();
-    private List<Office> officeList;
+    private List<Office> officeList = new ArrayList<>();
     private ArrayAdapter<String> mOfficesAdapter;
 
     @Override
@@ -304,6 +304,7 @@ public class CreateNewGroupFragment extends ProgressableFragment
 
     @Override
     public void showFetchingError(String s) {
+        noOfficeGenerator();
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
@@ -326,5 +327,14 @@ public class CreateNewGroupFragment extends ProgressableFragment
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private void noOfficeGenerator(){
+        Office noOffice = new Office();
+        noOffice.setId(0);
+        noOffice.setName("No Office Available");
+        officeList.add(noOffice);
+        mListOffices.add(noOffice.getName());
+        mOfficesAdapter.notifyDataSetChanged();
     }
 }
