@@ -602,6 +602,13 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
      * @param updatedList List<CheckerTask>
      */
     private fun updateRecyclerViewWithNewList(updatedList: List<CheckerTask>) {
+        if (updatedList.isEmpty()){
+            rv_checker_inbox.visibility = View.GONE
+            ll_error.visibility = View.VISIBLE
+        } else {
+            rv_checker_inbox.visibility = View.VISIBLE
+            ll_error.visibility = View.GONE
+        }
         checkerTaskList.clear()
         checkerTaskList.addAll(updatedList)
         checkerTaskListAdapter.submitList(checkerTaskList)

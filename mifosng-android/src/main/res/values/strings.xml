@@ -834,5 +834,6 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+    <string name="no_tasks_checker_inbox">No Tasks found</string>
 
 </resources>
