@@ -71,6 +71,8 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pb_checker_dialog.visibility = View.VISIBLE
+        ll_checker_dialog.visibility = View.GONE
         sp_action.onItemSelectedListener = this
         sp_entity.onItemSelectedListener = this
         setOnClickListeners()
@@ -136,6 +138,9 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
 
             selectedAction = checkerInboxSearchTemplate.actionNames[0]
             selectedEntity = checkerInboxSearchTemplate.entityNames[0]
+
+            pb_checker_dialog.visibility = View.GONE
+            ll_checker_dialog.visibility = View.VISIBLE
         })
     }
 
