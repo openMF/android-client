@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.view.ActionMode;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
@@ -85,6 +87,9 @@ public class ClientListFragment extends MifosBaseFragment
 
     @BindView(R.id.pb_client)
     ProgressBar pb_client;
+
+    @BindView(R.id.fab_create_client)
+    FloatingActionButton fabCreateClient;
 
     @Inject
     ClientNameListAdapter mClientNameListAdapter;
@@ -195,6 +200,18 @@ public class ClientListFragment extends MifosBaseFragment
             @Override
             public void onLoadMore(int page, int totalItemCount) {
                 mClientListPresenter.loadClients(true, totalItemCount);
+            }
+        });
+
+        rv_clients.addOnScrollListener( new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fabCreateClient.show();
+                } else {
+                    fabCreateClient.hide();
+                }
             }
         });
 
