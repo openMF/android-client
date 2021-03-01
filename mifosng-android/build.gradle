@@ -249,6 +249,9 @@ dependencies {
 
     // androidx annotations
     implementation 'androidx.annotation:annotation:1.1.0'
+
+    //Letter bitmap generator for circular image view
+    implementation 'com.first.avatargenerator:AvatarImageGenerator:1.4'
 }
 
 /*
