@@ -56,7 +56,6 @@ public class CollectionSheetDialogFragment extends BottomSheetDialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         date = getArguments().getString(Constants.REPAYMENT_DATE);
         members = getArguments().getInt(Constants.MEMBERS);

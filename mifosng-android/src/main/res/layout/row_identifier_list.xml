@@ -57,7 +57,7 @@
                     android:id="@+id/iv_identifier_options"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_more_vert_black_24dp"/>
+                    app:srcCompat="@drawable/ic_more_vert_black_24dp"/>
 
             </TableRow>
 
