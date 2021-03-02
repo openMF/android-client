@@ -18,37 +18,52 @@
             >
 
             <ImageView
-
                 android:layout_width="200dp"
                 android:layout_height="100dp"
-                android:src="@drawable/mifos_logo"/>
+                android:src="@drawable/mifos_logo"
+                android:layout_gravity="center"/>
             <TextView
                 style="@style/TextView.Login"
+                android:layout_gravity="center"
                 android:text="@string/enter_credentials"/>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userWrapper"
-                style="@style/TextInput.Base">
-
-                <EditText
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/marginItemsInSectionLarge"
+                app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_username"
-                    style="@style/EditText.Username"
-                    android:nextFocusDown="@+id/et_password" />
-
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username"
+                    android:nextFocusDown="@+id/et_password"
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordWrapper"
-                style="@style/TextInput.Base"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/marginItemsInSectionLarge"
+                app:layout_constraintBottom_toTopOf="@+id/bt_login"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:passwordToggleEnabled="true">
-
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"
-                    style="@style/EditText.Password"
-                    android:imeOptions="actionNext" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
 
             <LinearLayout
@@ -73,7 +88,6 @@
                             android:nextFocusDown="@+id/et_instancePort" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/portWrapper"
@@ -112,9 +126,18 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/bt_login"
-                style="@style/Button.Login" />
+                style="@style/Button.Login"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/login_button_rounded"
+                android:paddingTop="8.7dp"
+                android:paddingBottom="8.71dp"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

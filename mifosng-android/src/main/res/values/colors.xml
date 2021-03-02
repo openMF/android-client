@@ -76,4 +76,6 @@
         <item>@color/orange_light</item>
     </array>
 
+    <color name="cardview_login_hints">#BCBCBC</color>
+
 </resources>
