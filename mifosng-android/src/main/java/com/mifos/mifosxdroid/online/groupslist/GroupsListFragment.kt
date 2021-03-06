@@ -264,7 +264,6 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
      * @param show Status of Progressbar or SwipeRefreshLayout
      */
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = show
         if (show && mGroupListAdapter!!.itemCount == 0) {
             pb_groups!!.visibility = View.VISIBLE
             swipeRefreshLayout!!.isRefreshing = false
