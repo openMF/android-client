@@ -35,4 +35,9 @@
     <dimen name="about_icon_padding">8dp</dimen>
     <dimen name="card_radius">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
+  
+    <dimen name="marginItemsInSectionSmall">16dp</dimen>
+    <dimen name="marginItemsInSectionMedium">20dp</dimen>
+    <dimen name="marginItemsInSectionLarge">24dp</dimen>
+  
 </resources>

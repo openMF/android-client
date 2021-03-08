@@ -11,11 +11,14 @@
 
         <LinearLayout style="@style/LinearLayout.Base">
 
-            <LinearLayout style="@style/LinearLayout.Width">
+            <LinearLayout style="@style/LinearLayout.Width"
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="75dp"
-                    android:layout_height="75dp">
+                    android:layout_height="75dp"
+                    android:layout_marginTop="@dimen/marginItemsInSectionSmall"
+                    android:layout_gravity="center">
 
                     <com.mifos.mifosxdroid.views.CircularImageView
                         android:id="@+id/iv_clientImage"
@@ -31,7 +34,10 @@
 
                 <TextView
                     android:id="@+id/tv_fullName"
-                    style="@style/TextView.Client"/>
+                    style="@style/TextView.Client"
+                    android:layout_marginBottom="@dimen/marginItemsInSectionSmall"
+                    android:layout_marginTop="@dimen/marginItemsInSectionSmall"
+                    android:layout_gravity="center"/>
 
             </LinearLayout>
 

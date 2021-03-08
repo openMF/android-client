@@ -70,7 +70,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:src="@drawable/ic_done_all_black_24dp"
+            app:srcCompat="@drawable/ic_done_all_black_24dp"
             />
 
     </LinearLayout>
