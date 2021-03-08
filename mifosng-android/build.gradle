@@ -251,6 +251,9 @@ dependencies {
 
     // androidx annotations
     implementation 'androidx.annotation:annotation:1.1.0'
+
+    //card view
+    implementation 'androidx.cardview:cardview:1.0.0'
 }
 
 /*
