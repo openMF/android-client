@@ -1,19 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/RelativeLayout.Base"
-
-    >
+    style="@style/RelativeLayout.Base">
 
     <include layout="@layout/toolbar" />
 
     <androidx.core.widget.NestedScrollView
         style="@style/ScrollView.Login"
         android:layout_below="@+id/toolbar"
-        android:padding="@dimen/layout_padding_30dp"
-
+        android:clipChildren="false"
         >
 
         <LinearLayout style="@style/LinearLayout.Base"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="@dimen/layout_padding_30dp"
             android:animateLayoutChanges="true"
             >
 
