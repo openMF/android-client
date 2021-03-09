@@ -6,14 +6,12 @@
 
     <androidx.core.widget.NestedScrollView
         style="@style/ScrollView.Login"
-        android:layout_below="@+id/toolbar"
-        android:clipChildren="false"
-        >
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout style="@style/LinearLayout.Base"
-            android:clipChildren="false"
-            android:clipToPadding="false"
             android:padding="@dimen/layout_padding_30dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:animateLayoutChanges="true"
             >
 
