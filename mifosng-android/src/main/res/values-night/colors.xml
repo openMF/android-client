@@ -4,12 +4,12 @@
   -->
 
 <resources>
-    <color name="white">#ffffffff</color>
-    <color name="black">#000000</color>
+    <color name="white">#212121</color>
+    <color name="black">#ffffff</color>
     <color name="deposit_green">#ff14c416</color>
     <color name="light_green">#ff8bf98a</color>
     <color name="light_yellow">#fff9ac06</color>
-    <color name="light_blue">#FF87DBF9</color>
+    <color name="light_blue">#33999999</color>
     <color name="light_red">#fff9393c</color>
     <color name="light_grey">#ffd1d1d1</color>
     <color name="transaction_detail_bg">#8ad3da44</color>
@@ -60,14 +60,14 @@
 
     <color name="primary">#2196F3</color>
     <color name="primary_dark">#1976D2</color>
-    <color name="primary_light">#BBDEFB</color>
+    <color name="primary_light">#16754e</color>
     <color name="accent">#03A9F4</color>
-    <color name="primary_text">#212121</color>
+    <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="summer_sky">#29B6F6</color>
-    <color name="foreground">#ffffffff</color>
+    <color name="foreground">#555555</color>
 
     <!--Swipe Refresh Colors-->
     <array name="swipeRefreshColors">
@@ -76,7 +76,5 @@
         <item>@color/red_light</item>
         <item>@color/orange_light</item>
     </array>
-
-    <color name="cardview_login_hints">#BCBCBC</color>
 
 </resources>
