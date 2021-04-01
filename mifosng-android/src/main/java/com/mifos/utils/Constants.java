@@ -278,4 +278,5 @@ public class Constants {
     public static final String R_OVERDUE_X = "R_overdueX";
     public static final String R_OVERDUE_Y = "R_overdueY";
     public static final String ACTION_REPORT = "report";
+    public static final String All = "All";
 }
