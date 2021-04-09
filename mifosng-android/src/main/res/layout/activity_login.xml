@@ -8,22 +8,23 @@
         style="@style/ScrollView.Login"
         android:layout_below="@+id/toolbar">
 
-        <LinearLayout style="@style/LinearLayout.Base"
-            android:padding="@dimen/layout_padding_30dp"
-            android:clipToPadding="false"
-            android:clipChildren="false"
+        <LinearLayout
+            style="@style/LinearLayout.Base"
             android:animateLayoutChanges="true"
-            >
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="@dimen/layout_padding_30dp">
 
             <ImageView
                 android:layout_width="200dp"
                 android:layout_height="100dp"
-                android:src="@drawable/mifos_logo"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:src="@drawable/mifos_logo" />
+
             <TextView
                 style="@style/TextView.Login"
                 android:layout_gravity="center"
-                android:text="@string/enter_credentials"/>
+                android:text="@string/enter_credentials" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -35,13 +36,14 @@
                 app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
-                    android:nextFocusDown="@+id/et_password"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:nextFocusDown="@+id/et_password" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -54,6 +56,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:passwordToggleEnabled="true">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"
@@ -81,8 +84,8 @@
                         <EditText
                             android:id="@+id/et_instanceURL"
                             style="@style/EditText.Connection"
-                            android:inputType="textUri"
                             android:hint="@string/hint_instance_url"
+                            android:inputType="textUri"
                             android:nextFocusDown="@+id/et_instancePort" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -129,15 +132,16 @@
                 style="@style/Button.Login"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/login_button_rounded"
+                android:gravity="center"
                 android:paddingTop="8.7dp"
                 android:paddingBottom="8.71dp"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF" />
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
