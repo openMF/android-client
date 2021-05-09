@@ -2,6 +2,7 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.objects.user.User;
+import com.mifos.services.data.UserPayload;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,11 +23,10 @@ public class DataManagerAuth {
     }
 
     /**
-     * @param username Username
-     * @param password Password
+     * @param payload UserPayload
      * @return Basic OAuth
      */
-    public Observable<User> login(String username, String password) {
-        return baseApiManager.getAuthApi().authenticate(username, password);
+    public Observable<User> login(UserPayload payload) {
+        return baseApiManager.getAuthApi().authenticate(payload);
     }
 }

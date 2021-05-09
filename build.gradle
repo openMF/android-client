@@ -15,7 +15,7 @@ ext {
     supportLibraryVersion = '27.1.1'
     playServicesVersion = '10.0.1'
     mapUtilsServices = '0.4.2'
-    daggerVersion = '2.2'
+    daggerVersion = '2.13'
     raizLabsDBFlow = '3.1.1'
     espressoVersion = '2.2.2'
     runnerVersion = '0.4.1'

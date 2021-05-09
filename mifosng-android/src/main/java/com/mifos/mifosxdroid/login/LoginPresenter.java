@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.login;
 import com.mifos.api.datamanager.DataManagerAuth;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.user.User;
+import com.mifos.services.data.UserPayload;
 import com.mifos.utils.MFErrorParser;
 
 import javax.inject.Inject;
@@ -43,7 +44,10 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
-        subscription = dataManagerAuth.login(username, password)
+        UserPayload payload = new UserPayload();
+        payload.setUsername(username);
+        payload.setPassword(password);
+        subscription = dataManagerAuth.login(payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<User>() {

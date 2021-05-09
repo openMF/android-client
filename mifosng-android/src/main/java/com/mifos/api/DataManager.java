@@ -21,8 +21,10 @@ import com.mifos.objects.organisation.Staff;
 import com.mifos.objects.response.SaveResponse;
 import com.mifos.objects.templates.clients.ChargeTemplate;
 import com.mifos.objects.templates.loans.GroupLoanTemplate;
+import com.mifos.objects.user.User;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.services.data.GroupLoanPayload;
+import com.mifos.services.data.UserPayload;
 
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,14 @@ public class DataManager {
                        DataManagerClient dataManagerClient) {
         mBaseApiManager = baseApiManager;
         mDataManagerClient = dataManagerClient;
+    }
+
+    /**
+     * User Authentication
+     */
+
+    public Observable<User> createCharges(UserPayload payload) {
+        return mBaseApiManager.getAuthApi().authenticate(payload);
     }
 
     /**
