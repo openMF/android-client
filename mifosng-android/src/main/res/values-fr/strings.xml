@@ -602,4 +602,12 @@
         <item>prêts</item>
         <item>comptes d\'épargne</item>
     </string-array>
+
+    <!-- Language -->
+    <string name="language">Langue</string>
+    <string name="language_type" translatable="false">language_type</string>
+    <string name="lang_changed">La langue a changé</string>
+    <string name="lang_change_description">Sélectionnez la langue dans laquelle vous souhaitez afficher l\'application</string>
+    <string name="dark_mode">mode sombre</string>
+
 </resources>

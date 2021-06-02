@@ -28,6 +28,7 @@ import com.mifos.mifosxdroid.injection.module.ActivityModule;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.mobile.passcode.BasePassCodeActivity;
 import com.mifos.utils.Constants;
+import com.mifos.utils.LanguageHelper;
 import com.mifos.utils.PrefManager;
 
 /**
@@ -62,6 +63,11 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
         if (getSupportActionBar() != null && getTitle() != null) {
             setTitle(title);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LanguageHelper.onAttach(base));
     }
 
     protected void showBackButton() {

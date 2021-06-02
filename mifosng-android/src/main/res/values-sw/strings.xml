@@ -723,5 +723,11 @@
     <string name="failed_to_load_db_groups">Upakio wa makundi ya hifadhidata umefeli</string>
     <string name="browse">Vinjari</string>
 
+    <!-- Language -->
+    <string name="language">Lugha</string>
+    <string name="language_type" translatable="false">language_type</string>
+    <string name="lang_changed">Lugha Imebadilishwa</string>
+    <string name="lang_change_description">Chagua lugha ambayo unataka kutazama programu</string>
+    <string name="dark_mode">hali ya giza</string>
 
 </resources>

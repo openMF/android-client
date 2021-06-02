@@ -12,6 +12,7 @@
     <string name="branch_id">ID de la branca</string>
     <string name="balance">Balanç</string>
     <string name="client">Client</string>
+    <string name="settings">Configuració</string>
     <string name="clear_data">Buidar camps</string>
     <string name="choose_file">Click per escollir fitxer</string>
     <string name="center_name">Nom del centre</string>
@@ -155,4 +156,11 @@
     <string name="valid">Vàlid</string>
     <string name="surveyEmpty"> Aquesta enquesta està buida</string>
     <string name="back_again">Appuyez de nouveau sur la touche pour quitter</string>
+
+    <!-- Language -->
+    <string name="language">Llenguatge</string>
+    <string name="language_type" translatable="false">language_type</string>
+    <string name="lang_changed">S\'ha canviat l\'idioma</string>
+    <string name="lang_change_description">Seleccioneu l\'idioma en què voleu veure l\'aplicació</string>
+    <string name="dark_mode">mode fosc</string>
 </resources>

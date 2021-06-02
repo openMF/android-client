@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.mifos.mifosxdroid.R;
+import com.mifos.utils.LanguageHelper;
 import com.mifos.utils.Network;
 
 /**
@@ -27,10 +28,10 @@ public class MifosBaseFragment extends Fragment {
     private InputMethodManager inputManager;
     private MifosProgressBarHandler mMifosProgressBarHandler;
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(LanguageHelper.onAttach(context));
+        Activity activity = context instanceof Activity ? (Activity) context : null;
         this.activity = activity;
         try {
             callback = (BaseActivityCallback) activity;

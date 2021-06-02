@@ -64,6 +64,8 @@
     <string name="add_new">नया जोड़ें</string>
     <string name="charge_text">छोटी लिपि</string>
     <string name="charges">प्रभार</string>
+    <string name="checker_inbox">चेकर इनबॉक्स</string>
+    <string name="checker_inbox_and_pending_tasks">चेकर इनबॉक्स तथा कार्य</string>
     <string name="choose_file">फ़ाइल चुनने के लिए क्लिक करें</string>
     <string name="clear_data">डेटा को नष्ठ करें</string>
     <string name="click_to_refresh">रिफ्षे॔ करने के लिये क्लिक करें</string>
@@ -348,6 +350,7 @@
     <string name="review_payment">भुगतान की समीक्षा करें</string>
     <string name="review_transaction">लेनदेन की समीक्षा करें</string>
     <string name="review_transaction_details">भुगतान के विवरण की समीक्षा करें</string>
+    <string name="run_report">रिपोर्ट</string>
     <string name="save">सहेजें</string>
     <string name="savingAccounts">बचत खाते</string>
     <string name="saving_min_required_balance">न्यूनतम आवश्यक बैलेंस लागू करें</string>
@@ -611,5 +614,28 @@
     <string name="collectionsheet_submit_success">कलेक्शन शीट सफलतापूर्वक जमा कर दी गई</string>
     <string name="individual_collection_sheet">व्यक्तिगत कलेक्शन शीट</string>
     <string name="due_collection">कलेक्शन का देय</string>
+
+    !-- About App -->
+    <string name="about_app">फील्ड ऑफिसर एप्लीकेशन एक एप्लीकेशन है बैंक स्टाफ फील्ड ऑफिसर के लिए विकसित किया गया
+         ग्राहकों का केंद्र, समूह, ऋण खाता, बचत खाता, आदि।ट्रैक रखने के लिए </string>
+    <string name="about_mifos">द्वारा विकसित <a href="https://mifos.org/">Mifos</a>
+        <a href="https://github.com/openMF/android-client/graphs/contributors">contributors</a>.
+    </string>
+    <string name="about_us_connect">हमारे से जुड़िये</string>
+    <string name="link">हमसे मिलें</string>
+    <string name="about_support_github_sub">रेपो को फोर्क करें और परिवर्तनों को आगे बढ़ाएं या नए मुद्दे जमा करें।</string>
+    <string name="about_support_github">GitHub</string>
+    <string name="about">ऐप के बारे में</string>
+    <string name="about_support_twitter_sub">Twitter page for the application</string>
+    <string name="about_support_twitter">Twitter</string>
+    <string name="about_license">License</string>
+    <string name="about_license_sub">Check Mozilla Public License 2.0</string>
+
+    <!-- Language -->
+    <string name="language">भाषा</string>
+    <string name="language_type" translatable="false">language_type</string>
+    <string name="lang_changed">भाषा बदली गए</string>
+    <string name="lang_change_description">उस भाषा का चयन करें जिसमें आप ऐप देखना चाहते हैं</string>
+    <string name="dark_mode">डार्क मोडं</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.DashboardActivity
 
-
 /**
  * Created by mayankjindal on 22/07/17.
  */

@@ -23,6 +23,10 @@
     <dimen name="dimension_72_dp">72dp</dimen>
     <dimen name="dimension_32_dp">32dp</dimen>
 
+    <dimen name="marginItemsInSectionSmall">16dp</dimen>
+    <dimen name="marginItemsInSectionMedium">20dp</dimen>
+    <dimen name="marginItemsInSectionLarge">24dp</dimen>
+
     <!-- About App -->
     <dimen name="card_spacing">10dp</dimen>
     <dimen name="card_corner_radius">1dp</dimen>
@@ -35,9 +39,4 @@
     <dimen name="about_icon_padding">8dp</dimen>
     <dimen name="card_radius">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
-  
-    <dimen name="marginItemsInSectionSmall">16dp</dimen>
-    <dimen name="marginItemsInSectionMedium">20dp</dimen>
-    <dimen name="marginItemsInSectionLarge">24dp</dimen>
-  
 </resources>
