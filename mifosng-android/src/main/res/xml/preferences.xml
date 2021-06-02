@@ -15,7 +15,8 @@
 
     <ListPreference
         android:title="@string/dark_mode"
-        android:key="dark_mode"
+        android:key="@string/mode_key"
+        android:defaultValue="light"
         android:entries="@array/dark_mode_entries"
         android:entryValues="@array/dark_mode_values" />
 </PreferenceScreen>

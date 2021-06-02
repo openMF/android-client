@@ -636,5 +636,6 @@
     <string name="language_type" translatable="false">language_type</string>
     <string name="lang_changed">भाषा बदली गए</string>
     <string name="lang_change_description">उस भाषा का चयन करें जिसमें आप ऐप देखना चाहते हैं</string>
+    <string name="dark_mode">डार्क मोडं</string>
 
 </resources>

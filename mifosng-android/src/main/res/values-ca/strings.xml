@@ -162,4 +162,5 @@
     <string name="language_type" translatable="false">language_type</string>
     <string name="lang_changed">S\'ha canviat l\'idioma</string>
     <string name="lang_change_description">Seleccioneu l\'idioma en què voleu veure l\'aplicació</string>
+    <string name="dark_mode">mode fosc</string>
 </resources>

@@ -717,6 +717,7 @@
     <string name="language_type" translatable="false">language_type</string>
     <string name="lang_changed">语言已更改</string>
     <string name="lang_change_description">选择您要查看应用程序的语言</string>
+    <string name="dark_mode">暗模式</string>
 
 
 </resources>

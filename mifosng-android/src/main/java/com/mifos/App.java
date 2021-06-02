@@ -6,9 +6,12 @@
 package com.mifos;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
+
 import androidx.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
@@ -94,5 +97,6 @@ public class App extends MultiDexApplication {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LanguageHelper.onAttach(base, "en"));
+        super.attachBaseContext(LanguageHelper.onAttach(base));
     }
+}

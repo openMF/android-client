@@ -844,6 +844,12 @@
         <item>System Default</item>
     </string-array>
 
+    <string-array name="dark_mode_values"  translatable="false">
+        <item>light</item>
+        <item>dark</item>
+        <item>default</item>
+    </string-array>
+
 
     <!-- About App -->
     <string name="about_app">Field Officer Application is an application
@@ -867,6 +873,7 @@
     <string name="language_type" translatable="false">language_type</string>
     <string name="lang_changed">Language Changed</string>
     <string name="lang_change_description">Select the language in which you want to view the app</string>
+    <string name="mode_key">dark_mode</string>
 
     <string-array name="language_option" translatable="false">
         <item>Catalan</item>
