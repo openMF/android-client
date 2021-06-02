@@ -24,7 +24,7 @@
         android:shadowDy="3"
         android:shadowRadius="1"
         android:text="{fa-android}"
-        android:textColor="@color/black"
+        android:textColor="@color/primary_text"
         android:textSize="20sp" />
 
 
@@ -35,7 +35,7 @@
         android:layout_weight="0.35"
         android:gravity="left"
         android:text="May 24,2014"
-        android:textColor="@color/black" />
+        android:textColor="@color/primary_text" />
 
     <TextView
         android:id="@+id/tv_transaction_type"
@@ -44,7 +44,7 @@
         android:layout_weight="0.30"
         android:gravity="center"
         android:text="@string/withdrawal"
-        android:textColor="@color/black" />
+        android:textColor="@color/primary_text" />
 
     <TextView
         android:id="@+id/tv_transaction_amount"
@@ -53,7 +53,7 @@
         android:layout_weight="0.35"
         android:gravity="right"
         android:text="2500 INR"
-        android:textColor="@color/black" />
+        android:textColor="@color/primary_text" />
 
 
 </LinearLayout>

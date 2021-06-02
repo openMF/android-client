@@ -834,6 +834,15 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="ui">UI</string>
+    <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
+
+    <string-array name="dark_mode_entries"  translatable="false">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
 
 
     <!-- About App -->

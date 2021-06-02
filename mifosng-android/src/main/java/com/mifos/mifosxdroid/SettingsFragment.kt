@@ -1,8 +1,5 @@
 package com.mifos.mifosxdroid
 
-import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.preference.ListPreference
 import android.preference.Preference.OnPreferenceChangeListener
@@ -12,14 +9,14 @@ import android.widget.Toast
 import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.LanguageHelper
+import com.mifos.utils.ThemeHelper
+
 
 /**
  * Created by mayankjindal on 22/07/17.
  */
 class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener {
     var mEnableSyncSurvey: SwitchPreference? = null
-    private lateinit var languages: Array<String>
-    private var languageCallback: LanguageCallback? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
@@ -34,6 +31,13 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
                 syncSurveysDialogFragment.show(fragmentTransaction,
                         resources.getString(R.string.sync_clients))
             }
+            true
+        }
+        val themePreference = findPreference("dark_mode") as ListPreference
+        themePreference.onPreferenceChangeListener = OnPreferenceChangeListener { preference, newValue ->
+            val themeOption = newValue as String
+            ThemeHelper.applyTheme(themeOption)
+            startActivity(Intent(activity, activity.javaClass))
             true
         }
     }
@@ -74,12 +78,6 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
             val fragment = SettingsFragment()
             val args = Bundle()
             fragment.arguments = args
-            return fragment
-        }
-
-        fun newInstance(languageCallback: LanguageCallback?): SettingsFragment {
-            val fragment = SettingsFragment()
-            fragment.setLanguageCallback(languageCallback)
             return fragment
         }
     }

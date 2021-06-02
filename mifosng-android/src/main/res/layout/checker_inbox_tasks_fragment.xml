@@ -40,7 +40,7 @@
                 android:layout_toRightOf="@+id/iv_checker_inbox_icon"
                 android:singleLine="true"
                 android:text="@string/checker_inbox"
-                android:textColor="#222222"
+                android:textColor="@color/primary_text"
                 android:textStyle="bold" />
 
             <TextView
@@ -81,7 +81,7 @@
                 android:layout_toRightOf="@+id/iv_client_approval_icon"
                 android:singleLine="true"
                 android:text="@string/client_approval"
-                android:textColor="#222222"
+                android:textColor="@color/primary_text"
                 android:textStyle="bold" />
 
             <TextView
@@ -121,7 +121,7 @@
                 android:layout_toRightOf="@+id/iv_loan_approval_icon"
                 android:singleLine="true"
                 android:text="@string/loan_approval"
-                android:textColor="#222222"
+                android:textColor="@color/primary_text"
                 android:textStyle="bold" />
 
             <TextView
@@ -161,7 +161,7 @@
                 android:layout_toRightOf="@+id/iv_loan_disbursal_icon"
                 android:singleLine="true"
                 android:text="@string/loan_disbursal"
-                android:textColor="#222222"
+                android:textColor="@color/primary_text"
                 android:textStyle="bold" />
 
             <TextView
@@ -201,7 +201,7 @@
                 android:layout_toRightOf="@+id/iv_reschedule_loan_icon"
                 android:singleLine="true"
                 android:text="@string/reschedule_loan"
-                android:textColor="#222222"
+                android:textColor="@color/primary_text"
                 android:textStyle="bold" />
 
             <TextView

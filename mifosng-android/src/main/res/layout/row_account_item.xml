@@ -23,6 +23,7 @@
         style="@style/TextView.Base.Weight"
         android:layout_weight="1"
         android:padding="@dimen/text_padding_normal"
+        android:textColor="@color/primary_text"
         android:text="@string/medium_text" />
 
     <TextView
@@ -31,5 +32,6 @@
         android:layout_weight="1"
         android:gravity="right"
         android:padding="@dimen/text_padding_normal"
+        android:textColor="@color/primary_text"
         android:text="@string/medium_text" />
 </LinearLayout>

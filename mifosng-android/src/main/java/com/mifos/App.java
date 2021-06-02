@@ -22,6 +22,7 @@ import com.mifos.mifosxdroid.injection.module.ApplicationModule;
 import com.mifos.mifosxdroid.offlinejobs.OfflineJobCreator;
 import com.mifos.mobile.passcode.utils.ForegroundChecker;
 import com.mifos.utils.LanguageHelper;
+import com.mifos.utils.ThemeHelper;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -56,6 +57,10 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String themePref = sharedPreferences.getString("dark_mode", ThemeHelper.DEFAULT_MODE);
+        ThemeHelper.applyTheme(themePref);
         instance = this;
         Fabric.with(this, new Crashlytics());
 
@@ -91,5 +96,3 @@ public class App extends MultiDexApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(LanguageHelper.onAttach(base, "en"));
     }
-
-}
