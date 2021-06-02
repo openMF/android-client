@@ -187,7 +187,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
             // When an Image is picked

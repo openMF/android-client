@@ -898,4 +898,8 @@
     </string-array>
 
 
+    <string name="passcode">Passcode</string>
+    <string name="change_passcode">Change Passcode</string>
+    <string name="change_app_passcode">Change App Passcode</string>
+
 </resources>
