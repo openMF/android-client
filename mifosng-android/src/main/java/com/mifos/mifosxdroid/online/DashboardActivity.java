@@ -72,6 +72,7 @@ public class DashboardActivity extends MifosBaseActivity
     SwitchCompat userStatusToggle;
     private Menu menu;
     private boolean doubleBackToExitPressedOnce = false;
+    private Toast backToast;
     private boolean itemClient = true, itemCenter = true, itemGroup = true;
 
     @Override
@@ -348,6 +349,7 @@ public class DashboardActivity extends MifosBaseActivity
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             if (doubleBackToExitPressedOnce) {
+                backToast.cancel();
                 setMenuCreateClient(true);
                 setMenuCreateCentre(true);
                 setMenuCreateGroup(true);
@@ -355,7 +357,8 @@ public class DashboardActivity extends MifosBaseActivity
                 return;
             }
             this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show();
+            backToast = Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT);
+            backToast.show();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
