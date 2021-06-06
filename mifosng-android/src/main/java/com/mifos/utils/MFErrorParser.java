@@ -8,6 +8,7 @@ package com.mifos.utils;
 
 import com.google.gson.Gson;
 import com.mifos.objects.mifoserror.MifosError;
+import com.mifos.objects.mifoserror.MifosError400;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.plugins.RxJavaPlugins;
@@ -20,6 +21,9 @@ public class MFErrorParser {
 
     public static MifosError parseError(String serverResponse) {
         return gson.fromJson(serverResponse, MifosError.class);
+    }
+    public static MifosError400 parseError400(String serverResponse) {
+        return gson.fromJson(serverResponse, MifosError400.class);
     }
 
     public static String errorMessage(Throwable throwableError) {
