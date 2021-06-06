@@ -59,9 +59,6 @@ public class SyncPayloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).tv_activation_date.setText(clientPayload.getActivationDate());
 
             switch (clientPayload.getGenderId()) {
-                case 22 :
-                    ((ViewHolder) holder).tv_gender.setText("Male");
-                    break;
                 case 24 :
                     ((ViewHolder) holder).tv_gender.setText("Female");
                     break;
