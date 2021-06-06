@@ -212,18 +212,23 @@ public class DataTableRowDialogFragment extends DialogFragment
         payload.put(Constants.DATE_FORMAT, "dd-mm-YYYY");
         payload.put(Constants.LOCALE, "en");
         for (FormWidget formWidget : formWidgets) {
-            if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_INT)) {
-                payload.put(formWidget.getPropertyName(), Integer.parseInt(formWidget.getValue()
-                        .equals("") ? "0" : formWidget.getValue()));
-            } else if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_DECIMAL)) {
-                payload.put(formWidget.getPropertyName(), Double.parseDouble(formWidget.getValue
-                        ().equals("") ? "0.0" : formWidget.getValue()));
-            } else if (formWidget.getReturnType().equals(FormWidget.SCHEMA_KEY_CODEVALUE)) {
-                FormSpinner formSpinner = (FormSpinner) formWidget;
-                payload.put(formWidget.getPropertyName(), formSpinner.getIdOfSelectedItem
-                        (formWidget.getValue()));
-            } else {
-                payload.put(formWidget.getPropertyName(), formWidget.getValue());
+            switch (formWidget.getReturnType()) {
+                case FormWidget.SCHEMA_KEY_INT:
+                    payload.put(formWidget.getPropertyName(), Integer.parseInt(formWidget.getValue()
+                            .equals("") ? "0" : formWidget.getValue()));
+                    break;
+                case FormWidget.SCHEMA_KEY_DECIMAL:
+                    payload.put(formWidget.getPropertyName(), Double.parseDouble(formWidget.getValue
+                            ().equals("") ? "0.0" : formWidget.getValue()));
+                    break;
+                case FormWidget.SCHEMA_KEY_CODEVALUE:
+                    FormSpinner formSpinner = (FormSpinner) formWidget;
+                    payload.put(formWidget.getPropertyName(), formSpinner.getIdOfSelectedItem
+                            (formWidget.getValue()));
+                    break;
+                default:
+                    payload.put(formWidget.getPropertyName(), formWidget.getValue());
+                    break;
             }
         }
         return payload;
