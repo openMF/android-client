@@ -62,7 +62,7 @@ public class MifosOkHttpClient {
 
             //Set SSL certificate to OkHttpClient Builder
 
-            builder.sslSocketFactory(sslSocketFactory);
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
 
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
