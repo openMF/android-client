@@ -481,6 +481,7 @@ public class ReportDetailFragment extends MifosBaseFragment
                 tvLabel.setText(getString(R.string.overdue_y_number));
                 break;
         }
+        tvField.setFocusable(false);
         tvField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
