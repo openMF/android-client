@@ -57,7 +57,7 @@ public class MFDatePicker extends DialogFragment implements DatePickerDialog.OnD
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
 
-        dialog.getDatePicker().setMaxDate(new Date().getTime());
+        dialog.getDatePicker().setMinDate(new Date().getTime());
         return dialog;
     }
 
