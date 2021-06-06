@@ -1,7 +1,9 @@
 package com.mifos.mifosxdroid.tests;
 
 import android.content.Intent;
+
 import androidx.fragment.app.FragmentTransaction;
+
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.test.ViewAsserts;

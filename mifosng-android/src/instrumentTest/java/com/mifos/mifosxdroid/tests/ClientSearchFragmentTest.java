@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.tests;
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
+
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.mifos.mifosxdroid.R;
