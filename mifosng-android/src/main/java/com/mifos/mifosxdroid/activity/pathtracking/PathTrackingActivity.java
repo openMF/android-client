@@ -79,6 +79,10 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     public void onItemClick(View childView, int position) {
         List<UserLatLng> userLatLngs =
                 pathTrackingAdapter.getLatLngList(userLocations.get(position).getLatlng());
+        if (userLatLngs.size() == 0) {
+            Toast.makeText(this, "The locations do not exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
                 + userLatLngs.get(0).getLat() + "," + userLatLngs.get(0).getLng() + "&daddr="
                 + userLatLngs.get(userLatLngs.size() - 1).getLat() + "," + ""
