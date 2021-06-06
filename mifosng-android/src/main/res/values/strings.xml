@@ -257,6 +257,7 @@
     <string name="run_report">RunReports</string>
     <string name="menu_run_report">Run Report</string>
     <string name="menu_export_csv">Export CSV</string>
+    <string name="export_csv_directory" translatable="false">/mifos/documents/report/</string>
     <string name="msg_report_empty">No data retrieved for the chosen report!</string>
     <string name="report_loan_purpose">"Loan Purpose"</string>
     <string name="par_calculation">PAR Calculation</string>
