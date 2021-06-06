@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -85,5 +86,11 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
             fragmentTransaction.replace(R.id.container,
                     CheckerInboxFragment.newInstance()).commit()
         }
+
+        rl_reschedule_loan.setOnClickListener {
+            // todo: redirect to loans once API is created
+            Toast.makeText(context, getString(R.string.reschedule_loan), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/rl_checker_inbox"
@@ -175,6 +175,7 @@
         <View style="@style/divider_style" />
 
         <RelativeLayout
+            android:id="@+id/rl_reschedule_loan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
