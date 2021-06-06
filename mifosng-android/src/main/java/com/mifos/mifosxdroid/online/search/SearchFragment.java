@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -59,6 +63,9 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
 
     @BindView(R.id.cb_exact_match)
     CheckBox cb_exactMatch;
+
+    @BindView(R.id.progress_bar_search)
+    ProgressBar pb_search;
 
     @BindArray(R.array.search_options_values)
     String[] searchOptionsValues;
@@ -106,6 +113,29 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         rv_search.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_search.setHasFixedSize(true);
         rv_search.setAdapter(searchAdapter);
+
+        et_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String query = charSequence.toString();
+                if (!query.equals("")) {
+                    showInstantSearchedProgressBar(true);
+                    searchPresenter.searchInstantResources(query, resources, false);
+                } else {
+                    showInstantSearchedProgressBar(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
 
@@ -250,4 +280,19 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         }
     }
 
+    @Override
+    public void showInstantSearchedResult(List<SearchedEntity> searchedEntities) {
+        searchAdapter.setSearchResults(searchedEntities);
+        this.searchedEntities = searchedEntities;
+        showInstantSearchedProgressBar(false);
+    }
+
+    @Override
+    public void showInstantSearchedProgressBar(boolean b) {
+        if (b) {
+            pb_search.setVisibility(View.VISIBLE);
+        } else {
+            pb_search.setVisibility(View.GONE);
+        }
+    }
 }
