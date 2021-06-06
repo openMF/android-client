@@ -613,6 +613,7 @@
         <item>Zote</item>
         <item>Wateja</item>
         <item>Makundi</item>
+        <item>Vituo</item>
         <item>Akaunti Za Mikopo</item>
         <item>Akaunti Za Akiba</item>
     </string-array>
@@ -620,6 +621,7 @@
     <string-array name="search_options_values">
         <item>wateja</item>
         <item>makundi</item>
+        <item>vituo</item>
         <item>mikopo</item>
         <item>akauntizaakiba</item>
     </string-array>

@@ -676,6 +676,7 @@
         <item>全部</item>
         <item>客户端</item>
         <item>群组</item>
+        <item>中心</item>
         <item>贷款账户</item>
         <item>存款账户</item>
     </string-array>
@@ -683,6 +684,7 @@
     <string-array name="search_options_values">
         <item>客户端</item>
         <item>群组</item>
+        <item>中心</item>
         <item>贷款</item>
         <item>存款账户</item>
     </string-array>

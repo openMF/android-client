@@ -592,6 +592,7 @@
         <item>Tout</item>
         <item>Clients</item>
         <item>Groupes</item>
+        <item>Centres</item>
         <item>Comptes de Prêt</item>
         <item>Comptes d\'épargne</item>
     </string-array>
@@ -599,6 +600,7 @@
     <string-array name="search_options_values">
         <item>clients</item>
         <item>groupes</item>
+        <item>centres</item>
         <item>prêts</item>
         <item>comptes d\'épargne</item>
     </string-array>

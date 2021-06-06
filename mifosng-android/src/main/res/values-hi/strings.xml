@@ -532,6 +532,7 @@
         <item>संपूर्ण</item>
         <item>ग्राहक</item>
         <item>समूह</item>
+        <item>केंद्र</item>
         <item>ऋण खाते</item>
         <item>बचत खाते</item>
     </string-array>
@@ -539,6 +540,7 @@
     <string-array name="search_options_values">
         <item>clients</item>
         <item>groups</item>
+        <item>centers</item>
         <item>loans</item>
         <item>savingsaccounts</item>
     </string-array>
