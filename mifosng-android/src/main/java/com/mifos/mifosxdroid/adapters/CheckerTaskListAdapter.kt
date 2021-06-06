@@ -103,18 +103,22 @@ class CheckerTaskListAdapter : ListAdapter<CheckerTask,
         init {
             view.setOnClickListener {
                 mListener?.let {
+                    val llCheckerTaskOptions =
+                            view.findViewById<LinearLayout>(R.id.ll_checker_task_options)
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION)
-                        mListener.onItemClick(position)
+                        if (mBadgeProcessMode.isInBadgeProcessingMode()) {
+                            view.cb_checker_task.isChecked = !view.cb_checker_task.isChecked
+                            mBadgeProcessMode.onItemSelectedOrDeselcted(view, adapterPosition)
+                        } else {
+                            mListener.onItemClick(position)
+                            if (llCheckerTaskOptions.visibility == View.GONE) {
+                                llCheckerTaskOptions.visibility = View.VISIBLE
+                            } else {
+                                llCheckerTaskOptions.visibility = View.GONE
+                            }
+                        }
                 }
-                val llCheckerTaskOptions =
-                        view.findViewById<LinearLayout>(R.id.ll_checker_task_options)
-                if (llCheckerTaskOptions.visibility == View.GONE) {
-                    llCheckerTaskOptions.visibility = View.VISIBLE
-                } else {
-                    llCheckerTaskOptions.visibility = View.GONE
-                }
-
             }
 
             view.setOnLongClickListener {

@@ -19,6 +19,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog.CheckerTaskFilterDialogFragment
 import com.mifos.objects.CheckerTask
 import kotlinx.android.synthetic.main.checker_inbox_fragment.*
+import kotlinx.android.synthetic.main.item_checker_task.view.*
 import java.sql.Timestamp
 import javax.inject.Inject
 
@@ -446,7 +447,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
      */
     override fun onItemSelectedOrDeselcted(view: View, position: Int) {
         val task = checkerTaskList[position]
-        if ((view as CheckBox).isChecked) {
+        if (view.cb_checker_task.isChecked) {
             task.selectedFlag = true
             checkerTaskListAdapter.notifyItemChanged(position)
             selectedCheckerTaskList.add(task)
