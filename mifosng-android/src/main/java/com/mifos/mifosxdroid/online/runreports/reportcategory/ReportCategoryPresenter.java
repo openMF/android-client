@@ -97,8 +97,7 @@ public class ReportCategoryPresenter extends BasePresenter<ReportCategoryMvpView
         for (ClientReportTypeItem item : list) {
             map.put(item.getReportId(), item);
         }
-        ArrayList<ClientReportTypeItem> uniques = new ArrayList<>();
-        uniques.addAll(map.values());
+        ArrayList<ClientReportTypeItem> uniques = new ArrayList<>(map.values());
         return uniques;
     }
 }
