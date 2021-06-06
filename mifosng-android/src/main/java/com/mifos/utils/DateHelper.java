@@ -62,7 +62,7 @@ public class DateHelper {
      */
     public static String getDateAsStringUsedForCollectionSheetPayload(String date) {
         StringBuilder builder = new StringBuilder();
-        if (date != null) {
+        if (date != null && !date.isEmpty()) {
             String[] splittedDate = date.split("-");
             int month = Integer.parseInt(splittedDate[1]);
             builder.append(splittedDate[0]);
@@ -158,15 +158,18 @@ public class DateHelper {
      * @return date in the format day month year (ex 14 Apr 2016)
      */
     public static String getDateAsString(List<Integer> integersOfDate) {
+        if (integersOfDate != null && integersOfDate.size() == 3) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(integersOfDate.get(2))
+                    .append(' ')
+                    .append(getMonthName(integersOfDate.get(1)))
+                    .append(' ')
+                    .append(integersOfDate.get(0));
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(integersOfDate.get(2))
-                .append(' ')
-                .append(getMonthName(integersOfDate.get(1)))
-                .append(' ')
-                .append(integersOfDate.get(0));
-
-        return stringBuilder.toString();
+            return stringBuilder.toString();
+        } else {
+            return "";
+        }
 
     }
 

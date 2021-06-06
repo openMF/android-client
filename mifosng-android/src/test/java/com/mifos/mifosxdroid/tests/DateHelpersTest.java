@@ -9,6 +9,7 @@ import com.mifos.utils.DateHelper;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +38,15 @@ public class DateHelpersTest {
         assertEquals(expected, result);
     }
 
+    @Test
+    public void testGetDateAsStringUsedForCollectionSheetPayload3() {
+        String date = null;
+        String expected = "";
+        String result = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date);
+
+        assertEquals(expected, result);
+        assertEquals(expected, DateHelper.getDateAsStringUsedForCollectionSheetPayload(""));
+    }
 
     @Test
     public void testGetDateAsString1() {
@@ -56,12 +66,47 @@ public class DateHelpersTest {
         assertEquals(expected, result);
     }
 
+    @Test
+    public void testGetDateAsString3() {
+        List<Integer> l = null;
+        String expected = "";
+        String result = DateHelper.getDateAsString(l);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testGetDateAsString4() {
+        List<Integer> l = new ArrayList<>();
+        String expected = "";
+        String result = DateHelper.getDateAsString(l);
+
+        assertEquals(expected, result);
+    }
 
     @Test
     public void testGetMonthName() {
         int month = 1;
         String expected = "Jan";
         String result = DateHelper.getMonthName(month);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testGetMonthName1() {
+        int month = 13;
+        String expected = "";
+        String result = DateHelper.getMonthName(month);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testConvertDateAsListOfInteger() {
+        String date = "20 Aug 2017";
+        List<Integer> expected = Arrays.asList(20, 8, 2017);
+        List<Integer> result = DateHelper.convertDateAsListOfInteger(date);
 
         assertEquals(expected, result);
     }
