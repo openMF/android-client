@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity;
 import com.mifos.objects.user.UserLatLng;
 import com.mifos.objects.user.UserLocation;
 
@@ -112,6 +113,10 @@ public class PathTrackingAdapter extends RecyclerView.Adapter<PathTrackingAdapte
     }
 
     private void setMapLocation(GoogleMap map, UserLatLng location) {
+        if (userLatLngs == null) {
+            ((PathTrackingActivity) context).showError();
+            return;
+        }
         // Add a marker for this item and set the camera
         PolylineOptions polylineOptions = new PolylineOptions();
         for (UserLatLng userLatLng : userLatLngs) {
