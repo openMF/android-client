@@ -22,7 +22,7 @@ public class ValidationUtil {
             "([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
             "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5])" +
             ")$";
-    private static final String NAME_REGEX_PATTERN = "^[\\p{Alnum} .'-]+$";
+    private static final String NAME_REGEX_PATTERN = "^[\\p{Alpha} .'-]+$";
     private static Pattern domainNamePattern = Pattern.compile(DOMAIN_NAME_REGEX_PATTERN);
     private static Matcher domainNameMatcher;
     private static Pattern ipAddressPattern = Pattern.compile(IP_ADDRESS_REGEX_PATTERN);
