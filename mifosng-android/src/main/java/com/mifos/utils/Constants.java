@@ -24,6 +24,14 @@ public class Constants {
 
     public static final String API_PATH = "/mifosng-provider/api/v1";
 
+    /**
+     * Fragments
+     */
+    public static final String SEARCH_FRAGMENT = "SearchFragment";
+    public static final String CLIENT_LIST_FRAGMENT = "ClientListFragment";
+    public static final String GROUP_LIST_FRAGMENT = "GroupsListFragment";
+    public static final String CENTER_LIST_FRAGMENT = "CenterListFragment";
+    public static final String OFFLINE_DASHBOARD_FRAGMENT = "OfflineDashboardFragment";
 
     /**
      * Entity Type, Like Clients, Groups, Staff, Loans, Savings and Client Identifiers
