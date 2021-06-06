@@ -25,7 +25,7 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker;
 import com.mifos.objects.client.ChargeCreationResponse;
 import com.mifos.objects.client.Charges;
-import com.mifos.objects.templates.clients.ChargeTemplate;
+import com.mifos.objects.client.Page;
 import com.mifos.services.data.ChargesPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.DateHelper;
@@ -74,7 +74,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     private List<String> chargeNameList = new ArrayList<>();
     private ArrayAdapter<String> chargeNameAdapter;
-    private ChargeTemplate mChargeTemplate;
+    private Page<Charges> mChargesPage;
     private String dueDateString;
     private List<Integer> dueDateAsIntegerList;
     private View rootView;
@@ -160,7 +160,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     //Charges Fetching API
     private void inflateChargesSpinner() {
-        mChargeDialogPresenter.loadAllChargesV2(clientId);
+        mChargeDialogPresenter.loadAllChargesV2(clientId, 0);
     }
 
     //Charges Creation APi
@@ -194,10 +194,10 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
     }
 
     @Override
-    public void showAllChargesV2(ChargeTemplate chargeTemplate) {
-        mChargeTemplate = chargeTemplate;
+    public void showAllChargesV2(Page<Charges> chargesPage) {
+        mChargesPage = chargesPage;
         chargeNameList.addAll(mChargeDialogPresenter.filterChargeName
-                (chargeTemplate.getChargeOptions()));
+                (chargesPage.getPageItems()));
         chargeNameAdapter.notifyDataSetChanged();
     }
 
@@ -205,8 +205,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.sp_charge_name:
-                chargeId = mChargeTemplate.getChargeOptions().get(position).getId();
-                chargeName = mChargeTemplate.getChargeOptions().get(position).getName();
+                chargeId = mChargesPage.getPageItems().get(position).getChargeId();
+                chargeName = mChargesPage.getPageItems().get(position).getName();
                 break;
         }
     }
