@@ -18,7 +18,7 @@ jobs:
       
       # Upload Build Artifact
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.2.0
+      uses: actions/upload-artifact@v2.2.4
       with:
         # Artifact name
         name: apk-debug
