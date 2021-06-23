@@ -9,13 +9,15 @@
     <style name="Table">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="background">@drawable/table_row_round_bg</item>
     </style>
 
 
     <style name="TableRow">
-        <item name="android:layout_margin">3dp</item>
+        <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/table_row_round_bg</item>
     </style>
 
 </resources>

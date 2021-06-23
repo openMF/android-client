@@ -610,4 +610,6 @@
     <string name="lang_change_description">Sélectionnez la langue dans laquelle vous souhaitez afficher l\'application</string>
     <string name="dark_mode">mode sombre</string>
 
+    <string name="accounts">Compte</string>
+
 </resources>
