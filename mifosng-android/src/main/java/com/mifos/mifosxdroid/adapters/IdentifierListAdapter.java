@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.noncore.Identifier;
 
@@ -49,8 +50,19 @@ public class IdentifierListAdapter extends RecyclerView.Adapter<IdentifierListAd
         final Identifier identifier = identifiers.get(position);
 
         holder.tv_identifier_id.setText(String.valueOf(identifier.getDocumentKey()));
-        holder.tv_identifier_description.setText(identifier.getDescription());
+        String description = identifier.getDescription();
+        if (description == null) {
+            description = "-";
+        }
+        holder.tv_identifier_description.setText(description);
         holder.tv_identifier_type.setText(identifier.getDocumentType().getName());
+        int color;
+        if (identifier.getStatus().contains("inactive")) {
+            color = App.getContext().getColor(R.color.red_light);
+        } else {
+            color = App.getContext().getColor(R.color.green_light);
+        }
+        holder.v_status.setBackgroundColor(color);
     }
 
     public void setIdentifiers(List<Identifier> identifiers) {
@@ -85,6 +97,9 @@ public class IdentifierListAdapter extends RecyclerView.Adapter<IdentifierListAd
 
         @BindView(R.id.iv_identifier_options)
         ImageView iv_identifier_options;
+
+        @BindView(R.id.v_status)
+        View v_status;
 
         public ViewHolder(View view) {
             super(view);
