@@ -42,7 +42,7 @@ class ClientChargePresenter @Inject constructor(private val mDataManagerCharge: 
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
+                                val errorMessage = e.response()!!.errorBody()!!
                                         .string()
                                 mvpView!!.showFetchingErrorCharges(MFErrorParser
                                         .parseError(errorMessage)

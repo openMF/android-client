@@ -40,6 +40,8 @@ import com.mifos.mifosxdroid.offlinejobs.OfflineSyncGroup;
 import com.mifos.mifosxdroid.offlinejobs.OfflineSyncLoanRepayment;
 import com.mifos.mifosxdroid.offlinejobs.OfflineSyncSavingsAccount;
 
+import org.mifos.core.sharedpreference.UserPreferences;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -89,6 +91,11 @@ public interface ApplicationComponent {
     DatabaseHelperSavings databaseHelperSavings();
     DatabaseHelperSurveys databaseHelperSurveys();
     DatabaseHelperNote databaseHelperNote();
+
+    UserPreferences userPreferences();
+    org.mifos.core.apimanager.BaseApiManager baseApiManager();
+    org.mifos.core.datamanager.auth.DataManagerAuth sdkDataManagerAuth();
+
 
     void inject(OfflineSyncCenter offlineSyncCenter);
 
