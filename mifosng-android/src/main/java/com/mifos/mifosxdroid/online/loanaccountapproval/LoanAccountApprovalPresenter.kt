@@ -40,7 +40,7 @@ class LoanAccountApprovalPresenter @Inject constructor(private val mDataManager:
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
+                                val errorMessage = e.response()!!.errorBody()!!
                                         .string()
                                 mvpView!!.showLoanApproveFailed(
                                         MFErrorParser.parseError(errorMessage)

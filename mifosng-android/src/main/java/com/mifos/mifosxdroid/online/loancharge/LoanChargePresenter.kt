@@ -39,7 +39,7 @@ class LoanChargePresenter @Inject constructor(private val mDataManager: DataMana
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
+                                val errorMessage = e.response()!!.errorBody()!!
                                         .string()
                                 mvpView!!.showFetchingError(MFErrorParser
                                         .parseError(errorMessage)

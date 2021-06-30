@@ -49,7 +49,7 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(private
                         mvpView!!.showProgressbar(false)
                         if (e is HttpException) {
                             try {
-                                val errorMessage = e.response().errorBody()
+                                val errorMessage = e.response()!!.errorBody()!!
                                         .string()
                                 mvpView!!.showError(MFErrorParser.parseError(errorMessage)
                                         .errors[0].defaultUserMessage)
@@ -84,7 +84,7 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(private
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
+                                val errorMessage = e.response()!!.errorBody()!!
                                         .string()
                                 mvpView!!.showError(MFErrorParser.parseError(errorMessage)
                                         .errors[0].defaultUserMessage)
@@ -113,7 +113,7 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(private
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
+                                val errorMessage = e.response()!!.errorBody()!!
                                         .string()
                                 mvpView!!.showError(MFErrorParser.parseError(errorMessage)
                                         .errors[0].defaultUserMessage)

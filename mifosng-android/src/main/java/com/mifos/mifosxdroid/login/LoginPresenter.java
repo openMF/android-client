@@ -21,6 +21,8 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
 
     private final DataManagerAuth dataManagerAuth;
     private Subscription subscription;
+    @Inject
+    org.mifos.core.datamanager.auth.DataManagerAuth sdkDataManagerAuth;
 
     @Inject
     public LoginPresenter(DataManagerAuth dataManager) {
@@ -43,6 +45,7 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
+
         subscription = dataManagerAuth.login(username, password)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

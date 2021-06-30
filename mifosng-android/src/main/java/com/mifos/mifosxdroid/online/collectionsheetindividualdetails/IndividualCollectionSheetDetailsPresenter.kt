@@ -47,7 +47,7 @@ class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(pri
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
+                                val errorMessage = e.response()!!.errorBody()!!
                                         .string()
                                 mvpView!!.showError(MFErrorParser.parseError(errorMessage)
                                         .errors[0].defaultUserMessage)
