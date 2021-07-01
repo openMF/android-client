@@ -155,7 +155,7 @@ public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment impl
                 //TODO Write Negative Button Click Event Logic
                 break;
             case DialogInterface.BUTTON_POSITIVE:
-                PrefManager.setUserStatus(Constants.USER_ONLINE);
+                PrefManager.INSTANCE.setUserStatus(Constants.USER_ONLINE);
                 if (mLoanRepaymentRequests.size() != 0) {
                     mClientSyncIndex = 0;
                     syncGroupPayload();
@@ -259,7 +259,7 @@ public class SyncLoanRepaymentTransactionFragment extends MifosBaseFragment impl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_sync) {
-            switch (PrefManager.getUserStatus()) {
+            switch (PrefManager.INSTANCE.getUserStatus()) {
                 case 0:
                     if (mLoanRepaymentRequests.size() != 0) {
                         mClientSyncIndex = 0;

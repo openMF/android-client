@@ -243,9 +243,9 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
         googleApiClient.disconnect();
         stopNotification();
         unregisterReceiver(notificationReceiver);
-        PrefManager.putBoolean(Constants.SERVICE_STATUS, false);
+        PrefManager.INSTANCE.setServiceStatus(false);
         stopTime = DateHelper.getCurrentDateTime(DateHelper.TIME_FORMAT_VALUE);
-        addPathTracking(PrefManager.getUserId(), buildUserLocation());
+        addPathTracking(PrefManager.INSTANCE.getUserId(), buildUserLocation());
         super.onDestroy();
     }
 
@@ -268,7 +268,7 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
         userLocation.setStartTime(startTime);
         userLocation.setStopTime(stopTime);
         userLocation.setDate(date);
-        userLocation.setUserId(PrefManager.getUserId());
+        userLocation.setUserId(PrefManager.INSTANCE.getUserId());
         return userLocation;
     }
 

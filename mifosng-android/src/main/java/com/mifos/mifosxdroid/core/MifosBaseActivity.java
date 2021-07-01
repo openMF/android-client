@@ -114,9 +114,9 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
 
     @Override
     public void setUserStatus(SwitchCompat userStatus) {
-        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+        if (PrefManager.INSTANCE.getUserStatus() == Constants.USER_ONLINE) {
             userStatus.setChecked(false);
-        } else if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+        } else if (PrefManager.INSTANCE.getUserStatus() == Constants.USER_OFFLINE) {
             userStatus.setChecked(true);
         }
     }
@@ -142,7 +142,7 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                PrefManager.clearPrefs();
+                                PrefManager.INSTANCE.clear();
                                 startActivity(new Intent(MifosBaseActivity.this,
                                         SplashScreenActivity.class));
                                 Toast.makeText(MifosBaseActivity

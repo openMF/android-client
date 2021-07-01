@@ -106,7 +106,7 @@ public class SyncCentersDialogFragment extends DialogFragment implements SyncCen
         showUI();
 
         //Start Syncing Centers
-        if (isOnline() && (PrefManager.getUserStatus() == Constants.USER_ONLINE)) {
+        if (isOnline() && (PrefManager.INSTANCE.getUserStatus() == Constants.USER_ONLINE)) {
             syncCentersDialogPresenter.startSyncingCenters(mCenterList);
         } else {
             showNetworkIsNotAvailable();

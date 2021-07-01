@@ -50,7 +50,7 @@ public class OfflineSyncClient extends Job {
         mSubscriptions = new CompositeSubscription();
         clientPayloads = new ArrayList<>();
         App.get(getContext()).getComponent().inject(this);
-        if (PrefManager.getUserStatus() == 0) {
+        if (PrefManager.INSTANCE.getUserStatus() == 0) {
             loadDatabaseClientPayload();
             return Result.SUCCESS;
         } else {

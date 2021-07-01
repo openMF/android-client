@@ -153,7 +153,7 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
             case DialogInterface.BUTTON_NEGATIVE:
                 break;
             case DialogInterface.BUTTON_POSITIVE:
-                PrefManager.setUserStatus(Constants.USER_ONLINE);
+                PrefManager.INSTANCE.setUserStatus(Constants.USER_ONLINE);
                 if (centerPayloads.size() != 0) {
                     mCenterSyncIndex = 0;
                     syncCenterPayload();
@@ -251,7 +251,7 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_sync) {
-            switch (PrefManager.getUserStatus()) {
+            switch (PrefManager.INSTANCE.getUserStatus()) {
                 case 0:
                     if (centerPayloads.size() != 0) {
                         mCenterSyncIndex = 0;

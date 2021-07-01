@@ -10,7 +10,7 @@ public class MifosResponseHandler {
     }
 
     public static String getResponse() {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
 
             case 0:
                 return "created successfully";

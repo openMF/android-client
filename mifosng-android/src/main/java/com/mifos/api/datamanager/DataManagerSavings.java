@@ -57,7 +57,7 @@ public class DataManagerSavings {
      */
     public Observable<SavingsAccountWithAssociations> getSavingsAccount(
             String type, int savingsAccountId, String association) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getSavingsApi().getSavingsAccountWithAssociations(
                         type, savingsAccountId, association);
@@ -128,7 +128,7 @@ public class DataManagerSavings {
      */
     public Observable<SavingsAccountTransactionTemplate> getSavingsAccountTransactionTemplate(
             String type, final int savingsAccountId, String transactionType) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getSavingsApi().getSavingsAccountTransactionTemplate(type,
                         savingsAccountId, transactionType);
@@ -188,7 +188,7 @@ public class DataManagerSavings {
     public Observable<SavingsAccountTransactionResponse> processTransaction(
             String savingsAccountType, int savingsAccountId, String transactionType,
             SavingsAccountTransactionRequest request) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getSavingsApi().processTransaction(savingsAccountType,
                         savingsAccountId, transactionType, request);

@@ -45,7 +45,7 @@ public class DataManagerCharge {
      * where position is Starting according to offset</>
      */
     public Observable<Page<Charges>> getClientCharges(final int clientId, int offset, int limit) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit)
                         .concatMap(new Func1<Page<Charges>, Observable<? extends Page<Charges>>>() {

@@ -57,7 +57,7 @@ public class DataManagerCenter {
      * @return Centers List page from offset to max Limit
      */
     public Observable<Page<Center>> getCenters(boolean paged, int offset, int limit) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getCenterApi().getCenters(paged, offset, limit);
 
@@ -118,7 +118,7 @@ public class DataManagerCenter {
     }
 
     public Observable<SaveResponse> createCenter(CenterPayload centerPayload) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getCenterApi().createCenter(centerPayload);
             case 1:
@@ -138,7 +138,7 @@ public class DataManagerCenter {
      * @return CenterWithAssociations
      */
     public Observable<CenterWithAssociations> getCenterWithAssociations(int centerId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getCenterApi().getAllGroupsForCenter(centerId);
             case 1:

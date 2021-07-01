@@ -36,7 +36,7 @@ public class DataManagerStaff {
      * @return
      */
     public Observable<List<Staff>> getStaffInOffice(int officeId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getStaffApi().getStaffForOffice(officeId)
                         .concatMap(new Func1<List<Staff>, Observable<? extends List<Staff>>>() {

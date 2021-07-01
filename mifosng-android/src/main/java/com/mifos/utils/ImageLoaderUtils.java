@@ -18,7 +18,7 @@ import com.mifos.mifosxdroid.R;
 public class ImageLoaderUtils {
 
     public static String buildImageUrl(int clientId) {
-        return PrefManager.getInstanceUrl()
+        return PrefManager.INSTANCE.getInstanceUrl()
                 + "clients/"
                 + clientId
                 + "/images?maxHeight=120&maxWidth=120";
@@ -26,8 +26,8 @@ public class ImageLoaderUtils {
 
     public static GlideUrl buildGlideUrl(int clientId) {
         return new GlideUrl(buildImageUrl(clientId), new LazyHeaders.Builder()
-                .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager.getTenant())
-                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
+                .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager.INSTANCE.getTenant())
+                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.INSTANCE.getToken())
                 .addHeader("Accept", "application/octet-stream")
                 .build());
     }

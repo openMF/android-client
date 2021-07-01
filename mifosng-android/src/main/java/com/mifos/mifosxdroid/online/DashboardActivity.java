@@ -293,18 +293,18 @@ public class DashboardActivity extends MifosBaseActivity
     public void setupUserStatusToggle() {
         userStatusToggle
                 = mNavigationHeader.findViewById(R.id.user_status_toggle);
-        if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+        if (PrefManager.INSTANCE.getUserStatus() == Constants.USER_OFFLINE) {
             userStatusToggle.setChecked(true);
         }
 
         userStatusToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
-                    PrefManager.setUserStatus(Constants.USER_ONLINE);
+                if (PrefManager.INSTANCE.getUserStatus() == Constants.USER_OFFLINE) {
+                    PrefManager.INSTANCE.setUserStatus(Constants.USER_ONLINE);
                     userStatusToggle.setChecked(false);
                 } else {
-                    PrefManager.setUserStatus(Constants.USER_OFFLINE);
+                    PrefManager.INSTANCE.setUserStatus(Constants.USER_OFFLINE);
                     userStatusToggle.setChecked(true);
                 }
             }
@@ -330,7 +330,7 @@ public class DashboardActivity extends MifosBaseActivity
     private void loadClientDetails() {
 
         // download logged in user
-        final User loggedInUser = PrefManager.getUser();
+        final User loggedInUser = PrefManager.INSTANCE.getUser();
 
         TextView textViewUsername = ButterKnife.findById(mNavigationHeader, R.id.tv_user_name);
         textViewUsername.setText(loggedInUser.getUsername());

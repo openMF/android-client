@@ -106,8 +106,8 @@ public class CheckSelfPermissionAndRequest {
         } else {
 
             //Requesting Permission, first time to the device.
-            if (PrefManager.getBoolean(permissionDeniedStatus, true)) {
-                PrefManager.putBoolean(permissionDeniedStatus, false);
+            if (PrefManager.INSTANCE.getPermissionDeniedStatus(permissionDeniedStatus)) {
+                PrefManager.INSTANCE.setPermissionDeniedStatus(permissionDeniedStatus, false);
 
                 ActivityCompat.requestPermissions(activity, new String[]{permission},
                         permissionRequestCode);

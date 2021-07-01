@@ -44,7 +44,7 @@ public class DataManagerSurveys {
      * @return Observable<List<Survey>>
      */
     public Observable<List<Survey>> getAllSurvey() {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getSurveyApi().getAllSurveys();
             case 1:
