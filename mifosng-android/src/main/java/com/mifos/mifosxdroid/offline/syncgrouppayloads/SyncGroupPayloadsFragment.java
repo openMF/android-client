@@ -158,7 +158,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
                 //TODO Write Negative Button Click Event Logic
                 break;
             case DialogInterface.BUTTON_POSITIVE:
-                PrefManager.setUserStatus(Constants.USER_ONLINE);
+                PrefManager.INSTANCE.setUserStatus(Constants.USER_ONLINE);
                 if (groupPayloads.size() != 0) {
                     mClientSyncIndex = 0;
                     syncGroupPayload();
@@ -256,7 +256,7 @@ public class SyncGroupPayloadsFragment extends MifosBaseFragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_sync) {
-            switch (PrefManager.getUserStatus()) {
+            switch (PrefManager.INSTANCE.getUserStatus()) {
                 case 0:
                     if (groupPayloads.size() != 0) {
                         mClientSyncIndex = 0;

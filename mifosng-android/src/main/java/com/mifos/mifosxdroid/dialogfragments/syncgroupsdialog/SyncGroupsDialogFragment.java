@@ -105,7 +105,7 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
         showUI();
 
         //Start Syncing Groups
-        if (isOnline() && (PrefManager.getUserStatus() == Constants.USER_ONLINE)) {
+        if (isOnline() && (PrefManager.INSTANCE.getUserStatus() == Constants.USER_ONLINE)) {
             syncGroupsDialogPresenter.startSyncingGroups(groups);
         } else {
             showNetworkIsNotAvailable();

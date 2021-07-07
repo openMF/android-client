@@ -29,10 +29,10 @@ public class MifosInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request chianrequest = chain.request();
         Builder builder = chianrequest.newBuilder()
-                .header(HEADER_TENANT, PrefManager.getTenant());
+                .header(HEADER_TENANT, PrefManager.INSTANCE.getTenant());
 
-        if (PrefManager.isAuthenticated())
-            builder.header(HEADER_AUTH, PrefManager.getToken());
+        if (PrefManager.INSTANCE.isAuthenticated())
+            builder.header(HEADER_AUTH, PrefManager.INSTANCE.getToken());
 
         Request request = builder.build();
         return chain.proceed(request);

@@ -96,7 +96,7 @@ public class BaseApiManager {
                 .registerTypeAdapter(Date.class, new JsonDateSerializer()).create();
 
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(PrefManager.getInstanceUrl())
+                .baseUrl(PrefManager.INSTANCE.getInstanceUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

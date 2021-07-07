@@ -25,8 +25,8 @@ public class SplashScreenActivity extends MifosBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        if (!PrefManager.isAuthenticated()) {
-            PrefManager.setInstanceUrl(BaseUrl.PROTOCOL_HTTPS
+        if (!PrefManager.INSTANCE.isAuthenticated()) {
+            PrefManager.INSTANCE.setInstanceUrl(BaseUrl.PROTOCOL_HTTPS
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);
             startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         } else {

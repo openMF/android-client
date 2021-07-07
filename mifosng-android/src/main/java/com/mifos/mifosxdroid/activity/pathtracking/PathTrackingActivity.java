@@ -105,7 +105,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         createNotificationReceiver();
 
         showUserInterface();
-        pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
+        pathTrackingPresenter.loadPathTracking(PrefManager.INSTANCE.getUserId());
     }
 
     @Override
@@ -129,7 +129,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
 
     @Override
     public void onRefresh() {
-        pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
+        pathTrackingPresenter.loadPathTracking(PrefManager.INSTANCE.getUserId());
     }
 
     @Override       
@@ -141,7 +141,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     @OnClick(R.id.btn_try_again)
     public void reloadOnError() {
         sweetUIErrorHandler.hideSweetErrorLayoutUI(rvPathTracker, layoutError);
-        pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
+        pathTrackingPresenter.loadPathTracking(PrefManager.INSTANCE.getUserId());
     }
 
 
@@ -229,13 +229,13 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
             case R.id.menu_start_path_track:
                 if (checkPermissionAndRequest()) {
                     startService(intentLocationService);
-                    PrefManager.putBoolean(Constants.SERVICE_STATUS, true);
+                    PrefManager.INSTANCE.setServiceStatus(true);
                     invalidateOptionsMenu();
                 }
                 return true;
             case R.id.menu_stop_path_track:
                 stopService(intentLocationService);
-                PrefManager.putBoolean(Constants.SERVICE_STATUS, false);
+                PrefManager.INSTANCE.setServiceStatus(false);
                 invalidateOptionsMenu();
                 return true;
             default:
@@ -247,9 +247,9 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.menu_start_path_track)
-                .setVisible(!PrefManager.getBoolean(Constants.SERVICE_STATUS, false));
+                .setVisible(!PrefManager.INSTANCE.getServiceStatus());
         menu.findItem(R.id.menu_stop_path_track)
-                .setVisible(PrefManager.getBoolean(Constants.SERVICE_STATUS, false));
+                .setVisible(PrefManager.INSTANCE.getServiceStatus());
         return true;
     }
 
@@ -260,7 +260,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
                 String action = intent.getAction();
                 if (Constants.STOP_TRACKING.equals(action)) {
                     invalidateOptionsMenu();
-                    pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
+                    pathTrackingPresenter.loadPathTracking(PrefManager.INSTANCE.getUserId());
                 }
             }
         };

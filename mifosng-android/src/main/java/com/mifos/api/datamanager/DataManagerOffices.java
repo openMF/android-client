@@ -36,7 +36,7 @@ public class DataManagerOffices {
 
 
     public Observable<List<Office>> getOffices() {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getOfficeApi().getAllOffices()
                         .concatMap(new Func1<List<Office>, Observable<? extends List<Office>>>() {

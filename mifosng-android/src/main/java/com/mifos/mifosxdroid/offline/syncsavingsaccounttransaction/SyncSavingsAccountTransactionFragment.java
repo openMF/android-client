@@ -151,7 +151,7 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
                 dialog.dismiss();
                 break;
             case DialogInterface.BUTTON_POSITIVE:
-                PrefManager.setUserStatus(Constants.USER_ONLINE);
+                PrefManager.INSTANCE.setUserStatus(Constants.USER_ONLINE);
                 checkNetworkConnectionAndSync();
                 break;
             default:
@@ -212,7 +212,7 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_sync) {
-            switch (PrefManager.getUserStatus()) {
+            switch (PrefManager.INSTANCE.getUserStatus()) {
                 case 0:
                     checkNetworkConnectionAndSync();
                     break;

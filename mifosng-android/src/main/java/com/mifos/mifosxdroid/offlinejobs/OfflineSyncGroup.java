@@ -50,7 +50,7 @@ public class OfflineSyncGroup extends Job {
         mSubscriptions = new CompositeSubscription();
         groupPayloads = new ArrayList<>();
         App.get(getContext()).getComponent().inject(this);
-        if (PrefManager.getUserStatus() == 0) {
+        if (PrefManager.INSTANCE.getUserStatus() == 0) {
             loadDatabaseGroupPayload();
             return Result.SUCCESS;
         } else {

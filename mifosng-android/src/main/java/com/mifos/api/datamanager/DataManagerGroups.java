@@ -59,7 +59,7 @@ public class DataManagerGroups {
      * @return Groups List page from offset to max Limit
      */
     public Observable<Page<Group>> getGroups(boolean paged, int offset, int limit) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getGroupApi().getGroups(paged, offset, limit);
             case 1:
@@ -96,7 +96,7 @@ public class DataManagerGroups {
      * @return Group
      */
     public Observable<Group> getGroup(int groupId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getGroupApi().getGroup(groupId);
             case 1:
@@ -126,7 +126,7 @@ public class DataManagerGroups {
      * @return GroupWithAssociations
      */
     public Observable<GroupWithAssociations> getGroupWithAssociations(int groupId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getGroupApi().getGroupWithAssociations(groupId);
             case 1:
@@ -148,7 +148,7 @@ public class DataManagerGroups {
      * @return GroupAccounts
      */
     public Observable<GroupAccounts> getGroupAccounts(int groupId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
             case 1:
@@ -188,7 +188,7 @@ public class DataManagerGroups {
      * @return Group
      */
     public Observable<SaveResponse> createGroup(GroupPayload groupPayload) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getGroupApi().createGroup(groupPayload);
             case 1:

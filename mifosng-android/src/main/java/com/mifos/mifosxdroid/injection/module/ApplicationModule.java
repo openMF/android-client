@@ -6,9 +6,6 @@ import android.content.Context;
 import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.injection.ApplicationContext;
 
-import org.mifos.core.datamanager.auth.DataManagerAuth;
-import org.mifos.core.sharedpreference.UserPreferences;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -41,25 +38,6 @@ public class ApplicationModule {
     @Singleton
     BaseApiManager provideBaseApiManager() {
         return new BaseApiManager();
-    }
-
-    @Provides
-    @Singleton
-    UserPreferences provideSdkUserPreferences(Application application) {
-        return new UserPreferences(application);
-    }
-
-    @Provides
-    @Singleton
-    org.mifos.core.apimanager.BaseApiManager provideSdkBaseApiManager(UserPreferences preferences) {
-        return org.mifos.core.apimanager.BaseApiManager.Companion.getInstance(preferences);
-    }
-
-    @Provides
-    @Singleton
-    DataManagerAuth providesSdkDataManagerAuth(org.mifos.core.apimanager.BaseApiManager apiManager)
-    {
-        return DataManagerAuth.Companion.getInstance(apiManager);
     }
 
 }

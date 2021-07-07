@@ -53,7 +53,7 @@ public class OfflineSyncLoanRepayment extends Job {
         mSubscriptions = new CompositeSubscription();
         mLoanRepaymentRequests = new ArrayList<>();
         App.get(getContext()).getComponent().inject(this);
-        if (PrefManager.getUserStatus() == 0) {
+        if (PrefManager.INSTANCE.getUserStatus() == 0) {
             loadDatabaseLoanRepaymentTransactions();
             return Result.SUCCESS;
         } else {

@@ -63,7 +63,7 @@ public class DataManagerClient {
      * @return Client List from offset to max Limit
      */
     public Observable<Page<Client>> getAllClients(boolean paged, int offset, int limit) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getAllClients(paged, offset, limit)
                         .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
@@ -106,7 +106,7 @@ public class DataManagerClient {
      * @return The Client Details
      */
     public Observable<Client> getClient(int clientId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getClient(clientId)
                         .concatMap(new Func1<Client, Observable<? extends Client>>() {
@@ -143,7 +143,7 @@ public class DataManagerClient {
      * @return All Clients Account, Like Savings, Loan etc Accounts.
      */
     public Observable<ClientAccounts> getClientAccounts(final int clientId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getClientAccounts(clientId);
             case 1:
@@ -214,7 +214,7 @@ public class DataManagerClient {
      * @return ClientTemplate
      */
     public Observable<ClientsTemplate> getClientTemplate() {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().getClientTemplate()
                         .concatMap(new Func1<ClientsTemplate, Observable<? extends
@@ -248,7 +248,7 @@ public class DataManagerClient {
      * @return Client
      */
     public Observable<Client> createClient(final ClientPayload clientPayload) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getClientsApi().createClient(clientPayload)
                         .concatMap(new Func1<Client, Observable<? extends Client>>() {

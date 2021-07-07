@@ -104,7 +104,7 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
         ButterKnife.bind(this, rootView);
         mSyncSurveysDialogPresenter.attachView(this);
         //Start Syncing Surveys
-        if (isOnline() && (PrefManager.getUserStatus() == Constants.USER_ONLINE)) {
+        if (isOnline() && (PrefManager.INSTANCE.getUserStatus() == Constants.USER_ONLINE)) {
             mSyncSurveysDialogPresenter.loadSurveyList();
         } else {
             showNetworkIsNotAvailable();

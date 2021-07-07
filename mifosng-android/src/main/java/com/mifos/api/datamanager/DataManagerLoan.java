@@ -55,7 +55,7 @@ public class DataManagerLoan {
      * @return LoanWithAssociation
      */
     public Observable<LoanWithAssociations> getLoanById(int loanId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getLoanApi().getLoanByIdWithAllAssociations(loanId);
 
@@ -125,7 +125,7 @@ public class DataManagerLoan {
      * @return LoanRepaymentTemplate
      */
     public Observable<LoanRepaymentTemplate> getLoanRepayTemplate(final int loanId) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getLoanApi().getLoanRepaymentTemplate(loanId);
 
@@ -182,7 +182,7 @@ public class DataManagerLoan {
      */
     public Observable<LoanRepaymentResponse> submitPayment(final int loanId,
                                                            final LoanRepaymentRequest request) {
-        switch (PrefManager.getUserStatus()) {
+        switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
                 return mBaseApiManager.getLoanApi().submitPayment(loanId, request)
                         .concatMap(new Func1<LoanRepaymentResponse, Observable<? extends

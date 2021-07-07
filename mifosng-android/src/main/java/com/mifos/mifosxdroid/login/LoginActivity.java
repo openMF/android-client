@@ -118,10 +118,10 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         mLoginPresenter.attachView(this);
 
         et_port.setInputType(InputType.TYPE_CLASS_NUMBER);
-        if (!PrefManager.getPort().equals("80"))
-            et_port.setText(PrefManager.getPort());
+        if (!PrefManager.INSTANCE.getPort().equals("80"))
+            et_port.setText(PrefManager.INSTANCE.getPort());
 
-        et_domain.setText(PrefManager.getInstanceDomain());
+        et_domain.setText(PrefManager.INSTANCE.getInstanceDomain());
         et_domain.addTextChangedListener(urlWatcher);
         et_port.addTextChangedListener(urlWatcher);
         urlWatcher.afterTextChanged(null);
@@ -185,16 +185,16 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     @Override
     public void onLoginSuccessful(User user) {
         // Saving userID
-        PrefManager.setUserId(user.getUserId());
+        PrefManager.INSTANCE.setUserId(user.getUserId());
         // Saving user's token
-        PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
+        PrefManager.INSTANCE.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
         // Saving user
-        PrefManager.saveUser(user);
+        PrefManager.INSTANCE.saveUser(user);
 
         Toast.makeText(this, getString(R.string.toast_welcome) + " " + user.getUsername(),
                 Toast.LENGTH_SHORT).show();
 
-        if (PrefManager.getPassCodeStatus()) {
+        if (PrefManager.INSTANCE.getPassCodeStatus()) {
             startActivity(new Intent(this, DashboardActivity.class));
         } else {
             Intent intent = new Intent(this, PassCodeActivity.class);
@@ -230,13 +230,13 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             return;
         }
         // Saving tenant
-        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
+        PrefManager.INSTANCE.setTenant(et_tenantIdentifier.getEditableText().toString());
         // Saving InstanceURL for next usages
-        PrefManager.setInstanceUrl(instanceURL);
+        PrefManager.INSTANCE.setInstanceUrl(instanceURL);
         // Saving domain name
-        PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
+        PrefManager.INSTANCE.setInstanceDomain(et_domain.getEditableText().toString());
         // Saving port
-        PrefManager.setPort(et_port.getEditableText().toString());
+        PrefManager.INSTANCE.setPort(et_port.getEditableText().toString());
         // Updating Services
         BaseApiManager.createService();
 
