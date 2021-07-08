@@ -7,6 +7,8 @@ package com.mifos.mifosxdroid.online.groupslist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.view.ActionMode;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
@@ -80,6 +83,9 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
 
     @BindView(R.id.layout_error)
     View errorView;
+
+    @BindView(R.id.fab_create_group)
+    FloatingActionButton fabCreateGroup;
 
     @Inject
     GroupsListPresenter mGroupsListPresenter;
@@ -187,6 +193,18 @@ public class GroupsListFragment extends MifosBaseFragment implements GroupsListM
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mGroupsListPresenter.loadGroups(true, totalItemsCount);
+            }
+        });
+
+        rv_groups.addOnScrollListener( new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fabCreateGroup.show();
+                } else {
+                    fabCreateGroup.hide();
+                }
             }
         });
 

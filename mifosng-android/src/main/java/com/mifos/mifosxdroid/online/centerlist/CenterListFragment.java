@@ -7,6 +7,8 @@ package com.mifos.mifosxdroid.online.centerlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.CentersListAdapter;
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener;
@@ -68,6 +71,9 @@ public class CenterListFragment extends MifosBaseFragment
 
     @BindView(R.id.layout_error)
     View layoutError;
+
+    @BindView(R.id.fab_create_center)
+    FloatingActionButton fabCreateCenter;
 
     @Inject
     CenterListPresenter mCenterListPresenter;
@@ -141,6 +147,18 @@ public class CenterListFragment extends MifosBaseFragment
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mCenterListPresenter.loadCenters(true, totalItemsCount);
+            }
+        });
+
+        rvCenters.addOnScrollListener( new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fabCreateCenter.show();
+                } else {
+                    fabCreateCenter.hide();
+                }
             }
         });
 
