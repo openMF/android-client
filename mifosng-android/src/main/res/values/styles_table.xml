@@ -18,4 +18,16 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <!--this style is use to format table row in user_detail_dialog_layout.xml-->
+    <style name="user_info_TableRow">
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginBottom">18dp</item>
+        <item name="android:layout_marginLeft">@dimen/layout_padding_24dp</item>
+        <item name="android:layout_marginStart">@dimen/layout_padding_24dp</item>
+        <item name="android:layout_marginEnd">@dimen/layout_padding_24dp</item>
+        <item name="android:layout_marginRight">@dimen/layout_padding_24dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

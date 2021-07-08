@@ -5,10 +5,10 @@
 
 package com.mifos.mifosxdroid.online;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
 import androidx.annotation.VisibleForTesting;
 import com.google.android.material.navigation.NavigationView;
 import androidx.test.espresso.IdlingResource;
@@ -22,9 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mifos.mifosxdroid.AboutActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SettingsActivity;
@@ -44,12 +44,11 @@ import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.mifosxdroid.online.search.SearchFragment;
+import com.mifos.mifosxdroid.views.CircularImageView;
 import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
 import com.mifos.utils.PrefManager;
-
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -334,11 +333,68 @@ public class DashboardActivity extends MifosBaseActivity
 
         TextView textViewUsername = ButterKnife.findById(mNavigationHeader, R.id.tv_user_name);
         textViewUsername.setText(loggedInUser.getUsername());
+        textViewUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUserDetails();
+            }
+        });
 
         // no profile picture credential, using dummy profile picture
         ImageView imageViewUserPicture = ButterKnife
                 .findById(mNavigationHeader, R.id.iv_user_picture);
         imageViewUserPicture.setImageResource(R.drawable.ic_dp_placeholder);
+        imageViewUserPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUserDetails();
+            }
+        });
+    }
+
+    /**
+     * Opens dialog with user_detail_layout.xml view
+     * Displays users data
+     */
+    private void showUserDetails() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.user_detail_dialog_layout);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        final User loggedInUser = PrefManager.getUser();
+
+        TextView textViewUsername = ButterKnife.findById(dialog, R.id.tv_user_name);
+        textViewUsername.setText(loggedInUser.getUsername());
+
+        CircularImageView authIndicator = ButterKnife.findById(dialog, R.id.iv_auth_indicator);
+        TextView authText = ButterKnife.findById(dialog, R.id.tv_authText);
+        if (loggedInUser.isAuthenticated()) {
+            authIndicator.setImageResource(R.color.green_dark);
+            authText.setText(R.string.authenticated);
+        } else {
+            authIndicator.setImageResource(R.color.red_light);
+            authText.setText(R.string.unauthenticated);
+        }
+
+        // no profile picture credential, using dummy profile picture
+        ImageView imageViewUserPicture = ButterKnife
+                .findById(dialog, R.id.iv_user_picture);
+        imageViewUserPicture.setImageResource(R.drawable.ic_dp_placeholder);
+
+        TextView userId = ButterKnife.findById(dialog, R.id.tv_userId);
+        TextView officeName = ButterKnife.findById(dialog, R.id.tv_officeName);
+        TextView officeId = ButterKnife.findById(dialog, R.id.tv_officeId);
+        TextView tenant = ButterKnife.findById(dialog, R.id.tv_tenant);
+        TextView instanceUrl = ButterKnife.findById(dialog, R.id.tv_instanceURL);
+        userId.setText(String.format("%s", loggedInUser.getUserId()));
+        officeId.setText(String.format("%s", loggedInUser.getOfficeId()));
+        officeName.setText(loggedInUser.getOfficeName());
+        tenant.setText(PrefManager.getTenant());
+        instanceUrl.setText(PrefManager.getInstanceUrl());
+
+        dialog.show();
     }
 
     @Override
