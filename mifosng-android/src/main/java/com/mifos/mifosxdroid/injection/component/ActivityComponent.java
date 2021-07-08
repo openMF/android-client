@@ -19,6 +19,7 @@ import com.mifos.mifosxdroid.login.LoginActivity;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxFragment;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity;
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment;
+import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.mifosxdroid.online.runreports.report.ReportFragment;
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment;
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
@@ -52,7 +53,6 @@ import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSh
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment;
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment;
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment;
-import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment;
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment;
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval;
 import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment;

@@ -111,7 +111,6 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         mGroupList = ArrayList()
         selectedGroups = ArrayList()
         actionModeCallback = ActionModeCallback()
@@ -125,6 +124,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_groups, container, false)
+        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         ButterKnife.bind(this, rootView)
         mGroupsListPresenter!!.attachView(this)
 
