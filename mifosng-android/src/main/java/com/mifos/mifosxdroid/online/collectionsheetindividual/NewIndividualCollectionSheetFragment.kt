@@ -9,6 +9,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.fragment.app.DialogFragment
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 import com.mifos.api.model.RequestCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -26,6 +27,7 @@ import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import java.util.*
 import javax.inject.Inject
+
 
 /**
  * Created by aksh on 18/6/18.
@@ -46,6 +48,10 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     @JvmField
     @BindView(R.id.tv_repayment_date)
     var tvRepaymentDate: TextView? = null
+
+    @JvmField
+    @BindView(R.id.btn_clear)
+    var btnClear: Button? = null
 
     @JvmField
     @Inject
@@ -229,6 +235,13 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             R.id.tv_repayment_date -> setTvRepaymentDate()
             R.id.btn_fetch_collection_sheet -> retrieveCollectionSheet()
         }
+    }
+
+    @OnClick(R.id.btn_clear)
+    fun clear() {
+        spOffices!!.adapter = null
+        spStaff!!.adapter = null
+        setUpUi()
     }
 
     companion object {
