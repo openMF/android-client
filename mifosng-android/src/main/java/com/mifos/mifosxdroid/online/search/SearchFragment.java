@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SearchAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
@@ -29,6 +32,9 @@ import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.GroupsActivity;
+import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
+import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
+import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
 import com.mifos.objects.SearchedEntity;
 import com.mifos.utils.Constants;
 import com.mifos.utils.EspressoIdlingResource;
@@ -60,6 +66,18 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     @BindView(R.id.cb_exact_match)
     CheckBox cb_exactMatch;
 
+    @BindView(R.id.fab_create)
+    FloatingActionButton fabCreate;
+
+    @BindView(R.id.fab_client)
+    FloatingActionButton fabClient;
+
+    @BindView(R.id.fab_center)
+    FloatingActionButton fabCenter;
+
+    @BindView(R.id.fab_group)
+    FloatingActionButton fabGroup;
+
     @BindArray(R.array.search_options_values)
     String[] searchOptionsValues;
 
@@ -72,6 +90,8 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     private List<SearchedEntity> searchedEntities;
     private ArrayAdapter<CharSequence> searchOptionsAdapter;
     private String resources;
+    private Boolean isFabOpen = false;
+    private Animation fab_open, fab_close, rotate_forward, rotate_backward;
     private LinearLayoutManager layoutManager;
 
     @Override
@@ -79,6 +99,10 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         super.onCreate(savedInstanceState);
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         searchedEntities = new ArrayList<>();
+        fab_open = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_backward);
     }
 
     @Override
@@ -109,6 +133,24 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     }
 
 
+    @OnClick(R.id.fab_client)
+    public void onClickCreateClient() {
+        ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewClientFragment.newInstance(),
+                true, R.id.container_a);
+    }
+
+    @OnClick(R.id.fab_center)
+    public void onClickCreateCenter() {
+        ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewCenterFragment.newInstance(),
+                true, R.id.container_a);
+    }
+
+    @OnClick(R.id.fab_group)
+    public void onClickCreateCGroup() {
+        ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewGroupFragment.newInstance(),
+                true, R.id.container_a);
+    }
+
     @OnClick(R.id.btn_search)
     public void onClickSearch() {
         hideKeyboard(et_search);
@@ -119,7 +161,29 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         } else {
             Toaster.show(et_search, getString(R.string.no_search_query_entered));
         }
+    }
 
+    @OnClick(R.id.fab_create)
+    void onClickCreate() {
+        if (isFabOpen) {
+            fabCreate.startAnimation(rotate_backward);
+            fabClient.startAnimation(fab_close);
+            fabCenter.startAnimation(fab_close);
+            fabGroup.startAnimation(fab_close);
+            fabClient.setClickable(false);
+            fabCenter.setClickable(false);
+            fabGroup.setClickable(false);
+            isFabOpen = false;
+        } else {
+            fabCreate.startAnimation(rotate_forward);
+            fabClient.startAnimation(fab_open);
+            fabCenter.startAnimation(fab_open);
+            fabGroup.startAnimation(fab_open);
+            fabClient.setClickable(true);
+            fabCenter.setClickable(true);
+            fabGroup.setClickable(true);
+            isFabOpen = true;
+        }
     }
 
     @Override
@@ -250,5 +314,4 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
             }
         }
     }
-
 }

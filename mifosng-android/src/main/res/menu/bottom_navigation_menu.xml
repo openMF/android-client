@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:checked="true"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/dashboard"
+        />
+
+    <item
+        android:id="@+id/navigation_client_list"
+        android:checked="false"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/clients"
+        />
+
+    <item
+        android:id="@+id/navigation_center_list"
+        android:checked="false"
+        android:icon="@drawable/ic_centers_24dp"
+        android:title="@string/centers"
+        />
+
+    <item
+        android:id="@+id/navigation_group_list"
+        android:checked="false"
+        android:icon="@drawable/ic_group_black_24dp"
+        android:title="@string/groups"
+        />
+
+
+</menu>
