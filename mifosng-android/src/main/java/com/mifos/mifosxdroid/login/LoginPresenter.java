@@ -4,7 +4,6 @@ import com.mifos.api.datamanager.DataManagerAuth;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.user.User;
 import com.mifos.utils.MFErrorParser;
-
 import javax.inject.Inject;
 
 import retrofit2.adapter.rxjava.HttpException;

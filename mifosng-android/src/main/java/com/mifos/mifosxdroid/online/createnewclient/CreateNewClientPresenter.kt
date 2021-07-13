@@ -13,7 +13,6 @@ import com.mifos.objects.templates.clients.ClientsTemplate
 import com.mifos.objects.templates.clients.Options
 import com.mifos.utils.MFErrorParser
 import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -177,7 +176,7 @@ class CreateNewClientPresenter @Inject constructor(private val mDataManagerClien
         val imagePath = pngFile.absolutePath
 
         // create RequestBody instance from file
-        val requestFile = RequestBody.create("image/png".toMediaTypeOrNull(), pngFile)
+        val requestFile = RequestBody.create(MediaType.parse("image/png"), pngFile)
 
         // MultipartBody.Part is used to send also the actual file name
         val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)

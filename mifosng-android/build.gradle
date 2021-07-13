@@ -265,7 +265,7 @@ dependencies {
     //preferences
     implementation "androidx.preference:preference:$preference"
 
-    implementation 'com.github.danishjamal104:mifos-android-sdk-arch:2.3.2-alpha'
+    implementation "com.github.openMF:mifos-android-sdk-arch:$mifosSdkVersion"
 }
 
 /*
