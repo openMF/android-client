@@ -723,6 +723,7 @@
     <string name="failed_to_load_db_groups">Upakio wa makundi ya hifadhidata umefeli</string>
     <string name="browse">Vinjari</string>
     <string name="accounts">akaunti</string>
+    <string name="no_internet_available">Hakuna muunganisho wa mtandao</string>
 
     <!-- Language -->
     <string name="language">Lugha</string>

@@ -1,10 +1,12 @@
 package com.mifos.mifosxdroid.online.groupdetails
 
+import com.mifos.App
 import com.mifos.api.datamanager.DataManagerGroups
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.group.GroupWithAssociations
 import com.mifos.objects.zipmodels.GroupAndGroupAccounts
+import com.mifos.utils.Network
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -28,6 +30,10 @@ class GroupDetailsPresenter @Inject constructor(private val mDataManagerGroups: 
 
     fun loadGroupDetailsAndAccounts(groupId: Int) {
         checkViewAttached()
+        if (!Network.isOnline(App.getContext())) {
+            mvpView!!.showFetchingError(R.string.no_internet_available)
+            return
+        }
         mvpView!!.showProgressbar(true)
         mSubscriptions.add(Observable.combineLatest(
                 mDataManagerGroups.getGroup(groupId),
