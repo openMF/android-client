@@ -5,6 +5,7 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary
 
 import android.app.Activity
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -318,18 +319,8 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
             // Cache transactions here
             listOfAllTransactions.addAll(savingsAccountWithAssociations.transactions)
-            lv_Transactions!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l -> /*
-                                     On Click at a Savings Account Transaction
-                                     1. get the transactionId of that transaction
-                                     2. get the account Balance after that transaction
-                                    */
-                val transactionId = listOfAllTransactions[i].id
-                val runningBalance = listOfAllTransactions[i].runningBalance
-
-                //Display them as a Formatted string in a toast message
-                Toast.makeText(activity, String.format(resources
-                        .getString(R.string.savings_transaction_detail), transactionId,
-                        runningBalance), Toast.LENGTH_LONG).show()
+            lv_Transactions!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                showTransaction(i)
             }
             if (savingsAccountWithAssociations.status.submittedAndPendingApproval) {
                 bt_approve_saving!!.isEnabled = true
@@ -355,6 +346,29 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
             }
             enableInfiniteScrollOfTransactions()
         }
+    }
+
+    fun showTransaction(i: Int) {
+        val transaction = listOfAllTransactions[i]
+        val dialog = Dialog(context)
+        dialog.window.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.setContentView(R.layout.transaction_detail_dialog_layout)
+        val transactionId = dialog.findViewById<TextView>(R.id.tv_transactionId)
+        val date = dialog.findViewById<TextView>(R.id.tv_date)
+        val transactionType = dialog.findViewById<TextView>(R.id.tv_transactionType)
+        val runningBalance = dialog.findViewById<TextView>(R.id.tv_runningBalance)
+        val savingAccountId = dialog.findViewById<TextView>(R.id.tv_savingAccountId)
+        val accountNumber = dialog.findViewById<TextView>(R.id.tv_accountNumber)
+        val currency = dialog.findViewById<TextView>(R.id.tv_currency)
+        val dateList = transaction.date
+        transactionId.text = transaction.id.toString()
+        date.text = String.format("%s-%s-%s", dateList[0], dateList[1], dateList[2])
+        transactionType.text = transaction.transactionType.value
+        runningBalance.text = transaction.runningBalance.toString()
+        savingAccountId.text = transaction.accountId.toString()
+        accountNumber.text = transaction.accountNo
+        currency.text = transaction.currency.name
+        dialog.show()
     }
 
     override fun showSavingsActivatedSuccessfully(genericResponse: GenericResponse?) {
@@ -389,6 +403,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         const val MENU_ITEM_DOCUMENTS = 1004
         private const val ACTION_APPROVE_SAVINGS = 4
         private const val ACTION_ACTIVATE_SAVINGS = 5
+
         @JvmStatic
         fun newInstance(savingsAccountNumber: Int,
                         type: DepositType?,

@@ -24,6 +24,7 @@ import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualColle
 import com.mifos.mifosxdroid.online.runreports.report.ReportFragment;
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment;
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
+import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.sign.SignatureFragment;
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment;
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsFragment;
@@ -62,7 +63,6 @@ import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment;
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleFragment;
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsFragment;
 import com.mifos.mifosxdroid.online.note.NoteFragment;
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment;
 import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionFragment;
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment;
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateFragment;

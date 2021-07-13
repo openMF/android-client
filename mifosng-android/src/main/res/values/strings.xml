@@ -33,7 +33,6 @@
     <string name="default_instance_url" translatable="false">demo.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
-    <string name="date">Date</string>
     <string name="date_colon">Date:</string>
     <string name="payment_type">Payment Type</string>
     <string name="mifos_instance_domain">Mifos Instance Domain</string>
@@ -41,7 +40,6 @@
     <string name="password">Password</string>
     <string name="mifos" translatable="false">Mifos</string>
     <string name="full_name">Name</string>
-    <string name="account_number">Account Number</string>
     <string name="external_id">External ID</string>
     <string name="loanproduct">Loan Product</string>
     <string name="loantype">Loan Type</string>
@@ -199,7 +197,6 @@
     <string name="no_payment_added">No Payment Added</string>
     <string name="add_payment_detail">Add Payment Detail</string>
     <string name="generate_new">Generate New</string>
-    <string name="currency">Currency</string>
     <string name="Log_in_success">Logged in successfully</string>
     <!-- General Terms End Here -->
 
@@ -333,7 +330,6 @@
     <string name="transaction_failed">Transaction Failed</string>
     <string name="transaction_saved_in_db">Transaction Saved in DB</string>
     <string name="payment_failed">Payment Failed</string>
-    <string name="transaction_type">Transaction Type</string>
     <string name="loan_submission_date">Submission Date</string>
     <string name="total_charges">Total Charges:</string>
     <string name="total_dues">Total Due:</string>
@@ -834,6 +830,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+
     <string name="accounts">Accounts</string>
 
 >>>>>>> 9e9df49d (Intro added in SearchFragment)
@@ -899,6 +896,14 @@
     <string name="passcode">Passcode</string>
     <string name="change_passcode">Change Passcode</string>
     <string name="change_app_passcode">Change App Passcode</string>
+    <string name="currency">Currency</string>
+    <string name="account_number">Account Number</string>
+    <string name="saving_account_id">Saving Account Id</string>
+    <string name="running_balance">Running Balance</string>
+    <string name="transaction_type">Transaction Type</string>
+    <string name="date">Date</string>
+    <string name="transaction_id">Transaction Id</string>
+
 
     <string name="got_it">GOT IT</string>
     <string name="finish">FINISH</string>
