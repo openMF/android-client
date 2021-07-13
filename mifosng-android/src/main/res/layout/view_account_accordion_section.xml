@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:paddingBottom="12dp">
+    android:paddingBottom="12dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="10dp">
+
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/tv_toggle_accounts_icon"
@@ -23,10 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/tv_toggle_accounts_icon"
-        android:text="@string/savingAccounts"
         android:layout_toEndOf="@id/tv_toggle_accounts_icon"
         android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp" />
+        android:layout_marginStart="12dp"
+        tools:text="@string/savingAccounts" />
+
 
     <TextView
         android:id="@+id/tv_count_accounts"
