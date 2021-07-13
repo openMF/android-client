@@ -34,6 +34,7 @@
         <item name="android:layout_marginTop">6dp</item>
         <item name="android:layout_marginBottom">6dp</item>
         <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:paddingLeft">2dp</item>
     </style>
 
     <style name="TextView.Row.Value" parent="TextView.Row">
@@ -42,6 +43,7 @@
         <item name="android:layout_marginTop">6dp</item>
         <item name="android:layout_marginBottom">6dp</item>
         <item name="android:textColor">@color/primary_text</item>
+        <item name="android:paddingRight">32dp</item>
     </style>
 
     <style name="TextView.Client" parent="TextView.Base">
