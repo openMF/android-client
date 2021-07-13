@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -49,11 +50,16 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         RecyclerItemClickListener.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
+
+    @BindView(R.id.btn_search)
+    Button bt_search;
 
     @BindView(R.id.et_search)
     EditText et_search;
@@ -131,12 +137,46 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         rv_search.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_search.setHasFixedSize(true);
         rv_search.setAdapter(searchAdapter);
+
         cb_exactMatch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 onClickSearch();
             }
         });
+
+        showGuide();
+    }
+
+    void showGuide() {
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(250); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), "123");
+
+        sequence.setConfig(config);
+
+        String et_search_intro = getString(R.string.et_search_intro);
+        int i = 1;
+        for (String s: searchOptionsValues) {
+            et_search_intro += "\n" + i + '.' + s;
+            i++;
+        }
+
+        String sp_search_intro = getString(R.string.sp_search_intro);
+        String cb_exactMatch_intro = getString(R.string.cb_exactMatch_intro);
+        String bt_search_intro = getString(R.string.bt_search_intro);
+
+        sequence.addSequenceItem(et_search,
+                et_search_intro, getString(R.string.got_it));
+        sequence.addSequenceItem(sp_search,
+                sp_search_intro, getString(R.string.next));
+        sequence.addSequenceItem(cb_exactMatch,
+                cb_exactMatch_intro, getString(R.string.next));
+        sequence.addSequenceItem(bt_search,
+                bt_search_intro, getString(R.string.finish));
+
+        sequence.start();
     }
 
 
