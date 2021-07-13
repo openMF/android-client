@@ -1,8 +1,11 @@
 package com.mifos.mifosxdroid.online.loanaccountsummary
 
+import com.mifos.App
 import com.mifos.api.datamanager.DataManagerLoan
+import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.accounts.loan.LoanWithAssociations
+import com.mifos.utils.Network
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -32,8 +35,13 @@ class LoanAccountSummaryPresenter @Inject constructor(private val mDataManagerLo
                 .subscribe(object : Subscriber<LoanWithAssociations?>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
+                        var error = App.getContext().getString(R.string.loan_acc_not_found)
                         mvpView!!.showProgressbar(false)
-                        mvpView!!.showFetchingError("Loan Account not found.")
+                        if (!Network.isOnline(App.getContext())) {
+                            error = App.getContext().getString(R.string.no_internet_connection)
+                        }
+                        mvpView!!.showProgressbar(false)
+                        mvpView!!.showFetchingError(error)
                     }
 
                     override fun onNext(loanWithAssociations: LoanWithAssociations?) {

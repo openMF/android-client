@@ -834,6 +834,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+
     <string name="accounts">Accounts</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="ui">UI</string>
@@ -897,5 +898,6 @@
     <string name="passcode">Passcode</string>
     <string name="change_passcode">Change Passcode</string>
     <string name="change_app_passcode">Change App Passcode</string>
+    <string name="loan_acc_not_found">Loan Account not found.</string>
 
 </resources>
