@@ -21,6 +21,7 @@ import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivit
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment;
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment;
 import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment;
+import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment;
 import com.mifos.mifosxdroid.online.runreports.report.ReportFragment;
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment;
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
@@ -41,7 +42,6 @@ import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment;
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment;
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment;
 import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment;
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment;
 import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment;
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment;
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment;
