@@ -5,7 +5,6 @@ import com.mifos.api.datamanager.DataManagerDocument
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import rx.Subscriber
@@ -55,7 +54,7 @@ class SignaturePresenter @Inject constructor(private val mDataManagerDocument: D
 
     private fun getRequestFileBody(file: File?): MultipartBody.Part {
         // create RequestBody instance from file
-        val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file!!)
+        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file!!)
 
         // MultipartBody.Part is used to send also the actual file name
         return MultipartBody.Part.createFormData("file", file!!.name, requestFile)

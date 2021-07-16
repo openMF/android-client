@@ -5,7 +5,6 @@ import com.mifos.api.datamanager.DataManagerDataTable
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.zipmodels.ClientAndClientAccounts
 import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -37,7 +36,7 @@ class ClientDetailsPresenter @Inject constructor(private val mDataManagerDataTab
         val imagePath = pngFile.absolutePath
 
         // create RequestBody instance from file
-        val requestFile = RequestBody.create("image/png".toMediaTypeOrNull(), pngFile)
+        val requestFile = RequestBody.create(MediaType.parse("image/png"), pngFile)
 
         // MultipartBody.Part is used to send also the actual file name
         val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
