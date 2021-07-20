@@ -3,9 +3,20 @@ package com.mifos.api.datamanager;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
+import com.mifos.api.mappers.accounts.GetClientsClientIdAccsMapper;
+import com.mifos.api.mappers.client.ClientsClientIdResponseMapper;
+import com.mifos.api.mappers.client.GetClientResponseMapper;
+import com.mifos.api.mappers.client.PostClientRequestMapper;
+import com.mifos.api.mappers.client.PostClientResponseMapper;
+import com.mifos.api.mappers.client.identifiers.GetIdentifiersTemplateMapper;
+import com.mifos.api.mappers.client.identifiers.IdentifierCreationResponseMapper;
+import com.mifos.api.mappers.client.identifiers.IdentifierMapper;
+import com.mifos.api.mappers.client.identifiers.PostIdentifierMapper;
+import com.mifos.api.mappers.client.template.TemplateMapper;
+import com.mifos.api.utils.DataTables;
 import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ActivatePayload;
+import com.mifos.objects.client.Client;
 import com.mifos.objects.client.ClientAddressRequest;
 import com.mifos.objects.client.ClientAddressResponse;
 import com.mifos.objects.client.ClientPayload;
@@ -17,6 +28,12 @@ import com.mifos.objects.noncore.IdentifierTemplate;
 import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.utils.PrefManager;
 
+import org.apache.fineract.client.models.PostClientsClientIdIdentifiersRequest;
+import org.apache.fineract.client.models.PostClientsRequest;
+import org.apache.fineract.client.services.ClientApi;
+import org.apache.fineract.client.services.ClientIdentifierApi;
+
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,7 +42,6 @@ import javax.inject.Singleton;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * This DataManager is for Managing Client API, In which Request is going to Server
@@ -37,15 +53,25 @@ public class DataManagerClient {
 
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelperClient mDatabaseHelperClient;
+    public final org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager;
 
     @Inject
     public DataManagerClient(BaseApiManager baseApiManager,
-                             DatabaseHelperClient databaseHelperClient) {
+                             DatabaseHelperClient databaseHelperClient,
+                             org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager) {
 
         mBaseApiManager = baseApiManager;
         mDatabaseHelperClient = databaseHelperClient;
+        this.sdkBaseApiManager = sdkBaseApiManager;
     }
 
+    private ClientApi getClientApi() {
+        return sdkBaseApiManager.getClientsApi();
+    }
+
+    private ClientIdentifierApi getClientIdentifierApi() {
+        return sdkBaseApiManager.getClient().clientIdentifiers;
+    }
 
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -65,14 +91,12 @@ public class DataManagerClient {
     public Observable<Page<Client>> getAllClients(boolean paged, int offset, int limit) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().getAllClients(paged, offset, limit)
-                        .concatMap(new Func1<Page<Client>, Observable<? extends Page<Client>>>() {
-                            @Override
-                            public Observable<? extends Page<Client>> call(Page<Client>
-                                                                                   clientPage) {
-                                return Observable.just(clientPage);
-                            }
-                        });
+                return getClientApi().retrieveAll21(null, null, null,
+                        null, null, null,
+                        null, null, offset,
+                        limit, null, null, null)
+                        .map(GetClientResponseMapper.INSTANCE::mapFromEntity)
+                        .concatMap(Observable::just);
             case 1:
                 /**
                  * Return All Clients List from DatabaseHelperClient only one time.
@@ -108,13 +132,9 @@ public class DataManagerClient {
     public Observable<Client> getClient(int clientId) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().getClient(clientId)
-                        .concatMap(new Func1<Client, Observable<? extends Client>>() {
-                            @Override
-                            public Observable<? extends Client> call(Client client) {
-                                return Observable.just(client);
-                            }
-                        });
+                return getClientApi().retrieveOne11((long) clientId, false)
+                        .map(ClientsClientIdResponseMapper.INSTANCE::mapFromEntity)
+                        .concatMap(Observable::just);
             case 1:
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
@@ -145,7 +165,8 @@ public class DataManagerClient {
     public Observable<ClientAccounts> getClientAccounts(final int clientId) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().getClientAccounts(clientId);
+                return getClientApi().retrieveAssociatedAccounts((long) clientId)
+                        .map(GetClientsClientIdAccsMapper.INSTANCE::mapFromEntity);
             case 1:
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
@@ -167,14 +188,10 @@ public class DataManagerClient {
      * @return ClientAccounts
      */
     public Observable<ClientAccounts> syncClientAccounts(final int clientId) {
-        return mBaseApiManager.getClientsApi().getClientAccounts(clientId)
-                .concatMap(new Func1<ClientAccounts, Observable<? extends ClientAccounts>>() {
-                    @Override
-                    public Observable<? extends ClientAccounts> call(ClientAccounts
-                                                                             clientAccounts) {
-                        return mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId);
-                    }
-                });
+        return getClientApi().retrieveAssociatedAccounts((long) clientId)
+                .map(GetClientsClientIdAccsMapper.INSTANCE::mapFromEntity)
+                .concatMap(clientAccounts ->
+                        mDatabaseHelperClient.saveClientAccounts(clientAccounts, clientId));
     }
 
     /**
@@ -216,16 +233,10 @@ public class DataManagerClient {
     public Observable<ClientsTemplate> getClientTemplate() {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().getClientTemplate()
-                        .concatMap(new Func1<ClientsTemplate, Observable<? extends
-                                ClientsTemplate>>() {
-                            @Override
-                            public Observable<? extends
-                                    ClientsTemplate> call(ClientsTemplate clientsTemplate) {
-                                return mDatabaseHelperClient.saveClientTemplate(clientsTemplate);
-                            }
-                        });
-
+                return sdkBaseApiManager.getClientsApi()
+                        .retrieveTemplate5(null, null, null)
+                        .map(TemplateMapper.INSTANCE::mapFromEntity)
+                        .concatMap(mDatabaseHelperClient::saveClientTemplate);
             case 1:
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
@@ -250,13 +261,12 @@ public class DataManagerClient {
     public Observable<Client> createClient(final ClientPayload clientPayload) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getClientsApi().createClient(clientPayload)
-                        .concatMap(new Func1<Client, Observable<? extends Client>>() {
-                            @Override
-                            public Observable<? extends Client> call(Client client) {
-                                return Observable.just(client);
-                            }
-                        });
+                PostClientsRequest request = PostClientRequestMapper.INSTANCE
+                        .mapToEntity(clientPayload);
+                return getClientApi()
+                        .create6(request)
+                        .map(PostClientResponseMapper.INSTANCE::mapFromEntity)
+                        .concatMap(Observable::just);
             case 1:
                 /**
                  * If user is in offline mode and he is making client. client payload will be saved
@@ -309,7 +319,8 @@ public class DataManagerClient {
      * @return List<Identifier>
      */
     public Observable<List<Identifier>> getClientIdentifiers(int clientId) {
-        return mBaseApiManager.getClientsApi().getClientIdentifiers(clientId);
+        return getClientIdentifierApi().retrieveAllClientIdentifiers((long) clientId)
+                .map(IdentifierMapper.INSTANCE::mapFromEntityList);
     }
 
     /**
@@ -321,7 +332,12 @@ public class DataManagerClient {
      */
     public Observable<IdentifierCreationResponse> createClientIdentifier(
             int clientId, IdentifierPayload identifierPayload) {
-        return mBaseApiManager.getClientsApi().createClientIdentifier(clientId, identifierPayload);
+
+        PostClientsClientIdIdentifiersRequest requestPayload = PostIdentifierMapper.INSTANCE
+                .mapToEntity(identifierPayload);
+
+        return getClientIdentifierApi().createClientIdentifier((long) clientId, requestPayload)
+                .map(IdentifierCreationResponseMapper.INSTANCE::mapFromEntity);
     }
 
     /**
@@ -331,7 +347,8 @@ public class DataManagerClient {
      * @return IdentifierTemplate
      */
     public Observable<IdentifierTemplate> getClientIdentifierTemplate(int clientId) {
-        return mBaseApiManager.getClientsApi().getClientIdentifierTemplate(clientId);
+        return getClientIdentifierApi().newClientIdentifierDetails((long) clientId)
+                .map(GetIdentifiersTemplateMapper.INSTANCE::mapFromEntity);
     }
 
     /**
@@ -342,7 +359,17 @@ public class DataManagerClient {
      * @return GenericResponse
      */
     public Observable<GenericResponse> deleteClientIdentifier(int clientId, int identifierId) {
-        return mBaseApiManager.getClientsApi().deleteClientIdentifier(clientId, identifierId);
+        return getClientIdentifierApi().deleteClientIdentifier((long) clientId, (long) identifierId)
+                .map(it -> {
+                        HashMap<String, Object> map = new HashMap<String, Object>() { {
+                                put("officeId", it);
+                                put("clientId", it);
+                                put("resourceId", it);
+                            } };
+                        return new GenericResponse() { {
+                                setResponseFields(map);
+                            } };
+                    });
     }
 
     /**
@@ -353,6 +380,8 @@ public class DataManagerClient {
      * @return ClientAddressResponse
      */
     public Observable<List<ClientAddressResponse>> getClientPinpointLocations(int clientId) {
+        sdkBaseApiManager.getDataTableApi().getDatatable1(DataTables.ClientPinPointLocation
+                .getDatatable(), (long) clientId, null);
         return mBaseApiManager.getClientsApi().getClientPinpointLocations(clientId);
     }
 
@@ -404,6 +433,19 @@ public class DataManagerClient {
      */
     public Observable<GenericResponse> activateClient(int clientId,
                                                       ActivatePayload clientActivate) {
+        /*PostClientsClientIdRequest request = new PostClientsClientIdRequest();
+        request
+        .setNote("We cannot accept transfers of clients having loans with
+        less than 1 repayment left");
+        return getClientApi().activate1((long)clientId, request, "activate")
+        .map(it -> {
+            HashMap map = new HashMap<String, Object>();
+            map.put("clientId", it);
+            map.put("resourceId", it);
+            GenericResponse response = new GenericResponse();
+            response.setResponseFields(map);
+            return response;
+        });*/
         return mBaseApiManager.getClientsApi().activateClient(clientId, clientActivate);
     }
 }

@@ -1,5 +1,7 @@
 package com.mifos.mifosxdroid.online.datatablelistfragment
 
+import android.util.Log
+import com.google.gson.Gson
 import com.mifos.api.DataManager
 import com.mifos.api.datamanager.DataManagerClient
 import com.mifos.api.datamanager.DataManagerLoan

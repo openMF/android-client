@@ -4,6 +4,8 @@ import com.mifos.api.datamanager.DataManagerAuth;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.user.User;
 import com.mifos.utils.MFErrorParser;
+import com.mifos.utils.PrefManager;
+
 import javax.inject.Inject;
 
 import retrofit2.adapter.rxjava.HttpException;
@@ -70,6 +72,7 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
                     public void onNext(User user) {
                         getMvpView().showProgressbar(false);
                         getMvpView().onLoginSuccessful(user);
+                        PrefManager.INSTANCE.setUsernamePassword(username, password);
                     }
                 });
     }

@@ -14,6 +14,8 @@ import org.mifos.core.sharedpreference.UserPreferences
 object  PrefManager : UserPreferences<User>() {
 
     private const val USER_DETAILS = "user_details"
+    private const val AUTH_USERNAME = "auth_username"
+    private const val AUTH_PASSWORD = "auth_password"
 
     override val preference: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getInstance()
             .applicationContext)
@@ -40,6 +42,15 @@ object  PrefManager : UserPreferences<User>() {
 
     fun getPermissionDeniedStatus(permissionDeniedStatus: String): Boolean {
         return get(Key.Custom(permissionDeniedStatus), true)
+    }
+
+    fun setUsernamePassword(username: String, password: String) {
+        put(Key.Custom(AUTH_USERNAME), username)
+        put(Key.Custom(AUTH_PASSWORD), password)
+    }
+
+    fun getUsernamePassword(): Pair<String, String> {
+        return Pair(get(Key.Custom(AUTH_USERNAME)), get(Key.Custom(AUTH_PASSWORD)))
     }
 
 }
