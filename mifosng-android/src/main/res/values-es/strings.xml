@@ -165,5 +165,6 @@
     <string name="dark_mode">modo oscuro</string>
 
     <string name="accounts">cuenta</string>
+    <string name="run_report">Ejecutar informes</string>
 
 </resources>
