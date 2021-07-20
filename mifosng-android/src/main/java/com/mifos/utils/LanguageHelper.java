@@ -43,12 +43,16 @@ public class LanguageHelper {
 
     @TargetApi(Build.VERSION_CODES.N)
     private static Context updateResources(Context context, String language) {
-        Locale locale = new Locale(language);
+        Locale locale = new Locale(language.toLowerCase());
         Locale.setDefault(locale);
 
-        Configuration configuration = context.getResources().getConfiguration();
+        Resources resources = context.getResources();
+        Configuration configuration = resources.getConfiguration();
+
         configuration.setLocale(locale);
         configuration.setLayoutDirection(locale);
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return context.createConfigurationContext(configuration);
     }
