@@ -84,15 +84,6 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".online.GenerateCollectionSheetActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_generate_collection_sheet"
-            android:parentActivityName=".HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
-        </activity>
-        <activity
             android:name=".online.RunReportsActivity"
             android:label="@string/run_report"
             android:parentActivityName=".HomeActivity">
