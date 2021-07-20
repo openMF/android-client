@@ -26,4 +26,9 @@
         android:icon="@drawable/ic_passcode"
         android:summary="@string/change_app_passcode"
         android:title="@string/change_passcode"/>
+
+    <EditTextPreference
+        android:key="@string/hint_instance_url"
+        android:title="@string/instance_url"/>
+
 </PreferenceScreen>
