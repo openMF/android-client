@@ -16,7 +16,6 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment;
-import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.utils.Constants;
 
 import static androidx.test.espresso.Espresso.onView;
