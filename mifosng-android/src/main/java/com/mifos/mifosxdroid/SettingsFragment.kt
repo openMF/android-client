@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mifos.mifosxdroid
 
 import android.content.Intent
@@ -34,61 +36,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.preferences)
-        languages = activity.resources.getStringArray(R.array.language_option)
-        mEnableSyncSurvey = findPreference(resources.getString(R.string.sync_survey)) as SwitchPreference
-        mEnableSyncSurvey!!.onPreferenceChangeListener = OnPreferenceChangeListener { preference, newValue ->
-            if (newValue as Boolean) {
-                val syncSurveysDialogFragment = SyncSurveysDialogFragment.newInstance()
-                val fragmentTransaction = fragmentManager.beginTransaction()
-                fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SURVEYS_SYNC)
-                syncSurveysDialogFragment.isCancelable = false
-                syncSurveysDialogFragment.show(fragmentTransaction,
-                        resources.getString(R.string.sync_clients))
-            }
-            true
-        }
-
-        mInstanceUrlPref = findPreference(
-                getString(R.string.hint_instance_url)) as EditTextPreference
-        val instanceUrl = PrefManager.getInstanceUrl()
-        mInstanceUrlPref!!.text = instanceUrl
-        mInstanceUrlPref!!.isSelectable = true
-        mInstanceUrlPref!!.dialogTitle = "Edit Instance Url"
-        mInstanceUrlPref!!.setDialogIcon(R.drawable.ic_baseline_edit_24)
-        mInstanceUrlPref!!.onPreferenceChangeListener = OnPreferenceChangeListener { preference, o ->
-            val newUrl = o.toString()
-            if (newUrl != instanceUrl) {
-                PrefManager.setInstanceUrl(newUrl)
-                Toast.makeText(activity, newUrl, Toast.LENGTH_SHORT).show()
-                startActivity(Intent(activity, DashboardActivity::class.java))
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    activity.finishAffinity()
-                } else {
-                    activity.finish()
-                }
-            }
-            true
-        }
-
-        val langPref = findPreference("language_type") as ListPreference
-        langPref.onPreferenceChangeListener = OnPreferenceChangeListener {preference, newValue ->
-            LanguageHelper.setLocale(this.activity, newValue.toString())
-            startActivity(Intent(activity, activity.javaClass))
-            preferenceScreen = null
-            addPreferencesFromResource(R.xml.preferences)
-            preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-            true
-        }
-
-        val themePreference = findPreference(resources.getString(R.string.mode_key)) as ListPreference
-        themePreference.onPreferenceChangeListener = OnPreferenceChangeListener { preference, newValue ->
-            val themeOption = newValue as String
-            ThemeHelper.applyTheme(themeOption)
-            startActivity(Intent(activity, activity.javaClass))
-            Toast.makeText(activity, "Switched to ${themeOption.toString()} Mode", Toast.LENGTH_SHORT).show()
-            true
-        }
+        setUpPreferences()
 
         when (preference?.key) {
             getString(R.string.password) -> {
@@ -110,6 +58,80 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         }
     }
 
+    fun setUpPreferences() {
+        addPreferencesFromResource(R.xml.preferences)
+        languages = activity.resources.getStringArray(R.array.language_option)
+
+        initSurveyPreferences()
+        initInstanceUrlPreferences()
+        initLanguagePreferences()
+        initThemePreferences()
+    }
+
+    private fun initSurveyPreferences() {
+        mEnableSyncSurvey = findPreference(resources.getString(R.string.sync_survey)) as SwitchPreference
+        mEnableSyncSurvey!!.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
+            if (newValue as Boolean) {
+                val syncSurveysDialogFragment = SyncSurveysDialogFragment.newInstance()
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SURVEYS_SYNC)
+                syncSurveysDialogFragment.isCancelable = false
+                syncSurveysDialogFragment.show(fragmentTransaction,
+                    resources.getString(R.string.sync_clients))
+            }
+            true
+        }
+    }
+
+    private fun initInstanceUrlPreferences() {
+        mInstanceUrlPref = findPreference(
+            getString(R.string.hint_instance_url)
+        ) as EditTextPreference
+        val instanceUrl = PrefManager.getInstanceUrl()
+        mInstanceUrlPref!!.text = instanceUrl
+        mInstanceUrlPref!!.isSelectable = true
+        mInstanceUrlPref!!.dialogTitle = "Edit Instance Url"
+        mInstanceUrlPref!!.setDialogIcon(R.drawable.ic_baseline_edit_24)
+        mInstanceUrlPref!!.onPreferenceChangeListener =
+            OnPreferenceChangeListener { _, o ->
+                val newUrl = o.toString()
+                if (newUrl != instanceUrl) {
+                    PrefManager.setInstanceUrl(newUrl)
+                    Toast.makeText(activity, newUrl, Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(activity, DashboardActivity::class.java))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        activity.finishAffinity()
+                    } else {
+                        activity.finish()
+                    }
+                }
+                true
+            }
+    }
+
+    private fun initLanguagePreferences() {
+        val langPref = findPreference("language_type") as ListPreference
+        langPref.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
+            LanguageHelper.setLocale(this.activity, newValue.toString())
+            startActivity(Intent(activity, activity.javaClass))
+            preferenceScreen = null
+            addPreferencesFromResource(R.xml.preferences)
+            preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+            true
+        }
+    }
+
+    private fun initThemePreferences() {
+        val themePreference = findPreference(resources.getString(R.string.mode_key)) as ListPreference
+        themePreference.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
+            val themeOption = newValue as String
+            ThemeHelper.applyTheme(themeOption)
+            startActivity(Intent(activity, activity.javaClass))
+            Toast.makeText(activity, "Switched to $themeOption Mode", Toast.LENGTH_SHORT).show()
+            true
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
@@ -124,9 +146,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         LanguageHelper.setLocale(this.activity, preference.value)
     }
 
-    interface LanguageCallback {
-        fun updateNavDrawer()
-    }
+    interface LanguageCallback
 
     override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen?, preference: Preference?): Boolean {
         when (preference?.key) {
