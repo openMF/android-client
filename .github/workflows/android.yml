@@ -1,26 +1,49 @@
-name: Android Build 
-on: [push, pull_request]
+name: Android Client CI
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      
-      # Set up JDK 1.8
-    - name: set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-      
-      # Build with Gradle
-    - name: Build with Gradle
-      run: chmod +x gradlew && ./gradlew build check
-      
-      # Upload Build Artifact
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.2.0
-      with:
-        # Artifact name
-        name: apk-debug
-        # File path describing what artifact to upload
-        path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/checkout@v2
+
+        # Cache dependencies
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.OS }}-gradle-cache-${{ hashFiles('**/build.gradle') }}
+
+        # Set up JDK 1.8
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+        # Build with Gradle
+      - name: Build with Gradle
+        run: chmod +x gradlew && ./gradlew build check
+
+        # Upload Build Reports
+      - name: Upload Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/**
+
+        # Upload APK
+      - name: Upload APK
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: android-client
+          # File path describing what artifact to upload
+          path: mifosng-android/build/outputs/apk/debug/mifosng-android-debug.apk
