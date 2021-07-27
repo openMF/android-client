@@ -1,10 +1,12 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary
 
+import com.mifos.App
 import com.mifos.api.datamanager.DataManagerSavings
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.utils.Constants
+import com.mifos.utils.Network
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -39,8 +41,13 @@ class SavingsAccountSummaryPresenter @Inject constructor(private val mDataManage
                     }
 
                     override fun onError(e: Throwable) {
+                        var error = R.string.failed_to_fetch_savingsaccount
                         mvpView!!.showProgressbar(false)
-                        mvpView!!.showFetchingError(R.string.failed_to_fetch_savingsaccount)
+                        if (!Network.isOnline(App.getContext())) {
+                            error = R.string.no_internet_connection
+                        }
+                        mvpView!!.showProgressbar(false)
+                        mvpView!!.showFetchingError(error)
                     }
 
                     override fun onNext(savingsAccountWithAssociations: SavingsAccountWithAssociations?) {

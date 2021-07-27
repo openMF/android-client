@@ -33,7 +33,6 @@
     <string name="default_instance_url" translatable="false">demo.openmf.org</string>
     <string name="review_transaction">Review Transaction</string>
     <string name="amount">Amount</string>
-    <string name="date">Date</string>
     <string name="date_colon">Date:</string>
     <string name="payment_type">Payment Type</string>
     <string name="mifos_instance_domain">Mifos Instance Domain</string>
@@ -41,7 +40,6 @@
     <string name="password">Password</string>
     <string name="mifos" translatable="false">Mifos</string>
     <string name="full_name">Name</string>
-    <string name="account_number">Account Number</string>
     <string name="external_id">External ID</string>
     <string name="loanproduct">Loan Product</string>
     <string name="loantype">Loan Type</string>
@@ -199,7 +197,6 @@
     <string name="no_payment_added">No Payment Added</string>
     <string name="add_payment_detail">Add Payment Detail</string>
     <string name="generate_new">Generate New</string>
-    <string name="currency">Currency</string>
     <string name="Log_in_success">Logged in successfully</string>
     <!-- General Terms End Here -->
 
@@ -333,7 +330,6 @@
     <string name="transaction_failed">Transaction Failed</string>
     <string name="transaction_saved_in_db">Transaction Saved in DB</string>
     <string name="payment_failed">Payment Failed</string>
-    <string name="transaction_type">Transaction Type</string>
     <string name="loan_submission_date">Submission Date</string>
     <string name="total_charges">Total Charges:</string>
     <string name="total_dues">Total Due:</string>
@@ -834,6 +830,9 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+
+    <string name="accounts">Accounts</string>
+
     <string name="dark_mode">Dark Mode</string>
     <string name="ui">UI</string>
     <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
@@ -843,13 +842,6 @@
         <item>Dark</item>
         <item>System Default</item>
     </string-array>
-
-    <string-array name="dark_mode_values"  translatable="false">
-        <item>light</item>
-        <item>dark</item>
-        <item>default</item>
-    </string-array>
-
 
     <!-- About App -->
     <string name="about_app">Field Officer Application is an application
@@ -868,13 +860,18 @@
     <string name="about_license">License</string>
     <string name="about_license_sub">Check Mozilla Public License 2.0</string>
 
+    <string-array name="dark_mode_values"  translatable="false">
+        <item>light</item>
+        <item>dark</item>
+        <item>default</item>
+    </string-array>
+
     <!-- Language -->
     <string name="language">Language</string>
     <string name="language_type" translatable="false">language_type</string>
     <string name="lang_changed">Language Changed</string>
     <string name="lang_change_description">Select the language in which you want to view the app</string>
     <string name="mode_key">dark_mode</string>
-
     <string-array name="language_option" translatable="false">
         <item>Catalan</item>
         <item>English</item>
@@ -885,7 +882,6 @@
         <item>Chinese</item>
         <item>Kannada</item>
     </string-array>
-
     <string-array name="languages_value" translatable="false">
         <item>ca</item>
         <item>en</item>
@@ -896,10 +892,26 @@
         <item>zh</item>
         <item>kn</item>
     </string-array>
-
-
     <string name="passcode">Passcode</string>
     <string name="change_passcode">Change Passcode</string>
     <string name="change_app_passcode">Change App Passcode</string>
+
+    <string name="currency">Currency</string>
+    <string name="account_number">Account Number</string>
+    <string name="saving_account_id">Saving Account Id</string>
+    <string name="running_balance">Running Balance</string>
+    <string name="transaction_type">Transaction Type</string>
+    <string name="date">Date</string>
+    <string name="transaction_id">Transaction Id</string>
+
+
+    <string name="got_it">GOT IT</string>
+    <string name="finish">FINISH</string>
+    <string name="sp_search_intro">Filter out the results using this dropdown</string>
+    <string name="cb_exactMatch_intro">To get the result matching exactly the keyword entered.\n Simply check this box</string>
+    <string name="bt_search_intro">Click this button to make a search.\nClick on three dot icon in top right to create new Client/ Center/ Group or logout.\nExplore the menu by clicking on 3 line icon on top left.</string>
+    <string name="et_search_intro">Enter keyword to search among</string>
+
+    <string name="instance_url">Instance Url</string>
 
 </resources>

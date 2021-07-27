@@ -26,6 +26,7 @@ public class PrefManager {
     private static final String USER_DETAILS = "user_details";
     private static final String PASSCODE = "passcode";
     private static final String PASSCODE_STATUS = "passcode_status";
+    public static final String FIRST_TIME_APP_LAUNCH = "preferences_app_launched";
 
     private static Gson gson = new Gson();
 
@@ -202,5 +203,17 @@ public class PrefManager {
      */
     public static Boolean getPassCodeStatus() {
         return getBoolean(PASSCODE_STATUS, false);
+    }
+
+    /**
+     * @return true if app is launched is first time and set the value to
+     * false which is returned whenever next time it is called
+     */
+    public  static Boolean isAppFirstTimeLaunched() {
+        Boolean result = getBoolean(FIRST_TIME_APP_LAUNCH, true);
+        if (result) {
+            putBoolean(FIRST_TIME_APP_LAUNCH, false);
+        }
+        return result;
     }
 }

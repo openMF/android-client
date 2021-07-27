@@ -9,15 +9,19 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.fragment.app.DialogFragment
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 import com.mifos.api.model.RequestCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.dialogfragments.collectionsheetdialog.CollectionSheetDialogFragment
+import com.mifos.mifosxdroid.dialogfragments.searchdialog.SearchDialog
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
+import com.mifos.mifosxdroid.views.CustomSpinner
+import com.mifos.mifosxdroid.views.CustomSpinner.OnSpinnerEventsListener
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
@@ -26,6 +30,7 @@ import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import java.util.*
 import javax.inject.Inject
+
 
 /**
  * Created by aksh on 18/6/18.
@@ -37,15 +42,19 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     @JvmField
     @BindView(R.id.sp_office_list)
-    var spOffices: Spinner? = null
+    var spOffices: CustomSpinner? = null
 
     @JvmField
     @BindView(R.id.sp_staff_list)
-    var spStaff: Spinner? = null
+    var spStaff: CustomSpinner? = null
 
     @JvmField
     @BindView(R.id.tv_repayment_date)
     var tvRepaymentDate: TextView? = null
+
+    @JvmField
+    @BindView(R.id.btn_clear)
+    var btnClear: Button? = null
 
     @JvmField
     @Inject
@@ -66,6 +75,10 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     private var success = true
     private var actualDisbursementDate: String? = null
     private var transactionDate: String? = null
+
+    private var officeSearchDialog: SearchDialog? = null
+    private var staffSearchDialog: SearchDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
@@ -101,6 +114,43 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         tvRepaymentDate!!.setOnClickListener(this)
         btnFetchSheet!!.setOnClickListener(this)
         presenter!!.fetchOffices()
+
+        spOffices!!.setSpinnerEventsListener(object : OnSpinnerEventsListener {
+            override fun onSpinnerOpened(spinner: Spinner, isItemListLarge: Boolean) {
+                if (isItemListLarge) {
+                    enableOfficeSearch()
+                }
+            }
+
+            override fun onSpinnerClosed(spinner: Spinner) {}
+        })
+
+        spStaff!!.setSpinnerEventsListener(object : OnSpinnerEventsListener {
+            override fun onSpinnerOpened(spinner: Spinner, isItemListLarge: Boolean) {
+                if (isItemListLarge) {
+                    enableStaffSearch()
+                }
+            }
+
+            override fun onSpinnerClosed(spinner: Spinner) {}
+        })
+
+    }
+
+    fun enableOfficeSearch() {
+        if (officeSearchDialog == null) {
+            val listener = AdapterView.OnItemClickListener { adapterView, view, i, l -> spOffices!!.setSelection(i) }
+            officeSearchDialog = SearchDialog(requireContext(), officeNameList, listener)
+        }
+        officeSearchDialog!!.show()
+    }
+
+    fun enableStaffSearch() {
+        if (staffSearchDialog == null) {
+            val listener = AdapterView.OnItemClickListener { adapterView, view, i, l -> spStaff!!.setSelection(i) }
+            staffSearchDialog = SearchDialog(requireContext(), staffNameList, listener)
+        }
+        staffSearchDialog!!.show()
     }
 
     fun setRepaymentDate() {
@@ -229,6 +279,13 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             R.id.tv_repayment_date -> setTvRepaymentDate()
             R.id.btn_fetch_collection_sheet -> retrieveCollectionSheet()
         }
+    }
+
+    @OnClick(R.id.btn_clear)
+    fun clear() {
+        spOffices!!.adapter = null
+        spStaff!!.adapter = null
+        setUpUi()
     }
 
     companion object {

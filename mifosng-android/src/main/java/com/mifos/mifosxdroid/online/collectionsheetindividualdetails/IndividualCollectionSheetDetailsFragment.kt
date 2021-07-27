@@ -103,10 +103,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
             }
         }
         val layoutManager = LinearLayoutManager(context)
-        val dividerItemDecoration = DividerItemDecoration(
-                recyclerSheets!!.context, layoutManager.orientation)
         recyclerSheets!!.layoutManager = layoutManager
-        recyclerSheets!!.addItemDecoration(dividerItemDecoration)
         recyclerSheets!!.adapter = sheetsAdapter
         sheetsAdapter!!.setSheetItemClickListener(this)
         sheetsAdapter!!.setLoans(loansAndClientNames)

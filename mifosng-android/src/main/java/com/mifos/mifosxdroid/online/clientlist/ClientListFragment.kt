@@ -183,7 +183,7 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
     @OnClick(R.id.fab_create_client)
     fun onClickCreateNewClient() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewClientFragment.newInstance(),
-                true, R.id.container)
+                true, R.id.container_a)
     }
 
     /**

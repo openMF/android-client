@@ -4,7 +4,7 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -14,7 +14,9 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_clients"
@@ -33,6 +35,7 @@
         android:id="@+id/pb_client"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -41,11 +44,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_add_white_24dp"/>
+        android:layout_alignParentBottom="true"
+        app:srcCompat="@drawable/ic_add_white_24dp"
+        android:layout_alignParentRight="true" />
 
     <include
         layout="@layout/layout_sweet_exception_handler"
         android:visibility="gone"
         android:id="@+id/layout_error"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

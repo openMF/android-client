@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="@dimen/default_padding"
     android:layout_marginEnd="@dimen/default_padding"
     android:id="@+id/rl_client">
@@ -20,10 +20,12 @@
                     android:layout_marginTop="@dimen/marginItemsInSectionSmall"
                     android:layout_gravity="center">
 
+
                     <com.mifos.mifosxdroid.views.CircularImageView
                         android:id="@+id/iv_clientImage"
                         style="@style/ClientImage"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        tools:src="@drawable/ic_launcher"/>
 
                     <ProgressBar
                         android:id="@+id/pb_imageProgressBar"
@@ -31,16 +33,12 @@
                         android:layout_gravity="center"/>
 
                 </FrameLayout>
-
-                <TextView
-                    android:id="@+id/tv_fullName"
-                    style="@style/TextView.Client"
-                    android:layout_marginBottom="@dimen/marginItemsInSectionSmall"
-                    android:layout_marginTop="@dimen/marginItemsInSectionSmall"
-                    android:layout_gravity="center"/>
-
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_fullName"
+                style="@style/TextView.Client"
+                tools:text="Client Name" />
 
             <TableLayout
                 android:id="@+id/tbl_clientDetails"
@@ -56,7 +54,8 @@
 
                     <TextView
                         android:id="@+id/tv_accountNumber"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value"
+                        tools:text="000000325"/>
                 </TableRow>
 
                 <TableRow
@@ -69,7 +68,8 @@
 
                     <TextView
                         android:id="@+id/tv_externalId"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value"
+                        tools:text="ID-123"/>
                 </TableRow>
 
                 <TableRow
@@ -82,7 +82,8 @@
 
                     <TextView
                         android:id="@+id/tv_activationDate"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value"
+                        tools:text="Nov 16, 2016"/>
                 </TableRow>
 
                 <TableRow
@@ -95,7 +96,8 @@
 
                     <TextView
                         android:id="@+id/tv_office"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value"
+                        tools:text="GROUP AD"/>
                 </TableRow>
 
                 <TableRow
@@ -108,7 +110,8 @@
 
                     <TextView
                         android:id="@+id/tv_mobile_no"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value"
+                        tools:text="1234567890"/>
                 </TableRow>
 
                 <TableRow
@@ -121,7 +124,8 @@
 
                     <TextView
                         android:id="@+id/tv_group"
-                        style="@style/TextView.Row.Value"/>
+                        style="@style/TextView.Row.Value"
+                        tools:text="foodies"/>
                 </TableRow>
 
                 <TableRow
@@ -158,24 +162,44 @@
 
             </TableLayout>
 
+            <LinearLayout style="@style/LinearLayout.Width"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:id="@+id/tv_accountHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/accounts"
+                    android:textStyle="bold"
+                    />
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="2dp"
+                    android:background="@color/primary"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
             <include
                 android:id="@+id/account_accordion_section_loans"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_height="wrap_content" />
 
             <include
                 android:id="@+id/account_accordion_section_savings"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <include
                 android:id="@+id/account_accordion_section_recurring"
                 layout="@layout/view_account_accordion_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>
@@ -188,12 +212,12 @@
         android:visibility="gone"
         android:orientation="horizontal">
 
-       <Button
-           android:id="@+id/btn_activate_client"
-           android:layout_width="match_parent"
-           android:layout_height="50dp"
-           android:text="@string/activate_client"
-           android:background="@color/accent" />
+        <Button
+            android:id="@+id/btn_activate_client"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/activate_client"
+            android:background="@color/accent" />
     </LinearLayout>
 
 </RelativeLayout>

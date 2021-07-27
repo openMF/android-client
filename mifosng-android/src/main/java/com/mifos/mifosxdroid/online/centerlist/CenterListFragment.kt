@@ -97,11 +97,11 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
         centers = ArrayList()
         selectedCenters = ArrayList()
         actionModeCallback = ActionModeCallback()
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_centers_list, container, false)
+        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         ButterKnife.bind(this, rootView)
         mCenterListPresenter!!.attachView(this)
 
@@ -144,7 +144,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
     @OnClick(R.id.fab_create_center)
     fun onClickCreateNewCenter() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewCenterFragment.newInstance(),
-                true, R.id.container)
+                true, R.id.container_a)
     }
 
     /**

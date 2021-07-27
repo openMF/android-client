@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.passcode;
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.SplashScreenActivity
 import com.mifos.mifosxdroid.core.util.Toaster
@@ -38,7 +39,7 @@ class PassCodeActivity : MifosPassCodeActivity() {
         return EncryptionUtil.FINERACT_CN
     }
     override fun startNextActivity() {
-        startActivity(Intent(this, DashboardActivity::class.java))
+        startActivity(Intent(this, HomeActivity::class.java))
     }
 
     override fun onBackPressed() {

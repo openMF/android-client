@@ -59,7 +59,7 @@ public class ChargeNameListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((ViewHolder) holder).tv_charge_amount
                     .setText(pageItems.get(position).getAmount().toString());
             ((ViewHolder) holder).tv_charge_duedate
-                    .setText(pageItems.get(position).getDueDate().toString());
+                    .setText(pageItems.get(position).getFormattedDueDate());
         }
     }
 
