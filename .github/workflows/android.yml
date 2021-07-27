@@ -11,39 +11,116 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-        # Cache dependencies
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.OS }}-gradle-cache-${{ hashFiles('**/build.gradle') }}
-
         # Set up JDK 1.8
-      - name: set up JDK 1.8
+      - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
 
         # Build with Gradle
       - name: Build with Gradle
-        run: chmod +x gradlew && ./gradlew build check
-
-        # Upload Build Reports
-      - name: Upload Reports
-        uses: actions/upload-artifact@v2.2.0
-        with:
-          # Artifact name
-          name: reports
-          # File path describing what artifact to upload
-          path: mifosng-android/build/reports/**
+        run: chmod +x gradlew && ./gradlew assembleDebug
 
         # Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v2.2.0
         with:
           # Artifact name
-          name: android-client
+          name: android-client-app
           # File path describing what artifact to upload
           path: mifosng-android/build/outputs/apk/debug/mifosng-android-debug.apk
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+        # Test with Gradle
+      - name: Test App
+        run: ./gradlew test
+
+        # Upload test reports
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: test-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/tests/**
+
+  lintCheck:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+        # Perform Lint Check
+      - name: Lint Check
+        run: ./gradlew lint
+
+        # Upload reports
+      - name: Upload Lint Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: lint-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/lint-results**
+
+  pmd:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+        # Perform PMD Check
+      - name: PMD Check
+        run: ./gradlew pmd
+
+        # Upload reports
+      - name: Upload PMD Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: pmd-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/pmd/**
+
+  checkstyle:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+        # Perform Checkstyle Check
+      - name: Checkstyle
+        run: ./gradlew checkstyle
+
+        # Upload reports
+      - name: Upload Checkstyle Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: checkstyle-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/checkstyle/**
+
+  findbugs:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+        # Find bugs Check
+      - name: Findbugs
+        run: ./gradlew findbugs
+
+        # Upload reports
+      - name: Upload Checkstyle Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: findbugs-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/findbugs/**
