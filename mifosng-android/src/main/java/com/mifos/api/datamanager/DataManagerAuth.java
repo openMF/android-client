@@ -34,7 +34,7 @@ public class DataManagerAuth {
     public Observable<User> login(String username, String password) {
         sdkBaseApiManager.createService(username, password,
                 PrefManager.INSTANCE.getInstanceUrl(),
-                PrefManager.INSTANCE.getTenant());
+                PrefManager.INSTANCE.getTenant(), false);
         String body = String.format("{\"username\": \"%s\", \"password\": \"%s\"}",
                 username, password);
         return sdkBaseApiManager.getAuthApi().authenticate(true, body)

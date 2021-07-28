@@ -265,7 +265,7 @@ dependencies {
     //preferences
     implementation "androidx.preference:preference:$preference"
 
-    implementation "com.github.openMF:mifos-android-sdk-arch:$mifosSdkVersion"
+    implementation "com.github.openMF:fineract-android-sdk:$mifosSdkVersion"
 }
 
 /*
