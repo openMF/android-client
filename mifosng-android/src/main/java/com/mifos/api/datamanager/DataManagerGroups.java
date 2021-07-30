@@ -4,6 +4,11 @@ import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups;
+import com.mifos.api.mappers.groups.CreateGroupRequestMapper;
+import com.mifos.api.mappers.groups.CreateGroupResponseMapper;
+import com.mifos.api.mappers.groups.GetGroupsGroupIdAccountsMapper;
+import com.mifos.api.mappers.groups.GetGroupsGroupIdMapper;
+import com.mifos.api.mappers.groups.GetPagedGroupsResponseMapper;
 import com.mifos.objects.accounts.GroupAccounts;
 import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
@@ -13,13 +18,14 @@ import com.mifos.objects.group.GroupWithAssociations;
 import com.mifos.objects.response.SaveResponse;
 import com.mifos.utils.PrefManager;
 
+import org.apache.fineract.client.services.GroupsApi;
+
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * This DataManager is for Managing Groups API, In which Request is going to Server
@@ -33,14 +39,21 @@ public class DataManagerGroups {
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelperGroups mDatabaseHelperGroups;
     public final DatabaseHelperClient mDatabaseHelperClient;
+    public final org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager;
 
     @Inject
     public DataManagerGroups(BaseApiManager baseApiManager,
                              DatabaseHelperGroups databaseHelperGroups,
-                             DatabaseHelperClient databaseHelperClient) {
+                             DatabaseHelperClient databaseHelperClient,
+                             org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager) {
         mBaseApiManager = baseApiManager;
         mDatabaseHelperGroups = databaseHelperGroups;
         mDatabaseHelperClient = databaseHelperClient;
+        this.sdkBaseApiManager = sdkBaseApiManager;
+    }
+
+    private GroupsApi getGroupsApi() {
+        return sdkBaseApiManager.getGroupApi();
     }
 
     /**
@@ -61,7 +74,12 @@ public class DataManagerGroups {
     public Observable<Page<Group>> getGroups(boolean paged, int offset, int limit) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getGroupApi().getGroups(paged, offset, limit);
+                return getGroupsApi().retrieveAll24(null, null, null,
+                        null, null, paged,
+                        offset, limit, null,
+                        null, null)
+                .map(GetPagedGroupsResponseMapper.INSTANCE::mapFromEntity);
+                // return mBaseApiManager.getGroupApi().getGroups(paged, offset, limit);
             case 1:
                 /**
                  * offset : is the value from which position we want to fetch the list, It means
@@ -98,7 +116,9 @@ public class DataManagerGroups {
     public Observable<Group> getGroup(int groupId) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getGroupApi().getGroup(groupId);
+                return getGroupsApi().retrieveOne14((long) groupId, null, null)
+                        .map(GetGroupsGroupIdMapper.INSTANCE::mapFromEntity);
+                //return mBaseApiManager.getGroupApi().getGroup(groupId);
             case 1:
                 /**
                  * Return Groups from DatabaseHelperGroups.
@@ -128,6 +148,7 @@ public class DataManagerGroups {
     public Observable<GroupWithAssociations> getGroupWithAssociations(int groupId) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
+                // todo: association query param is missing groups/{groupId}?association=all
                 return mBaseApiManager.getGroupApi().getGroupWithAssociations(groupId);
             case 1:
                 /**
@@ -150,7 +171,9 @@ public class DataManagerGroups {
     public Observable<GroupAccounts> getGroupAccounts(int groupId) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
+                return getGroupsApi().retrieveAccounts((long) groupId)
+                        .map(GetGroupsGroupIdAccountsMapper.INSTANCE::mapFromEntity);
+                // return mBaseApiManager.getGroupApi().getGroupAccounts(groupId);
             case 1:
                 /**
                  * Return Groups from DatabaseHelperGroups.
@@ -170,14 +193,10 @@ public class DataManagerGroups {
      * @return GroupAccounts
      */
     public Observable<GroupAccounts> syncGroupAccounts(final int groupId) {
-        return mBaseApiManager.getGroupApi().getGroupAccounts(groupId)
-                .concatMap(new Func1<GroupAccounts, Observable<? extends GroupAccounts>>() {
-                    @Override
-                    public Observable<? extends GroupAccounts> call(GroupAccounts
-                                                                            groupAccounts) {
-                        return mDatabaseHelperGroups.saveGroupAccounts(groupAccounts, groupId);
-                    }
-                });
+        return getGroupsApi().retrieveAccounts((long) groupId)
+                .map(GetGroupsGroupIdAccountsMapper.INSTANCE::mapFromEntity)
+                .concatMap(groupAccounts ->
+                        mDatabaseHelperGroups.saveGroupAccounts(groupAccounts, groupId));
     }
 
     /**
@@ -190,7 +209,10 @@ public class DataManagerGroups {
     public Observable<SaveResponse> createGroup(GroupPayload groupPayload) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getGroupApi().createGroup(groupPayload);
+                return getGroupsApi().create8(CreateGroupRequestMapper.INSTANCE
+                        .mapToEntity(groupPayload))
+                        .map(CreateGroupResponseMapper.INSTANCE::mapFromEntity);
+                //return mBaseApiManager.getGroupApi().createGroup(groupPayload);
             case 1:
                 /**
                  * Save GroupPayload in Database table.
@@ -242,6 +264,7 @@ public class DataManagerGroups {
      */
     public Observable<GenericResponse> activateGroup(int groupId,
                                                       ActivatePayload activatePayload) {
+        // todo: documentation defer
         return mBaseApiManager.getGroupApi().activateGroup(groupId, activatePayload);
     }
 }

@@ -2,6 +2,7 @@ package com.mifos.api.mappers.accounts.loan
 
 import com.mifos.objects.accounts.loan.Status
 import org.apache.fineract.client.models.GetClientsLoanAccountsStatus
+import org.apache.fineract.client.models.GetGroupsGroupIdAccountsStatus
 import org.mifos.core.data.AbstractMapper
 
 object LoanAccStatusMapper: AbstractMapper<GetClientsLoanAccountsStatus, Status>() {
@@ -34,6 +35,22 @@ object LoanAccStatusMapper: AbstractMapper<GetClientsLoanAccountsStatus, Status>
             closedRescheduled = domainModel.closedRescheduled
             closed = domainModel.closed
             overpaid = domainModel.overpaid
+        }
+    }
+
+    fun mapFromEntity(entity: GetGroupsGroupIdAccountsStatus): Status {
+        return Status().apply {
+            id = entity.id
+            code = entity.code
+            value = entity.description
+            pendingApproval = entity.pendingApproval
+            waitingForDisbursal = entity.waitingForDisbursal
+            active = entity.active
+            closedObligationsMet = entity.closedObligationsMet
+            closedWrittenOff = entity.closedWrittenOff
+            closedRescheduled = entity.closedRescheduled
+            closed = entity.closed
+            overpaid = entity.overpaid
         }
     }
 }

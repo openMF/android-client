@@ -2,6 +2,7 @@ package com.mifos.api.mappers.accounts.loan
 
 import com.mifos.objects.accounts.loan.LoanType
 import org.apache.fineract.client.models.GetClientsLoanAccountsType
+import org.apache.fineract.client.models.GetGroupsGroupIdAccountsLoanType
 import org.mifos.core.data.AbstractMapper
 
 object LoanAccTypeMapper: AbstractMapper<GetClientsLoanAccountsType, LoanType>() {
@@ -18,6 +19,14 @@ object LoanAccTypeMapper: AbstractMapper<GetClientsLoanAccountsType, LoanType>()
             id = domainModel.id
             code = domainModel.code
             description = domainModel.value
+        }
+    }
+
+    fun mapFromEntity(entity: GetGroupsGroupIdAccountsLoanType): LoanType {
+        return LoanType().apply {
+            id = entity.id
+            code = entity.code
+            value = entity.description
         }
     }
 }
