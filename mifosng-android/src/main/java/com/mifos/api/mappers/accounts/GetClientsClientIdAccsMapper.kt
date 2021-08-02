@@ -10,7 +10,9 @@ object GetClientsClientIdAccsMapper: AbstractMapper<GetClientsClientIdAccountsRe
     override fun mapFromEntity(entity: GetClientsClientIdAccountsResponse): ClientAccounts {
         return ClientAccounts().apply {
             savingsAccounts = entity.savingsAccounts?.let { SavingsAccMapper.mapFromEntityList(it) }
+                ?: listOf()
             loanAccounts = entity.loanAccounts?.let { LoanAccMapper.mapFromEntityList(it) }
+                ?: listOf()
         }
     }
 

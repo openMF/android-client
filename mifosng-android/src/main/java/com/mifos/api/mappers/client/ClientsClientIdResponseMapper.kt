@@ -24,7 +24,7 @@ object ClientsClientIdResponseMapper: AbstractMapper<GetClientsClientIdResponse,
                 code = entity.status!!.code
                 value = entity.status!!.description
             }
-            activationDate = entity.activationDate!!.toArray()
+            activationDate = entity.activationDate?.let { it.toArray() } ?: listOf()
         }
     }
 
