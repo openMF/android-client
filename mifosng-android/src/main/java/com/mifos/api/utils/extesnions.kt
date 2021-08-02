@@ -1,5 +1,6 @@
 package com.mifos.api.utils
 
+import java.lang.IndexOutOfBoundsException
 import java.util.*
 
 fun Date.toArray(): List<Int> {
@@ -12,6 +13,13 @@ fun Date.toIntArray(): IntArray {
         it.plus(this.month)
         it.plus(this.date)
     }
+}
+
+fun List<Int>.toDate(): Date {
+    if(size < 3) {
+        throw IndexOutOfBoundsException()
+    }
+    return Date(get(0), get(1), get(2))
 }
 
 fun IntArray.toDate(): Date {

@@ -2,6 +2,7 @@ package com.mifos.api.mappers.accounts.savings
 
 import com.mifos.objects.accounts.savings.Status
 import org.apache.fineract.client.models.GetClientsSavingsAccountsStatus
+import org.apache.fineract.client.models.GetGroupsGroupIdAccountsSavingStatus
 import org.mifos.core.data.AbstractMapper
 
 object SavingsAccStatusMapper: AbstractMapper<GetClientsSavingsAccountsStatus, Status>() {
@@ -30,6 +31,20 @@ object SavingsAccStatusMapper: AbstractMapper<GetClientsSavingsAccountsStatus, S
             withdrawnByApplicant = domainModel.withdrawnByApplicant
             active = domainModel.active
             closed = domainModel.closed
+        }
+    }
+
+    fun mapFromEntity(entity: GetGroupsGroupIdAccountsSavingStatus): Status {
+        return Status().apply {
+            id = entity.id
+            code = entity.code
+            value = entity.description
+            submittedAndPendingApproval = entity.submittedAndPendingApproval
+            approved = entity.approved
+            rejected = entity.rejected
+            withdrawnByApplicant = entity.withdrawnByApplicant
+            active = entity.active
+            closed = entity.closed
         }
     }
 }
