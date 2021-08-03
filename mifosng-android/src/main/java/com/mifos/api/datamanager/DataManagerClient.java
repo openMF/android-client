@@ -446,6 +446,8 @@ public class DataManagerClient {
             response.setResponseFields(map);
             return response;
         });*/
+        // todo: this is work around to make older request work, changing YYYY to yyyy
+        clientActivate.setDateFormat("dd MMMM yyyy");
         return mBaseApiManager.getClientsApi().activateClient(clientId, clientActivate);
     }
 }

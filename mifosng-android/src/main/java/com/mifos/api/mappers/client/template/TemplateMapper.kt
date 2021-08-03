@@ -11,18 +11,18 @@ object TemplateMapper: AbstractMapper<GetClientsTemplateResponse, ClientsTemplat
         return ClientsTemplate().apply {
             activationDate = entity.activationDate!!.toIntArray()
             officeId = entity.officeId!!
-            officeOptions = entity.officeOptions?.let { OfficeOptionMapper.mapFromEntityList(it) }
-            staffOptions = entity.staffOptions?.let { StaffOptionMapper.mapFromEntityList(it) }
+            officeOptions = entity.officeOptions?.let { OfficeOptionMapper.mapFromEntityList(it) } ?:  listOf()
+            staffOptions = entity.staffOptions?.let { StaffOptionMapper.mapFromEntityList(it) } ?:  listOf()
             savingProductOptions = entity.savingProductOptions?.let {
                 SavingProductOptionMapper.mapFromEntityList(
                     it
                 )
-            }
+            } ?:  listOf()
             genderOptions = listOf()
             clientTypeOptions = listOf()
             clientClassificationOptions = listOf()
             clientLegalFormOptions = listOf()
-            dataTables = entity.datatables?.let { ClientDataTableMapper.mapFromEntityList(it) }
+            dataTables = entity.datatables?.let { ClientDataTableMapper.mapFromEntityList(it) } ?:  listOf()
         }
     }
 
