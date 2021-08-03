@@ -24,14 +24,16 @@ public class DataManagerCharge {
 
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelperCharge mDatabaseHelperCharge;
+    public final org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager;
 
     @Inject
     public DataManagerCharge(BaseApiManager baseApiManager,
-                             DatabaseHelperCharge databaseHelperCharge) {
+                             DatabaseHelperCharge databaseHelperCharge,
+                             org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager) {
         mBaseApiManager = baseApiManager;
         mDatabaseHelperCharge = databaseHelperCharge;
+        this.sdkBaseApiManager = sdkBaseApiManager;
     }
-
 
     /**
      * This Method Request the Charge API at
@@ -47,6 +49,7 @@ public class DataManagerCharge {
     public Observable<Page<Charges>> getClientCharges(final int clientId, int offset, int limit) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
+                // todo: missing endpoint clients/{clientId}/charges
                 return mBaseApiManager.getChargeApi().getListOfCharges(clientId, offset, limit)
                         .concatMap(new Func1<Page<Charges>, Observable<? extends Page<Charges>>>() {
                             @Override

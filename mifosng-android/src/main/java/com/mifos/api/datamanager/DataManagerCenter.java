@@ -3,6 +3,9 @@ package com.mifos.api.datamanager;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter;
+import com.mifos.api.mappers.centers.GetCentersCenterIdResponseMapper;
+import com.mifos.api.mappers.centers.GetCentersResponseMapper;
+import com.mifos.api.mappers.office.GetOfficeResponseMapper;
 import com.mifos.objects.accounts.CenterAccounts;
 import com.mifos.objects.client.ActivatePayload;
 import com.mifos.objects.client.Page;
@@ -13,13 +16,15 @@ import com.mifos.objects.response.SaveResponse;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.PrefManager;
 
+import org.apache.fineract.client.services.CentersApi;
+import org.apache.fineract.client.services.OfficesApi;
+
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server
@@ -32,14 +37,24 @@ public class DataManagerCenter {
 
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelperCenter mDatabaseHelperCenter;
+    public final org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager;
 
     @Inject
     public DataManagerCenter(BaseApiManager baseApiManager,
-                             DatabaseHelperCenter databaseHelperCenter) {
+                             DatabaseHelperCenter databaseHelperCenter,
+                             org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager) {
         mBaseApiManager = baseApiManager;
         mDatabaseHelperCenter = databaseHelperCenter;
+        this.sdkBaseApiManager = sdkBaseApiManager;
     }
 
+    private CentersApi getCentersApi() {
+        return sdkBaseApiManager.getCenterApi();
+    }
+
+    private OfficesApi getOfficeApi() {
+        return sdkBaseApiManager.getOfficeApi();
+    }
 
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -59,8 +74,11 @@ public class DataManagerCenter {
     public Observable<Page<Center>> getCenters(boolean paged, int offset, int limit) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getCenterApi().getCenters(paged, offset, limit);
-
+                return getCentersApi().retrieveAll23(null, null, null,
+                        null, null, paged,
+                        offset, limit, null,
+                        null, null, null, null)
+                .map(GetCentersResponseMapper.INSTANCE::mapFromEntity);
             case 1:
                 /**
                  * Return All Centers List from DatabaseHelperCenter only one time.
@@ -93,14 +111,10 @@ public class DataManagerCenter {
      * @return CenterAccounts
      */
     public Observable<CenterAccounts> syncCenterAccounts(final int centerId) {
-        return mBaseApiManager.getCenterApi().getCenterAccounts(centerId)
-                .concatMap(new Func1<CenterAccounts, Observable<? extends CenterAccounts>>() {
-                    @Override
-                    public Observable<? extends CenterAccounts> call(CenterAccounts
-                                                                             centerAccounts) {
-                        return mDatabaseHelperCenter.saveCenterAccounts(centerAccounts, centerId);
-                    }
-                });
+        return getCentersApi().retrieveGroupAccount((long) centerId)
+                .map(GetCentersCenterIdResponseMapper.INSTANCE::mapFromEntity)
+                .concatMap(centerAccounts ->
+                        mDatabaseHelperCenter.saveCenterAccounts(centerAccounts, centerId));
     }
 
     /**
@@ -120,6 +134,7 @@ public class DataManagerCenter {
     public Observable<SaveResponse> createCenter(CenterPayload centerPayload) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
+                // todo: activationDate,dateFormat,locale etc. fields missing in PostCentersRequest
                 return mBaseApiManager.getCenterApi().createCenter(centerPayload);
             case 1:
                 /**
@@ -140,6 +155,7 @@ public class DataManagerCenter {
     public Observable<CenterWithAssociations> getCenterWithAssociations(int centerId) {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
+                // todo: centers/{centerId}?association endpoint missing
                 return mBaseApiManager.getCenterApi().getAllGroupsForCenter(centerId);
             case 1:
                 /**
@@ -163,7 +179,8 @@ public class DataManagerCenter {
     }
 
     public Observable<List<Office>> getOffices() {
-        return mBaseApiManager.getOfficeApi().getAllOffices();
+        return getOfficeApi().retrieveOffices(null, null, null)
+                .map(GetOfficeResponseMapper.INSTANCE::mapFromEntityList);
     }
 
     /**
@@ -205,6 +222,23 @@ public class DataManagerCenter {
      */
     public Observable<GenericResponse> activateCenter(int centerId,
                                                       ActivatePayload activatePayload) {
+        /**
+         * todo: miss match body fields
+         *
+         * In Swagger(not working): {
+         *   "closureReasonId": 32,
+         *   "closureDate": "05 May 2014",
+         *   "locale": "en",
+         *   "dateFormat": "dd MMMM yyyy"
+         * }
+         *
+         * In Html Doc(working): {
+         *   "locale": "en",
+         *   "dateFormat": "dd MMMM yyyy",
+         *   "activationDate": "01 March 2011"
+         * }
+         *
+         */
         return mBaseApiManager.getCenterApi().activateCenter(centerId, activatePayload);
     }
 }
