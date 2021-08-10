@@ -2,11 +2,16 @@ package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.local.databasehelper.DatabaseHelperSurveys;
+import com.mifos.api.mappers.survey.ScorecardDataMapper;
+import com.mifos.api.mappers.survey.SurveyDataMapper;
 import com.mifos.objects.survey.QuestionDatas;
 import com.mifos.objects.survey.ResponseDatas;
 import com.mifos.objects.survey.Scorecard;
 import com.mifos.objects.survey.Survey;
 import com.mifos.utils.PrefManager;
+import org.apache.fineract.client.models.ScorecardData;
+import org.apache.fineract.client.services.ScoreCardApi;
+import org.apache.fineract.client.services.SpmSurveysApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +32,24 @@ public class DataManagerSurveys {
 
     public final BaseApiManager mBaseApiManager;
     public final DatabaseHelperSurveys mDatabaseHelperSurveys;
+    public final org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager;
 
     @Inject
     public DataManagerSurveys(BaseApiManager baseApiManager,
-                              DatabaseHelperSurveys databaseHelperSurveys) {
+                              DatabaseHelperSurveys databaseHelperSurveys,
+                              org.mifos.core.apimanager.BaseApiManager sdkBaseApiManager) {
         mBaseApiManager = baseApiManager;
         mDatabaseHelperSurveys = databaseHelperSurveys;
+        this.sdkBaseApiManager = sdkBaseApiManager;
     }
 
+    private SpmSurveysApi getSurveyApi() {
+        return sdkBaseApiManager.getSurveyApi();
+    }
+
+    private ScoreCardApi getScoreCardApi() {
+        return sdkBaseApiManager.getClient().surveyScorecards;
+    }
 
     /**
      * This Method sending the Request to REST API :
@@ -46,7 +61,9 @@ public class DataManagerSurveys {
     public Observable<List<Survey>> getAllSurvey() {
         switch (PrefManager.INSTANCE.getUserStatus()) {
             case 0:
-                return mBaseApiManager.getSurveyApi().getAllSurveys();
+                return getSurveyApi().fetchAllSurveys1(null)
+                        .map(SurveyDataMapper.INSTANCE::mapFromEntityList);
+                //return mBaseApiManager.getSurveyApi().getAllSurveys();
             case 1:
                 return mDatabaseHelperSurveys.readAllSurveys();
             default:
@@ -94,7 +111,10 @@ public class DataManagerSurveys {
      * @return Scorecard
      */
     public Observable<Scorecard> submitScore(int surveyId, Scorecard scorecardPayload) {
-        return mBaseApiManager.getSurveyApi().submitScore(surveyId, scorecardPayload);
+        ScorecardData sdkPayload = ScorecardDataMapper.INSTANCE.mapToEntity(scorecardPayload);
+        return getScoreCardApi().createScorecard1((long) surveyId, sdkPayload)
+        .map(unused -> scorecardPayload);
+        //return mBaseApiManager.getSurveyApi().submitScore(surveyId, scorecardPayload);
     }
 
     public Observable<Survey> getSurvey(int surveyId) {
