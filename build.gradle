@@ -26,5 +26,5 @@ ext {
     butterKnifeVersion = '8.0.1'
     mifosPasscodeVersion = '0.3.0'
     preference = '1.1.0'
-    mifosSdkVersion = '1.0.0'
+    mifosSdkVersion = '1.0.1'
 }

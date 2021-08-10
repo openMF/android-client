@@ -4,6 +4,7 @@ import com.mifos.api.BaseApiManager;
 import com.mifos.api.GenericResponse;
 import com.mifos.api.local.databasehelper.DatabaseHelperClient;
 import com.mifos.api.mappers.accounts.GetClientsClientIdAccsMapper;
+import com.mifos.api.mappers.client.ClientActivatingRequestMapper;
 import com.mifos.api.mappers.client.ClientsClientIdResponseMapper;
 import com.mifos.api.mappers.client.GetClientResponseMapper;
 import com.mifos.api.mappers.client.PostClientRequestMapper;
@@ -29,6 +30,7 @@ import com.mifos.objects.templates.clients.ClientsTemplate;
 import com.mifos.utils.PrefManager;
 
 import org.apache.fineract.client.models.PostClientsClientIdIdentifiersRequest;
+import org.apache.fineract.client.models.PostClientsClientIdRequest;
 import org.apache.fineract.client.models.PostClientsRequest;
 import org.apache.fineract.client.services.ClientApi;
 import org.apache.fineract.client.services.ClientIdentifierApi;
@@ -433,21 +435,16 @@ public class DataManagerClient {
      */
     public Observable<GenericResponse> activateClient(int clientId,
                                                       ActivatePayload clientActivate) {
-        /*PostClientsClientIdRequest request = new PostClientsClientIdRequest();
-        request
-        .setNote("We cannot accept transfers of clients having loans with
-        less than 1 repayment left");
-        return getClientApi().activate1((long)clientId, request, "activate")
-        .map(it -> {
-            HashMap map = new HashMap<String, Object>();
-            map.put("clientId", it);
-            map.put("resourceId", it);
-            GenericResponse response = new GenericResponse();
-            response.setResponseFields(map);
-            return response;
-        });*/
-        // todo: this is work around to make older request work, changing YYYY to yyyy
-        clientActivate.setDateFormat("dd MMMM yyyy");
-        return mBaseApiManager.getClientsApi().activateClient(clientId, clientActivate);
+
+        PostClientsClientIdRequest request = ClientActivatingRequestMapper.INSTANCE
+                .mapToEntity(clientActivate);
+        return getClientApi().activate1((long) clientId, request, "activate").map(it -> {
+                HashMap map = new HashMap<String, Object>();
+                map.put("clientId", it);
+                map.put("resourceId", it);
+                GenericResponse response = new GenericResponse();
+                response.setResponseFields(map);
+                return response;
+            });
     }
 }

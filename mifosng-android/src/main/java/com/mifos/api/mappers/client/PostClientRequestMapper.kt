@@ -1,8 +1,11 @@
 package com.mifos.api.mappers.client
 
 import com.mifos.objects.client.ClientPayload
+import com.mifos.objects.noncore.DataTablePayload
+import org.apache.fineract.client.models.PostClientsDatatable
 import org.apache.fineract.client.models.PostClientsRequest
 import org.mifos.core.data.AbstractMapper
+import java.util.HashMap
 
 object PostClientRequestMapper: AbstractMapper<PostClientsRequest, ClientPayload>() {
     override fun mapFromEntity(entity: PostClientsRequest): ClientPayload {
@@ -14,6 +17,10 @@ object PostClientRequestMapper: AbstractMapper<PostClientsRequest, ClientPayload
             locale = entity.locale
             activationDate = entity.activationDate
             isActive = entity.active!!
+            datatables = entity.datatables?.let { it.map { DataTablePayload().apply {
+                registeredTableName = it.registeredTableName
+                data = it.data as HashMap<String, Any>?
+            } } }
         }
     }
 
@@ -27,6 +34,10 @@ object PostClientRequestMapper: AbstractMapper<PostClientsRequest, ClientPayload
             activationDate = domainModel.activationDate
             active = domainModel.isActive
             groupId = 1
+            datatables = domainModel.datatables?.let { it.map { PostClientsDatatable().apply {
+                registeredTableName = it.registeredTableName
+                data = it.data as HashMap<String, Any>?
+            } } }
         }
     }
 
