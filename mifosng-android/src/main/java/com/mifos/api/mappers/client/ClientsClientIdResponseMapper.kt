@@ -31,7 +31,7 @@ object ClientsClientIdResponseMapper: AbstractMapper<GetClientsClientIdResponse,
     override fun mapToEntity(domainModel: Client): GetClientsClientIdResponse {
         return GetClientsClientIdResponse().apply {
             id = domainModel.id
-            accountNo = domainModel.accountNo.toLong()
+            accountNo = domainModel.accountNo
             firstname = domainModel.fullname.split(" ")[0]
             lastname = domainModel.fullname.split(" ")[1]
             displayName = domainModel.displayName

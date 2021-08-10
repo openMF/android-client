@@ -5,6 +5,8 @@ import com.mifos.api.mappers.UserMapper;
 import com.mifos.objects.user.User;
 import com.mifos.utils.PrefManager;
 
+import org.apache.fineract.client.models.PostAuthenticationRequest;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -35,9 +37,10 @@ public class DataManagerAuth {
         sdkBaseApiManager.createService(username, password,
                 PrefManager.INSTANCE.getInstanceUrl(),
                 PrefManager.INSTANCE.getTenant(), false);
-        String body = String.format("{\"username\": \"%s\", \"password\": \"%s\"}",
-                username, password);
-        return sdkBaseApiManager.getAuthApi().authenticate(true, body)
+        PostAuthenticationRequest body = new PostAuthenticationRequest();
+        body.setUsername(username);
+        body.setPassword(password);
+        return sdkBaseApiManager.getAuthApi().authenticate(body, true)
                 .map(UserMapper.INSTANCE::mapFromEntity);
     }
 }
