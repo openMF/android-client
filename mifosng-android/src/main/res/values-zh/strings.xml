@@ -6,7 +6,7 @@
 <resources>
 
     <!-- General Terms Begin Here -->
-    <string name="app_name">MifosXDroid</string>
+    <string name="app_name">Graviton</string>
     <string name="mifos_account">Mifos 账户</string>
     <string name="enter_credentials"><b>请输入您的凭证。</b></string>
     <string name="datatables">数据表</string>

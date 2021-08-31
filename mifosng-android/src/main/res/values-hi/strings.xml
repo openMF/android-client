@@ -542,7 +542,7 @@
         <item>loans</item>
         <item>savingsaccounts</item>
     </string-array>
-    <string name="app_name">MifosXDroid</string>
+    <string name="app_name">Graviton</string>
     <string name="loan_charges_due">ऋण प्रभार की देय तिथि</string>
     <string name="all_centers_synced">सभी केंद्र सिंक कर दिये गये हैं</string>
     <string name="failed_to_load_centerpayload">सेंटर पेलोड लोड करने में विफल</string>

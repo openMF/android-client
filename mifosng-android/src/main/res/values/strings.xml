@@ -6,8 +6,8 @@
 <resources>
 
     <!-- General Terms Begin Here -->
-    <string name="app_name">MifosXDroid</string>
-    <string name="mifos_account">Mifos Account</string>
+    <string name="app_name">Graviton</string>
+    <string name="mifos_account">Graviton</string>
     <string name="enter_credentials"><b>Please enter your credentials.</b></string>
     <string name="datatables">DataTable</string>
     <string name="associated_datatables">Associated Datatables</string>
@@ -35,7 +35,7 @@
     <string name="amount">Amount</string>
     <string name="date_colon">Date:</string>
     <string name="payment_type">Payment Type</string>
-    <string name="mifos_instance_domain">Mifos Instance Domain</string>
+    <string name="mifos_instance_domain">Graviton Instance Domain</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="mifos" translatable="false">Mifos</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MifosXDroid</string>
+    <string name="app_name">Graviton</string>
     <string name="savings_interest_earned">Intérêt Gagné</string>
     <string name="sync">Synchroniser</string>
     <string name="enter_center_id">ID de Centre</string>

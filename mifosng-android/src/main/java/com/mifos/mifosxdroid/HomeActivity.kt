@@ -147,10 +147,10 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 intent.setClass(this, CheckerInboxPendingTasksActivity::class.java);
                 startActivity(intent);
             }
-            R.id.item_path_tracker -> {
-                intent.setClass(applicationContext, PathTrackingActivity::class.java)
-                startNavigationClickActivity(intent)
-            }
+//            R.id.item_path_tracker -> {
+//                intent.setClass(applicationContext, PathTrackingActivity::class.java)
+//                startNavigationClickActivity(intent)
+//            }
             R.id.item_offline -> {
                 replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container_a)
                 supportActionBar!!.setTitle(R.string.offline)

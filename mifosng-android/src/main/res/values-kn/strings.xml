@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MifosXDroid</string>
+    <string name="app_name">Graviton</string>
     <string name="account_number">ಖಾತೆ ಸಂಖ್ಯೆ</string>
     <string name="action_save_location">ಸ್ಥಳವನ್ನು ಉಳಿಸಿ</string>
     <string name="action_settings">ಸೆಟ್ಟಿಂಗ್ಗಳು</string>

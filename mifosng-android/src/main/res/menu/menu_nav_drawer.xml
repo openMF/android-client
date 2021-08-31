@@ -32,12 +32,12 @@
             android:title="@string/run_report"
             />
                 
-        <item
-            android:id="@+id/item_path_tracker"
-            android:checked="false"
-            android:icon="@drawable/ic_path_tracker"
-            android:title="@string/path_tracker"
-            />
+<!--        <item-->
+<!--            android:id="@+id/item_path_tracker"-->
+<!--            android:checked="false"-->
+<!--            android:icon="@drawable/ic_path_tracker"-->
+<!--            android:title="@string/path_tracker"-->
+<!--            />-->
 
         <item
             android:id="@+id/item_settings"

@@ -202,7 +202,8 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
         when (adapterView.id) {
-            R.id.sp_office_list -> if (i == officeList!!.size || i == 0) {
+//            R.id.sp_office_list -> if (i == officeList!!.size || i == 0) {
+            R.id.sp_office_list -> if (i == 0) {
                 Toaster.show(rootView, getStringMessage(R.string.error_select_office))
             } else {
                 Toaster.show(rootView, officeNameList!![i])

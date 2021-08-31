@@ -6,7 +6,7 @@
 <resources>
 
     <!-- General Terms Begin Here -->
-    <string name="app_name">MifosXDroid</string>
+    <string name="app_name">Graviton</string>
     <string name="mifos_account">Akaunti ya Mifos</string>
     <string name="enter_credentials"><b>Tafadhali ingiza vitambulisho vyako.</b></string>
     <string name="datatables">Meza ya Data</string>

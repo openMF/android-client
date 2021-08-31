@@ -160,21 +160,21 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         inflater.inflate(R.menu.menu_login, menu);
         return true;
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.mItem_connection_settings:
-                ll_connectionSettings.setVisibility(
-                        ll_connectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
-
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle item selection
+//        switch (item.getItemId()) {
+//            case R.id.mItem_connection_settings:
+//                ll_connectionSettings.setVisibility(
+//                        ll_connectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
+//
+//
+//                return true;
+//
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
 
     @Override
