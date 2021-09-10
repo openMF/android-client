@@ -12,6 +12,7 @@
     <string name="search">Search</string>
     <string name="group_name">Group Name</string>
     <string name="staff_name">Staff Name</string>
+    <string name="client_address">Address</string>
     <string name="level_name">Level Name</string>
     <string name="offline">Offline Sync *</string>
     <string name="client_search_hint">Client name or ID</string>

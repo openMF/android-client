@@ -12,6 +12,7 @@
     <string name="datatables">Tableaux des données</string>
     <string name="login">S\'identifier</string>
     <string name="search">Chercher</string>
+    <string name="client_address">Address</string>
     <string name="group_name">Nom de Groupe</string>
     <string name="staff_name">Nom de personnel</string>
     <string name="level_name">Nom de niveau</string>

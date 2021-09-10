@@ -1,7 +1,11 @@
 package com.mifos.mifosxdroid.online.clientdetails
 
+import com.google.gson.JsonArray
+import com.mifos.api.BaseApiManager
 import com.mifos.api.datamanager.DataManagerClient
 import com.mifos.api.datamanager.DataManagerDataTable
+import com.mifos.api.local.databasehelper.DatabaseHelperDataTable
+import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.zipmodels.ClientAndClientAccounts
 import okhttp3.MediaType
@@ -13,6 +17,7 @@ import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import rx.subscriptions.CompositeSubscription
 import java.io.File
 import javax.inject.Inject
 
@@ -22,6 +27,9 @@ import javax.inject.Inject
 class ClientDetailsPresenter @Inject constructor(private val mDataManagerDataTable: DataManagerDataTable,
                                                  private val mDataManagerClient: DataManagerClient) : BasePresenter<ClientDetailsMvpView?>() {
     private var mSubscription: Subscription? = null
+    private val subscriptions = CompositeSubscription()
+    var jsonElem = JsonArray()
+
     override fun attachView(mvpView: ClientDetailsMvpView?) {
         super.attachView(mvpView)
     }
@@ -29,6 +37,7 @@ class ClientDetailsPresenter @Inject constructor(private val mDataManagerDataTab
     override fun detachView() {
         super.detachView()
         if (mSubscription != null) mSubscription!!.unsubscribe()
+        subscriptions.unsubscribe()
     }
 
     fun uploadImage(id: Int, pngFile: File) {
@@ -79,6 +88,28 @@ class ClientDetailsPresenter @Inject constructor(private val mDataManagerDataTab
                 })
     }
 
+    fun loadDataTableInfo(table: String?, entityId: Int) {
+        checkViewAttached()
+        mvpView!!.showProgressbar(true)
+        subscriptions.add(mDataManagerDataTable.getDataTableInfo(table, entityId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<JsonArray?>() {
+                override fun onCompleted() {
+                    mvpView!!.showProgressbar(false)
+                }
+                override fun onError(e: Throwable) {
+                }
+                override fun onNext(jsonElements: JsonArray?) {
+                    mvpView!!.showProgressbar(false)
+                    if (jsonElements!!.size() == 0) {
+                    } else {
+                        mvpView!!.showDataTableInfo(jsonElements)
+                    }
+                }
+            }))
+    }
+
     fun loadClientDetailsAndClientAccounts(clientId: Int) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
@@ -103,6 +134,10 @@ class ClientDetailsPresenter @Inject constructor(private val mDataManagerDataTab
 
                     override fun onNext(clientAndClientAccounts: ClientAndClientAccounts?) {
                         mvpView!!.showProgressbar(false)
+//                        val mBaseApiManager: BaseApiManager? = null
+//                        val mDatabaseHelperDataTable: DatabaseHelperDataTable? = null
+//
+//                        val datatableManager = DataManagerDataTable(mBaseApiManager, mDatabaseHelperDataTable)
                         mvpView!!.showClientAccount(clientAndClientAccounts!!.clientAccounts)
                         mvpView!!.showClientInformation(clientAndClientAccounts.client)
                     }

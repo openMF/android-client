@@ -282,6 +282,7 @@
     <string name="loan_purposes">Loan Purposes</string>
     <string name="loan_fund">Fund</string>
     <string name="staff">Staff</string>
+    <string name="client_address">Address</string>
     <string name="loan_cycle">Loan Cycle</string>
     <string name="loan_status">Status</string>
     <string name="loan_in_arrears">In Arrears</string>

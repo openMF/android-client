@@ -115,6 +115,20 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/address_client"
+                    style="@style/TableRow">
+
+                    <TextView
+                        style="@style/TextView.Row"
+                        android:text="@string/client_address"/>
+
+                    <TextView
+                        android:id="@+id/tv_clientAddress"
+                        style="@style/TextView.Row.Value"
+                        tools:text="address"/>
+                </TableRow>
+
+                <TableRow
                     android:id="@+id/row_group"
                     style="@style/TableRow">
 

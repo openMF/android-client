@@ -25,8 +25,13 @@ import androidx.core.content.res.ResourcesCompat
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
+import com.mifos.api.BaseApiManager
+import com.mifos.api.datamanager.DataManagerDataTable
+import com.mifos.api.local.databasehelper.DatabaseHelperDataTable
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter
@@ -38,6 +43,7 @@ import com.mifos.mifosxdroid.online.activate.ActivateFragment
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment
 import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment
+import com.mifos.mifosxdroid.online.datatabledata.DataTableDataMvpView
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment
 import com.mifos.mifosxdroid.online.note.NoteFragment
@@ -54,16 +60,22 @@ import com.mifos.utils.FragmentConstants
 import com.mifos.utils.ImageLoaderUtils
 import com.mifos.utils.Utils
 import okhttp3.ResponseBody
+import org.json.JSONObject
+import rx.Subscriber
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import rx.subscriptions.CompositeSubscription
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
 import javax.inject.Inject
 
-class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
+class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView{
     var imgDecodableString: String? = null
     private val TAG = ClientDetailsFragment::class.java.simpleName
     var clientId = 0
     var chargesList: MutableList<Charges> = ArrayList()
+    var address_client = ""
 
     @JvmField
     @BindView(R.id.tv_fullName)
@@ -72,6 +84,10 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     @JvmField
     @BindView(R.id.tv_accountNumber)
     var tv_accountNumber: TextView? = null
+
+    @JvmField
+    @BindView(R.id.tv_clientAddress)
+    var tv_clientAddress: TextView? = null
 
     @JvmField
     @BindView(R.id.tv_externalId)
@@ -175,6 +191,11 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
     fun inflateClientInformation() {
         mClientDetailsPresenter!!.loadClientDetailsAndClientAccounts(clientId)
+        mClientDetailsPresenter!!.loadDataTableInfo("KYC", clientId)
+//        val mBaseApiManager: BaseApiManager? = null
+//        val mDatabaseHelperDataTable: DatabaseHelperDataTable? = null
+//
+//        val datatableManager = DataManagerDataTable(mBaseApiManager, mDatabaseHelperDataTable)
     }
 
     override fun onAttach(activity: Activity) {
@@ -429,10 +450,12 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             tvGroup!!.text = client.groupNames
             tv_externalId!!.text = client.externalId
             tvMobileNo!!.text = client.mobileNo
+            tv_clientAddress!!.text = address_client
             if (TextUtils.isEmpty(client.accountNo)) rowAccount!!.visibility = View.GONE
             if (TextUtils.isEmpty(client.externalId)) rowExternal!!.visibility = View.GONE
             if (TextUtils.isEmpty(client.mobileNo)) rowMobileNo!!.visibility = View.GONE
             if (TextUtils.isEmpty(client.groupNames)) rowGroup!!.visibility = View.GONE
+            if (TextUtils.isEmpty(address_client)) tv_clientAddress!!.visibility = View.GONE
             try {
                 val dateString = Utils.getStringOfDate(
                         client.activationDate)
@@ -474,6 +497,14 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             }
             //inflateClientsAccounts();
         }
+    }
+
+    override fun showDataTableInfo(jsonElements: JsonArray?) {
+        val dataObj = jsonElements?.get(0)
+        val jsonObject = dataObj?.asJsonObject
+        val body = JSONObject(jsonObject.toString())
+        val addressObj = body.optString("Address")
+        address_client = addressObj
     }
 
     override fun showUploadImageSuccessfully(response: ResponseBody?, imagePath: String?) {
@@ -536,6 +567,26 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             })
         }
     }
+
+//    override fun showDataTableInfo(jsonElements: JsonArray?) {
+//        val dataObj = jsonElements?.get(0)
+//        val jsonObject = dataObj?.asJsonObject
+//        val body = JSONObject(jsonObject.toString())
+//        val addressObj = body.optString("Address")
+//        address_client = addressObj
+//    }
+//
+//    override fun showDataTableDeletedSuccessfully() {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun showEmptyDataTable() {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun showFetchingError(message: Int) {
+//        TODO("Not yet implemented")
+//    }
 
     override fun showFetchingError(s: String?) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()

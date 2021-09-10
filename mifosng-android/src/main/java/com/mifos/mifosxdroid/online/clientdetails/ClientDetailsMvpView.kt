@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.online.clientdetails
 
+import com.google.gson.JsonArray
 import com.mifos.mifosxdroid.base.MvpView
 import com.mifos.objects.accounts.ClientAccounts
 import com.mifos.objects.client.Client
@@ -10,6 +11,7 @@ import okhttp3.ResponseBody
  */
 interface ClientDetailsMvpView : MvpView {
     fun showClientInformation(client: Client?)
+    fun showDataTableInfo(jsonElements: JsonArray?)
     fun showUploadImageSuccessfully(response: ResponseBody?, imagePath: String?)
     fun showUploadImageFailed(s: String?)
     fun showUploadImageProgressbar(b: Boolean)

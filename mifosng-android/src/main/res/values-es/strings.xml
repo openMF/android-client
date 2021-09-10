@@ -10,6 +10,7 @@
     <string name="additional_payment">Pago adicional</string>
     <string name="amount">Cantidad</string>
     <string name="amount_paid">Cant. Pagada</string>
+    <string name="client_address">Address</string>
     <string name="balance">Balance</string>
     <string name="branch_id">ID de la rama</string>
     <string name="cancel">Cancelar</string>

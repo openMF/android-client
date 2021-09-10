@@ -5,6 +5,7 @@
     <string name="action_settings">Configuració</string>
     <string name="activation_date">Data d\'activació</string>
     <string name="active">Actiu</string>
+    <string name="client_address">Address</string>
     <string name="add_new">Afegir nou</string>
     <string name="additional_payment">Pagament addicional</string>
     <string name="amount">Quantitat</string>

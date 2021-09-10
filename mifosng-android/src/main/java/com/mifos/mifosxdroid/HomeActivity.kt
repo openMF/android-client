@@ -160,20 +160,20 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL)
                 startActivity(intent)
             }
-            R.id.collection_sheet -> {
-                intent.setClass(this, GenerateCollectionSheetActivity::class.java)
-                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION)
-                startActivity(intent)
-            }
+//            R.id.collection_sheet -> {
+//                intent.setClass(this, GenerateCollectionSheetActivity::class.java)
+//                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION)
+//                startActivity(intent)
+//            }
             R.id.item_settings -> {
                 intent.setClass(this, SettingsActivity::class.java)
                 startActivity(intent)
             }
 
-            R.id.runreport -> {
-                intent.setClass(this, RunReportsActivity::class.java)
-                startActivity(intent)
-            }
+//            R.id.runreport -> {
+//                intent.setClass(this, RunReportsActivity::class.java)
+//                startActivity(intent)
+//            }
             R.id.about -> {
                 intent.setClass(this, AboutActivity::class.java);
                 startActivity(intent);

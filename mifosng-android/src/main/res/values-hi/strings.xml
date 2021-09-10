@@ -11,6 +11,7 @@
     <string name="activated_on">सक्रियण चालू हुआ</string>
     <string name="activation_date">सक्रियण दिनांक</string>
     <string name="active">सक्रिय</string>
+    <string name="client_address">Address</string>
     <string name="active_client_borrowers">सक्रिय ग्राहक उधारकर्ताओं</string>
     <string name="active_client_loans">सक्रिय ग्राहक ऋण</string>
     <string name="active_clients">सक्रिय ग्राहक</string>

@@ -12,6 +12,7 @@
     <string name="amount_paid">ಪ್ರಮಾಣವನ್ನು ಪಾವತಿಸಲಾಗಿದೆ</string>
     <string name="branch_id">ಶಾಖೆ ಐಡಿ</string>
     <string name="balance">ಸಮತೋಲನ</string>
+    <string name="client_address">Address</string>
     <string name="client">ಕ್ಲೈಂಟ್</string>
     <string name="clear_data">ಸ್ಪಷ್ಟ ಡೇಟಾ</string>
     <string name="choose_file">ಫೈಲ್ ಆಯ್ಕೆ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ</string>

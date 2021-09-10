@@ -13,6 +13,7 @@
     <string name="associated_datatables">关联的数据表</string>
     <string name="login">登录</string>
     <string name="login_successfully">登录成功</string>
+    <string name="client_address">Address</string>
     <string name="test_ip">10.0.2.2</string>
     <string name="search">搜索</string>
     <string name="group_name">小组名称</string>

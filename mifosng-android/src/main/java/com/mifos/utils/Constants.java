@@ -258,7 +258,8 @@ public class Constants {
     public static final String R_LOAN_PURPOSE_ID = "R_loanPurposeId";
     public static final String R_FUND_ID = "R_fundId";
     public static final String R_CURRENCY_ID = "R_currencyId";
-    public static final String R_OFFICE_ID = "R_officeId";
+    // public static final String R_OFFICE_ID = "R_officeId";
+    public static final String R_OFFICE_ID = "R_branch";
     public static final String R_PAR_TYPE = "R_parType";
     public static final String R_SUB_STATUS = "R_subStatus";
     public static final String R_ACCOUNT = "R_account";
@@ -270,8 +271,10 @@ public class Constants {
     public static final String TO_Y_SELECT = "toYSelect";
     public static final String OVERDUE_X_SELECT = "overdueXSelect";
     public static final String OVERDUE_Y_SELECT = "overdueYSelect";
-    public static final String R_START_DATE = "R_startDate";
-    public static final String R_END_DATE = "R_endDate";
+    public static final String R_START_DATE = "R_fromDate";
+    public static final String R_END_DATE = "R_toDate";
+    // public static final String R_START_DATE = "R_startDate";
+    // public static final String R_END_DATE = "R_endDate";
     public static final String R_ACCOUNT_NO = "R_accountNo";
     public static final String R_FROM_X = "R_fromX";
     public static final String R_TO_Y = "R_toY";

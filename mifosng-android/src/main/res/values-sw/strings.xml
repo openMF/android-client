@@ -16,6 +16,7 @@
     <string name="level_name">Jina La Kiwango</string>
     <string name="offline">Ulandanishi nje ya mtandao *</string>
     <string name="search_results">Matokeo ya utafutaji</string>
+    <string name="client_address">Address</string>
     <string name="client_name">Jina La Mteja</string>
     <string name="client">Mteja</string>
     <string name="save">Hifadhi</string>
