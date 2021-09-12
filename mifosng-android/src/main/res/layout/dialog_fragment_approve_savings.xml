@@ -8,14 +8,15 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/layout_padding_16dp">
 
     <TextView
         android:id="@+id/tv_approval_date_on"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingTop="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="15dp"
         android:text="@string/approved_on"
         android:textSize="16sp"/>
 
@@ -24,25 +25,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/approval_savings_date"
-        android:paddingBottom="16dp"
-        android:paddingTop="10dp"
         android:textSize="20sp"
-        android:background="@color/light_grey"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="55dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/tv_approval_date_on"/>
 
 
     <EditText
         android:id="@+id/et_savings_approval_reason"
         style="@style/EditText.BaseWidth"
-        android:gravity="start"
         android:hint="@string/savings_approval_reason"
         android:inputType="text"
-        android:paddingBottom="16dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@+id/tv_approval_date" />
 
     <Button
@@ -52,6 +47,5 @@
         android:id="@+id/btn_approve_savings"
         android:background="@color/primary"
         android:layout_below="@+id/et_savings_approval_reason"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_margin="@dimen/layout_padding_16dp"/>
 </RelativeLayout>
