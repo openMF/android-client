@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.gson.JsonArray
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
@@ -19,6 +20,7 @@ import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.Constants
+import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
@@ -43,6 +45,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     private val requestCode = 1
     private var actualDisbursementDate: String? = null
     private var transactionDate: String? = null
+    var address_client = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
@@ -50,9 +53,9 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
             sheet = savedInstanceState[Constants.EXTRA_COLLECTION_INDIVIDUAL] as IndividualCollectionSheet
             showCollectionSheetViews(sheet)
         }
-        sheet = arguments!!.getParcelable(Constants.INDIVIDUAL_SHEET)
-        actualDisbursementDate = arguments!!.getString(Constants.DISBURSEMENT_DATE)
-        transactionDate = arguments!!.getString(Constants.TRANSACTION_DATE)
+        sheet = requireArguments().getParcelable(Constants.INDIVIDUAL_SHEET)
+        actualDisbursementDate = requireArguments().getString(Constants.DISBURSEMENT_DATE)
+        transactionDate = requireArguments().getString(Constants.TRANSACTION_DATE)
         setHasOptionsMenu(true)
     }
 
@@ -118,6 +121,14 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
 
     override fun showError(error: String?) {
         Toaster.show(rootView, error)
+    }
+
+    override fun showDataTableInfo(jsonElements: JsonArray?) {
+        val dataObj = jsonElements?.get(0)
+        val jsonObject = dataObj?.asJsonObject
+        val body = JSONObject(jsonObject.toString())
+        val addressObj = body.optString("Address")
+        address_client = addressObj
     }
 
     override fun showProgressbar(b: Boolean) {

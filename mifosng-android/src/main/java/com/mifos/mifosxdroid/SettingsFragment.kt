@@ -63,7 +63,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         languages = activity.resources.getStringArray(R.array.language_option)
 
         initSurveyPreferences()
-        initInstanceUrlPreferences()
+        // initInstanceUrlPreferences()
         initLanguagePreferences()
         initThemePreferences()
     }

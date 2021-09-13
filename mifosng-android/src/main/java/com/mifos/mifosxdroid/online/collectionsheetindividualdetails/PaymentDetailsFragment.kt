@@ -9,21 +9,25 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.gson.JsonArray
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.objects.accounts.loan.PaymentTypeOptions
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.Constants
 import com.mifos.utils.ImageLoaderUtils
+import org.json.JSONObject
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by aksh on 21/6/18.
  */
-class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItemSelectedListener {
+class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItemSelectedListener, IndividualCollectionSheetDetailsMvpView {
     @JvmField
     @BindView(R.id.tv_name)
     var tvName: TextView? = null
@@ -35,6 +39,10 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     @JvmField
     @BindView(R.id.et_total_due)
     var etDue: TextView? = null
+
+    @JvmField
+    @BindView(R.id.tv_clientAddress)
+    var tvClientAddress: TextView? = null
 
     @JvmField
     @BindView(R.id.tv_total_charges)
@@ -87,6 +95,10 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     @JvmField
     @BindView(R.id.iv_user_picture)
     var ivUserPicture: ImageView? = null
+
+    @JvmField
+    @Inject
+    var presenter: IndividualCollectionSheetDetailsPresenter? = null
     var paymentTypeList: List<String>? = null
     var paymentTypeOptionsList: List<PaymentTypeOptions>? = null
     var payload: IndividualCollectionSheetPayload? = null
@@ -94,6 +106,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     private var bulkRepaymentTransaction: BulkRepaymentTransactions? = null
     private var position = 0
     private var clientId = 0
+    private var clientAddress = ""
     private lateinit var rootView: View
     private var loanAndClientNameItem: LoanAndClientName? = null
     override fun onAttach(activity: Activity) {
@@ -109,18 +122,20 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        position = arguments!!.getInt(Constants.ADAPTER_POSITION)
-        loanAndClientNameItem = arguments!!.getParcelable(Constants.LOAN_AND_CLIENT)
-        paymentTypeList = arguments!!.getStringArrayList(Constants.PAYMENT_LIST)
-        payload = arguments!!.getParcelable(Constants.PAYLOAD)
-        paymentTypeOptionsList = arguments!!.getParcelableArrayList(Constants.PAYMENT_OPTIONS)
-        clientId = arguments!!.getInt(Constants.CLIENT_ID)
+        position = requireArguments().getInt(Constants.ADAPTER_POSITION)
+        loanAndClientNameItem = requireArguments()!!.getParcelable(Constants.LOAN_AND_CLIENT)
+        paymentTypeList = requireArguments()!!.getStringArrayList(Constants.PAYMENT_LIST)
+        payload = requireArguments()!!.getParcelable(Constants.PAYLOAD)
+        paymentTypeOptionsList = requireArguments()!!.getParcelableArrayList(Constants.PAYMENT_OPTIONS)
+        clientId = requireArguments()!!.getInt(Constants.CLIENT_ID)
         bulkRepaymentTransaction = BulkRepaymentTransactions()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.add_payment_detail, container, false)
         ButterKnife.bind(this, rootView)
+        presenter!!.attachView(this)
+        presenter!!.loadDataTableInfo("KYC", clientId)
         return rootView
     }
 
@@ -129,6 +144,10 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
         tvName!!.text = loanAndClientNameItem!!.clientName
         tvProduct!!.text = concatProductWithAccount(loanCollectionSheetItem
                 .productShortName, loanCollectionSheetItem.accountId)
+
+        tvClientAddress!!.text = clientAddress
+
+
         if (loanCollectionSheetItem.chargesDue != null) {
             tvCharges!!.text = String.format(Locale.getDefault(), "%f",
                     loanCollectionSheetItem.chargesDue)
@@ -137,6 +156,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
             etDue!!.text = String.format(Locale.getDefault(), "%f",
                     loanCollectionSheetItem.totalDue)
         }
+
         ImageLoaderUtils.loadImage(context, clientId,
                 ivUserPicture)
         val defaultBulkRepaymentTransaction = BulkRepaymentTransactions()
@@ -230,7 +250,6 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        showUI()
     }
 
     fun onShowSheetMandatoryItem(transaction: BulkRepaymentTransactions?, position: Int) {
@@ -286,5 +305,30 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     }
 
     companion object {
+    }
+
+    override fun showSuccess() {
+        Toaster.show(rootView, getStringMessage(R.string.collectionsheet_submit_success))
+    }
+
+    override fun showError(error: String?) {
+        Toaster.show(rootView, error)
+    }
+
+    override fun showDataTableInfo(jsonElements: JsonArray?) {
+        val dataObj = jsonElements?.get(0)
+        val jsonObject = dataObj?.asJsonObject
+        val body = JSONObject(jsonObject.toString())
+        val addressObj = body.optString("Address")
+        clientAddress = addressObj
+        showUI()
+    }
+
+    override fun showProgressbar(b: Boolean) {
+        if (b) {
+            showMifosProgressDialog()
+        } else {
+            hideMifosProgressDialog()
+        }
     }
 }

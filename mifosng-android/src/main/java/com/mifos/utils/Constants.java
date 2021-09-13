@@ -151,6 +151,8 @@ public class Constants {
 
     public static final String PAYLOAD = "payload";
 
+    public static final String CLIENT_ADDRESS = "client_address";
+
     public static final String PAYMENT_LIST = "payment_list";
 
     public static final String LOAN_AND_CLIENT = "loan_and_client_item";

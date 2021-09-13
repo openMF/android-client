@@ -1,6 +1,8 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
+
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

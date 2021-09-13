@@ -1,8 +1,11 @@
 package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.mifos.api.DataManager
 import com.mifos.api.GenericResponse
 import com.mifos.api.datamanager.DataManagerCollectionSheet
+import com.mifos.api.datamanager.DataManagerDataTable
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.accounts.loan.PaymentTypeOptions
@@ -22,9 +25,10 @@ import javax.inject.Inject
 /**
  * Created by aksh on 20/6/18.
  */
-class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(private val mDataManager: DataManager,
+class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(private val mDataManager: DataManager, private val mDataManagerDataTable: DataManagerDataTable,
                                                                              private val mDataManagerCollection: DataManagerCollectionSheet) : BasePresenter<IndividualCollectionSheetDetailsMvpView?>() {
     private val mSubscription: CompositeSubscription?
+    private val subscriptions = CompositeSubscription()
     override fun attachView(mvpView: IndividualCollectionSheetDetailsMvpView?) {
         super.attachView(mvpView)
     }
@@ -84,6 +88,28 @@ class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(pri
                     }
                 }
         return loansAndClientNames
+    }
+
+    fun loadDataTableInfo(table: String?, entityId: Int){
+        checkViewAttached()
+        mvpView!!.showProgressbar(true)
+        subscriptions.add(mDataManagerDataTable.getDataTableInfo(table, entityId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<JsonArray?>() {
+                override fun onCompleted() {
+                    mvpView!!.showProgressbar(false)
+                }
+                override fun onError(e: Throwable) {
+                }
+                override fun onNext(jsonElements: JsonArray?) {
+                    mvpView!!.showProgressbar(false)
+                    if (jsonElements!!.size() == 0) {
+                    } else {
+                        mvpView!!.showDataTableInfo(jsonElements)
+                    }
+                }
+            }))
     }
 
     init {
