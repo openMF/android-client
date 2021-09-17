@@ -316,11 +316,19 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     }
 
     override fun showDataTableInfo(jsonElements: JsonArray?) {
-        val dataObj = jsonElements?.get(0)
-        val jsonObject = dataObj?.asJsonObject
-        val body = JSONObject(jsonObject.toString())
-        val addressObj = body.optString("Address")
-        clientAddress = addressObj
+
+        clientAddress = if (jsonElements == null) {
+            "Something went wrong"
+        } else if (jsonElements.size() == 0){
+            "KYC Not Filled"
+        } else {
+            val dataObj = jsonElements?.get(0)
+            val jsonObject = dataObj?.asJsonObject
+            val body = JSONObject(jsonObject.toString())
+            val addressObj = body.optString("Address")
+            addressObj
+        }
+
         showUI()
     }
 

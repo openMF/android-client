@@ -10,6 +10,7 @@ import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.accounts.loan.PaymentTypeOptions
 import com.mifos.objects.collectionsheet.ClientCollectionSheet
+import com.mifos.objects.collectionsheet.CollectionSheetPayload
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.MFErrorParser
 import retrofit2.adapter.rxjava.HttpException
@@ -101,10 +102,12 @@ class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(pri
                     mvpView!!.showProgressbar(false)
                 }
                 override fun onError(e: Throwable) {
+                    mvpView!!.showDataTableInfo(null)
                 }
                 override fun onNext(jsonElements: JsonArray?) {
                     mvpView!!.showProgressbar(false)
                     if (jsonElements!!.size() == 0) {
+                        mvpView!!.showDataTableInfo(jsonElements)
                     } else {
                         mvpView!!.showDataTableInfo(jsonElements)
                     }

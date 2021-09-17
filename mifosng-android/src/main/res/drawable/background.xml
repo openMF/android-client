@@ -3,8 +3,22 @@
 
     <item android:drawable="@color/summer_sky" />
 
-    <item>
-        <bitmap android:src="@drawable/ic_launcher"
-            android:gravity="center" />
-    </item>
+<!--    <item>-->
+<!--        <bitmap android:src="@drawable/ic_launcher"-->
+<!--            android:gravity="center" />-->
+<!--    </item>-->
+
+<!--    <item-->
+<!--        android:left="50dp"-->
+<!--        android:right="50dp"-->
+<!--        >-->
+<!--        <bitmap android:src="@drawable/mifos_logo"-->
+<!--            android:gravity="center" />-->
+<!--    </item>-->
+
+    <item
+        android:width="250dp"
+        android:height="75dp"
+        android:drawable="@drawable/mifos_logo"
+        android:gravity="center" />
 </layer-list>

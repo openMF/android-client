@@ -22,7 +22,7 @@ public class IndividualCollectionSheetPayload implements Parcelable {
     //TODO Change to BulkSavingsDueTransaction list later
     private List<BulkRepaymentTransactions> bulkSavingsDueTransactions = new ArrayList<>();
 
-    private String dateFormat = "dd MMMM YYYY";
+    private String dateFormat = "dd MMMM yyyy";
 
     private String locale = "en";
 

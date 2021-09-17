@@ -210,7 +210,8 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
                 officeId = officeList!![i - 1].id
                 presenter!!.fetchStaff(officeId)
             }
-            R.id.sp_staff_list -> if (i == staffList!!.size || i == 0) {
+//            R.id.sp_staff_list -> if (i == staffList!!.size || i == 0) {
+            R.id.sp_staff_list -> if (i == 0) {
                 Toaster.show(rootView, getStringMessage(R.string.error_select_staff))
             } else {
                 staffId = staffList!![i - 1].id

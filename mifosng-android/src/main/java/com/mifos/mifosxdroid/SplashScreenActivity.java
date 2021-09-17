@@ -15,6 +15,8 @@ import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.mobile.passcode.utils.PassCodeConstants;
 import com.mifos.utils.PrefManager;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * This is the First Activity which can be used for initial checks, inits at app Startup
@@ -25,6 +27,12 @@ public class SplashScreenActivity extends MifosBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (!PrefManager.isAuthenticated()) {
             PrefManager.setInstanceUrl(BaseUrl.PROTOCOL_HTTPS
                     + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH);

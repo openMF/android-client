@@ -2,6 +2,8 @@ package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +19,8 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
+import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment
+import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.Constants
@@ -27,7 +31,7 @@ import javax.inject.Inject
 /**
  * Created by aksh on 20/6/18.
  */
-class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
+class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener{
     @JvmField
     @BindView(R.id.recycler_collections)
     var recyclerSheets: RecyclerView? = null
@@ -39,6 +43,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     private var sheet: IndividualCollectionSheet? = null
     private var paymentTypeList: List<String?>? = null
     private var loansAndClientNames: List<LoanAndClientName?>? = null
+    var myActivity: MifosBaseActivity? = null
     var payload: IndividualCollectionSheetPayload? = null
         private set
     private lateinit var rootView: View
@@ -56,6 +61,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         sheet = requireArguments().getParcelable(Constants.INDIVIDUAL_SHEET)
         actualDisbursementDate = requireArguments().getString(Constants.DISBURSEMENT_DATE)
         transactionDate = requireArguments().getString(Constants.TRANSACTION_DATE)
+        myActivity = MifosBaseActivity()
         setHasOptionsMenu(true)
     }
 
@@ -152,7 +158,10 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         val fragment: PaymentDetailsFragment = PaymentDetailsFragment().newInstance(position, payload
                 , paymentTypeOptionList, current, paymentTypeOptions, clientId)
         fragment.setTargetFragment(this, requestCode)
-        (context as MifosBaseActivity?)!!.replaceFragment(fragment, true, R.id.container)
+//        val fragment: LoanAccountSummaryFragment = LoanAccountSummaryFragment.newInstance(current!!.loan.loanId, true)
+//        fragment.setTargetFragment(this, requestCode)
+
+         (context as MifosBaseActivity?)!!.replaceFragment(fragment, true, R.id.container)
     }
 
     private fun submitSheet() {
@@ -179,4 +188,5 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     companion object {
 
     }
+
 }
