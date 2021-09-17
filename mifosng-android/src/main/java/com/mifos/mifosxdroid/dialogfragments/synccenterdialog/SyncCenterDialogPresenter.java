@@ -175,7 +175,7 @@ public class SyncCenterDialogPresenter extends BasePresenter<SyncCenterDialogMvp
     /**
      * Sync the Center Account with Center Id. This method fetching the Center Accounts from the
      * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperCenter
-     * and then DataManagerCenter returns the Center Accounts to Presenter.
+     * and then DataManagerCenter.java returns the Center Accounts to Presenter.
      * <p>
      * <p>
      * onNext : As Center Accounts Successfully sync then sync there Loan and LoanRepayment

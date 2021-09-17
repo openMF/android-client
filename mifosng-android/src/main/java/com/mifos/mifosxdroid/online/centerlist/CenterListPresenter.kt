@@ -78,7 +78,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
         mSubscriptions.add(mDataManagerCenter.getCenters(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center?>?>() {
+                .subscribe(object : Subscriber<Page<Center>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showProgressbar(false)
@@ -89,7 +89,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
                         }
                     }
 
-                    override fun onNext(centerPage: Page<Center?>?) {
+                    override fun onNext(centerPage: Page<Center>) {
                         mSyncCenterList = centerPage!!.pageItems
                         if (mSyncCenterList.size == 0 && !loadmore) {
                             mvpView!!.showEmptyCenters(R.string.center)
@@ -126,9 +126,9 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
     }
 
     /**
-     * This Method Loading the Center From Database. It request Observable to DataManagerCenter
-     * and DataManagerCenter Request to DatabaseHelperCenter to load the Center List Page from the
-     * Center_Table and As the Center List Page is loaded DataManagerCenter gives the Center List
+     * This Method Loading the Center From Database. It request Observable to DataManagerCenter.java
+     * and DataManagerCenter.java Request to DatabaseHelperCenter to load the Center List Page from the
+     * Center_Table and As the Center List Page is loaded DataManagerCenter.java gives the Center List
      * Page after getting response from DatabaseHelperCenter
      */
     fun loadDatabaseCenters() {
@@ -136,13 +136,13 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
         mSubscriptions.add(mDataManagerCenter.allDatabaseCenters
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center?>?>() {
+                .subscribe(object : Subscriber<Page<Center>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showMessage(R.string.failed_to_load_db_centers)
                     }
 
-                    override fun onNext(centerPage: Page<Center?>?) {
+                    override fun onNext(centerPage: Page<Center>) {
                         mDatabaseCenterSyncStatus = true
                         if (centerPage != null) {
                             mDbCenterList = centerPage.pageItems as List<Center>

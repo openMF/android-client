@@ -110,10 +110,11 @@ class CreateNewClientPresenter @Inject constructor(private val mDataManagerClien
     fun createClient(clientPayload: ClientPayload?) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
-        mSubscriptions.add(mDataManagerClient.createClient(clientPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Client?>() {
+        mSubscriptions.add(
+            mDataManagerClient.createClient(clientPayload)
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribeOn(Schedulers.io())
+                ?.subscribe(object : Subscriber<Client?>() {
                     override fun onCompleted() {
                         mvpView!!.showProgressbar(false)
                     }
@@ -123,9 +124,9 @@ class CreateNewClientPresenter @Inject constructor(private val mDataManagerClien
                         try {
                             if (e is HttpException) {
                                 val errorMessage = e.response()!!.errorBody()!!
-                                        .string()
+                                    .string()
                                 mvpView!!.showMessage(MFErrorParser.parseError(errorMessage)
-                                        .errors[0].defaultUserMessage)
+                                    .errors[0].defaultUserMessage)
                             }
                         } catch (throwable: Throwable) {
                             RxJavaPlugins.getInstance().errorHandler.handleError(e)
@@ -137,16 +138,17 @@ class CreateNewClientPresenter @Inject constructor(private val mDataManagerClien
                         if (t != null) {
                             if (t.clientId != null) {
                                 mvpView!!.showClientCreatedSuccessfully(
-                                        R.string.client_created_successfully)
+                                    R.string.client_created_successfully)
                                 mvpView!!.setClientId(t.clientId)
                             } else {
                                 mvpView!!.showWaitingForCheckerApproval(
-                                        R.string.waiting_for_checker_approval
+                                    R.string.waiting_for_checker_approval
                                 )
                             }
                         }
                     }
-                }))
+                })
+        )
     }
 
     fun filterOptions(options: List<Options>?): List<String> {

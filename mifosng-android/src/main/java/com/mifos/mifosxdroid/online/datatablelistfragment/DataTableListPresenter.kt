@@ -81,10 +81,11 @@ class DataTableListPresenter @Inject constructor(private val mDataManagerLoan: D
     fun createClient(clientPayload: ClientPayload?) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
-        mSubscription!!.add(dataManagerClient.createClient(clientPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Client?>() {
+        mSubscription!!.add(
+            dataManagerClient.createClient(clientPayload)
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribeOn(Schedulers.io())
+                ?.subscribe(object : Subscriber<Client>() {
                     override fun onCompleted() {
                         mvpView!!.showProgressbar(false)
                     }
@@ -99,14 +100,15 @@ class DataTableListPresenter @Inject constructor(private val mDataManagerLoan: D
                         if (client != null) {
                             if (client.clientId != null) {
                                 mvpView!!.showClientCreatedSuccessfully(
-                                        client)
+                                    client)
                             } else {
                                 mvpView!!.showWaitingForCheckerApproval(
-                                        R.string.waiting_for_checker_approval)
+                                    R.string.waiting_for_checker_approval)
                             }
                         }
                     }
-                }))
+                })
+        )
     }
 
     init {

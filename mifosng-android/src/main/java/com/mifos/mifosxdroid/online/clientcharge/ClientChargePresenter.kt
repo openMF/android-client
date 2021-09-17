@@ -33,7 +33,7 @@ class ClientChargePresenter @Inject constructor(private val mDataManagerCharge: 
         mSubscription = mDataManagerCharge.getClientCharges(clientId, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Charges?>?>() {
+                .subscribe(object : Subscriber<Page<Charges>>() {
                     override fun onCompleted() {
                         mvpView!!.showProgressbar(false)
                     }
@@ -53,7 +53,7 @@ class ClientChargePresenter @Inject constructor(private val mDataManagerCharge: 
                         }
                     }
 
-                    override fun onNext(chargesPage: Page<Charges?>?) {
+                    override fun onNext(chargesPage: Page<Charges>) {
                         mvpView!!.showProgressbar(false)
                         if (chargesPage!!.pageItems.size > 0) {
                             mvpView!!.showChargesList(chargesPage)
