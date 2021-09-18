@@ -155,11 +155,11 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         val paymentTypeOptions = ArrayList(sheet!!.paymentTypeOptions)
         val current = loansAndClientNames!![position]
         val clientId = current!!.id
-        val fragment: PaymentDetailsFragment = PaymentDetailsFragment().newInstance(position, payload
-                , paymentTypeOptionList, current, paymentTypeOptions, clientId)
+       // val fragment: PaymentDetailsFragment = PaymentDetailsFragment().newInstance(position, payload
+       //         , paymentTypeOptionList, current, paymentTypeOptions, clientId)
+       // fragment.setTargetFragment(this, requestCode)
+        val fragment: LoanAccountSummaryFragment = LoanAccountSummaryFragment.newInstance(current!!.loan.loanId, true)
         fragment.setTargetFragment(this, requestCode)
-//        val fragment: LoanAccountSummaryFragment = LoanAccountSummaryFragment.newInstance(current!!.loan.loanId, true)
-//        fragment.setTargetFragment(this, requestCode)
 
          (context as MifosBaseActivity?)!!.replaceFragment(fragment, true, R.id.container)
     }

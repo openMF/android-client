@@ -12,9 +12,14 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment.OnPayloadSelectedListener
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment
+import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment
+import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment
+import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleFragment
+import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsFragment
+import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.utils.Constants
 
-class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedListener {
+class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedListener, LoanAccountSummaryFragment.OnFragmentInteractionListener {
     var payload: IndividualCollectionSheetPayload? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,5 +44,39 @@ class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedLi
 
     override fun onPayloadSelected(payload: IndividualCollectionSheetPayload?) {
         this.payload = payload
+    }
+
+    /**
+     * Called when the make the make repayment button is clicked
+     * in the Loan Account Summary Fragment.
+     *
+     *
+     * It will display the Loan Repayment Fragment where
+     * the Information of the repayment has to be filled in.
+     */
+    override fun makeRepayment(loan: LoanWithAssociations?) {
+        replaceFragment(LoanRepaymentFragment.newInstance(loan), true, R.id.container)
+    }
+
+    /**
+     * Called when the Repayment Schedule option from the Menu is
+     * clicked
+     *
+     *
+     * It will display the Complete Loan Repayment Schedule.
+     */
+    override fun loadRepaymentSchedule(loanId: Int) {
+        replaceFragment(LoanRepaymentScheduleFragment.newInstance(loanId), true, R.id.container)
+    }
+
+    /**
+     * Called when the Transactions option from the Menu is clicked
+     *
+     *
+     * It will display all the Transactions associated with the Loan
+     * and also their details
+     */
+    override fun loadLoanTransactions(loanId: Int) {
+        replaceFragment(LoanTransactionsFragment.newInstance(loanId), true, R.id.container)
     }
 }
