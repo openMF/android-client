@@ -1,6 +1,7 @@
 package com.mifos.api.datamanager;
 
 import com.mifos.api.BaseApiManager;
+import com.mifos.api.model.LoginUser;
 import com.mifos.objects.user.User;
 
 import javax.inject.Inject;
@@ -27,6 +28,6 @@ public class DataManagerAuth {
      * @return Basic OAuth
      */
     public Observable<User> login(String username, String password) {
-        return baseApiManager.getAuthApi().authenticate(username, password);
+        return baseApiManager.getAuthApi().authenticate(new LoginUser(username, password));
     }
 }
